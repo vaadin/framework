@@ -210,8 +210,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void bind(final int rowIndex) {
-                    serverInitiated = true;
-                    GridConnector.this.getWidget().editRow(rowIndex);
+                    // call this finally to avoid issues with editing on init
+                    Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            GridConnector.this.getWidget().editRow(rowIndex);
+                        }
+                    });
                 }
 
                 @Override
@@ -223,7 +228,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 @Override
                 public void confirmBind(final boolean bindSucceeded) {
                     endRequest(bindSucceeded);
-
                 }
 
                 @Override
@@ -235,18 +239,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         @Override
         public void bind(EditorRequest<JsonObject> request) {
-            if (!handleServerInitiated(request)) {
-                startRequest(request);
-                rpc.bind(request.getRowIndex());
-            }
+            startRequest(request);
+            rpc.bind(request.getRowIndex());
         }
 
         @Override
         public void save(EditorRequest<JsonObject> request) {
-            if (!handleServerInitiated(request)) {
-                startRequest(request);
-                rpc.save(request.getRowIndex());
-            }
+            startRequest(request);
+            rpc.save(request.getRowIndex());
         }
 
         @Override
@@ -296,11 +296,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         private void startRequest(EditorRequest<?> request) {
+            assert currentRequest == null : "Earlier request not yet finished";
+
             currentRequest = request;
         }
 
         private void endRequest(boolean succeeded) {
-            assert currentRequest != null;
+            assert currentRequest != null : "Current request was null";
             /*
              * Clear current request first to ensure the state is valid if
              * another request is made in the callback.
@@ -406,6 +408,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     protected void init() {
         super.init();
 
+        // All scroll RPC calls are executed finally to avoid issues on init
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
             public void scrollToStart() {

@@ -944,7 +944,7 @@ public class Grid<T> extends ResizeComposite implements
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
         protected enum State {
-            INACTIVE, ACTIVATING, ACTIVE, SAVING
+            INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
         }
 
         private Grid<T> grid;
@@ -1018,7 +1018,7 @@ public class Grid<T> extends ResizeComposite implements
         private final RequestCallback<T> bindRequestCallback = new RequestCallback<T>() {
             @Override
             public void onSuccess(EditorRequest<T> request) {
-                if (state == State.ACTIVATING) {
+                if (state == State.BINDING) {
                     state = State.ACTIVE;
                     bindTimeout.cancel();
 
@@ -1029,7 +1029,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             public void onError(EditorRequest<T> request) {
-                if (state == State.ACTIVATING) {
+                if (state == State.BINDING) {
                     state = State.INACTIVE;
                     bindTimeout.cancel();
 
@@ -1188,6 +1188,7 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void show() {
             if (state == State.ACTIVATING) {
+                state = State.BINDING;
                 bindTimeout.schedule(BIND_TIMEOUT_MS);
                 EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
                         bindRequestCallback);

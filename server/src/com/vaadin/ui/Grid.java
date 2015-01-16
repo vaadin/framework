@@ -2740,14 +2740,19 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                boolean success;
+                boolean success = false;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
-                    doEditItem(id);
-                    success = true;
+                    if (editedItemId == null) {
+                        editedItemId = id;
+                    }
+
+                    if (editedItemId.equals(id)) {
+                        success = true;
+                        doEditItem();
+                    }
                 } catch (Exception e) {
                     handleError(e);
-                    success = false;
                 }
                 getEditorRpc().confirmBind(success);
             }
@@ -2764,13 +2769,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void save(int rowIndex) {
-                boolean success;
+                boolean success = false;
                 try {
                     saveEditor();
                     success = true;
                 } catch (Exception e) {
                     handleError(e);
-                    success = false;
                 }
                 getEditorRpc().confirmSave(success);
             }
@@ -4474,31 +4478,31 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
-     *             if the editor is not enabled
+     *             if the editor is not enabled or already editing an item
      * @throws IllegalArgumentException
      *             if the {@code itemId} is not in the backing container
      * @see #setEditorEnabled(boolean)
      */
     public void editItem(Object itemId) throws IllegalStateException,
             IllegalArgumentException {
-        doEditItem(itemId);
-
-        getEditorRpc().bind(getContainerDataSource().indexOfId(itemId));
-    }
-
-    protected void doEditItem(Object itemId) {
         if (!isEditorEnabled()) {
             throw new IllegalStateException("Item editor is not enabled");
-        }
-
-        Item item = getContainerDataSource().getItem(itemId);
-        if (item == null) {
+        } else if (editedItemId != null) {
+            throw new IllegalStateException("Editing item + " + itemId
+                    + " failed. Item editor is already editing item "
+                    + editedItemId);
+        } else if (!getContainerDataSource().containsId(itemId)) {
             throw new IllegalArgumentException("Item with id " + itemId
                     + " not found in current container");
         }
+        editedItemId = itemId;
+        getEditorRpc().bind(getContainerDataSource().indexOfId(itemId));
+    }
+
+    protected void doEditItem() {
+        Item item = getContainerDataSource().getItem(editedItemId);
 
         editorFieldGroup.setItemDataSource(item);
-        editedItemId = itemId;
 
         for (Column column : getColumns()) {
             Object propertyId = column.getPropertyId();

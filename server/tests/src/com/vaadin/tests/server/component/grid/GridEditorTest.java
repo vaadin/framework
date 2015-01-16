@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
+
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -48,14 +50,15 @@ public class GridEditorTest {
     private static final Integer DEFAULT_AGE = 25;
     private static final Object ITEM_ID = new Object();
 
-    private Grid grid;
-
     // Explicit field for the test session to save it from GC
     private VaadinSession session;
 
+    private final Grid grid = new Grid();
+    private Method doEditMethod;
+
     @Before
     @SuppressWarnings("unchecked")
-    public void setup() {
+    public void setup() throws SecurityException, NoSuchMethodException {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(PROPERTY_NAME, String.class, "[name]");
         container.addContainerProperty(PROPERTY_AGE, Integer.class,
@@ -64,8 +67,7 @@ public class GridEditorTest {
         Item item = container.addItem(ITEM_ID);
         item.getItemProperty(PROPERTY_NAME).setValue(DEFAULT_NAME);
         item.getItemProperty(PROPERTY_AGE).setValue(DEFAULT_AGE);
-
-        grid = new Grid(container);
+        grid.setContainerDataSource(container);
 
         // VaadinSession needed for ConverterFactory
         VaadinService mockService = EasyMock
@@ -73,6 +75,10 @@ public class GridEditorTest {
         session = new MockVaadinSession(mockService);
         VaadinSession.setCurrent(session);
         session.lock();
+
+        // Access to method for actual editing.
+        doEditMethod = Grid.class.getDeclaredMethod("doEditItem");
+        doEditMethod.setAccessible(true);
     }
 
     @After
@@ -83,21 +89,21 @@ public class GridEditorTest {
     }
 
     @Test
-    public void initAssumptions() throws Exception {
+    public void testInitAssumptions() throws Exception {
         assertFalse(grid.isEditorEnabled());
         assertNull(grid.getEditedItemId());
         assertNotNull(grid.getEditorFieldGroup());
     }
 
     @Test
-    public void setEnabled() throws Exception {
+    public void testSetEnabled() throws Exception {
         assertFalse(grid.isEditorEnabled());
         grid.setEditorEnabled(true);
         assertTrue(grid.isEditorEnabled());
     }
 
     @Test
-    public void setDisabled() throws Exception {
+    public void testSetDisabled() throws Exception {
         assertFalse(grid.isEditorEnabled());
         grid.setEditorEnabled(true);
         grid.setEditorEnabled(false);
@@ -105,7 +111,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void setReEnabled() throws Exception {
+    public void testSetReEnabled() throws Exception {
         assertFalse(grid.isEditorEnabled());
         grid.setEditorEnabled(true);
         grid.setEditorEnabled(false);
@@ -114,7 +120,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void detached() throws Exception {
+    public void testDetached() throws Exception {
         FieldGroup oldFieldGroup = grid.getEditorFieldGroup();
         grid.removeAllColumns();
         grid.setContainerDataSource(new IndexedContainer());
@@ -122,12 +128,12 @@ public class GridEditorTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void disabledEditItem() throws Exception {
+    public void testDisabledEditItem() throws Exception {
         grid.editItem(ITEM_ID);
     }
 
     @Test
-    public void editItem() throws Exception {
+    public void testEditItem() throws Exception {
         startEdit();
         assertEquals(ITEM_ID, grid.getEditedItemId());
         assertEquals(getEditedItem(), grid.getEditorFieldGroup()
@@ -140,7 +146,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void saveEditor() throws Exception {
+    public void testSaveEditor() throws Exception {
         startEdit();
         TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
 
@@ -155,7 +161,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void saveEditorCommitFail() throws Exception {
+    public void testSaveEditorCommitFail() throws Exception {
         startEdit();
 
         ((TextField) grid.getEditorField(PROPERTY_AGE)).setValue("Invalid");
@@ -170,7 +176,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void cancelEditor() throws Exception {
+    public void testCancelEditor() throws Exception {
         startEdit();
         TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
         field.setValue("New Name");
@@ -184,26 +190,26 @@ public class GridEditorTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nonexistentEditItem() throws Exception {
+    public void testNonexistentEditItem() throws Exception {
         grid.setEditorEnabled(true);
         grid.editItem(new Object());
     }
 
     @Test
-    public void getField() throws Exception {
+    public void testGetField() throws Exception {
         startEdit();
 
         assertNotNull(grid.getEditorField(PROPERTY_NAME));
     }
 
     @Test
-    public void getFieldWithoutItem() throws Exception {
+    public void testGetFieldWithoutItem() throws Exception {
         grid.setEditorEnabled(true);
         assertNotNull(grid.getEditorField(PROPERTY_NAME));
     }
 
     @Test
-    public void customBinding() {
+    public void testCustomBinding() {
         TextField textField = new TextField();
         grid.setEditorField(PROPERTY_NAME, textField);
 
@@ -213,13 +219,13 @@ public class GridEditorTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void disableWhileEditing() {
+    public void testDisableWhileEditing() {
         startEdit();
         grid.setEditorEnabled(false);
     }
 
     @Test
-    public void fieldIsNotReadonly() {
+    public void testFieldIsNotReadonly() {
         startEdit();
 
         Field<?> field = grid.getEditorField(PROPERTY_NAME);
@@ -227,7 +233,7 @@ public class GridEditorTest {
     }
 
     @Test
-    public void fieldIsReadonlyWhenFieldGroupIsReadonly() {
+    public void testFieldIsReadonlyWhenFieldGroupIsReadonly() {
         startEdit();
 
         grid.getEditorFieldGroup().setReadOnly(true);
@@ -236,18 +242,18 @@ public class GridEditorTest {
     }
 
     @Test
-    public void columnRemoved() {
+    public void testColumnRemoved() {
         Field<?> field = grid.getEditorField(PROPERTY_NAME);
 
-        assertSame("field should be attached to grid.", grid, field.getParent());
+        assertSame("field should be attached to ", grid, field.getParent());
 
         grid.removeColumn(PROPERTY_NAME);
 
-        assertNull("field should be detached from grid.", field.getParent());
+        assertNull("field should be detached from ", field.getParent());
     }
 
     @Test
-    public void setFieldAgain() {
+    public void testSetFieldAgain() {
         TextField field = new TextField();
         grid.setEditorField(PROPERTY_NAME, field);
 
@@ -261,6 +267,13 @@ public class GridEditorTest {
     private void startEdit() {
         grid.setEditorEnabled(true);
         grid.editItem(ITEM_ID);
+        // Simulate succesful client response to actually start the editing.
+        try {
+            doEditMethod.invoke(grid);
+        } catch (Exception e) {
+            Assert.fail("Editing item " + ITEM_ID + " failed. Cause: "
+                    + e.getCause().toString());
+        }
     }
 
     private Item getEditedItem() {
