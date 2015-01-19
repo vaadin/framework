@@ -1301,19 +1301,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    /**
-     * Tree does not support lazy options loading mode. Setting this true will
-     * throw UnsupportedOperationException.
-     * 
-     * @see com.vaadin.ui.Select#setLazyLoading(boolean)
-     */
-    public void setLazyLoading(boolean useLazyLoading) {
-        if (useLazyLoading) {
-            throw new UnsupportedOperationException(
-                    "Lazy options loading is not supported by Tree.");
-        }
-    }
-
     private ItemStyleGenerator itemStyleGenerator;
 
     private DropHandler dropHandler;
