@@ -293,6 +293,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     static class JsniUtil {
         public static class TouchHandlerBundle {
 
+            private static final double FLICK_POLL_FREQUENCY = 100d;
+
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -336,24 +338,56 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             private double deltaY = 0;
 
             private final Escalator escalator;
+
             private CustomTouchEvent latestTouchMoveEvent;
+
+            /** The timestamp of {@link #flickPageX1} and {@link #flickPageY1} */
+            private double flickTimestamp = Double.MIN_VALUE;
+
+            /** The most recent flick touch reference Y */
+            private double flickPageY1 = -1;
+            /** The most recent flick touch reference X */
+            private double flickPageX1 = -1;
+
+            /** The previous flick touch reference Y, before {@link #flickPageY1} */
+            private double flickPageY2 = -1;
+            /** The previous flick touch reference X, before {@link #flickPageX1} */
+            private double flickPageX2 = -1;
+
+            /**
+             * This animation callback guarantees the fact that we don't scroll
+             * the grid more than once per visible frame.
+             * 
+             * It seems that there will never be more touch events than there
+             * are rendered frames, but there's no guarantee for that. If it was
+             * guaranteed, we probably could do all of this immediately in
+             * {@link #touchMove(CustomTouchEvent)}, instead of deferring it
+             * over here.
+             */
             private AnimationCallback mover = new AnimationCallback() {
                 @Override
-                public void execute(double doNotUseThisTimestamp) {
-                    /*
-                     * We can't use the timestamp parameter here, since it is
-                     * not in any predetermined format; TouchEnd does not
-                     * provide a compatible timestamp, and we need to be able to
-                     * get a comparable timestamp to determine whether to
-                     * trigger a flick scroll or not.
-                     */
-
+                public void execute(double timestamp) {
                     if (touches != 1) {
                         return;
                     }
 
                     final int x = latestTouchMoveEvent.getPageX();
                     final int y = latestTouchMoveEvent.getPageY();
+
+                    /*
+                     * Check if we need a new flick coordinate sample (more than
+                     * FLICK_POLL_FREQUENCY ms have passed since the last
+                     * sample)
+                     */
+                    if (timestamp - flickTimestamp > FLICK_POLL_FREQUENCY) {
+                        flickTimestamp = timestamp;
+                        flickPageY2 = flickPageY1;
+                        flickPageY1 = y;
+
+                        flickPageX2 = flickPageX1;
+                        flickPageX1 = x;
+                    }
+
                     deltaX = x - lastX;
                     deltaY = y - lastY;
                     lastX = x;
@@ -457,20 +491,48 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 animationHandle = AnimationScheduler.get()
                         .requestAnimationFrame(mover, escalator.bodyElem);
                 event.getNativeEvent().preventDefault();
-
-                /*
-                 * this initializes a correct timestamp, and also renders the
-                 * first frame for added responsiveness.
-                 */
-                mover.execute(Duration.currentTimeMillis());
             }
 
             public void touchEnd(final CustomTouchEvent event) {
                 touches = event.getNativeEvent().getTouches().length();
 
                 if (touches == 0) {
-                    escalator.scroller.handleFlickScroll(deltaX, deltaY,
-                            lastTime);
+
+                    /*
+                     * We want to smooth the flick calculations here. We have
+                     * taken a frame of reference every FLICK_POLL_FREQUENCY.
+                     * But if the sample is too fresh, we might introduce noise
+                     * in our sampling, so we use the older sample instead. it
+                     * might be less accurate, but it's smoother.
+                     * 
+                     * flickPage?1 is the most recent one, while flickPage?2 is
+                     * the previous one.
+                     */
+
+                    final double finalPageY;
+                    final double finalPageX;
+                    double deltaT = lastTime - flickTimestamp;
+                    boolean onlyOneSample = flickPageX2 < 0 || flickPageY2 < 0;
+                    if (onlyOneSample || deltaT > FLICK_POLL_FREQUENCY / 3) {
+                        finalPageY = flickPageY1;
+                        finalPageX = flickPageX1;
+                    } else {
+                        deltaT += FLICK_POLL_FREQUENCY;
+                        finalPageY = flickPageY2;
+                        finalPageX = flickPageX2;
+                    }
+
+                    flickPageY1 = -1;
+                    flickPageY2 = -1;
+                    flickTimestamp = Double.MIN_VALUE;
+
+                    double deltaX = latestTouchMoveEvent.getPageX()
+                            - finalPageX;
+                    double deltaY = latestTouchMoveEvent.getPageY()
+                            - finalPageY;
+
+                    escalator.scroller
+                            .handleFlickScroll(deltaX, deltaY, deltaT);
                     escalator.body.domSorter.reschedule();
                 }
             }
@@ -533,12 +595,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          *            the timestamp of the last touchmove
          */
         public FlickScrollAnimator(final double deltaX, final double deltaY,
-                final double lastTime) {
-            final double currentTimeMillis = Duration.currentTimeMillis();
-            velX = Math.max(Math.min(deltaX / (currentTimeMillis - lastTime),
-                    MAX_SPEED), -MAX_SPEED);
-            velY = Math.max(Math.min(deltaY / (currentTimeMillis - lastTime),
-                    MAX_SPEED), -MAX_SPEED);
+                final double deltaT) {
+            velX = Math.max(Math.min(deltaX / deltaT, MAX_SPEED), -MAX_SPEED);
+            velY = Math.max(Math.min(deltaY / deltaT, MAX_SPEED), -MAX_SPEED);
 
             lastLeft = horizontalScrollbar.getScrollPos();
             lastTop = verticalScrollbar.getScrollPos();
@@ -1027,9 +1086,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          *            the timestamp of the last touchmove
          */
         public void handleFlickScroll(double deltaX, double deltaY,
-                double lastTime) {
+                double deltaT) {
             currentFlickScroller = new FlickScrollAnimator(deltaX, deltaY,
-                    lastTime);
+                    deltaT);
             AnimationScheduler.get()
                     .requestAnimationFrame(currentFlickScroller);
         }
@@ -2347,8 +2406,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             private boolean sortIfConditionsMet() {
                 boolean enoughFramesHavePassed = framesPassed >= REQUIRED_FRAMES_PASSED;
                 boolean enoughTimeHasPassed = (Duration.currentTimeMillis() - startTime) >= SORT_DELAY_MILLIS;
+                boolean notAnimatingFlick = (scroller.currentFlickScroller == null);
                 boolean conditionsMet = enoughFramesHavePassed
-                        && enoughTimeHasPassed;
+                        && enoughTimeHasPassed && notAnimatingFlick;
 
                 if (conditionsMet) {
                     resetConditions();
