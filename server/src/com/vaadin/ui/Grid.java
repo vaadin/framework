@@ -2153,6 +2153,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          */
         public Column setSortable(boolean sortable) {
             checkColumnIsAttached();
+
+            if (sortable && !(grid.datasource instanceof Sortable)) {
+                throw new IllegalStateException(
+                        "Can't set column "
+                                + toString()
+                                + " sortable. The Container of Grid does not implement Sortable");
+            }
+
             state.sortable = sortable;
             grid.markAsDirty();
             return this;
@@ -2896,6 +2904,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     column.setSortable(((Sortable) datasource)
                             .getSortableContainerPropertyIds().contains(
                                     propertyId));
+                } else {
+                    column.setSortable(false);
                 }
             }
         } else {
@@ -2908,6 +2918,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                                     + " with the header \""
                                     + getColumn(property).getHeaderCaption()
                                     + "\"");
+                }
+
+                if (!(datasource instanceof Sortable)
+                        || !((Sortable) datasource)
+                                .getSortableContainerPropertyIds().contains(
+                                        property)) {
+                    columns.get(property).setSortable(false);
                 }
             }
         }
