@@ -268,6 +268,21 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
+     * Sets the position of the window on the screen using
+     * {@link #setPositionX(int)} and {@link #setPositionY(int)}
+     * 
+     * @since
+     * @param x
+     *            The new x coordinate for the window
+     * @param y
+     *            The new y coordinate for the window
+     */
+    public void setPosition(int x, int y) {
+        setPositionX(x);
+        setPositionY(y);
+    }
+
+    /**
      * Sets the distance of Window left border in pixels from left border of the
      * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
      * mode.

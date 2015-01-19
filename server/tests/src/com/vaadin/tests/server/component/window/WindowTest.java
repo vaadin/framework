@@ -50,4 +50,11 @@ public class WindowTest {
         Assert.assertEquals(b2, window.getAssistiveDescription()[1]);
 
     }
+
+    @Test
+    public void testSetPosition() {
+        window.setPosition(100, 200);
+        Assert.assertEquals(100, window.getPositionX());
+        Assert.assertEquals(200, window.getPositionY());
+    }
 }
