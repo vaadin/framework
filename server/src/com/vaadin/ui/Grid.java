@@ -2858,10 +2858,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             sort(false);
         } else {
-
-            // If the new container is not sortable, we'll just re-set the sort
-            // order altogether.
-            clearSortOrder();
+            // Clear sorting order. Don't sort.
+            sortOrder.clear();
         }
 
         datasourceExtension = new RpcDataProviderExtension(container);
