@@ -15,7 +15,10 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class AlignTopIconInButtonTest extends MultiBrowserTest {
 
     @Test
-    public void testIconPositioninButton() {
+    public void iconIsCenteredInsideButton() {
         openTestURL();
 
         WebElement wrapper = findElement(By.className("v-button-wrap"));
@@ -41,7 +44,6 @@ public class AlignTopIconInButtonTest extends MultiBrowserTest {
                 + wrapper.getSize().getWidth() - icon.getLocation().getX()
                 - icon.getSize().getWidth();
 
-        Assert.assertTrue("Icon element is not centered inside button.",
-                Math.abs(rightSpace - leftSpace) <= 1);
+        assertThat(Math.abs(rightSpace - leftSpace), is(lessThanOrEqualTo(2)));
     }
 }
