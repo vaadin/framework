@@ -70,7 +70,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
                 buttonCell.isFocused());
 
         // avoid clicking on the button
-        buttonCell.click(150, 5);
+        buttonCell.click(buttonCell.getSize().getWidth() - 10, 5);
         assertTrue("cell should be focused after focusing",
                 buttonCell.isFocused());
 

@@ -3157,7 +3157,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         header.addColumn(datasourcePropertyId);
         footer.addColumn(datasourcePropertyId);
 
-        column.setHeaderCaption(SharedUtil.camelCaseToHumanFriendly(String
+        column.setHeaderCaption(SharedUtil.propertyIdToHumanFriendly(String
                 .valueOf(datasourcePropertyId)));
 
         return column;
