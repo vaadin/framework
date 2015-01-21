@@ -3369,6 +3369,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return align;
         }
 
+        /**
+         *
+         * @param columnIndex
+         * @since 7.3.9
+         */
         protected void saveNaturalColumnWidthIfNotSaved(int columnIndex) {
             if (naturalWidth < 0) {
                 // This is recently revealed column. Try to detect a proper
@@ -4305,6 +4310,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return cid;
         }
 
+        /**
+         *
+         * @param columnIndex
+         * @since 7.3.9
+         */
         protected void saveNaturalColumnWidthIfNotSaved(int columnIndex) {
             if (naturalWidth < 0) {
                 // This is recently revealed column. Try to detect a proper
