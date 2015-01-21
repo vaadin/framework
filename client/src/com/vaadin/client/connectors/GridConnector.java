@@ -490,13 +490,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
-            onSelectionModeChange();
-        }
-        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
-            updateSelectionFromState();
-        }
-
         // Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
@@ -518,6 +511,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
+        // Header and footer
         if (stateChangeEvent.hasPropertyChanged("header")) {
             updateHeaderFromState(getState().header);
         }
@@ -526,19 +520,31 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             updateFooterFromState(getState().footer);
         }
 
+        // Selection
+        if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
+            onSelectionModeChange();
+        }
+        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
+            updateSelectionFromState();
+        }
+
+        // Sorting
         if (stateChangeEvent.hasPropertyChanged("sortColumns")
                 || stateChangeEvent.hasPropertyChanged("sortDirs")) {
             onSortStateChange();
         }
 
+        // Editor
         if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
             getWidget().setEditorEnabled(getState().editorEnabled);
         }
 
+        // Frozen columns
         if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
             getWidget().setFrozenColumnCount(getState().frozenColumnCount);
         }
 
+        // Theme features
         String activeTheme = getConnection().getUIConnector().getActiveTheme();
         if (lastKnownTheme == null) {
             lastKnownTheme = activeTheme;
