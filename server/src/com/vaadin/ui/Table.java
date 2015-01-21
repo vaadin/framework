@@ -3854,8 +3854,14 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
+    /**
+     * Checks whether row headers are visible.
+     *
+     * @return {@code false} if row headers are hidden, {@code true} otherwise
+     * @since 7.3.9
+     */
     protected boolean rowHeadersAreEnabled() {
-        return getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
+        return getRowHeaderMode() != RowHeaderMode.HIDDEN;
     }
 
     private void paintRow(PaintTarget target, final Object[][] cells,
