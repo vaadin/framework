@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.components.notification;
 
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
-
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 /**
  * Test to check notification delay.
@@ -34,20 +35,16 @@ public class NotificationDelayTest extends MultiBrowserTest {
         openTestURL();
 
         Assert.assertTrue("No notification found", hasNotification());
-        Actions actions = new Actions(getDriver());
-        actions.moveByOffset(10, 10).build().perform();
-        long start = System.currentTimeMillis();
-        boolean hidden = false;
-        while (System.currentTimeMillis() <= start + 5000) {
-            Thread.sleep(500);
-            hidden = !hasNotification();
-            if (hidden) {
-                break;
-            }
-        }
 
-        Assert.assertTrue("Notification is still visible after 5 seconds",
-                hidden);
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                new Actions(getDriver()).moveByOffset(10, 10).perform();
+
+                return !hasNotification();
+            }
+        });
     }
 
     private boolean hasNotification() {

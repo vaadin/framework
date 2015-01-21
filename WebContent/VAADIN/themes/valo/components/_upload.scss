@@ -16,7 +16,7 @@
 
   .#{$primary-stylename}-immediate input[type="file"] {
     @include opacity(0);
-    z-index: 2;
+    z-index: -1;
     position: absolute;
     right: 0;
     height: $v-unit-size;

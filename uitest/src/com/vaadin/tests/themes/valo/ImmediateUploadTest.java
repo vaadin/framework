@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -40,34 +41,59 @@ public class ImmediateUploadTest extends MultiBrowserTest {
         return getAllBrowsers();
     }
 
-    @Test
-    public void fileInputShouldNotBeVisibleInImmediate()
-            throws InterruptedException {
+    @Override
+    public void setup() throws Exception {
+        super.setup();
         openTestURL();
+    }
 
-        UploadElement normalUpload = $(UploadElement.class).id("upload");
-        UploadElement immediateUpload = $(UploadElement.class).id(
-                "immediateupload");
+    private WebElement getUploadButton(String id) {
+        UploadElement normalUpload = $(UploadElement.class).id(id);
 
-        WebElement normalUploadInput = normalUpload.findElement(By
-                .cssSelector("input[type='file']"));
-        WebElement immediateUploadInput = immediateUpload.findElement(By
-                .cssSelector("input[type='file']"));
+        return normalUpload.findElement(By.tagName("div"));
+    }
 
-        WebElement normalUploadButton = normalUpload.findElement(By
-                .tagName("div"));
-        WebElement immediateUploadButton = immediateUpload.findElement(By
-                .tagName("div"));
+    private WebElement getUploadFileInput(String id) {
+        UploadElement normalUpload = $(UploadElement.class).id(id);
 
-        assertThat(normalUploadButton.getCssValue("display"),
-                equalToIgnoringCase("block"));
-        assertThat(immediateUploadButton.getCssValue("display"),
-                equalToIgnoringCase("block"));
+        return normalUpload.findElement(By.cssSelector("input[type='file']"));
+    }
 
-        assertThat(normalUploadInput.getCssValue("position"),
-                equalToIgnoringCase("static"));
-        assertThat(immediateUploadInput.getCssValue("position"),
-                equalToIgnoringCase("absolute"));
+    @Test
+    public void normalUploadButtonIsVisible() {
+        WebElement button = getUploadButton("upload");
 
+        assertThat(button.getCssValue("display"), is("block"));
+    }
+
+    @Test
+    public void fileInputIsVisibleForNormalUpload() {
+        WebElement input = getUploadFileInput("upload");
+
+        assertThat(input.getCssValue("position"), is("static"));
+    }
+
+    @Test
+    public void immediateUploadButtonIsVisible() {
+        WebElement button = getUploadButton("immediateupload");
+
+        assertThat(button.getCssValue("display"), is("block"));
+    }
+
+    @Test
+    public void fileInputIsNotVisibleForImmediateUpload() {
+        WebElement input = getUploadFileInput("immediateupload");
+
+        assertThat(input.getCssValue("position"), is("absolute"));
+    }
+
+    @Test
+    public void fileInputIsNotClickableForImmediateUpload() throws IOException {
+        WebElement input = getUploadFileInput("immediateupload");
+
+        // input.click() and then verifying if the upload window is opened
+        // would be better but couldn't figure a way to do that. screenshots
+        // don't show the upload window, not at least in firefox.
+        assertThat(input.getCssValue("z-index"), is("-1"));
     }
 }

@@ -757,7 +757,7 @@ public class JsonCodec implements Serializable {
                         fieldType, connectorTracker);
                 encoded.put(fieldName, encodeResult.getEncodedValue());
 
-                if (!jsonEquals(encodeResult.getEncodedValue(), fieldReference)) {
+                if (valueChanged(encodeResult.getEncodedValue(), fieldReference)) {
                     diff.put(fieldName, encodeResult.getDiffOrValue());
                 }
             }
@@ -769,25 +769,101 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Compares the value with the reference. If they match, returns true.
+     * Compares the value with the reference. If they match, returns false.
      *
      * @param fieldValue
      * @param referenceValue
      * @return
      */
-    private static boolean jsonEquals(JsonValue fieldValue,
+    private static boolean valueChanged(JsonValue fieldValue,
             JsonValue referenceValue) {
         if (fieldValue instanceof JsonNull) {
             fieldValue = null;
         }
 
         if (fieldValue == referenceValue) {
-            return true;
-        } else if (fieldValue == null || referenceValue == null) {
             return false;
+        } else if (fieldValue == null || referenceValue == null) {
+            return true;
         } else {
-            return fieldValue.jsEquals(referenceValue);
+            return !jsonEquals(fieldValue, referenceValue);
         }
+    }
+
+    /**
+     * Compares two json values for deep equality.
+     * 
+     * This is a helper for overcoming the fact that
+     * {@link JsonValue#equals(Object)} only does an identity check and
+     * {@link JsonValue#jsEquals(JsonValue)} is defined to use JavaScript
+     * semantics where arrays and objects are equals only based on identity.
+     * 
+     * @since
+     * @param a
+     *            the first json value to check, may not be null
+     * @param b
+     *            the second json value to check, may not be null
+     * @return <code>true</code> if both json values are the same;
+     *         <code>false</code> otherwise
+     */
+    public static boolean jsonEquals(JsonValue a, JsonValue b) {
+        assert a != null;
+        assert b != null;
+
+        if (a == b) {
+            return true;
+        }
+
+        JsonType type = a.getType();
+        if (type != b.getType()) {
+            return false;
+        }
+
+        switch (type) {
+        case NULL:
+            return true;
+        case BOOLEAN:
+            return a.asBoolean() == b.asBoolean();
+        case NUMBER:
+            return a.asNumber() == b.asNumber();
+        case STRING:
+            return a.asString().equals(b.asString());
+        case OBJECT:
+            return jsonObjectEquals((JsonObject) a, (JsonObject) b);
+        case ARRAY:
+            return jsonArrayEquals((JsonArray) a, (JsonArray) b);
+        default:
+            throw new RuntimeException("Unsupported JsonType: " + type);
+        }
+    }
+
+    private static boolean jsonObjectEquals(JsonObject a, JsonObject b) {
+        String[] keys = a.keys();
+
+        if (keys.length != b.keys().length) {
+            return false;
+        }
+
+        for (String key : keys) {
+            JsonValue value = b.get(key);
+            if (value == null || !jsonEquals(a.get(key), value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean jsonArrayEquals(JsonArray a, JsonArray b) {
+        if (a.length() != b.length()) {
+            return false;
+        }
+        for (int i = 0; i < a.length(); i++) {
+            if (!jsonEquals(a.get(i), b.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static JsonArray encodeArrayContents(Type componentType,
