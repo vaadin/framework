@@ -1,21 +1,17 @@
 package com.vaadin.tests.server.component.textfield;
 
+import java.util.Collections;
+
+import junit.framework.TestCase;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.ui.TextField;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class TextFieldWithPropertyFormatterTest {
+public class TextFieldWithPropertyFormatterTest extends TestCase {
 
     private static final String INPUT_VALUE = "foo";
     private static final String PARSED_VALUE = "BAR";
@@ -28,8 +24,10 @@ public class TextFieldWithPropertyFormatterTest {
     private int listenerCalled;
     private int repainted;
 
-    @Before
-    public void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
         field = new TextField() {
             @Override
             public void markAsDirty() {
@@ -72,7 +70,6 @@ public class TextFieldWithPropertyFormatterTest {
         repainted = 0;
     }
 
-    @Test
     public void testWithServerApi() {
         checkInitialState();
 
@@ -96,13 +93,11 @@ public class TextFieldWithPropertyFormatterTest {
         assertEquals(FORMATTED_VALUE, field.getValue());
     }
 
-    @Test
     public void testWithSimulatedClientSideChange() {
         checkInitialState();
 
         field.changeVariables(null,
-                Collections.singletonMap(TextFieldConstants.VAR_CUR_TEXT,
-                                         (Object) INPUT_VALUE));
+                Collections.singletonMap("text", (Object) INPUT_VALUE));
 
         checkEndState();
 

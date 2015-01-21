@@ -1,15 +1,15 @@
 package com.vaadin.tests.server.components;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.shared.ui.textfield.TextFieldConstants;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.TextField;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.easymock.EasyMock;
 import org.junit.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.TextField;
 
 /**
  * Check that the value change listener for a text field is triggered exactly
@@ -38,7 +38,7 @@ public class TextFieldValueChangeTest extends
     @Override
     protected void setValue(AbstractField<String> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put(TextFieldConstants.VAR_CUR_TEXT, "newValue");
+        variables.put("text", "newValue");
         ((TextField) field).changeVariables(field, variables);
     }
 
