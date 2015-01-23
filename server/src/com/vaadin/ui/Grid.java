@@ -2154,11 +2154,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setSortable(boolean sortable) {
             checkColumnIsAttached();
 
-            if (sortable && !(grid.datasource instanceof Sortable)) {
-                throw new IllegalStateException(
-                        "Can't set column "
-                                + toString()
-                                + " sortable. The Container of Grid does not implement Sortable");
+            if (sortable) {
+                if (!(grid.datasource instanceof Sortable)) {
+                    throw new IllegalStateException(
+                            "Can't set column "
+                                    + toString()
+                                    + " sortable. The Container of Grid does not implement Sortable");
+                } else if (!((Sortable) grid.datasource)
+                        .getSortableContainerPropertyIds().contains(propertyId)) {
+                    throw new IllegalStateException(
+                            "Can't set column "
+                                    + toString()
+                                    + " sortable. Container doesn't support sorting by property "
+                                    + propertyId);
+                }
             }
 
             state.sortable = sortable;

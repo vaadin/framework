@@ -57,6 +57,7 @@ public class GridColumns {
         for (int c = 0; c < 10; c++) {
             ds.addContainerProperty("column" + c, String.class, "");
         }
+        ds.addContainerProperty("noSort", Object.class, null);
         grid = new Grid(ds);
 
         getStateMethod = Grid.class.getDeclaredMethod("getState");
@@ -231,6 +232,14 @@ public class GridColumns {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveColumnThatDoesNotExist() {
         grid.removeColumn("banana phone");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSetNonSortableColumnSortable() {
+        Column noSortColumn = grid.getColumn("noSort");
+        assertFalse("Object property column should not be sortable.",
+                noSortColumn.isSortable());
+        noSortColumn.setSortable(true);
     }
 
     private GridColumnState getColumnState(Object propertyId) {
