@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
@@ -211,6 +212,27 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         header.findElement(By.tagName("input")).click();
         assertFalse("Row 100 was still selected", getGridElement().getRow(100)
                 .isSelected());
+    }
+
+    @Test
+    public void testSelectAllAndSort() {
+        openTestURL();
+
+        setSelectionModelMulti();
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+
+        header.findElement(By.tagName("input")).click();
+
+        getGridElement().getHeaderCell(0, 1).click();
+
+        WebElement selectionBox = getGridElement().getCell(4, 0).findElement(
+                By.tagName("input"));
+        selectionBox.click();
+        selectionBox.click();
+
+        assertFalse(
+                "Exception occured on row reselection.",
+                logContainsText("Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
     }
 
     @Test

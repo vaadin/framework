@@ -385,6 +385,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             addValueChangeListeners(activationPartition[2]);
 
             activeRange = newActiveRange;
+
+            assert valueChangeListeners.size() == newActiveRange.length() : "Value change listeners not set up correctly!";
         }
 
         private void addValueChangeListeners(Range range) {
@@ -404,36 +406,19 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 }
 
                 GridValueChangeListener listener = new GridValueChangeListener(
-                        itemId);
+                        itemId, item);
                 valueChangeListeners.put(itemId, listener);
-
-                for (final Column column : getGrid().getColumns()) {
-                    final Property<?> property = item.getItemProperty(column
-                            .getPropertyId());
-                    if (property instanceof ValueChangeNotifier) {
-                        ((ValueChangeNotifier) property)
-                                .addValueChangeListener(listener);
-                    }
-                }
             }
         }
 
         private void removeValueChangeListeners(Range range) {
             for (int i = range.getStart(); i < range.getEnd(); i++) {
                 final Object itemId = container.getIdByIndex(i);
-                final Item item = container.getItem(itemId);
                 final GridValueChangeListener listener = valueChangeListeners
                         .remove(itemId);
 
                 if (listener != null) {
-                    for (final Column column : getGrid().getColumns()) {
-                        final Property<?> property = item
-                                .getItemProperty(column.getPropertyId());
-                        if (property instanceof ValueChangeNotifier) {
-                            ((ValueChangeNotifier) property)
-                                    .removeValueChangeListener(listener);
-                        }
-                    }
+                    listener.removeListener();
                 }
             }
         }
@@ -451,21 +436,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 return;
             }
 
-            for (int i = activeRange.getStart(); i < activeRange.getEnd(); i++) {
-                final Object itemId = container.getIdByIndex(i);
-                final Item item = container.getItem(itemId);
-                final GridValueChangeListener listener = valueChangeListeners
-                        .get(itemId);
-                assert (listener != null) : "a listener should've been pre-made by addValueChangeListeners";
-
-                for (final Column column : removedColumns) {
-                    final Property<?> property = item.getItemProperty(column
-                            .getPropertyId());
-                    if (property instanceof ValueChangeNotifier) {
-                        ((ValueChangeNotifier) property)
-                                .removeValueChangeListener(listener);
-                    }
-                }
+            for (GridValueChangeListener listener : valueChangeListeners
+                    .values()) {
+                listener.removeColumns(removedColumns);
             }
         }
 
@@ -482,23 +455,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 return;
             }
 
-            for (int i = activeRange.getStart(); i < activeRange.getEnd(); i++) {
-                final Object itemId = container.getIdByIndex(i);
-                final Item item = container.getItem(itemId);
-                final GridValueChangeListener listener = valueChangeListeners
-                        .get(itemId);
-                assert (listener != null) : "a listener should've been pre-made by addValueChangeListeners";
-
-                for (final Column column : addedColumns) {
-                    final Property<?> property = item.getItemProperty(column
-                            .getPropertyId());
-                    if (property instanceof ValueChangeNotifier) {
-                        ((ValueChangeNotifier) property)
-                                .addValueChangeListener(listener);
-                    }
-                }
-
-                updateRowData(i);
+            for (GridValueChangeListener listener : valueChangeListeners
+                    .values()) {
+                listener.addColumns(addedColumns);
             }
         }
 
@@ -592,19 +551,54 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private class GridValueChangeListener implements ValueChangeListener {
         private final Object itemId;
+        private final Item item;
 
-        public GridValueChangeListener(Object itemId) {
+        public GridValueChangeListener(Object itemId, Item item) {
             /*
              * Using an assert instead of an exception throw, just to optimize
              * prematurely
              */
             assert itemId != null : "null itemId not accepted";
             this.itemId = itemId;
+            this.item = item;
+
+            internalAddColumns(getGrid().getColumns());
         }
 
         @Override
         public void valueChange(ValueChangeEvent event) {
-            updateRowData(container.indexOfId(itemId));
+            updateRowData(itemId);
+        }
+
+        public void removeListener() {
+            removeColumns(getGrid().getColumns());
+        }
+
+        public void addColumns(Collection<Column> addedColumns) {
+            internalAddColumns(addedColumns);
+            updateRowData(itemId);
+        }
+
+        private void internalAddColumns(Collection<Column> addedColumns) {
+            for (final Column column : addedColumns) {
+                final Property<?> property = item.getItemProperty(column
+                        .getPropertyId());
+                if (property instanceof ValueChangeNotifier) {
+                    ((ValueChangeNotifier) property)
+                            .addValueChangeListener(this);
+                }
+            }
+        }
+
+        public void removeColumns(Collection<Column> removedColumns) {
+            for (final Column column : removedColumns) {
+                final Property<?> property = item.getItemProperty(column
+                        .getPropertyId());
+                if (property instanceof ValueChangeNotifier) {
+                    ((ValueChangeNotifier) property)
+                            .removeValueChangeListener(this);
+                }
+            }
         }
     }
 
@@ -672,8 +666,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * taking all the corner cases into account.
                  */
 
+                Map<Object, GridValueChangeListener> listeners = activeRowHandler.valueChangeListeners;
+                for (GridValueChangeListener listener : listeners.values()) {
+                    listener.removeListener();
+                }
+                listeners.clear();
                 activeRowHandler.activeRange = Range.withLength(0, 0);
-                activeRowHandler.valueChangeListeners.clear();
+                keyMapper.setActiveRange(Range.withLength(0, 0));
+                keyMapper.indexToItemId.clear();
                 rpc.resetDataAndSize(event.getContainer().size());
             }
         }
@@ -688,6 +688,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private RowReference rowReference;
     private CellReference cellReference;
+
+    private Set<Object> updatedItemIds = new HashSet<Object>();
 
     /**
      * Creates a new data provider using the given container.
@@ -732,8 +734,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-
         if (initial) {
             clientInitialized = true;
 
@@ -750,6 +750,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
             int numberOfRows = Math.min(40, size);
             pushRowData(0, numberOfRows, 0, 0);
         }
+
+        for (Object itemId : updatedItemIds) {
+            internalUpdateRowData(itemId);
+        }
+        updatedItemIds.clear();
+
+        super.beforeClientResponse(initial);
     }
 
     private void pushRowData(int firstRowToPush, int numberOfRows,
@@ -888,19 +895,27 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Informs the client side that data of a row has been modified in the data
      * source.
      * 
-     * @param index
-     *            the index of the row that was updated
+     * @param itemId
+     *            the item Id the row that was updated
      */
-    public void updateRowData(int index) {
-        /*
-         * TODO: ignore duplicate requests for the same index during the same
-         * roundtrip.
-         */
-        Object itemId = container.getIdByIndex(index);
-        JsonValue row = getRowData(getGrid().getColumns(), itemId);
-        JsonArray rowArray = Json.createArray();
-        rowArray.set(0, row);
-        rpc.setRowData(index, rowArray);
+    public void updateRowData(Object itemId) {
+        if (updatedItemIds.isEmpty()) {
+            // At least one new item will be updated. Mark as dirty to actually
+            // update before response to client.
+            markAsDirty();
+        }
+
+        updatedItemIds.add(itemId);
+    }
+
+    private void internalUpdateRowData(Object itemId) {
+        int index = container.indexOfId(itemId);
+        if (index >= 0) {
+            JsonValue row = getRowData(getGrid().getColumns(), itemId);
+            JsonArray rowArray = Json.createArray();
+            rowArray.set(0, row);
+            rpc.setRowData(index, rowArray);
+        }
     }
 
     /**
