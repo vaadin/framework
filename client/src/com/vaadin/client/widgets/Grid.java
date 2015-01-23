@@ -3506,7 +3506,8 @@ public class Grid<T> extends ResizeComposite implements
         // Sink header events and key events
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
-                BrowserEvents.KEYPRESS, BrowserEvents.DBLCLICK));
+                BrowserEvents.KEYPRESS, BrowserEvents.DBLCLICK,
+                BrowserEvents.MOUSEDOWN));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
         addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
@@ -4738,6 +4739,12 @@ public class Grid<T> extends ResizeComposite implements
         if (!eventCell.getColumn().isSortable()) {
             // Only handle sorting events if the column is sortable
             return false;
+        }
+
+        if (BrowserEvents.MOUSEDOWN.equals(event.getType())
+                && event.getShiftKey()) {
+            // Don't select text when shift clicking on a header.
+            event.preventDefault();
         }
 
         if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
