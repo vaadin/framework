@@ -45,5 +45,13 @@ public enum Transport {
     public String getIdentifier() {
         return identifier;
     }
-
+    
+    public static Transport getByIdentifier(String identifier) {
+        for (Transport t : values()) {
+            if (t.getIdentifier().equals(identifier)) {
+                return t;
+            }
+        }
+        return null;
+    }
 }
