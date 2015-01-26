@@ -87,10 +87,6 @@ public class CalendarHtmlInEventsTest extends SingleBrowserTest {
                 By.className("v-calendar-event"));
     }
 
-    private void click(CheckBoxElement htmlAllowed2) {
-        htmlAllowed2.findElement(By.xpath("input")).click();
-    }
-
     private WebElement getMonthDay(int i) {
         return calendar.findElements(By.className("v-calendar-month-day")).get(
                 i);

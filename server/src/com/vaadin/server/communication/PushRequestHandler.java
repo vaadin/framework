@@ -98,7 +98,9 @@ public class PushRequestHandler implements RequestHandler,
                 "true");
         atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
                 String.valueOf(PushConstants.MESSAGE_DELIMITER));
-
+        atmosphere.addInitParameter(
+                ApplicationConfig.DROP_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
+                "false");
         // Disable heartbeat (it does not emit correct events client side)
         // https://github.com/Atmosphere/atmosphere-javascript/issues/141
         atmosphere.addInitParameter(

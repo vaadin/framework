@@ -15,16 +15,20 @@
  */
 package com.vaadin.data.util.filter;
 
+import java.util.Arrays;
+
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
+import com.vaadin.shared.util.SharedUtil;
 
 public class Between implements Filter {
 
     private final Object propertyId;
-    private final Comparable startValue;
-    private final Comparable endValue;
+    private final Comparable<?> startValue;
+    private final Comparable<?> endValue;
 
-    public Between(Object propertyId, Comparable startValue, Comparable endValue) {
+    public Between(Object propertyId, Comparable<?> startValue,
+            Comparable<?> endValue) {
         this.propertyId = propertyId;
         this.startValue = startValue;
         this.endValue = endValue;
@@ -47,9 +51,11 @@ public class Between implements Filter {
             throws UnsupportedOperationException {
         Object value = item.getItemProperty(getPropertyId()).getValue();
         if (value instanceof Comparable) {
-            Comparable cval = (Comparable) value;
-            return cval.compareTo(getStartValue()) >= 0
-                    && cval.compareTo(getEndValue()) <= 0;
+            Comparable comparable = (Comparable) value;
+            return isAfterStartValue(comparable)
+                    && isBeforeEndValue(comparable);
+        } else if (value == null) {
+            return getStartValue() == null && getEndValue() == null;
         }
         return false;
     }
@@ -61,8 +67,8 @@ public class Between implements Filter {
 
     @Override
     public int hashCode() {
-        return getPropertyId().hashCode() + getStartValue().hashCode()
-                + getEndValue().hashCode();
+        return Arrays.hashCode(new Object[] { getPropertyId(), getStartValue(),
+                getEndValue() });
     }
 
     @Override
@@ -78,13 +84,23 @@ public class Between implements Filter {
         final Between o = (Between) obj;
 
         // Checks the properties one by one
-        boolean propertyIdEqual = (null != getPropertyId()) ? getPropertyId()
-                .equals(o.getPropertyId()) : null == o.getPropertyId();
-        boolean startValueEqual = (null != getStartValue()) ? getStartValue()
-                .equals(o.getStartValue()) : null == o.getStartValue();
-        boolean endValueEqual = (null != getEndValue()) ? getEndValue().equals(
-                o.getEndValue()) : null == o.getEndValue();
+        boolean propertyIdEqual = SharedUtil.equals(getPropertyId(),
+                o.getPropertyId());
+        boolean startValueEqual = SharedUtil.equals(getStartValue(),
+                o.getStartValue());
+        boolean endValueEqual = SharedUtil.equals(getEndValue(),
+                o.getEndValue());
         return propertyIdEqual && startValueEqual && endValueEqual;
 
+    }
+
+    private boolean isAfterStartValue(Comparable comparable) {
+        return getStartValue() == null
+                || comparable.compareTo(getStartValue()) >= 0;
+    }
+
+    private boolean isBeforeEndValue(Comparable comparable) {
+        return getEndValue() == null
+                || comparable.compareTo(getEndValue()) <= 0;
     }
 }

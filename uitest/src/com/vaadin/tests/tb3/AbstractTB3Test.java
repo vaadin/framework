@@ -67,6 +67,7 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
@@ -1325,6 +1326,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         StringWriter writer = new StringWriter();
         IOUtils.copy(contents, writer, "UTF8");
         return JsonUtil.parse(writer.toString());
+    }
+
+    protected void click(CheckBoxElement checkbox) {
+        checkbox.findElement(By.xpath("input")).click();
     }
 
 }

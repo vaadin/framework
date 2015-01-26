@@ -20,12 +20,17 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -151,6 +156,27 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
                 deleteFailureFiles(failurePng);
             }
         }
+        if (referenceToKeep != null) {
+            File errorPng = getErrorFileFromReference(referenceToKeep);
+            enableAutoswitch(new File(errorPng.getParentFile(),
+                    errorPng.getName() + ".html"));
+        }
+    }
+
+    private void enableAutoswitch(File htmlFile) throws FileNotFoundException,
+            IOException {
+        if (htmlFile == null || !htmlFile.exists()) {
+            return;
+        }
+
+        String html = FileUtils.readFileToString(htmlFile);
+
+        html = html.replace("body onclick=\"",
+                "body onclick=\"clearInterval(autoSwitch);");
+        html = html.replace("</script>",
+                ";autoSwitch=setInterval(switchImage,500);</script>");
+
+        FileUtils.writeStringToFile(htmlFile, html);
     }
 
     private void deleteFailureFiles(File failurePng) {
