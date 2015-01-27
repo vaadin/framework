@@ -4634,6 +4634,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editorFieldGroup.setFieldFactory(fieldFactory);
     }
 
+    /**
+     * Gets the field factory for the {@link FieldGroup}. The field factory is
+     * only used when {@link FieldGroup} creates a new field.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     * 
+     * @return The field factory in use
+     */
+    public FieldGroupFieldFactory getEditorFieldFactory() {
+        return editorFieldGroup.getFieldFactory();
+    }
+
     @Override
     public void addItemClickListener(ItemClickListener listener) {
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
