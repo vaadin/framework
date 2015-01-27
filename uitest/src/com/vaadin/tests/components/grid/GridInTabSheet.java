@@ -20,6 +20,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellReference;
+import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -36,8 +38,8 @@ public class GridInTabSheet extends AbstractTestUI {
             grid.addRow(i);
         }
 
-        sheet.addTab(grid);
-        sheet.addTab(new Label("Hidden"));
+        sheet.addTab(grid, "Grid");
+        sheet.addTab(new Label("Hidden"), "Label");
 
         addComponent(sheet);
         addComponent(new Button("Add row to Grid", new Button.ClickListener() {
@@ -64,6 +66,28 @@ public class GridInTabSheet extends AbstractTestUI {
                         }
                     }
                 }));
-    }
+        addComponent(new Button("Add CellStyleGenerator",
+                new Button.ClickListener() {
 
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.setCellStyleGenerator(new CellStyleGenerator() {
+                            @Override
+                            public String getStyle(CellReference cellReference) {
+                                int rowIndex = ((Integer) cellReference
+                                        .getItemId()).intValue();
+                                Object propertyId = cellReference
+                                        .getPropertyId();
+                                if (rowIndex % 4 == 1) {
+                                    return null;
+                                } else if (rowIndex % 4 == 3
+                                        && "Column 1".equals(propertyId)) {
+                                    return null;
+                                }
+                                return propertyId.toString().replace(' ', '_');
+                            }
+                        });
+                    }
+                }));
+    }
 }

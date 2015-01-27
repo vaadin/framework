@@ -509,14 +509,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
          *            the number of rows removed at <code>firstIndex</code>
          */
         public void removeRows(int firstIndex, int count) {
-            int lastRemoved = firstIndex + count;
-            if (lastRemoved < activeRange.getStart()) {
-                /* firstIndex < lastIndex < start */
-                activeRange = activeRange.offsetBy(-count);
-            } else if (firstIndex < activeRange.getEnd()) {
-                final Range deprecated = Range.between(
-                        Math.max(activeRange.getStart(), firstIndex),
-                        Math.min(activeRange.getEnd(), lastRemoved + 1));
+            Range removed = Range.withLength(firstIndex, count);
+            if (removed.intersects(activeRange)) {
+                final Range deprecated = removed.restrictTo(activeRange);
                 for (int i = deprecated.getStart(); i < deprecated.getEnd(); ++i) {
                     Object itemId = keyMapper.itemIdAtIndex(i);
                     // Item doesn't exist anymore.
@@ -526,7 +521,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 activeRange = Range.withLength(activeRange.getStart(),
                         activeRange.length() - deprecated.length());
             } else {
-                /* end <= firstIndex, no need to do anything */
+                if (removed.getEnd() < activeRange.getStart()) {
+                    /* firstIndex < lastIndex < start */
+                    activeRange = activeRange.offsetBy(-count);
+                }
+                /* else: end <= firstIndex, no need to do anything */
             }
         }
     }
@@ -670,11 +669,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 for (GridValueChangeListener listener : listeners.values()) {
                     listener.removeListener();
                 }
+
                 listeners.clear();
                 activeRowHandler.activeRange = Range.withLength(0, 0);
                 keyMapper.setActiveRange(Range.withLength(0, 0));
                 keyMapper.indexToItemId.clear();
-                rpc.resetDataAndSize(event.getContainer().size());
+
+                /* Mark as dirty to push changes in beforeClientResponse */
+                bareItemSetTriggeredSizeChange = true;
+                markAsDirty();
             }
         }
     };
@@ -683,13 +686,23 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private KeyMapper<Object> columnKeys;
 
-    /* Has client been initialized */
-    private boolean clientInitialized = false;
+    /** RpcDataProvider should send the current cache again. */
+    private boolean refreshCache = false;
 
     private RowReference rowReference;
     private CellReference cellReference;
 
+    /** Set of updated item ids */
     private Set<Object> updatedItemIds = new HashSet<Object>();
+
+    /**
+     * Queued RPC calls for adding and removing rows. Queue will be handled in
+     * {@link beforeClientResponse}
+     */
+    private List<Runnable> rowChanges = new ArrayList<Runnable>();
+
+    /** Size possibly changed with a bare ItemSetChangeEvent */
+    private boolean bareItemSetTriggeredSizeChange = false;
 
     /**
      * Creates a new data provider using the given container.
@@ -732,11 +745,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * RpcDataProviderExtension makes all actual RPC calls from this function
+     * based on changes in the container.
+     */
     @Override
     public void beforeClientResponse(boolean initial) {
-        if (initial) {
-            clientInitialized = true;
-
+        if (initial || bareItemSetTriggeredSizeChange) {
             /*
              * Push initial set of rows, assuming Grid will initially be
              * rendered scrolled to the top and with a decent amount of rows
@@ -749,12 +766,30 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             int numberOfRows = Math.min(40, size);
             pushRowData(0, numberOfRows, 0, 0);
+        } else {
+            // Only do row changes if not initial response.
+            for (Runnable r : rowChanges) {
+                r.run();
+            }
+
+            // Send current rows again if needed.
+            if (refreshCache) {
+                int firstRow = activeRowHandler.activeRange.getStart();
+                int numberOfRows = activeRowHandler.activeRange.length();
+
+                pushRowData(firstRow, numberOfRows, firstRow, numberOfRows);
+            }
         }
 
         for (Object itemId : updatedItemIds) {
             internalUpdateRowData(itemId);
         }
+
+        // Clear all changes.
+        rowChanges.clear();
+        refreshCache = false;
         updatedItemIds.clear();
+        bareItemSetTriggeredSizeChange = false;
 
         super.beforeClientResponse(initial);
     }
@@ -865,10 +900,23 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param count
      *            the number of rows inserted at <code>index</code>
      */
-    private void insertRowData(int index, int count) {
-        if (clientInitialized) {
-            rpc.insertRowData(index, count);
+    private void insertRowData(final int index, final int count) {
+        if (rowChanges.isEmpty()) {
+            markAsDirty();
         }
+
+        /*
+         * Since all changes should be processed in a consistent order, we don't
+         * send the RPC call immediately. beforeClientResponse will decide
+         * whether to send these or not. Valid situation to not send these is
+         * initial response or bare ItemSetChange event.
+         */
+        rowChanges.add(new Runnable() {
+            @Override
+            public void run() {
+                rpc.insertRowData(index, count);
+            }
+        });
 
         activeRowHandler.insertRows(index, count);
     }
@@ -876,19 +924,27 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Informs the client side that rows have been removed from the data source.
      * 
-     * @param firstIndex
+     * @param index
      *            the index of the first row removed
      * @param count
      *            the number of rows removed
      * @param firstItemId
      *            the item id of the first removed item
      */
-    private void removeRowData(int firstIndex, int count) {
-        if (clientInitialized) {
-            rpc.removeRowData(firstIndex, count);
+    private void removeRowData(final int index, final int count) {
+        if (rowChanges.isEmpty()) {
+            markAsDirty();
         }
 
-        activeRowHandler.removeRows(firstIndex, count);
+        /* See comment in insertRowData */
+        rowChanges.add(new Runnable() {
+            @Override
+            public void run() {
+                rpc.removeRowData(index, count);
+            }
+        });
+
+        activeRowHandler.removeRows(index, count);
     }
 
     /**
@@ -922,14 +978,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Pushes a new version of all the rows in the active cache range.
      */
     public void refreshCache() {
-        if (!clientInitialized) {
-            return;
+        if (!refreshCache) {
+            refreshCache = true;
+            markAsDirty();
         }
-
-        int firstRow = activeRowHandler.activeRange.getStart();
-        int numberOfRows = activeRowHandler.activeRange.length();
-
-        pushRowData(firstRow, numberOfRows, firstRow, numberOfRows);
     }
 
     @Override

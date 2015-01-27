@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -43,8 +44,43 @@ public class GridInTabSheetTest extends MultiBrowserTest {
             assertEquals("" + (100 + i), getGridElement().getCell(i, 1)
                     .getText());
         }
+
+        assertNoNotification();
+    }
+
+    private void assertNoNotification() {
         assertFalse("There was an unexpected error notification",
                 isElementPresent(NotificationElement.class));
+    }
+
+    @Test
+    public void testAddManyRowsWhenGridIsHidden() {
+        setDebug(true);
+        openTestURL();
+
+        TabSheetElement tabsheet = $(TabSheetElement.class).first();
+        tabsheet.openTab("Label");
+        for (int i = 0; i < 50; ++i) {
+            addGridRow();
+        }
+
+        tabsheet.openTab("Grid");
+
+        assertNoNotification();
+    }
+
+    @Test
+    public void testAddCellStyleGeneratorWhenGridIsHidden() {
+        setDebug(true);
+        openTestURL();
+
+        TabSheetElement tabsheet = $(TabSheetElement.class).first();
+        tabsheet.openTab("Label");
+        addCellStyleGenerator();
+
+        tabsheet.openTab("Grid");
+
+        assertNoNotification();
     }
 
     private void removeGridRow() {
@@ -53,6 +89,11 @@ public class GridInTabSheetTest extends MultiBrowserTest {
 
     private void addGridRow() {
         $(ButtonElement.class).caption("Add row to Grid").first().click();
+    }
+
+    private void addCellStyleGenerator() {
+        $(ButtonElement.class).caption("Add CellStyleGenerator").first()
+                .click();
     }
 
     private GridElement getGridElement() {
