@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -465,46 +466,74 @@ public class FieldGroup implements Serializable {
         try {
             firePreCommitEvent();
 
-            List<InvalidValueException> invalidValueExceptions = commitFields();
+            Map<Field<?>, InvalidValueException> invalidValueExceptions = commitFields();
 
             if (invalidValueExceptions.isEmpty()) {
                 firePostCommitEvent();
                 commitTransactions();
             } else {
-                throwInvalidValueException(invalidValueExceptions);
+                throw new FieldGroupInvalidValueException(
+                        invalidValueExceptions);
             }
         } catch (Exception e) {
             rollbackTransactions();
-
-            throw new CommitException("Commit failed", e);
+            throw new CommitException("Commit failed", this, e);
         }
 
     }
 
-    private List<InvalidValueException> commitFields() {
-        List<InvalidValueException> invalidValueExceptions = new ArrayList<InvalidValueException>();
+    /**
+     * Tries to commit all bound fields one by one and gathers any validation
+     * exceptions in a map, which is returned to the caller
+     * 
+     * @return a propertyId to validation exception map which is empty if all
+     *         commits succeeded
+     */
+    private Map<Field<?>, InvalidValueException> commitFields() {
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             try {
                 f.commit();
             } catch (InvalidValueException e) {
-                invalidValueExceptions.add(e);
+                invalidValueExceptions.put(f, e);
             }
         }
 
         return invalidValueExceptions;
     }
 
-    private void throwInvalidValueException(
-            List<InvalidValueException> invalidValueExceptions) {
-        if (invalidValueExceptions.size() == 1) {
-            throw invalidValueExceptions.get(0);
-        } else {
-            InvalidValueException[] causes = invalidValueExceptions
-                    .toArray(new InvalidValueException[invalidValueExceptions
-                            .size()]);
+    /**
+     * Exception which wraps InvalidValueExceptions from all invalid fields in a
+     * FieldGroup
+     * 
+     * @since 7.4
+     */
+    public static class FieldGroupInvalidValueException extends
+            InvalidValueException {
+        private Map<Field<?>, InvalidValueException> invalidValueExceptions;
 
-            throw new InvalidValueException(null, causes);
+        /**
+         * Constructs a new exception with the specified validation exceptions.
+         * 
+         * @param invalidValueExceptions
+         *            a property id to exception map
+         */
+        public FieldGroupInvalidValueException(
+                Map<Field<?>, InvalidValueException> invalidValueExceptions) {
+            super(null, invalidValueExceptions.values().toArray(
+                    new InvalidValueException[invalidValueExceptions.size()]));
+            this.invalidValueExceptions = invalidValueExceptions;
+        }
+
+        /**
+         * Returns a map containing fields which failed validation and the
+         * exceptions the corresponding validators threw.
+         *
+         * @return a map with all the invalid value exceptions
+         */
+        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+            return invalidValueExceptions;
         }
     }
 
@@ -1006,26 +1035,64 @@ public class FieldGroup implements Serializable {
         return fieldName.toLowerCase().replace("_", "");
     }
 
+    /**
+     * Exception thrown by a FieldGroup when the commit operation fails.
+     * 
+     * Provides information about validation errors through
+     * {@link #getInvalidFields()} if the cause of the failure is that all bound
+     * fields did not pass validation
+     * 
+     */
     public static class CommitException extends Exception {
+
+        private FieldGroup fieldGroup;
 
         public CommitException() {
             super();
-            // TODO Auto-generated constructor stub
+        }
+
+        public CommitException(String message, FieldGroup fieldGroup,
+                Throwable cause) {
+            super(message, cause);
+            this.fieldGroup = fieldGroup;
         }
 
         public CommitException(String message, Throwable cause) {
             super(message, cause);
-            // TODO Auto-generated constructor stub
         }
 
         public CommitException(String message) {
             super(message);
-            // TODO Auto-generated constructor stub
         }
 
         public CommitException(Throwable cause) {
             super(cause);
-            // TODO Auto-generated constructor stub
+        }
+
+        /**
+         * Returns a map containing the fields which failed validation and the
+         * exceptions the corresponding validators threw.
+         *
+         * @since 7.4
+         * @return a map with all the invalid value exceptions. Can be empty but
+         *         not null
+         */
+        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+            if (getCause() instanceof FieldGroupInvalidValueException) {
+                return ((FieldGroupInvalidValueException) getCause())
+                        .getInvalidFields();
+            }
+            return new HashMap<Field<?>, InvalidValueException>();
+        }
+
+        /**
+         * Returns the field group where the exception occurred
+         * 
+         * @since 7.4
+         * @return the field group
+         */
+        public FieldGroup getFieldGroup() {
+            return fieldGroup;
         }
 
     }

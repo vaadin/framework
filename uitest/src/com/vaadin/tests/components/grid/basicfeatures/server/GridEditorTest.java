@@ -187,9 +187,10 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         intField.clear();
         intField.sendKeys("banana phone");
         editor.save();
-        assertTrue(
-                "No exception on invalid value.",
-                logContainsText("Exception occured, com.vaadin.data.fieldgroup.FieldGroup$CommitException: Commit failed"));
+        WebElement n = $(NotificationElement.class).first();
+        assertEquals("Column 7: Could not convert value to Integer",
+                n.getText());
+        n.click();
         editor.cancel();
 
         selectMenuPath(EDIT_ITEM_100);
