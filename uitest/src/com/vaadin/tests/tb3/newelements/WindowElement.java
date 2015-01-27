@@ -1,9 +1,10 @@
 package com.vaadin.tests.tb3.newelements;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ServerClass;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ServerClass;
 
 /*
  Suggestions for new elemental api for Window
@@ -15,10 +16,11 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
     private final String maximizeBoxClass = "v-window-maximizebox";
 
     public void restore() {
-        if(isMaximized()) {
+        if (isMaximized()) {
             getRestoreButton().click();
         } else {
-            throw new AssertionError("Window is not maximized, cannot be restored.");
+            throw new AssertionError(
+                    "Window is not maximized, cannot be restored.");
         }
     }
 
@@ -27,27 +29,37 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
     }
 
     private WebElement getRestoreButton() {
-        return this.findElement(By.className("v-window-restorebox"));
+        return findElement(By.className("v-window-restorebox"));
     }
 
     public void maximize() {
-        if(!isMaximized()) {
+        if (!isMaximized()) {
             getMaximizeButton().click();
         } else {
-            throw new AssertionError("Window is already maximized, cannot maximize.");
+            throw new AssertionError(
+                    "Window is already maximized, cannot maximize.");
         }
     }
 
     private WebElement getMaximizeButton() {
-        return this.findElement(By.className(maximizeBoxClass));
+        return findElement(By.className(maximizeBoxClass));
     }
 
     public void move(int xOffset, int yOffset) {
         Actions action = new Actions(getDriver());
-        action.moveToElement(this.findElement(org.openqa.selenium.By.className("v-window-wrap")), 5, 5);
+        action.moveToElement(
+                findElement(org.openqa.selenium.By.className("v-window-wrap")),
+                5, 5);
         action.clickAndHold();
         action.moveByOffset(xOffset, yOffset);
         action.release();
         action.build().perform();
+    }
+
+    /**
+     * @return the caption of the window
+     */
+    public String getCaption() {
+        return findElement(By.className("v-window-header")).getText();
     }
 }
