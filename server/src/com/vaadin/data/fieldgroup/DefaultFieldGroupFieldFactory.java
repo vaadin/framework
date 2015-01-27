@@ -129,10 +129,6 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return (T) field;
     }
 
-    private boolean anyField(Class<?> fieldType) {
-        return fieldType == Field.class || fieldType == AbstractField.class;
-    }
-
     protected AbstractSelect createCompatibleSelect(
             Class<? extends AbstractSelect> fieldType) {
         AbstractSelect select;
@@ -157,7 +153,23 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return select;
     }
 
-    private boolean anySelect(Class<? extends Field> fieldType) {
+    /**
+     * @since 7.4
+     * @param fieldType
+     *            the type of the field
+     * @return true if any AbstractField can be assigned to the field
+     */
+    protected boolean anyField(Class<?> fieldType) {
+        return fieldType == Field.class || fieldType == AbstractField.class;
+    }
+
+    /**
+     * @since 7.4
+     * @param fieldType
+     *            the type of the field
+     * @return true if any AbstractSelect can be assigned to the field
+     */
+    protected boolean anySelect(Class<? extends Field> fieldType) {
         return anyField(fieldType) || fieldType == AbstractSelect.class;
     }
 

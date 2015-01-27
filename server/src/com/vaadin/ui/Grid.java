@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +48,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
+import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -166,6 +169,11 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * been bound.
      */
     private final class CustomFieldGroup extends FieldGroup {
+
+        public CustomFieldGroup() {
+            setFieldFactory(EditorFieldFactory.get());
+        }
+
         @Override
         protected Class<?> getPropertyType(Object propertyId)
                 throws BindException {
@@ -173,6 +181,59 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 return datasource.getType(propertyId);
             } else {
                 return super.getPropertyType(propertyId);
+            }
+        }
+    }
+
+    /**
+     * Field factory used by default in the editor.
+     * 
+     * Aims to fields of suitable type and with suitable size for use in the
+     * editor row.
+     */
+    public static class EditorFieldFactory extends
+            DefaultFieldGroupFieldFactory {
+        private static final EditorFieldFactory INSTANCE = new EditorFieldFactory();
+
+        protected EditorFieldFactory() {
+        }
+
+        /**
+         * Returns the singleton instance
+         * 
+         * @return the singleton instance
+         */
+        public static EditorFieldFactory get() {
+            return INSTANCE;
+        }
+
+        @Override
+        public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
+            T f = super.createField(type, fieldType);
+            if (f != null) {
+                f.setWidth("100%");
+            }
+            return f;
+        }
+
+        @Override
+        protected AbstractSelect createCompatibleSelect(
+                Class<? extends AbstractSelect> fieldType) {
+            if (anySelect(fieldType)) {
+                return super.createCompatibleSelect(ComboBox.class);
+            }
+            return super.createCompatibleSelect(fieldType);
+        }
+
+        @Override
+        protected void populateWithEnumData(AbstractSelect select,
+                Class<? extends Enum> enumClass) {
+            // Use enums directly and the EnumToStringConverter to be consistent
+            // with what is shown in the Grid
+            @SuppressWarnings("unchecked")
+            EnumSet<?> enumSet = EnumSet.allOf(enumClass);
+            for (Object r : enumSet) {
+                select.addItem(r);
             }
         }
     }
