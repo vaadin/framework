@@ -1000,7 +1000,7 @@ public class Grid<T> extends ResizeComposite implements
 
             private void cleanup() {
                 state = State.ACTIVE;
-                enableButtons(true);
+                setButtonsEnabled(true);
                 saveTimeout.cancel();
             }
         };
@@ -1126,7 +1126,7 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             state = State.SAVING;
-            enableButtons(false);
+            setButtonsEnabled(false);
             saveTimeout.schedule(SAVE_TIMEOUT_MS);
             EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
                     saveRequestCallback);
@@ -1372,7 +1372,13 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.getStyle().setLeft(-grid.getScrollLeft(), Unit.PX);
         }
 
-        private void enableButtons(boolean enabled) {
+        protected void setGridEnabled(boolean enabled) {
+            // TODO: This should be informed to handler as well so possible
+            // fields can be disabled.
+            setButtonsEnabled(enabled);
+        }
+
+        private void setButtonsEnabled(boolean enabled) {
             saveButton.setEnabled(enabled);
             cancelButton.setEnabled(enabled);
         }
@@ -3542,7 +3548,15 @@ public class Grid<T> extends ResizeComposite implements
 
         this.enabled = enabled;
         getElement().setTabIndex(enabled ? 0 : -1);
-        getEscalator().setScrollLocked(Direction.VERTICAL, !enabled);
+
+        // Editor save and cancel buttons need to be disabled.
+        boolean editorOpen = editor.getState() != State.INACTIVE;
+        if (editorOpen) {
+            editor.setGridEnabled(enabled);
+        }
+
+        getEscalator().setScrollLocked(Direction.VERTICAL,
+                !enabled || editorOpen);
         getEscalator().setScrollLocked(Direction.HORIZONTAL, !enabled);
     }
 

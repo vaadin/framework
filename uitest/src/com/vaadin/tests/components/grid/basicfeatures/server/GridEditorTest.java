@@ -232,4 +232,28 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertEquals("Grid shouldn't scroll vertically while editing",
                 originalScrollPos, getGridVerticalScrollPos());
     }
+
+    @Test
+    public void testEditorInDisabledGrid() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+
+        selectMenuPath("Component", "State", "Enabled");
+        assertEditorOpen();
+
+        GridEditorElement editor = getGridElement().getEditor();
+        editor.save();
+        assertEditorOpen();
+
+        editor.cancel();
+        assertEditorOpen();
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        scrollGridVerticallyTo(100);
+        assertEquals("Grid shouldn't scroll vertically while editing",
+                originalScrollPos, getGridVerticalScrollPos());
+    }
 }
