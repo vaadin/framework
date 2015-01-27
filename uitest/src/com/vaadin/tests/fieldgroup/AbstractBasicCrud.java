@@ -16,16 +16,20 @@
 package com.vaadin.tests.fieldgroup;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
@@ -34,10 +38,15 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("valo")
 public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
@@ -100,6 +109,7 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
         private TextField birthDate = new TextField("Birth date");
         private TextField age = new TextField("Age");
         private CheckBox alive = new CheckBox("Alive");
+        private Label errorLabel = new Label((String) null, ContentMode.HTML);
 
         @PropertyId("address.streetAddress")
         private TextField address_streetAddress = new TextField(
@@ -120,10 +130,17 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
             address_country.setNullRepresentation("");
             birthDate.setNullRepresentation("");
 
+            age.addValidator(new IntegerRangeValidator(
+                    "Must be between 0 and 100", 0, 100));
+
             setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
             addComponents(firstName, lastName, gender, birthDate, age, alive,
                     address_streetAddress, address_postalCode, address_city,
                     address_country);
+
+            errorLabel.addStyleName(ValoTheme.LABEL_COLORED);
+            setRows(3);
+            addComponent(errorLabel, 0, 2, getColumns() - 1, 2);
 
             HorizontalLayout hl = new HorizontalLayout(save, cancel);
             hl.setSpacing(true);
@@ -131,6 +148,33 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
 
         }
 
+        @Override
+        protected void handleCommitException(CommitException e) {
+            String message = "";
+            // Produce error message in the order in which the fields are in the
+            // layout
+            for (Component c : this) {
+                if (!(c instanceof Field)) {
+                    continue;
+                }
+                Field<?> f = (Field<?>) c;
+                Map<Field<?>, InvalidValueException> exceptions = e
+                        .getInvalidFields();
+                if (exceptions.containsKey(f)) {
+                    message += f.getCaption() + ": "
+                            + exceptions.get(f).getLocalizedMessage()
+                            + "<br/>\n";
+                }
+            }
+
+            errorLabel.setValue(message);
+        }
+
+        @Override
+        protected void discard() {
+            super.discard();
+            errorLabel.setValue(null);
+        }
     }
 
     protected abstract void deselectAll();
@@ -153,6 +197,7 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
                         fieldGroup.commit();
                         log("Saved " + fieldGroup.getItemDataSource());
                     } catch (CommitException e) {
+                        handleCommitException(e);
                         log("Commit failed: " + e.getMessage());
                     }
                 }
@@ -161,9 +206,26 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     log("Discarded " + fieldGroup.getItemDataSource());
-                    deselectAll();
+                    discard();
                 }
             });
+        }
+
+        protected void discard() {
+            deselectAll();
+        }
+
+        protected void handleCommitException(CommitException e) {
+            String message = "";
+            for (Object propertyId : e.getInvalidFields().keySet()) {
+                Field<?> f = e.getFieldGroup().getField(propertyId);
+                message += f.getCaption() + ": "
+                        + e.getInvalidFields().get(propertyId);
+            }
+
+            if (!message.isEmpty()) {
+                Notification.show(message, Type.ERROR_MESSAGE);
+            }
         }
 
         public void edit(BeanItem<ComplexPerson> item) {

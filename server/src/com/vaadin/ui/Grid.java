@@ -48,6 +48,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
@@ -90,6 +91,7 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.renderer.Renderer;
 import com.vaadin.ui.renderer.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -235,6 +237,102 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             for (Object r : enumSet) {
                 select.addItem(r);
             }
+        }
+    }
+
+    /**
+     * Error handler for the editor
+     */
+    public interface EditorErrorHandler extends Serializable {
+
+        /**
+         * Called when an exception occurs while the editor row is being saved
+         * 
+         * @param event
+         *            An event providing more information about the error
+         */
+        void commitError(CommitErrorEvent event);
+    }
+
+    /**
+     * An event which is fired when saving the editor fails
+     */
+    public static class CommitErrorEvent extends Component.Event {
+
+        private CommitException cause;
+
+        public CommitErrorEvent(Grid grid, CommitException cause) {
+            super(grid);
+            this.cause = cause;
+        }
+
+        /**
+         * Retrieves the cause of the failure
+         * 
+         * @return the cause of the failure
+         */
+        public CommitException getCause() {
+            return cause;
+        }
+
+        @Override
+        public Grid getComponent() {
+            return (Grid) super.getComponent();
+        }
+
+        /**
+         * Checks if validation exceptions caused this error
+         * 
+         * @return true if the problem was caused by a validation error
+         */
+        public boolean isValidationFailure() {
+            return cause.getCause() instanceof InvalidValueException;
+        }
+
+    }
+
+    /**
+     * Default error handler for the editor
+     * 
+     */
+    public class DefaultEditorErrorHandler implements EditorErrorHandler {
+
+        @Override
+        public void commitError(CommitErrorEvent event) {
+            Map<Field<?>, InvalidValueException> invalidFields = event
+                    .getCause().getInvalidFields();
+
+            if (!invalidFields.isEmpty()) {
+                // Validation error, show first failure as
+                // "<Column header>: <message>"
+                FieldGroup fieldGroup = event.getCause().getFieldGroup();
+                Object propertyId = getFirstPropertyId(fieldGroup,
+                        invalidFields.keySet());
+                Field<?> field = fieldGroup.getField(propertyId);
+                String caption = getColumn(propertyId).getHeaderCaption();
+                // TODO This should be shown in the editor component once
+                // there is a place for that. Optionally, all errors should be
+                // shown
+                Notification.show(caption + ": "
+                        + invalidFields.get(field).getLocalizedMessage(),
+                        Type.ERROR_MESSAGE);
+
+            } else {
+                com.vaadin.server.ErrorEvent.findErrorHandler(Grid.this).error(
+                        new ConnectorErrorEvent(Grid.this, event.getCause()));
+            }
+        }
+
+        private Object getFirstPropertyId(FieldGroup fieldGroup,
+                Set<Field<?>> keySet) {
+            for (Column c : getColumns()) {
+                Object propertyId = c.getPropertyId();
+                Field<?> f = fieldGroup.getField(propertyId);
+                if (keySet.contains(f)) {
+                    return propertyId;
+                }
+            }
+            return null;
         }
     }
 
@@ -2604,6 +2702,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     private boolean defaultContainer = true;
 
+    private EditorErrorHandler editorErrorHandler = new DefaultEditorErrorHandler();
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionListener.class, "select", SelectionEvent.class);
 
@@ -2843,6 +2943,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 try {
                     saveEditor();
                     success = true;
+                } catch (CommitException e) {
+                    try {
+                        getEditorErrorHandler().commitError(
+                                new CommitErrorEvent(Grid.this, e));
+                    } catch (Exception ee) {
+                        // A badly written error handler can throw an exception,
+                        // which would lock up the Grid
+                        handleError(ee);
+                    }
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -4693,6 +4802,35 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void setEditorFieldFactory(FieldGroupFieldFactory fieldFactory) {
         editorFieldGroup.setFieldFactory(fieldFactory);
+    }
+
+    /**
+     * Sets the error handler for the editor.
+     * 
+     * The error handler is called whenever there is an exception in the editor.
+     * 
+     * @param editorErrorHandler
+     *            The editor error handler to use
+     * @throws IllegalArgumentException
+     *             if the error handler is null
+     */
+    public void setEditorErrorHandler(EditorErrorHandler editorErrorHandler)
+            throws IllegalArgumentException {
+        if (editorErrorHandler == null) {
+            throw new IllegalArgumentException(
+                    "The error handler cannot be null");
+        }
+        this.editorErrorHandler = editorErrorHandler;
+    }
+
+    /**
+     * Gets the error handler used for the editor
+     * 
+     * @see #setErrorHandler(com.vaadin.server.ErrorHandler)
+     * @return the editor error handler, never null
+     */
+    public EditorErrorHandler getEditorErrorHandler() {
+        return editorErrorHandler;
     }
 
     /**
