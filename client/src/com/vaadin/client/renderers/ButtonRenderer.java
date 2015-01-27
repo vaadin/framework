@@ -33,6 +33,7 @@ public class ButtonRenderer extends ClickableRenderer<String, Button> {
     public Button createWidget() {
         Button b = GWT.create(Button.class);
         b.addClickHandler(this);
+        b.setStylePrimaryName("v-nativebutton");
         return b;
     }
 

@@ -54,7 +54,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         openTestURL();
 
         WebElement button = getGridCell(0, 1).findElement(
-                By.className("gwt-Button"));
+                By.className("v-nativebutton"));
 
         button.click();
 
@@ -74,7 +74,8 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         assertTrue("cell should be focused after focusing",
                 buttonCell.isFocused());
 
-        WebElement button = buttonCell.findElement(By.className("gwt-Button"));
+        WebElement button = buttonCell.findElement(By
+                .className("v-nativebutton"));
         assertNotEquals("Button should not be clicked before click",
                 "Clicked!", button.getText());
 
@@ -113,14 +114,14 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         assertTrue(getGridCell(0, 1).isElementPresent(
                 By.className("v-progressbar")));
         assertTrue(getGridCell(0, 2).isElementPresent(
-                By.className("gwt-Button")));
+                By.className("v-nativebutton")));
     }
 
     @Test
     public void testPropertyIdInEvent() {
         openTestURL();
         WebElement button = getGridCell(0, 3).findElement(
-                By.className("gwt-Button"));
+                By.className("v-nativebutton"));
         button.click();
         assertEquals(WidgetRenderers.PROPERTY_ID, button.getText());
     }

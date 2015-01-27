@@ -25,6 +25,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.renderer.ButtonRenderer;
 import com.vaadin.ui.renderer.ClickableRenderer.RendererClickEvent;
 import com.vaadin.ui.renderer.ClickableRenderer.RendererClickListener;
@@ -94,7 +95,7 @@ public class WidgetRenderers extends AbstractTestUI {
 
         addComponent(grid);
 
-        addComponent(new Button("Change column order",
+        addComponent(new NativeButton("Change column order",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {

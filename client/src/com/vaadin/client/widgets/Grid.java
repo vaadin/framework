@@ -1289,7 +1289,8 @@ public class Grid<T> extends ResizeComposite implements
 
             saveButton = new Button();
             saveButton.setText("Save");
-            saveButton.setStyleName(styleName + "-save");
+            saveButton.setStylePrimaryName("v-nativebutton");
+            saveButton.addStyleName(styleName + "-save");
             saveButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1302,7 +1303,8 @@ public class Grid<T> extends ResizeComposite implements
 
             cancelButton = new Button();
             cancelButton.setText("Cancel");
-            cancelButton.setStyleName(styleName + "-cancel");
+            cancelButton.setStylePrimaryName("v-nativebutton");
+            cancelButton.addStyleName(styleName + "-cancel");
             cancelButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
