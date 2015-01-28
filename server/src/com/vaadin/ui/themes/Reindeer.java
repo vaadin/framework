@@ -15,14 +15,6 @@
  */
 package com.vaadin.ui.themes;
 
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
-
 public class Reindeer extends BaseTheme {
 
     public static final String THEME_NAME = "reindeer";
@@ -87,6 +79,18 @@ public class Reindeer extends BaseTheme {
      * Removes borders and background color from the panel
      */
     public static final String PANEL_LIGHT = "light";
+
+    /***************************************************************************
+     * 
+     * ProgressBar Styles
+     * 
+     **************************************************************************/
+
+    /**
+     * Displays the progress bar with a static background, instead of an
+     * animated one.
+     */
+    public static final String PROGRESSBAR_STATIC = "static";
 
     /***************************************************************************
      * 

@@ -343,7 +343,7 @@ public class BrowserInfo {
     public boolean requiresOverflowAutoFix() {
         return (getWebkitVersion() > 0 || getOperaVersion() >= 11
                 || getIEVersion() >= 10 || isFirefox())
-                && Util.getNativeScrollbarSize() > 0;
+                && WidgetUtil.getNativeScrollbarSize() > 0;
     }
 
     /**
@@ -359,7 +359,8 @@ public class BrowserInfo {
      *         otherwise <code>false</code>
      */
     public boolean requiresPositionAbsoluteOverflowAutoFix() {
-        return (getWebkitVersion() > 0) && Util.getNativeScrollbarSize() > 0;
+        return (getWebkitVersion() > 0)
+                && WidgetUtil.getNativeScrollbarSize() > 0;
     }
 
     /**

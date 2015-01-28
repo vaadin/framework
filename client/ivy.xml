@@ -42,6 +42,9 @@
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build->default,sources" />
 
+        <!-- Testing dependencies -->
+        <dependency org="org.easymock" name="easymock" rev="3.0"
+            conf="test,ide-> default" />
 
     </dependencies>
 

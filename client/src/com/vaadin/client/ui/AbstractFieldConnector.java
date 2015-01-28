@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui;
 
-import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.AbstractFieldState;
 
 public abstract class AbstractFieldConnector extends AbstractComponentConnector {
@@ -51,14 +51,12 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
         super.updateWidgetStyleNames();
 
         // add / remove modified style name to Fields
-        setWidgetStyleName(ApplicationConnection.MODIFIED_CLASSNAME,
-                isModified());
+        setWidgetStyleName(StyleConstants.MODIFIED, isModified());
 
         // add / remove error style name to Fields
         setWidgetStyleNameWithPrefix(getWidget().getStylePrimaryName(),
-                ApplicationConnection.REQUIRED_CLASSNAME_EXT, isRequired());
+                StyleConstants.REQUIRED_EXT, isRequired());
 
-        getWidget().setStyleName(ApplicationConnection.REQUIRED_CLASSNAME,
-                isRequired());
+        getWidget().setStyleName(StyleConstants.REQUIRED, isRequired());
     }
 }

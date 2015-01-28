@@ -1,3 +1,11 @@
+$font-size: 16px !default;
+$line-height: normal !default;
+
+// Provide these so that we can use them in base mixins
+// and so that we can use base mixins in Valo
+$v-font-size: $font-size !default;
+$v-line-height: $line-height !default;
+
 @import "common/mixins.scss";
 @import "absolutelayout/absolutelayout.scss";
 @import "accordion/accordion.scss";
@@ -16,8 +24,10 @@
 @import "inlinedatefield/inlinedatefield.scss";
 @import "dragwrapper/dragwrapper.scss";
 @import "embedded/embedded.scss";
+@import "escalator/escalator.scss";
 @import "fonts/fonts.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
 @import "link/link.scss";
@@ -59,16 +69,14 @@
 	overflow: hidden;
 }
 
-$font-size: 16px;
-$line-height: normal;
 @mixin base {
 	// @include base-app;
-	
+
 	// everything included from base theme
 	// other themes should enclose corresponding definitions in theme selectors
-	
+
 	@include base-widget;
-	
+
 	@include base-absolutelayout;
 	@include base-accordion;
 	@include base-browserframe;
@@ -78,10 +86,10 @@ $line-height: normal;
 	@include base-caption;
 	@include base-colorpicker;
 	@include base-calendar;
-	
+
 	// here for now to preserve old semantics
 	@include base-common;
-	
+
 	@include base-layout;
 	@include base-csslayout;
 	@include base-customcomponent;
@@ -90,7 +98,9 @@ $line-height: normal;
 	@include base-inline-datefield;
 	@include base-dragwrapper;
 	@include base-embedded;
+	@include base-escalator;
 	@include base-formlayout;
+	@include base-grid;
 	@include base-gridlayout;
 	@include base-label;
 	@include base-link;
@@ -103,7 +113,7 @@ $line-height: normal;
 	@include base-progressindicator(v-progressbar);
 	/* For legacy ProgressIndicator component */
 	@include base-progressindicator(v-progressindicator);
-	
+
 	@include base-select;
 	@include base-shadow;
 	@include base-slider;

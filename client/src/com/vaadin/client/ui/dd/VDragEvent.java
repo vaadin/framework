@@ -30,7 +30,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 /**
  * DragEvent used by Vaadin client side engine. Supports components, items,
@@ -262,8 +262,8 @@ public class VDragEvent {
         if (alignImageToEvent) {
             int absoluteTop = element.getAbsoluteTop();
             int absoluteLeft = element.getAbsoluteLeft();
-            int clientX = Util.getTouchOrMouseClientX(startEvent);
-            int clientY = Util.getTouchOrMouseClientY(startEvent);
+            int clientX = WidgetUtil.getTouchOrMouseClientX(startEvent);
+            int clientY = WidgetUtil.getTouchOrMouseClientY(startEvent);
             int offsetX = absoluteLeft - clientX;
             int offsetY = absoluteTop - clientY;
             setDragImage(cloneNode, offsetX, offsetY);

@@ -30,6 +30,7 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractFieldConnector;
@@ -387,7 +388,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         if (element != getWidget().getElement()) {
-            Slot slot = Util.findWidget(element, Slot.class);
+            Slot slot = WidgetUtil.findWidget(element, Slot.class);
             if (slot != null && slot.getCaptionElement() != null
                     && slot.getParent() == getWidget()
                     && slot.getCaptionElement().isOrHasChild(element)) {

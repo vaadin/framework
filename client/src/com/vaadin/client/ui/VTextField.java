@@ -34,7 +34,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
 
@@ -422,7 +422,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      * @return true iff the value was updated
      */
     protected boolean updateCursorPosition() {
-        if (Util.isAttachedAndDisplayed(this)) {
+        if (WidgetUtil.isAttachedAndDisplayed(this)) {
             int cursorPos = getCursorPos();
             if (lastCursorPos != cursorPos) {
                 client.updateVariable(paintableId,

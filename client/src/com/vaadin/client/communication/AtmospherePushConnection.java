@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
@@ -36,6 +35,8 @@ import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.shared.util.SharedUtil;
+
+import elemental.json.JsonObject;
 
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
@@ -114,7 +115,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     private JavaScriptObject socket;
 
-    private ArrayList<JSONObject> messageQueue = new ArrayList<JSONObject>();
+    private ArrayList<JsonObject> messageQueue = new ArrayList<JsonObject>();
 
     private State state = State.CONNECT_PENDING;
 
@@ -204,25 +205,25 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     @Override
-    public void push(JSONObject message) {
+    public void push(JsonObject message) {
         switch (state) {
         case CONNECT_PENDING:
             assert isActive();
-            VConsole.log("Queuing push message: " + message);
+            VConsole.log("Queuing push message: " + message.toJson());
             messageQueue.add(message);
             break;
         case CONNECTED:
             assert isActive();
-            VConsole.log("Sending push message: " + message);
+            VConsole.log("Sending push message: " + message.toJson());
 
             if (transport.equals("websocket")) {
                 FragmentedMessage fragmented = new FragmentedMessage(
-                        message.toString());
+                        message.toJson());
                 while (fragmented.hasNextFragment()) {
                     doPush(socket, fragmented.getNextFragment());
                 }
             } else {
-                doPush(socket, message.toString());
+                doPush(socket, message.toJson());
             }
             break;
         case DISCONNECT_PENDING:
@@ -261,7 +262,7 @@ public class AtmospherePushConnection implements PushConnection {
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
-            for (JSONObject message : messageQueue) {
+            for (JsonObject message : messageQueue) {
                 push(message);
             }
             messageQueue.clear();

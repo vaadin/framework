@@ -2,8 +2,13 @@ package com.vaadin.data.util;
 
 import java.util.List;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.junit.Assert;
 
+import com.vaadin.data.Container.Indexed.ItemAddEvent;
+import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 
 public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
@@ -269,6 +274,145 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         // no visible items
         container.removeAllItems();
         counter.assertNone();
+    }
+
+    public void testItemAdd_idSequence() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId;
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(1), itemId);
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(2), itemId);
+
+        itemId = container.addItemAfter(null);
+        assertEquals(Integer.valueOf(3), itemId);
+
+        itemId = container.addItemAt(2);
+        assertEquals(Integer.valueOf(4), itemId);
+    }
+
+    public void testItemAddRemove_idSequence() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId;
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(1), itemId);
+
+        container.removeItem(itemId);
+
+        itemId = container.addItem();
+        assertEquals(
+                "Id sequence should continue from the previous value even if an item is removed",
+                Integer.valueOf(2), itemId);
+    }
+
+    public void testItemAddedEvent() {
+        IndexedContainer container = new IndexedContainer();
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        addListener.containerItemSetChange(EasyMock.isA(ItemAddEvent.class));
+        EasyMock.replay(addListener);
+
+        container.addItem();
+
+        EasyMock.verify(addListener);
+    }
+
+    public void testItemAddedEvent_AddedItem() {
+        IndexedContainer container = new IndexedContainer();
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+
+        Object itemId = container.addItem();
+
+        assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
+    }
+
+    public void testItemAddedEvent_IndexOfAddedItem() {
+        IndexedContainer container = new IndexedContainer();
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        container.addItem();
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+
+        Object itemId = container.addItemAt(1);
+
+        assertEquals(1, capturedEvent.getValue().getFirstIndex());
+    }
+
+    public void testItemRemovedEvent() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId = container.addItem();
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        removeListener.containerItemSetChange(EasyMock
+                .isA(ItemRemoveEvent.class));
+        EasyMock.replay(removeListener);
+
+        container.removeItem(itemId);
+
+        EasyMock.verify(removeListener);
+    }
+
+    public void testItemRemovedEvent_RemovedItem() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId = container.addItem();
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeItem(itemId);
+
+        assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
+    }
+
+    public void testItemRemovedEvent_indexOfRemovedItem() {
+        IndexedContainer container = new IndexedContainer();
+        container.addItem();
+        Object secondItemId = container.addItem();
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeItem(secondItemId);
+
+        assertEquals(1, capturedEvent.getValue().getFirstIndex());
+    }
+
+    public void testItemRemovedEvent_amountOfRemovedItems() {
+        IndexedContainer container = new IndexedContainer();
+        container.addItem();
+        container.addItem();
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeAllItems();
+
+        assertEquals(2, capturedEvent.getValue().getRemovedItemsCount());
+    }
+
+    private Capture<ItemAddEvent> captureAddEvent(
+            ItemSetChangeListener addListener) {
+        Capture<ItemAddEvent> capturedEvent = new Capture<ItemAddEvent>();
+        addListener.containerItemSetChange(EasyMock.capture(capturedEvent));
+        return capturedEvent;
+    }
+
+    private Capture<ItemRemoveEvent> captureRemoveEvent(
+            ItemSetChangeListener removeListener) {
+        Capture<ItemRemoveEvent> capturedEvent = new Capture<ItemRemoveEvent>();
+        removeListener.containerItemSetChange(EasyMock.capture(capturedEvent));
+        return capturedEvent;
+    }
+
+    private ItemSetChangeListener createListenerMockFor(
+            IndexedContainer container) {
+        ItemSetChangeListener listener = EasyMock
+                .createNiceMock(ItemSetChangeListener.class);
+        container.addItemSetChangeListener(listener);
+        return listener;
     }
 
     // Ticket 8028

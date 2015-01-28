@@ -37,9 +37,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
 
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
@@ -352,7 +352,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalHeights() {
-        int captionHeight = Util.getRequiredHeight(captionWrapper);
+        int captionHeight = WidgetUtil.getRequiredHeight(captionWrapper);
         int totalHeight = getOffsetHeight();
 
         String selectHeight = (totalHeight - captionHeight) + "px";
@@ -394,10 +394,10 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalWidths() {
         getElement().getStyle().setPosition(Position.RELATIVE);
-        int bordersAndPaddings = Util.measureHorizontalPaddingAndBorder(
+        int bordersAndPaddings = WidgetUtil.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);
 
-        int buttonWidth = Util.getRequiredWidth(buttons);
+        int buttonWidth = WidgetUtil.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();
 
         int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings) / 2;
@@ -429,8 +429,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setEnabled(enabled);
         add.setEnabled(enabled);
         remove.setEnabled(enabled);
-        add.setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
-        remove.setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+        add.setStyleName(StyleConstants.DISABLED, !enabled);
+        remove.setStyleName(StyleConstants.DISABLED, !enabled);
     }
 
     @Override
@@ -609,14 +609,14 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             if (options.getElement() == subElement) {
                 return SUBPART_OPTION_SELECT;
             } else {
-                int idx = Util.getChildElementIndex(subElement);
+                int idx = WidgetUtil.getChildElementIndex(subElement);
                 return SUBPART_OPTION_SELECT_ITEM + idx;
             }
         } else if (selections.getElement().isOrHasChild(subElement)) {
             if (selections.getElement() == subElement) {
                 return SUBPART_SELECTION_SELECT;
             } else {
-                int idx = Util.getChildElementIndex(subElement);
+                int idx = WidgetUtil.getChildElementIndex(subElement);
                 return SUBPART_SELECTION_SELECT_ITEM + idx;
             }
         } else if (add.getElement().isOrHasChild(subElement)) {

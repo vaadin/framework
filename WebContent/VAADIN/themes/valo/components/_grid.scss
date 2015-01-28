@@ -1,12 +1,98 @@
-@import "escalator";
+@import "table";
+
+$v-grid-row-background-color: valo-table-background-color() !default;
+$v-grid-row-stripe-background-color: scale-color($v-grid-row-background-color, $lightness: if(color-luminance($v-grid-row-background-color) < 10, 4%, -4%)) !default;
+
+$v-grid-border: valo-border($color: $v-grid-row-background-color, $strength: 0.8) !default;
+$v-grid-cell-focused-border: max(2px, first-number($v-border)) solid $v-selection-color !default;
+
+$v-grid-row-height: $v-table-row-height !default;
+$v-grid-row-selected-background-color: $v-selection-color !default;
+
+$v-grid-header-font-size: $v-table-header-font-size !default;
+$v-grid-header-background-color: $v-background-color !default;
+
+$v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
+
+
+@import "../../base/grid/grid";
 
 /**
  *
  *
- * @param {string} $primary-styleName (v-grid) - 
+ * @param {string} $primary-stylename (v-grid) -
  *
  * @group grid
  */
-@mixin valo-grid($primary-styleName : v-grid) {
-  @include valo-escalator($primary-styleName);
+@mixin valo-grid ($primary-stylename: v-grid) {
+
+  @include base-grid($primary-stylename);
+
+  .#{$primary-stylename} {
+    @include user-select(text);
+    background-color: $v-background-color;
+  }
+
+  .#{$primary-stylename}-header .#{$primary-stylename}-cell {
+    @include valo-gradient($v-grid-header-background-color);
+    text-shadow: valo-text-shadow($font-color: valo-font-color($v-grid-header-background-color), $background-color: $v-grid-header-background-color);
+  }
+
+  .#{$primary-stylename}-footer .#{$primary-stylename}-cell {
+    @include valo-gradient($v-grid-footer-background-color);
+    text-shadow: valo-text-shadow($font-color: valo-font-color($v-grid-footer-background-color), $background-color: $v-grid-footer-background-color);
+  }
+
+  .#{$primary-stylename}-header-deco {
+    @include valo-gradient($v-grid-header-background-color);
+  }
+
+  .#{$primary-stylename}-footer-deco,
+  .#{$primary-stylename}-horizontal-scrollbar-deco {
+    @include valo-gradient($v-grid-footer-background-color);
+  }
+
+  // Selected
+  .#{$primary-stylename}-row-selected {
+    > .#{$primary-stylename}-cell {
+      @include valo-gradient($v-selection-color);
+      color: valo-font-color($v-selection-color);
+      text-shadow: valo-text-shadow($font-color: valo-font-color($v-selection-color), $background-color: $v-selection-color);
+      border-color: adjust-color($v-selection-color, $lightness: -8%, $saturation: -8%);
+    }
+
+    > .#{$primary-stylename}-cell-focused:before {
+      border-color: adjust-color($v-selection-color, $lightness: 20%);
+    }
+  }
+
+  .#{$primary-stylename}-editor-save,
+  .#{$primary-stylename}-editor-cancel {
+    @include valo-button-static-style;
+    @include valo-button-style($unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
+  }
+
+  // Customize scrollbars
+  .#{$primary-stylename}-scroller {
+    &::-webkit-scrollbar {
+      border: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      border: 4px solid transparent;
+      background: if(is-dark-color($v-grid-header-background-color), rgba(255,255,255,.3), rgba(0,0,0,.3));
+      -webkit-background-clip: content-box;
+      background-clip: content-box;
+    }
+  }
+
+  .#{$primary-stylename}-scroller-vertical::-webkit-scrollbar-thumb {
+    min-height: 30px;
+  }
+
+  .#{$primary-stylename}-scroller-horizontal::-webkit-scrollbar-thumb {
+    min-width: 30px;
+  }
+
 }

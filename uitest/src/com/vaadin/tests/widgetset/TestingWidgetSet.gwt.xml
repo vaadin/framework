@@ -4,6 +4,8 @@
     <!-- Inherit the DefaultWidgetSet -->
     <inherits name="com.vaadin.DefaultWidgetSet" />
 
+    <inherits name="com.google.gwt.user.theme.standard.Standard" />
+
     <replace-with class="com.vaadin.tests.widgetset.client.CustomUIConnector">
         <when-type-is class="com.vaadin.client.ui.ui.UIConnector" />
     </replace-with>
@@ -17,5 +19,9 @@
         class="com.vaadin.tests.widgetset.client.MockApplicationConnection">
         <when-type-is class="com.vaadin.client.ApplicationConnection" />
     </replace-with>
+    
+    <generate-with class="com.vaadin.tests.widgetset.rebind.TestWidgetRegistryGenerator">
+        <when-type-is class="com.vaadin.tests.widgetset.client.TestWidgetConnector.TestWidgetRegistry" />
+    </generate-with>
 
 </module>

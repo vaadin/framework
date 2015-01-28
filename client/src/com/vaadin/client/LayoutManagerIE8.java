@@ -94,7 +94,7 @@ public class LayoutManagerIE8 extends LayoutManager {
          * the containing element. To force a reflow by modifying the magical
          * zoom property.
          */
-        Util.forceIE8Redraw(RootPanel.get().getElement());
+        WidgetUtil.forceIE8Redraw(RootPanel.get().getElement());
         Profiler.leave("LayoutManagerIE8.performBrowserLayoutHacks");
     }
 }

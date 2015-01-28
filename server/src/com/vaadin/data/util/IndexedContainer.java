@@ -226,6 +226,7 @@ public class IndexedContainer extends
     @Override
     public boolean removeAllItems() {
         int origSize = size();
+        Object firstItem = getFirstVisibleItem();
 
         internalRemoveAllItems();
 
@@ -235,16 +236,17 @@ public class IndexedContainer extends
         // filtered out items were removed or not
         if (origSize != 0) {
             // Sends a change event
-            fireItemSetChange();
+            fireItemsRemoved(0, firstItem, origSize);
         }
 
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container#addItem()
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItem() {
@@ -362,10 +364,11 @@ public class IndexedContainer extends
                 new IndexedContainerItem(newItemId), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItemAfter(Object previousItemId) {
@@ -391,10 +394,11 @@ public class IndexedContainer extends
                 newItemId), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int)
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItemAt(int index) {
@@ -620,8 +624,7 @@ public class IndexedContainer extends
     @Override
     protected void fireItemAdded(int position, Object itemId, Item item) {
         if (position >= 0) {
-            fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
-                    position));
+            super.fireItemAdded(position, itemId, item);
         }
     }
 
@@ -1211,4 +1214,5 @@ public class IndexedContainer extends
     public Collection<Filter> getContainerFilters() {
         return super.getContainerFilters();
     }
+
 }

@@ -67,8 +67,8 @@ import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
@@ -134,7 +134,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // options and are not collapsed (#7506)
                 content = "&nbsp;";
             } else {
-                content = Util.escapeHTML(caption);
+                content = WidgetUtil.escapeHTML(caption);
             }
             sb.append("<span>" + content + "</span>");
             return sb.toString();
@@ -599,8 +599,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             final int naturalMenuWidth = menuFirstChild.getOffsetWidth();
 
             if (popupOuterPadding == -1) {
-                popupOuterPadding = Util.measureHorizontalPaddingAndBorder(
-                        getElement(), 2);
+                popupOuterPadding = WidgetUtil
+                        .measureHorizontalPaddingAndBorder(getElement(), 2);
             }
 
             if (naturalMenuWidth < desiredWidth) {
@@ -657,7 +657,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 menu.setHeight(menuHeight + "px");
 
                 final int naturalMenuWidthPlusScrollBar = naturalMenuWidth
-                        + Util.getNativeScrollbarSize();
+                        + WidgetUtil.getNativeScrollbarSize();
                 if (offsetWidth < naturalMenuWidthPlusScrollBar) {
                     menu.setWidth(naturalMenuWidthPlusScrollBar + "px");
                 }
@@ -818,7 +818,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
                 Roles.getListitemRole().set(mi.getElement());
 
-                Util.sinkOnloadForImages(mi.getElement());
+                WidgetUtil.sinkOnloadForImages(mi.getElement());
 
                 this.addItem(mi);
                 if (s == currentSuggestion) {
@@ -1069,7 +1069,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  * the end and the focus to the start. This makes Firefox work
                  * the same way as other browsers (#13477)
                  */
-                Util.setSelectionRange(getElement(), pos, length, "backward");
+                WidgetUtil.setSelectionRange(getElement(), pos, length,
+                        "backward");
 
             } else {
                 /*
@@ -1609,7 +1610,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     private void forceReflow() {
-        Util.setStyleTemporarily(tb.getElement(), "zoom", "1");
+        WidgetUtil.setStyleTemporarily(tb.getElement(), "zoom", "1");
     }
 
     /**
@@ -1621,7 +1622,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         int availableHeight = 0;
         availableHeight = getOffsetHeight();
 
-        int iconHeight = Util.getRequiredHeight(selectedItemIcon);
+        int iconHeight = WidgetUtil.getRequiredHeight(selectedItemIcon);
         int marginTop = (availableHeight - iconHeight) / 2;
         selectedItemIcon.getElement().getStyle()
                 .setMarginTop(marginTop, Unit.PX);
@@ -1936,7 +1937,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      */
     public void updateSuggestionPopupMinWidth() {
         // used only to calculate minimum width
-        String captions = Util.escapeHTML(inputPrompt);
+        String captions = WidgetUtil.escapeHTML(inputPrompt);
 
         for (FilterSelectSuggestion suggestion : currentSuggestions) {
             // Collect captions so we can calculate minimum width for
@@ -1944,7 +1945,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (captions.length() > 0) {
                 captions += "|";
             }
-            captions += Util.escapeHTML(suggestion.getReplacementString());
+            captions += WidgetUtil
+                    .escapeHTML(suggestion.getReplacementString());
         }
 
         // Calculate minimum textarea width
@@ -2051,7 +2053,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              */
             preventNextBlurEventInIE = false;
 
-            Element focusedElement = Util.getIEFocusedElement();
+            Element focusedElement = WidgetUtil.getFocusedElement();
             if (getElement().isOrHasChild(focusedElement)
                     || suggestionPopup.getElement()
                             .isOrHasChild(focusedElement)) {
@@ -2129,7 +2131,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * when the popup is used to view longer items than the text box is
              * wide.
              */
-            int w = Util.getRequiredWidth(this);
+            int w = WidgetUtil.getRequiredWidth(this);
 
             if ((!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
@@ -2150,9 +2152,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
                 // Use util.getRequiredWidth instead of getOffsetWidth here
 
-                int iconWidth = selectedItemIcon == null ? 0 : Util
+                int iconWidth = selectedItemIcon == null ? 0 : WidgetUtil
                         .getRequiredWidth(selectedItemIcon);
-                int buttonWidth = popupOpener == null ? 0 : Util
+                int buttonWidth = popupOpener == null ? 0 : WidgetUtil
                         .getRequiredWidth(popupOpener);
 
                 /*

@@ -32,7 +32,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DragImageModifier;
 
 /**
@@ -310,7 +310,7 @@ public class VTextArea extends VTextField implements DragImageModifier {
             // and reattach the whole TextArea.
             // Webkit fails to properly reflow the text when enabling wrapping,
             // same workaround
-            Util.detachAttach(getElement());
+            WidgetUtil.detachAttach(getElement());
         }
         this.wordwrap = wordwrap;
     }

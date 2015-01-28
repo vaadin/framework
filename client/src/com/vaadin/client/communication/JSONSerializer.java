@@ -16,16 +16,16 @@
 
 package com.vaadin.client.communication;
 
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.metadata.Type;
+import elemental.json.JsonValue;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given
  * type to JSON and how to deserialize the JSON back into an object.
  * <p>
  * The {@link #serialize(Object, ApplicationConnection)} and
- * {@link #deserialize(Type, JSONValue, ApplicationConnection)} methods must be
+ * {@link #deserialize(Type, JsonValue, ApplicationConnection)} methods must be
  * symmetric so they can be chained and produce the original result (or an equal
  * result).
  * <p>
@@ -53,12 +53,12 @@ public interface JSONSerializer<T> {
      * 
      * @return A deserialized object
      */
-    T deserialize(Type type, JSONValue jsonValue,
+    T deserialize(Type type, JsonValue jsonValue,
             ApplicationConnection connection);
 
     /**
      * Serialize the given object into JSON. Must be compatible with
-     * {@link #deserialize(Type, JSONValue, ApplicationConnection)} and also
+     * {@link #deserialize(Type, JsonValue, ApplicationConnection)} and also
      * with the server side JsonCodec.decodeCustomType method.
      * 
      * @param value
@@ -67,6 +67,6 @@ public interface JSONSerializer<T> {
      *            the application connection providing the context
      * @return A JSON serialized version of the object
      */
-    JSONValue serialize(T value, ApplicationConnection connection);
+    JsonValue serialize(T value, ApplicationConnection connection);
 
 }

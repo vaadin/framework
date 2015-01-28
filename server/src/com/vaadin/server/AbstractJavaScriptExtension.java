@@ -106,8 +106,8 @@ import com.vaadin.ui.JavaScriptFunction;
  * <li>Java Dates are represented by JavaScript numbers containing the timestamp
  * </li>
  * <li>List, Set and all arrays in Java are represented by JavaScript arrays.</li>
- * <li>Map<String, ?> in Java is represented by JavaScript object with fields
- * corresponding to the map keys.</li>
+ * <li>Map&lt;String, ?&gt; in Java is represented by JavaScript object with
+ * fields corresponding to the map keys.</li>
  * <li>Any other Java Map is represented by a JavaScript array containing two
  * arrays, the first contains the keys and the second contains the values in the
  * same order.</li>
