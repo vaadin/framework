@@ -1056,6 +1056,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         sendSelectedRows(immediate);
     }
 
+    private void updateFirstVisibleAndSendSelectedRows() {
+        updateFirstVisibleRow();
+        sendSelectedRows(immediate);
+    }
+
     /**
      * Sends the selection to the server if it has been changed since the last
      * update/visit.
@@ -7238,6 +7243,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return s;
     }
 
+    // Updates first visible row for the case we cannot wait
+    // for onScroll
+    private void updateFirstVisibleRow() {
+        scrollTop = scrollBodyPanel.getScrollPosition();
+        firstRowInViewPort = calcFirstRowInViewPort();
+        int maxFirstRow = totalRows - pageLength;
+        if (firstRowInViewPort > maxFirstRow && maxFirstRow >= 0) {
+            firstRowInViewPort = maxFirstRow;
+        }
+        lastRequestedFirstvisible = firstRowInViewPort;
+        client.updateVariable(paintableId, "firstvisible", firstRowInViewPort,
+                false);
+    }
+
     /**
      * This method has logic which rows needs to be requested from server when
      * user scrolls
@@ -7706,7 +7725,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // focus and select the last visible row
                         setRowFocus(lastVisibleRowInViewPort);
                         selectFocusedRow(ctrl, shift);
-                        sendSelectedRows();
+                        updateFirstVisibleAndSendSelectedRows();
                     } else {
                         int indexOfToBeFocused = focusedRow.getIndex()
                                 + getFullyVisibleRowCount();
@@ -7723,7 +7742,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             setRowFocus(toBeFocusedRow);
                             selectFocusedRow(ctrl, shift);
                             // TODO needs scrollintoview ?
-                            sendSelectedRows();
+                            updateFirstVisibleAndSendSelectedRows();
                         } else {
                             // scroll down by pixels and return, to wait for
                             // new rows, then select the last item in the
@@ -7759,7 +7778,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // focus and select the first visible row
                         setRowFocus(firstVisibleRowInViewPort);
                         selectFocusedRow(ctrl, shift);
-                        sendSelectedRows();
+                        updateFirstVisibleAndSendSelectedRows();
                     } else {
                         int indexOfToBeFocused = focusedRow.getIndex()
                                 - getFullyVisibleRowCount();
@@ -7774,7 +7793,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             setRowFocus(toBeFocusedRow);
                             selectFocusedRow(ctrl, shift);
                             // TODO needs scrollintoview ?
-                            sendSelectedRows();
+                            updateFirstVisibleAndSendSelectedRows();
                         } else {
                             // unless waiting for the next rowset already
                             // scroll down by pixels and return, to wait for
@@ -7806,7 +7825,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     if (rowByRowIndex.getIndex() == 0) {
                         setRowFocus(rowByRowIndex);
                         selectFocusedRow(ctrl, shift);
-                        sendSelectedRows();
+                        updateFirstVisibleAndSendSelectedRows();
                     } else {
                         // first row of table will come in next row fetch
                         if (ctrl) {
@@ -7832,7 +7851,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     if (focusedRow != rowByRowIndex) {
                         setRowFocus(rowByRowIndex);
                         selectFocusedRow(ctrl, shift);
-                        sendSelectedRows();
+                        updateFirstVisibleAndSendSelectedRows();
                     }
                 } else {
                     if (ctrl) {

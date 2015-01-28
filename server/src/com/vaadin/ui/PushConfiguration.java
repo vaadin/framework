@@ -208,7 +208,7 @@ class PushConfigurationImpl implements PushConfiguration {
     public Transport getTransport() {
         try {
             return Transport
-                    .valueOf(getParameter(PushConfigurationState.TRANSPORT_PARAM));
+                    .getByIdentifier(getParameter(PushConfigurationState.TRANSPORT_PARAM));
         } catch (IllegalArgumentException e) {
             return null;
         }

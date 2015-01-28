@@ -881,11 +881,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     public void setCaption(String c, String iconURL, boolean asHtml) {
-        String html = c;
-        if (!asHtml) {
-            c = WidgetUtil.escapeHTML(c);
+        String html;
+        if (asHtml) {
+            html = c == null ? "" : c;
+        } else {
+            html = WidgetUtil.escapeHTML(c);
         }
-
         // Provide information to assistive device users that a sub window was
         // opened
         String prefix = "<span class='"

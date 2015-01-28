@@ -378,7 +378,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         window.setAssistivePrefix(state.assistivePrefix);
         window.setAssistivePostfix(state.assistivePostfix);
-        window.setCaption(state.caption, iconURL);
+        window.setCaption(state.caption, iconURL, getState().captionAsHtml);
 
         window.setWaiAriaRole(getState().role);
         window.setAssistiveDescription(state.contentDescription);
