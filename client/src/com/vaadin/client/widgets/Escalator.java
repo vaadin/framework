@@ -16,11 +16,13 @@
 package com.vaadin.client.widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1161,47 +1163,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
     }
 
-    private class ColumnAutoWidthAssignScheduler {
-        private boolean isScheduled = false;
-        private final ScheduledCommand widthCommand = new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (!isScheduled) {
-                    return;
-                }
-
-                isScheduled = false;
-
-                ColumnConfigurationImpl cc = columnConfiguration;
-                for (int col = 0; col < cc.getColumnCount(); col++) {
-                    ColumnConfigurationImpl.Column column = cc.columns.get(col);
-                    if (!column.isWidthFinalized()) {
-                        cc.setColumnWidth(col, -1);
-                        column.widthIsFinalized();
-                    }
-                }
-            }
-        };
-
-        /**
-         * Calculates the widths of all uncalculated cells once the javascript
-         * execution is done.
-         * <p>
-         * This method makes sure that any duplicate requests in the same cycle
-         * are ignored.
-         */
-        public void reschedule() {
-            if (!isScheduled) {
-                isScheduled = true;
-                Scheduler.get().scheduleFinally(widthCommand);
-            }
-        }
-
-        public void cancel() {
-            isScheduled = false;
-        }
-    }
-
     protected abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -1422,14 +1383,18 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 if (rows == numberOfRows) {
                     /*
                      * We are inserting the first rows in this container. We
-                     * potentially need to autocalculate the widths for the
-                     * cells for the first time.
-                     * 
-                     * To make sure that can take the entire dataset into
-                     * account, we'll do this deferredly, so that each container
-                     * section gets populated before we start calculating.
+                     * potentially need to set the widths for the cells for the
+                     * first time.
                      */
-                    columnAutoWidthAssignScheduler.reschedule();
+                    Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
+                    Double width = Double
+                            .valueOf(ColumnConfigurationImpl.Column.DEFAULT_COLUMN_WIDTH_PX);
+                    for (int i = 0; i < getColumnConfiguration()
+                            .getColumnCount(); i++) {
+                        Integer col = Integer.valueOf(i);
+                        colWidths.put(col, width);
+                    }
+                    getColumnConfiguration().setColumnWidths(colWidths);
                 }
             }
         }
@@ -3808,18 +3773,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
         public class Column {
-            private static final int DEFAULT_COLUMN_WIDTH_PX = 100;
+            public static final double DEFAULT_COLUMN_WIDTH_PX = 100;
 
             private double definedWidth = -1;
             private double calculatedWidth = DEFAULT_COLUMN_WIDTH_PX;
             private boolean measuringRequested = false;
-
-            /**
-             * If a column has been created (either via insertRow or
-             * insertColumn), it will be given an arbitrary width, and only then
-             * a width will be defined.
-             */
-            private boolean widthHasBeenFinalized = false;
 
             public void setWidth(double px) {
                 definedWidth = px;
@@ -3883,15 +3841,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             private void calculateWidth() {
                 calculatedWidth = getMaxCellWidth(columns.indexOf(this));
-            }
-
-            public void widthIsFinalized() {
-                columnAutoWidthAssignScheduler.cancel();
-                widthHasBeenFinalized = true;
-            }
-
-            public boolean isWidthFinalized() {
-                return widthHasBeenFinalized;
             }
         }
 
@@ -4082,13 +4031,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             body.paintInsertColumns(index, numberOfColumns, frozen);
             footer.paintInsertColumns(index, numberOfColumns, frozen);
 
-            // fix autowidth
+            // fix initial width
             if (header.getRowCount() > 0 || body.getRowCount() > 0
                     || footer.getRowCount() > 0) {
-                for (int col = index; col < index + numberOfColumns; col++) {
-                    getColumnConfiguration().setColumnWidth(col, -1);
-                    columnConfiguration.columns.get(col).widthIsFinalized();
+
+                Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
+                Double width = Double.valueOf(Column.DEFAULT_COLUMN_WIDTH_PX);
+                for (int i = index; i < index + numberOfColumns; i++) {
+                    Integer col = Integer.valueOf(i);
+                    colWidths.put(col, width);
                 }
+                getColumnConfiguration().setColumnWidths(colWidths);
             }
 
             // Adjust scrollbar
@@ -4170,16 +4123,30 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         @Override
         public void setColumnWidth(int index, double px)
                 throws IllegalArgumentException {
-            checkValidColumnIndex(index);
+            setColumnWidths(Collections.singletonMap(Integer.valueOf(index),
+                    Double.valueOf(px)));
+        }
 
-            columns.get(index).setWidth(px);
-            columns.get(index).widthIsFinalized();
+        @Override
+        public void setColumnWidths(Map<Integer, Double> indexWidthMap)
+                throws IllegalArgumentException {
+
+            if (indexWidthMap == null) {
+                throw new IllegalArgumentException("indexWidthMap was null");
+            }
+
+            if (indexWidthMap.isEmpty()) {
+                return;
+            }
+
+            for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
+                int index = entry.getKey().intValue();
+                double width = entry.getValue().doubleValue();
+                checkValidColumnIndex(index);
+                columns.get(index).setWidth(width);
+            }
+
             widthsArray = null;
-
-            /*
-             * TODO [[optimize]]: only modify the elements that are actually
-             * modified.
-             */
             header.reapplyColumnWidths();
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
@@ -4372,8 +4339,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             layoutIsScheduled = false;
         }
     };
-
-    private final ColumnAutoWidthAssignScheduler columnAutoWidthAssignScheduler = new ColumnAutoWidthAssignScheduler();
 
     /**
      * Creates a new Escalator widget instance.
@@ -5144,9 +5109,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
     @Override
     public boolean isWorkPending() {
-        return body.domSorter.waiting
-                || columnAutoWidthAssignScheduler.isScheduled
-                || verticalScrollbar.isWorkPending()
+        return body.domSorter.waiting || verticalScrollbar.isWorkPending()
                 || horizontalScrollbar.isWorkPending();
     }
 

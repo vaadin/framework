@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -2217,21 +2218,67 @@ public class Grid<T> extends ResizeComposite implements
             rescheduleCount = 0;
 
             assert !dataIsBeingFetched : "Trying to calculate column widths even though data is still being fetched.";
-            /*
-             * At this point we assume that no data is being fetched anymore.
-             * Everything's rendered in the DOM. Now we just make sure
-             * everything fits as it should.
-             */
 
-            /*
-             * Quick optimization: if the sum of fixed widths and minimum widths
-             * is greater than the grid can display, we already know that things
-             * will be squeezed and no expansion will happen.
-             */
-            if (gridWasTooNarrowAndEverythingWasFixedAlready()) {
-                return;
+            if (columnsAreGuaranteedToBeWiderThanGrid()) {
+                applyColumnWidths();
+            } else {
+                applyColumnWidthsWithExpansion();
             }
+        }
 
+        private boolean columnsAreGuaranteedToBeWiderThanGrid() {
+            double freeSpace = escalator.getInnerWidth();
+            for (Column<?, ?> column : getColumns()) {
+                if (column.getWidth() >= 0) {
+                    freeSpace -= column.getWidth();
+                } else if (column.getMinimumWidth() >= 0) {
+                    freeSpace -= column.getMinimumWidth();
+                }
+            }
+            return freeSpace < 0;
+        }
+
+        @SuppressWarnings("boxing")
+        private void applyColumnWidths() {
+
+            /* Step 1: Apply all column widths as they are. */
+
+            Map<Integer, Double> selfWidths = new LinkedHashMap<Integer, Double>();
+            List<Column<?, T>> columns = getColumns();
+            for (int index = 0; index < columns.size(); index++) {
+                selfWidths.put(index, columns.get(index).getWidth());
+            }
+            Grid.this.escalator.getColumnConfiguration().setColumnWidths(
+                    selfWidths);
+
+            /*
+             * Step 2: Make sure that each column ends up obeying their min/max
+             * width constraints if defined as autowidth. If constraints are
+             * violated, fix it.
+             */
+
+            Map<Integer, Double> constrainedWidths = new LinkedHashMap<Integer, Double>();
+            for (int index = 0; index < columns.size(); index++) {
+                Column<?, T> column = columns.get(index);
+
+                boolean hasAutoWidth = column.getWidth() < 0;
+                if (!hasAutoWidth) {
+                    continue;
+                }
+
+                // TODO: bug: these don't honor the CSS max/min. :(
+                double actualWidth = column.getWidthActual();
+                if (actualWidth < getMinWidth(column)) {
+                    constrainedWidths.put(index, column.getMinimumWidth());
+                } else if (actualWidth > getMaxWidth(column)) {
+                    constrainedWidths.put(index, column.getMaximumWidth());
+                }
+            }
+            Grid.this.escalator.getColumnConfiguration().setColumnWidths(
+                    constrainedWidths);
+        }
+
+        private void applyColumnWidthsWithExpansion() {
             boolean someColumnExpands = false;
             int totalRatios = 0;
             double reservedPixels = 0;
@@ -2414,32 +2461,6 @@ public class Grid<T> extends ResizeComposite implements
                 }
 
             } while (minWidthsCausedReflows);
-        }
-
-        private boolean gridWasTooNarrowAndEverythingWasFixedAlready() {
-            double freeSpace = escalator.getInnerWidth();
-            for (Column<?, ?> column : getColumns()) {
-                if (column.getWidth() >= 0) {
-                    freeSpace -= column.getWidth();
-                } else if (column.getMinimumWidth() >= 0) {
-                    freeSpace -= column.getMinimumWidth();
-                }
-            }
-
-            if (freeSpace < 0) {
-                for (Column<?, ?> column : getColumns()) {
-                    column.doSetWidth(column.getWidth());
-
-                    boolean wasFixedWidth = column.getWidth() <= 0;
-                    boolean newWidthIsSmallerThanMinWidth = column
-                            .getWidthActual() < getMinWidth(column);
-                    if (wasFixedWidth && newWidthIsSmallerThanMinWidth) {
-                        column.doSetWidth(column.getMinimumWidth());
-                    }
-                }
-            }
-
-            return freeSpace < 0;
         }
 
         private int getExpandRatio(Column<?, ?> column,

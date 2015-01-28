@@ -16,7 +16,7 @@
 
 package com.vaadin.client.widget.escalator;
 
-import com.vaadin.client.widgets.Escalator;
+import java.util.Map;
 
 /**
  * A representation of the columns in an instance of {@link Escalator}.
@@ -139,6 +139,23 @@ public interface ColumnConfiguration {
      *             if <code>index</code> is not a valid column index
      */
     public double getColumnWidth(int index) throws IllegalArgumentException;
+
+    /**
+     * Sets widths for a set of columns.
+     * 
+     * @param indexWidthMap
+     *            a map from column index to its respective width to be set. If
+     *            the given width for a column index is negative, the column is
+     *            resized-to-fit.
+     * @throws IllegalArgumentException
+     *             if {@code indexWidthMap} is {@code null}
+     * @throws IllegalArgumentException
+     *             if any column index in {@code indexWidthMap} is invalid
+     * @throws NullPointerException
+     *             If any value in the map is <code>null</code>
+     */
+    public void setColumnWidths(Map<Integer, Double> indexWidthMap)
+            throws IllegalArgumentException;
 
     /**
      * Returns the actual width of a column.
