@@ -46,4 +46,12 @@ public enum Transport {
         return identifier;
     }
 
+    public static Transport getByIdentifier(String identifier) {
+        for (Transport t : values()) {
+            if (t.getIdentifier().equals(identifier)) {
+                return t;
+            }
+        }
+        return null;
+    }
 }
