@@ -47,6 +47,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -4479,7 +4480,28 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
-        recalculateElementSizes();
+
+        // recalculateElementSizes();
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                /*
+                 * Not a faintest idea why we have to defer this call, but
+                 * unless it is deferred, the size of the escalator will be 0x0
+                 * after it is first detached and then reattached to the DOM.
+                 * This only applies to a bare Escalator; inside a Grid
+                 * everything works fine either way.
+                 * 
+                 * The three autodetectRowHeightLater calls above seem obvious
+                 * suspects at first. However, they don't seem to have anything
+                 * to do with the issue, as they are no-ops in the
+                 * detach-reattach case.
+                 */
+                recalculateElementSizes();
+            }
+        });
+
         /*
          * Note: There's no need to explicitly insert rows into the body.
          * 
@@ -4505,6 +4527,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
         }
+
+        verticalScrollbar.onLoad();
+        horizontalScrollbar.onLoad();
 
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());

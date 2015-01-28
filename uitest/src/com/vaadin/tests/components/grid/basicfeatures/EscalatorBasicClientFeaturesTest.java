@@ -52,6 +52,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected static final String GENERAL = "General";
     protected static final String DETACH_ESCALATOR = "Detach Escalator";
+    protected static final String ATTACH_ESCALATOR = "Attach Escalator";
     protected static final String POPULATE_COLUMN_ROW = "Populate Escalator (columns, then rows)";
     protected static final String POPULATE_ROW_COLUMN = "Populate Escalator (rows, then columns)";
     protected static final String CLEAR_COLUMN_ROW = "Clear (columns, then rows)";
@@ -234,10 +235,10 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected void scrollVerticallyTo(int px) {
-        executeScript("arguments[0].scrollTop = " + px, getVeticalScrollbar());
+        executeScript("arguments[0].scrollTop = " + px, getVerticalScrollbar());
     }
 
-    private TestBenchElement getVeticalScrollbar() {
+    protected TestBenchElement getVerticalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
     }
@@ -247,7 +248,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
                 getHorizontalScrollbar());
     }
 
-    private TestBenchElement getHorizontalScrollbar() {
+    protected TestBenchElement getHorizontalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-horizontal"));
     }
