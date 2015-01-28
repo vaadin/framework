@@ -16,6 +16,7 @@
 package com.vaadin.shared.util;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Misc internal utility methods used by both the server and the client package.
@@ -168,7 +169,8 @@ public class SharedUtil implements Serializable {
             return string.toUpperCase();
         }
 
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
+        return string.substring(0, 1).toUpperCase(Locale.ENGLISH)
+                + string.substring(1);
     }
 
     /**

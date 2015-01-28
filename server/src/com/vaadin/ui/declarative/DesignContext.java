@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.jsoup.nodes.Attributes;
@@ -29,6 +28,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 
@@ -509,7 +509,7 @@ public class DesignContext implements Serializable {
         // Otherwise, get the full class name using the prefix to package
         // mapping. Example: "v-vertical-layout" ->
         // "com.vaadin.ui.VerticalLayout"
-        String[] parts = tagName.split("-");
+        String[] parts = tagName.split("-", 2);
         if (parts.length < 2) {
             throw new DesignException("The tagname '" + tagName
                     + "' is invalid: missing prefix.");
@@ -519,24 +519,16 @@ public class DesignContext implements Serializable {
         if (packageName == null) {
             throw new DesignException("Unknown tag: " + tagName);
         }
-        int firstCharacterIndex = prefixName.length() + 1; // +1 is for '-'
-        tagName = tagName.substring(firstCharacterIndex,
-                firstCharacterIndex + 1).toUpperCase(Locale.ENGLISH)
-                + tagName.substring(firstCharacterIndex + 1);
-        int i;
-        while ((i = tagName.indexOf("-")) != -1) {
-            int length = tagName.length();
-            if (i != length - 1) {
-                tagName = tagName.substring(0, i)
-                        + tagName.substring(i + 1, i + 2).toUpperCase(
-                                Locale.ENGLISH) + tagName.substring(i + 2);
-
-            } else {
-                // Ends with "-"
-                System.out.println("A tag name should not end with '-'.");
-            }
+        String[] classNameParts = parts[1].split("-");
+        String className = "";
+        for (String classNamePart : classNameParts) {
+            // Split will ignore trailing and multiple dashes but that should be
+            // ok
+            // <v-button--> will be resolved to <v-button>
+            // <v--button> will be resolved to <v-button>
+            className += SharedUtil.capitalize(classNamePart);
         }
-        return packageName + "." + tagName;
+        return packageName + "." + className;
     }
 
     @SuppressWarnings("unchecked")
