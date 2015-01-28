@@ -335,7 +335,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private boolean isLocked = false;
 
-    /** @deprecarted access via {@link #getHandlerManager()} instead. */
+    /** @deprecated access via {@link #getHandlerManager()} instead. */
     @Deprecated
     private HandlerManager handlerManager;
 
@@ -512,6 +512,15 @@ public abstract class ScrollbarBundle implements DeferredWorker {
              */
             internalSetScrollPos(toInt32(scrollPos));
         }
+    }
+
+    /**
+     * Should be called whenever this bundle is attached to the DOM (typically,
+     * from the onLoad of the containing widget). Used to ensure the DOM scroll
+     * position is maintained when detaching and reattaching the bundle.
+     */
+    public void onLoad() {
+        internalSetScrollPos(toInt32(scrollPos));
     }
 
     /**
