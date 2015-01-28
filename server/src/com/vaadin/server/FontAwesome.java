@@ -43,6 +43,7 @@ public enum FontAwesome implements FontIcon {
     AMBULANCE(0XF0F9), //
     ANCHOR(0XF13D), //
     ANDROID(0XF17B), //
+	ANGELLIST(0XF209), //
     ANGLE_DOUBLE_DOWN(0XF103), //
     ANGLE_DOUBLE_LEFT(0XF100), //
     ANGLE_DOUBLE_RIGHT(0XF101), //
@@ -53,6 +54,7 @@ public enum FontAwesome implements FontIcon {
     ANGLE_UP(0XF106), //
     APPLE(0XF179), //
     ARCHIVE(0XF187), //
+	AREA_CHART(0XF1FE), //
     ARROW_CIRCLE_DOWN(0XF0AB), //
     ARROW_CIRCLE_LEFT(0XF0A8), //
     ARROW_CIRCLE_O_DOWN(0XF01A), //
@@ -70,6 +72,7 @@ public enum FontAwesome implements FontIcon {
     ARROWS_H(0XF07E), //
     ARROWS_V(0XF07D), //
     ASTERISK(0XF069), //
+	AT(0XF1FA), //
     AUTOMOBILE(0XF1B9), //
     BACKWARD(0XF04A), //
     BAN(0XF05E), //
@@ -82,6 +85,11 @@ public enum FontAwesome implements FontIcon {
     BEHANCE_SQUARE(0XF1B5), //
     BELL(0XF0F3), //
     BELL_O(0XF0A2), //
+	BELL_SLASH(0XF1F6), //
+	BELL_SLASH_O(0XF1F7), //
+	BICYCLE(0XF206), //
+	BINOCULARS(0XF1E5), //
+	BIRTHDAY_CAKE(0XF1FD), //
     BITBUCKET(0XF171), //
     BITBUCKET_SQUARE(0XF172), //
     BITCOIN(0XF15A), //
@@ -98,7 +106,9 @@ public enum FontAwesome implements FontIcon {
     BUILDING_O(0XF0F7), //
     BULLHORN(0XF0A1), //
     BULLSEYE(0XF140), //
+	BUS(0XF207), //
     CAB(0XF1BA), //
+	CALCULATOR(0XF1EC), //
     CALENDAR(0XF073), //
     CALENDAR_O(0XF133), //
     CAMERA(0XF030), //
@@ -112,6 +122,13 @@ public enum FontAwesome implements FontIcon {
     CARET_SQUARE_O_RIGHT(0XF152), //
     CARET_SQUARE_O_UP(0XF151), //
     CARET_UP(0XF0D8), //
+	CC(0XF20A), //
+	CC_AMEX(0XF1F3), //
+	CC_DISCOVER(0XF1F2), //
+	CC_MASTERCARD(0XF1F1), //
+	CC_PAYPAL(0XF1F4), //
+	CC_STRIPE(0XF1F5), //
+	CC_VISA(0XF1F0), //
     CERTIFICATE(0XF0A3), //
     CHAIN(0XF0C1), //
     CHAIN_BROKEN(0XF127), //
@@ -153,6 +170,7 @@ public enum FontAwesome implements FontIcon {
     COMPASS(0XF14E), //
     COMPRESS(0XF066), //
     COPY(0XF0C5), //
+	COPYRIGHT(0XF1F9), //
     CREDIT_CARD(0XF09D), //
     CROP(0XF125), //
     CROSSHAIRS(0XF05B), //
@@ -194,6 +212,7 @@ public enum FontAwesome implements FontIcon {
     EXTERNAL_LINK_SQUARE(0XF14C), //
     EYE(0XF06E), //
     EYE_SLASH(0XF070), //
+	EYEDROPPER(0XF1FB), //
     FACEBOOK(0XF09A), //
     FACEBOOK_SQUARE(0XF082), //
     FAST_BACKWARD(0XF049), //
@@ -239,6 +258,7 @@ public enum FontAwesome implements FontIcon {
     FORWARD(0XF04E), //
     FOURSQUARE(0XF180), //
     FROWN_O(0XF119), //
+	FUTBOL_O(0XF1E3), //
     GAMEPAD(0XF11B), //
     GAVEL(0XF0E3), //
     GBP(0XF154), //
@@ -257,6 +277,7 @@ public enum FontAwesome implements FontIcon {
     GOOGLE(0XF1A0), //
     GOOGLE_PLUS(0XF0D5), //
     GOOGLE_PLUS_SQUARE(0XF0D4), //
+	GOOGLE_WALLET(0XF1EE), //
     GRADUATION_CAP(0XF19D), //
     GROUP(0XF0C0), //
     H_SQUARE(0XF0FD), //
@@ -274,6 +295,7 @@ public enum FontAwesome implements FontIcon {
     HOME(0XF015), //
     HOSPITAL_O(0XF0F8), //
     HTML5(0XF13B), //
+	ILS(0XF20B), //
     IMAGE(0XF03E), //
     INBOX(0XF01C), //
     INDENT(0XF03C), //
@@ -282,6 +304,7 @@ public enum FontAwesome implements FontIcon {
     INR(0XF156), //
     INSTAGRAM(0XF16D), //
     INSTITUTION(0XF19C), //
+	IOXHOST(0XF208), //
     ITALIC(0XF033), //
     JOOMLA(0XF1AA), //
     JPY(0XF157), //
@@ -291,6 +314,8 @@ public enum FontAwesome implements FontIcon {
     KRW(0XF159), //
     LANGUAGE(0XF1AB), //
     LAPTOP(0XF109), //
+	LASTFM(0XF202), //
+	LASTFM_SQAURE(0XF203), //
     LEAF(0XF06C), //
     LEGAL(0XF0E3), //
     LEMON_O(0XF094), //
@@ -300,6 +325,7 @@ public enum FontAwesome implements FontIcon {
     LIFE_RING(0XF1CD), //
     LIFE_SAVER(0XF1CD), //
     LIGHTBULB_O(0XF0EB), //
+	LINE_CHART(0XF201), //
     LINK(0XF0C1), //
     LINKEDIN(0XF0E1), //
     LINKEDIN_SQUARE(0XF08C), //
@@ -322,6 +348,7 @@ public enum FontAwesome implements FontIcon {
     MALE(0XF183), //
     MAP_MARKER(0XF041), //
     MAXCDN(0XF136), //
+	MEANPATH(0XF20C), //
     MEDKIT(0XF0FA), //
     MEH_O(0XF11A), //
     MICROPHONE(0XF130), //
@@ -337,9 +364,11 @@ public enum FontAwesome implements FontIcon {
     MORTAR_BOARD(0XF19D), //
     MUSIC(0XF001), //
     NAVICON(0XF0C9), //
+	NEWSPAPER_O(0XF1EA), //
     OPENID(0XF19B), //
     OUTDENT(0XF03B), //
     PAGELINES(0XF18C), //
+	PAINT_BRUSH(0XF1FC), //
     PAPER_PLANE(0XF1D8), //
     PAPER_PLANE_O(0XF1D9), //
     PAPERCLIP(0XF0C6), //
@@ -347,6 +376,7 @@ public enum FontAwesome implements FontIcon {
     PASTE(0XF0EA), //
     PAUSE(0XF04C), //
     PAW(0XF1B0), //
+	PAYPAL(0XF1ED), //
     PENCIL(0XF040), //
     PENCIL_SQUARE(0XF14B), //
     PENCIL_SQUARE_O(0XF044), //
@@ -354,6 +384,7 @@ public enum FontAwesome implements FontIcon {
     PHONE_SQUARE(0XF098), //
     PHOTO(0XF03E), //
     PICTURE_O(0XF03E), //
+	PIE_CHART(0XF200), //
     PIED_PIPER(0XF1A7), //
     PIED_PIPER_ALT(0XF1A8), //
     PIED_PIPER_SQUARE(0XF1A7), //
@@ -363,6 +394,7 @@ public enum FontAwesome implements FontIcon {
     PLAY(0XF04B), //
     PLAY_CIRCLE(0XF144), //
     PLAY_CIRCLE_O(0XF01D), //
+	PLUG(0XF1E6), //
     PLUS(0XF067), //
     PLUS_CIRCLE(0XF055), //
     PLUS_SQUARE(0XF0FE), //
@@ -412,6 +444,8 @@ public enum FontAwesome implements FontIcon {
     SHARE_ALT_SQUARE(0XF1E1), //
     SHARE_SQUARE(0XF14D), //
     SHARE_SQUARE_O(0XF045), //
+	SHEKEL(0XF20B), //
+	SHEQEL(0XF20B), //
     SHIELD(0XF132), //
     SHOPPING_CART(0XF07A), //
     SIGN_IN(0XF090), //
@@ -421,7 +455,9 @@ public enum FontAwesome implements FontIcon {
     SKYPE(0XF17E), //
     SLACK(0XF198), //
     SLIDERS(0XF1DE), //
+	SLIDESHARE(0XF1E7), //
     SMILE_O(0XF118), //
+	SOCCER_BALL_O(0XF1E3), //
     SORT(0XF0DC), //
     SORT_ALPHA_ASC(0XF15D), //
     SORT_ALPHA_DESC(0XF15E), //
@@ -488,17 +524,22 @@ public enum FontAwesome implements FontIcon {
     TINT(0XF043), //
     TOGGLE_DOWN(0XF150), //
     TOGGLE_LEFT(0XF191), //
+	TOGGLE_OFF(0XF204), //
+	TOGGLE_ON(0XF205), //
     TOGGLE_RIGHT(0XF152), //
     TOGGLE_UP(0XF151), //
+	TRASH(0XF1F8), //
     TRASH_O(0XF014), //
     TREE(0XF1BB), //
     TRELLO(0XF181), //
     TROPHY(0XF091), //
     TRUCK(0XF0D1), //
     TRY(0XF195), //
+	TTY(0XF1E4), //
     TUMBLR(0XF173), //
     TUMBLR_SQUARE(0XF174), //
     TURKISH_LIRA(0XF195), //
+	TWITCH(0XF1E8), //
     TWITTER(0XF099), //
     TWITTER_SQUARE(0XF081), //
     UMBRELLA(0XF0E9), //
@@ -526,6 +567,7 @@ public enum FontAwesome implements FontIcon {
     WEIBO(0XF18A), //
     WEIXIN(0XF1D7), //
     WHEELCHAIR(0XF193), //
+	WIFI(0XF1EB), //
     WINDOWS(0XF17A), //
     WON(0XF159), //
     WORDPRESS(0XF19A), //
@@ -533,6 +575,7 @@ public enum FontAwesome implements FontIcon {
     XING(0XF168), //
     XING_SQUARE(0XF169), //
     YAHOO(0XF19E), //
+	YELP(0XF1E9), //
     YEN(0XF157), //
     YOUTUBE(0XF167), //
     YOUTUBE_PLAY(0XF16A), //
