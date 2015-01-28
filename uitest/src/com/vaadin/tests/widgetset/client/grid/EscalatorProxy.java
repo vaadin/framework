@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
+import java.util.Map;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -86,6 +88,12 @@ public class EscalatorProxy extends Escalator {
         public void refreshColumns(int index, int numberOfColumns)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             columnConfiguration.refreshColumns(index, numberOfColumns);
+        }
+
+        @Override
+        public void setColumnWidths(Map<Integer, Double> indexWidthMap)
+                throws IllegalArgumentException {
+            columnConfiguration.setColumnWidths(indexWidthMap);
         }
     }
 
