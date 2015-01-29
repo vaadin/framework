@@ -18,7 +18,7 @@ package com.vaadin.client.widget.escalator;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
-import com.vaadin.client.widgets.Escalator;
+import com.google.gwt.dom.client.TableSectionElement;
 
 /**
  * A representation of the rows in each of the sections (header, body and
@@ -192,5 +192,5 @@ public interface RowContainer {
      * 
      * @return RowContainer root element
      */
-    public Element getElement();
+    public TableSectionElement getElement();
 }

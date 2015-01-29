@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
@@ -1241,6 +1242,46 @@ public class WidgetUtil {
      */
     public static boolean pixelValuesEqual(final double num1, final double num2) {
         return Math.abs(num1 - num2) <= PIXEL_EPSILON;
+    }
+
+    public static native TextRectangle getBoundingClientRect(Element e)
+    /*-{
+        return e.getBoundingClientRect();
+    }-*/;
+
+    public static final class TextRectangle extends JavaScriptObject {
+        protected TextRectangle() {
+        }
+
+        public native double getBottom()
+        /*-{
+            return this.bottom;
+        }-*/;
+
+        public native double getHeight()
+        /*-{
+            return this.height;
+        }-*/;
+
+        public native double getLeft()
+        /*-{
+            return this.left;
+        }-*/;
+
+        public native double getRight()
+        /*-{
+            return this.right;
+        }-*/;
+
+        public native double getTop()
+        /*-{
+            return this.top;
+        }-*/;
+
+        public native double getWidth()
+        /*-{
+            return this.width;
+        }-*/;
     }
 
     /**
