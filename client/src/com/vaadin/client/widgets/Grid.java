@@ -63,7 +63,6 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.ComplexRenderer;
-import com.vaadin.client.renderers.ObjectRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.SubPartAware;
@@ -2586,18 +2585,13 @@ public class Grid<T> extends ResizeComposite implements
     public static abstract class Column<C, T> {
 
         /**
-         * The default renderer for grid columns.
-         * <p>
-         * The first time this renderer is called, a warning is displayed,
-         * informing the developer to use a manually defined renderer for their
-         * column.
+         * Default renderer for GridColumns. Renders everything into text
+         * through {@link Object#toString()}.
          */
-        private final class DefaultObjectRenderer extends ObjectRenderer {
+        private final class DefaultTextRenderer implements Renderer<Object> {
             boolean warned = false;
-            private final String DEFAULT_RENDERER_WARNING = "This column uses "
-                    + "a dummy default ObjectRenderer. A more suitable "
-                    + "renderer should be set using the setRenderer() "
-                    + "method.";
+            private final String DEFAULT_RENDERER_WARNING = "This column uses a dummy default TextRenderer. "
+                    + "A more suitable renderer should be set using the setRenderer() method.";
 
             @Override
             public void render(RendererCellReference cell, Object data) {
@@ -2608,7 +2602,14 @@ public class Grid<T> extends ResizeComposite implements
                     warned = true;
                 }
 
-                super.render(cell, data);
+                final String text;
+                if (data == null) {
+                    text = "";
+                } else {
+                    text = data.toString();
+                }
+
+                cell.getElement().setInnerText(text);
             }
         }
 
@@ -2640,7 +2641,7 @@ public class Grid<T> extends ResizeComposite implements
          * Constructs a new column with a simple TextRenderer.
          */
         public Column() {
-            setRenderer(new DefaultObjectRenderer());
+            setRenderer(new DefaultTextRenderer());
         }
 
         /**
