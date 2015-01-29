@@ -67,6 +67,7 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.AbstractElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -1330,6 +1331,18 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     protected void click(CheckBoxElement checkbox) {
         checkbox.findElement(By.xpath("input")).click();
+    }
+
+    @Override
+    public boolean isElementPresent(Class<? extends AbstractElement> clazz) {
+        // This is a bug in TB4 as isElementPresent(..) should just return true
+        // or false but can also throw exceptions. The problem is possibly if
+        // this is run when the Vaadin app is not initialized yet
+        try {
+            return super.isElementPresent(clazz);
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
 }
