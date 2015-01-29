@@ -5,11 +5,13 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
-public class ValidationOfRequiredEmptyFields extends TestBase {
+@SuppressWarnings("deprecation")
+public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
 
     private TextField tf;
     private CheckBox requiredInput;
@@ -23,10 +25,10 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
     private CheckBox stringLengthValidatorInput;
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         requiredInput = new CheckBox("Field required");
         requiredInput.setImmediate(true);
-        requiredInput.addListener(new ValueChangeListener() {
+        requiredInput.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 tf.setRequired(requiredInput.getValue());
@@ -35,16 +37,16 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
 
         requiredErrorInput = new TextField("Required error message");
         requiredErrorInput.setImmediate(true);
-        requiredErrorInput.addListener(new ValueChangeListener() {
+        requiredErrorInput.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 tf.setRequiredError(requiredErrorInput.getValue());
             }
         });
 
-        integerValidatorInput = new CheckBox("Integer.parseInt validator");
+        integerValidatorInput = new CheckBox("Integer validator");
         integerValidatorInput.setImmediate(true);
-        integerValidatorInput.addListener(new ValueChangeListener() {
+        integerValidatorInput.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
@@ -55,20 +57,20 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
                 }
             }
         });
-        stringLengthValidatorInput = new CheckBox(
-                "stringLength.parseInt validator");
+        stringLengthValidatorInput = new CheckBox("String length validator");
         stringLengthValidatorInput.setImmediate(true);
-        stringLengthValidatorInput.addListener(new ValueChangeListener() {
+        stringLengthValidatorInput
+                .addValueChangeListener(new ValueChangeListener() {
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (stringLengthValidatorInput.getValue()) {
-                    tf.addValidator(stringLengthValidator);
-                } else {
-                    tf.removeValidator(stringLengthValidator);
-                }
-            }
-        });
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        if (stringLengthValidatorInput.getValue()) {
+                            tf.addValidator(stringLengthValidator);
+                        } else {
+                            tf.removeValidator(stringLengthValidator);
+                        }
+                    }
+                });
 
         tf = new TextField();
         tf.setImmediate(true);
@@ -86,8 +88,8 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
-        return null;
+    protected String getTestDescription() {
+        return "Tests that the lower textfield's tooltip displays validation error messages correctly.";
     }
 
     @Override
