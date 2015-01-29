@@ -41,7 +41,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
@@ -190,7 +190,7 @@ public class DateCellDayEvent extends FocusableHTML implements
         if (dateCell.weekgrid.getCalendar().isEventCaptionAsHtml()) {
             htmlOrText = calendarEvent.getCaption();
         } else {
-            htmlOrText = Util.escapeHTML(calendarEvent.getCaption());
+            htmlOrText = WidgetUtil.escapeHTML(calendarEvent.getCaption());
         }
 
         if (bigMode) {

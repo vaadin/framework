@@ -236,7 +236,7 @@ public class MeasuredSize {
         Profiler.leave("Measure borders");
 
         Profiler.enter("Measure height");
-        int requiredHeight = Util.getRequiredHeight(element);
+        int requiredHeight = WidgetUtil.getRequiredHeight(element);
         int marginHeight = sumHeights(margins);
         int oldHeight = height;
         int oldWidth = width;
@@ -247,7 +247,7 @@ public class MeasuredSize {
         Profiler.leave("Measure height");
 
         Profiler.enter("Measure width");
-        int requiredWidth = Util.getRequiredWidth(element);
+        int requiredWidth = WidgetUtil.getRequiredWidth(element);
         int marginWidth = sumWidths(margins);
         if (setOuterWidth(requiredWidth + marginWidth)) {
             debugSizeChange(element, "Width (outer)", oldWidth, width);

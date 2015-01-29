@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusableScrollPanel;
 import com.vaadin.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.client.ui.VTreeTable;
@@ -129,7 +129,7 @@ public class TreeTableConnector extends TableConnector {
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, VTreeTableRow.class);
+            Object node = WidgetUtil.findWidget(element, VTreeTableRow.class);
 
             if (node != null) {
                 VTreeTableRow row = (VTreeTableRow) node;

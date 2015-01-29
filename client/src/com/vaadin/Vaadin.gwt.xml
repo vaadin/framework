@@ -10,8 +10,6 @@
 
     <inherits name="com.google.gwt.http.HTTP" />
 
-    <inherits name="com.google.gwt.json.JSON" />
-
     <inherits name="com.google.gwt.logging.Logging" />
     <set-property name="gwt.logging.enabled" value="TRUE" />
 
@@ -25,17 +23,6 @@
     <replace-with class="com.vaadin.client.VSchedulerImpl">
         <when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
     </replace-with>
-
-    <generate-with
-        class="com.vaadin.server.widgetsetutils.AcceptCriteriaFactoryGenerator">
-        <when-type-is class="com.vaadin.client.ui.dd.VAcceptCriterionFactory" />
-    </generate-with>
-
-    <generate-with
-        class="com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory">
-        <when-type-assignable
-            class="com.vaadin.client.metadata.ConnectorBundleLoader" />
-    </generate-with>
 
     <replace-with
         class="com.vaadin.client.communication.AtmospherePushConnection">
@@ -92,4 +79,9 @@
         <when-type-is class="com.vaadin.client.event.PointerEventSupportImpl" />
         <when-property-is value="ie10" name="user.agent" />
     </replace-with>
+
+    <!-- Make Sass linking available -->
+    <define-linker name="sass"
+        class="com.vaadin.sass.linker.SassLinker" />
+
 </module>

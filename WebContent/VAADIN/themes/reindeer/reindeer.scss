@@ -1,3 +1,20 @@
+$font-size: 12px !default;
+$line-height: normal !default;
+
+
+// Override Base Grid variables
+$v-grid-border: 1px solid #c2c3c4;
+$v-grid-cell-vertical-border: 1px solid #d4d4d4;
+$v-grid-cell-horizontal-border: none;
+$v-grid-cell-focused-border: 1px solid #0f68ba;
+$v-grid-row-height: 20px;
+$v-grid-row-stripe-background-color: #eff0f1;
+$v-grid-row-selected-background-color: #4d749f;
+$v-grid-header-font-size: 10px;
+$v-grid-header-background-color: rgb(217,219,221);
+$v-grid-cell-padding-horizontal: 6px;
+
+
 @import "../base/base.scss";
 
 // common between others for now for backwards compatibility
@@ -12,6 +29,7 @@
 @import "datefield/datefield.scss";
 @import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "label/label.scss";
 @import "layouts/layouts.scss";
 @import "link/link.scss";
@@ -33,9 +51,6 @@
 	background: #f5f5f5;
 }
 
-$font-size: 12px;
-$line-height: normal;
-
 @mixin reindeer {
 	@include base;
 	// TODO @each
@@ -49,6 +64,7 @@ $line-height: normal;
 	@include reindeer-datefield;
 	@include reindeer-inlinedatefield;
 	@include reindeer-formlayout;
+	@include reindeer-grid;
 	@include reindeer-label;
 	@include reindeer-layouts;
 	@include reindeer-link;
@@ -59,7 +75,7 @@ $line-height: normal;
 	@include reindeer-progressindicator(v-progressbar);
 	/* For legacy ProgressIndicator component */
 	@include reindeer-progressindicator(v-progressindicator);
-	
+
 	@include reindeer-select;
 	@include reindeer-slider;
 	@include reindeer-splitpanel;
@@ -69,5 +85,3 @@ $line-height: normal;
 	@include reindeer-tree;
 	@include reindeer-window;
 }
-
-

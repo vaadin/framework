@@ -32,6 +32,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VGridLayout;
@@ -211,10 +212,10 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         // widget to which the path is relative. Otherwise, the current
         // implementation simply interprets the path as if baseElement was
         // null.
-        Widget baseWidget = Util.findWidget(baseElement, null);
+        Widget baseWidget = WidgetUtil.findWidget(baseElement, null);
 
         Widget w = getWidgetFromPath(widgetPath, baseWidget);
-        if (w == null || !Util.isAttachedAndDisplayed(w)) {
+        if (w == null || !WidgetUtil.isAttachedAndDisplayed(w)) {
             return null;
         }
         if (parts.length == 1) {
@@ -333,7 +334,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (Util.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
+                if (WidgetUtil.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();

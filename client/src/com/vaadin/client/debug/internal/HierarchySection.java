@@ -35,6 +35,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 
 /**
  * Provides functionality for examining the UI component hierarchy.
@@ -240,7 +241,7 @@ public class HierarchySection implements Section {
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE) {
                 Highlight.hideAll();
-                Element eventTarget = Util.getElementFromPoint(event
+                Element eventTarget = WidgetUtil.getElementFromPoint(event
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
@@ -272,7 +273,7 @@ public class HierarchySection implements Section {
                 event.consume();
                 event.getNativeEvent().stopPropagation();
                 stopFind();
-                Element eventTarget = Util.getElementFromPoint(event
+                Element eventTarget = WidgetUtil.getElementFromPoint(event
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration

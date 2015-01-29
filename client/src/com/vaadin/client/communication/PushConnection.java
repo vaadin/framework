@@ -16,11 +16,11 @@
 
 package com.vaadin.client.communication;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
+import elemental.json.JsonObject;
 
 /**
  * Represents the client-side endpoint of a bidirectional ("push") communication
@@ -61,7 +61,7 @@ public interface PushConnection {
      * 
      * @see #isActive()
      */
-    public void push(JSONObject payload);
+    public void push(JsonObject payload);
 
     /**
      * Checks whether this push connection is in a state where it can push

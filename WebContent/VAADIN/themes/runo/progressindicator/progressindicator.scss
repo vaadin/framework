@@ -20,4 +20,10 @@
 	background: #dfe2e4;
 }
 
+// Static style
+
+.#{$primaryStyleName}-static .#{$primaryStyleName}-wrapper {
+  background: #dfe2e4 url(img/base-static.gif) repeat-x;
+}
+
 }

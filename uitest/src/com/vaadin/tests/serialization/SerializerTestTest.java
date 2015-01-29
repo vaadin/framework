@@ -27,6 +27,9 @@ public class SerializerTestTest extends MultiBrowserTest {
         openTestURL();
         int logRow = 0;
 
+        Assert.assertEquals(
+                "sendJson: {\"b\":false,\"s\":\"JSON\"}, null, \"value\"",
+                getLogRow(logRow++));
         Assert.assertEquals("sendDate: May 31, 2013 8:12:13 AM UTC",
                 getLogRow(logRow++));
         Assert.assertEquals("sendDate: January 1, 1970 12:00:00 AM UTC",
@@ -77,6 +80,9 @@ public class SerializerTestTest extends MultiBrowserTest {
                 "sendBoolean: false, false, [false, false, true, false, true, true]",
                 getLogRow(logRow++));
         Assert.assertEquals("sendBeanSubclass: 43", getLogRow(logRow++));
+        Assert.assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
+        Assert.assertEquals("state.jsonString: a string", getLogRow(logRow++));
+        Assert.assertEquals("state.jsonNull: NULL", getLogRow(logRow++));
         Assert.assertEquals(
                 "state.doubleArray: [1.7976931348623157e+308, 5e-324]",
                 getLogRow(logRow++));

@@ -23,7 +23,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VCalendar;
 
 /**
@@ -48,7 +48,7 @@ public class DateCellContainer extends FlowPanel implements MouseDownHandler,
 
     public static int measureBorderWidth(DateCellContainer dc) {
         if (borderWidth == -1) {
-            borderWidth = Util.measureHorizontalBorder(dc.getElement());
+            borderWidth = WidgetUtil.measureHorizontalBorder(dc.getElement());
         }
         return borderWidth;
     }

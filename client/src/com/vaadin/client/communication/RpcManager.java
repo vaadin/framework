@@ -18,8 +18,6 @@ package com.vaadin.client.communication;
 
 import java.util.Collection;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONString;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
@@ -29,6 +27,8 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.MethodInvocation;
+
+import elemental.json.JsonArray;
 
 /**
  * Client side RPC manager that can invoke methods based on RPC calls received
@@ -64,7 +64,18 @@ public class RpcManager {
         }
     }
 
-    private Method getMethod(MethodInvocation invocation) {
+    /**
+     * Gets the method that an invocation targets.
+     * 
+     * @param invocation
+     *            the method invocation to get the method for
+     * 
+     * @since 7.4
+     * @return the method targeted by this invocation
+     */
+    public static Method getMethod(MethodInvocation invocation) {
+        // Implemented here instead of in MethodInovcation since it's in shared
+        // and can't use our Method class.
         Type type = new Type(invocation.getInterfaceName(), null);
         Method method = type.getMethod(invocation.getMethodName());
         return method;
@@ -86,14 +97,14 @@ public class RpcManager {
         }
     }
 
-    public void parseAndApplyInvocation(JSONArray rpcCall,
+    public MethodInvocation parseAndApplyInvocation(JsonArray rpcCall,
             ApplicationConnection connection) {
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
-        String connectorId = ((JSONString) rpcCall.get(0)).stringValue();
-        String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
-        String methodName = ((JSONString) rpcCall.get(2)).stringValue();
-        JSONArray parametersJson = (JSONArray) rpcCall.get(3);
+        String connectorId = rpcCall.getString(0);
+        String interfaceName = rpcCall.getString(1);
+        String methodName = rpcCall.getString(2);
+        JsonArray parametersJson = rpcCall.getArray(3);
 
         ServerConnector connector = connectorMap.getConnector(connectorId);
 
@@ -114,14 +125,16 @@ public class RpcManager {
             VConsole.log("Server to client RPC call: " + invocation);
             applyInvocation(invocation, connector);
         }
+
+        return invocation;
     }
 
     private void parseMethodParameters(MethodInvocation methodInvocation,
-            JSONArray parametersJson, ApplicationConnection connection) {
+            JsonArray parametersJson, ApplicationConnection connection) {
         Type[] parameterTypes = getParameterTypes(methodInvocation);
 
-        Object[] parameters = new Object[parametersJson.size()];
-        for (int j = 0; j < parametersJson.size(); ++j) {
+        Object[] parameters = new Object[parametersJson.length()];
+        for (int j = 0; j < parametersJson.length(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(parameterTypes[j],
                     parametersJson.get(j), null, connection);
         }

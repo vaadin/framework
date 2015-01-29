@@ -300,7 +300,9 @@ public class JsonCodec implements Serializable {
         }
 
         // Try to decode object using fields
-        if (value.getType() == JsonType.NULL) {
+        if (isJsonType(targetType)) {
+            return value;
+        } else if (value.getType() == JsonType.NULL) {
             return null;
         } else if (targetType == byte.class || targetType == Byte.class) {
             return Byte.valueOf((byte) value.asNumber());
@@ -332,6 +334,11 @@ public class JsonCodec implements Serializable {
             return decodeObject(targetType, (JsonObject) value,
                     connectorTracker);
         }
+    }
+
+    private static boolean isJsonType(Type type) {
+        return type instanceof Class<?>
+                && JsonValue.class.isAssignableFrom((Class<?>) type);
     }
 
     private static Object decodeArray(Type componentType, JsonArray value,

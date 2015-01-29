@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * This class contains a basic implementation for both {@link FormFieldFactory}
@@ -75,42 +76,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      * @return the formatted caption string
      */
     public static String createCaptionByPropertyId(Object propertyId) {
-        String name = propertyId.toString();
-        if (name.length() > 0) {
-
-            int dotLocation = name.lastIndexOf('.');
-            if (dotLocation > 0 && dotLocation < name.length() - 1) {
-                name = name.substring(dotLocation + 1);
-            }
-            if (name.indexOf(' ') < 0
-                    && name.charAt(0) == Character.toLowerCase(name.charAt(0))
-                    && name.charAt(0) != Character.toUpperCase(name.charAt(0))) {
-                StringBuffer out = new StringBuffer();
-                out.append(Character.toUpperCase(name.charAt(0)));
-                int i = 1;
-
-                while (i < name.length()) {
-                    int j = i;
-                    for (; j < name.length(); j++) {
-                        char c = name.charAt(j);
-                        if (Character.toLowerCase(c) != c
-                                && Character.toUpperCase(c) == c) {
-                            break;
-                        }
-                    }
-                    if (j == name.length()) {
-                        out.append(name.substring(i));
-                    } else {
-                        out.append(name.substring(i, j));
-                        out.append(" " + name.charAt(j));
-                    }
-                    i = j + 1;
-                }
-
-                name = out.toString();
-            }
-        }
-        return name;
+        return SharedUtil.propertyIdToHumanFriendly(propertyId);
     }
 
     /**

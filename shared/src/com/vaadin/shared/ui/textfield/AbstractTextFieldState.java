@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.textfield;
 
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class AbstractTextFieldState extends AbstractFieldState {
     {
@@ -25,6 +26,7 @@ public class AbstractTextFieldState extends AbstractFieldState {
     /**
      * Maximum character count in text field.
      */
+    @NoLayout
     public int maxLength = -1;
 
     /**
@@ -35,10 +37,12 @@ public class AbstractTextFieldState extends AbstractFieldState {
     /**
      * The prompt to display in an empty field. Null when disabled.
      */
+    @NoLayout
     public String inputPrompt = null;
 
     /**
      * The text in the field
      */
+    @NoLayout
     public String text = null;
 }

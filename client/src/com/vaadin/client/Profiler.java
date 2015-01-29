@@ -17,11 +17,13 @@
 package com.vaadin.client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -29,8 +31,6 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.shared.GWT;
-import com.vaadin.client.debug.internal.ProfilerSection.Node;
-import com.vaadin.client.debug.internal.ProfilerSection.ProfilerResultConsumer;
 
 /**
  * Lightweight profiling tool that can be used to collect profiling data with
@@ -52,6 +52,236 @@ public class Profiler {
         @Override
         protected boolean isImplEnabled() {
             return true;
+        }
+    }
+
+    /**
+     * Interface for getting data from the {@link Profiler}.
+     * <p>
+     * <b>Warning!</b> This interface is most likely to change in the future
+     * 
+     * @since 7.1
+     * @author Vaadin Ltd
+     */
+    public interface ProfilerResultConsumer {
+        public void addProfilerData(Node rootNode, List<Node> totals);
+
+        public void addBootstrapData(LinkedHashMap<String, Double> timings);
+    }
+
+    /**
+     * A hierarchical representation of the time spent running a named block of
+     * code.
+     * <p>
+     * <b>Warning!</b> This class is most likely to change in the future and is
+     * therefore defined in this class in an internal package instead of
+     * Profiler where it might seem more logical.
+     */
+    public static class Node {
+        private final String name;
+        private final LinkedHashMap<String, Node> children = new LinkedHashMap<String, Node>();
+        private double time = 0;
+        private int count = 0;
+        private double enterTime = 0;
+        private double minTime = 1000000000;
+        private double maxTime = 0;
+
+        /**
+         * Create a new node with the given name.
+         * 
+         * @param name
+         */
+        public Node(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Gets the name of the node
+         * 
+         * @return the name of the node
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Creates a new child node or retrieves and existing child and updates
+         * its total time and hit count.
+         * 
+         * @param name
+         *            the name of the child
+         * @param timestamp
+         *            the timestamp for when the node is entered
+         * @return the child node object
+         */
+        public Node enterChild(String name, double timestamp) {
+            Node child = children.get(name);
+            if (child == null) {
+                child = new Node(name);
+                children.put(name, child);
+            }
+            child.enterTime = timestamp;
+            child.count++;
+            return child;
+        }
+
+        /**
+         * Gets the total time spent in this node, including time spent in sub
+         * nodes
+         * 
+         * @return the total time spent, in milliseconds
+         */
+        public double getTimeSpent() {
+            return time;
+        }
+
+        /**
+         * Gets the minimum time spent for one invocation of this node,
+         * including time spent in sub nodes
+         * 
+         * @return the time spent for the fastest invocation, in milliseconds
+         */
+        public double getMinTimeSpent() {
+            return minTime;
+        }
+
+        /**
+         * Gets the maximum time spent for one invocation of this node,
+         * including time spent in sub nodes
+         * 
+         * @return the time spent for the slowest invocation, in milliseconds
+         */
+        public double getMaxTimeSpent() {
+            return maxTime;
+        }
+
+        /**
+         * Gets the number of times this node has been entered
+         * 
+         * @return the number of times the node has been entered
+         */
+        public int getCount() {
+            return count;
+        }
+
+        /**
+         * Gets the total time spent in this node, excluding time spent in sub
+         * nodes
+         * 
+         * @return the total time spent, in milliseconds
+         */
+        public double getOwnTime() {
+            double time = getTimeSpent();
+            for (Node node : children.values()) {
+                time -= node.getTimeSpent();
+            }
+            return time;
+        }
+
+        /**
+         * Gets the child nodes of this node
+         * 
+         * @return a collection of child nodes
+         */
+        public Collection<Node> getChildren() {
+            return Collections.unmodifiableCollection(children.values());
+        }
+
+        private void buildRecursiveString(StringBuilder builder, String prefix) {
+            if (getName() != null) {
+                String msg = getStringRepresentation(prefix);
+                builder.append(msg + '\n');
+            }
+            String childPrefix = prefix + "*";
+            for (Node node : children.values()) {
+                node.buildRecursiveString(builder, childPrefix);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return getStringRepresentation("");
+        }
+
+        public String getStringRepresentation(String prefix) {
+            if (getName() == null) {
+                return "";
+            }
+            String msg = prefix + " " + getName() + " in " + getTimeSpent()
+                    + " ms.";
+            if (getCount() > 1) {
+                msg += " Invoked "
+                        + getCount()
+                        + " times ("
+                        + roundToSignificantFigures(getTimeSpent() / getCount())
+                        + " ms per time, min "
+                        + roundToSignificantFigures(getMinTimeSpent())
+                        + " ms, max "
+                        + roundToSignificantFigures(getMaxTimeSpent())
+                        + " ms).";
+            }
+            if (!children.isEmpty()) {
+                double ownTime = getOwnTime();
+                msg += " " + ownTime + " ms spent in own code";
+                if (getCount() > 1) {
+                    msg += " ("
+                            + roundToSignificantFigures(ownTime / getCount())
+                            + " ms per time)";
+                }
+                msg += '.';
+            }
+            return msg;
+        }
+
+        private static double roundToSignificantFigures(double num) {
+            // Number of significant digits
+            int n = 3;
+            if (num == 0) {
+                return 0;
+            }
+
+            final double d = Math.ceil(Math.log10(num < 0 ? -num : num));
+            final int power = n - (int) d;
+
+            final double magnitude = Math.pow(10, power);
+            final long shifted = Math.round(num * magnitude);
+            return shifted / magnitude;
+        }
+
+        public void sumUpTotals(Map<String, Node> totals) {
+            String name = getName();
+            if (name != null) {
+                Node totalNode = totals.get(name);
+                if (totalNode == null) {
+                    totalNode = new Node(name);
+                    totals.put(name, totalNode);
+                }
+
+                totalNode.time += getOwnTime();
+                totalNode.count += getCount();
+                totalNode.minTime = Math.min(totalNode.minTime,
+                        getMinTimeSpent());
+                totalNode.maxTime = Math.max(totalNode.maxTime,
+                        getMaxTimeSpent());
+            }
+            for (Node node : children.values()) {
+                node.sumUpTotals(totals);
+            }
+        }
+
+        /**
+         * @param timestamp
+         */
+        public void leave(double timestamp) {
+            double elapsed = (timestamp - enterTime);
+            time += elapsed;
+            enterTime = 0;
+            if (elapsed < minTime) {
+                minTime = elapsed;
+            }
+            if (elapsed > maxTime) {
+                maxTime = elapsed;
+            }
         }
     }
 

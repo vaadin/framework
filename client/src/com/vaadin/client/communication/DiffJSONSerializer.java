@@ -15,9 +15,9 @@
  */
 package com.vaadin.client.communication;
 
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.metadata.Type;
+import elemental.json.JsonValue;
 
 public interface DiffJSONSerializer<T> extends JSONSerializer<T> {
     /**
@@ -27,6 +27,6 @@ public interface DiffJSONSerializer<T> extends JSONSerializer<T> {
      * @param jsonValue
      * @param connection
      */
-    public void update(T target, Type type, JSONValue jsonValue,
+    public void update(T target, Type type, JsonValue jsonValue,
             ApplicationConnection connection);
 }

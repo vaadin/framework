@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-widgets"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="build-provided" />
+        <conf name="ide" visibility="private" />
+        <conf name="test" />
+    </configurations>
+    <publications>
+        <artifact type="jar" ext="jar" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+        <artifact type="pom" ext="pom" />
+    </publications>
+    <dependencies defaultconf="build" defaultconfmapping="build->default">
+        <!-- API DEPENDENCIES -->
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build-provided,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-client"
+            rev="${vaadin.version}" conf="build-provided,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" conf="build-provided,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-themes"
+            rev="${vaadin.version}" conf="build-provided,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-sass-compiler"
+            rev="${vaadin.sass.version}" conf="build-provided->default" />
+
+    </dependencies>
+
+</ivy-module>

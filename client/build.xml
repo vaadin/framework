@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-client" basedir="." default="publish-local">
     <description>
         Compiles build helpers used when building other
         modules.
@@ -18,25 +18,30 @@
         <!-- Could possibly compile GWT files also here to verify that a) 
             the same dependencies are used and b) all dependencies have been declared -->
         <fileset file="${gwt.user.jar}" />
+        <fileset file="${gwt.elemental.jar}" />
     </path>
     <path id="classpath.test.custom" />
 
     <target name="jar">
-        <property name="jar.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+        <property name="jar.file"
+            location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
         <antcall target="common.jar">
             <reference refid="client.gwt.includes" torefid="extra.jar.includes" />
         </antcall>
         <jar destfile="${jar.file}" update="true">
             <manifest>
-                <attribute name="Vaadin-Package-Version" value="1" />
+                <attribute name="Vaadin-Package-Version"
+                    value="1" />
                 <attribute name="Vaadin-Widgetsets" value="com.vaadin.DefaultWidgetSet" />
             </manifest>
         </jar>
         <!-- Hack to add validation dependency with source classifier -->
-        <property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
+        <property name="pom.xml"
+            location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
         <copy file="${pom.xml}" tofile="${temp.pom}">
             <filterchain>
-                <replacestring from="  &lt;/dependencies&gt;" to="    &lt;dependency&gt;
+                <replacestring from="  &lt;/dependencies&gt;"
+                    to="    &lt;dependency&gt;
                &lt;groupId&gt;javax.validation&lt;/groupId&gt;
                &lt;artifactId&gt;validation-api&lt;/artifactId&gt;
                &lt;version&gt;1.0.0.GA&lt;/version&gt;

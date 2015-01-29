@@ -225,7 +225,7 @@ public class ResourceLoader {
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener, boolean async) {
-        final String url = Util.getAbsoluteUrl(scriptUrl);
+        final String url = WidgetUtil.getAbsoluteUrl(scriptUrl);
         ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
@@ -307,7 +307,7 @@ public class ResourceLoader {
      */
     public void preloadResource(String url,
             ResourceLoadListener resourceLoadListener) {
-        url = Util.getAbsoluteUrl(url);
+        url = WidgetUtil.getAbsoluteUrl(url);
         ResourceLoadEvent event = new ResourceLoadEvent(this, url, true);
         if (loadedResources.contains(url) || preloadedResources.contains(url)) {
             // Already loaded or preloaded -> just fire listener
@@ -424,7 +424,7 @@ public class ResourceLoader {
      */
     public void loadStylesheet(final String stylesheetUrl,
             final ResourceLoadListener resourceLoadListener) {
-        final String url = Util.getAbsoluteUrl(stylesheetUrl);
+        final String url = WidgetUtil.getAbsoluteUrl(stylesheetUrl);
         final ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
