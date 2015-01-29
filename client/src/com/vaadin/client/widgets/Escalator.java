@@ -1245,7 +1245,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         @Override
-        public Element getElement() {
+        public TableSectionElement getElement() {
             return root;
         }
 

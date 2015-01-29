@@ -17,6 +17,7 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -138,7 +139,8 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public void setDefaultRowHeight(double px) throws IllegalArgumentException {
+        public void setDefaultRowHeight(double px)
+                throws IllegalArgumentException {
             rowContainer.setDefaultRowHeight(px);
         }
 
@@ -159,7 +161,7 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public Element getElement() {
+        public TableSectionElement getElement() {
             return rowContainer.getElement();
         }
 

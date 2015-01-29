@@ -39,6 +39,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -941,6 +942,9 @@ public class Grid<T> extends ResizeComposite implements
      */
     protected static class Editor<T> {
 
+        private static final double BUTTON_HEIGHT = 25;
+        private static final double BUTTON_WIDTH = 50;
+        private static final double BUTTON_MARGIN = 5;
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
@@ -1256,8 +1260,9 @@ public class Grid<T> extends ResizeComposite implements
                     .getRequiredWidthBoundingClientRectDouble(tr);
             double height = WidgetUtil
                     .getRequiredHeightBoundingClientRectDouble(tr);
-            setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
-                    - wrapperTop, width, height);
+            double overlayTop = rowTop + bodyTop - wrapperTop;
+            setBounds(editorOverlay, tr.getOffsetLeft(), overlayTop, width,
+                    height);
 
             updateHorizontalScrollPosition();
 
@@ -1297,8 +1302,6 @@ public class Grid<T> extends ResizeComposite implements
                     save();
                 }
             });
-            setBounds(saveButton.getElement(), 0, tr.getOffsetHeight() + 5, 50,
-                    25);
             attachWidget(saveButton, editorOverlay);
 
             cancelButton = new Button();
@@ -1311,9 +1314,41 @@ public class Grid<T> extends ResizeComposite implements
                     cancel();
                 }
             });
-            setBounds(cancelButton.getElement(), 55, tr.getOffsetHeight() + 5,
-                    50, 25);
             attachWidget(cancelButton, editorOverlay);
+
+            /*
+             * We can't use BUTTON_HEIGHT here, becuase it's ignored by at least
+             * Chrome and Firefox. So we measure it.
+             */
+            double buttonTop = getButtonTop(tr, saveButton.getOffsetHeight());
+            setBounds(saveButton.getElement(), 0, buttonTop, BUTTON_WIDTH,
+                    BUTTON_HEIGHT);
+            setBounds(cancelButton.getElement(), BUTTON_WIDTH + BUTTON_MARGIN,
+                    buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
+
+        private double getButtonTop(TableRowElement tr, int buttonHeight) {
+            boolean buttonsShouldBeRenderedBelow = buttonsShouldBeRenderedBelow(
+                    tr, buttonHeight);
+            final double buttonTop;
+            if (buttonsShouldBeRenderedBelow) {
+                buttonTop = tr.getOffsetHeight() + BUTTON_MARGIN;
+            } else {
+                buttonTop = -(buttonHeight + BUTTON_MARGIN);
+            }
+            return buttonTop;
+        }
+
+        private boolean buttonsShouldBeRenderedBelow(TableRowElement tr,
+                int buttonHeight) {
+            TableSectionElement tfoot = grid.escalator.getFooter().getElement();
+            double tfootPageTop = WidgetUtil.getBoundingClientRect(tfoot)
+                    .getTop();
+            double trPageBottom = WidgetUtil.getBoundingClientRect(tr)
+                    .getBottom();
+            double bottomOfButtons = trPageBottom + buttonHeight
+                    + BUTTON_MARGIN;
+            return bottomOfButtons < tfootPageTop;
         }
 
         protected void hideOverlay() {
