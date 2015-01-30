@@ -43,6 +43,11 @@
   .v-horizontal > .v-expand > .v-slot {
     height: 100%;
   }
+  
+  /* Workaround for IE8+IE9 bug where clicking inside an input area which is inside a div with negative margin causes cursor position to jump to wrong position. See #11152 */ 
+  .v-horizontal > .v-expand > .v-slot { 
+     position: relative; 
+  } 
 
   .v-vertical > .v-spacing,
   .v-vertical > .v-expand > .v-spacing {
