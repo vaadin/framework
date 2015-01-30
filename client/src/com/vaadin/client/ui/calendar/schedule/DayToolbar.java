@@ -134,7 +134,7 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
 
     @Override
     public void onClick(ClickEvent event) {
-        if (!calendar.isDisabledOrReadOnly()) {
+        if (!calendar.isDisabled()) {
             if (event.getSource() == nextLabel) {
                 if (calendar.getForwardListener() != null) {
                     calendar.getForwardListener().forward();

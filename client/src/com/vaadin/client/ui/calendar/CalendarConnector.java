@@ -35,8 +35,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -138,7 +138,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         getWidget().setListener(new DateClickListener() {
             @Override
             public void dateClick(String date) {
-                if (!getWidget().isDisabledOrReadOnly()
+                if (!getWidget().isDisabled()
                         && hasEventListener(CalendarEventId.DATECLICK)) {
                     rpc.dateClick(date);
                 }
@@ -171,7 +171,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         getWidget().setListener(new WeekClickListener() {
             @Override
             public void weekClick(String event) {
-                if (!getWidget().isDisabledOrReadOnly()
+                if (!getWidget().isDisabled()
                         && hasEventListener(CalendarEventId.WEEKCLICK)) {
                     rpc.weekClick(event);
                 }
