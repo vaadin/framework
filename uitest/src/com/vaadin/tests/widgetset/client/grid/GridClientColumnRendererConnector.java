@@ -114,11 +114,6 @@ public class GridClientColumnRendererConnector extends
             // TODO Auto-generated method stub (henrik paul: 17.6.)
             return null;
         }
-
-        @Override
-        public int indexOf(String row) {
-            return ds.indexOf(row);
-        }
     }
 
     @Override

@@ -443,7 +443,16 @@ public class ListDataSource<T> implements DataSource<T> {
         }
     }
 
-    @Override
+    /**
+     * Retrieves the index for given row object.
+     * <p>
+     * <em>Note:</em> This method does not verify that the given row object
+     * exists at all in this DataSource.
+     * 
+     * @param row
+     *            the row object
+     * @return index of the row; or <code>-1</code> if row is not available
+     */
     public int indexOf(T row) {
         return ds.indexOf(row);
     }

@@ -362,7 +362,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         return indexToRowMap.get(Integer.valueOf(rowIndex));
     }
 
-    @Override
+    /**
+     * Retrieves the index for given row object.
+     * <p>
+     * <em>Note:</em> This method does not verify that the given row object
+     * exists at all in this DataSource.
+     * 
+     * @param row
+     *            the row object
+     * @return index of the row; or <code>-1</code> if row is not available
+     */
     public int indexOf(T row) {
         Object key = getRowKey(row);
         if (keyToIndexMap.containsKey(key)) {
