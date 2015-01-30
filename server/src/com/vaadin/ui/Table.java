@@ -62,7 +62,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.table.TableConstants;
-import com.vaadin.shared.util.SharedUtil;
 
 /**
  * <p>
@@ -443,7 +442,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds value of property selectable.
      */
-    private Boolean selectable;
+    private boolean selectable = false;
 
     /**
      * Holds value of property columnHeaderMode.
@@ -1602,19 +1601,15 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Returns whether table is selectable.
+     * Getter for property selectable.
      * 
      * <p>
-     * The table is not selectable until it's explicitly set as selectable or at
-     * least one {@link ValueChangeListener} is added.
+     * The table is not selectable by default.
      * </p>
      * 
-     * @return whether table is selectable.
+     * @return the Value of property selectable.
      */
     public boolean isSelectable() {
-        if (selectable == null) {
-            return hasListeners(ValueChangeEvent.class);
-        }
         return selectable;
     }
 
@@ -1622,16 +1617,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * Setter for property selectable.
      * 
      * <p>
-     * The table is not selectable until it's explicitly set as selectable via
-     * this method or alternatively at least one {@link ValueChangeListener} is
-     * added.
+     * The table is not selectable by default.
      * </p>
      * 
      * @param selectable
      *            the New value of property selectable.
      */
     public void setSelectable(boolean selectable) {
-        if (!SharedUtil.equals(this.selectable, selectable)) {
+        if (this.selectable != selectable) {
             this.selectable = selectable;
             markAsDirty();
         }
