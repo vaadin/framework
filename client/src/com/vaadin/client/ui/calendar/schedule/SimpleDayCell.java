@@ -439,24 +439,20 @@ public class SimpleDayCell extends FocusableFlowPanel implements
             if (calendar.isEventMoveAllowed()) {
                 startCalendarEventDrag(event, (MonthEventLabel) w);
             }
-        } else if (!calendar.isReadOnly()) {
-            // these are not allowed when in read-only
-            if (w == bottomspacer) {
-                if (scrollable) {
-                    setLimitedCellHeight();
-                } else {
-                    setUnlimitedCellHeight();
-                }
-                reDraw(true);
-
-            } else if (w == this && !scrollable) {
-                MonthGrid grid = getMonthGrid();
-                if (grid.isEnabled() && calendar.isRangeSelectAllowed()) {
-                    grid.setSelectionStart(this);
-                    grid.setSelectionEnd(this);
-                }
-            } else if (w instanceof Label) {
-                labelMouseDown = true;
+        } else if (w == bottomspacer) {
+            if (scrollable) {
+                setLimitedCellHeight();
+            } else {
+                setUnlimitedCellHeight();
+            }
+            reDraw(true);
+        } else if (w instanceof Label) {
+            labelMouseDown = true;
+        } else if (w == this && !scrollable) {
+            MonthGrid grid = getMonthGrid();
+            if (grid.isEnabled() && calendar.isRangeSelectAllowed()) {
+                grid.setSelectionStart(this);
+                grid.setSelectionEnd(this);
             }
         }
 

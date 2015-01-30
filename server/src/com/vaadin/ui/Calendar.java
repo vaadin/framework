@@ -1775,9 +1775,6 @@ public class Calendar extends AbstractComponent implements
 
         @Override
         public void dateClick(String date) {
-            if (!isClientChangeAllowed()) {
-                return;
-            }
             if (date != null && date.length() > 6) {
                 try {
                     Date d = df_date.parse(date);
@@ -1789,9 +1786,6 @@ public class Calendar extends AbstractComponent implements
 
         @Override
         public void weekClick(String event) {
-            if (!isClientChangeAllowed()) {
-                return;
-            }
             if (event.length() > 0 && event.contains("w")) {
                 String[] splitted = event.split("w");
                 if (splitted.length == 2) {
