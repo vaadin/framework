@@ -194,16 +194,4 @@ public interface DataSource<T> {
      *        means that the row is not currently in this data source's cache.
      */
     public RowHandle<T> getHandle(T row);
-
-    /**
-     * Retrieves the index for given row object.
-     * <p>
-     * <em>Note:</em> This method does not verify that the given row object
-     * exists at all in this DataSource.
-     * 
-     * @param row
-     *            the row object
-     * @return index of the row; or <code>-1</code> if row is not available
-     */
-    int indexOf(T row);
 }
