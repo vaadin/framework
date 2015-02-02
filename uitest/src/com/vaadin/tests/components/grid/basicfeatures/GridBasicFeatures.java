@@ -960,6 +960,22 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 c.cancelEditor();
             }
         }, null);
+
+        createClickAction("Change save caption", "Editor",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.setEditorSaveCaption("ǝʌɐS");
+                    }
+                }, null);
+
+        createClickAction("Change cancel caption", "Editor",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.setEditorCancelCaption("ʃǝɔuɐↃ");
+                    }
+                }, null);
     }
 
     @SuppressWarnings("boxing")

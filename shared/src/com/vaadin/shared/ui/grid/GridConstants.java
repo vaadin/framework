@@ -68,4 +68,10 @@ public final class GridConstants implements Serializable {
      * Event ID for item click events
      */
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
+
+    /** The default save button caption in the editor */
+    public static final String DEFAULT_SAVE_CAPTION = "Save";
+
+    /** The default cancel button caption in the editor */
+    public static final String DEFAULT_CANCEL_CAPTION = "Cancel";
 }

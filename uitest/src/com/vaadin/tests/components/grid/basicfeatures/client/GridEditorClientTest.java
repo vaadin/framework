@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -31,10 +32,16 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 public class GridEditorClientTest extends GridBasicClientFeaturesTest {
+
+    private static final String[] EDIT_ROW_100 = new String[] { "Component",
+            "Editor", "Edit row 100" };
+    private static final String[] EDIT_ROW_5 = new String[] { "Component",
+            "Editor", "Edit row 5" };
 
     @Before
     public void setUp() {
@@ -44,7 +51,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testProgrammaticOpeningClosing() {
-        selectMenuPath("Component", "Editor", "Edit row 5");
+        selectMenuPath(EDIT_ROW_5);
         assertNotNull(getEditor());
 
         selectMenuPath("Component", "Editor", "Cancel edit");
@@ -55,13 +62,13 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testProgrammaticOpeningWithScroll() {
-        selectMenuPath("Component", "Editor", "Edit row 100");
+        selectMenuPath(EDIT_ROW_100);
         assertNotNull(getEditor());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testVerticalScrollLocking() {
-        selectMenuPath("Component", "Editor", "Edit row 5");
+        selectMenuPath(EDIT_ROW_5);
         getGridElement().getCell(200, 0);
     }
 
@@ -89,7 +96,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testWidgetBinding() throws Exception {
-        selectMenuPath("Component", "Editor", "Edit row 100");
+        selectMenuPath(EDIT_ROW_100);
         WebElement editor = getEditor();
 
         List<WebElement> widgets = editor.findElements(By
@@ -108,7 +115,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void testWithSelectionColumn() throws Exception {
         selectMenuPath("Component", "State", "Selection mode", "multi");
-        selectMenuPath("Component", "State", "Editor", "Edit row 5");
+        selectMenuPath(EDIT_ROW_5);
 
         WebElement editor = getEditor();
         List<WebElement> selectorDivs = editor.findElements(By
@@ -122,7 +129,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testSave() {
-        selectMenuPath("Component", "Editor", "Edit row 100");
+        selectMenuPath(EDIT_ROW_100);
 
         WebElement textField = getEditor().findElements(
                 By.className("gwt-TextBox")).get(0);
@@ -140,7 +147,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testProgrammaticSave() {
-        selectMenuPath("Component", "Editor", "Edit row 100");
+        selectMenuPath(EDIT_ROW_100);
 
         WebElement textField = getEditor().findElements(
                 By.className("gwt-TextBox")).get(0);
@@ -152,4 +159,39 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
         assertEquals("Changed", getGridElement().getCell(100, 0).getText());
     }
+
+    @Test
+    public void testCaptionChange() {
+        selectMenuPath(EDIT_ROW_5);
+        assertEquals("Save button caption should've been \""
+                + GridConstants.DEFAULT_SAVE_CAPTION + "\" to begin with",
+                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
+        assertEquals("Cancel button caption should've been \""
+                + GridConstants.DEFAULT_CANCEL_CAPTION + "\" to begin with",
+                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
+                        .getText());
+
+        selectMenuPath("Component", "Editor", "Change Save Caption");
+        assertNotEquals(
+                "Save button caption should've changed while editor is open",
+                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
+
+        getCancelButton().click();
+
+        selectMenuPath("Component", "Editor", "Change Cancel Caption");
+        selectMenuPath(EDIT_ROW_5);
+        assertNotEquals(
+                "Cancel button caption should've changed while editor is closed",
+                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
+                        .getText());
+    }
+
+    protected WebElement getSaveButton() {
+        return getEditor().findElement(By.className("v-grid-editor-save"));
+    }
+
+    protected WebElement getCancelButton() {
+        return getEditor().findElement(By.className("v-grid-editor-cancel"));
+    }
+
 }
