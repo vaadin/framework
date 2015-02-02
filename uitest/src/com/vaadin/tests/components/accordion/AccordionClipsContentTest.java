@@ -15,10 +15,9 @@
  */
 package com.vaadin.tests.components.accordion;
 
-import org.junit.Test;
-
 import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.junit.Test;
 
 public class AccordionClipsContentTest extends MultiBrowserTest {
     @Override
@@ -47,6 +46,11 @@ public class AccordionClipsContentTest extends MultiBrowserTest {
         vaadinElement("Root/VOverlay[3]/VMenuBar[0]#item0").click();
 
         $(NativeButtonElement.class).first().click();
+
+        // Give the button time to pop back up in IE8.
+        // If this sleep causes issues, next best thing is to click outside the
+        // button to remove focus - needs new screenshots for all browsers.
+        Thread.sleep(10);
 
         compareScreen("button-clicked");
     }
