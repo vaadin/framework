@@ -956,6 +956,20 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, "Component", "Editor");
 
+        addMenuCommand("Change Save Caption", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setEditorSaveCaption("ǝʌɐS");
+            }
+        }, "Component", "Editor");
+
+        addMenuCommand("Change Cancel Caption", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setEditorCancelCaption("ʃǝɔuɐↃ");
+            }
+        }, "Component", "Editor");
+
     }
 
     private void configureFooterRow(final FooterRow row) {
