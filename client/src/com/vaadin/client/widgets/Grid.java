@@ -971,8 +971,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private HandlerRegistration scrollHandler;
 
-        private Button saveButton;
-        private Button cancelButton;
+        private final Button saveButton;
+        private final Button cancelButton;
 
         private static final int SAVE_TIMEOUT_MS = 5000;
         private final Timer saveTimeout = new Timer() {
@@ -1052,6 +1052,28 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
         };
+
+        public Editor() {
+            saveButton = new Button();
+            saveButton.setText(GridConstants.DEFAULT_SAVE_CAPTION);
+            saveButton.setStylePrimaryName("v-nativebutton");
+            saveButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    save();
+                }
+            });
+
+            cancelButton = new Button();
+            cancelButton.setText(GridConstants.DEFAULT_CANCEL_CAPTION);
+            cancelButton.setStylePrimaryName("v-nativebutton");
+            cancelButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    cancel();
+                }
+            });
+        }
 
         public int getRow() {
             return rowIndex;
@@ -1295,28 +1317,7 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
 
-            saveButton = new Button();
-            saveButton.setText("Save");
-            saveButton.setStylePrimaryName("v-nativebutton");
-            saveButton.addStyleName(styleName + "-save");
-            saveButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    save();
-                }
-            });
             attachWidget(saveButton, editorOverlay);
-
-            cancelButton = new Button();
-            cancelButton.setText("Cancel");
-            cancelButton.setStylePrimaryName("v-nativebutton");
-            cancelButton.addStyleName(styleName + "-cancel");
-            cancelButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    cancel();
-                }
-            });
             attachWidget(cancelButton, editorOverlay);
 
             /*
@@ -1362,6 +1363,9 @@ public class Grid<T> extends ResizeComposite implements
             }
             columnToWidget.clear();
 
+            detachWidget(saveButton);
+            detachWidget(cancelButton);
+
             editorOverlay.removeAllChildren();
             editorOverlay.removeFromParent();
 
@@ -1371,9 +1375,14 @@ public class Grid<T> extends ResizeComposite implements
         protected void setStylePrimaryName(String primaryName) {
             if (styleName != null) {
                 editorOverlay.removeClassName(styleName);
+                saveButton.removeStyleName(styleName + "-save");
+                cancelButton.removeStyleName(styleName + "-cancel");
             }
             styleName = primaryName + "-editor";
             editorOverlay.addClassName(styleName);
+
+            saveButton.addStyleName(styleName + "-save");
+            cancelButton.addStyleName(styleName + "-cancel");
         }
 
         /**
@@ -1399,6 +1408,11 @@ public class Grid<T> extends ResizeComposite implements
         private void attachWidget(Widget w, Element parent) {
             parent.appendChild(w.getElement());
             setParent(w, grid);
+        }
+
+        private void detachWidget(Widget w) {
+            setParent(w, null);
+            w.getElement().removeFromParent();
         }
 
         private static void setBounds(Element e, double left, double top,
@@ -1430,6 +1444,32 @@ public class Grid<T> extends ResizeComposite implements
         private void setButtonsEnabled(boolean enabled) {
             saveButton.setEnabled(enabled);
             cancelButton.setEnabled(enabled);
+        }
+
+        public void setSaveCaption(String saveCaption)
+                throws IllegalArgumentException {
+            if (saveCaption == null) {
+                throw new IllegalArgumentException(
+                        "Save caption cannot be null");
+            }
+            saveButton.setText(saveCaption);
+        }
+
+        public String getSaveCaption() {
+            return saveButton.getText();
+        }
+
+        public void setCancelCaption(String cancelCaption)
+                throws IllegalArgumentException {
+            if (cancelCaption == null) {
+                throw new IllegalArgumentException(
+                        "Cancel caption cannot be null");
+            }
+            cancelButton.setText(cancelCaption);
+        }
+
+        public String getCancelCaption() {
+            return cancelButton.getText();
         }
     }
 
@@ -5823,6 +5863,50 @@ public class Grid<T> extends ResizeComposite implements
      */
     public Widget getEditorWidget(Column<?, T> column) {
         return editor.getWidget(column);
+    }
+
+    /**
+     * Sets the caption on the save button in the Grid editor.
+     * 
+     * @param saveCaption
+     *            the caption to set
+     * @throws IllegalArgumentException
+     *             if {@code saveCaption} is {@code null}
+     */
+    public void setEditorSaveCaption(String saveCaption)
+            throws IllegalArgumentException {
+        editor.setSaveCaption(saveCaption);
+    }
+
+    /**
+     * Gets the current caption on the save button in the Grid editor.
+     * 
+     * @return the current caption on the save button
+     */
+    public String getEditorSaveCaption() {
+        return editor.getSaveCaption();
+    }
+
+    /**
+     * Sets the caption on the cancel button in the Grid editor.
+     * 
+     * @param cancelCaption
+     *            the caption to set
+     * @throws IllegalArgumentException
+     *             if {@code cancelCaption} is {@code null}
+     */
+    public void setEditorCancelCaption(String cancelCaption)
+            throws IllegalArgumentException {
+        editor.setCancelCaption(cancelCaption);
+    }
+
+    /**
+     * Gets the caption on the cancel button in the Grid editor.
+     * 
+     * @return the current caption on the cancel button
+     */
+    public String getEditorCancelCaption() {
+        return editor.getCancelCaption();
     }
 
     @Override

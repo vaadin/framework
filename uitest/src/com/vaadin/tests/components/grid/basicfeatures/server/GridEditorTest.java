@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -31,6 +32,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -160,6 +162,32 @@ public class GridEditorTest extends GridBasicFeaturesTest {
                 .getText());
     }
 
+    @Test
+    public void testCaptionChange() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertEquals("Save button caption should've been \""
+                + GridConstants.DEFAULT_SAVE_CAPTION + "\" to begin with",
+                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
+        assertEquals("Cancel button caption should've been \""
+                + GridConstants.DEFAULT_CANCEL_CAPTION + "\" to begin with",
+                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
+                        .getText());
+
+        selectMenuPath("Component", "Editor", "Change save caption");
+        assertNotEquals(
+                "Save button caption should've changed while editor is open",
+                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
+
+        getCancelButton().click();
+
+        selectMenuPath("Component", "Editor", "Change cancel caption");
+        selectMenuPath(EDIT_ITEM_5);
+        assertNotEquals(
+                "Cancel button caption should've changed while editor is closed",
+                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
+                        .getText());
+    }
+
     private void assertEditorOpen() {
         assertNotNull("Editor is supposed to be open", getEditor());
         assertEquals("Unexpected number of widgets", GridBasicFeatures.COLUMNS,
@@ -256,5 +284,13 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         scrollGridVerticallyTo(100);
         assertEquals("Grid shouldn't scroll vertically while editing",
                 originalScrollPos, getGridVerticalScrollPos());
+    }
+
+    private WebElement getSaveButton() {
+        return getDriver().findElement(By.className("v-grid-editor-save"));
+    }
+
+    private WebElement getCancelButton() {
+        return getDriver().findElement(By.className("v-grid-editor-cancel"));
     }
 }

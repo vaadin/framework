@@ -4862,6 +4862,56 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return editorFieldGroup.getFieldFactory();
     }
 
+    /**
+     * Sets the caption on the save button in the Grid editor.
+     * 
+     * @param saveCaption
+     *            the caption to set
+     * @throws IllegalArgumentException
+     *             if {@code saveCaption} is {@code null}
+     */
+    public void setEditorSaveCaption(String saveCaption)
+            throws IllegalArgumentException {
+        if (saveCaption == null) {
+            throw new IllegalArgumentException("Save caption cannot be null");
+        }
+        getState().editorSaveCaption = saveCaption;
+    }
+
+    /**
+     * Gets the current caption of the save button in the Grid editor.
+     * 
+     * @return the current caption of the save button
+     */
+    public String getEditorSaveCaption() {
+        return getState(false).editorSaveCaption;
+    }
+
+    /**
+     * Sets the caption on the cancel button in the Grid editor.
+     * 
+     * @param cancelCaption
+     *            the caption to set
+     * @throws IllegalArgumentException
+     *             if {@code cancelCaption} is {@code null}
+     */
+    public void setEditorCancelCaption(String cancelCaption)
+            throws IllegalArgumentException {
+        if (cancelCaption == null) {
+            throw new IllegalArgumentException("Cancel caption cannot be null");
+        }
+        getState().editorCancelCaption = cancelCaption;
+    }
+
+    /**
+     * Gets the current caption of the cancel button in the Grid editor.
+     * 
+     * @return the current caption of the cancel button
+     */
+    public String getCancelCaption() {
+        return getState(false).editorCancelCaption;
+    }
+
     @Override
     public void addItemClickListener(ItemClickListener listener) {
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,

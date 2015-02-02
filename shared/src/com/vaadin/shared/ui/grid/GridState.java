@@ -146,4 +146,11 @@ public class GridState extends AbstractComponentState {
     /** Whether row data might contain generated cell styles */
     public boolean hasCellStyleGenerator;
 
+    /** The caption for the save button in the editor */
+    @DelegateToWidget
+    public String editorSaveCaption = GridConstants.DEFAULT_SAVE_CAPTION;
+
+    /** The caption for the cancel button in the editor */
+    @DelegateToWidget
+    public String editorCancelCaption = GridConstants.DEFAULT_CANCEL_CAPTION;
 }
