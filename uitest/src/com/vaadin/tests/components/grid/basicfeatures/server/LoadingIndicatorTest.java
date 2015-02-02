@@ -18,7 +18,9 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -44,11 +46,8 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
         gridElement.getCell(200, 1);
 
         // Wait for loading indicator delay
-        Thread.sleep(500);
-
-        Assert.assertTrue(
-                "Loading indicator should be visible when fetching rows that are visible",
-                isLoadingIndicatorVisible());
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(By
+                .className("v-loading-indicator")));
 
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
                 .className("v-loading-indicator")));
@@ -65,22 +64,29 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
                 isLoadingIndicatorVisible());
 
         // Finally verify that there was actually a request going on
-        Thread.sleep(2000);
+        waitUntilLogContains("Requested items");
+    }
 
-        String firstLogRow = getLogRow(0);
-        Assert.assertTrue(
-                "Last log message should be number 6: " + firstLogRow,
-                firstLogRow.startsWith("6. Requested items"));
+    private void waitUntilLogContains(final String value) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return getLogRow(0).contains(value);
+            }
+
+            @Override
+            public String toString() {
+                // Timed out after 10 seconds waiting for ...
+                return "first log row to contain '" + value + "' (was: '"
+                        + getLogRow(0) + "')";
+            }
+        });
     }
 
     private boolean isLoadingIndicatorVisible() {
         WebElement loadingIndicator = findElement(By
                 .className("v-loading-indicator"));
-        if (loadingIndicator == null) {
-            return false;
-        } else {
-            return loadingIndicator.isDisplayed();
-        }
 
+        return loadingIndicator.isDisplayed();
     }
 }
