@@ -19,35 +19,25 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Resource;
-import com.vaadin.server.ThemeResource;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 
@@ -65,8 +55,21 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static Map<Class, AttributeCacheEntry> cache = Collections
-            .synchronizedMap(new HashMap<Class, AttributeCacheEntry>());
+    private static Map<Class<?>, AttributeCacheEntry> cache = Collections
+            .synchronizedMap(new HashMap<Class<?>, AttributeCacheEntry>());
+
+    // translates string <-> object
+    private static DesignFormatter FORMATTER = new DesignFormatter();
+
+    /**
+     * Returns the currently used formatter. All primitive types and all types
+     * needed by Vaadin components are handled by that formatter.
+     * 
+     * @return An instance of the formatter.
+     */
+    public static DesignFormatter getFormatter() {
+        return FORMATTER;
+    }
 
     /**
      * Clears the children and attributes of the given element
@@ -111,8 +114,8 @@ public class DesignAttributeHandler implements Serializable {
                 success = false;
             } else {
                 // we have a value from design attributes, let's use that
-                Object param = fromAttributeValue(
-                        setter.getParameterTypes()[0], value);
+                Object param = getFormatter().parse(value,
+                        setter.getParameterTypes()[0]);
                 setter.invoke(target, param);
                 success = true;
             }
@@ -170,7 +173,7 @@ public class DesignAttributeHandler implements Serializable {
             Method getter = descriptor.getReadMethod();
             Method setter = descriptor.getWriteMethod();
             if (getter != null && setter != null
-                    && isSupported(descriptor.getPropertyType())) {
+                    && getFormatter().canConvert(descriptor.getPropertyType())) {
                 String attribute = toAttributeName(descriptor.getName());
                 entry.addAttribute(attribute, getter, setter);
             }
@@ -229,10 +232,9 @@ public class DesignAttributeHandler implements Serializable {
      * @return the attribute value or the default value if the attribute is not
      *         found
      */
-    @SuppressWarnings("unchecked")
     public static <T> T readAttribute(String attribute, Attributes attributes,
             Class<T> outputType) {
-        if (!isSupported(outputType)) {
+        if (!getFormatter().canConvert(outputType)) {
             throw new IllegalArgumentException("output type: "
                     + outputType.getName() + " not supported");
         }
@@ -241,7 +243,7 @@ public class DesignAttributeHandler implements Serializable {
         } else {
             try {
                 String value = attributes.get(attribute);
-                return (T) fromAttributeValue(outputType, value);
+                return getFormatter().parse(value, outputType);
             } catch (Exception e) {
                 throw new DesignException("Failed to read attribute "
                         + attribute, e);
@@ -266,7 +268,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     public static <T> void writeAttribute(String attribute,
             Attributes attributes, T value, T defaultValue, Class<T> inputType) {
-        if (!isSupported(inputType)) {
+        if (!getFormatter().canConvert(inputType)) {
             throw new IllegalArgumentException("input type: "
                     + inputType.getName() + " not supported");
         }
@@ -274,101 +276,6 @@ public class DesignAttributeHandler implements Serializable {
             String attributeValue = toAttributeValue(inputType, value);
             attributes.put(attribute, attributeValue);
         }
-    }
-
-    /**
-     * Formats the given design attribute value. The method is provided to
-     * ensure consistent number formatting for design attribute values
-     * 
-     * @param number
-     *            the number to be formatted
-     * @return the formatted number
-     */
-    public static String formatFloat(float number) {
-        return getDecimalFormat().format(number);
-    }
-
-    /**
-     * Formats the given design attribute value. The method is provided to
-     * ensure consistent number formatting for design attribute values
-     * 
-     * @param number
-     *            the number to be formatted
-     * @return the formatted number
-     */
-    public static String formatDouble(double number) {
-        return getDecimalFormat().format(number);
-    }
-
-    /**
-     * Convert ShortcutAction to attribute string presentation
-     * 
-     * @param shortcut
-     *            the shortcut action
-     * @return the action as attribute string presentation
-     */
-    private static String formatShortcutAction(ShortcutAction shortcut) {
-        StringBuilder sb = new StringBuilder();
-        // handle modifiers
-        if (shortcut.getModifiers() != null) {
-            for (int modifier : shortcut.getModifiers()) {
-                sb.append(ShortcutKeyMapper.getStringForKeycode(modifier))
-                        .append("-");
-            }
-        }
-        // handle keycode
-        sb.append(ShortcutKeyMapper.getStringForKeycode(shortcut.getKeyCode()));
-        return sb.toString();
-    }
-
-    /**
-     * Reads shortcut action from attribute presentation
-     * 
-     * @param attributeValue
-     *            attribute presentation of shortcut action
-     * @return shortcut action with keycode and modifier keys from attribute
-     *         value
-     */
-    private static ShortcutAction readShortcutAction(String attributeValue) {
-        if (attributeValue.length() == 0) {
-            return null;
-        }
-        String[] parts = attributeValue.split("-");
-        // handle keycode
-        String keyCodePart = parts[parts.length - 1];
-        int keyCode = ShortcutKeyMapper.getKeycodeForString(keyCodePart);
-        if (keyCode < 0) {
-            throw new IllegalArgumentException("Invalid shortcut definition "
-                    + attributeValue);
-        }
-        // handle modifiers
-        int[] modifiers = null;
-        if (parts.length > 1) {
-            modifiers = new int[parts.length - 1];
-        }
-        for (int i = 0; i < parts.length - 1; i++) {
-            int modifier = ShortcutKeyMapper.getKeycodeForString(parts[i]);
-            if (modifier > 0) {
-                modifiers[i] = modifier;
-            } else {
-                throw new IllegalArgumentException(
-                        "Invalid shortcut definition " + attributeValue);
-            }
-        }
-        return new ShortcutAction(null, keyCode, modifiers);
-    }
-
-    /**
-     * Creates the decimal format used when writing attributes to the design.
-     * 
-     * @return the decimal format
-     */
-    private static DecimalFormat getDecimalFormat() {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
-                "en_US"));
-        DecimalFormat fmt = new DecimalFormat("0.###", symbols);
-        fmt.setGroupingUsed(false);
-        return fmt;
     }
 
     /**
@@ -381,6 +288,7 @@ public class DesignAttributeHandler implements Serializable {
      * @return the design attribute name corresponding the given method name
      */
     private static String toAttributeName(String propertyName) {
+        propertyName = removeSubsequentUppercase(propertyName);
         String[] words = propertyName.split("(?<!^)(?=[A-Z])");
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < words.length; i++) {
@@ -393,56 +301,43 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Parses the given attribute value to specified target type
+     * Replaces subsequent UPPERCASE strings of length 2 or more followed either
+     * by another uppercase letter or an end of string. This is to generalise
+     * handling of method names like <tt>showISOWeekNumbers</tt>.
      * 
-     * @param targetType
-     *            the target type for the value
-     * @param value
-     *            the parsed value
-     * @return the object of specified target type
+     * @param param
+     *            Input string.
+     * @return Input string with sequences of UPPERCASE turned into Normalcase.
      */
-    private static Object fromAttributeValue(Class<?> targetType, String value) {
-        if (targetType == String.class) {
-            return value;
+    private static String removeSubsequentUppercase(String param) {
+        StringBuffer result = new StringBuffer();
+        // match all two-or-more caps letters lead by a non-uppercase letter
+        // followed by either a capital letter or string end
+        Pattern pattern = Pattern.compile("(^|[^A-Z])([A-Z]{2,})([A-Z]|$)");
+        Matcher matcher = pattern.matcher(param);
+        while (matcher.find()) {
+            String matched = matcher.group(2);
+            // if this is a beginning of the string, the whole matched group is
+            // written in lower case
+            if (matcher.group(1).isEmpty()) {
+                matcher.appendReplacement(result, matched.toLowerCase()
+                        + matcher.group(3));
+                // otherwise the first character of the group stays uppercase,
+                // while the others are lower case
+            } else {
+                matcher.appendReplacement(
+                        result,
+                        matcher.group(1) + matched.substring(0, 1)
+                                + matched.substring(1).toLowerCase()
+                                + matcher.group(3));
+            }
+            // in both cases the uppercase letter of the next word (or string's
+            // end) is added
+            // this implies there is at least one extra lowercase letter after
+            // it to be caught by the next call to find()
         }
-        // special handling for boolean type. The attribute evaluates to true if
-        // it is present and the value is not "false" or "FALSE". Thus empty
-        // value evaluates to true.
-        if (targetType == Boolean.TYPE || targetType == Boolean.class) {
-            return parseBoolean(value);
-        }
-        if (targetType == Integer.TYPE || targetType == Integer.class) {
-            return Integer.valueOf(value);
-        }
-        if (targetType == Byte.TYPE || targetType == Byte.class) {
-            return Byte.valueOf(value);
-        }
-        if (targetType == Short.TYPE || targetType == Short.class) {
-            return Short.valueOf(value);
-        }
-        if (targetType == Long.TYPE || targetType == Long.class) {
-            return Long.valueOf(value);
-        }
-        if (targetType == Character.TYPE || targetType == Character.class) {
-            return value.charAt(0);
-        }
-        if (targetType == Float.TYPE || targetType == Float.class) {
-            return Float.valueOf(value);
-        }
-        if (targetType == Double.TYPE || targetType == Double.class) {
-            return Double.valueOf(value);
-        }
-        if (targetType == Resource.class) {
-            return parseResource(value);
-        }
-        if (Enum.class.isAssignableFrom(targetType)) {
-            return Enum.valueOf((Class<? extends Enum>) targetType,
-                    value.toUpperCase());
-        }
-        if (targetType == ShortcutAction.class) {
-            return readShortcutAction(value);
-        }
-        return null;
+        matcher.appendTail(result);
+        return result.toString();
     }
 
     /**
@@ -460,53 +355,12 @@ public class DesignAttributeHandler implements Serializable {
             // value is not null. How to represent null value in attributes?
             return "";
         }
-        if (sourceType == Resource.class) {
-            if (value instanceof ExternalResource) {
-                return ((ExternalResource) value).getURL();
-            } else if (value instanceof ThemeResource) {
-                return "theme://" + ((ThemeResource) value).getResourceId();
-            } else if (value instanceof FontAwesome) {
-                return "font://" + ((FontAwesome) value).name();
-            } else if (value instanceof FileResource) {
-                String path = ((FileResource) value).getSourceFile().getPath();
-                if (File.separatorChar != '/') {
-                    // make sure we use '/' as file separator in templates
-                    return path.replace(File.separatorChar, '/');
-                } else {
-                    return path;
-                }
-            } else {
-                getLogger().warning(
-                        "Unknown resource type " + value.getClass().getName());
-                return null;
-            }
-        } else if (sourceType == Float.class || sourceType == Float.TYPE) {
-            return formatFloat(((Float) value).floatValue());
-        } else if (sourceType == Double.class || sourceType == Double.TYPE) {
-            return formatDouble(((Double) value).doubleValue());
-        } else if (sourceType == ShortcutAction.class) {
-            return formatShortcutAction((ShortcutAction) value);
+        Converter<String, Object> converter = getFormatter().findConverterFor(
+                sourceType);
+        if (converter != null) {
+            return converter.convertToPresentation(value, String.class, null);
         } else {
             return value.toString();
-        }
-    }
-
-    /**
-     * Parses the given attribute value as resource
-     * 
-     * @param value
-     *            the attribute value to be parsed
-     * @return resource instance based on the attribute value
-     */
-    private static Resource parseResource(String value) {
-        if (value.startsWith("http://")) {
-            return new ExternalResource(value);
-        } else if (value.startsWith("theme://")) {
-            return new ThemeResource(value.substring(8));
-        } else if (value.startsWith("font://")) {
-            return FontAwesome.valueOf(value.substring(7));
-        } else {
-            return new FileResource(new File(value));
         }
     }
 
@@ -542,29 +396,6 @@ public class DesignAttributeHandler implements Serializable {
         return cache.get(clazz).getGetter(attribute);
     }
 
-    // supported property types
-    private static final List<Class<?>> supportedClasses = Arrays
-            .asList(new Class<?>[] { String.class, Boolean.class,
-                    Integer.class, Byte.class, Short.class, Long.class,
-                    Character.class, Float.class, Double.class, Resource.class,
-                    ShortcutAction.class });
-
-    /**
-     * Returns true if the specified value type is supported by this class.
-     * Currently the handler supports primitives, {@link Locale.class} and
-     * {@link Resource.class}.
-     * 
-     * @param valueType
-     *            the value type to be tested
-     * @return true if the value type is supported, otherwise false
-     */
-    private static boolean isSupported(Class<?> valueType) {
-        return valueType != null
-                && (valueType.isPrimitive()
-                        || supportedClasses.contains(valueType) || Enum.class
-                            .isAssignableFrom(valueType));
-    }
-
     /**
      * Cache object for caching supported attributes and their getters and
      * setters
@@ -597,119 +428,6 @@ public class DesignAttributeHandler implements Serializable {
             Method[] methods = accessMethods.get(attribute);
             return (methods != null && methods.length > 1) ? methods[1] : null;
         }
-    }
-
-    /**
-     * Provides mappings between shortcut keycodes and their representation in
-     * design attributes
-     * 
-     * @author Vaadin Ltd
-     */
-    private static class ShortcutKeyMapper implements Serializable {
-
-        private static Map<Integer, String> keyCodeMap = Collections
-                .synchronizedMap(new HashMap<Integer, String>());
-        private static Map<String, Integer> presentationMap = Collections
-                .synchronizedMap(new HashMap<String, Integer>());
-
-        static {
-            // map modifiers
-            mapKey(ModifierKey.ALT, "alt");
-            mapKey(ModifierKey.CTRL, "ctrl");
-            mapKey(ModifierKey.META, "meta");
-            mapKey(ModifierKey.SHIFT, "shift");
-            // map keys
-            mapKey(KeyCode.ENTER, "enter");
-            mapKey(KeyCode.ESCAPE, "escape");
-            mapKey(KeyCode.PAGE_UP, "pageup");
-            mapKey(KeyCode.PAGE_DOWN, "pagedown");
-            mapKey(KeyCode.TAB, "tab");
-            mapKey(KeyCode.ARROW_LEFT, "left");
-            mapKey(KeyCode.ARROW_UP, "up");
-            mapKey(KeyCode.ARROW_RIGHT, "right");
-            mapKey(KeyCode.ARROW_DOWN, "down");
-            mapKey(KeyCode.BACKSPACE, "backspace");
-            mapKey(KeyCode.DELETE, "delete");
-            mapKey(KeyCode.INSERT, "insert");
-            mapKey(KeyCode.END, "end");
-            mapKey(KeyCode.HOME, "home");
-            mapKey(KeyCode.F1, "f1");
-            mapKey(KeyCode.F2, "f2");
-            mapKey(KeyCode.F3, "f3");
-            mapKey(KeyCode.F4, "f4");
-            mapKey(KeyCode.F5, "f5");
-            mapKey(KeyCode.F6, "f6");
-            mapKey(KeyCode.F7, "f7");
-            mapKey(KeyCode.F8, "f8");
-            mapKey(KeyCode.F9, "f9");
-            mapKey(KeyCode.F10, "f10");
-            mapKey(KeyCode.F11, "f11");
-            mapKey(KeyCode.F12, "f12");
-            mapKey(KeyCode.NUM0, "0");
-            mapKey(KeyCode.NUM1, "1");
-            mapKey(KeyCode.NUM2, "2");
-            mapKey(KeyCode.NUM3, "3");
-            mapKey(KeyCode.NUM4, "4");
-            mapKey(KeyCode.NUM5, "5");
-            mapKey(KeyCode.NUM6, "6");
-            mapKey(KeyCode.NUM7, "7");
-            mapKey(KeyCode.NUM8, "8");
-            mapKey(KeyCode.NUM9, "9");
-            mapKey(KeyCode.SPACEBAR, "spacebar");
-            mapKey(KeyCode.A, "a");
-            mapKey(KeyCode.B, "b");
-            mapKey(KeyCode.C, "c");
-            mapKey(KeyCode.D, "d");
-            mapKey(KeyCode.E, "e");
-            mapKey(KeyCode.F, "f");
-            mapKey(KeyCode.G, "g");
-            mapKey(KeyCode.H, "h");
-            mapKey(KeyCode.I, "i");
-            mapKey(KeyCode.J, "j");
-            mapKey(KeyCode.K, "k");
-            mapKey(KeyCode.L, "l");
-            mapKey(KeyCode.M, "m");
-            mapKey(KeyCode.N, "n");
-            mapKey(KeyCode.O, "o");
-            mapKey(KeyCode.P, "p");
-            mapKey(KeyCode.Q, "q");
-            mapKey(KeyCode.R, "r");
-            mapKey(KeyCode.S, "s");
-            mapKey(KeyCode.T, "t");
-            mapKey(KeyCode.U, "u");
-            mapKey(KeyCode.V, "v");
-            mapKey(KeyCode.X, "x");
-            mapKey(KeyCode.Y, "y");
-            mapKey(KeyCode.Z, "z");
-        }
-
-        private static void mapKey(int keyCode, String presentation) {
-            keyCodeMap.put(keyCode, presentation);
-            presentationMap.put(presentation, keyCode);
-        }
-
-        private static int getKeycodeForString(String attributePresentation) {
-            Integer code = presentationMap.get(attributePresentation);
-            return code != null ? code.intValue() : -1;
-        }
-
-        private static String getStringForKeycode(int keyCode) {
-            return keyCodeMap.get(keyCode);
-        }
-    }
-
-    /**
-     * Converts the given string attribute value to its corresponding boolean.
-     * 
-     * An empty string and "true" are considered to represent a true value and
-     * "false" to represent a false value.
-     * 
-     * @param booleanValue
-     *            the boolean value from an attribute
-     * @return the parsed boolean
-     */
-    public static boolean parseBoolean(String booleanValue) {
-        return !booleanValue.equalsIgnoreCase("false");
     }
 
 }

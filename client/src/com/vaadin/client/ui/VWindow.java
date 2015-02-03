@@ -1338,9 +1338,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onKeyUp(KeyUpEvent event) {
-        if (isClosable() && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-            onCloseClick();
-        }
+        // do nothing
     }
 
     @Override

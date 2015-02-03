@@ -137,6 +137,8 @@
             <li>The semantics of empty and required for Field classes has been made more consistent. This mainly affects Checkbox which is now considered to be empty when it is not checked.</li>
             <li>The previously inconsistent behavior in HTML vs plain text rendering of Calendar event captions has been made consistent.</li>
             <li>Support for Opera 12 has been dropped. Newer versions based on the Blink rendering engine are still supported.</li>
+            <li>Window's accessibility shortcut was moved to server-side. Now setCloseShortcut overrides the default value, while addCloseShortcut can be used to add more than one shortcut key for closing the window.
+                The protected value closeShortcut in Window was removed.</li>
         </ul>
         <h3 id="knownissues">Known issues</h3>
         <ul>

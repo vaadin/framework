@@ -15,15 +15,18 @@
  */
 package com.vaadin.tests.design;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.util.Locale;
-
-import junit.framework.TestCase;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -32,11 +35,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the handling of the locale property in parsing and html generation.

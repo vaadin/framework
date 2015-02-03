@@ -563,8 +563,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             if (expandRatio == 1.0f) {
                 childElement.attr(":expand", "");
             } else if (expandRatio > 0) {
-                childElement.attr(":expand",
-                        DesignAttributeHandler.formatFloat(expandRatio));
+                childElement.attr(":expand", DesignAttributeHandler
+                        .getFormatter().format(expandRatio));
             }
         }
     }

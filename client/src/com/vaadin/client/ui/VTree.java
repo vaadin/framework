@@ -1737,8 +1737,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         selectNode(node, true);
                     }
                 }
+                showTooltipForKeyboardNavigation(node);
             }
-            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -1763,8 +1763,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         selectNode(node, true);
                     }
                 }
+                showTooltipForKeyboardNavigation(node);
             }
-            showTooltipForKeyboardNavigation(node);
             return true;
         }
 

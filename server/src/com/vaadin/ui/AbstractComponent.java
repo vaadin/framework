@@ -959,8 +959,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         // handle immediate
         if (attr.hasKey("immediate")) {
-            setImmediate(DesignAttributeHandler.parseBoolean(attr
-                    .get("immediate")));
+            setImmediate(DesignAttributeHandler.getFormatter().parse(
+                    attr.get("immediate"), Boolean.class));
         }
 
         // handle locale
@@ -984,8 +984,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         // handle responsive
         if (attr.hasKey("responsive")) {
-            setResponsive(DesignAttributeHandler.parseBoolean(attr
-                    .get("responsive")));
+            setResponsive(DesignAttributeHandler.getFormatter().parse(
+                    attr.get("responsive"), Boolean.class));
         }
         // check for unsupported attributes
         Set<String> supported = new HashSet<String>();
@@ -1138,9 +1138,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 } else if (widthAuto) {
                     attributes.put("width-auto", "true");
                 } else {
-                    String widthString = DesignAttributeHandler
-                            .formatFloat(getWidth())
-                            + getWidthUnits().getSymbol();
+                    String widthString = DesignAttributeHandler.getFormatter()
+                            .format(getWidth()) + getWidthUnits().getSymbol();
                     attributes.put("width", widthString);
 
                 }
@@ -1152,9 +1151,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 } else if (heightAuto) {
                     attributes.put("height-auto", "true");
                 } else {
-                    String heightString = DesignAttributeHandler
-                            .formatFloat(getHeight())
-                            + getHeightUnits().getSymbol();
+                    String heightString = DesignAttributeHandler.getFormatter()
+                            .format(getHeight()) + getHeightUnits().getSymbol();
                     attributes.put("height", heightString);
                 }
             }

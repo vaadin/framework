@@ -20,19 +20,18 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.AbstractOrderedLayoutElement;
+import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
+import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class BasicCrudTest extends SingleBrowserTest {
+public class BasicCrudTableTest extends SingleBrowserTest {
 
     @Test
     public void fieldsInitiallyEmpty() {
         openTestURL();
-        AbstractOrderedLayoutElement fieldsLayout = $(
-                AbstractOrderedLayoutElement.class).id("form");
-        List<TextFieldElement> textFields = fieldsLayout.$(
+        List<TextFieldElement> textFields = getFieldsLayout().$(
                 TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
@@ -40,16 +39,18 @@ public class BasicCrudTest extends SingleBrowserTest {
         }
     }
 
+    private AbstractHasTestBenchCommandExecutor getFieldsLayout() {
+        return $(AbstractComponentElement.class).id("form");
+    }
+
     @Test
     public void fieldsClearedOnDeselect() {
         openTestURL();
-        AbstractOrderedLayoutElement fieldsLayout = $(
-                AbstractOrderedLayoutElement.class).id("form");
 
         // Select row
         $(TableElement.class).first().getCell(2, 2).click();
 
-        List<TextFieldElement> textFields = fieldsLayout.$(
+        List<TextFieldElement> textFields = getFieldsLayout().$(
                 TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {

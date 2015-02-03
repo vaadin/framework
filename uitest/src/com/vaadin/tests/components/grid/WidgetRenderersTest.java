@@ -15,15 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
@@ -31,6 +22,15 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TB tests for the various builtin widget-based renderers.
@@ -41,30 +41,31 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class WidgetRenderersTest extends MultiBrowserTest {
 
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        openTestURL();
+    }
+
     @Test
     public void testProgressBarRenderer() {
-        openTestURL();
-
         assertTrue(getGridCell(0, 0).isElementPresent(
                 By.className("v-progressbar")));
     }
 
     @Test
     public void testButtonRenderer() {
-        openTestURL();
-
         WebElement button = getGridCell(0, 1).findElement(
                 By.className("v-nativebutton"));
 
         button.click();
 
-        assertEquals("Clicked!", button.getText());
+        waitUntilTextUpdated(button, "Clicked!");
     }
 
     @Test
     public void testButtonRendererAfterCellBeingFocused() {
-        openTestURL();
-
         GridCellElement buttonCell = getGridCell(0, 1);
         assertFalse("cell should not be focused before focusing",
                 buttonCell.isFocused());
@@ -80,30 +81,41 @@ public class WidgetRenderersTest extends MultiBrowserTest {
                 "Clicked!", button.getText());
 
         new Actions(getDriver()).moveToElement(button).click().perform();
-        assertEquals("Button should be clicked after click", "Clicked!",
-                button.getText());
+
+        waitUntilTextUpdated(button, "Clicked!");
     }
 
     @Test
     public void testImageRenderer() {
-        openTestURL();
-
-        WebElement image = getGridCell(0, 2).findElement(
+        final WebElement image = getGridCell(0, 2).findElement(
                 By.className("gwt-Image"));
 
-        assertTrue(image.getAttribute("src").endsWith("window/img/close.png"));
+        waitUntilmageSrcEndsWith(image, "window/img/close.png");
 
         image.click();
 
-        assertTrue(image.getAttribute("src")
-                .endsWith("window/img/maximize.png"));
+        waitUntilmageSrcEndsWith(image, "window/img/maximize.png");
+    }
+
+    private void waitUntilmageSrcEndsWith(final WebElement image, final String expectedText) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return image.getAttribute("src").endsWith(expectedText);
+            }
+
+            @Override
+            public String toString() {
+                // Timed out after 10 seconds waiting for ...
+                return String.format("image source to update. Supposed to end with '%s' (was: '%s').",
+                        expectedText, image.getAttribute("src"));
+            }
+        });
     }
 
     @Test
     public void testColumnReorder() {
-        setDebug(true);
-        openTestURL();
-
         $(ButtonElement.class).caption("Change column order").first().click();
 
         assertFalse("Notification was present",
@@ -119,14 +131,34 @@ public class WidgetRenderersTest extends MultiBrowserTest {
 
     @Test
     public void testPropertyIdInEvent() {
-        openTestURL();
         WebElement button = getGridCell(0, 3).findElement(
                 By.className("v-nativebutton"));
+
         button.click();
-        assertEquals(WidgetRenderers.PROPERTY_ID, button.getText());
+
+        waitUntilTextUpdated(button, WidgetRenderers.PROPERTY_ID);
     }
 
     GridCellElement getGridCell(int row, int col) {
         return $(GridElement.class).first().getCell(row, col);
+    }
+
+    private void waitUntilTextUpdated(final WebElement button,
+            final String expectedText) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return button.getText().equals(expectedText);
+            }
+
+            @Override
+            public String toString() {
+                // Timed out after 10 seconds waiting for ...
+                return String.format("button's text to become '%s' (was: '').",
+                        expectedText, button.getText());
+            }
+
+        });
     }
 }
