@@ -113,6 +113,7 @@
             <li>Uses GWT 2.7 for improved compilation times when using Super Dev Mode.</li>
             <li>@Viewport annotation for declaratively defining a mobile viewport definition for a UI.</li>
             <li>Component captions, TabSheet/Accordion tab captions and Calendar event captions can be configured to be displayed as HTML.</li>
+            <li>The <tt>vaadin-widgets</tt> JAR package containing only GWT Widgets intended for standalone use without the rest of the framework. Currently only contains Grid.</li>
             <li>Selects use converters when presenting itemids.</li>
             <li>Improved performance when server response contains no visual changes (e.g. empty polling responses).</li>
             <li>Development time on-the-fly scss compilation cache may now be preserved when redeploying or restarting the server.</li>
@@ -220,6 +221,8 @@
             </li>
             <li>Built-in themes (<tt>vaadin-themes</tt>)
             </li>
+            <li>Widgets for standalone client-side use (<tt>vaadin-widgets</tt>)
+            </li>
             <li>Dependency libraries provided under the <tt>lib/</tt>
                 folder
             </li>
@@ -253,25 +256,20 @@
             your own, which you need to do if you use almost any add-on
             components.)
         </p>
+        
+        <p>
+            For compiling the widget set, for instance when using Vaadin
+            add-ons with custom client-side implementation, you need to include
+            <tt>vaadin-client</tt> and <tt>vaadin-client-compiler</tt> on the
+            compiler classpath. Those JARs should be in a non-deployed project
+            library folder, such as <tt>lib</tt>.
+        </p>
 
         <h4 id="package.updates">Updates to the Packaging</h4>
         <p>
-            Since Vaadin 7.2.0, the old vaadin-theme-compiler has been moved into
-            a separate project and renamed to vaadin-sass-compiler. It is now included
-            along with the other 3rd party dependencies in the ZIP package.
-        </p>
-
-        <p>
-            For pure client-side development, you only need the
-            <tt>vaadin-client</tt>
-            and
-            <tt>vaadin-client-compiler</tt>
-            JARs, which should be put to a non-deployed project library
-            folder, such as
-            <tt>lib</tt>
-            . You also need them if you compile the widget set for any
-            reason, such as using Vaadin add-ons, or create new
-            server-side components integrated with client-side widgets.
+            Vaadin 7.4.0 introduces <tt>vaadin-widgets</tt> for pure
+            client-side development. This JAR only contains GWT Widgets
+            designed to be fully functional without Vaadin's server-side.
         </p>
 
         <h2 id="migrating">Migrating from Vaadin 6</h2>
