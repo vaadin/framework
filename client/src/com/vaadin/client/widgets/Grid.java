@@ -945,6 +945,10 @@ public class Grid<T> extends ResizeComposite implements
         private static final double BUTTON_HEIGHT = 25;
         private static final double BUTTON_WIDTH = 50;
         private static final double BUTTON_MARGIN = 5;
+        private static final double SAVE_BUTTON_LEFT_MARGIN_PX = 0;
+        private static final double CANCEL_BUTTON_LEFT_MARGIN_PX = SAVE_BUTTON_LEFT_MARGIN_PX
+                + BUTTON_WIDTH + BUTTON_MARGIN;
+
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
@@ -1264,8 +1268,6 @@ public class Grid<T> extends ResizeComposite implements
             setBounds(editorOverlay, tr.getOffsetLeft(), overlayTop, width,
                     height);
 
-            updateHorizontalScrollPosition();
-
             scrollHandler = grid.addScrollHandler(new ScrollHandler() {
                 @Override
                 public void onScroll(ScrollEvent event) {
@@ -1321,10 +1323,12 @@ public class Grid<T> extends ResizeComposite implements
              * Chrome and Firefox. So we measure it.
              */
             double buttonTop = getButtonTop(tr, saveButton.getOffsetHeight());
-            setBounds(saveButton.getElement(), 0, buttonTop, BUTTON_WIDTH,
-                    BUTTON_HEIGHT);
-            setBounds(cancelButton.getElement(), BUTTON_WIDTH + BUTTON_MARGIN,
+            setBounds(saveButton.getElement(), SAVE_BUTTON_LEFT_MARGIN_PX,
                     buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT);
+            setBounds(cancelButton.getElement(), CANCEL_BUTTON_LEFT_MARGIN_PX,
+                    buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+            updateHorizontalScrollPosition();
         }
 
         private double getButtonTop(TableRowElement tr, int buttonHeight) {
@@ -1406,7 +1410,14 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void updateHorizontalScrollPosition() {
-            editorOverlay.getStyle().setLeft(-grid.getScrollLeft(), Unit.PX);
+            double scrollLeft = grid.getScrollLeft();
+
+            editorOverlay.getStyle().setLeft(-scrollLeft, Unit.PX);
+
+            double saveLeftPx = scrollLeft + SAVE_BUTTON_LEFT_MARGIN_PX;
+            double cancelLeftPx = scrollLeft + CANCEL_BUTTON_LEFT_MARGIN_PX;
+            saveButton.getElement().getStyle().setLeft(saveLeftPx, Unit.PX);
+            cancelButton.getElement().getStyle().setLeft(cancelLeftPx, Unit.PX);
         }
 
         protected void setGridEnabled(boolean enabled) {

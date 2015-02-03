@@ -89,7 +89,6 @@ public class GridElement extends AbstractComponentElement {
          * useless.
          */
         public void save() {
-            getField(0);
             List<WebElement> buttons = findElements(By.xpath("./button"));
             buttons.get(0).click();
         }
@@ -101,7 +100,6 @@ public class GridElement extends AbstractComponentElement {
          * useless.
          */
         public void cancel() {
-            getField(0);
             List<WebElement> buttons = findElements(By.xpath("./button"));
             buttons.get(1).click();
         }
