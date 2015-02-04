@@ -79,6 +79,7 @@ public class ClassesSerializableTest extends TestCase {
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
             "com\\.vaadin\\.util\\.WeakValueMap.*", //
+            "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
     };
 
     /**

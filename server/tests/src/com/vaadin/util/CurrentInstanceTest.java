@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinRequest;
@@ -31,6 +32,12 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 public class CurrentInstanceTest {
+
+    @Before
+    public void clearExistingThreadLocals() {
+        // Ensure no previous test left some thread locals hanging
+        CurrentInstance.clearAll();
+    }
 
     @Test
     public void testInitiallyCleared() throws Exception {
@@ -49,6 +56,8 @@ public class CurrentInstanceTest {
 
     @Test
     public void testClearedAfterRemoveInheritable() throws Exception {
+        CurrentInstance.clearAll();
+
         CurrentInstance.setInheritable(CurrentInstanceTest.class, this);
         Assert.assertEquals(this,
                 CurrentInstance.get(CurrentInstanceTest.class));
