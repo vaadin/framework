@@ -1982,7 +1982,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Return the property id for the backing property of this Column
+         * Returns the property id for the backing property of this Column
          * 
          * @return property id
          */
@@ -2302,11 +2302,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Should sorting controls be available for the column
+         * Sets whether the column should be sortable by the user. The grid can
+         * be sorted by a sortable column by clicking or tapping the column's
+         * default header. Programmatic sorting using the Grid.sort methods is
+         * not affected by this setting.
          * 
          * @param sortable
-         *            <code>true</code> if the sorting controls should be
-         *            visible.
+         *            <code>true</code> if the user should be able to sort the
+         *            column, false otherwise
          * @return the column itself
          */
         public Column setSortable(boolean sortable) {
@@ -2334,7 +2337,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Are the sorting controls visible in the column header
+         * Returns whether the user is able to sort the grid by this column.
+         * 
+         * @return true if the column is sortable by the user, false otherwise
          */
         public boolean isSortable() {
             return state.sortable;
@@ -2361,8 +2366,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * and 2, respectively. The column with a <strong>ratio of 0 is exactly
          * as wide as its contents requires</strong>. The column with a ratio of
          * 1 is as wide as it needs, <strong>plus a third of any excess
-         * space</strong>, bceause we have 3 parts total, and this column
-         * reservs only one of those. The column with a ratio of 2, is as wide
+         * space</strong>, because we have 3 parts total, and this column
+         * reserves only one of those. The column with a ratio of 2, is as wide
          * as it needs to be, <strong>plus two thirds</strong> of the excess
          * width.
          * 
@@ -2384,7 +2389,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Gets the column's expand ratio.
+         * Returns the column's expand ratio.
          * 
          * @return the column's expand ratio
          * @see #setExpandRatio(int)
@@ -2431,7 +2436,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Gets the minimum width for this column.
+         * Return the minimum width for this column.
          * 
          * @return the minimum width for this column
          * @see #setMinimumWidth(double)
@@ -2468,13 +2473,86 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Gets the maximum width for this column.
+         * Returns the maximum width for this column.
          * 
          * @return the maximum width for this column
          * @see #setMaximumWidth(double)
          */
         public double getMaximumWidth() {
             return getState().maxWidth;
+        }
+
+        /**
+         * Sets whether the properties corresponding to this column should be
+         * editable when the item editor is active. By default columns are
+         * editable.
+         * <p>
+         * Values in non-editable columns are currently not displayed when the
+         * editor is active, but this will probably change in the future. They
+         * are not automatically assigned an editor field and, if one is
+         * manually assigned, it is not used. Columns that cannot (or should
+         * not) be edited even in principle should be set non-editable.
+         * 
+         * @param editable
+         *            {@code true} if this column should be editable,
+         *            {@code false} otherwise
+         * @return this column
+         *
+         * @throws IllegalStateException
+         *             if the editor is currently active
+         *
+         * @see Grid#editItem(Object)
+         * @see Grid#isEditorActive()
+         */
+        public Column setEditable(boolean editable) {
+            checkColumnIsAttached();
+            if (grid.isEditorActive()) {
+                throw new IllegalStateException(
+                        "Cannot change column editable status while the editor is active");
+            }
+            getState().editable = editable;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
+         * Returns whether the properties corresponding to this column should be
+         * editable when the item editor is active.
+         * 
+         * @return {@code true} if this column is editable, {@code false}
+         *         otherwise
+         * 
+         * @see Grid#editItem(Object)
+         * @see #setEditable(boolean)
+         */
+
+        public boolean isEditable() {
+            return getState().editable;
+        }
+
+        /**
+         * Sets the field component used to edit the properties in this column
+         * when the item editor is active. Please refer to
+         * {@link Grid#setEditorField(Object, Field)} for more information.
+         * 
+         * @param editor
+         *            the editor field, cannot be null
+         * @return this column
+         */
+        public Column setEditorField(Field<?> editor) {
+            grid.setEditorField(getPropertyId(), editor);
+            return this;
+        }
+
+        /**
+         * Returns the editor field used to edit the properties in this column
+         * when the item editor is active. Please refer to
+         * {@link Grid#getEditorField(Object)} for more information.
+         * 
+         * @return the editor field or null if this column is not editable
+         */
+        public Field<?> getEditorField() {
+            return grid.getEditorField(getPropertyId());
         }
     }
 
@@ -4616,6 +4694,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Gets the field component that represents a property in the item editor.
+     * Returns null if the corresponding column is not
+     * {@link Column#isEditable() editable}.
      * <p>
      * When {@link #editItem(Object) editItem} is called, fields are
      * automatically created and bound for any unbound properties.
@@ -4627,7 +4707,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * 
      * @param propertyId
      *            the property id of the property for which to find the field
-     * @return the bound field, never null
+     * @return the bound field or null if the respective column is not editable
      * 
      * @throws IllegalArgumentException
      *             if there is no column for the provided property id
@@ -4637,6 +4717,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public Field<?> getEditorField(Object propertyId) {
         checkColumnExists(propertyId);
+
+        if (!getColumn(propertyId).isEditable()) {
+            return null;
+        }
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
         if (editor == null) {
@@ -4651,7 +4735,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Opens the editor interface for the provided item.
+     * Opens the editor interface for the provided item. Scrolls the Grid to
+     * bring the item to view if it is not already visible.
      * 
      * @param itemId
      *            the id of the item to edit
@@ -4683,11 +4768,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editorFieldGroup.setItemDataSource(item);
 
         for (Column column : getColumns()) {
-            Object propertyId = column.getPropertyId();
-
-            Field<?> editor = getEditorField(propertyId);
-
-            getColumn(propertyId).getState().editorConnector = editor;
+            column.getState().editorConnector = getEditorField(column
+                    .getPropertyId());
         }
     }
 

@@ -46,6 +46,12 @@ public class GridColumnState implements Serializable {
     public Connector rendererConnector;
 
     /**
+     * Whether the values in this column are editable when the editor interface
+     * is active.
+     */
+    public boolean editable = true;
+
+    /**
      * The connector for the field used to edit cells in this column when the
      * editor interface is active.
      */

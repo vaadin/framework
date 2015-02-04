@@ -756,6 +756,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setExpandRatio(state.expandRatio);
 
         column.setSortable(state.sortable);
+        column.setEditable(state.editable);
         column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
     }
 

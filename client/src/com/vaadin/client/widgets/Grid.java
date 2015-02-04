@@ -1254,11 +1254,13 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Returns the editor widget associated with the given column. If the
-         * editor is not active, returns null.
+         * editor is not active or the column is not
+         * {@link Grid.Column#isEditable() editable}, returns null.
          * 
          * @param column
          *            the column
-         * @return the widget if the editor is open, null otherwise
+         * @return the widget if the editor is open and the column is editable,
+         *         null otherwise
          */
         protected Widget getWidget(Column<?, T> column) {
             return columnToWidget.get(column);
@@ -1305,14 +1307,12 @@ public class Grid<T> extends ResizeComposite implements
                 editorOverlay.appendChild(cell);
 
                 Column<?, T> column = grid.getColumn(i);
-                if (column == grid.selectionColumn) {
-                    continue;
-                }
-
-                Widget editor = getHandler().getWidget(column);
-                if (editor != null) {
-                    columnToWidget.put(column, editor);
-                    attachWidget(editor, cell);
+                if (column.isEditable()) {
+                    Widget editor = getHandler().getWidget(column);
+                    if (editor != null) {
+                        columnToWidget.put(column, editor);
+                        attachWidget(editor, cell);
+                    }
                 }
             }
 
@@ -1987,6 +1987,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     public final class SelectionColumn extends Column<Boolean, T> {
+
         private boolean initDone = false;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
@@ -2021,6 +2022,8 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             setWidth(-1);
+
+            setEditable(false);
 
             initDone = true;
         }
@@ -2074,6 +2077,17 @@ public class Grid<T> extends ResizeComposite implements
         public double getMinimumWidth() {
             return -1;
         }
+
+        @Override
+        public Column<Boolean, T> setEditable(boolean editable) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "can't set the selection column editable");
+            }
+            super.setEditable(editable);
+            return this;
+        }
+
     }
 
     /**
@@ -2738,6 +2752,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean sortable = false;
 
+        private boolean editable = true;
+
         private String headerCaption = "";
 
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
@@ -3157,6 +3173,43 @@ public class Grid<T> extends ResizeComposite implements
          */
         public int getExpandRatio() {
             return expandRatio;
+        }
+
+        /**
+         * Sets whether the values in this column should be editable by the user
+         * when the row editor is active. By default columns are editable.
+         * 
+         * @param editable
+         *            {@code true} to set this column editable, {@code false}
+         *            otherwise
+         * @return this column
+         * 
+         * @throws IllegalStateException
+         *             if the editor is currently active
+         * 
+         * @see Grid#editRow(int)
+         * @see Grid#isEditorActive()
+         */
+        public Column<C, T> setEditable(boolean editable) {
+            if (editable != this.editable && grid.isEditorActive()) {
+                throw new IllegalStateException(
+                        "Cannot change column editable status while the editor is active");
+            }
+            this.editable = editable;
+            return this;
+        }
+
+        /**
+         * Returns whether the values in this column are editable by the user
+         * when the row editor is active.
+         * 
+         * @return {@code true} if this column is editable, {@code false}
+         *         otherwise
+         *
+         * @see #setEditable(boolean)
+         */
+        public boolean isEditable() {
+            return editable;
         }
 
         private void scheduleColumnWidthRecalculator() {
@@ -5779,6 +5832,15 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void editRow(int rowIndex) {
         editor.editRow(rowIndex);
+    }
+
+    /**
+     * Returns whether the editor is currently open on some row.
+     * 
+     * @return {@code true} if the editor is active, {@code false} otherwise.
+     */
+    public boolean isEditorActive() {
+        return editor.getState() != State.INACTIVE;
     }
 
     /**
