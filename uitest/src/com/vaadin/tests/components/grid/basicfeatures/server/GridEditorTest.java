@@ -119,13 +119,13 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_100);
 
         List<WebElement> widgets = getEditorWidgets();
-        assertEquals("Number of widgets", GridBasicFeatures.COLUMNS,
+        assertEquals("Number of widgets", GridBasicFeatures.EDITABLE_COLUMNS,
                 widgets.size());
 
         assertEquals("(100, 0)", widgets.get(0).getAttribute("value"));
         assertEquals("(100, 1)", widgets.get(1).getAttribute("value"));
         assertEquals("(100, 2)", widgets.get(2).getAttribute("value"));
-        assertEquals("<b>100</b>", widgets.get(9).getAttribute("value"));
+        assertEquals("<b>100</b>", widgets.get(8).getAttribute("value"));
     }
 
     @Test
@@ -191,8 +191,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     private void assertEditorOpen() {
         assertNotNull("Editor is supposed to be open", getEditor());
-        assertEquals("Unexpected number of widgets", GridBasicFeatures.COLUMNS,
-                getEditorWidgets().size());
+        assertEquals("Unexpected number of widgets",
+                GridBasicFeatures.EDITABLE_COLUMNS, getEditorWidgets().size());
     }
 
     private void assertEditorClosed() {
@@ -285,6 +285,15 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         scrollGridVerticallyTo(100);
         assertEquals("Grid shouldn't scroll vertically while editing",
                 originalScrollPos, getGridVerticalScrollPos());
+    }
+
+    @Test
+    public void testUneditableColumn() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+
+        assertFalse("Uneditable column should not have an editor widget",
+                getGridElement().getEditor().isEditable(3));
     }
 
     private WebElement getSaveButton() {

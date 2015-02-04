@@ -75,11 +75,28 @@ public class GridElement extends AbstractComponentElement {
          * Gets the editor field for column in given index.
          * 
          * @param colIndex
-         *            column index
+         *            the column index
          * @return the editor field for given location
+         * 
+         * @throws NoSuchElementException
+         *             if {@code isEditable(colIndex) == false}
          */
         public TestBenchElement getField(int colIndex) {
             return grid.getSubPart("#editor[" + colIndex + "]");
+        }
+
+        /**
+         * Gets whether the column with the given index is editable, that is,
+         * has an associated editor field.
+         * 
+         * @param colIndex
+         *            the column index
+         * @return {@code true} if the column has an editor field, {@code false}
+         *          otherwise
+         */
+        public boolean isEditable(int colIndex) {
+            return grid
+                    .isElementPresent(By.vaadin("#editor[" + colIndex + "]"));
         }
 
         /**

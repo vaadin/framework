@@ -77,6 +77,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
     private static final int MANUALLY_FORMATTED_COLUMNS = 5;
     public static final int COLUMNS = 12;
+    public static final int EDITABLE_COLUMNS = COLUMNS - 1;
     public static final int ROWS = 1000;
 
     private int containerDelay = 0;
@@ -223,7 +224,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.getEditorField(getColumnProperty(3)).setReadOnly(true);
+        grid.getEditorField(getColumnProperty(2)).setReadOnly(true);
+        grid.getColumn(getColumnProperty(3)).setEditable(false);
 
         createGridActions();
 

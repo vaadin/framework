@@ -102,14 +102,14 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         List<WebElement> widgets = editor.findElements(By
                 .className("gwt-TextBox"));
 
-        assertEquals(GridBasicFeatures.COLUMNS, widgets.size());
+        assertEquals(GridBasicFeatures.EDITABLE_COLUMNS, widgets.size());
 
         assertEquals("(100, 0)", widgets.get(0).getAttribute("value"));
         assertEquals("(100, 1)", widgets.get(1).getAttribute("value"));
         assertEquals("(100, 2)", widgets.get(2).getAttribute("value"));
 
-        assertEquals("100", widgets.get(7).getAttribute("value"));
-        assertEquals("<b>100</b>", widgets.get(9).getAttribute("value"));
+        assertEquals("100", widgets.get(6).getAttribute("value"));
+        assertEquals("<b>100</b>", widgets.get(8).getAttribute("value"));
     }
 
     @Test
@@ -186,6 +186,13 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
                         .getText());
     }
 
+    public void testUneditableColumn() {
+        selectMenuPath("Component", "Editor", "Edit row 5");
+
+        assertFalse("Uneditable column should not have an editor widget",
+                getGridElement().getEditor().isEditable(3));
+    }
+
     protected WebElement getSaveButton() {
         return getEditor().findElement(By.className("v-grid-editor-save"));
     }
@@ -193,5 +200,4 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     protected WebElement getCancelButton() {
         return getEditor().findElement(By.className("v-grid-editor-cancel"));
     }
-
 }

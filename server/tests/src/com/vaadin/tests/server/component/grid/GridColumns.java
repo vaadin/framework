@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -37,6 +38,7 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.TextField;
 
 public class GridColumns {
 
@@ -240,6 +242,35 @@ public class GridColumns {
         assertFalse("Object property column should not be sortable.",
                 noSortColumn.isSortable());
         noSortColumn.setSortable(true);
+    }
+
+    @Test
+    public void testColumnsEditableByDefault() {
+        for (Column c : grid.getColumns()) {
+            assertTrue(c + " should be editable", c.isEditable());
+        }
+    }
+
+    @Test
+    public void testPropertyAndColumnEditorFieldsMatch() {
+        grid.setEditorField("column1", new TextField());
+        assertSame(grid.getEditorField("column1"), grid.getColumn("column1")
+                .getEditorField());
+
+        grid.getColumn("column2").setEditorField(new TextField());
+        assertSame(grid.getEditorField("column2"), grid.getColumn("column2")
+                .getEditorField());
+    }
+
+    @Test
+    public void testUneditableColumnHasNoField() {
+        Column col = grid.getColumn("column1");
+
+        col.setEditable(false);
+
+        assertFalse("Column should be uneditable", col.isEditable());
+        assertNull("Uneditable column should not be auto-assigned a Field",
+                col.getEditorField());
     }
 
     private GridColumnState getColumnState(Object propertyId) {

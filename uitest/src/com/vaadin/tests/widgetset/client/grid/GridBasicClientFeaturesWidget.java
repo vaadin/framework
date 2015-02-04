@@ -359,6 +359,8 @@ public class GridBasicClientFeaturesWidget extends
             column.setHeaderCaption("Header (0," + c + ")");
         }
 
+        grid.getColumn(3).setEditable(false);
+
         HeaderRow row = grid.getDefaultHeaderRow();
         for (int i = 0; i < col; ++i) {
             String caption = "Header (0," + i + ")";
