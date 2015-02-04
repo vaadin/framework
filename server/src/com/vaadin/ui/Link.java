@@ -16,10 +16,16 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
+
+import org.jsoup.nodes.Element;
+
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.link.LinkConstants;
 import com.vaadin.shared.ui.link.LinkState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Link is used to create external or internal URL links.
@@ -202,4 +208,34 @@ public class Link extends AbstractComponent {
         setResource(LinkConstants.HREF_RESOURCE, resource);
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("target")) {
+            setTargetName(DesignAttributeHandler.getFormatter().parse(
+                    design.attr("target"), String.class));
+        }
+        if (design.hasAttr("href")) {
+            setResource(DesignAttributeHandler.getFormatter().parse(
+                    design.attr("href"), Resource.class));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Link def = designContext.getDefaultInstance(this);
+        DesignAttributeHandler.writeAttribute("target", design.attributes(),
+                getTargetName(), def.getTargetName(), String.class);
+        DesignAttributeHandler.writeAttribute("href", design.attributes(),
+                getResource(), def.getResource(), Resource.class);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> a = super.getCustomAttributes();
+        a.add("target-name");
+        a.add("resource");
+        return a;
+    }
 }
