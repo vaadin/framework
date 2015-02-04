@@ -31,11 +31,12 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
+import com.vaadin.ui.declarative.converters.DesignEnumConverter;
 import com.vaadin.ui.declarative.converters.DesignFormatConverter;
 import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
+import com.vaadin.ui.declarative.converters.DesignTimeZoneConverter;
 import com.vaadin.ui.declarative.converters.DesignToStringConverter;
-import com.vaadin.ui.declarative.converters.ShortcutKeyMapper;
 
 /**
  * Class focused on flexible and consistent formatting and parsing of different
@@ -48,6 +49,7 @@ import com.vaadin.ui.declarative.converters.ShortcutKeyMapper;
 public class DesignFormatter implements Serializable {
 
     private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
+    private final Converter<String, Enum> stringEnumConverter = new DesignEnumConverter();
 
     /**
      * Creates the formatter with default types already mapped.
@@ -162,25 +164,11 @@ public class DesignFormatter implements Serializable {
         converterMap.put(Character.class, charConverter);
         converterMap.put(Character.TYPE, charConverter);
 
-        // date conversion has its own class
         converterMap.put(Date.class, new DesignDateConverter());
-
-        // as shortcut action and resource
         converterMap.put(ShortcutAction.class,
-                new DesignShortcutActionConverter(ShortcutKeyMapper.DEFAULT));
-
+                new DesignShortcutActionConverter());
         converterMap.put(Resource.class, new DesignResourceConverter());
-
-        // timezones use different static method and do not use toString()
-        converterMap.put(TimeZone.class, new DesignToStringConverter<TimeZone>(
-                TimeZone.class, "getTimeZone") {
-            @Override
-            public String convertToPresentation(TimeZone value,
-                    Class<? extends String> targetType, Locale locale)
-                    throws Converter.ConversionException {
-                return value.getID();
-            }
-        });
+        converterMap.put(TimeZone.class, new DesignTimeZoneConverter());
     }
 
     /**
@@ -307,17 +295,7 @@ public class DesignFormatter implements Serializable {
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType, boolean strict) {
         if (sourceType.isEnum()) {
-            // enums can be read in lowercase
-            return new DesignToStringConverter<T>(sourceType) {
-
-                @Override
-                public T convertToModel(String value,
-                        Class<? extends T> targetType, Locale locale)
-                        throws Converter.ConversionException {
-                    return super.convertToModel(value.toUpperCase(),
-                            targetType, locale);
-                }
-            };
+            return (Converter<String, T>) stringEnumConverter;
         } else if (converterMap.containsKey(sourceType)) {
             return ((Converter<String, T>) converterMap.get(sourceType));
         } else if (!strict) {
