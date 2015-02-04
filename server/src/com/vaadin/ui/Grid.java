@@ -91,8 +91,8 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.renderer.ObjectRenderer;
 import com.vaadin.ui.renderer.Renderer;
+import com.vaadin.ui.renderer.TextRenderer;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
@@ -1968,25 +1968,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             this.grid = grid;
             this.state = state;
             this.propertyId = propertyId;
-
-            internalSetRenderer(new ObjectRenderer() {
-                private boolean warned = false;
-                private final String DEFAULT_RENDERER_WARNING = "This column uses "
-                        + "a dummy default ObjectRenderer. A more suitable "
-                        + "renderer should be set using the setRenderer() "
-                        + "method.";
-
-                @Override
-                public JsonValue encode(Object value) {
-                    if (!warned && !(value instanceof String)) {
-                        getLogger().warning(
-                                Column.this.toString() + ": "
-                                        + DEFAULT_RENDERER_WARNING);
-                        warned = true;
-                    }
-                    return super.encode(value);
-                }
-            });
+            internalSetRenderer(new TextRenderer());
         }
 
         /**
@@ -2150,13 +2132,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * @see #setConverter(Converter)
          */
         public Column setRenderer(Renderer<?> renderer) {
-            boolean success = internalSetRenderer(renderer);
-            if (!success) {
-                throw new IllegalArgumentException("Could not find a "
-                        + "converter for converting from the model type "
-                        + getModelType() + " to the renderer presentation "
-                        + "type " + renderer.getPresentationType() + " (in "
-                        + toString() + ")");
+            if (!internalSetRenderer(renderer)) {
+                throw new IllegalArgumentException(
+                        "Could not find a converter for converting from the model type "
+                                + getModelType()
+                                + " to the renderer presentation type "
+                                + renderer.getPresentationType() + " (in "
+                                + toString() + ")");
             }
             return this;
         }
@@ -2209,19 +2191,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             Class<?> modelType = getModelType();
             if (converter != null) {
                 if (!converter.getModelType().isAssignableFrom(modelType)) {
-                    throw new IllegalArgumentException("The converter model "
-                            + "type " + converter.getModelType() + " is not "
-                            + "compatible with the property type " + modelType
-                            + " (in " + toString() + ")");
+                    throw new IllegalArgumentException(
+                            "The converter model type "
+                                    + converter.getModelType()
+                                    + " is not compatible with the property type "
+                                    + modelType + " (in " + toString() + ")");
 
                 } else if (!getRenderer().getPresentationType()
                         .isAssignableFrom(converter.getPresentationType())) {
-                    throw new IllegalArgumentException("The converter "
-                            + "presentation type "
-                            + converter.getPresentationType() + " is not "
-                            + "compatible with the renderer presentation "
-                            + "type " + getRenderer().getPresentationType()
-                            + " (in " + toString() + ")");
+                    throw new IllegalArgumentException(
+                            "The converter presentation type "
+                                    + converter.getPresentationType()
+                                    + " is not compatible with the renderer presentation type "
+                                    + getRenderer().getPresentationType()
+                                    + " (in " + toString() + ")");
                 }
             }
 
@@ -2281,7 +2264,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return converter;
         }
 
-        @SuppressWarnings("unchecked")
         private <T> boolean internalSetRenderer(Renderer<T> renderer) {
 
             Converter<? extends T, ?> converter;
