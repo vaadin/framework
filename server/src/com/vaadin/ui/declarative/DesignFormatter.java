@@ -28,11 +28,12 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignEnumConverter;
-import com.vaadin.ui.declarative.converters.DesignFormatConverter;
 import com.vaadin.ui.declarative.converters.DesignObjectConverter;
 import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
@@ -111,16 +112,20 @@ public class DesignFormatter implements Serializable {
         // floats and doubles use formatters
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
                 "en_US"));
-        DecimalFormat fmt = new DecimalFormat("0.###", symbols);
+        final DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
-        converterMap.put(Float.class, new DesignFormatConverter<Float>(
-                Float.class, fmt));
-        converterMap.put(Float.TYPE, new DesignFormatConverter<Float>(
-                Float.class, fmt));
-        converterMap.put(Double.class, new DesignFormatConverter<Double>(
-                Double.class, fmt));
-        converterMap.put(Double.TYPE, new DesignFormatConverter<Double>(
-                Double.class, fmt));
+        converterMap.put(Float.class, new StringToFloatConverter() {
+            @Override
+            protected java.text.NumberFormat getFormat(Locale locale) {
+                return fmt;
+            };
+        });
+        converterMap.put(Double.class, new StringToDoubleConverter() {
+            @Override
+            protected java.text.NumberFormat getFormat(Locale locale) {
+                return fmt;
+            };
+        });
 
         // strings do nothing
         converterMap.put(String.class, new Converter<String, String>() {
