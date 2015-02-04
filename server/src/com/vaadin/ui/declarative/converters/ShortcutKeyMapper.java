@@ -16,9 +16,8 @@
 package com.vaadin.ui.declarative.converters;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -55,10 +54,8 @@ public interface ShortcutKeyMapper extends Serializable {
      */
     public static final ShortcutKeyMapper DEFAULT = new ShortcutKeyMapper() {
 
-        private final Map<Integer, String> keyCodeMap = Collections
-                .synchronizedMap(new HashMap<Integer, String>());
-        private final Map<String, Integer> presentationMap = Collections
-                .synchronizedMap(new HashMap<String, Integer>());
+        private final Map<Integer, String> keyCodeMap = new ConcurrentHashMap<Integer, String>();
+        private final Map<String, Integer> presentationMap = new ConcurrentHashMap<String, Integer>();
 
         {
             // map modifiers

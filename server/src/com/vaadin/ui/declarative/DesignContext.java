@@ -17,10 +17,10 @@ package com.vaadin.ui.declarative;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -44,8 +44,7 @@ import com.vaadin.ui.HasComponents;
 public class DesignContext implements Serializable {
 
     // cache for object instances
-    private static Map<Class<?>, Component> instanceCache = Collections
-            .synchronizedMap(new HashMap<Class<?>, Component>());
+    private static Map<Class<?>, Component> instanceCache = new ConcurrentHashMap<Class<?>, Component>();
 
     // The root component of the component hierarchy
     private Component rootComponent = null;
