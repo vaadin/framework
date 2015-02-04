@@ -16,8 +16,12 @@
 
 package com.vaadin.ui;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.progressindicator.ProgressBarState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Shows the current progress of a long running task.
@@ -149,4 +153,21 @@ public class ProgressBar extends AbstractField<Float> implements
         getState().state = newValue;
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
+            setValue(DesignAttributeHandler.readAttribute("value",
+                    design.attributes(), Float.class));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Float defaultValue = ((ProgressBar) designContext
+                .getDefaultInstance(this)).getValue();
+        DesignAttributeHandler.writeAttribute("value", design.attributes(),
+                getValue(), defaultValue, Float.class);
+    }
 }
