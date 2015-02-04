@@ -1772,6 +1772,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         attributes.add("readonly");
         // must be handled by subclasses
         attributes.add("value");
+        attributes.add("converted-value");
         return attributes;
     }
 

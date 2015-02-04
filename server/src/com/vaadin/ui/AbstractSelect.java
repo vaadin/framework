@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -49,6 +51,9 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 
 /**
  * <p>
@@ -2180,5 +2185,41 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          */
         public String generateDescription(Component source, Object itemId,
                 Object propertyId);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // handle default attributes
+        super.readDesign(design, designContext);
+        // handle children specifying selectable items (<option>)
+        Set<String> selected = new HashSet<String>();
+        for (Element child : design.children()) {
+            if (!"option".equals(child.nodeName())) {
+                throw new DesignException(
+                        "Unsupported child element in a select: "
+                                + child.nodeName() + ".");
+            }
+            String itemId = child.html();
+            addItem(itemId);
+            if (child.hasAttr("icon")) {
+                setItemIcon(
+                        itemId,
+                        DesignAttributeHandler.readAttribute("icon",
+                                child.attributes(), Resource.class));
+            }
+            if (child.hasAttr("selected")) {
+                selected.add(itemId);
+            }
+        }
+        if (!selected.isEmpty()) {
+            if (isMultiSelect()) {
+                setValue(selected);
+            } else if (selected.size() == 1) {
+                setValue(selected.iterator().next());
+            } else {
+                throw new DesignException(
+                        "Multiple values selected for a single select component");
+            }
+        }
     }
 }
