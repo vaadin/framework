@@ -21,11 +21,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ShortcutAction;
@@ -34,8 +34,8 @@ import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignFormatConverter;
 import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
-import com.vaadin.ui.declarative.converters.ShortcutKeyMapper;
 import com.vaadin.ui.declarative.converters.DesignToStringConverter;
+import com.vaadin.ui.declarative.converters.ShortcutKeyMapper;
 
 /**
  * Class focused on flexible and consistent formatting and parsing of different
@@ -47,8 +47,7 @@ import com.vaadin.ui.declarative.converters.DesignToStringConverter;
  */
 public class DesignFormatter implements Serializable {
 
-    private final Map<Class<?>, Converter<String, ?>> converterMap = Collections
-            .synchronizedMap(new HashMap<Class<?>, Converter<String, ?>>());
+    private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
 
     /**
      * Creates the formatter with default types already mapped.

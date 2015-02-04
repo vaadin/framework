@@ -23,10 +23,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -55,8 +54,7 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static Map<Class<?>, AttributeCacheEntry> cache = Collections
-            .synchronizedMap(new HashMap<Class<?>, AttributeCacheEntry>());
+    private static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<Class<?>, AttributeCacheEntry>();
 
     // translates string <-> object
     private static DesignFormatter FORMATTER = new DesignFormatter();
@@ -403,8 +401,7 @@ public class DesignAttributeHandler implements Serializable {
      * @author Vaadin Ltd
      */
     private static class AttributeCacheEntry implements Serializable {
-        private Map<String, Method[]> accessMethods = Collections
-                .synchronizedMap(new HashMap<String, Method[]>());
+        private Map<String, Method[]> accessMethods = new ConcurrentHashMap<String, Method[]>();
 
         private void addAttribute(String attribute, Method getter, Method setter) {
             Method[] methods = new Method[2];
