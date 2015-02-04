@@ -57,7 +57,7 @@ public class WriteDesignTest extends TestCase {
         assertEquals("5", design.attr("maxlength"));
         assertEquals("3", design.attr("columns"));
         assertEquals("input", design.attr("input-prompt"));
-        assertEquals("EAGER", design.attr("text-change-event-mode"));
+        assertEquals("eager", design.attr("text-change-event-mode"));
         assertEquals("100", design.attr("text-change-timeout"));
     }
 
