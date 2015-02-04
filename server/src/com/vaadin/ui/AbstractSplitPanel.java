@@ -64,6 +64,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         @Override
         public void setSplitterPosition(float position) {
             getSplitterState().position = position;
+            fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this,
+                    position, getSplitPositionUnit()));
         }
     };
 
@@ -331,6 +333,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         splitterState.positionUnit = unit.getSymbol();
         splitterState.positionReversed = reverse;
         posUnit = unit;
+        fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, pos,
+                posUnit));
     }
 
     /**
@@ -520,6 +524,54 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     }
 
+    /**
+     * Interface for listening for {@link SplitPositionChangeEvent}s fired by a
+     * SplitPanel.
+     * 
+     * @since
+     */
+    public interface SplitPositionChangeListener extends ConnectorEventListener {
+
+        public static final Method moveMethod = ReflectTools.findMethod(
+                SplitPositionChangeListener.class, "onSplitPositionChanged",
+                SplitPositionChangeEvent.class);
+
+        /**
+         * SplitPanel splitter position has been changed.
+         * 
+         * @param event
+         *            SplitPositionChangeEvent event.
+         */
+        public void onSplitPositionChanged(SplitPositionChangeEvent event);
+    }
+
+    /**
+     * Event that indicates a change in SplitPanel's splitter position.
+     * 
+     * @since
+     */
+    public static class SplitPositionChangeEvent extends Component.Event {
+
+        private final float position;
+        private final Unit unit;
+
+        public SplitPositionChangeEvent(final Component source,
+                final float position, final Unit unit) {
+            super(source);
+            this.position = position;
+            this.unit = unit;
+        }
+
+        public float getSplitPosition() {
+            return position;
+        }
+
+        public Unit getSplitPositionUnit() {
+            return unit;
+        }
+
+    }
+
     public void addSplitterClickListener(SplitterClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
                 listener, SplitterClickListener.clickMethod);
@@ -546,6 +598,31 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     @Deprecated
     public void removeListener(SplitterClickListener listener) {
         removeSplitterClickListener(listener);
+    }
+
+    /**
+     * Register a listener to handle {@link SplitPositionChangeEvent}s.
+     * 
+     * @since
+     * @param listener
+     *            {@link SplitPositionChangeListener} to be registered.
+     */
+    public void addSplitPositionChangeListener(
+            SplitPositionChangeListener listener) {
+        addListener(SplitPositionChangeEvent.class, listener,
+                SplitPositionChangeListener.moveMethod);
+    }
+
+    /**
+     * Removes a {@link SplitPositionChangeListener}.
+     * 
+     * @since
+     * @param listener
+     *            SplitPositionChangeListener to be removed.
+     */
+    public void removeSplitPositionChangeListener(
+            SplitPositionChangeListener listener) {
+        removeListener(SplitPositionChangeEvent.class, listener);
     }
 
     @Override
