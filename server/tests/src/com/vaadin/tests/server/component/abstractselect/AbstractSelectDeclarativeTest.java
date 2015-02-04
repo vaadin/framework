@@ -138,11 +138,9 @@ public class AbstractSelectDeclarativeTest extends
 
     @Test
     public void testWriteInlineData() {
-        String modifiedDesign = getDesignForInlineData();
         // No data is written by default
-        modifiedDesign = modifiedDesign.replaceAll(
-                "[ \n]*<option(.*)</option>[ \n]*", "");
-        testWrite(modifiedDesign, getExpectedComponentForInlineData());
+        testWrite(stripOptionTags(getDesignForInlineData()),
+                getExpectedComponentForInlineData());
     }
 
     private String getDesignForInlineData() {

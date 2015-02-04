@@ -166,4 +166,10 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         sb.append("</").append(producedElem.tagName()).append(">");
         return sb.toString();
     }
+
+    protected String stripOptionTags(String design) {
+        return design.replaceAll("[ \n]*<option(.*)</option>[ \n]*", "");
+
+    }
+
 }
