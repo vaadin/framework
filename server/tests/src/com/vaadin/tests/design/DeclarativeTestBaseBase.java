@@ -26,6 +26,8 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.junit.Assert;
 
 import com.vaadin.ui.Component;
@@ -153,11 +155,15 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
                     .append(producedElem.attr(attrName)).append("\'");
         }
         sb.append(">");
-        for (Element child : producedElem.children()) {
-            elementToHtml(child, sb);
+        for (Node child : producedElem.childNodes()) {
+            if (child instanceof Element) {
+                elementToHtml((Element) child, sb);
+            } else if (child instanceof TextNode) {
+                String text = ((TextNode) child).text();
+                sb.append(text.trim());
+            }
         }
         sb.append("</").append(producedElem.tagName()).append(">");
         return sb.toString();
     }
-
 }

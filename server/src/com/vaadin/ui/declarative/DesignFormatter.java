@@ -33,6 +33,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignEnumConverter;
 import com.vaadin.ui.declarative.converters.DesignFormatConverter;
+import com.vaadin.ui.declarative.converters.DesignObjectConverter;
 import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
 import com.vaadin.ui.declarative.converters.DesignTimeZoneConverter;
@@ -50,6 +51,7 @@ public class DesignFormatter implements Serializable {
 
     private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
     private final Converter<String, Enum> stringEnumConverter = new DesignEnumConverter();
+    private final Converter<String, Object> stringObjectConverter = new DesignObjectConverter();
 
     /**
      * Creates the formatter with default types already mapped.
@@ -294,6 +296,12 @@ public class DesignFormatter implements Serializable {
     @SuppressWarnings("unchecked")
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType, boolean strict) {
+        if (sourceType == Object.class) {
+            // Use for propertyIds, itemIds and such. Only string type objects
+            // are really supported if no special logic is implemented in the
+            // component.
+            return (Converter<String, T>) stringObjectConverter;
+        }
         if (sourceType.isEnum()) {
             return (Converter<String, T>) stringEnumConverter;
         } else if (converterMap.containsKey(sourceType)) {
