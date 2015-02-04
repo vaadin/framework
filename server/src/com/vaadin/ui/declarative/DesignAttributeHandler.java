@@ -154,7 +154,7 @@ public class DesignAttributeHandler implements Serializable {
         if (clazz == null) {
             throw new IllegalArgumentException("The clazz can not be null");
         }
-        if (cache.containsKey(clazz.getCanonicalName())) {
+        if (cache.containsKey(clazz)) {
             // NO-OP
             return;
         }
