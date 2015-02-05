@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
@@ -40,7 +39,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
@@ -1060,20 +1058,19 @@ public class RpcDataProviderExtension extends AbstractExtension {
             try {
                 presentationValue = presentationType.cast(modelValue);
             } catch (ClassCastException e) {
-                ConversionException ee = new Converter.ConversionException(
-                        "Unable to convert value of type "
-                                + modelValue.getClass().getName()
-                                + " to presentation type "
-                                + presentationType.getName()
-                                + ". No converter is set and the types are not compatible.");
                 if (presentationType == String.class) {
-                    // We don't want to throw an exception for the default cause
-                    // when one column can't be rendered. Just log the exception
-                    // and let the column be empty
-                    presentationValue = (T) "";
-                    getLogger().log(Level.SEVERE, ee.getMessage(), ee);
+                    // If there is no converter, just fallback to using
+                    // toString().
+                    // modelValue can't be null as Class.cast(null) will always
+                    // succeed
+                    presentationValue = (T) modelValue.toString();
                 } else {
-                    throw ee;
+                    throw new Converter.ConversionException(
+                            "Unable to convert value of type "
+                                    + modelValue.getClass().getName()
+                                    + " to presentation type "
+                                    + presentationType.getName()
+                                    + ". No converter is set and the types are not compatible.");
                 }
             }
         } else {
