@@ -110,7 +110,9 @@ public class ListDataSource<T> implements DataSource<T> {
 
         @Override
         public void updateRow() {
-            changeHandler.dataUpdated(ds.indexOf(getRow()), 1);
+            if (changeHandler != null) {
+                changeHandler.dataUpdated(ds.indexOf(getRow()), 1);
+            }
         }
     }
 
@@ -389,7 +391,10 @@ public class ListDataSource<T> implements DataSource<T> {
             throw new IllegalStateException(
                     "Trying to fetch rows outside of array");
         }
-        changeHandler.dataAvailable(firstRowIndex, numberOfRows);
+
+        if (changeHandler != null) {
+            changeHandler.dataAvailable(firstRowIndex, numberOfRows);
+        }
     }
 
     @Override
