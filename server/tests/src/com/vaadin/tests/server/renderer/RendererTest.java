@@ -44,6 +44,11 @@ public class RendererTest {
 
     private static class TestBean {
         int i = 42;
+
+        @Override
+        public String toString() {
+            return "TestBean [" + i + "]";
+        }
     }
 
     private static class ExtendedBean extends TestBean {
@@ -177,7 +182,7 @@ public class RendererTest {
 
     @Test
     public void testEncodingWithoutConverter() throws Exception {
-        assertEquals("", render(baz, new TestBean()).asString());
+        assertEquals("TestBean [42]", render(baz, new TestBean()).asString());
     }
 
     @Test
