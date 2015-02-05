@@ -56,9 +56,12 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
     @Test
     public void verifyUserAgent() {
         openTestURL();
-        Assert.assertEquals(expectedUserAgent.get(getDesiredCapabilities()),
-                vaadinElementById("userAgent").getText());
+        String expected = expectedUserAgent.get(getDesiredCapabilities());
+        String actual = vaadinElementById("userAgent").getText();
+        Assert.assertEquals("Remote control " + getRemoteControlName()
+                + " uses incorrect browser version", expected, actual);
         Assert.assertEquals("Touch device? No",
                 vaadinElementById("touchDevice").getText());
     }
+
 }
