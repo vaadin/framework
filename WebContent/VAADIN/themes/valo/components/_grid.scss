@@ -3,7 +3,7 @@
 $v-grid-row-background-color: valo-table-background-color() !default;
 $v-grid-row-stripe-background-color: scale-color($v-grid-row-background-color, $lightness: if(color-luminance($v-grid-row-background-color) < 10, 4%, -4%)) !default;
 
-$v-grid-border: valo-border($color: $v-grid-row-background-color, $strength: 0.8) !default;
+$v-grid-border: flatten-list(valo-border($color: $v-grid-row-background-color, $strength: 0.8)) !default;
 $v-grid-cell-focused-border: max(2px, first-number($v-border)) solid $v-selection-color !default;
 
 $v-grid-row-height: $v-table-row-height !default;
@@ -13,6 +13,8 @@ $v-grid-header-font-size: $v-table-header-font-size !default;
 $v-grid-header-background-color: $v-background-color !default;
 
 $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
+
+$v-grid-animations-enabled: $v-animations-enabled !default;
 
 
 @import "../../base/grid/grid";
@@ -68,10 +70,91 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
     }
   }
 
+  .#{$primary-stylename}-editor {
+    @include valo-focus-style;
+    border-color: $v-focus-color;
+  }
+
+  .#{$primary-stylename}-editor-footer {
+    font-size: $v-font-size--small;
+    padding: 0 round($v-layout-spacing-horizontal / 2);
+    background: $v-app-background-color;
+    @if $v-grid-animations-enabled {
+      @include animation(valo-grid-editor-footer-animate-in 200ms 120ms backwards);
+    }
+  }
+
+  @if $v-grid-animations-enabled {
+    .#{$primary-stylename}-editor-footer:first-child {
+      @include animation(valo-grid-editor-footer-animate-in-alt 200ms 120ms backwards);
+    }
+  }
+
+  .#{$primary-stylename}-editor-cells {
+    z-index: 1;
+  }
+
+  .#{$primary-stylename}-editor-cells > div {
+    // Vertical centering for widgets
+    &:before {
+      content: "";
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .v-textfield,
+    .v-textfield-focus,
+    .v-datefield,
+    .v-datefield .v-textfield-focus,
+    .v-filterselect-input,
+    .v-filterselect-input:focus {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+
+      @if $v-textfield-bevel {
+        @include box-shadow(valo-bevel-and-shadow($bevel: $v-textfield-bevel));
+      } @else {
+        @include box-shadow(none);
+      }
+    }
+
+    .v-textfield-focus,
+    .v-datefield .v-textfield-focus,
+    .v-filterselect-input:focus {
+      position: relative;
+    }
+
+    .v-select {
+      padding-left: round($v-grid-cell-padding-horizontal / 2);
+      padding-right: round($v-grid-cell-padding-horizontal / 2);
+    }
+
+    .v-checkbox {
+      margin: 0 round($v-grid-cell-padding-horizontal / 2);
+
+      label {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-editor-message > div:before {
+    display: inline-block;
+    @include valo-error-indicator-style($is-pseudo-element: true);
+  }
+
   .#{$primary-stylename}-editor-save,
   .#{$primary-stylename}-editor-cancel {
-    @include valo-button-static-style;
-    @include valo-button-style($unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
+    @include valo-link-style;
+    font-weight: $v-font-weight + 100;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    padding: round($v-layout-spacing-vertical / 2) round($v-layout-spacing-horizontal / 2);
+    margin: 0;
+    outline: none;
   }
 
   // Customize scrollbars
@@ -97,4 +180,20 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
     min-width: 30px;
   }
 
+}
+
+
+@include keyframes(valo-grid-editor-footer-animate-in) {
+  0% {
+    margin-top: -$v-grid-row-height;
+  }
+}
+
+@include keyframes(valo-grid-editor-footer-animate-in-alt) {
+  0% {
+    margin-bottom: -$v-grid-row-height - first-number($v-grid-cell-horizontal-border);
+  }
+  100% {
+    margin-bottom: first-number($v-grid-cell-horizontal-border) * -1;
+  }
 }

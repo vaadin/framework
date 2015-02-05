@@ -106,8 +106,7 @@ public class GridElement extends AbstractComponentElement {
          * useless.
          */
         public void save() {
-            List<WebElement> buttons = findElements(By.xpath("./button"));
-            buttons.get(0).click();
+            findElement(By.className("v-grid-editor-save")).click();
         }
 
         /**
@@ -117,8 +116,7 @@ public class GridElement extends AbstractComponentElement {
          * useless.
          */
         public void cancel() {
-            List<WebElement> buttons = findElements(By.xpath("./button"));
-            buttons.get(1).click();
+            findElement(By.className("v-grid-editor-cancel")).click();
         }
     }
 

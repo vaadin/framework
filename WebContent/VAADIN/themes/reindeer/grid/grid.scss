@@ -57,4 +57,35 @@
     background-image: url(img/desc-light.png);
   }
 
+  .#{$primaryStyleName}-editor-footer {
+    background: #dfe1e3;
+  }
+
+  .#{$primaryStyleName}-editor-cells > div {
+    .v-textfield,
+    .v-textfield-focus,
+    .v-datefield,
+    .v-datefield .v-textfield-focus,
+    .v-filterselect,
+    .v-filterselect-input,
+    .v-filterselect-input:focus {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .v-filterselect {
+      overflow: hidden;
+    }
+
+    .v-filterselect-input {
+      height: 100%;
+    }
+
+    .v-filterselect-button {
+      // 24px is the height of v-filterselect
+      margin-top: round((24px - $v-grid-row-height) / -2)
+    }
+  }
+
 }

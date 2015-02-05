@@ -117,8 +117,9 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "multi");
         selectMenuPath(EDIT_ROW_5);
 
-        WebElement editor = getEditor();
-        List<WebElement> selectorDivs = editor.findElements(By
+        WebElement editorCells = findElement(By
+                .className("v-grid-editor-cells"));
+        List<WebElement> selectorDivs = editorCells.findElements(By
                 .cssSelector("div"));
 
         assertTrue("selector column cell should've been empty", selectorDivs

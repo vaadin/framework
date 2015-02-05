@@ -394,16 +394,22 @@ $valo-shared-pathPrefix: null;
 /**
  * Error indicator styles. The error indicator is by default a font character which you can style freely.
  *
+ * @param {boolean} $is-pseudo-element (false) - is the selector including this mixin targeting a pseudo element
+ *
  * @requires {mixin} valo-error-indicator-icon-style by default
  */
-@mixin valo-error-indicator-style {
+@mixin valo-error-indicator-style ($is-pseudo-element: false) {
   color: $v-error-indicator-color;
   font-weight: 600;
   width: ceil($v-unit-size/2);
   text-align: center;
 
-  &:before {
+  @if $is-pseudo-element {
     @include valo-error-indicator-icon-style;
+  } @else {
+    &:before {
+      @include valo-error-indicator-icon-style;
+    }
   }
 }
 

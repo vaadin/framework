@@ -85,7 +85,8 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   // Rows
 
-  .#{$primaryStyleName}-row > td {
+  .#{$primaryStyleName}-row > td,
+  .#{$primaryStyleName}-editor-cells > div {
     border-left: $v-grid-cell-vertical-border;
     border-bottom: $v-grid-cell-horizontal-border;
 
@@ -221,20 +222,33 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
   // Editor
 
   .#{$primaryStyleName}-editor {
-    // TODO should be fixed in offset calculations
-    margin-top: -1px;
     position: absolute;
-    overflow-y: visible;
-    background: $v-grid-editor-background-color;
-    @include box-shadow(0 0 10px 1px rgba(0,0,0,.3));
+    z-index: 20;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    border: $v-grid-border;
+    margin-top: nth($v-grid-border, 1) * -1;
+    @include box-shadow(0 0 9px rgba(0,0,0,.2));
+  }
+
+  .#{$primaryStyleName}-editor-cells {
+    position: relative;
+    white-space: nowrap;
 
     > div {
-      position: absolute;
+      display: inline-block;
       @include box-sizing(border-box);
-      border-left: $v-grid-cell-vertical-border;
+      vertical-align: middle;
+      background: $v-grid-editor-background-color;
 
       &:first-child {
         border-left: none;
+      }
+
+      > * {
+        vertical-align: middle;
+        display: inline-block;
       }
 
       .v-textfield,
@@ -244,24 +258,60 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
         max-width: 100%;
         min-height: 100%;
         max-height: 100%;
-        border: none;
-        border-radius: 0;
       }
 
-      .v-textfield-focus,
-      .v-filterselect-focus input {
-        position: relative;
-        z-index: 1;
+      .v-select,
+      .v-select-select {
+        min-width: 100%;
+        max-width: 100%;
       }
     }
   }
 
-  .#{$primaryStyleName}-editor-save,
-  .#{$primaryStyleName}-editor-cancel {
-    position: absolute;
-    // TODO remove the inline size from the widgets
-    width: auto !important;
-    height: auto !important;
+  .#{$primaryStyleName}-editor-footer {
+    display: table;
+    height: $v-grid-row-height;
+    border-top: $v-grid-cell-horizontal-border;
+    margin-top: nth($v-grid-cell-horizontal-border, 1) * -1;
+    background: $v-grid-row-background-color;
+    padding: 0 5px;
+
+    + .#{$primaryStyleName}-editor-cells > div {
+      border-bottom: none;
+      border-top: $v-grid-cell-horizontal-border;
+    }
+
+    &:first-child {
+      border-top: none;
+      margin-top: 0;
+      border-bottom: $v-grid-cell-horizontal-border;
+      margin-bottom: nth($v-grid-cell-horizontal-border, 1) * -1;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-message,
+  .#{$primaryStyleName}-editor-buttons {
+    display: table-cell;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .#{$primaryStyleName}-editor-message {
+    width: 100%;
+    position: relative;
+
+    > div {
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: $v-grid-row-height;
+      top: 0;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-save {
+    margin-right: 4px;
   }
 
   // Renderers
