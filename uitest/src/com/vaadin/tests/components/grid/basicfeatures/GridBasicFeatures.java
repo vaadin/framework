@@ -57,6 +57,7 @@ import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.Grid.SelectionModel;
 import com.vaadin.ui.renderer.DateRenderer;
 import com.vaadin.ui.renderer.HtmlRenderer;
 import com.vaadin.ui.renderer.NumberRenderer;
@@ -81,6 +82,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     public static final int ROWS = 1000;
 
     private int containerDelay = 0;
+
+    private boolean singleSelectAllowDeselect = true;
 
     private IndexedContainer ds;
     private Grid grid;
@@ -320,6 +323,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         grid.setSelectionMode(selectionMode);
                         if (selectionMode == SelectionMode.SINGLE) {
                             grid.addSelectionListener(selectionListener);
+
+                            ((SelectionModel.Single) grid.getSelectionModel())
+                                    .setDeselectAllowed(singleSelectAllowDeselect);
                         } else {
                             grid.removeSelectionListener(selectionListener);
                         }
@@ -487,6 +493,20 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
 
+                });
+
+        createBooleanAction("Single select allow deselect", "State",
+                singleSelectAllowDeselect, new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        singleSelectAllowDeselect = value.booleanValue();
+
+                        SelectionModel model = c.getSelectionModel();
+                        if (model instanceof SelectionModel.Single) {
+                            ((SelectionModel.Single) model)
+                                    .setDeselectAllowed(singleSelectAllowDeselect);
+                        }
+                    }
                 });
     }
 

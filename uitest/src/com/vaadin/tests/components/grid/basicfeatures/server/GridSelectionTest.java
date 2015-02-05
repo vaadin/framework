@@ -270,6 +270,41 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
     }
 
+    @Test
+    public void testToggleDeselectAllowed() {
+        openTestURL();
+
+        setSelectionModelSingle();
+        // Deselect allowed already enabled
+
+        getGridElement().getCell(5, 1).click();
+        getGridElement().getCell(5, 1).click();
+        assertFalse("Row should be not selected after two clicks", getRow(5)
+                .isSelected());
+
+        selectMenuPath("Component", "State", "Single select allow deselect");
+        getGridElement().getCell(5, 1).click();
+        getGridElement().getCell(5, 1).click();
+        assertTrue("Row should be selected after two clicks", getRow(5)
+                .isSelected());
+
+        selectMenuPath("Component", "State", "Single select allow deselect");
+        getGridElement().getCell(5, 1).click();
+        assertFalse("Row should be not selected after another click", getRow(5)
+                .isSelected());
+
+        // Also verify that state is updated together with the model
+        setSelectionModelNone();
+        selectMenuPath("Component", "State", "Single select allow deselect");
+        setSelectionModelSingle();
+
+        getGridElement().getCell(5, 1).click();
+        getGridElement().getCell(5, 1).click();
+
+        assertTrue("Row should stay selected after two clicks", getRow(5)
+                .isSelected());
+    }
+
     private void setSelectionModelMulti() {
         selectMenuPath("Component", "State", "Selection mode", "multi");
     }

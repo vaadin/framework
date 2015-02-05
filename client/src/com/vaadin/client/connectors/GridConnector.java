@@ -57,6 +57,7 @@ import com.vaadin.client.widget.grid.events.SelectAllHandler;
 import com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionEvent;
 import com.vaadin.client.widget.grid.selection.SelectionHandler;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModelMulti;
 import com.vaadin.client.widget.grid.selection.SelectionModelNone;
 import com.vaadin.client.widget.grid.selection.SelectionModelSingle;
@@ -536,7 +537,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         // Selection
         if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
             onSelectionModeChange();
+            updateSelectDeselectAllowed();
+        } else if (stateChangeEvent
+                .hasPropertyChanged("singleSelectDeselectAllowed")) {
+            updateSelectDeselectAllowed();
         }
+
         if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
             updateSelectionFromState();
         }
@@ -564,6 +570,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         } else if (!lastKnownTheme.equals(activeTheme)) {
             getWidget().resetSizesFromDom();
             lastKnownTheme = activeTheme;
+        }
+    }
+
+    private void updateSelectDeselectAllowed() {
+        SelectionModel<JsonObject> model = getWidget().getSelectionModel();
+        if (model instanceof SelectionModel.Single<?>) {
+            ((SelectionModel.Single<?>) model)
+                    .setDeselectAllowed(getState().singleSelectDeselectAllowed);
         }
     }
 

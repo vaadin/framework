@@ -40,6 +40,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
     /** Event handling for selection by clicking cells */
     private ClickSelectHandler<T> clickSelectHandler;
 
+    private boolean deselectAllowed = true;
+
     @Override
     public boolean isSelected(T row) {
         return selectedRow != null
@@ -66,6 +68,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         if (this.grid != null) {
             spaceSelectHandler = new SpaceSelectHandler<T>(grid);
             clickSelectHandler = new ClickSelectHandler<T>(grid);
+            updateHandlerDeselectAllowed();
         } else {
             spaceSelectHandler.removeHandler();
             clickSelectHandler.removeHandler();
@@ -148,4 +151,25 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
             return false;
         }
     }
+
+    @Override
+    public void setDeselectAllowed(boolean deselectAllowed) {
+        this.deselectAllowed = deselectAllowed;
+        updateHandlerDeselectAllowed();
+    }
+
+    @Override
+    public boolean isDeselectAllowed() {
+        return deselectAllowed;
+    }
+
+    private void updateHandlerDeselectAllowed() {
+        if (spaceSelectHandler != null) {
+            spaceSelectHandler.setDeselectAllowed(deselectAllowed);
+        }
+        if (clickSelectHandler != null) {
+            clickSelectHandler.setDeselectAllowed(deselectAllowed);
+        }
+    }
+
 }
