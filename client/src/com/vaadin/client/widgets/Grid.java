@@ -83,7 +83,6 @@ import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
-import com.vaadin.client.widget.grid.EditorHandler.EditorRequest.RequestCallback;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
@@ -936,6 +935,106 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    private static class EditorRequestImpl<T> implements EditorRequest<T> {
+
+        /**
+         * A callback interface used to notify the invoker of the editor handler
+         * of completed editor requests.
+         * 
+         * @param <T>
+         *            the row data type
+         */
+        public static interface RequestCallback<T> {
+            /**
+             * The method that must be called when the request has been
+             * processed correctly.
+             * 
+             * @param request
+             *            the original request object
+             */
+            public void onSuccess(EditorRequest<T> request);
+
+            /**
+             * The method that must be called when processing the request has
+             * produced an aborting error.
+             * 
+             * @param request
+             *            the original request object
+             */
+            public void onError(EditorRequest<T> request);
+        }
+
+        private Grid<T> grid;
+        private int rowIndex;
+        private RequestCallback<T> callback;
+        private boolean completed = false;
+
+        public EditorRequestImpl(Grid<T> grid, int rowIndex,
+                RequestCallback<T> callback) {
+            this.grid = grid;
+            this.rowIndex = rowIndex;
+            this.callback = callback;
+        }
+
+        @Override
+        public int getRowIndex() {
+            return rowIndex;
+        }
+
+        @Override
+        public T getRow() {
+            return grid.getDataSource().getRow(rowIndex);
+        }
+
+        @Override
+        public Grid<T> getGrid() {
+            return grid;
+        }
+
+        @Override
+        public Widget getWidget(Grid.Column<?, T> column) {
+            Widget w = grid.getEditorWidget(column);
+            assert w != null;
+            return w;
+        }
+
+        private void complete(Collection<Column<?, T>> errorColumns) {
+            if (completed) {
+                throw new IllegalStateException(
+                        "An EditorRequest must be completed exactly once");
+            }
+            completed = true;
+
+            grid.getEditor().clearEditorColumnErrors();
+            if (errorColumns != null) {
+                for (Column<?, T> column : errorColumns) {
+                    grid.getEditor().setEditorColumnError(column, true);
+                }
+            }
+        }
+
+        @Override
+        public void success() {
+            complete(null);
+            if (callback != null) {
+                callback.onSuccess(this);
+            }
+        }
+
+        @Override
+        public void failure(Collection<Grid.Column<?, T>> errorColumns) {
+            complete(errorColumns);
+            if (callback != null) {
+                callback.onError(this);
+            }
+        }
+
+        @Override
+        public boolean isCompleted() {
+            return completed;
+        }
+    }
+
     /**
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
@@ -944,6 +1043,8 @@ public class Grid<T> extends ResizeComposite implements
 
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
+
+        private static final String ERROR_CLASS_NAME = "error";
 
         protected enum State {
             INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
@@ -988,7 +1089,7 @@ public class Grid<T> extends ResizeComposite implements
             }
         };
 
-        private final RequestCallback<T> saveRequestCallback = new RequestCallback<T>() {
+        private final EditorRequestImpl.RequestCallback<T> saveRequestCallback = new EditorRequestImpl.RequestCallback<T>() {
             @Override
             public void onSuccess(EditorRequest<T> request) {
                 if (state == State.SAVING) {
@@ -1027,7 +1128,7 @@ public class Grid<T> extends ResizeComposite implements
                                 + " remember to call success() or fail()?");
             }
         };
-        private final RequestCallback<T> bindRequestCallback = new RequestCallback<T>() {
+        private final EditorRequestImpl.RequestCallback<T> bindRequestCallback = new EditorRequestImpl.RequestCallback<T>() {
             @Override
             public void onSuccess(EditorRequest<T> request) {
                 if (state == State.BINDING) {
@@ -1054,6 +1155,9 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
         };
+
+        /** A set of all the columns that display an error flag. */
+        private final Set<Column<?, T>> columnErrors = new HashSet<Grid.Column<?, T>>();
 
         public Editor() {
             saveButton = new Button();
@@ -1132,7 +1236,7 @@ public class Grid<T> extends ResizeComposite implements
             hideOverlay();
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
 
-            EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
+            EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
                     null);
             handler.cancel(request);
             state = State.INACTIVE;
@@ -1159,7 +1263,7 @@ public class Grid<T> extends ResizeComposite implements
             state = State.SAVING;
             setButtonsEnabled(false);
             saveTimeout.schedule(SAVE_TIMEOUT_MS);
-            EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
+            EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
                     saveRequestCallback);
             handler.save(request);
         }
@@ -1222,8 +1326,8 @@ public class Grid<T> extends ResizeComposite implements
             if (state == State.ACTIVATING) {
                 state = State.BINDING;
                 bindTimeout.schedule(BIND_TIMEOUT_MS);
-                EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
-                        bindRequestCallback);
+                EditorRequest<T> request = new EditorRequestImpl<T>(grid,
+                        rowIndex, bindRequestCallback);
                 handler.bind(request);
                 grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
             }
@@ -1372,6 +1476,8 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.removeFromParent();
 
             scrollHandler.removeHandler();
+
+            clearEditorColumnErrors();
         }
 
         protected void setStylePrimaryName(String primaryName) {
@@ -1479,6 +1585,46 @@ public class Grid<T> extends ResizeComposite implements
 
         public String getCancelCaption() {
             return cancelButton.getText();
+        }
+
+        public void setEditorColumnError(Column<?, T> column, boolean hasError) {
+            if (state != State.ACTIVE && state != State.SAVING) {
+                throw new IllegalStateException("Cannot set cell error "
+                        + "status: editor is neither active nor saving.");
+            }
+
+            if (isEditorColumnError(column) == hasError) {
+                return;
+            }
+
+            Element editorCell = getWidget(column).getElement()
+                    .getParentElement();
+            if (hasError) {
+                editorCell.addClassName(ERROR_CLASS_NAME);
+                columnErrors.add(column);
+            } else {
+                editorCell.removeClassName(ERROR_CLASS_NAME);
+                columnErrors.remove(column);
+            }
+        }
+
+        public void clearEditorColumnErrors() {
+
+            /*
+             * editorOverlay has no children if it's not active, effectively
+             * making this loop a NOOP.
+             */
+            Element e = editorOverlay.getFirstChildElement();
+            while (e != null) {
+                e.removeClassName(ERROR_CLASS_NAME);
+                e = e.getNextSiblingElement();
+            }
+
+            columnErrors.clear();
+        }
+
+        public boolean isEditorColumnError(Column<?, T> column) {
+            return columnErrors.contains(column);
         }
     }
 
@@ -3215,7 +3361,7 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @return {@code true} if this column is editable, {@code false}
          *         otherwise
-         *
+         * 
          * @see #setEditable(boolean)
          */
         public boolean isEditable() {

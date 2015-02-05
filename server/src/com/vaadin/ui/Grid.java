@@ -260,6 +260,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private CommitException cause;
 
+        private Set<Column> errorColumns = new HashSet<Column>();
+
         public CommitErrorEvent(Grid grid, CommitException cause) {
             super(grid);
             this.cause = cause;
@@ -288,6 +290,26 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return cause.getCause() instanceof InvalidValueException;
         }
 
+        /**
+         * Marks that an error indicator should be shown for the editor of a
+         * column.
+         * 
+         * @param column
+         *            the column to show an error for
+         */
+        public void addErrorColumn(Column column) {
+            errorColumns.add(column);
+        }
+
+        /**
+         * Gets all the columns that have been marked as erroneous.
+         * 
+         * @return an umodifiable collection of erroneous columns
+         */
+        public Collection<Column> getErrorColumns() {
+            return Collections.unmodifiableCollection(errorColumns);
+        }
+
     }
 
     /**
@@ -302,19 +324,36 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     .getCause().getInvalidFields();
 
             if (!invalidFields.isEmpty()) {
-                // Validation error, show first failure as
-                // "<Column header>: <message>"
+                Object firstErrorPropertyId = null;
+                Field<?> firstErrorField = null;
+
                 FieldGroup fieldGroup = event.getCause().getFieldGroup();
-                Object propertyId = getFirstPropertyId(fieldGroup,
-                        invalidFields.keySet());
-                Field<?> field = fieldGroup.getField(propertyId);
-                String caption = getColumn(propertyId).getHeaderCaption();
-                // TODO This should be shown in the editor component once
-                // there is a place for that. Optionally, all errors should be
-                // shown
-                Notification.show(caption + ": "
-                        + invalidFields.get(field).getLocalizedMessage(),
-                        Type.ERROR_MESSAGE);
+                for (Column column : getColumns()) {
+                    Object propertyId = column.getPropertyId();
+                    Field<?> field = fieldGroup.getField(propertyId);
+                    if (invalidFields.keySet().contains(field)) {
+                        event.addErrorColumn(column);
+
+                        if (firstErrorPropertyId == null) {
+                            firstErrorPropertyId = propertyId;
+                            firstErrorField = field;
+                        }
+                    }
+                }
+
+                /*
+                 * Validation error, show first failure as
+                 * "<Column header>: <message>"
+                 */
+                String caption = getColumn(firstErrorPropertyId)
+                        .getHeaderCaption();
+                String message = invalidFields.get(firstErrorField)
+                        .getLocalizedMessage();
+                /*
+                 * TODO This should be shown in the editor component once there
+                 * is a place for that. Optionally, all errors should be shown
+                 */
+                Notification.show(caption + ": " + message, Type.ERROR_MESSAGE);
 
             } else {
                 com.vaadin.server.ErrorEvent.findErrorHandler(Grid.this).error(
@@ -3016,14 +3055,21 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void save(int rowIndex) {
+                List<String> errorColumnIds = null;
                 boolean success = false;
                 try {
                     saveEditor();
                     success = true;
                 } catch (CommitException e) {
                     try {
-                        getEditorErrorHandler().commitError(
-                                new CommitErrorEvent(Grid.this, e));
+                        CommitErrorEvent event = new CommitErrorEvent(
+                                Grid.this, e);
+                        getEditorErrorHandler().commitError(event);
+
+                        errorColumnIds = new ArrayList<String>();
+                        for (Column column : event.getErrorColumns()) {
+                            errorColumnIds.add(column.state.id);
+                        }
                     } catch (Exception ee) {
                         // A badly written error handler can throw an exception,
                         // which would lock up the Grid
@@ -3032,7 +3078,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 } catch (Exception e) {
                     handleError(e);
                 }
-                getEditorRpc().confirmSave(success);
+                getEditorRpc().confirmSave(success, errorColumnIds);
             }
 
             private void handleError(Exception e) {

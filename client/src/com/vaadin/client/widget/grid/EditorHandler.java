@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.widget.grid;
 
+import java.util.Collection;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.widgets.Grid;
 
@@ -43,82 +45,27 @@ public interface EditorHandler<T> {
      * @param <T>
      *            the row data type
      */
-    public static class EditorRequest<T> {
-
-        /**
-         * A callback interface used to notify the invoker of the editor handler
-         * of completed editor requests.
-         * 
-         * @param <T>
-         *            the row data type
-         */
-        public interface RequestCallback<T> {
-            /**
-             * The method that must be called when the request has been
-             * processed correctly.
-             * 
-             * @param request
-             *            the original request object
-             */
-            public void onSuccess(EditorRequest<T> request);
-
-            /**
-             * The method that must be called when processing the request has
-             * produced an aborting error.
-             * 
-             * @param request
-             *            the original request object
-             */
-            public void onError(EditorRequest<T> request);
-        }
-
-        private Grid<T> grid;
-        private int rowIndex;
-        private RequestCallback<T> callback;
-        private boolean completed = false;
-
-        /**
-         * Creates a new editor request.
-         * 
-         * @param rowIndex
-         *            the index of the edited row
-         * @param callback
-         *            the callback invoked when the request is ready, or null if
-         *            no need to call back
-         */
-        public EditorRequest(Grid<T> grid, int rowIndex,
-                RequestCallback<T> callback) {
-            this.grid = grid;
-            this.rowIndex = rowIndex;
-            this.callback = callback;
-        }
-
+    public interface EditorRequest<T> {
         /**
          * Returns the index of the row being requested.
          * 
          * @return the row index
          */
-        public int getRowIndex() {
-            return rowIndex;
-        }
+        public int getRowIndex();
 
         /**
          * Returns the row data related to the row being requested.
          * 
          * @return the row data
          */
-        public T getRow() {
-            return grid.getDataSource().getRow(rowIndex);
-        }
+        public T getRow();
 
         /**
          * Returns the grid instance related to this editor request.
          * 
          * @return the grid instance
          */
-        public Grid<T> getGrid() {
-            return grid;
-        }
+        public Grid<T> getGrid();
 
         /**
          * Returns the editor widget used to edit the values of the given
@@ -128,59 +75,30 @@ public interface EditorHandler<T> {
          *            the column whose widget to get
          * @return the widget related to the column
          */
-        public Widget getWidget(Grid.Column<?, T> column) {
-            Widget w = grid.getEditorWidget(column);
-            assert w != null;
-            return w;
-        }
-
-        /**
-         * Completes this request. The request can only be completed once. This
-         * method should only be called by an EditorHandler implementer if the
-         * request handling is asynchronous in nature and {@link #startAsync()}
-         * is previously invoked for this request. Synchronous requests are
-         * completed automatically by the editor.
-         * 
-         * @throws IllegalStateException
-         *             if the request is already completed
-         */
-        private void complete() {
-            if (completed) {
-                throw new IllegalStateException(
-                        "An EditorRequest must be completed exactly once");
-            }
-            completed = true;
-        }
+        public Widget getWidget(Grid.Column<?, T> column);
 
         /**
          * Informs Grid that the editor request was a success.
          */
-        public void success() {
-            complete();
-            if (callback != null) {
-                callback.onSuccess(this);
-            }
-        }
+        public void success();
 
         /**
          * Informs Grid that an error occurred while trying to process the
          * request.
+         * 
+         * @param errorColumns
+         *            a collection of columns for which an error indicator
+         *            should be shown, or <code>null</code> if no columns should
+         *            be marked as erroneous.
          */
-        public void fail() {
-            complete();
-            if (callback != null) {
-                callback.onError(this);
-            }
-        }
+        public void failure(Collection<Grid.Column<?, T>> errorColumns);
 
         /**
          * Checks whether the request is completed or not.
          * 
          * @return <code>true</code> iff the request is completed
          */
-        public boolean isCompleted() {
-            return completed;
-        }
+        public boolean isCompleted();
     }
 
     /**
@@ -188,8 +106,9 @@ public interface EditorHandler<T> {
      * opened for editing.
      * <p>
      * The implementation <em>must</em> call either
-     * {@link EditorRequest#success()} or {@link EditorRequest#fail()} to signal
-     * a successful or a failed (respectively) bind action.
+     * {@link EditorRequest#success()} or
+     * {@link EditorRequest#failure(Collection)} to signal a successful or a
+     * failed (respectively) bind action.
      * 
      * @param request
      *            the data binding request

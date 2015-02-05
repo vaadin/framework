@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.grid;
 
+import java.util.List;
+
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -56,6 +58,9 @@ public interface EditorClientRpc extends ClientRpc {
      * 
      * @param saveSucceeded
      *            <code>true</code> iff the save action was successful
+     * @param errorColumnsIds
+     *            a list of column keys that should get error markers, or
+     *            <code>null</code> if there should be no error markers
      */
-    void confirmSave(boolean saveSucceeded);
+    void confirmSave(boolean saveSucceeded, List<String> errorColumnsIds);
 }
