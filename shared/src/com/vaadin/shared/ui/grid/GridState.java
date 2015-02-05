@@ -132,6 +132,9 @@ public class GridState extends AbstractComponentState {
 
     public SharedSelectionMode selectionMode;
 
+    /** Whether single select mode can be cleared through the UI */
+    public boolean singleSelectDeselectAllowed = true;
+
     /** Keys of the currently sorted columns */
     public String[] sortColumns = new String[0];
 

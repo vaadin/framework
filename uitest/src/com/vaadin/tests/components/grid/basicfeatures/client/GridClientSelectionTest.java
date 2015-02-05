@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -74,7 +76,7 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
         assertTrue("Multi Selection Model should have select all checkbox",
                 header.isElementPresent(By.tagName("input")));
 
-        setSelectionModelSingle();
+        setSelectionModelSingle(true);
         header = getGridElement().getHeaderCell(0, 0);
         assertFalse(
                 "Check box shouldn't have been in header for Single Selection Model",
@@ -88,15 +90,133 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
 
     }
 
-    private void setSelectionModelMulti() {
-        selectMenuPath("Component", "State", "Selection mode", "multi");
+    @Test
+    public void testDeselectAllowedMouseInput() {
+        openTestURL();
+
+        setSelectionModelSingle(true);
+
+        getGridElement().getCell(5, 1).click();
+
+        assertTrue("Row 5 should be selected after clicking", isRowSelected(5));
+
+        getGridElement().getCell(7, 1).click();
+
+        assertFalse("Row 5 should be deselected after clicking another row",
+                isRowSelected(5));
+        assertTrue("Row 7 should be selected after clicking", isRowSelected(7));
+
+        getGridElement().getCell(7, 1).click();
+
+        assertFalse("Row should be deselected after clicking again",
+                isRowSelected(7));
     }
 
-    private void setSelectionModelSingle() {
-        selectMenuPath("Component", "State", "Selection mode", "single");
+    @Test
+    public void testDeselectAllowedKeyboardInput() {
+        openTestURL();
+
+        setSelectionModelSingle(true);
+
+        getGridElement().getHeaderCell(0, 1).click();
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Row 0 should be selected after pressing space",
+                isRowSelected(0));
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertFalse(
+                "Row 0 should be deselected after pressing space another row",
+                isRowSelected(0));
+        assertTrue("Row 1 should be selected after pressing space",
+                isRowSelected(1));
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertFalse("Row should be deselected after pressing space again",
+                isRowSelected(1));
+    }
+
+    @Test
+    public void testDeselectNotAllowedMouseInput() {
+        openTestURL();
+
+        setSelectionModelSingle(false);
+
+        getGridElement().getCell(5, 1).click();
+
+        assertTrue("Row 5 should be selected after clicking", isRowSelected(5));
+
+        getGridElement().getCell(7, 1).click();
+
+        assertFalse("Row 5 should be deselected after clicking another row",
+                isRowSelected(5));
+        assertTrue("Row 7 should be selected after clicking", isRowSelected(7));
+
+        getGridElement().getCell(7, 1).click();
+
+        assertTrue("Row should remain selected after clicking again",
+                isRowSelected(7));
+    }
+
+    @Test
+    public void testDeselectNotAllowedKeyboardInput() {
+        openTestURL();
+
+        setSelectionModelSingle(false);
+
+        getGridElement().getHeaderCell(0, 1).click();
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Row 0 should be selected after pressing space",
+                isRowSelected(0));
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertFalse(
+                "Row 0 should be deselected after pressing space another row",
+                isRowSelected(0));
+        assertTrue("Row 1 should be selected after pressing space",
+                isRowSelected(1));
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Row should remain selected after pressing space again",
+                isRowSelected(1));
+    }
+
+    private boolean isRowSelected(int index) {
+        boolean selected = getGridElement().getRow(index).isSelected();
+        return selected;
+    }
+
+    private void setSelectionModelMulti() {
+        setSelectionModel("multi");
+    }
+
+    private void setSelectionModelSingle(boolean deselectAllowed) {
+        String mode = "single";
+        if (!deselectAllowed) {
+            mode += " (no deselect)";
+        }
+        setSelectionModel(mode);
     }
 
     private void setSelectionModelNone() {
-        selectMenuPath("Component", "State", "Selection mode", "none");
+        setSelectionModel("none");
+    }
+
+    private void setSelectionModel(String model) {
+        selectMenuPath("Component", "State", "Selection mode", model);
     }
 }

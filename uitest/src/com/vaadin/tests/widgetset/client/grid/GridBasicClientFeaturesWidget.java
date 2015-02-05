@@ -66,6 +66,7 @@ import com.vaadin.client.widget.grid.events.HeaderKeyPressHandler;
 import com.vaadin.client.widget.grid.events.HeaderKeyUpHandler;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModel.None;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
@@ -465,6 +466,15 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 grid.setSelectionMode(SelectionMode.SINGLE);
+            }
+        }, selectionModePath);
+
+        addMenuCommand("single (no deselect)", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setSelectionMode(SelectionMode.SINGLE);
+                ((SelectionModel.Single<?>) grid.getSelectionModel())
+                        .setDeselectAllowed(false);
             }
         }, selectionModePath);
 

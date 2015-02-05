@@ -79,10 +79,10 @@ public class SpaceSelectHandler<T> {
         protected void setSelected(Grid<T> grid, int rowIndex) {
             T row = grid.getDataSource().getRow(rowIndex);
 
-            if (grid.isSelected(row)) {
-                grid.deselect(row);
-            } else {
+            if (!grid.isSelected(row)) {
                 grid.select(row);
+            } else if (deselectAllowed) {
+                grid.deselect(row);
             }
         }
     }
@@ -91,6 +91,7 @@ public class SpaceSelectHandler<T> {
     private Grid<T> grid;
     private HandlerRegistration spaceUpHandler;
     private HandlerRegistration spaceDownHandler;
+    private boolean deselectAllowed = true;
 
     /**
      * Constructor for SpaceSelectHandler. This constructor will add all
@@ -120,5 +121,17 @@ public class SpaceSelectHandler<T> {
     public void removeHandler() {
         spaceDownHandler.removeHandler();
         spaceUpHandler.removeHandler();
+    }
+
+    /**
+     * Sets whether pressing space for the currently selected row should
+     * deselect the row.
+     * 
+     * @param deselectAllowed
+     *            <code>true</code> to allow deselecting the selected row;
+     *            otherwise <code>false</code>
+     */
+    public void setDeselectAllowed(boolean deselectAllowed) {
+        this.deselectAllowed = deselectAllowed;
     }
 }

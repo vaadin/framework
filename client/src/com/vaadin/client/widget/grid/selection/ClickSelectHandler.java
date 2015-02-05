@@ -30,6 +30,7 @@ public class ClickSelectHandler<T> {
 
     private Grid<T> grid;
     private HandlerRegistration clickHandler;
+    private boolean deselectAllowed = true;
 
     private class RowClickHandler implements BodyClickHandler {
 
@@ -38,6 +39,8 @@ public class ClickSelectHandler<T> {
             T row = (T) event.getTargetCell().getRow();
             if (!grid.isSelected(row)) {
                 grid.select(row);
+            } else if (deselectAllowed) {
+                grid.deselect(row);
             }
         }
     }
@@ -59,5 +62,16 @@ public class ClickSelectHandler<T> {
      */
     public void removeHandler() {
         clickHandler.removeHandler();
+    }
+
+    /**
+     * Sets whether clicking the currently selected row should deselect the row.
+     * 
+     * @param deselectAllowed
+     *            <code>true</code> to allow deselecting the selected row;
+     *            otherwise <code>false</code>
+     */
+    public void setDeselectAllowed(boolean deselectAllowed) {
+        this.deselectAllowed = deselectAllowed;
     }
 }

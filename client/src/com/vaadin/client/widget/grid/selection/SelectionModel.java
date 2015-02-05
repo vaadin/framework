@@ -116,6 +116,26 @@ public interface SelectionModel<T> {
          */
         public T getSelectedRow();
 
+        /**
+         * Sets whether it's allowed to deselect the selected row through the
+         * UI. Deselection is allowed by default.
+         * 
+         * @param deselectAllowed
+         *            <code>true</code> if the selected row can be deselected
+         *            without selecting another row instead; otherwise
+         *            <code>false</code>.
+         */
+        public void setDeselectAllowed(boolean deselectAllowed);
+
+        /**
+         * Sets whether it's allowed to deselect the selected row through the
+         * UI.
+         * 
+         * @return <code>true</code> if deselection is allowed; otherwise
+         *         <code>false</code>
+         */
+        public boolean isDeselectAllowed();
+
     }
 
     /**
