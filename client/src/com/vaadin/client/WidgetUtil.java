@@ -564,7 +564,8 @@ public class WidgetUtil {
      */
     public static int getRequiredWidthBoundingClientRect(
             com.google.gwt.dom.client.Element element) {
-        return (int) getRequiredWidthBoundingClientRectDouble(element);
+        return (int) Math
+                .ceil(getRequiredWidthBoundingClientRectDouble(element));
     }
 
     /**
@@ -584,7 +585,7 @@ public class WidgetUtil {
     /*-{
         if (element.getBoundingClientRect) {
           var rect = element.getBoundingClientRect();
-          return Math.ceil(rect.right - rect.left);
+          return rect.right - rect.left;
         } else {
           return element.offsetWidth;
         }
@@ -642,7 +643,8 @@ public class WidgetUtil {
      */
     public static int getRequiredHeightBoundingClientRect(
             com.google.gwt.dom.client.Element element) {
-        return (int) getRequiredHeightBoundingClientRectDouble(element);
+        return (int) Math
+                .ceil(getRequiredHeightBoundingClientRectDouble(element));
     }
 
     /**
@@ -663,7 +665,7 @@ public class WidgetUtil {
         var height;
         if (element.getBoundingClientRect != null) {
           var rect = element.getBoundingClientRect();
-          height = Math.ceil(rect.bottom - rect.top);
+          height = rect.bottom - rect.top;
         } else {
           height = element.offsetHeight;
         }
