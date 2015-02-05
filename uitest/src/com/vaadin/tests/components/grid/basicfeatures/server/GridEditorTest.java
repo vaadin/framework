@@ -219,7 +219,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         FixedNotificationElement n = $(FixedNotificationElement.class).first();
         assertEquals("Column 7: Could not convert value to Integer",
                 n.getCaption());
-        n.click();
+        n.close();
         editor.cancel();
 
         selectMenuPath(EDIT_ITEM_100);
