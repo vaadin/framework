@@ -1003,7 +1003,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         /*-{
             if (element.addEventListener) {
                 // firefox likes "wheel", while others use "mousewheel"
-                var eventName = element.onwheel===undefined?"mousewheel":"wheel";
+                var eventName = 'onmousewheel' in element ? 'mousewheel' : 'wheel';
                 element.addEventListener(eventName, this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
             } else {
                 // IE8
