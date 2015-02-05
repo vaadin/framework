@@ -187,11 +187,25 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
                         .getText());
     }
 
+    @Test
     public void testUneditableColumn() {
         selectMenuPath("Component", "Editor", "Edit row 5");
 
         assertFalse("Uneditable column should not have an editor widget",
                 getGridElement().getEditor().isEditable(3));
+    }
+
+    @Test
+    public void testErrorField() {
+        selectMenuPath(EDIT_ROW_5);
+
+        assertTrue("No errors should be present",
+                getEditor().findElements(By.className("error")).isEmpty());
+        selectMenuPath("Component", "Editor", "Toggle second editor error");
+        getSaveButton().click();
+
+        assertEquals("Unexpected amount of error fields", 1, getEditor()
+                .findElements(By.className("error")).size());
     }
 
     protected WebElement getSaveButton() {

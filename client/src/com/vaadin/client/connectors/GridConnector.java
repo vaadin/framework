@@ -18,6 +18,7 @@ package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -202,7 +203,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
 
-        private EditorRequest<?> currentRequest = null;
+        private EditorRequest<JsonObject> currentRequest = null;
         private boolean serverInitiated = false;
 
         public CustomEditorHandler() {
@@ -227,12 +228,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void confirmBind(final boolean bindSucceeded) {
-                    endRequest(bindSucceeded);
+                    endRequest(bindSucceeded, null);
                 }
 
                 @Override
-                public void confirmSave(boolean saveSucceeded) {
-                    endRequest(saveSucceeded);
+                public void confirmSave(boolean saveSucceeded,
+                        List<String> errorColumnsIds) {
+                    endRequest(saveSucceeded, errorColumnsIds);
                 }
             });
         }
@@ -295,24 +297,34 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        private void startRequest(EditorRequest<?> request) {
+        private void startRequest(EditorRequest<JsonObject> request) {
             assert currentRequest == null : "Earlier request not yet finished";
 
             currentRequest = request;
         }
 
-        private void endRequest(boolean succeeded) {
+        private void endRequest(boolean succeeded, List<String> errorColumnsIds) {
             assert currentRequest != null : "Current request was null";
             /*
              * Clear current request first to ensure the state is valid if
              * another request is made in the callback.
              */
-            EditorRequest<?> request = currentRequest;
+            EditorRequest<JsonObject> request = currentRequest;
             currentRequest = null;
             if (succeeded) {
                 request.success();
             } else {
-                request.fail();
+                Collection<Column<?, JsonObject>> errorColumns;
+                if (errorColumnsIds != null) {
+                    errorColumns = new ArrayList<Grid.Column<?, JsonObject>>();
+                    for (String colId : errorColumnsIds) {
+                        errorColumns.add(columnIdToColumn.get(colId));
+                    }
+                } else {
+                    errorColumns = null;
+                }
+
+                request.failure(errorColumns);
             }
         }
     }

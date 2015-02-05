@@ -100,6 +100,17 @@ public class GridElement extends AbstractComponentElement {
         }
 
         /**
+         * Checks whether a field is marked with an error.
+         * 
+         * @param colIndex
+         *            column index
+         * @return <code>true</code> iff the field is marked with an error
+         */
+        public boolean isFieldErrorMarked(int colIndex) {
+            return getField(colIndex).getAttribute("class").contains("error");
+        }
+
+        /**
          * Saves the fields of this editor.
          * <p>
          * <em>Note:</em> that this closes the editor making this element

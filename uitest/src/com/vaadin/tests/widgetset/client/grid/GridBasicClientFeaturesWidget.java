@@ -16,6 +16,7 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,7 @@ import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel.None;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.client.widgets.Grid.SelectionMode;
@@ -122,6 +124,12 @@ public class GridBasicClientFeaturesWidget extends
 
         @Override
         public void save(EditorRequest<List<Data>> request) {
+            if (secondEditorError) {
+                log.setText("Syntethic fail of editor in column 2");
+                request.failure(Collections.<Column<?, List<Data>>> singleton(grid
+                        .getColumn(2)));
+                return;
+            }
             try {
                 log.setText("Row " + request.getRowIndex() + " edit committed");
                 List<Data> rowData = ds.getRow(request.getRowIndex());
@@ -145,7 +153,7 @@ public class GridBasicClientFeaturesWidget extends
                 request.success();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).warning(e.toString());
-                request.fail();
+                request.failure(null);
             }
         }
 
@@ -178,6 +186,8 @@ public class GridBasicClientFeaturesWidget extends
     private List<List<Data>> data;
     private final ListDataSource<List<Data>> ds;
     private final ListSorter<List<Data>> sorter;
+
+    private boolean secondEditorError = false;
 
     /**
      * Our basic data object
@@ -972,6 +982,12 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, "Component", "Editor");
 
+        addMenuCommand("Toggle second editor error", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                secondEditorError = !secondEditorError;
+            }
+        }, "Component", "Editor");
     }
 
     private void configureFooterRow(final FooterRow row) {

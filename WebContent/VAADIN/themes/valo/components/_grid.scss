@@ -102,6 +102,17 @@ $v-grid-animations-enabled: $v-animations-enabled !default;
       height: 100%;
       vertical-align: middle;
     }
+    
+    .error::before {
+      border-top: round($v-unit-size / 4) solid $v-error-indicator-color;
+      border-right: round($v-unit-size / 4) solid transparent;
+    }
+    
+    .error,
+    .error > input {
+      // taken from @mixin valo-textfield-error-style()
+      background-color: scale-color($v-error-indicator-color, $lightness: 98%);
+    }
 
     .v-textfield,
     .v-textfield-focus,

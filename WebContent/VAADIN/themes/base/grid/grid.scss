@@ -266,6 +266,21 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
         max-width: 100%;
       }
     }
+
+    .error::before {
+      position: absolute;
+      display: block;
+      height: 0;
+      width: 0;
+      content: "";
+      border-top: 5px solid red;
+      border-right: 5px solid transparent;
+    }
+
+    .error,
+    .error > input {
+      background-color: #fee;
+    }
   }
 
   .#{$primaryStyleName}-editor-footer {

@@ -212,6 +212,10 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
         GridEditorElement editor = getGridElement().getEditor();
 
+        assertFalse(
+                "Field 7 should not have been marked with an error before error",
+                editor.isFieldErrorMarked(7));
+
         WebElement intField = editor.getField(7);
         intField.clear();
         intField.sendKeys("banana phone");
@@ -220,6 +224,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertEquals("Column 7: Could not convert value to Integer",
                 n.getCaption());
         n.close();
+        assertTrue("Field 7 should have been marked with an error after error",
+                editor.isFieldErrorMarked(7));
         editor.cancel();
 
         selectMenuPath(EDIT_ITEM_100);
