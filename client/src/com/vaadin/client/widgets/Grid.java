@@ -942,13 +942,6 @@ public class Grid<T> extends ResizeComposite implements
      */
     protected static class Editor<T> {
 
-        private static final double BUTTON_HEIGHT = 25;
-        private static final double BUTTON_WIDTH = 50;
-        private static final double BUTTON_MARGIN = 5;
-        private static final double SAVE_BUTTON_LEFT_MARGIN_PX = 0;
-        private static final double CANCEL_BUTTON_LEFT_MARGIN_PX = SAVE_BUTTON_LEFT_MARGIN_PX
-                + BUTTON_WIDTH + BUTTON_MARGIN;
-
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
@@ -960,6 +953,16 @@ public class Grid<T> extends ResizeComposite implements
         private EditorHandler<T> handler;
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
+        private DivElement cellWrapper = DivElement.as(DOM.createDiv());
+        private DivElement messageAndButtonsWrapper = DivElement.as(DOM
+                .createDiv());
+
+        private DivElement messageWrapper = DivElement.as(DOM.createDiv());
+        private DivElement buttonsWrapper = DivElement.as(DOM.createDiv());
+
+        // Element which contains the error message for the editor
+        // Should only be added to the DOM when there's a message to show
+        private DivElement message = DivElement.as(DOM.createDiv());
 
         private Map<Column<?, T>, Widget> columnToWidget = new HashMap<Column<?, T>, Widget>();
 
@@ -1055,7 +1058,6 @@ public class Grid<T> extends ResizeComposite implements
         public Editor() {
             saveButton = new Button();
             saveButton.setText(GridConstants.DEFAULT_SAVE_CAPTION);
-            saveButton.setStylePrimaryName("v-nativebutton");
             saveButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1065,7 +1067,6 @@ public class Grid<T> extends ResizeComposite implements
 
             cancelButton = new Button();
             cancelButton.setText(GridConstants.DEFAULT_CANCEL_CAPTION);
-            cancelButton.setStylePrimaryName("v-nativebutton");
             cancelButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1274,23 +1275,7 @@ public class Grid<T> extends ResizeComposite implements
          */
         protected void showOverlay(TableRowElement tr) {
 
-            DivElement tableWrapper = DivElement.as(tr.getParentElement()
-                    .getParentElement().getParentElement());
-
-            AbstractRowContainer body = (AbstractRowContainer) grid
-                    .getEscalator().getBody();
-
-            double rowTop = body.getRowTop(tr);
-            int bodyTop = body.getElement().getAbsoluteTop();
-            int wrapperTop = tableWrapper.getAbsoluteTop();
-
-            double width = WidgetUtil
-                    .getRequiredWidthBoundingClientRectDouble(tr);
-            double height = WidgetUtil
-                    .getRequiredHeightBoundingClientRectDouble(tr);
-            double overlayTop = rowTop + bodyTop - wrapperTop;
-            setBounds(editorOverlay, tr.getOffsetLeft(), overlayTop, width,
-                    height);
+            DivElement gridElement = DivElement.as(grid.getElement());
 
             scrollHandler = grid.addScrollHandler(new ScrollHandler() {
                 @Override
@@ -1299,12 +1284,14 @@ public class Grid<T> extends ResizeComposite implements
                 }
             });
 
-            tableWrapper.appendChild(editorOverlay);
+            gridElement.appendChild(editorOverlay);
+            editorOverlay.appendChild(cellWrapper);
+            editorOverlay.appendChild(messageAndButtonsWrapper);
 
             for (int i = 0; i < tr.getCells().getLength(); i++) {
                 Element cell = createCell(tr.getCells().getItem(i));
 
-                editorOverlay.appendChild(cell);
+                cellWrapper.appendChild(cell);
 
                 Column<?, T> column = grid.getColumn(i);
                 if (column.isEditable()) {
@@ -1316,43 +1303,58 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
 
-            attachWidget(saveButton, editorOverlay);
-            attachWidget(cancelButton, editorOverlay);
+            // Only add these elements once
+            if (!messageAndButtonsWrapper.isOrHasChild(messageWrapper)) {
+                messageAndButtonsWrapper.appendChild(messageWrapper);
+                messageAndButtonsWrapper.appendChild(buttonsWrapper);
+            }
 
-            /*
-             * We can't use BUTTON_HEIGHT here, becuase it's ignored by at least
-             * Chrome and Firefox. So we measure it.
-             */
-            double buttonTop = getButtonTop(tr, saveButton.getOffsetHeight());
-            setBounds(saveButton.getElement(), SAVE_BUTTON_LEFT_MARGIN_PX,
-                    buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT);
-            setBounds(cancelButton.getElement(), CANCEL_BUTTON_LEFT_MARGIN_PX,
-                    buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT);
+            attachWidget(saveButton, buttonsWrapper);
+            attachWidget(cancelButton, buttonsWrapper);
 
             updateHorizontalScrollPosition();
-        }
 
-        private double getButtonTop(TableRowElement tr, int buttonHeight) {
-            boolean buttonsShouldBeRenderedBelow = buttonsShouldBeRenderedBelow(
-                    tr, buttonHeight);
-            final double buttonTop;
-            if (buttonsShouldBeRenderedBelow) {
-                buttonTop = tr.getOffsetHeight() + BUTTON_MARGIN;
+            AbstractRowContainer body = (AbstractRowContainer) grid
+                    .getEscalator().getBody();
+            double rowTop = body.getRowTop(tr);
+
+            int bodyTop = body.getElement().getAbsoluteTop();
+            int gridTop = gridElement.getAbsoluteTop();
+            double overlayTop = rowTop + bodyTop - gridTop;
+
+            if (buttonsShouldBeRenderedBelow(tr)) {
+                // Default case, editor buttons are below the edited row
+                editorOverlay.getStyle().setTop(overlayTop, Unit.PX);
+                editorOverlay.getStyle().clearBottom();
             } else {
-                buttonTop = -(buttonHeight + BUTTON_MARGIN);
+                // Move message and buttons wrapper on top of cell wrapper if
+                // there is not enough space visible space under and fix the
+                // overlay from the bottom
+                editorOverlay.appendChild(cellWrapper);
+                int gridHeight = grid.getElement().getOffsetHeight();
+                editorOverlay.getStyle()
+                        .setBottom(
+                                gridHeight - overlayTop - tr.getOffsetHeight(),
+                                Unit.PX);
+                editorOverlay.getStyle().clearTop();
             }
-            return buttonTop;
+
+            // Do not render over the vertical scrollbar
+            int nativeScrollbarSize = WidgetUtil.getNativeScrollbarSize();
+            if (nativeScrollbarSize > 0) {
+                editorOverlay.getStyle().setRight(nativeScrollbarSize, Unit.PX);
+            }
         }
 
-        private boolean buttonsShouldBeRenderedBelow(TableRowElement tr,
-                int buttonHeight) {
+        private boolean buttonsShouldBeRenderedBelow(TableRowElement tr) {
             TableSectionElement tfoot = grid.escalator.getFooter().getElement();
             double tfootPageTop = WidgetUtil.getBoundingClientRect(tfoot)
                     .getTop();
             double trPageBottom = WidgetUtil.getBoundingClientRect(tr)
                     .getBottom();
-            double bottomOfButtons = trPageBottom + buttonHeight
-                    + BUTTON_MARGIN;
+            int messageAndButtonsHeight = messageAndButtonsWrapper
+                    .getOffsetHeight();
+            double bottomOfButtons = trPageBottom + messageAndButtonsHeight;
             return bottomOfButtons < tfootPageTop;
         }
 
@@ -1366,6 +1368,7 @@ public class Grid<T> extends ResizeComposite implements
             detachWidget(cancelButton);
 
             editorOverlay.removeAllChildren();
+            cellWrapper.removeAllChildren();
             editorOverlay.removeFromParent();
 
             scrollHandler.removeHandler();
@@ -1374,14 +1377,27 @@ public class Grid<T> extends ResizeComposite implements
         protected void setStylePrimaryName(String primaryName) {
             if (styleName != null) {
                 editorOverlay.removeClassName(styleName);
+
+                cellWrapper.removeClassName(styleName + "-cells");
+                messageAndButtonsWrapper.removeClassName(styleName + "-footer");
+
+                messageWrapper.removeClassName(styleName + "-message");
+                buttonsWrapper.removeClassName(styleName + "-buttons");
+
                 saveButton.removeStyleName(styleName + "-save");
                 cancelButton.removeStyleName(styleName + "-cancel");
             }
             styleName = primaryName + "-editor";
-            editorOverlay.addClassName(styleName);
+            editorOverlay.setClassName(styleName);
 
-            saveButton.addStyleName(styleName + "-save");
-            cancelButton.addStyleName(styleName + "-cancel");
+            cellWrapper.setClassName(styleName + "-cells");
+            messageAndButtonsWrapper.setClassName(styleName + "-footer");
+
+            messageWrapper.setClassName(styleName + "-message");
+            buttonsWrapper.setClassName(styleName + "-buttons");
+
+            saveButton.setStyleName(styleName + "-save");
+            cancelButton.setStyleName(styleName + "-cancel");
         }
 
         /**
@@ -1425,13 +1441,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
-
-            editorOverlay.getStyle().setLeft(-scrollLeft, Unit.PX);
-
-            double saveLeftPx = scrollLeft + SAVE_BUTTON_LEFT_MARGIN_PX;
-            double cancelLeftPx = scrollLeft + CANCEL_BUTTON_LEFT_MARGIN_PX;
-            saveButton.getElement().getStyle().setLeft(saveLeftPx, Unit.PX);
-            cancelButton.getElement().getStyle().setLeft(cancelLeftPx, Unit.PX);
+            cellWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
         }
 
         protected void setGridEnabled(boolean enabled) {
