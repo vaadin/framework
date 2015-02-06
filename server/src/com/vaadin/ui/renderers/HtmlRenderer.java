@@ -13,22 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.renderer;
+package com.vaadin.ui.renderers;
 
 import com.vaadin.ui.Grid.AbstractRenderer;
 
 /**
- * A renderer for presenting simple plain-text string values.
+ * A renderer for presenting HTML content.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
-
+public class HtmlRenderer extends AbstractRenderer<String> {
     /**
-     * Creates a new text renderer
+     * Creates a new HTML renderer.
      */
-    public TextRenderer() {
+    public HtmlRenderer() {
         super(String.class);
     }
 }

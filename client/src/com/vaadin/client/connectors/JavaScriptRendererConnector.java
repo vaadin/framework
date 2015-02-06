@@ -31,7 +31,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.renderer.AbstractJavaScriptRenderer;
+import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

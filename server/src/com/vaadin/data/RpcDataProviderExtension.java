@@ -52,7 +52,7 @@ import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
-import com.vaadin.ui.renderer.Renderer;
+import com.vaadin.ui.renderers.Renderer;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;

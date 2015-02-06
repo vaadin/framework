@@ -26,7 +26,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.renderer.NumberRenderer;
+import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {
 

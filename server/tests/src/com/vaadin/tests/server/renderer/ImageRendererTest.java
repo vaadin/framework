@@ -30,7 +30,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.renderer.ImageRenderer;
+import com.vaadin.ui.renderers.ImageRenderer;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

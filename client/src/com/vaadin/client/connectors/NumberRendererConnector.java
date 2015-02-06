@@ -29,7 +29,7 @@ import com.vaadin.shared.ui.Connect;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderer.NumberRenderer.class)
+@Connect(com.vaadin.ui.renderers.NumberRenderer.class)
 public class NumberRendererConnector extends TextRendererConnector {
     // no implementation needed
 }

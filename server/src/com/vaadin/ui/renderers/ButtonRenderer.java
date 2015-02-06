@@ -13,21 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.renderer;
-
-import com.vaadin.ui.Grid.AbstractRenderer;
+package com.vaadin.ui.renderers;
 
 /**
- * A renderer for presenting HTML content.
+ * A Renderer that displays a button with a textual caption. The value of the
+ * corresponding property is used as the caption. Click listeners can be added
+ * to the renderer, invoked when any of the rendered buttons is clicked.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class HtmlRenderer extends AbstractRenderer<String> {
+public class ButtonRenderer extends ClickableRenderer<String> {
+
     /**
-     * Creates a new HTML renderer.
+     * Creates a new button renderer.
      */
-    public HtmlRenderer() {
+    public ButtonRenderer() {
         super(String.class);
+    }
+
+    /**
+     * Creates a new button renderer and adds the given click listener to it.
+     * 
+     * @param listener
+     *            the click listener to register
+     */
+    public ButtonRenderer(RendererClickListener listener) {
+        this();
+        addClickListener(listener);
     }
 }

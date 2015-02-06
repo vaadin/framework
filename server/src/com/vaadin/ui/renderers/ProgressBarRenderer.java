@@ -13,23 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors;
+package com.vaadin.ui.renderers;
 
-import com.vaadin.client.renderers.ProgressBarRenderer;
-import com.vaadin.shared.ui.Connect;
+import com.vaadin.ui.Grid.AbstractRenderer;
+
+import elemental.json.JsonValue;
 
 /**
- * A connector for {@link ProgressBarRenderer}.
+ * A renderer that represents a double values as a graphical progress bar.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.ProgressBarRenderer.class)
-public class ProgressBarRendererConnector extends
-        AbstractRendererConnector<Double> {
+public class ProgressBarRenderer extends AbstractRenderer<Double> {
+
+    /**
+     * Creates a new text renderer
+     */
+    public ProgressBarRenderer() {
+        super(Double.class);
+    }
 
     @Override
-    public ProgressBarRenderer getRenderer() {
-        return (ProgressBarRenderer) super.getRenderer();
+    public JsonValue encode(Double value) {
+        if (value != null) {
+            value = Math.max(Math.min(value, 1), 0);
+        }
+        return super.encode(value);
     }
 }

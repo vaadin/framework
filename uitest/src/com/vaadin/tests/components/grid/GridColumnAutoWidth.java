@@ -22,7 +22,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.renderer.HtmlRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
 
 public class GridColumnAutoWidth extends AbstractTestUI {
     @Override

@@ -90,8 +90,8 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.renderer.Renderer;
-import com.vaadin.ui.renderer.TextRenderer;
+import com.vaadin.ui.renderers.Renderer;
+import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
