@@ -13,32 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.renderer;
+package com.vaadin.ui.renderers;
 
 import com.vaadin.ui.Grid.AbstractRenderer;
 
-import elemental.json.JsonValue;
-
 /**
- * A renderer that represents a double values as a graphical progress bar.
+ * A renderer for presenting simple plain-text string values.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class ProgressBarRenderer extends AbstractRenderer<Double> {
+public class TextRenderer extends AbstractRenderer<String> {
 
     /**
      * Creates a new text renderer
      */
-    public ProgressBarRenderer() {
-        super(Double.class);
-    }
-
-    @Override
-    public JsonValue encode(Double value) {
-        if (value != null) {
-            value = Math.max(Math.min(value, 1), 0);
-        }
-        return super.encode(value);
+    public TextRenderer() {
+        super(String.class);
     }
 }

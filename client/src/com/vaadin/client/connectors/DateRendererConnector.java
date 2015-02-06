@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.Connect;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderer.DateRenderer.class)
+@Connect(com.vaadin.ui.renderers.DateRenderer.class)
 public class DateRendererConnector extends TextRendererConnector {
     // No implementation needed
 }

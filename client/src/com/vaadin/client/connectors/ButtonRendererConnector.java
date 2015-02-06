@@ -28,7 +28,7 @@ import elemental.json.JsonObject;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderer.ButtonRenderer.class)
+@Connect(com.vaadin.ui.renderers.ButtonRenderer.class)
 public class ButtonRendererConnector extends ClickableRendererConnector<String> {
 
     @Override

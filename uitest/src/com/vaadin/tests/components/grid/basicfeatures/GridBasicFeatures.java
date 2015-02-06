@@ -58,9 +58,9 @@ import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SelectionModel;
-import com.vaadin.ui.renderer.DateRenderer;
-import com.vaadin.ui.renderer.HtmlRenderer;
-import com.vaadin.ui.renderer.NumberRenderer;
+import com.vaadin.ui.renderers.DateRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.NumberRenderer;
 
 /**
  * Tests the basic features like columns, footers and headers

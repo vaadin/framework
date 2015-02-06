@@ -36,7 +36,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.renderer.TextRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 
 import elemental.json.JsonValue;
 
