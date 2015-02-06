@@ -156,5 +156,4 @@ public class FileResource implements ConnectorResource {
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
-
 }

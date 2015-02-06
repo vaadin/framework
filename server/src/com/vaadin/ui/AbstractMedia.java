@@ -18,11 +18,16 @@ package com.vaadin.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
@@ -34,6 +39,8 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Abstract base class for the HTML5 media components.
@@ -254,6 +261,51 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void play() {
         getRpcProxy(MediaControl.class).play();
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        String altText = getAltText();
+        if (altText != null && !altText.isEmpty()) {
+            design.append(altText);
+        }
+
+        for (Resource r : getSources()) {
+            Attributes attr = design.appendElement("source").attributes();
+            DesignAttributeHandler.writeAttribute("href", attr, r, null,
+                    Resource.class);
+        }
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        String altText = "";
+        for (Node child : design.childNodes()) {
+            if (child instanceof Element
+                    && ((Element) child).tagName().equals("source")
+                    && child.hasAttr("href")) {
+                addSource(DesignAttributeHandler.readAttribute("href",
+                        child.attributes(), Resource.class));
+            } else {
+                altText += child.toString();
+            }
+        }
+
+        altText = altText.trim();
+        if (!altText.isEmpty()) {
+            setAltText(altText);
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("alt-text");
+        return result;
     }
 
 }
