@@ -129,6 +129,22 @@ public class GridElement extends AbstractComponentElement {
         public void cancel() {
             findElement(By.className("v-grid-editor-cancel")).click();
         }
+
+        /**
+         * Gets the error message text, or <code>null</code> if no message is
+         * present.
+         */
+        public String getErrorMessage() {
+            WebElement messageWrapper = findElement(By
+                    .className("v-grid-editor-message"));
+            List<WebElement> divs = messageWrapper.findElements(By
+                    .tagName("div"));
+            if (divs.isEmpty()) {
+                return null;
+            } else {
+                return divs.get(0).getText();
+            }
+        }
     }
 
     /**

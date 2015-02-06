@@ -125,9 +125,11 @@ public class GridBasicClientFeaturesWidget extends
         @Override
         public void save(EditorRequest<List<Data>> request) {
             if (secondEditorError) {
-                log.setText("Syntethic fail of editor in column 2");
-                request.failure(Collections.<Column<?, List<Data>>> singleton(grid
-                        .getColumn(2)));
+                request.failure(
+                        "Syntethic fail of editor in column 2. "
+                                + "This message is so long that it doesn't fit into its box",
+                        Collections.<Column<?, List<Data>>> singleton(grid
+                                .getColumn(2)));
                 return;
             }
             try {
@@ -153,7 +155,7 @@ public class GridBasicClientFeaturesWidget extends
                 request.success();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).warning(e.toString());
-                request.failure(null);
+                request.failure(null, null);
             }
         }
 

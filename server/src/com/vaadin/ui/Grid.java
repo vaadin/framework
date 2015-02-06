@@ -90,7 +90,6 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.renderer.Renderer;
 import com.vaadin.ui.renderer.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -262,9 +261,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private Set<Column> errorColumns = new HashSet<Column>();
 
+        private String userErrorMessage;
+
         public CommitErrorEvent(Grid grid, CommitException cause) {
             super(grid);
             this.cause = cause;
+            userErrorMessage = cause.getLocalizedMessage();
         }
 
         /**
@@ -310,6 +312,25 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return Collections.unmodifiableCollection(errorColumns);
         }
 
+        /**
+         * Gets the error message to show to the user.
+         * 
+         * @return error message to show
+         */
+        public String getUserErrorMessage() {
+            return userErrorMessage;
+        }
+
+        /**
+         * Sets the error message to show to the user.
+         * 
+         * @param userErrorMessage
+         *            the user error message to set
+         */
+        public void setUserErrorMessage(String userErrorMessage) {
+            this.userErrorMessage = userErrorMessage;
+        }
+
     }
 
     /**
@@ -349,12 +370,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                         .getHeaderCaption();
                 String message = invalidFields.get(firstErrorField)
                         .getLocalizedMessage();
-                /*
-                 * TODO This should be shown in the editor component once there
-                 * is a place for that. Optionally, all errors should be shown
-                 */
-                Notification.show(caption + ": " + message, Type.ERROR_MESSAGE);
 
+                event.setUserErrorMessage(caption + ": " + message);
             } else {
                 com.vaadin.server.ErrorEvent.findErrorHandler(Grid.this).error(
                         new ConnectorErrorEvent(Grid.this, event.getCause()));
@@ -2536,10 +2553,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          *            {@code true} if this column should be editable,
          *            {@code false} otherwise
          * @return this column
-         *
+         * 
          * @throws IllegalStateException
          *             if the editor is currently active
-         *
+         * 
          * @see Grid#editItem(Object)
          * @see Grid#isEditorActive()
          */
@@ -3056,6 +3073,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             @Override
             public void save(int rowIndex) {
                 List<String> errorColumnIds = null;
+                String errorMessage = null;
                 boolean success = false;
                 try {
                     saveEditor();
@@ -3065,6 +3083,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                         CommitErrorEvent event = new CommitErrorEvent(
                                 Grid.this, e);
                         getEditorErrorHandler().commitError(event);
+
+                        errorMessage = event.getUserErrorMessage();
 
                         errorColumnIds = new ArrayList<String>();
                         for (Column column : event.getErrorColumns()) {
@@ -3078,7 +3098,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 } catch (Exception e) {
                     handleError(e);
                 }
-                getEditorRpc().confirmSave(success, errorColumnIds);
+                getEditorRpc().confirmSave(success, errorMessage,
+                        errorColumnIds);
             }
 
             private void handleError(Exception e) {

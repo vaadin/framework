@@ -998,12 +998,15 @@ public class Grid<T> extends ResizeComposite implements
             return w;
         }
 
-        private void complete(Collection<Column<?, T>> errorColumns) {
+        private void complete(String errorMessage,
+                Collection<Column<?, T>> errorColumns) {
             if (completed) {
                 throw new IllegalStateException(
                         "An EditorRequest must be completed exactly once");
             }
             completed = true;
+
+            grid.getEditor().setErrorMessage(errorMessage);
 
             grid.getEditor().clearEditorColumnErrors();
             if (errorColumns != null) {
@@ -1015,15 +1018,16 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void success() {
-            complete(null);
+            complete(null, null);
             if (callback != null) {
                 callback.onSuccess(this);
             }
         }
 
         @Override
-        public void failure(Collection<Grid.Column<?, T>> errorColumns) {
-            complete(errorColumns);
+        public void failure(String errorMessage,
+                Collection<Grid.Column<?, T>> errorColumns) {
+            complete(errorMessage, errorColumns);
             if (callback != null) {
                 callback.onError(this);
             }
@@ -1177,6 +1181,17 @@ public class Grid<T> extends ResizeComposite implements
                     cancel();
                 }
             });
+        }
+
+        public void setErrorMessage(String errorMessage) {
+            if (errorMessage == null) {
+                message.removeFromParent();
+            } else {
+                message.setInnerText(errorMessage);
+                if (message.getParentElement() == null) {
+                    messageWrapper.appendChild(message);
+                }
+            }
         }
 
         public int getRow() {
