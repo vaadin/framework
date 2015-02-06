@@ -228,13 +228,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void confirmBind(final boolean bindSucceeded) {
-                    endRequest(bindSucceeded, null);
+                    endRequest(bindSucceeded, null, null);
                 }
 
                 @Override
                 public void confirmSave(boolean saveSucceeded,
-                        List<String> errorColumnsIds) {
-                    endRequest(saveSucceeded, errorColumnsIds);
+                        String errorMessage, List<String> errorColumnsIds) {
+                    endRequest(saveSucceeded, errorMessage, errorColumnsIds);
                 }
             });
         }
@@ -303,7 +303,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             currentRequest = request;
         }
 
-        private void endRequest(boolean succeeded, List<String> errorColumnsIds) {
+        private void endRequest(boolean succeeded, String errorMessage,
+                List<String> errorColumnsIds) {
             assert currentRequest != null : "Current request was null";
             /*
              * Clear current request first to ensure the state is valid if
@@ -324,7 +325,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     errorColumns = null;
                 }
 
-                request.failure(errorColumns);
+                request.failure(errorMessage, errorColumns);
             }
         }
     }

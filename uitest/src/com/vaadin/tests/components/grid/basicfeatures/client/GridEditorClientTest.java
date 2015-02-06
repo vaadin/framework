@@ -33,6 +33,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
@@ -199,13 +200,23 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     public void testErrorField() {
         selectMenuPath(EDIT_ROW_5);
 
+        GridEditorElement editor = getGridElement().getEditor();
+
         assertTrue("No errors should be present",
-                getEditor().findElements(By.className("error")).isEmpty());
+                editor.findElements(By.className("error")).isEmpty());
+        assertEquals("No error message should be present", null,
+                editor.getErrorMessage());
+
         selectMenuPath("Component", "Editor", "Toggle second editor error");
         getSaveButton().click();
 
-        assertEquals("Unexpected amount of error fields", 1, getEditor()
+        assertEquals("Unexpected amount of error fields", 1, editor
                 .findElements(By.className("error")).size());
+        assertEquals(
+                "Unexpedted error message",
+                "Syntethic fail of editor in column 2. "
+                        + "This message is so long that it doesn't fit into its box",
+                editor.getErrorMessage());
     }
 
     protected WebElement getSaveButton() {

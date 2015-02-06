@@ -58,9 +58,12 @@ public interface EditorClientRpc extends ClientRpc {
      * 
      * @param saveSucceeded
      *            <code>true</code> iff the save action was successful
+     * @param errorMessage
+     *            the error message to show the user
      * @param errorColumnsIds
      *            a list of column keys that should get error markers, or
      *            <code>null</code> if there should be no error markers
      */
-    void confirmSave(boolean saveSucceeded, List<String> errorColumnsIds);
+    void confirmSave(boolean saveSucceeded, String errorMessage,
+            List<String> errorColumnsIds);
 }

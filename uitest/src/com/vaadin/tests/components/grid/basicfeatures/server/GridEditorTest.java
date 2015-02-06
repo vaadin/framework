@@ -38,7 +38,6 @@ import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public class GridEditorTest extends GridBasicFeaturesTest {
 
@@ -220,10 +219,9 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         intField.clear();
         intField.sendKeys("banana phone");
         editor.save();
-        FixedNotificationElement n = $(FixedNotificationElement.class).first();
+
         assertEquals("Column 7: Could not convert value to Integer",
-                n.getCaption());
-        n.close();
+                editor.getErrorMessage());
         assertTrue("Field 7 should have been marked with an error after error",
                 editor.isFieldErrorMarked(7));
         editor.cancel();
@@ -231,6 +229,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_100);
         assertFalse("Exception should not exist",
                 isElementPresent(NotificationElement.class));
+        assertEquals("There should be no editor error message", null,
+                editor.getErrorMessage());
     }
 
     @Test

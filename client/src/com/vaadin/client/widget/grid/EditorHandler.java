@@ -86,12 +86,16 @@ public interface EditorHandler<T> {
          * Informs Grid that an error occurred while trying to process the
          * request.
          * 
+         * @param errorMessage
+         *            and error message to show to the user, or
+         *            <code>null</code> to not show any message.
          * @param errorColumns
          *            a collection of columns for which an error indicator
          *            should be shown, or <code>null</code> if no columns should
          *            be marked as erroneous.
          */
-        public void failure(Collection<Grid.Column<?, T>> errorColumns);
+        public void failure(String errorMessage,
+                Collection<Grid.Column<?, T>> errorColumns);
 
         /**
          * Checks whether the request is completed or not.
@@ -107,8 +111,8 @@ public interface EditorHandler<T> {
      * <p>
      * The implementation <em>must</em> call either
      * {@link EditorRequest#success()} or
-     * {@link EditorRequest#failure(Collection)} to signal a successful or a
-     * failed (respectively) bind action.
+     * {@link EditorRequest#failure(String, Collection)} to signal a successful
+     * or a failed (respectively) bind action.
      * 
      * @param request
      *            the data binding request
@@ -123,9 +127,10 @@ public interface EditorHandler<T> {
      * <p>
      * In contrast to {@link #bind(EditorRequest)} and
      * {@link #save(EditorRequest)}, any calls to
-     * {@link EditorRequest#success()} or {@link EditorRequest#fail()} have no
-     * effect on the outcome of the cancel action. The editor is already closed
-     * when this method is called.
+     * {@link EditorRequest#success()} or
+     * {@link EditorRequest#failure(String, Collection)} have no effect on the
+     * outcome of the cancel action. The editor is already closed when this
+     * method is called.
      * 
      * @param request
      *            the cancel request
