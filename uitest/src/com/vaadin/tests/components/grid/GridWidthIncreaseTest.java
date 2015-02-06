@@ -16,12 +16,15 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridWidthIncreaseTest extends MultiBrowserTest {
@@ -29,28 +32,37 @@ public class GridWidthIncreaseTest extends MultiBrowserTest {
     private static int INCREASE_COUNT = 3;
 
     @Test
-    public void testColumnsExpandWithGrid() {
+    public void testColumnsExpandWithGrid() throws IOException {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
 
-        int[] widths = new int[GridWidthIncrease.COLUMN_COUNT];
+        double accuracy = 1.0d;
+        DesiredCapabilities cap = getDesiredCapabilities();
+        if (BrowserUtil.isIE(cap, 8) || BrowserUtil.isIE(cap, 9)
+                || BrowserUtil.isPhantomJS(cap)) {
+            accuracy = 2.0d;
+        }
+
         for (int i = 0; i < INCREASE_COUNT; ++i) {
-            int totalWidth = 0;
             $(ButtonElement.class).first().click();
+            int prevWidth = 0;
             for (int c = 0; c < GridWidthIncrease.COLUMN_COUNT; ++c) {
                 int width = grid.getCell(0, c).getSize().getWidth();
-                totalWidth += width;
-                widths[c] = width;
                 if (c > 0) {
                     // check that columns are roughly the same width.
-                    assertEquals("Difference in column widths", widths[c],
-                            widths[c - 1], 1.0d);
+                    assertEquals("Difference in column widths", prevWidth,
+                            width, accuracy);
                 }
+                prevWidth = width;
             }
-            // Column widths should be the same as table wrapper size
-            assertTrue(totalWidth == grid.getTableWrapper().getSize()
-                    .getWidth());
+            /*
+             * Column widths should be the same as table wrapper size. Since
+             * Selenium doesn't support subpixels correctly, we use a rough
+             * estimation.
+             */
+            assertEquals(grid.getRow(0).getSize().getWidth(), grid
+                    .getTableWrapper().getSize().getWidth(), accuracy);
         }
     }
 }
