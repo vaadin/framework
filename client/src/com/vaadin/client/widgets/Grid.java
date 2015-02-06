@@ -2447,6 +2447,29 @@ public class Grid<T> extends ResizeComposite implements
                 applyColumnWidths();
             } else {
                 applyColumnWidthsWithExpansion();
+
+                /*
+                 * [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: just
+                 * dump all the remaining pixels into the last column and
+                 * whistle loudly
+                 */
+                boolean dumpIntoLastColumn = false;
+                double escalatorWidth = escalator.getInnerWidth();
+                double occupiedWidth = 0;
+                for (Column column : getColumns()) {
+                    occupiedWidth += column.getWidthActual();
+                    if (column.getWidth() < 0 && column.getExpandRatio() != 0) {
+                        dumpIntoLastColumn = true;
+                    }
+                }
+
+                if (dumpIntoLastColumn) {
+                    Column<?, T> lastColumn = getColumn(getColumnCount() - 1);
+                    double width = Math.floor(lastColumn.getWidthActual()
+                            + (escalatorWidth - occupiedWidth));
+                    escalator.getColumnConfiguration().setColumnWidth(
+                            getColumnCount() - 1, width);
+                }
             }
         }
 
@@ -2565,7 +2588,8 @@ public class Grid<T> extends ResizeComposite implements
              * can distribute the remaining pixels to all columns according to
              * their expand ratios.
              */
-            double pixelsToDistribute = escalator.getInnerWidth()
+            // [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: ceil
+            double pixelsToDistribute = Math.ceil(escalator.getInnerWidth())
                     - reservedPixels;
             if (pixelsToDistribute <= 0 || totalRatios <= 0) {
                 return;
@@ -2579,7 +2603,9 @@ public class Grid<T> extends ResizeComposite implements
             boolean aColumnHasMaxedOut;
             do {
                 aColumnHasMaxedOut = false;
-                final double widthPerRatio = pixelsToDistribute / totalRatios;
+                // [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME floor
+                final double widthPerRatio = Math.floor(pixelsToDistribute
+                        / totalRatios);
                 final Iterator<Column<?, ?>> i = columnsToExpand.iterator();
                 while (i.hasNext()) {
                     final Column<?, ?> column = i.next();
@@ -2615,7 +2641,9 @@ public class Grid<T> extends ResizeComposite implements
              * If we still have anything left, distribute the remaining pixels
              * to the remaining columns.
              */
-            final double widthPerRatio = pixelsToDistribute / totalRatios;
+            // [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: floor
+            final double widthPerRatio = Math.floor(pixelsToDistribute
+                    / totalRatios);
             for (Column<?, ?> column : columnsToExpand) {
                 final int expandRatio = getExpandRatio(column,
                         someColumnExpands);
@@ -2651,7 +2679,8 @@ public class Grid<T> extends ResizeComposite implements
                      * wouldn't show up in that set.
                      */
 
-                    double minWidth = getMinWidth(column);
+                    // [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME ceil
+                    double minWidth = Math.ceil(getMinWidth(column));
                     double currentWidth = column.getWidthActual();
                     boolean hasAutoWidth = column.getWidth() < 0;
                     if (hasAutoWidth && currentWidth < minWidth) {
@@ -2676,8 +2705,9 @@ public class Grid<T> extends ResizeComposite implements
                 for (Column<?, ?> column : columnsToExpand) {
                     totalRatios += getExpandRatio(column, someColumnExpands);
                 }
-                final double pixelsToRemovePerRatio = pixelsToRemoveFromOtherColumns
-                        / totalRatios;
+                // [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: ceil
+                final double pixelsToRemovePerRatio = Math
+                        .ceil(pixelsToRemoveFromOtherColumns / totalRatios);
                 for (Column<?, ?> column : columnsToExpand) {
                     final double pixelsToRemove = pixelsToRemovePerRatio
                             * getExpandRatio(column, someColumnExpands);
@@ -3100,7 +3130,7 @@ public class Grid<T> extends ResizeComposite implements
          *            the width in pixels or negative for auto sizing
          */
         public Column<C, T> setWidth(double pixels) {
-            if (widthUser != pixels) {
+            if (!WidgetUtil.pixelValuesEqual(widthUser, pixels)) {
                 widthUser = pixels;
                 scheduleColumnWidthRecalculator();
             }

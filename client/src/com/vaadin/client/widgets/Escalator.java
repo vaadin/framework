@@ -2037,8 +2037,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
+
+                /*
+                 * [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: not
+                 * using the double-version is a workaround for a bug. It'll be
+                 * converted to use the double version at a later time
+                 */
                 double requiredWidth = WidgetUtil
-                        .getRequiredWidthBoundingClientRectDouble(cellClone);
+                        .getRequiredWidthBoundingClientRect(cellClone);
 
                 if (BrowserInfo.get().isIE9()) {
                     /*
