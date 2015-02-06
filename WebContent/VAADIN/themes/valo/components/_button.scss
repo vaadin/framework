@@ -119,6 +119,8 @@
     text-align: center;
     white-space: nowrap;
     outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @include valo-tappable;
     @if $vertical-centering {
       @include valo-button-vertical-centering;

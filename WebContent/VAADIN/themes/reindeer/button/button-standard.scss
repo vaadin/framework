@@ -42,6 +42,8 @@
 	background-repeat: no-repeat;
 	background-position: right top;
 	background-image: url(img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+	overflow: hidden;
+	text-overflow: ellipsis;
 	}
 
 .#{$primaryStyleName}-caption {
