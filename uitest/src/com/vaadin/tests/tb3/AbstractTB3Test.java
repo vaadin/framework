@@ -934,7 +934,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         public static DesiredCapabilities chrome(int version) {
             DesiredCapabilities c = DesiredCapabilities.chrome();
             c.setVersion("" + version);
-            c.setPlatform(Platform.XP);
+            c.setPlatform(Platform.VISTA);
             return c;
         }
 
