@@ -22,9 +22,12 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -44,6 +47,7 @@ import com.vaadin.shared.ui.AlignmentInfo;
 public final class Slot extends SimplePanel {
 
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
+    private static final int TOUCH_ERROR_MESSAGE_HIDE_DELAY = 200;
 
     private final VAbstractOrderedLayout layout;
 
@@ -55,7 +59,12 @@ public final class Slot extends SimplePanel {
     private Element captionText;
     private Icon icon;
     private Element errorIcon;
+    private Element errorMessage;
     private Element requiredIcon;
+
+    private HandlerRegistration focusRegistration;
+    private HandlerRegistration blurRegistration;
+    private boolean labelClicked = false;
 
     private ElementResizeListener captionResizeListener;
 
@@ -582,9 +591,21 @@ public final class Slot extends SimplePanel {
                 errorIcon.setClassName("v-errorindicator");
             }
             caption.appendChild(errorIcon);
-        } else if (errorIcon != null) {
-            errorIcon.removeFromParent();
-            errorIcon = null;
+
+            if(BrowserInfo.get().isTouchDevice()) {
+                addFocusHandlerToWidget(error, widget);
+                addBlurHandlerToWidget(widget);
+            }
+
+        } else {
+            if (errorIcon != null) {
+                errorIcon.removeFromParent();
+                errorIcon = null;
+            }
+
+            if (errorMessage != null) {
+                removeErrorMessageAndHandlers();
+            }
         }
 
         if (caption != null) {
@@ -649,6 +670,81 @@ public final class Slot extends SimplePanel {
                 }
             }
         }
+    }
+
+    private void removeErrorMessageAndHandlers() {
+        errorMessage.removeFromParent();
+        errorMessage = null;
+
+        if (focusRegistration != null) {
+            focusRegistration.removeHandler();
+            focusRegistration = null;
+        }
+
+        if(blurRegistration != null) {
+            blurRegistration.removeHandler();
+            blurRegistration = null;
+        }
+    }
+
+    private void addFocusHandlerToWidget(final String error, Widget widget) {
+        focusRegistration = widget.addHandler(new FocusHandler() {
+            @Override
+            public void onFocus(FocusEvent event) {
+                if(labelClicked) {
+                    labelClicked = false;
+                    return;
+                }
+                if (errorMessage == null) {
+                    errorMessage = DOM.createDiv();
+                    errorMessage.setClassName("v-touch-error-message");
+                }
+                errorMessage.setInnerHTML(error);
+                captionWrap.appendChild(errorMessage);
+            }
+        }, FocusEvent.getType());
+    }
+
+    private void addBlurHandlerToWidget(final Widget widget) {
+        blurRegistration = widget.addHandler(new BlurHandler() {
+            @Override
+            public void onBlur(BlurEvent event) {
+                if(errorMessage != null) {
+                    addClickHandlerToErrorMessage(widget);
+                }
+                scheduleErrorMessageHide(TOUCH_ERROR_MESSAGE_HIDE_DELAY);
+            }
+        }, BlurEvent.getType());
+    }
+
+    private void scheduleErrorMessageHide(int delay) {
+        //Delaying hiding to allow error message click handler
+        //do his job and return the focus back if error message was tapped
+        Timer hideTimer = new Timer() {
+            @Override
+            public void run() {
+                if(errorMessage != null) {
+                    errorMessage.removeFromParent();
+                    errorMessage = null;
+                }
+            }
+        };
+        hideTimer.schedule(delay);
+    }
+
+    private void addClickHandlerToErrorMessage(final Widget widget) {
+        Event.sinkEvents(errorMessage, Event.ONCLICK);
+        Event.setEventListener(errorMessage, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if(Event.ONCLICK == event.getTypeInt()) {
+                    errorMessage.removeFromParent();
+                    errorMessage = null;
+                    labelClicked = true;
+                    widget.getElement().focus();
+                }
+            }
+        });
     }
 
     /**
