@@ -51,6 +51,7 @@ import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -2618,11 +2619,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         /**
          * Sets the field component used to edit the properties in this column
-         * when the item editor is active. Please refer to
-         * {@link Grid#setEditorField(Object, Field)} for more information.
+         * when the item editor is active. If an item has not been set, then the
+         * binding is postponed until the item is set using
+         * {@link #editItem(Object)}.
+         * <p>
+         * Setting the field to <code>null</code> clears any previously set
+         * field, causing a new field to be created the next time the item
+         * editor is opened.
          * 
          * @param editor
-         *            the editor field, cannot be null
+         *            the editor field
          * @return this column
          */
         public Column setEditorField(Field<?> editor) {
@@ -2632,10 +2638,25 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         /**
          * Returns the editor field used to edit the properties in this column
-         * when the item editor is active. Please refer to
-         * {@link Grid#getEditorField(Object)} for more information.
+         * when the item editor is active. Returns null if the column is not
+         * {@link Column#isEditable() editable}.
+         * <p>
+         * When {@link #editItem(Object) editItem} is called, fields are
+         * automatically created and bound for any unbound properties.
+         * <p>
+         * Getting a field before the editor has been opened depends on special
+         * support from the {@link FieldGroup} in use. Using this method with a
+         * user-provided <code>FieldGroup</code> might cause
+         * {@link BindException} to be thrown.
          * 
-         * @return the editor field or null if this column is not editable
+         * @return the bound field; or <code>null</code> if the respective
+         *         column is not editable
+         * 
+         * @throws IllegalArgumentException
+         *             if there is no column for the provided property id
+         * @throws BindException
+         *             if no field has been configured and there is a problem
+         *             building or binding
          */
         public Field<?> getEditorField() {
             return grid.getEditorField(getPropertyId());
@@ -4789,30 +4810,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
     }
 
-    /**
-     * Gets the field component that represents a property in the item editor.
-     * Returns null if the corresponding column is not
-     * {@link Column#isEditable() editable}.
-     * <p>
-     * When {@link #editItem(Object) editItem} is called, fields are
-     * automatically created and bound for any unbound properties.
-     * <p>
-     * Getting a field before the editor has been opened depends on special
-     * support from the {@link FieldGroup} in use. Using this method with a
-     * user-provided <code>FieldGroup</code> might cause {@link BindException}
-     * to be thrown.
-     * 
-     * @param propertyId
-     *            the property id of the property for which to find the field
-     * @return the bound field or null if the respective column is not editable
-     * 
-     * @throws IllegalArgumentException
-     *             if there is no column for the provided property id
-     * @throws BindException
-     *             if no field has been configured and there is a problem
-     *             building or binding
-     */
-    public Field<?> getEditorField(Object propertyId) {
+    private Field<?> getEditorField(Object propertyId) {
         checkColumnExists(propertyId);
 
         if (!getColumn(propertyId).isEditable()) {
@@ -4870,21 +4868,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
     }
 
-    /**
-     * Binds the field to the given propertyId. If an item has not been set,
-     * then the binding is postponed until the item is set using
-     * {@link #editItem(Object)}.
-     * <p>
-     * Setting the field to <code>null</code> clears any previously set field,
-     * causing a new field to be created the next time the item editor is
-     * opened.
-     * 
-     * @param field
-     *            The field to bind
-     * @param propertyId
-     *            The propertyId to bind the field to
-     */
-    public void setEditorField(Object propertyId, Field<?> field) {
+    private void setEditorField(Object propertyId, Field<?> field) {
         checkColumnExists(propertyId);
 
         Field<?> oldField = editorFieldGroup.getField(propertyId);
