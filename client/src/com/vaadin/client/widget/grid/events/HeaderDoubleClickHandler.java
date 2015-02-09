@@ -21,7 +21,7 @@ import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridDo
  * Handler for {@link GridDoubleClickEvent}s that happen in the header of the
  * Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface HeaderDoubleClickHandler extends GridDoubleClickHandler {

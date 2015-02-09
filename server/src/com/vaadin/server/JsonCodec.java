@@ -798,7 +798,7 @@ public class JsonCodec implements Serializable {
      * {@link JsonValue#jsEquals(JsonValue)} is defined to use JavaScript
      * semantics where arrays and objects are equals only based on identity.
      * 
-     * @since
+     * @since 7.4
      * @param a
      *            the first json value to check, may not be null
      * @param b

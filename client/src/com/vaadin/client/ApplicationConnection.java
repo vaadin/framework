@@ -3706,7 +3706,7 @@ public class ApplicationConnection implements HasHandlers {
      * might be in an inconsistent state because some state changes have been
      * applied but others not. This includes running layotus.
      * 
-     * @since 
+     * @since 7.4
      * @return <code>true</code> if the internal state might be inconsistent
      *         because changes are being processed; <code>false</code> if the
      *         state should be consistent
