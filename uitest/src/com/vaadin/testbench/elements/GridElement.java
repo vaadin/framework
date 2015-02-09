@@ -275,7 +275,7 @@ public class GridElement extends AbstractComponentElement {
      *            Row index
      * @return The th element of the row
      */
-    public WebElement getHeaderRow(int rowIndex) {
+    public TestBenchElement getHeaderRow(int rowIndex) {
         return getSubPart("#header[" + rowIndex + "]");
     }
 
@@ -286,7 +286,7 @@ public class GridElement extends AbstractComponentElement {
      *            Row index
      * @return The tr element of the row
      */
-    public WebElement getFooterRow(int rowIndex) {
+    public TestBenchElement getFooterRow(int rowIndex) {
         return getSubPart("#footer[" + rowIndex + "]");
     }
 
@@ -295,9 +295,9 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return The element representing the vertical scrollbar
      */
-    public WebElement getVerticalScroller() {
+    public TestBenchElement getVerticalScroller() {
         List<WebElement> rootElements = findElements(By.xpath("./div"));
-        return rootElements.get(0);
+        return (TestBenchElement) rootElements.get(0);
     }
 
     /**
@@ -305,9 +305,9 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return The element representing the horizontal scrollbar
      */
-    public WebElement getHorizontalScroller() {
+    public TestBenchElement getHorizontalScroller() {
         List<WebElement> rootElements = findElements(By.xpath("./div"));
-        return rootElements.get(1);
+        return (TestBenchElement) rootElements.get(1);
     }
 
     /**
@@ -315,7 +315,7 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return The thead element
      */
-    public WebElement getHeader() {
+    public TestBenchElement getHeader() {
         return getSubPart("#header");
     }
 
@@ -324,7 +324,7 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return the tbody element
      */
-    public WebElement getBody() {
+    public TestBenchElement getBody() {
         return getSubPart("#cell");
     }
 
@@ -333,7 +333,7 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return the tfoot element
      */
-    public WebElement getFooter() {
+    public TestBenchElement getFooter() {
         return getSubPart("#footer");
     }
 
@@ -342,9 +342,9 @@ public class GridElement extends AbstractComponentElement {
      * 
      * @return The element that wraps the table element
      */
-    public WebElement getTableWrapper() {
+    public TestBenchElement getTableWrapper() {
         List<WebElement> rootElements = findElements(By.xpath("./div"));
-        return rootElements.get(2);
+        return (TestBenchElement) rootElements.get(2);
     }
 
     public GridEditorElement getEditor() {
