@@ -44,10 +44,19 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
     private int lowerWrapperY = -1;
     private int pageHeight = -1;
     private int rowHeight = -1;
-    private int lastRowNumber = -1;
 
-    private WebElement lastRow;
     private WebElement wrapper;
+
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Sending PageDown has no effect on PhantomJS. On IE focus
+        // in Table is often lost, so default scrolling happens on PageDown.
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                getBrowsersExcludingIE());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+        return browsers;
+    }
 
     @Override
     public void setup() throws Exception {
@@ -63,51 +72,80 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         lowerWrapperY = wrapper.getLocation().getY() + pageHeight;
     }
 
+    private void sendKeyUntilEndIsReached(Keys key) {
+        while(true) {
+            int lastVisibleRowNumber = getLastVisibleRowNumber();
+            sendKey(key);
+
+            if (!waitUntilLastRowHasChanged(lastVisibleRowNumber)) {
+                break;
+            }
+        }
+    }
+
+    private void sendKey(Keys key) {
+        new Actions(driver).sendKeys(key).build().perform();
+    }
+
+    private boolean waitUntilLastRowHasChanged(final int row) {
+        try {
+            waitUntil(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver input) {
+                    return row != getLastVisibleRowNumber();
+                }
+            }, 1);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private int getLastVisibleRowNumber() {
+        return getRowNumber(getLastVisibleRow());
+    }
+
+    private void sendPageDownUntilBottomIsReached() {
+        sendKeyUntilEndIsReached(Keys.PAGE_DOWN);
+    }
+
+    private void sendPageUpUntilTopIsReached() {
+        sendKeyUntilEndIsReached(Keys.PAGE_UP);
+    }
+
     @Test
     public void navigatePageDown() {
-        // Scroll to a point where you can reach the bottom with 3 PageDowns.
+        // Scroll to a point where you can reach the bottom with a couple of page downs.
         // Can't use v-table-body height because lower rows haven't been
         // fetched yet.
         testBenchElement(wrapper).scroll(
                 ROW_NUMBER * rowHeight - (int) (2.8 * pageHeight));
         waitForScrollToFinish();
 
-        lastRow = getLastVisibleRow();
-        lastRow.click();
+        getLastVisibleRow().click();
+        sendPageDownUntilBottomIsReached();
 
-        // Press PageDown 3 times, we should reach the last row
-        for (int j = 0; j < 3; j++) {
-            lastRowNumber = getRowNumber(lastRow);
-            new Actions(driver).sendKeys(Keys.PAGE_DOWN).build().perform();
-            waitForRowsToUpdate();
-        }
         assertEquals("Last table row should be visible", ROW_NUMBER - 1,
-                lastRowNumber);
+                getLastVisibleRowNumber());
     }
 
     @Test
     public void navigatePageUp() {
-        // Scroll to a point where you can reach the top with 3 PageUps.
+        // Scroll to a point where you can reach the top with a couple of page ups.
         testBenchElement(wrapper).scroll((int) (2.8 * pageHeight));
         waitForScrollToFinish();
 
-        lastRow = getLastVisibleRow();
         getFirstVisibleRow().click();
+        sendPageUpUntilTopIsReached();
 
-        // Press PageUp 3 times, we should reach the first row
-        for (int j = 0; j < 3; j++) {
-            lastRowNumber = getRowNumber(lastRow);
-            new Actions(driver).sendKeys(Keys.PAGE_UP).build().perform();
-            waitForRowsToUpdate();
-        }
         assertEquals("First table row should be visible", 0,
                 getRowNumber(getFirstVisibleRow()));
     }
 
     @Test
     public void navigateEndAndHome() {
-        lastRow = getLastVisibleRow();
-        lastRow.click();
+        getLastVisibleRow().click();
 
         new Actions(driver).sendKeys(Keys.END).build().perform();
         waitForScrollToFinish();
@@ -139,31 +177,6 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
                 return "scroll position indicator to vanish";
-            }
-        });
-    }
-
-    /**
-     * Waits until the visible rows have been updated to some other set of rows.
-     * Fails if there is no change.
-     */
-    private void waitForRowsToUpdate() {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                lastRow = getLastVisibleRow();
-                int rowNumber = getRowNumber(lastRow);
-                if (lastRowNumber != rowNumber) {
-                    lastRowNumber = rowNumber;
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public String toString() {
-                // Timed out after 10 seconds waiting for ...
-                return "visible rows to be updated";
             }
         });
     }
@@ -209,15 +222,4 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         fail("Could not find last visible row");
         return null;
     }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Sending PageDown has no effect on PhantomJS. On IE focus
-        // in Table is often lost, so default scrolling happens on PageDown.
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
-                getBrowsersExcludingIE());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
-    }
-
 }
