@@ -47,8 +47,11 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
         });
         grid.setEditorEnabled(true);
         grid.setSizeFull();
-        grid.getEditorField("age").addValidator(
-                new IntegerRangeValidator("Must be between 0 and 100", 0, 100));
+        grid.getColumn("age")
+                .getEditorField()
+                .addValidator(
+                        new IntegerRangeValidator("Must be between 0 and 100",
+                                0, 100));
         addComponent(grid);
         getLayout().setExpandRatio(grid, 1);
     }

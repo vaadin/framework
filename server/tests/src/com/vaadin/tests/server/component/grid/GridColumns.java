@@ -253,13 +253,14 @@ public class GridColumns {
 
     @Test
     public void testPropertyAndColumnEditorFieldsMatch() {
-        grid.setEditorField("column1", new TextField());
-        assertSame(grid.getEditorField("column1"), grid.getColumn("column1")
+        Column column1 = grid.getColumn("column1");
+        column1.setEditorField(new TextField());
+        assertSame(column1.getEditorField(), grid.getColumn("column1")
                 .getEditorField());
 
-        grid.getColumn("column2").setEditorField(new TextField());
-        assertSame(grid.getEditorField("column2"), grid.getColumn("column2")
-                .getEditorField());
+        Column column2 = grid.getColumn("column2");
+        column2.setEditorField(new TextField());
+        assertSame(column2.getEditorField(), column2.getEditorField());
     }
 
     @Test

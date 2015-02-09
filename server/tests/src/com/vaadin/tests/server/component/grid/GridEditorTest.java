@@ -139,16 +139,17 @@ public class GridEditorTest {
         assertEquals(getEditedItem(), grid.getEditorFieldGroup()
                 .getItemDataSource());
 
-        assertEquals(DEFAULT_NAME, grid.getEditorField(PROPERTY_NAME)
-                .getValue());
-        assertEquals(String.valueOf(DEFAULT_AGE),
-                grid.getEditorField(PROPERTY_AGE).getValue());
+        assertEquals(DEFAULT_NAME, grid.getColumn(PROPERTY_NAME)
+                .getEditorField().getValue());
+        assertEquals(String.valueOf(DEFAULT_AGE), grid.getColumn(PROPERTY_AGE)
+                .getEditorField().getValue());
     }
 
     @Test
     public void testSaveEditor() throws Exception {
         startEdit();
-        TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
+        TextField field = (TextField) grid.getColumn(PROPERTY_NAME)
+                .getEditorField();
 
         field.setValue("New Name");
         assertEquals(DEFAULT_NAME, field.getPropertyDataSource().getValue());
@@ -164,7 +165,8 @@ public class GridEditorTest {
     public void testSaveEditorCommitFail() throws Exception {
         startEdit();
 
-        ((TextField) grid.getEditorField(PROPERTY_AGE)).setValue("Invalid");
+        ((TextField) grid.getColumn(PROPERTY_AGE).getEditorField())
+                .setValue("Invalid");
         try {
             // Manual fail instead of @Test(expected=...) to check it is
             // saveEditor that fails and not setValue
@@ -178,7 +180,8 @@ public class GridEditorTest {
     @Test
     public void testCancelEditor() throws Exception {
         startEdit();
-        TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
+        TextField field = (TextField) grid.getColumn(PROPERTY_NAME)
+                .getEditorField();
         field.setValue("New Name");
 
         grid.cancelEditor();
@@ -199,23 +202,23 @@ public class GridEditorTest {
     public void testGetField() throws Exception {
         startEdit();
 
-        assertNotNull(grid.getEditorField(PROPERTY_NAME));
+        assertNotNull(grid.getColumn(PROPERTY_NAME).getEditorField());
     }
 
     @Test
     public void testGetFieldWithoutItem() throws Exception {
         grid.setEditorEnabled(true);
-        assertNotNull(grid.getEditorField(PROPERTY_NAME));
+        assertNotNull(grid.getColumn(PROPERTY_NAME).getEditorField());
     }
 
     @Test
     public void testCustomBinding() {
         TextField textField = new TextField();
-        grid.setEditorField(PROPERTY_NAME, textField);
+        grid.getColumn(PROPERTY_NAME).setEditorField(textField);
 
         startEdit();
 
-        assertSame(textField, grid.getEditorField(PROPERTY_NAME));
+        assertSame(textField, grid.getColumn(PROPERTY_NAME).getEditorField());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -228,7 +231,7 @@ public class GridEditorTest {
     public void testFieldIsNotReadonly() {
         startEdit();
 
-        Field<?> field = grid.getEditorField(PROPERTY_NAME);
+        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
         assertFalse(field.isReadOnly());
     }
 
@@ -237,13 +240,13 @@ public class GridEditorTest {
         startEdit();
 
         grid.getEditorFieldGroup().setReadOnly(true);
-        Field<?> field = grid.getEditorField(PROPERTY_NAME);
+        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
         assertTrue(field.isReadOnly());
     }
 
     @Test
     public void testColumnRemoved() {
-        Field<?> field = grid.getEditorField(PROPERTY_NAME);
+        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
 
         assertSame("field should be attached to ", grid, field.getParent());
 
@@ -255,13 +258,13 @@ public class GridEditorTest {
     @Test
     public void testSetFieldAgain() {
         TextField field = new TextField();
-        grid.setEditorField(PROPERTY_NAME, field);
+        grid.getColumn(PROPERTY_NAME).setEditorField(field);
 
         field = new TextField();
-        grid.setEditorField(PROPERTY_NAME, field);
+        grid.getColumn(PROPERTY_NAME).setEditorField(field);
 
         assertSame("new field should be used.", field,
-                grid.getEditorField(PROPERTY_NAME));
+                grid.getColumn(PROPERTY_NAME).getEditorField());
     }
 
     private void startEdit() {
