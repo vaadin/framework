@@ -25,6 +25,7 @@ import java.util.Map;
 import org.junit.Assert;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Flash;
 
 public abstract class DeclarativeTestBase<T extends Component> extends
         DeclarativeTestBaseBase<T> {
@@ -82,6 +83,23 @@ public abstract class DeclarativeTestBase<T extends Component> extends
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    {
+        comparators.put(Flash.class, new IntrospectorEqualsAsserter<Flash>(
+                Flash.class) {
+            @Override
+            public void assertObjectEquals(Flash o1, Flash o2) {
+                super.assertObjectEquals(o1, o2);
+                assertEquals("parameterNames", o1.getParameterNames(),
+                        o2.getParameterNames());
+                for (String name : o1.getParameterNames()) {
+                    assertEquals("Parameter " + name, o1.getParameter(name),
+                            o2.getParameter(name));
+                }
+            }
+        });
+
     }
 
     @Override

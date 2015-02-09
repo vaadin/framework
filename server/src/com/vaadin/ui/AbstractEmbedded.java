@@ -15,8 +15,14 @@
  */
 package com.vaadin.ui;
 
+import java.util.Collection;
+
+import org.jsoup.nodes.Element;
+
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Abstract base for embedding components.
@@ -81,4 +87,27 @@ public abstract class AbstractEmbedded extends AbstractComponent {
         return getState(false).alternateText;
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("alt")) {
+            setAlternateText(DesignAttributeHandler.readAttribute("alt",
+                    design.attributes(), String.class));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbstractEmbedded def = designContext.getDefaultInstance(this);
+        DesignAttributeHandler.writeAttribute("alt", design.attributes(),
+                getAlternateText(), def.getAlternateText(), String.class);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> c = super.getCustomAttributes();
+        c.add("alternate-text");
+        return c;
+    }
 }
