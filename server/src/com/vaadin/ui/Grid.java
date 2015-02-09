@@ -5070,7 +5070,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * 
      * @return the current caption of the cancel button
      */
-    public String getCancelCaption() {
+    public String getEditorCancelCaption() {
         return getState(false).editorCancelCaption;
     }
 
