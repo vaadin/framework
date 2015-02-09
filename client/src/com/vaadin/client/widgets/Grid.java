@@ -3084,7 +3084,7 @@ public class Grid<T> extends ResizeComposite implements
         public abstract C getValue(T row);
 
         /**
-         * The renderer to render the cell width. By default renders the data as
+         * The renderer to render the cell with. By default renders the data as
          * a String or adds the widget into the cell if the column type is of
          * widget type.
          * 
