@@ -53,7 +53,7 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
             windowHeight = y + initialHeight + 90;
         } else if (isElementPresent(By.className("v-ch"))) {
             // Chrome does something wrong with window height
-            windowHeight = y + initialHeight + 20;
+            windowHeight = y + initialHeight + 50;
         }
         getDriver().manage().window()
                 .setSize(new Dimension(size.getWidth(), windowHeight));
