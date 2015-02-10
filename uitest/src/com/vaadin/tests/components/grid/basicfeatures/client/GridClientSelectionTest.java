@@ -118,7 +118,7 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
 
         setSelectionModelSingle(true);
 
-        getGridElement().getHeaderCell(0, 1).click();
+        getGridElement().getHeaderCell(0, 0).click();
 
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
 
@@ -171,7 +171,7 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
 
         setSelectionModelSingle(false);
 
-        getGridElement().getHeaderCell(0, 1).click();
+        getGridElement().getHeaderCell(0, 0).click();
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
