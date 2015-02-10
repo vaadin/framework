@@ -85,77 +85,36 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * doesn't leak memory.
      */
     public class DataProviderKeyMapper implements Serializable {
-        private final BiMap<Integer, Object> indexToItemId = HashBiMap.create();
         private final BiMap<Object, String> itemIdToKey = HashBiMap.create();
         private Set<Object> pinnedItemIds = new HashSet<Object>();
-        private Range activeRange = Range.withLength(0, 0);
         private long rollingIndex = 0;
 
         private DataProviderKeyMapper() {
             // private implementation
         }
 
-        void setActiveRange(Range newActiveRange) {
-            final Range[] removed = activeRange.partitionWith(newActiveRange);
-            final Range[] added = newActiveRange.partitionWith(activeRange);
-
-            removeActiveRows(removed[0]);
-            removeActiveRows(removed[2]);
-            addActiveRows(added[0]);
-            addActiveRows(added[2]);
-
-            activeRange = newActiveRange;
-        }
-
-        private void removeActiveRows(final Range deprecated) {
-            for (int i = deprecated.getStart(); i < deprecated.getEnd(); i++) {
-                final Integer ii = Integer.valueOf(i);
-                final Object itemId = indexToItemId.get(ii);
-
-                if (!isPinned(itemId)) {
-                    itemIdToKey.remove(itemId);
-                    indexToItemId.remove(ii);
+        /**
+         * Sets the currently active rows. This will purge any unpinned rows
+         * from cache.
+         * 
+         * @param itemIds
+         *            collection of itemIds to map to row keys
+         */
+        void setActiveRows(Collection<?> itemIds) {
+            Set<Object> itemSet = new HashSet<Object>(itemIds);
+            Set<Object> itemsRemoved = new HashSet<Object>();
+            for (Object itemId : itemIdToKey.keySet()) {
+                if (!itemSet.contains(itemId) && !isPinned(itemId)) {
+                    itemsRemoved.add(itemId);
                 }
             }
-        }
 
-        private void addActiveRows(Range added) {
-            if (added.isEmpty()) {
-                // Some container.getItemIds() implementations just might be
-                // expensive even for an empty range, so bail out early
-                return;
+            for (Object itemId : itemsRemoved) {
+                itemIdToKey.remove(itemId);
             }
 
-            List<?> newItemIds = container.getItemIds(added.getStart(),
-                    added.length());
-            Integer index = added.getStart();
-            for (Object itemId : newItemIds) {
-                /*
-                 * We might be in a situation we have an index <-> itemId entry
-                 * already. This happens when something was selected, scrolled
-                 * out of view and now we're scrolling it back into view. It's
-                 * unnecessary to overwrite it in that case.
-                 * 
-                 * Fun thought: considering branch prediction, it _might_ even
-                 * be a bit faster to simply always run the code inside this
-                 * if-state. But it sounds too stupid (and most often too
-                 * insignificant) to try out.
-                 */
-                if (!indexToItemId.containsKey(index)) {
-                    /*
-                     * We might be in a situation where we have an itemId <->
-                     * key entry already, but no index for it. This happens when
-                     * something that is out of view is selected
-                     * programmatically. In that case, we only want to add an
-                     * index for that entry, and not overwrite the key.
-                     */
-                    if (!itemIdToKey.containsKey(itemId)) {
-                        itemIdToKey.put(itemId, nextKey());
-                    }
-
-                    indexToItemId.forcePut(index, itemId);
-                }
-                index++;
+            for (Object itemId : itemSet) {
+                itemIdToKey.put(itemId, getKey(itemId));
             }
         }
 
@@ -286,11 +245,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             pinnedItemIds.remove(itemId);
-            final Integer index = indexToItemId.inverse().get(itemId);
-            if (index == null || !activeRange.contains(index.intValue())) {
-                itemIdToKey.remove(itemId);
-                indexToItemId.remove(index);
-            }
         }
 
         /**
@@ -302,10 +256,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
          */
         public boolean isPinned(Object itemId) {
             return pinnedItemIds.contains(itemId);
-        }
-
-        Object itemIdAtIndex(int index) {
-            return indexToItemId.get(Integer.valueOf(index));
         }
     }
 
@@ -352,10 +302,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @param activeRowCount
          *            the number of active rows
          */
-        public void setActiveRows(int firstActiveRow, int activeRowCount) {
-
-            final Range newActiveRange = Range.withLength(firstActiveRow,
-                    activeRowCount);
+        public void setActiveRows(Range newActiveRange) {
 
             // TODO [[Components]] attach and detach components
 
@@ -695,8 +642,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
                 listeners.clear();
                 activeRowHandler.activeRange = Range.withLength(0, 0);
-                keyMapper.setActiveRange(Range.withLength(0, 0));
-                keyMapper.indexToItemId.clear();
 
                 /* Mark as dirty to push changes in beforeClientResponse */
                 bareItemSetTriggeredSizeChange = true;
@@ -819,22 +764,32 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private void pushRowData(int firstRowToPush, int numberOfRows,
             int firstCachedRowIndex, int cacheSize) {
-        Range active = Range.withLength(firstRowToPush, numberOfRows);
-        if (cacheSize != 0) {
-            Range cached = Range.withLength(firstCachedRowIndex, cacheSize);
-            active = active.combineWith(cached);
+        Range newRange = Range.withLength(firstRowToPush, numberOfRows);
+        Range cached = Range.withLength(firstCachedRowIndex, cacheSize);
+        Range fullRange = newRange;
+        if (!cached.isEmpty()) {
+            fullRange = newRange.combineWith(cached);
         }
 
-        keyMapper.setActiveRange(active);
+        List<?> itemIds = container.getItemIds(fullRange.getStart(),
+                fullRange.length());
+        keyMapper.setActiveRows(itemIds);
 
-        List<?> itemIds = container.getItemIds(firstRowToPush, numberOfRows);
         JsonArray rows = Json.createArray();
-        for (int i = 0; i < itemIds.size(); ++i) {
-            rows.set(i, getRowData(getGrid().getColumns(), itemIds.get(i)));
+
+        // Offset the index to match the wanted range.
+        int diff = 0;
+        if (!cached.isEmpty() && newRange.getStart() > cached.getStart()) {
+            diff = cached.length();
+        }
+
+        for (int i = 0; i < newRange.length() && i + diff < itemIds.size(); ++i) {
+            Object itemId = itemIds.get(i + diff);
+            rows.set(i, getRowData(getGrid().getColumns(), itemId));
         }
         rpc.setRowData(firstRowToPush, rows);
 
-        activeRowHandler.setActiveRows(active.getStart(), active.length());
+        activeRowHandler.setActiveRows(fullRange);
     }
 
     private JsonValue getRowData(Collection<Column> columns, Object itemId) {
