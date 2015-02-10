@@ -226,13 +226,14 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
         @Override
         protected void internalSetScrollbarThickness(double px) {
-            root.getStyle().setWidth(px, Unit.PX);
+            root.getStyle().setPaddingRight(px, Unit.PX);
+            root.getStyle().setWidth(0, Unit.PX);
             scrollSizeElement.getStyle().setWidth(px, Unit.PX);
         }
 
         @Override
         protected String internalGetScrollbarThickness() {
-            return root.getStyle().getWidth();
+            return scrollSizeElement.getStyle().getWidth();
         }
 
         @Override
@@ -295,13 +296,14 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
         @Override
         protected void internalSetScrollbarThickness(double px) {
-            root.getStyle().setHeight(px, Unit.PX);
+            root.getStyle().setPaddingBottom(px, Unit.PX);
+            root.getStyle().setHeight(0, Unit.PX);
             scrollSizeElement.getStyle().setHeight(px, Unit.PX);
         }
 
         @Override
         protected String internalGetScrollbarThickness() {
-            return root.getStyle().getHeight();
+            return scrollSizeElement.getStyle().getHeight();
         }
 
         @Override

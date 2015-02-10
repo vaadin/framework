@@ -6,7 +6,7 @@
 
   .#{$primaryStyleName}-scroller {
     position: absolute;
-    z-index: 20;
+    z-index: 1;
     outline: none;
     @include box-sizing(border-box);
   }
@@ -31,6 +31,7 @@
     position: absolute;
     overflow: hidden;
     @include box-sizing(border-box);
+    z-index: 5;
   }
 
   .#{$primaryStyleName}-tablewrapper > table {
