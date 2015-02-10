@@ -4367,15 +4367,39 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
         };
 
+        int scrollbarThickness = WidgetUtil.getNativeScrollbarSize();
+        if (BrowserInfo.get().isIE()) {
+            /*
+             * IE refuses to scroll properly if the DIV isn't at least one pixel
+             * larger than the scrollbar controls themselves. But, probably
+             * because of subpixel rendering, in Grid, one pixel isn't enough,
+             * so we'll add two instead.
+             */
+            if (BrowserInfo.get().isIE9()) {
+                scrollbarThickness += 2;
+            } else {
+                scrollbarThickness += 1;
+            }
+        }
+
         root.appendChild(verticalScrollbar.getElement());
         verticalScrollbar.addScrollHandler(scrollHandler);
-        verticalScrollbar.setScrollbarThickness(WidgetUtil
-                .getNativeScrollbarSize());
+        verticalScrollbar.setScrollbarThickness(scrollbarThickness);
+
+        if (BrowserInfo.get().isIE8()) {
+            /*
+             * IE8 will have to compensate for a misalignment where it pops the
+             * scrollbar outside of its box. See Bug 3 in
+             * http://edskes.net/ie/ie8overflowandexpandingboxbugs.htm
+             */
+            Style vScrollStyle = verticalScrollbar.getElement().getStyle();
+            vScrollStyle.setRight(
+                    verticalScrollbar.getScrollbarThickness() - 1, Unit.PX);
+        }
 
         root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar.addScrollHandler(scrollHandler);
-        horizontalScrollbar.setScrollbarThickness(WidgetUtil
-                .getNativeScrollbarSize());
+        horizontalScrollbar.setScrollbarThickness(scrollbarThickness);
         horizontalScrollbar
                 .addVisibilityHandler(new ScrollbarBundle.VisibilityHandler() {
                     @Override
@@ -4401,18 +4425,21 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         table.appendChild(footElem);
 
         Style hCornerStyle = headerDeco.getStyle();
-        hCornerStyle.setWidth(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
+        hCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
         hCornerStyle.setDisplay(Display.NONE);
         root.appendChild(headerDeco);
 
         Style fCornerStyle = footerDeco.getStyle();
-        fCornerStyle.setWidth(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
+        fCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
         fCornerStyle.setDisplay(Display.NONE);
         root.appendChild(footerDeco);
 
         Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
         hWrapperStyle.setDisplay(Display.NONE);
-        hWrapperStyle.setHeight(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
+        hWrapperStyle.setHeight(horizontalScrollbar.getScrollbarThickness(),
+                Unit.PX);
         root.appendChild(horizontalScrollbarDeco);
 
         setStylePrimaryName("v-escalator");
