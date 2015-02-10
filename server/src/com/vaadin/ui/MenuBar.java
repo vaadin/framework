@@ -17,10 +17,16 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Tag;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -28,6 +34,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -932,7 +940,150 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             this.checked = checked;
             markAsDirty();
         }
-
     }// class MenuItem
 
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        for (MenuItem item : getItems()) {
+            design.appendChild(createMenuElement(item));
+        }
+
+        // in many cases there seems to be an empty more menu item
+        if (getMoreMenuItem() != null && !getMoreMenuItem().getText().isEmpty()) {
+            Element moreMenu = createMenuElement(getMoreMenuItem());
+            moreMenu.attr("more", "");
+            design.appendChild(moreMenu);
+        }
+
+        if (!htmlContentAllowed) {
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+        }
+    }
+
+    protected Element createMenuElement(MenuItem item) {
+        Element menuElement = new Element(Tag.valueOf("menu"), "");
+        // Defaults
+        MenuItem def = new MenuItem("", null, null);
+
+        Attributes attr = menuElement.attributes();
+        DesignAttributeHandler.writeAttribute("icon", attr, item.getIcon(),
+                def.getIcon(), Resource.class);
+        DesignAttributeHandler.writeAttribute("disabled", attr,
+                !item.isEnabled(), !def.isEnabled(), boolean.class);
+        DesignAttributeHandler.writeAttribute("visible", attr,
+                item.isVisible(), def.isVisible(), boolean.class);
+        DesignAttributeHandler.writeAttribute("separator", attr,
+                item.isSeparator(), def.isSeparator(), boolean.class);
+        DesignAttributeHandler.writeAttribute("checkable", attr,
+                item.isCheckable(), def.isCheckable(), boolean.class);
+        DesignAttributeHandler.writeAttribute("checked", attr,
+                item.isChecked(), def.isChecked(), boolean.class);
+        DesignAttributeHandler.writeAttribute("description", attr,
+                item.getDescription(), def.getDescription(), String.class);
+        DesignAttributeHandler.writeAttribute("style-name", attr,
+                item.getStyleName(), def.getStyleName(), String.class);
+
+        menuElement.append(item.getText());
+
+        if (item.hasChildren()) {
+            for (MenuItem subMenu : item.getChildren()) {
+                menuElement.appendChild(createMenuElement(subMenu));
+            }
+        }
+
+        return menuElement;
+    }
+
+    protected MenuItem readMenuElement(Element menuElement) {
+        Resource icon = null;
+        if (menuElement.hasAttr("icon")) {
+            icon = DesignAttributeHandler.getFormatter().parse(
+                    menuElement.attr("icon"), Resource.class);
+        }
+
+        String caption = "";
+        List<Element> subMenus = new ArrayList<Element>();
+        for (Node node : menuElement.childNodes()) {
+            if (node instanceof Element
+                    && ((Element) node).tagName().equals("menu")) {
+                subMenus.add((Element) node);
+            }
+            caption += node.toString();
+        }
+        MenuItem menu = new MenuItem(caption.trim(), icon, null);
+
+        Attributes attr = menuElement.attributes();
+        if (menuElement.hasAttr("icon")) {
+            menu.setIcon(DesignAttributeHandler.readAttribute("icon", attr,
+                    Resource.class));
+        }
+        if (menuElement.hasAttr("disabled")) {
+            menu.setEnabled(!DesignAttributeHandler.readAttribute("disabled",
+                    attr, boolean.class));
+        }
+        if (menuElement.hasAttr("visible")) {
+            menu.setVisible(DesignAttributeHandler.readAttribute("visible",
+                    attr, boolean.class));
+        }
+        if (menuElement.hasAttr("separator")) {
+            menu.setSeparator(DesignAttributeHandler.readAttribute("separator",
+                    attr, boolean.class));
+        }
+        if (menuElement.hasAttr("checkable")) {
+            menu.setCheckable(DesignAttributeHandler.readAttribute("checkable",
+                    attr, boolean.class));
+        }
+        if (menuElement.hasAttr("checked")) {
+            menu.setChecked(DesignAttributeHandler.readAttribute("checked",
+                    attr, boolean.class));
+        }
+        if (menuElement.hasAttr("description")) {
+            menu.setDescription(DesignAttributeHandler.readAttribute(
+                    "description", attr, String.class));
+        }
+        if (menuElement.hasAttr("style-name")) {
+            menu.setStyleName(DesignAttributeHandler.readAttribute(
+                    "style-name", attr, String.class));
+        }
+
+        if (!subMenus.isEmpty()) {
+            menu.itsChildren = new ArrayList<MenuItem>();
+        }
+
+        for (Element subMenu : subMenus) {
+            MenuItem newItem = readMenuElement(subMenu);
+
+            newItem.setParent(menu);
+            menu.itsChildren.add(newItem);
+        }
+
+        return menu;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        for (Element itemElement : design.children()) {
+            if (itemElement.tagName().equals("menu")) {
+                MenuItem menuItem = readMenuElement(itemElement);
+                if (itemElement.hasAttr("more")) {
+                    setMoreMenuItem(menuItem);
+                } else {
+                    menuItems.add(menuItem);
+                }
+            }
+        }
+
+        setHtmlContentAllowed(!design.hasAttr(DESIGN_ATTR_PLAIN_TEXT));
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add(DESIGN_ATTR_PLAIN_TEXT);
+        result.add("html-content-allowed");
+        return result;
+    }
 }// class MenuBar

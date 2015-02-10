@@ -38,7 +38,6 @@ import org.jsoup.nodes.Node;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Component;
 
 /**
  * Default attribute handler implementation used when parsing designs to
@@ -192,8 +191,8 @@ public class DesignAttributeHandler implements Serializable {
      * @param defaultInstance
      *            the default instance for comparing default values
      */
-    public static void writeAttribute(Component component, String attribute,
-            Attributes attr, Component defaultInstance) {
+    public static void writeAttribute(Object component, String attribute,
+            Attributes attr, Object defaultInstance) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
         if (getter == null) {
             getLogger().warning(
