@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NotificationElement;
@@ -38,6 +39,7 @@ public class GridRowAddRemoveTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    @Ignore("This test checks the parameters passed to Container. Has nothing to do with what's sent to client.")
     public void removeRows_loadAllAtOnce() {
         openTestURL();
 
