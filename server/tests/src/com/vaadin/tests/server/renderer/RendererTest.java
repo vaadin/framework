@@ -21,7 +21,6 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Locale;
 
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,11 +30,10 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.renderers.TextRenderer;
 
 import elemental.json.JsonValue;
@@ -119,13 +117,7 @@ public class RendererTest {
         item.getItemProperty("baz").setValue(new TestBean());
         item.getItemProperty("bah").setValue(new ExtendedBean());
 
-        UI ui = EasyMock.createNiceMock(UI.class);
-        ConnectorTracker ct = EasyMock.createNiceMock(ConnectorTracker.class);
-        EasyMock.expect(ui.getConnectorTracker()).andReturn(ct).anyTimes();
-        EasyMock.replay(ui, ct);
-
-        grid = new Grid(c);
-        grid.setParent(ui);
+        grid = new TestGrid(c);
 
         foo = grid.getColumn("foo");
         bar = grid.getColumn("bar");
