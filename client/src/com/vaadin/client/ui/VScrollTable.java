@@ -3617,9 +3617,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     c.setText(caption);
                 }
 
+                c.setSorted(false);
                 if (col.hasAttribute("sortable")) {
                     c.setSortable(true);
-                    c.setSorted(false);
                 } else {
                     c.setSortable(false);
                 }
