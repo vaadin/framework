@@ -984,9 +984,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     @Override
     public void setParent(ClientConnector parent) {
-        super.setParent(parent);
         if (parent == null) {
-            // We're detached, release various listeners
+            // We're being detached, release various listeners
 
             activeRowHandler
                     .removeValueChangeListeners(activeRowHandler.activeRange);
@@ -1004,6 +1003,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             throw new IllegalStateException(
                     "Grid is the only accepted parent type");
         }
+        super.setParent(parent);
     }
 
     /**
