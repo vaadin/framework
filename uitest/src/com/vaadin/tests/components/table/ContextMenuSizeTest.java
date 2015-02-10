@@ -15,13 +15,15 @@
  */
 package com.vaadin.tests.components.table;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -30,90 +32,49 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for context menu position and size.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ContextMenuSizeTest extends MultiBrowserTest {
-
-    @Test
-    public void testContextMenuBottom() {
-        openTestURL();
-
-        WebElement menu = openContextMenu();
-        int initialHeight = menu.getSize().getHeight();
-        int y = menu.getLocation().getY();
-
-        closeContextMenu();
-
-        Dimension size = getDriver().manage().window().getSize();
-
-        int windowHeight = y + initialHeight - 10;
-        if (isElementPresent(By.className("v-ff"))) {
-            // FF does something wrong with window height
-            windowHeight = y + initialHeight + 90;
-        } else if (isElementPresent(By.className("v-ch"))) {
-            // Chrome does something wrong with window height
-            windowHeight = y + initialHeight + 50;
-        }
-        getDriver().manage().window()
-                .setSize(new Dimension(size.getWidth(), windowHeight));
-
-        menu = openContextMenu();
-        int height = menu.getSize().getHeight();
-
-        Assert.assertEquals("Context menu height has been changed after "
-                + "window height update which allows to show context as is",
-                initialHeight, height);
-
-    }
-
-    @Test
-    public void testContextMenuSize() {
-        openTestURL();
-
-        WebElement menu = openContextMenu();
-        int initialHeight = menu.getSize().getHeight();
-        int y = menu.getLocation().getY();
-
-        closeContextMenu();
-
-        Dimension size = getDriver().manage().window().getSize();
-
-        int windowHeight = initialHeight - 10;
-        if (isElementPresent(By.className("v-ch"))) {
-            // Chrome does something wrong with window height
-            windowHeight = y + initialHeight;
-        }
-        getDriver().manage().window()
-                .setSize(new Dimension(size.getWidth(), windowHeight));
-
-        menu = openContextMenu();
-        int height = menu.getSize().getHeight();
-
-        Assert.assertTrue(
-                "Context menu height has not been descreased after "
-                        + "window height update to value lower than context menu initial height",
-                initialHeight > height);
-        closeContextMenu();
-
-        getDriver().manage().window()
-                .setSize(new Dimension(size.getWidth(), size.getHeight()));
-        menu = openContextMenu();
-        height = menu.getSize().getHeight();
-        Assert.assertEquals("Context menu height has not been reset after "
-                + "window height reset", initialHeight, height);
-    }
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
                 getAllBrowsers());
 
-        // context menu doesn't work in phantom JS and works wired with IE8 and
-        // selenium.
+        // context menu doesn't work in phantom JS and works weirdly with IE8
+        // and selenium.
         browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
         browsers.remove(Browser.IE8.getDesiredCapabilities());
         return browsers;
+    }
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        openTestURL();
+    }
+
+    private void resizeViewPortHeightTo(int windowHeight) {
+        // viewport width doesn't matter, let's use a magic number of 500.
+        testBench().resizeViewPortTo(500, windowHeight);
+    }
+
+    private int getContextMenuY() {
+        int y = openContextMenu().getLocation().getY();
+
+        closeContextMenu();
+
+        return y;
+    }
+
+    private int getContextMenuHeight() {
+        int height = openContextMenu().getSize().getHeight();
+
+        closeContextMenu();
+
+        return height;
     }
 
     private WebElement openContextMenu() {
@@ -124,8 +85,29 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
     }
 
     private void closeContextMenu() {
-        Actions actions = new Actions(getDriver());
-        actions.click().build().perform();
+        findElement(By.className("v-app")).click();
+    }
+
+    @Test
+    public void contextMenuIsResizedToFitWindow() {
+        int initialHeight = getContextMenuHeight();
+
+        resizeViewPortHeightTo(initialHeight - 10);
+        assertThat(getContextMenuHeight(), lessThan(initialHeight));
+
+        resizeViewPortHeightTo(initialHeight + 100);
+        assertThat(getContextMenuHeight(), is(initialHeight));
+    }
+
+    @Test
+    public void contextMenuPositionIsChangedAfterResize() {
+        int height = getContextMenuHeight();
+        int y = getContextMenuY();
+
+        resizeViewPortHeightTo(y + height - 10);
+
+        assertThat(getContextMenuY(), lessThan(y));
+        assertThat(getContextMenuHeight(), is(height));
     }
 
 }
