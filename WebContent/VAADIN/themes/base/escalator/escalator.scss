@@ -133,4 +133,17 @@
     z-index: 1;
   }
 
+  .#{$primaryStyleName}-spacer {
+    position: absolute;
+    display: block;
+    
+    // debug
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    
+    > td {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }

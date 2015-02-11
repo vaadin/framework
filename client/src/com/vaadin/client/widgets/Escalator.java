@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,6 +68,7 @@ import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle;
@@ -93,7 +95,7 @@ import com.vaadin.shared.util.SharedUtil;
  |-- AbstractStaticRowContainer
  | |-- HeaderRowContainer
  | `-- FooterContainer
- `---- BodyRowContainer
+ `---- BodyRowContainerImpl
 
  AbstractRowContainer is intended to contain all common logic
  between RowContainers. It manages the bookkeeping of row
@@ -106,7 +108,7 @@ import com.vaadin.shared.util.SharedUtil;
  are pretty thin special cases of a StaticRowContainer
  (mostly relating to positioning of the root element).
 
- BodyRowContainer could also be split into an additional
+ BodyRowContainerImpl could also be split into an additional
  "AbstractScrollingRowContainer", but I felt that no more
  inner classes were needed. So it contains both logic
  required for making things scroll about, and equivalent
@@ -118,8 +120,8 @@ import com.vaadin.shared.util.SharedUtil;
 
  Each RowContainer can be thought to have three levels of
  indices for any given displayed row (but the distinction
- matters primarily for the BodyRowContainer, because of the
- way it scrolls through data):
+ matters primarily for the BodyRowContainerImpl, because of 
+ the way it scrolls through data):
 
  - Logical index
  - Physical (or DOM) index
@@ -137,9 +139,9 @@ import com.vaadin.shared.util.SharedUtil;
  (because of 0-based indices). In Header and
  FooterRowContainers, you are safe to assume that the logical
  index is the same as the physical index. But because the
- BodyRowContainer never displays large data sources entirely
- in the DOM, a physical index usually has no apparent direct
- relationship with its logical index.
+ BodyRowContainerImpl never displays large data sources 
+ entirely in the DOM, a physical index usually has no 
+ apparent direct relationship with its logical index.
 
  VISUAL INDEX is the index relating to the order that you
  see a row in, in the browser, as it is rendered. The
@@ -147,20 +149,20 @@ import com.vaadin.shared.util.SharedUtil;
  index is similar to the physical index in the sense that
  Header and FooterRowContainers can assume a 1:1
  relationship between visual index and logical index. And
- again, BodyRowContainer has no such relationship. The
+ again, BodyRowContainerImpl has no such relationship. The
  body's visual index has additionally no apparent
  relationship with its physical index. Because the <tr> tags
  are reused in the body and visually repositioned with CSS
  as the user scrolls, the relationship between physical
  index and visual index is quickly broken. You can get an
  element's visual index via the field
- BodyRowContainer.visualRowOrder.
+ BodyRowContainerImpl.visualRowOrder.
 
  Currently, the physical and visual indices are kept in sync
  _most of the time_ by a deferred rearrangement of rows.
  They become desynced when scrolling. This is to help screen
  readers to read the contents from the DOM in a natural
- order. See BodyRowContainer.DeferredDomSorter for more
+ order. See BodyRowContainerImpl.DeferredDomSorter for more
  about that.
 
  */
@@ -272,17 +274,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * re-measure)
      */
     /*
-     * [[rowheight]]: This code will require alterations that are relevant for
-     * being able to support variable row heights. NOTE: these bits can most
-     * often also be identified by searching for code reading the ROW_HEIGHT_PX
-     * constant.
-     */
-    /*
      * [[mpixscroll]]: This code will require alterations that are relevant for
      * supporting the scrolling through more pixels than some browsers normally
      * would support. (i.e. when we support more than "a million" pixels in the
      * escalator DOM). NOTE: these bits can most often also be identified by
      * searching for code that call scrollElem.getScrollTop();.
+     */
+    /*
+     * [[spacer]]: Code that is important to make spacers work.
      */
 
     /**
@@ -1139,10 +1138,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         public void scrollToRow(final int rowIndex,
                 final ScrollDestination destination, final double padding) {
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             final double targetStartPx = body.getDefaultRowHeight() * rowIndex;
             final double targetEndPx = targetStartPx
                     + body.getDefaultRowHeight();
@@ -1182,19 +1177,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * Escalator as "v-escalator".
          */
         private String primaryStyleName = null;
-
-        /**
-         * A map containing cached values of an element's current top position.
-         * <p>
-         * Don't use this field directly, because it will not take proper care
-         * of all the bookkeeping required.
-         * 
-         * @deprecated Use {@link #setRowPosition(Element, int, int)},
-         *             {@link #getRowTop(Element)} and
-         *             {@link #removeRowPosition(Element)} instead.
-         */
-        @Deprecated
-        private final Map<TableRowElement, Double> rowTopPositionMap = new HashMap<TableRowElement, Double>();
 
         private boolean defaultRowHeightShouldBeAutodetected = true;
 
@@ -1907,20 +1889,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              */
         }
 
-        @SuppressWarnings("boxing")
         protected void setRowPosition(final TableRowElement tr, final int x,
                 final double y) {
-            position.set(tr, x, y);
-            rowTopPositionMap.put(tr, y);
+            positions.set(tr, x, y);
         }
 
-        @SuppressWarnings("boxing")
         protected double getRowTop(final TableRowElement tr) {
-            return rowTopPositionMap.get(tr);
+            return positions.getTop(tr);
         }
 
         protected void removeRowPosition(TableRowElement tr) {
-            rowTopPositionMap.remove(tr);
+            positions.remove(tr);
         }
 
         public void autodetectRowHeightLater() {
@@ -2204,18 +2183,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 return;
             }
 
-            /*
-             * TODO [[rowheight]]: even if no rows are evaluated in the current
-             * viewport, the heights of some unrendered rows might change in a
-             * refresh. This would cause the scrollbar to be adjusted (in
-             * scrollHeight and/or scrollTop). Do we want to take this into
-             * account?
-             */
             if (hasColumnAndRowData()) {
-                /*
-                 * TODO [[rowheight]]: nudge rows down with
-                 * refreshRowPositions() as needed
-                 */
                 for (int row = logicalRowRange.getStart(); row < logicalRowRange
                         .getEnd(); row++) {
                     final TableRowElement tr = getTrByVisualIndex(row);
@@ -2290,7 +2258,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
     }
 
-    private class BodyRowContainer extends AbstractRowContainer {
+    private class BodyRowContainerImpl extends AbstractRowContainer implements
+            BodyRowContainer {
         /*
          * TODO [[optimize]]: check whether a native JsArray might be faster
          * than LinkedList
@@ -2401,7 +2370,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         private DeferredDomSorter domSorter = new DeferredDomSorter();
 
-        public BodyRowContainer(final TableSectionElement bodyElement) {
+        private final SpacerContainer spacerContainer = new SpacerContainer();
+
+        public BodyRowContainerImpl(final TableSectionElement bodyElement) {
             super(bodyElement);
         }
 
@@ -2409,6 +2380,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         public void setStylePrimaryName(String primaryStyleName) {
             super.setStylePrimaryName(primaryStyleName);
             UIObject.setStylePrimaryName(root, primaryStyleName + "-body");
+            spacerContainer.setStylePrimaryName(primaryStyleName);
         }
 
         public void updateEscalatorRowsOnScroll() {
@@ -2431,21 +2403,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             if (viewportOffset > 0) {
                 // there's empty room on top
 
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 int originalRowsToMove = (int) Math.ceil(viewportOffset
                         / getDefaultRowHeight());
                 int rowsToMove = Math.min(originalRowsToMove,
-                        root.getChildCount());
+                        visualRowOrder.size());
 
-                final int end = root.getChildCount();
+                final int end = visualRowOrder.size();
                 final int start = end - rowsToMove;
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 final int logicalRowIndex = (int) (scrollTop / getDefaultRowHeight());
                 moveAndUpdateEscalatorRows(Range.between(start, end), 0,
                         logicalRowIndex);
@@ -2457,11 +2421,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             else if (viewportOffset + getDefaultRowHeight() <= 0) {
                 /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
-
-                /*
                  * the viewport has been scrolled more than the topmost visual
                  * row.
                  */
@@ -2469,10 +2428,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 int originalRowsToMove = (int) Math.abs(viewportOffset
                         / getDefaultRowHeight());
                 int rowsToMove = Math.min(originalRowsToMove,
-                        root.getChildCount());
+                        visualRowOrder.size());
 
                 int logicalRowIndex;
-                if (rowsToMove < root.getChildCount()) {
+                if (rowsToMove < visualRowOrder.size()) {
                     /*
                      * We scroll so little that we can just keep adding the rows
                      * below the current escalator
@@ -2480,10 +2439,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     logicalRowIndex = getLogicalRowIndex(visualRowOrder
                             .getLast()) + 1;
                 } else {
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     /*
                      * Since we're moving all escalator rows, we need to
                      * calculate the first logical row index from the scroll
@@ -2498,13 +2453,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                  * moveAndUpdateEscalatorRows works, this will work out even if
                  * we move all the rows, and try to place them "at the end".
                  */
-                final int targetVisualIndex = root.getChildCount();
+                final int targetVisualIndex = visualRowOrder.size();
 
                 // make sure that we don't move rows over the data boundary
                 boolean aRowWasLeftBehind = false;
                 if (logicalRowIndex + rowsToMove > getRowCount()) {
                     /*
-                     * TODO [[rowheight]]: with constant row heights, there's
+                     * TODO [[spacer]]: with constant row heights, there's
                      * always exactly one row that will be moved beyond the data
                      * source, when viewport is scrolled to the end. This,
                      * however, isn't guaranteed anymore once row heights start
@@ -2583,10 +2538,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              */
             scroller.recalculateScrollbarsForVirtualViewport();
 
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             final boolean addedRowsAboveCurrentViewport = index
                     * getDefaultRowHeight() < getScrollTop();
             final boolean addedRowsBelowCurrentViewport = index
@@ -2600,10 +2551,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                  * without re-evaluating any rows.
                  */
 
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 final double yDelta = numberOfRows * getDefaultRowHeight();
                 adjustScrollPosIgnoreEvents(yDelta);
                 updateTopRowLogicalIndex(numberOfRows);
@@ -2637,10 +2584,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 moveAndUpdateEscalatorRows(Range.between(start, end),
                         visualTargetIndex, unupdatedLogicalStart);
 
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 // move the surrounding rows to their correct places.
                 double rowTop = (unupdatedLogicalStart + (end - start))
                         * getDefaultRowHeight();
@@ -2649,10 +2592,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 while (i.hasNext()) {
                     final TableRowElement tr = i.next();
                     setRowPosition(tr, 0, rowTop);
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     rowTop += getDefaultRowHeight();
                 }
 
@@ -2762,10 +2701,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             { // Reposition the rows that were moved
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 double newRowTop = logicalTargetIndex * getDefaultRowHeight();
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
@@ -2773,10 +2708,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 for (int i = 0; i < visualSourceRange.length(); i++) {
                     final TableRowElement tr = iter.next();
                     setRowPosition(tr, 0, newRowTop);
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     newRowTop += getDefaultRowHeight();
                 }
             }
@@ -2802,10 +2733,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             verticalScrollbar.setScrollPosByDelta(yDelta);
 
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             final double rowTopPos = yDelta - (yDelta % getDefaultRowHeight());
             for (final TableRowElement tr : visualRowOrder) {
                 setRowPosition(tr, 0, getRowTop(tr) + rowTopPos);
@@ -2847,10 +2774,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                  * added.
                  */
                 for (int i = 0; i < addedRows.size(); i++) {
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     setRowPosition(addedRows.get(i), 0, (index + i)
                             * getDefaultRowHeight());
                 }
@@ -2859,10 +2782,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 for (int i = index + addedRows.size(); i < visualRowOrder
                         .size(); i++) {
                     final TableRowElement tr = visualRowOrder.get(i);
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     setRowPosition(tr, 0, i * getDefaultRowHeight());
                 }
 
@@ -2873,10 +2792,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         private int getMaxEscalatorRowCapacity() {
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             final int maxEscalatorRowCapacity = (int) Math
                     .ceil(calculateHeight() / getDefaultRowHeight()) + 1;
 
@@ -2930,10 +2845,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     .isEmpty() && removedVisualInside.getStart() == 0;
 
             if (!removedAbove.isEmpty() || firstVisualRowIsRemoved) {
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 final double yDelta = removedAbove.length()
                         * getDefaultRowHeight();
                 final double firstLogicalRowHeight = getDefaultRowHeight();
@@ -2996,10 +2907,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     final int dirtyRowsStart = removedLogicalInside.getStart();
                     for (int i = dirtyRowsStart; i < escalatorRowCount; i++) {
                         final TableRowElement tr = visualRowOrder.get(i);
-                        /*
-                         * FIXME [[rowheight]]: coded to work only with default
-                         * row heights - will not work with variable row heights
-                         */
                         setRowPosition(tr, 0, i * getDefaultRowHeight());
                     }
 
@@ -3039,10 +2946,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                      * double-refreshing.
                      */
 
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     final double contentBottom = getRowCount()
                             * getDefaultRowHeight();
                     final double viewportBottom = tBodyScrollTop
@@ -3097,7 +3000,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                          */
 
                         /*
-                         * FIXME [[rowheight]]: above if-clause is coded to only
+                         * FIXME [[spacer]]: above if-clause is coded to only
                          * work with default row heights - will not work with
                          * variable row heights
                          */
@@ -3160,12 +3063,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                         for (int i = removedVisualInside.getStart(); i < escalatorRowCount; i++) {
                             final TableRowElement tr = visualRowOrder.get(i);
                             setRowPosition(tr, 0, (int) newTop);
-
-                            /*
-                             * FIXME [[rowheight]]: coded to work only with
-                             * default row heights - will not work with variable
-                             * row heights
-                             */
                             newTop += getDefaultRowHeight();
                         }
 
@@ -3214,10 +3111,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                          *  5
                          */
 
-                        /*
-                         * FIXME [[rowheight]]: coded to work only with default
-                         * row heights - will not work with variable row heights
-                         */
                         final int rowsScrolled = (int) (Math
                                 .ceil((viewportBottom - contentBottom)
                                         / getDefaultRowHeight()));
@@ -3269,20 +3162,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             final ListIterator<TableRowElement> iterator = visualRowOrder
                     .listIterator(removedVisualInside.getStart());
 
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             double rowTop = (removedLogicalInside.getStart() + logicalOffset)
                     * getDefaultRowHeight();
             for (int i = removedVisualInside.getStart(); i < escalatorRowCount
                     - removedVisualInside.length(); i++) {
                 final TableRowElement tr = iterator.next();
                 setRowPosition(tr, 0, rowTop);
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 rowTop += getDefaultRowHeight();
             }
         }
@@ -3305,19 +3190,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             // move the surrounding rows to their correct places.
             final ListIterator<TableRowElement> iterator = visualRowOrder
                     .listIterator(removedVisualInside.getEnd());
-            /*
-             * FIXME [[rowheight]]: coded to work only with default row heights
-             * - will not work with variable row heights
-             */
             double rowTop = removedLogicalInside.getStart()
                     * getDefaultRowHeight();
             while (iterator.hasNext()) {
                 final TableRowElement tr = iterator.next();
                 setRowPosition(tr, 0, rowTop);
-                /*
-                 * FIXME [[rowheight]]: coded to work only with default row
-                 * heights - will not work with variable row heights
-                 */
                 rowTop += getDefaultRowHeight();
             }
         }
@@ -3364,8 +3241,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             /*
-             * TODO [[rowheight]]: these assumptions will be totally broken with
-             * variable row heights.
+             * TODO [[spacer]]: these assumptions will be totally broken with
+             * spacers.
              */
             final int maxEscalatorRows = getMaxEscalatorRowCapacity();
             final int currentTopRowIndex = getLogicalRowIndex(visualRowOrder
@@ -3586,10 +3463,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 if (!visualRowOrder.isEmpty()) {
                     final double firstRowTop = getRowTop(visualRowOrder
                             .getFirst());
-                    /*
-                     * FIXME [[rowheight]]: coded to work only with default row
-                     * heights - will not work with variable row heights
-                     */
                     final double firstRowMinTop = tBodyScrollTop
                             - getDefaultRowHeight();
                     if (firstRowTop < firstRowMinTop) {
@@ -3613,20 +3486,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             if (visualRowOrder.isEmpty()) {
                 return;
             }
-
-            /*
-             * As an intermediate step between hard-coded row heights to crazily
-             * varying row heights, Escalator will support the modification of
-             * the default row height (which is applied to all rows).
-             * 
-             * This allows us to do some assumptions and simplifications for
-             * now. This code is intended to be quite short-lived, but gives
-             * insight into what needs to be done when row heights change in the
-             * body, in a general sense.
-             * 
-             * TODO [[rowheight]] remove this comment once row heights may
-             * genuinely vary.
-             */
 
             Profiler.enter("Escalator.BodyRowContainer.reapplyDefaultRowHeights");
 
@@ -3661,10 +3520,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             /* step 3: make sure we have the correct amount of escalator rows. */
             verifyEscalatorCount();
 
-            /*
-             * TODO [[rowheight]] This simply doesn't work with variable rows
-             * heights.
-             */
             int logicalLogical = (int) (getRowTop(visualRowOrder.getFirst()) / getDefaultRowHeight());
             setTopRowLogicalIndex(logicalLogical);
 
@@ -3774,6 +3629,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             Element rowElement = cell.getElement().getParentElement();
             return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
                     cell.getElement());
+        }
+
+        @Override
+        public void setSpacer(int rowIndex, double height)
+                throws IllegalArgumentException {
+            spacerContainer.setSpacer(rowIndex, height);
         }
     }
 
@@ -4250,6 +4111,226 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
     }
 
+    private class SpacerContainer {
+
+        /** This is used mainly for testing purposes */
+        private static final String SPACER_LOGICAL_ROW_PROPERTY = "vLogicalRow";
+
+        /*
+         * TODO [[optimize]] maybe convert the usage of this class to flyweight
+         * or object pooling pattern?
+         */
+        private final class Spacer {
+            private TableCellElement spacerElement;
+            private TableRowElement root;
+
+            public TableRowElement getRootElement() {
+                return root;
+            }
+
+            public void setPosition(double x, double y) {
+                positions.set(root, x, y);
+            }
+
+            /**
+             * Creates a new element structure for the spacer.
+             * <p>
+             * {@link #createDomStructure()} and
+             * {@link #setRootElement(Element)} can collectively only be called
+             * once, otherwise an {@link AssertionError} will be raised (if
+             * asserts are enabled).
+             */
+            public void createDomStructure(double height) {
+                assert root == null || root.getParentElement() == null : "this spacer was already attached";
+
+                root = TableRowElement.as(DOM.createTR());
+                spacerElement = TableCellElement.as(DOM.createTD());
+                root.appendChild(spacerElement);
+                spacerElement.setInnerText("IAMA SPACER, AMA");
+                initElements(height);
+            }
+
+            private void initElements(double height) {
+                setHeight(height);
+                root.getStyle().setWidth(100, Unit.PCT);
+
+                spacerElement.getStyle().setWidth(100, Unit.PCT);
+                spacerElement.setColSpan(getColumnConfiguration()
+                        .getColumnCount());
+
+                setStylePrimaryName(getStylePrimaryName());
+            }
+
+            public void setRootElement(TableRowElement tr) {
+                assert root == null || root.getParentElement() == null : "this spacer was already attached";
+
+                assert tr != null : "tr may not be null";
+                root = tr;
+
+                assert tr.getChildCount() == 1 : "tr must have exactly one child";
+                spacerElement = tr.getCells().getItem(0);
+                assert spacerElement != null : "spacer element somehow was null";
+            }
+
+            public void setStylePrimaryName(String style) {
+                UIObject.setStylePrimaryName(root, style + "-spacer");
+            }
+
+            public void setHeight(double newHeight) {
+                root.getStyle().setHeight(newHeight, Unit.PX);
+                getLogger().warning(
+                        "spacer's height changed, but pushing rows out of "
+                                + "the way not implemented yet");
+            }
+        }
+
+        private final TreeMap<Integer, Double> rowIndexToHeight = new TreeMap<Integer, Double>();
+        private final TreeMap<Integer, TableRowElement> rowIndexToSpacerElement = new TreeMap<Integer, TableRowElement>();
+
+        public void setSpacer(int rowIndex, double height)
+                throws IllegalArgumentException {
+            if (rowIndex < 0 || rowIndex >= getBody().getRowCount()) {
+                throw new IllegalArgumentException("invalid row index: "
+                        + rowIndex + ", while the body only has "
+                        + getBody().getRowCount() + " rows.");
+            }
+
+            if (height >= 0) {
+                insertOrUpdateSpacer(rowIndex, height);
+            } else if (spacerExists(rowIndex)) {
+                removeSpacer(rowIndex);
+            }
+        }
+
+        @SuppressWarnings("boxing")
+        private void insertOrUpdateSpacer(int rowIndex, double height) {
+            if (!spacerExists(rowIndex)) {
+                insertSpacer(rowIndex, height);
+            } else {
+                updateSpacer(rowIndex, height);
+            }
+            rowIndexToHeight.put(rowIndex, height);
+        }
+
+        private boolean spacerExists(int rowIndex) {
+            Integer rowIndexObj = Integer.valueOf(rowIndex);
+            boolean spacerExists = rowIndexToHeight.containsKey(rowIndexObj);
+            assert spacerExists == rowIndexToSpacerElement
+                    .containsKey(rowIndexObj) : "Inconsistent bookkeeping detected.";
+            return spacerExists;
+        }
+
+        @SuppressWarnings("boxing")
+        private void insertSpacer(int rowIndex, double height) {
+            Spacer spacer = createSpacer(height);
+            spacer.getRootElement().setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY,
+                    rowIndex);
+            TableRowElement spacerRoot = spacer.getRootElement();
+            rowIndexToSpacerElement.put(rowIndex, spacerRoot);
+            spacer.setPosition(0, getSpacerTop(rowIndex));
+            spacerRoot.getStyle().setWidth(
+                    columnConfiguration.calculateRowWidth(), Unit.PX);
+            body.getElement().appendChild(spacerRoot);
+        }
+
+        private void updateSpacer(int rowIndex, double newHeight) {
+            getSpacer(rowIndex).setHeight(newHeight);
+        }
+
+        @SuppressWarnings("boxing")
+        private Spacer getSpacer(int rowIndex) {
+            Spacer spacer = new Spacer();
+            spacer.setRootElement(rowIndexToSpacerElement.get(rowIndex));
+            return spacer;
+        }
+
+        private Spacer createSpacer(double height) {
+            /*
+             * Optimally, this would be a factory method in SpacerImpl, but
+             * since it's not a static class, we can't do that directly. We
+             * could make it static, and pass in references, but that probably
+             * will become hairy pretty quickly.
+             */
+
+            Spacer spacer = new Spacer();
+            spacer.createDomStructure(height);
+            return spacer;
+        }
+
+        private double getSpacerTop(int rowIndex) {
+            double spacerHeights = 0;
+
+            /*-
+             * TODO: uncomment this bit once the spacers start pushing the
+             * rows downwards, offseting indices. OTOH this entire method 
+             * probably needs to be usable by BodyContainerImpl as well, 
+             * since this same logic can/should be used for calculating the 
+             * top position for rows. 
+
+            // Sum all spacer heights that occur before rowIndex.
+            for (Double spacerHeight : rowIndexToHeight.headMap(
+                    Integer.valueOf(rowIndex), false).values()) {
+                spacerHeights += spacerHeight.doubleValue();
+            }
+             */
+
+            double rowHeights = getBody().getDefaultRowHeight()
+                    * (rowIndex + 1);
+
+            return rowHeights + spacerHeights;
+        }
+
+        @SuppressWarnings("boxing")
+        private void removeSpacer(int rowIndex) {
+            Spacer spacer = getSpacer(rowIndex);
+
+            // fix DOM
+            spacer.setHeight(0); // resets row offsets
+            spacer.getRootElement().removeFromParent();
+
+            // fix bookkeeping
+            rowIndexToHeight.remove(rowIndex);
+            rowIndexToSpacerElement.remove(rowIndex);
+        }
+
+        public void setStylePrimaryName(String style) {
+            for (TableRowElement spacerRoot : rowIndexToSpacerElement.values()) {
+                Spacer spacer = new Spacer();
+                spacer.setRootElement(spacerRoot);
+                spacer.setStylePrimaryName(style);
+            }
+        }
+    }
+
+    private class ElementPositionBookkeeper {
+        /**
+         * A map containing cached values of an element's current top position.
+         * <p>
+         * Don't use this field directly, because it will not take proper care
+         * of all the bookkeeping required.
+         */
+        private final Map<Element, Double> elementTopPositionMap = new HashMap<Element, Double>();
+
+        public void set(final Element e, final double x, final double y) {
+            assert e != null : "Element was null";
+            position.set(e, x, y);
+            elementTopPositionMap.put(e, Double.valueOf(y));
+        }
+
+        public double getTop(final Element e) {
+            Double top = elementTopPositionMap.get(e);
+            if (top == null) {
+                throw new IllegalArgumentException("Element " + e
+                        + " was not found in the position bookkeeping");
+            }
+            return top.doubleValue();
+        }
+
+        public void remove(Element e) {
+            elementTopPositionMap.remove(e);
+        }
+    }
+
     // abs(atan(y/x))*(180/PI) = n deg, x = 1, solve y
     /**
      * The solution to
@@ -4309,7 +4390,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
-    private final BodyRowContainer body = new BodyRowContainer(bodyElem);
+    private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem);
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
     private final Scroller scroller = new Scroller();
@@ -4345,6 +4426,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             layoutIsScheduled = false;
         }
     };
+
+    private final ElementPositionBookkeeper positions = new ElementPositionBookkeeper();
 
     /**
      * Creates a new Escalator widget instance.
@@ -4517,7 +4600,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             int index = rowsToRemove - i - 1;
             TableRowElement tr = bodyElem.getRows().getItem(index);
             body.paintRemoveRow(tr, index);
-            body.removeRowPosition(tr);
+            positions.remove(tr);
         }
         body.visualRowOrder.clear();
         body.setTopRowLogicalIndex(0);
@@ -4595,7 +4678,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * 
      * @return the body. Never <code>null</code>
      */
-    public RowContainer getBody() {
+    public BodyRowContainer getBody() {
         return body;
     }
 
@@ -5189,5 +5272,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             columnConfiguration.setColumnWidth(i,
                     columnConfiguration.getColumnWidth(i));
         }
+    }
+
+    private Range getViewportPixels() {
+        int from = (int) Math.floor(verticalScrollbar.getScrollPos());
+        int to = (int) Math.ceil(body.heightOfSection);
+        return Range.between(from, to);
     }
 }

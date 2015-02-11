@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -64,6 +66,10 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLUMN_SPANNING = "Column spanning";
     protected static final String COLSPAN_NORMAL = "Apply normal colspan";
     protected static final String COLSPAN_NONE = "Apply no colspan";
+    protected static final String SPACERS = "Spacers";
+    protected static final String ROW_1 = "Row 1";
+    protected static final String SET_100PX = "Set 100px";
+    protected static final String REMOVE = "Remove";
 
     @Override
     protected Class<?> getUIClass() {
@@ -258,5 +264,25 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected void populate() {
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+    }
+
+    private List<WebElement> getSpacers() {
+        return getEscalator().findElements(By.className("v-escalator-spacer"));
+    }
+
+    @SuppressWarnings("boxing")
+    protected WebElement getSpacer(int logicalRowIndex) {
+        List<WebElement> spacers = getSpacers();
+        System.out.println("size: " + spacers.size());
+        for (WebElement spacer : spacers) {
+            System.out.println(spacer + ", " + logicalRowIndex);
+            Boolean isInDom = (Boolean) executeScript(
+                    "return arguments[0]['vLogicalRow'] === arguments[1]",
+                    spacer, logicalRowIndex);
+            if (isInDom) {
+                return spacer;
+            }
+        }
+        return null;
     }
 }

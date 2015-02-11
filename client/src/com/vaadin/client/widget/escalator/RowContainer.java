@@ -22,15 +22,46 @@ import com.google.gwt.dom.client.TableSectionElement;
 
 /**
  * A representation of the rows in each of the sections (header, body and
- * footer) in an {@link Escalator}.
+ * footer) in an {@link com.vaadin.client.widgets.Escalator}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
- * @see Escalator#getHeader()
- * @see Escalator#getBody()
- * @see Escalator#getFooter()
+ * @see com.vaadin.client.widgets.Escalator#getHeader()
+ * @see com.vaadin.client.widgets.Escalator#getBody()
+ * @see com.vaadin.client.widgets.Escalator#getFooter()
+ * @see SpacerContainer
  */
 public interface RowContainer {
+
+    /**
+     * The row container for the body section in an
+     * {@link com.vaadin.client.widgets.Escalator}.
+     * <p>
+     * The body section can contain both rows and spacers.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     * @see com.vaadin.client.widgets.Escalator#getBody()
+     */
+    public interface BodyRowContainer extends RowContainer {
+        /**
+         * Marks a spacer and its height.
+         * <p>
+         * If a spacer is already registered with the given row index, that
+         * spacer will be updated with the given height.
+         * 
+         * @param rowIndex
+         *            the row index for the spacer to modify. The affected
+         *            spacer is underneath the given index
+         * @param height
+         *            the pixel height of the spacer. If {@code height} is
+         *            negative, the affected spacer (if exists) will be removed
+         * @throws IllegalArgumentException
+         *             if {@code rowIndex} is not a valid row index
+         */
+        void setSpacer(int rowIndex, double height)
+                throws IllegalArgumentException;
+    }
 
     /**
      * An arbitrary pixel height of a row, before any autodetection for the row

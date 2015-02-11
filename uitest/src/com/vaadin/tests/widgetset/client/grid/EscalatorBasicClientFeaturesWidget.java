@@ -303,6 +303,7 @@ public class EscalatorBasicClientFeaturesWidget extends
         createColumnsAndRowsMenu();
         createFrozenMenu();
         createColspanMenu();
+        createSpacerMenu();
     }
 
     private void createFrozenMenu() {
@@ -608,6 +609,34 @@ public class EscalatorBasicClientFeaturesWidget extends
                 if (container.getRowCount() > 0) {
                     removeRows(container, 0, container.getRowCount());
                 }
+            }
+        }, menupath);
+    }
+
+    private void createSpacerMenu() {
+        String[] menupath = { "Features", "Spacers" };
+        createSpacersMenuForRow(1, menupath);
+        createSpacersMenuForRow(50, menupath);
+    }
+
+    private void createSpacersMenuForRow(final int rowIndex, String[] menupath) {
+        menupath = new String[] { menupath[0], menupath[1], "Row " + rowIndex };
+        addMenuCommand("Set 100px", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, 100);
+            }
+        }, menupath);
+        addMenuCommand("Set 50px", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, 50);
+            }
+        }, menupath);
+        addMenuCommand("Remove", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, -1);
             }
         }, menupath);
     }
