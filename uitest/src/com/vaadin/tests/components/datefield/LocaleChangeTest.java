@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class LocaleChangeTest extends MultiBrowserTest {

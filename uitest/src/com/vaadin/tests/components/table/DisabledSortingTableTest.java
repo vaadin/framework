@@ -14,14 +14,17 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DisabledSortingTableTest extends MultiBrowserTest {
 
+    Class<?> uiClass;
+
     @Override
-    protected void closeApplication() {
-        // need to close manually to use the correct ui class.
-    }
+    protected java.lang.Class<?> getUIClass() {
+        return uiClass;
+    };
 
     @Test
     public void sortingByEmptyArrayShouldClearSortingIndicator() {
-        openTestURL(DisabledSortingTable.class);
+        uiClass = DisabledSortingTable.class;
+        openTestURL();
 
         assertThatFirstCellHasText("0");
 
@@ -32,13 +35,12 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
 
         sortByEmptyArray();
         assertThatFirstCellHasText("4");
-
-        openTestURL(DisabledSortingTable.class, "closeApplication");
     }
 
     @Test
     public void emptySortingClearsIndicatorAndResetsSortingWithSQLContainer() {
-        openTestURL(DisabledSortingTableSqlContainer.class);
+        uiClass = DisabledSortingTableSqlContainer.class;
+        openTestURL();
 
         assertThatFirstCellHasText("1");
 
@@ -49,8 +51,6 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
         sortByEmptyArray();
 
         assertThatFirstCellHasText("1");
-
-        openTestURL(DisabledSortingTableSqlContainer.class, "closeApplication");
     }
 
     private void sortFirstColumnAscending() {
@@ -91,8 +91,8 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String.format("header to get class name '%s'",
-                        className);
+                return String
+                        .format("header to get class name '%s'", className);
             }
         });
     }

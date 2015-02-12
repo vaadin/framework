@@ -19,14 +19,11 @@
  */
 package com.vaadin.tests.tb3;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+import com.vaadin.testbench.parallel.TestCategory;
 
 /**
  * A {@link MultiBrowserTest} which restricts the tests to the browsers which
@@ -39,7 +36,6 @@ public abstract class WebsocketTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return new ArrayList<DesiredCapabilities>(
-                getBrowsersSupportingWebSocket());
+        return getBrowsersSupportingWebSocket();
     }
 }

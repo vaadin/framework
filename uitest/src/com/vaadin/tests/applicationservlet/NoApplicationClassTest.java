@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.applicationservlet;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -23,6 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class NoApplicationClassTest extends MultiBrowserTest {
@@ -38,8 +38,7 @@ public class NoApplicationClassTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
-                .getDesiredCapabilities());
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Override

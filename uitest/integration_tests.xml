@@ -27,6 +27,8 @@
     <!-- Base url where the testable application is deployed -->
     <property name="deployment.url" value="http://${test.integration.server}:8080" />
 
+    <!-- TestBench license parameter -->
+    <property name="vaadin.testbench.developer.license" value="" />
 
     <property name="report.dir" location="${integration_test.dir}/result/reports-integration" />
 
@@ -124,6 +126,7 @@
             <jvmarg value="-Dserver-name=${server-name}" />
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Ddemo.war=${demo.war}" />
+            <jvmarg value="-Dvaadin.testbench.developer.license=${vaadin.testbench.developer.license}" />
             <test name="${junit.test.suite}" todir="${server.report.dir}" />
         </junit>
     </target>

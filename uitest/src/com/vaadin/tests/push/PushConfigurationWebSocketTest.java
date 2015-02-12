@@ -28,13 +28,7 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        browsers.remove(Browser.IE9.getDesiredCapabilities());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-
-        return browsers;
+        return getBrowsersSupportingWebSocket();
     }
 
     @Test

@@ -33,11 +33,9 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
         // PhantomJS doesn't send Focus / Blur events when clicking or
         // navigating with keyboard
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
+        return getBrowsersExcludingPhantomJS();
     }
 
     @Override

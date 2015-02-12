@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.ui;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -24,6 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DynamicViewportEmptyTest extends MultiBrowserTest {
@@ -35,7 +35,7 @@ public class DynamicViewportEmptyTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Arrays.asList(Browser.CHROME.getDesiredCapabilities());
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Test

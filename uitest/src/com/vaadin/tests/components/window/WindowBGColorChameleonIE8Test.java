@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class WindowBGColorChameleonIE8Test extends SingleBrowserTest {
@@ -19,9 +19,7 @@ public class WindowBGColorChameleonIE8Test extends SingleBrowserTest {
      */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-
-        return Arrays.asList(MultiBrowserTest.Browser.IE8
-                .getDesiredCapabilities());
+        return Arrays.asList(Browser.IE8.getDesiredCapabilities());
     }
 
     @Test

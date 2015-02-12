@@ -17,13 +17,12 @@ package com.vaadin.tests.push;
 
 import java.util.List;
 
-import com.vaadin.tests.annotations.TestCategory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.WebsocketTest;
 
 @TestCategory("push")
 public class RefreshCloseConnectionTest extends MultiBrowserTest {

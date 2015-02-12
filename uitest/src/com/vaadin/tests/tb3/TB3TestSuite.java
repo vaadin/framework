@@ -16,11 +16,11 @@
 
 package com.vaadin.tests.tb3;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
 
-import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
+
+import com.vaadin.testbench.parallel.ParallelTestSuite;
 
 /**
  * Test suite which consists of all the TB3 tests passed in the constructor.
@@ -28,34 +28,21 @@ import org.junit.runners.model.InitializationError;
  * 
  * @author Vaadin Ltd
  */
-public class TB3TestSuite extends Suite {
-
-    /**
-     * This only restricts the number of test suites running concurrently. The
-     * number of tests to run concurrently are configured in {@link TB3Runner}.
-     */
-    private static final int MAX_CONCURRENT_TEST_SUITES = 20;
-
-    /**
-     * This is static so it is shared by all test suites running concurrently on
-     * the same machine and thus can limit the number of threads in use.
-     */
-    private final ExecutorService service = Executors
-            .newFixedThreadPool(MAX_CONCURRENT_TEST_SUITES);
+public class TB3TestSuite extends ParallelTestSuite {
 
     public TB3TestSuite(Class<?> klass,
             Class<? extends AbstractTB3Test> baseClass, String basePackage,
-            String[] ignorePackages) throws InitializationError {
+            String[] ignorePackages) throws InitializationError, IOException {
         this(klass, baseClass, basePackage, ignorePackages,
                 new TB3TestLocator());
     }
 
     public TB3TestSuite(Class<?> klass,
             Class<? extends AbstractTB3Test> baseClass, String basePackage,
-            String[] ignorePackages, TB3TestLocator testLocator)
-            throws InitializationError {
-        super(klass, testLocator.findTests(baseClass, basePackage,
-                ignorePackages));
-        setScheduler(new ParallelScheduler(service));
+            String[] ignorePackages, TB3TestLocator locator)
+            throws InitializationError, IOException {
+        super(klass, locator
+                .findClasses(baseClass, basePackage, ignorePackages).toArray(
+                        new Class<?>[] {}));
     }
 }

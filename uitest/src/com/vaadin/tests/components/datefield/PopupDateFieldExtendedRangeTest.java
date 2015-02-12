@@ -31,6 +31,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -405,9 +406,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         new Actions(driver).keyUp(Keys.SHIFT).perform();
 
         // TODO: remove this once #14406 has been fixed
-        if (!getBrowsersExcludingIE().contains(getDesiredCapabilities())
-                && !Browser.IE8.getDesiredCapabilities().equals(
-                        getDesiredCapabilities())) {
+        if (BrowserUtil.isIE(getDesiredCapabilities())
+                && !BrowserUtil.isIE8(getDesiredCapabilities())) {
             popup.findElement(
                     By.className("v-datefield-calendarpanel-prevmonth"))
                     .findElement(By.tagName("button")).click();
@@ -435,9 +435,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                         .size());
         // TODO: remove this check once #14406 has been fixed -- clicking the
         // button instead of navigating with arrow keys steals the focus
-        if (getBrowsersExcludingIE().contains(getDesiredCapabilities())
-                || Browser.IE8.getDesiredCapabilities().equals(
-                        getDesiredCapabilities())) {
+        if (!BrowserUtil.isIE(getDesiredCapabilities())
+                || BrowserUtil.isIE8(getDesiredCapabilities())) {
             assertEquals(
                     "unexpected focus",
                     "16",

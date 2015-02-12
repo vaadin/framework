@@ -32,11 +32,7 @@ public class GridMultiSortingTest extends GridBasicFeaturesTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-        /* FireFox and PhantomJS don't know how to press Shift key... */
-        browsersToTest.remove(Browser.FIREFOX.getDesiredCapabilities());
-        browsersToTest.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsersToTest;
+        return super.getBrowsersSupportingShiftClick();
     }
 
     @Test

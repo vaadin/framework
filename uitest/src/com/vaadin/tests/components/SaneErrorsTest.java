@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -24,6 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SaneErrorsTest extends MultiBrowserTest {
@@ -35,7 +35,7 @@ public class SaneErrorsTest extends MultiBrowserTest {
      */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(DesiredCapabilities.firefox());
+        return getBrowserCapabilities(Browser.FIREFOX);
     }
 
     @Test

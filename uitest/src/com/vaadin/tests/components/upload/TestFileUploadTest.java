@@ -41,9 +41,7 @@ public class TestFileUploadTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // PhantomJS fails to upload files for unknown reasons
-        List<DesiredCapabilities> b = super.getBrowsersToTest();
-        b.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return b;
+        return getBrowsersExcludingPhantomJS();
     }
 
     @Test

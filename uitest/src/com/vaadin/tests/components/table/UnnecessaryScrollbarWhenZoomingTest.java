@@ -34,6 +34,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchCommandExecutor;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UnnecessaryScrollbarWhenZoomingTest extends MultiBrowserTest {

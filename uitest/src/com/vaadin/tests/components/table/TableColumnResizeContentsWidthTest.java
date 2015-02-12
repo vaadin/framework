@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,9 +27,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that components within table cells get resized when their column gets
@@ -40,13 +41,7 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-
-        // Can't get IE8 to hit the resizer, extracted IE8 to it's own test
-        // class.
-        browsersToTest.remove(Browser.IE8.getDesiredCapabilities());
-
-        return browsersToTest;
+        return getBrowsersExcludingIE8();
     }
 
     @Test

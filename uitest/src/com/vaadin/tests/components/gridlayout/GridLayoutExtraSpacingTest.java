@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.GridLayoutElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
