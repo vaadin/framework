@@ -44,6 +44,7 @@ public interface RowContainer {
      * @see com.vaadin.client.widgets.Escalator#getBody()
      */
     public interface BodyRowContainer extends RowContainer {
+
         /**
          * Marks a spacer and its height.
          * <p>
@@ -61,6 +62,32 @@ public interface RowContainer {
          */
         void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException;
+
+        /**
+         * Sets a new spacer updater.
+         * <p>
+         * Spacers that are currently visible will be updated, i.e.
+         * {@link SpacerUpdater#destroy(Spacer) destroyed} with the previous
+         * one, and {@link SpacerUpdater#init(Spacer) initialized} with the new
+         * one.
+         * 
+         * @param spacerUpdater
+         *            the new spacer updater
+         * @throws IllegalArgumentException
+         *             if {@code spacerUpdater} is {@code null}
+         */
+        void setSpacerUpdater(SpacerUpdater spacerUpdater)
+                throws IllegalArgumentException;
+
+        /**
+         * Gets the spacer updater currently in use.
+         * <p>
+         * {@link SpacerUpdater#NULL} is the default.
+         * 
+         * @return the spacer updater currently in use. Never <code>null</code>
+         */
+        SpacerUpdater getSpacerUpdater();
+
     }
 
     /**

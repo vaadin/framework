@@ -25,6 +25,7 @@ import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.tests.widgetset.client.grid.EscalatorBasicClientFeaturesWidget.LogWidget;
 
@@ -111,6 +112,17 @@ public class EscalatorProxy extends Escalator {
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
             rowContainer.setSpacer(rowIndex, height);
+        }
+
+        @Override
+        public void setSpacerUpdater(SpacerUpdater spacerUpdater)
+                throws IllegalArgumentException {
+            rowContainer.setSpacerUpdater(spacerUpdater);
+        }
+
+        @Override
+        public SpacerUpdater getSpacerUpdater() {
+            return rowContainer.getSpacerUpdater();
         }
     }
 

@@ -12,6 +12,9 @@ import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widgets.Escalator;
 
 public class EscalatorBasicClientFeaturesWidget extends
@@ -615,6 +618,33 @@ public class EscalatorBasicClientFeaturesWidget extends
 
     private void createSpacerMenu() {
         String[] menupath = { "Features", "Spacers" };
+
+        addMenuCommand("Swap Spacer Updater", new ScheduledCommand() {
+            private final SpacerUpdater CUSTOM = new SpacerUpdater() {
+                @Override
+                public void destroy(Spacer spacer) {
+                    spacer.getElement().setInnerText("");
+                }
+
+                @Override
+                public void init(Spacer spacer) {
+                    spacer.getElement().setInnerText(
+                            "Spacer for row " + spacer.getRow());
+                }
+            };
+
+            @Override
+            public void execute() {
+                BodyRowContainer body = escalator.getBody();
+
+                if (body.getSpacerUpdater().equals(SpacerUpdater.NULL)) {
+                    body.setSpacerUpdater(CUSTOM);
+                } else {
+                    body.setSpacerUpdater(SpacerUpdater.NULL);
+                }
+            }
+        }, menupath);
+
         createSpacersMenuForRow(1, menupath);
         createSpacersMenuForRow(50, menupath);
     }

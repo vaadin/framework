@@ -74,6 +74,8 @@ import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundle;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
@@ -3636,6 +3638,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 throws IllegalArgumentException {
             spacerContainer.setSpacer(rowIndex, height);
         }
+
+        @Override
+        public void setSpacerUpdater(SpacerUpdater spacerUpdater)
+                throws IllegalArgumentException {
+            spacerContainer.setSpacerUpdater(spacerUpdater);
+        }
+
+        @Override
+        public SpacerUpdater getSpacerUpdater() {
+            return spacerContainer.getSpacerUpdater();
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -4116,41 +4129,21 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         /** This is used mainly for testing purposes */
         private static final String SPACER_LOGICAL_ROW_PROPERTY = "vLogicalRow";
 
-        /*
-         * TODO [[optimize]] maybe convert the usage of this class to flyweight
-         * or object pooling pattern?
-         */
-        private final class Spacer {
+        private final class SpacerImpl implements Spacer {
             private TableCellElement spacerElement;
             private TableRowElement root;
+            private final int rowIndex;
 
-            public TableRowElement getRootElement() {
-                return root;
-            }
+            public SpacerImpl(int rowIndex, double height) {
+                this.rowIndex = rowIndex;
 
-            public void setPosition(double x, double y) {
-                positions.set(root, x, y);
-            }
-
-            /**
-             * Creates a new element structure for the spacer.
-             * <p>
-             * {@link #createDomStructure()} and
-             * {@link #setRootElement(Element)} can collectively only be called
-             * once, otherwise an {@link AssertionError} will be raised (if
-             * asserts are enabled).
-             */
-            public void createDomStructure(double height) {
-                assert root == null || root.getParentElement() == null : "this spacer was already attached";
-
+                // Build DOM structure
                 root = TableRowElement.as(DOM.createTR());
                 spacerElement = TableCellElement.as(DOM.createTD());
                 root.appendChild(spacerElement);
-                spacerElement.setInnerText("IAMA SPACER, AMA");
-                initElements(height);
-            }
+                root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
 
-            private void initElements(double height) {
+                // Configure DOM structure
                 setHeight(height);
                 root.getStyle().setWidth(100, Unit.PCT);
 
@@ -4161,15 +4154,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 setStylePrimaryName(getStylePrimaryName());
             }
 
-            public void setRootElement(TableRowElement tr) {
-                assert root == null || root.getParentElement() == null : "this spacer was already attached";
+            public TableRowElement getRootElement() {
+                return root;
+            }
 
-                assert tr != null : "tr may not be null";
-                root = tr;
-
-                assert tr.getChildCount() == 1 : "tr must have exactly one child";
-                spacerElement = tr.getCells().getItem(0);
-                assert spacerElement != null : "spacer element somehow was null";
+            public void setPosition(double x, double y) {
+                positions.set(root, x, y);
             }
 
             public void setStylePrimaryName(String style) {
@@ -4182,10 +4172,20 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                         "spacer's height changed, but pushing rows out of "
                                 + "the way not implemented yet");
             }
+
+            @Override
+            public Element getElement() {
+                return spacerElement;
+            }
+
+            @Override
+            public int getRow() {
+                return rowIndex;
+            }
         }
 
-        private final TreeMap<Integer, Double> rowIndexToHeight = new TreeMap<Integer, Double>();
-        private final TreeMap<Integer, TableRowElement> rowIndexToSpacerElement = new TreeMap<Integer, TableRowElement>();
+        private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
+        private SpacerUpdater spacerUpdater = SpacerUpdater.NULL;
 
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
@@ -4196,65 +4196,42 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             if (height >= 0) {
-                insertOrUpdateSpacer(rowIndex, height);
+                if (!spacerExists(rowIndex)) {
+                    insertNewSpacer(rowIndex, height);
+                } else {
+                    updateExistingSpacer(rowIndex, height);
+                }
             } else if (spacerExists(rowIndex)) {
                 removeSpacer(rowIndex);
             }
         }
 
-        @SuppressWarnings("boxing")
-        private void insertOrUpdateSpacer(int rowIndex, double height) {
-            if (!spacerExists(rowIndex)) {
-                insertSpacer(rowIndex, height);
-            } else {
-                updateSpacer(rowIndex, height);
-            }
-            rowIndexToHeight.put(rowIndex, height);
-        }
-
         private boolean spacerExists(int rowIndex) {
-            Integer rowIndexObj = Integer.valueOf(rowIndex);
-            boolean spacerExists = rowIndexToHeight.containsKey(rowIndexObj);
-            assert spacerExists == rowIndexToSpacerElement
-                    .containsKey(rowIndexObj) : "Inconsistent bookkeeping detected.";
-            return spacerExists;
+            return rowIndexToSpacer.containsKey(Integer.valueOf(rowIndex));
         }
 
         @SuppressWarnings("boxing")
-        private void insertSpacer(int rowIndex, double height) {
-            Spacer spacer = createSpacer(height);
-            spacer.getRootElement().setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY,
-                    rowIndex);
-            TableRowElement spacerRoot = spacer.getRootElement();
-            rowIndexToSpacerElement.put(rowIndex, spacerRoot);
+        private void insertNewSpacer(int rowIndex, double height) {
+
+            SpacerImpl spacer = new SpacerImpl(rowIndex, height);
+
+            rowIndexToSpacer.put(rowIndex, spacer);
             spacer.setPosition(0, getSpacerTop(rowIndex));
+
+            TableRowElement spacerRoot = spacer.getRootElement();
             spacerRoot.getStyle().setWidth(
                     columnConfiguration.calculateRowWidth(), Unit.PX);
             body.getElement().appendChild(spacerRoot);
+
+            initSpacerContent(spacer);
         }
 
-        private void updateSpacer(int rowIndex, double newHeight) {
+        private void updateExistingSpacer(int rowIndex, double newHeight) {
             getSpacer(rowIndex).setHeight(newHeight);
         }
 
-        @SuppressWarnings("boxing")
-        private Spacer getSpacer(int rowIndex) {
-            Spacer spacer = new Spacer();
-            spacer.setRootElement(rowIndexToSpacerElement.get(rowIndex));
-            return spacer;
-        }
-
-        private Spacer createSpacer(double height) {
-            /*
-             * Optimally, this would be a factory method in SpacerImpl, but
-             * since it's not a static class, we can't do that directly. We
-             * could make it static, and pass in references, but that probably
-             * will become hairy pretty quickly.
-             */
-
-            Spacer spacer = new Spacer();
-            spacer.createDomStructure(height);
-            return spacer;
+        private SpacerImpl getSpacer(int rowIndex) {
+            return rowIndexToSpacer.get(Integer.valueOf(rowIndex));
         }
 
         private double getSpacerTop(int rowIndex) {
@@ -4282,32 +4259,71 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         @SuppressWarnings("boxing")
         private void removeSpacer(int rowIndex) {
-            Spacer spacer = getSpacer(rowIndex);
+            SpacerImpl spacer = getSpacer(rowIndex);
 
             // fix DOM
+            destroySpacerContent(spacer);
             spacer.setHeight(0); // resets row offsets
             spacer.getRootElement().removeFromParent();
 
             // fix bookkeeping
-            rowIndexToHeight.remove(rowIndex);
-            rowIndexToSpacerElement.remove(rowIndex);
+            rowIndexToSpacer.remove(rowIndex);
         }
 
         public void setStylePrimaryName(String style) {
-            for (TableRowElement spacerRoot : rowIndexToSpacerElement.values()) {
-                Spacer spacer = new Spacer();
-                spacer.setRootElement(spacerRoot);
+            for (SpacerImpl spacer : rowIndexToSpacer.values()) {
                 spacer.setStylePrimaryName(style);
             }
+        }
+
+        public void setSpacerUpdater(SpacerUpdater spacerUpdater)
+                throws IllegalArgumentException {
+            if (spacerUpdater == null) {
+                throw new IllegalArgumentException(
+                        "spacer updater cannot be null");
+            }
+
+            destroySpacerContent(rowIndexToSpacer.values());
+            this.spacerUpdater = spacerUpdater;
+            initSpacerContent(rowIndexToSpacer.values());
+        }
+
+        public SpacerUpdater getSpacerUpdater() {
+            return spacerUpdater;
+        }
+
+        private void destroySpacerContent(Iterable<SpacerImpl> spacers) {
+            for (SpacerImpl spacer : spacers) {
+                destroySpacerContent(spacer);
+            }
+        }
+
+        private void destroySpacerContent(SpacerImpl spacer) {
+            assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator before detaching";
+            assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator before detaching";
+            spacerUpdater.destroy(spacer);
+            assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator before detaching";
+            assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator before detaching";
+        }
+
+        private void initSpacerContent(Iterable<SpacerImpl> spacers) {
+            for (SpacerImpl spacer : spacers) {
+                initSpacerContent(spacer);
+            }
+        }
+
+        private void initSpacerContent(SpacerImpl spacer) {
+            assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator before attaching";
+            assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator before attaching";
+            spacerUpdater.init(spacer);
+            assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator during attaching";
+            assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator during attaching";
         }
     }
 
     private class ElementPositionBookkeeper {
         /**
          * A map containing cached values of an element's current top position.
-         * <p>
-         * Don't use this field directly, because it will not take proper care
-         * of all the bookkeeping required.
          */
         private final Map<Element, Double> elementTopPositionMap = new HashMap<Element, Double>();
 
