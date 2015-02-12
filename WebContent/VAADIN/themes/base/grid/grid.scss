@@ -52,6 +52,27 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
     border: $v-grid-border;
   }
 
+  .#{$primaryStyleName} .header-drag-table {
+    border-spacing: 0;
+    table-layout: fixed;
+    width: inherit; // a decent default fallback
+
+    .#{$primaryStyleName}-header {
+
+      > .#{$primaryStyleName}-cell {
+        border: $v-grid-border;
+        opacity: 0.9;
+        filter: alpha(opacity=90); // IE8
+      }
+
+      > .#{$primaryStyleName}-drop-marker {
+        background-color: #197de1;
+        position: absolute;
+        width: 3px;
+      }
+    }
+  }
+
   // Common cell styles
 
   .#{$primaryStyleName}-cell {

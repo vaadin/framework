@@ -649,6 +649,15 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setEnabled(!grid.isEnabled());
             }
         }, "Component", "State");
+
+        addMenuCommand("Column Reordering", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setColumnReorderingAllowed(!grid
+                        .isColumnReorderingAllowed());
+            }
+        }, "Component", "State");
     }
 
     private void createColumnsMenu() {

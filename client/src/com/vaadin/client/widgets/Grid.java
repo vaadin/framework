@@ -36,6 +36,8 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
@@ -53,6 +55,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -68,6 +72,8 @@ import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.dd.DragAndDropHandler;
+import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -2853,6 +2859,153 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean enabled = true;
 
+    private boolean columnReorderingAllowed;
+
+    private DragAndDropHandler dndHandler = new DragAndDropHandler();
+
+    private DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
+
+        /**
+         * Elements for displaying the dragged column(s) and drop marker
+         * properly
+         */
+        private Element table;
+        private Element tableHeader;
+        /** Marks the column drop location */
+        private Element dropMarker;
+        /** A copy of the dragged column(s), moves with cursor. */
+        private Element dragElement;
+        /** Tracks index of the column whose left side the drop would occur */
+        private int latestColumnDropIndex;
+        /**
+         * Makes sure that drag cancel doesn't cause anything unwanted like sort
+         */
+        private HandlerRegistration columnSortPreventRegistration;
+
+        private void initHeaderDragElementDOM() {
+            if (table == null) {
+                tableHeader = DOM.createTHead();
+                dropMarker = DOM.createDiv();
+                tableHeader.appendChild(dropMarker);
+                table = DOM.createTable();
+                table.appendChild(tableHeader);
+                table.setClassName("header-drag-table");
+            }
+            // update the style names on each run in case primary name has been
+            // modified
+            tableHeader.setClassName(escalator.getHeader().getElement()
+                    .getClassName());
+            dropMarker.setClassName(getStylePrimaryName() + "-drop-marker");
+            getElement().appendChild(table);
+        }
+
+        @Override
+        public void updateDragElement(NativePreviewEvent event) {
+            int clientX = WidgetUtil.getTouchOrMouseClientX(event
+                    .getNativeEvent());
+            resolveDragElementHorizontalPosition(clientX);
+            updateDragDropMarker(clientX);
+        }
+
+        private void updateDragDropMarker(final int clientX) {
+            RowContainer header = escalator.getHeader();
+            NodeList<TableCellElement> cells = header.getRowElement(
+                    eventCell.getRowIndex()).getCells();
+            double dropMarkerLeft = 0 - escalator.getScrollLeft();
+            latestColumnDropIndex = 0;
+            for (int i = 0; i < cells.getLength(); i++, latestColumnDropIndex++) {
+                TableCellElement cellElement = cells.getItem(i);
+                int cellX = cellElement.getAbsoluteLeft();
+                int cellWidth = cellElement.getOffsetWidth();
+                if (clientX < cellX || clientX < cellX + (cellWidth / 2)) {
+                    break;
+                } else {
+                    dropMarkerLeft += cellWidth;
+                }
+            }
+            if (dropMarkerLeft > header.getElement().getOffsetWidth()
+                    || dropMarkerLeft < 0) {
+                dropMarkerLeft = -10000000;
+            }
+            dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
+        }
+
+        private void resolveDragElementVerticalPosition() {
+            dragElement.getStyle().setTop(-10, Unit.PX);
+        }
+
+        private void resolveDragElementHorizontalPosition(final int clientX) {
+            int left = clientX - table.getAbsoluteLeft();
+            left = Math.max(0, Math.min(left, table.getClientWidth()));
+            left -= dragElement.getClientWidth() / 2;
+            dragElement.getStyle().setLeft(left, Unit.PX);
+        }
+
+        @Override
+        public void showDragElement() {
+            initHeaderDragElementDOM();
+            // TODO this clones also some unwanted style names, should confirm
+            // with UX what we want to show (focus/sort indicator)
+            dragElement = DOM.clone(eventCell.getElement(), true);
+            dragElement.getStyle().clearWidth();
+            dropMarker.getStyle().setProperty("height",
+                    dragElement.getStyle().getHeight());
+            tableHeader.appendChild(dragElement);
+            // might need to change this on fly once sorting with multiple
+            // header rows is possible
+            resolveDragElementVerticalPosition();
+        }
+
+        @Override
+        public void removeDragElement() {
+            table.removeFromParent();
+            dragElement.removeFromParent();
+        }
+
+        @Override
+        public void onDrop() {
+            final int draggedColumnIndex = eventCell.getColumnIndex();
+            if (latestColumnDropIndex != draggedColumnIndex
+                    && latestColumnDropIndex != (draggedColumnIndex + 1)) {
+                List<Column<?, T>> columns = getColumns();
+                List<Column<?, T>> reordered = new ArrayList<Column<?, T>>(
+                        columns);
+                Column<?, T> moved = reordered.remove(draggedColumnIndex);
+                if (draggedColumnIndex < latestColumnDropIndex) {
+                    latestColumnDropIndex--;
+                }
+                reordered.add(latestColumnDropIndex, moved);
+                @SuppressWarnings("unchecked")
+                Column<?, T>[] array = reordered.toArray(new Column[reordered
+                        .size()]);
+                setColumnOrder(array);
+            } // else no reordering
+        }
+
+        @Override
+        public void onDragCancel() {
+            // cancel next click so that we may prevent column sorting if
+            // mouse was released on top of the dragged cell
+            if (columnSortPreventRegistration == null) {
+                columnSortPreventRegistration = Event
+                        .addNativePreviewHandler(new NativePreviewHandler() {
+
+                            @Override
+                            public void onPreviewNativeEvent(
+                                    NativePreviewEvent event) {
+                                if (event.getTypeInt() == Event.ONCLICK) {
+                                    event.cancel();
+                                    event.getNativeEvent().preventDefault();
+                                    columnSortPreventRegistration
+                                            .removeHandler();
+                                    columnSortPreventRegistration = null;
+                                }
+                            }
+                        });
+            }
+        }
+    };
+
     /**
      * Enumeration for easy setting of selection mode.
      */
@@ -4649,7 +4802,7 @@ public class Grid<T> extends ResizeComposite implements
                             + getColumnCount() + ")");
         }
 
-        this.frozenColumnCount = numberOfColumns;
+        frozenColumnCount = numberOfColumns;
         updateFrozenColumns();
     }
 
@@ -4949,6 +5102,10 @@ public class Grid<T> extends ResizeComposite implements
 
         if (!isElementInChildWidget(e)) {
 
+            if (handleHeaderCellDragStartEvent(event, container)) {
+                return;
+            }
+
             // Sorting through header Click / KeyUp
             if (handleHeaderDefaultRowEvent(event, container)) {
                 return;
@@ -5095,6 +5252,35 @@ public class Grid<T> extends ResizeComposite implements
         scrollToRow(newRow);
 
         return true;
+    }
+
+    private boolean handleHeaderCellDragStartEvent(Event event,
+            RowContainer container) {
+        if (!columnReorderingAllowed) {
+            return false;
+        }
+        if (container != escalator.getHeader()) {
+            return false;
+        }
+        // for now only support reordering of default row as the only row
+        if (!getHeader().getRow(eventCell.getRowIndex()).isDefault()
+                || getHeader().getRowCount() != 1) {
+            return false;
+        }
+        if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()
+                .getFrozenColumnCount()) {
+            return false;
+        }
+        if (event.getTypeInt() == Event.ONMOUSEDOWN
+                && event.getButton() == NativeEvent.BUTTON_LEFT
+                || event.getTypeInt() == Event.ONTOUCHSTART) {
+            dndHandler.onDragStartOnDraggableElement(event,
+                    headerCellDndCallback);
+            event.preventDefault();
+            event.stopPropagation();
+            return true;
+        }
+        return false;
     }
 
     private Point rowEventTouchStartingPoint;
@@ -5903,6 +6089,27 @@ public class Grid<T> extends ResizeComposite implements
     public boolean isWorkPending() {
         return escalator.isWorkPending() || dataIsBeingFetched
                 || autoColumnWidthsRecalculator.isScheduled();
+    }
+
+    /**
+     * Returns whether columns can be reordered with drag and drop.
+     * 
+     * @since
+     * @return <code>true</code> if columns can be reordered, false otherwise
+     */
+    public boolean isColumnReorderingAllowed() {
+        return columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether column reordering with drag and drop is allowed or not.
+     * 
+     * @since
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        this.columnReorderingAllowed = columnReorderingAllowed;
     }
 
     /**
