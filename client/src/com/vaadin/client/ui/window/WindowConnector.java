@@ -405,6 +405,10 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         // centered is this is unset on move/resize
         window.centered = state.centered;
+        // Ensure centering before setting visible (#16486)
+        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
+            window.center();
+        }
         window.setVisible(true);
 
         // ensure window is not larger than browser window
