@@ -55,6 +55,8 @@ import com.vaadin.client.widget.grid.datasources.ListSorter;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
@@ -444,6 +446,31 @@ public class GridBasicClientFeaturesWidget extends
                 });
             }
         }, listenersPath);
+        addMenuCommand("Add ColumnReorder listener", new ScheduledCommand() {
+            private HandlerRegistration columnReorderHandler = null;
+
+            @Override
+            public void execute() {
+                if (columnReorderHandler != null) {
+                    return;
+                }
+                final Label columnOrderLabel = new Label();
+                columnOrderLabel.getElement().setId("columnreorder");
+                addLineEnd(columnOrderLabel, 300);
+                columnReorderHandler = grid
+                        .addColumnReorderHandler(new ColumnReorderHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onColumnReorder(
+                                    ColumnReorderEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columns", "" + (++eventIndex));
+                            }
+                        });
+            }
+        }, listenersPath);
     }
 
     private void createStateMenu() {
@@ -766,6 +793,24 @@ public class GridBasicClientFeaturesWidget extends
                             originalRenderer.render(cell, data);
                         }
                     });
+                }
+            }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Move column left", new ScheduledCommand() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void execute() {
+                    List<Column<?, List<Data>>> cols = grid.getColumns();
+                    ArrayList<Column> reordered = new ArrayList<Column>(cols);
+                    if (index == 0) {
+                        Column<?, List<Data>> col = reordered.remove(0);
+                        reordered.add(col);
+                    } else {
+                        Column<?, List<Data>> col = reordered.remove(index);
+                        reordered.add(index - 1, col);
+                    }
+                    grid.setColumnOrder(reordered.toArray(new Column[reordered
+                            .size()]));
                 }
             }, "Component", "Columns", "Column " + i);
         }

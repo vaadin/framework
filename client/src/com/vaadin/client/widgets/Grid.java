@@ -100,6 +100,8 @@ import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -6041,6 +6043,20 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * Register a column reorder handler to this Grid. The event for this
+     * handler is fired when the Grid's columns are reordered.
+     * 
+     * @since
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addColumnReorderHandler(
+            ColumnReorderHandler<T> handler) {
+        return addHandler(handler, ColumnReorderEvent.getType());
+    }
+
+    /**
      * Apply sorting to data source.
      */
     private void sort(boolean userOriginated) {
@@ -6163,6 +6179,8 @@ public class Grid<T> extends ResizeComposite implements
         for (FooterRow row : footer.getRows()) {
             row.calculateColspans();
         }
+
+        fireEvent(new ColumnReorderEvent<T>());
     }
 
     /**
