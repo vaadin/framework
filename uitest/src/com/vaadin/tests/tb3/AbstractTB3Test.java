@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -60,6 +61,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.gwt.thirdparty.guava.common.base.Joiner;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
@@ -320,8 +322,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
-    protected void openTestURL() {
-        openTestURL("");
+    protected void openTestURL(String... parameters) {
+        openTestURL(getUIClass(), parameters);
     }
 
     /**
@@ -329,13 +331,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
-    protected void openTestURL(String extraParameters) {
-        String url = getTestUrl();
-        if (url.contains("?")) {
-            url = url + "&" + extraParameters;
-        } else {
-            url = url + "?" + extraParameters;
+    protected void openTestURL(Class<?> uiClass, String... parameters) {
+        String url = getTestURL(uiClass);
+
+        if(parameters.length > 0) {
+            url += "?" + Joiner.on("&").join(parameters);
         }
+
         driver.get(url);
     }
 
@@ -345,12 +347,16 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return the full URL for the test
      */
     protected String getTestUrl() {
-        String baseUrl = getBaseURL();
-        if (baseUrl.endsWith("/")) {
-            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        }
+        return StringUtils.strip(getBaseURL(), "/") + getDeploymentPath();
+    }
 
-        return baseUrl + getDeploymentPath();
+    /**
+     * Returns the full URL to be used for the test for the provided UI class.
+     *
+     * @return the full URL for the test
+     */
+    protected String getTestURL(Class<?> uiClass) {
+        return StringUtils.strip(getBaseURL(), "/") + getDeploymentPath(uiClass);
     }
 
     /**
@@ -434,13 +440,17 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     public void tearDown() throws Exception {
         if (driver != null) {
             try {
-                openTestURL("&closeApplication");
+                closeApplication();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             driver.quit();
         }
         driver = null;
+    }
+
+    protected void closeApplication() {
+        openTestURL("closeApplication");
     }
 
     /**
@@ -833,7 +843,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *            true if /run-push should be used instead of /run
      * @return The path to the given UI class
      */
-    private String getDeploymentPath(Class<?> uiClass) {
+    protected String getDeploymentPath(Class<?> uiClass) {
         String runPath = "/run";
         if (isPush()) {
             runPath = "/run-push";

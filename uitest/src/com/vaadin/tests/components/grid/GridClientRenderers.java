@@ -57,8 +57,8 @@ public class GridClientRenderers extends MultiBrowserTest {
     }
 
     @Override
-    protected String getDeploymentPath() {
-        String path = super.getDeploymentPath();
+    protected String getDeploymentPath(Class<?> uiClass) {
+        String path = super.getDeploymentPath(uiClass);
         if (latency > 0) {
             path += (path.contains("?") ? "&" : "?") + "latency=" + latency;
         }
