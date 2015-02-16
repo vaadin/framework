@@ -29,8 +29,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * Base class for renderers that needs initialization and destruction logic
- * (override {@link #init(FlyweightCell) and #destroy(FlyweightCell) } and event
- * handling (see {@link #onBrowserEvent(Cell, NativeEvent)},
+ * (override {@link #init(FlyweightCell)} and {@link #destroy(FlyweightCell) }
+ * and event handling (see {@link #onBrowserEvent(Cell, NativeEvent)},
  * {@link #getConsumedEvents()} and {@link #onActivate()}.
  * 
  * <p>
@@ -48,7 +48,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * 
      * @param cell
      *            The cell. Note that the cell is not to be stored outside of
-     *            the method as the cell install will change. See
+     *            the method as the cell instance will change. See
      *            {@link FlyweightCell}
      */
     public abstract void init(RendererCellReference cell);
@@ -62,7 +62,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * 
      * @param cell
      *            The cell. Note that the cell is not to be stored outside of
-     *            the method as the cell install will change. See
+     *            the method as the cell instance will change. See
      *            {@link FlyweightCell}
      */
     public void destroy(RendererCellReference cell) {
