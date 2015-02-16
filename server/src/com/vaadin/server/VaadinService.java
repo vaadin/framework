@@ -1581,8 +1581,18 @@ public abstract class VaadinService implements Serializable {
             }
 
             JsonObject appError = Json.createObject();
-            appError.put("caption", caption);
-            appError.put("message", message);
+            if (caption == null) {
+                appError.put("caption", Json.createNull());
+            } else {
+                appError.put("caption", caption);
+            }
+
+            if (message == null) {
+                appError.put("message", Json.createNull());
+            } else {
+                appError.put("message", message);
+            }
+
             if (url == null) {
                 appError.put("url", Json.createNull());
             } else {

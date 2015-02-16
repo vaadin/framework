@@ -66,4 +66,18 @@ public class VaadinServiceTest {
         Assert.assertEquals("SessionDestroyListeners not called exactly once",
                 1, listener.callCount);
     }
+
+    @Test
+    public void testCriticalNotificationNullHandling() {
+        for (String caption : new String[] { "some caption", null }) {
+            for (String message : new String[] { "some message", null }) {
+                for (String details : new String[] { "some details", null }) {
+                    for (String url : new String[] { "some url", null }) {
+                        VaadinService.createCriticalNotificationJSON(caption,
+                                message, details, url);
+                    }
+                }
+            }
+        }
+    }
 }
