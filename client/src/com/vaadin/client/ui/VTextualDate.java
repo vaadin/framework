@@ -25,7 +25,11 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.ui.TextBox;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
@@ -39,7 +43,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
-        HandlesAriaRequired {
+        HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
 
@@ -107,7 +111,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 VTextualDate.this.fireEvent(event);
             }
         });
-
+        if (BrowserInfo.get().isIE()) {
+            addDomHandler(this, KeyDownEvent.getType());
+        }
         add(text);
     }
 
@@ -385,5 +391,15 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         }
 
         return null;
+    }
+
+    @Override
+    public void onKeyDown(KeyDownEvent event) {
+        if (BrowserInfo.get().isIE()
+                && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            // IE does not send change events when pressing enter in a text
+            // input so we handle it using a key listener instead
+            onChange(null);
+        }
     }
 }
