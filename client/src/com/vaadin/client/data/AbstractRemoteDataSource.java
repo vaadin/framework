@@ -541,7 +541,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             Range oldCached = cached;
             cached = cached.offsetBy(count);
 
-            for (int i = 1; i <= indexToRowMap.size(); i++) {
+            for (int i = 1; i <= cached.length(); i++) {
                 int oldIndex = oldCached.getEnd() - i;
                 int newIndex = cached.getEnd() - i;
                 moveRowFromIndexToIndex(oldIndex, newIndex);
