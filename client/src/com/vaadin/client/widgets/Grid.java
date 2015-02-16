@@ -36,6 +36,7 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
@@ -77,10 +78,13 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EventCellReference;
@@ -1776,6 +1780,8 @@ public class Grid<T> extends ResizeComposite implements
 
     private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
+    private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
+
     private EventCellReference<T> eventCell = new EventCellReference<T>(this);
     private GridKeyDownEvent keyDown = new GridKeyDownEvent(this, eventCell);
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this, eventCell);
@@ -2768,6 +2774,38 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    private class GridSpacerUpdater implements SpacerUpdater {
+        @Override
+        public void init(Spacer spacer) {
+            int rowIndex = spacer.getRow();
+
+            String string = detailsGenerator.getDetails(rowIndex);
+            if (string == null) {
+                destroy(spacer);
+                escalator.getBody().setSpacer(rowIndex,
+                        DETAILS_ROW_INITIAL_HEIGHT);
+                return;
+            }
+
+            spacer.getElement().setInnerText(string);
+
+            /*
+             * Once we have the content properly inside the DOM, we should
+             * re-measure it to make sure that it's the correct height.
+             */
+            double measuredHeight = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(spacer
+                            .getElement());
+            assert getElement().isOrHasChild(spacer.getElement()) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
+            escalator.getBody().setSpacer(rowIndex, measuredHeight);
+        }
+
+        @Override
+        public void destroy(Spacer spacer) {
+            spacer.getElement().setInnerText("");
+        }
+    }
+
     /**
      * Escalator used internally by grid to render the rows
      */
@@ -2852,6 +2890,10 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
+
+    private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
+
+    private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
 
     /**
      * Enumeration for easy setting of selection mode.
@@ -4902,7 +4944,7 @@ public class Grid<T> extends ResizeComposite implements
 
         EventTarget target = event.getEventTarget();
 
-        if (!Element.is(target)) {
+        if (!Element.is(target) || isOrContainsInSpacer(Element.as(target))) {
             return;
         }
 
@@ -4966,6 +5008,19 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
         }
+    }
+
+    private boolean isOrContainsInSpacer(Node node) {
+        Node n = node;
+        while (n != null && n != getElement()) {
+            if (Element.is(n)
+                    && Element.as(n).getClassName()
+                            .equals(getStylePrimaryName() + "-spacer")) {
+                return true;
+            }
+            n = n.getParentNode();
+        }
+        return false;
     }
 
     private boolean isElementInChildWidget(Element e) {
@@ -6278,5 +6333,48 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void resetSizesFromDom() {
         getEscalator().resetSizesFromDom();
+    }
+
+    /**
+     * Sets a new details generator for row details.
+     * <p>
+     * The currently opened row details will be re-rendered.
+     * 
+     * @since
+     * @param detailsGenerator
+     *            the details generator to set
+     */
+    public void setDetailsGenerator(DetailsGenerator detailsGenerator)
+            throws IllegalArgumentException {
+
+        this.detailsGenerator = detailsGenerator;
+
+        // this will refresh all visible spacers
+        escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
+    }
+
+    /**
+     * Gets the current details generator for row details.
+     * 
+     * @since
+     * @return the detailsGenerator the current details generator
+     */
+    public DetailsGenerator getDetailsGenerator() {
+        return detailsGenerator;
+    }
+
+    /**
+     * Shows or hides the details for a specific row.
+     * 
+     * @since
+     * @param row
+     *            the index of the affected row
+     * @param visible
+     *            <code>true</code> to show the details, or <code>false</code>
+     *            to hide them
+     */
+    public void setDetailsVisible(int rowIndex, boolean visible) {
+        double height = visible ? DETAILS_ROW_INITIAL_HEIGHT : -1;
+        escalator.getBody().setSpacer(rowIndex, height);
     }
 }

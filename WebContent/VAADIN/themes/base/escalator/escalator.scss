@@ -137,9 +137,7 @@
     position: absolute;
     display: block;
     
-    // debug
-    background-color: rgba(0,0,0,0.6);
-    color: white;
+    background-color: $background-color;
     
     > td {
       width: 100%;

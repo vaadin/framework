@@ -46,6 +46,7 @@ import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
@@ -400,6 +401,7 @@ public class GridBasicClientFeaturesWidget extends
         createEditorMenu();
         createInternalsMenu();
         createDataSourceMenu();
+        createDetailsMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -1213,5 +1215,43 @@ public class GridBasicClientFeaturesWidget extends
     private void updateLabel(VLabel label, String output, int object, int column) {
         String coords = "(" + object + ", " + column + ")";
         label.setText(coords + " " + output);
+    }
+
+    private void createDetailsMenu() {
+        String[] menupath = new String[] { "Component", "Row details" };
+        addMenuCommand("Set generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public String getDetails(int rowIndex) {
+                        return "Row: " + rowIndex + ". Lorem ipsum "
+                                + "dolor sit amet, consectetur adipiscing "
+                                + "elit. Morbi congue massa non augue "
+                                + "pulvinar, nec consectetur justo efficitur. "
+                                + "In nec arcu sit amet lorem hendrerit "
+                                + "mollis.";
+                    }
+                });
+            }
+        }, menupath);
+        addMenuCommand("Toggle details for row 1", new ScheduledCommand() {
+            boolean visible = false;
+
+            @Override
+            public void execute() {
+                visible = !visible;
+                grid.setDetailsVisible(1, visible);
+            }
+        }, menupath);
+        addMenuCommand("Toggle details for row 100", new ScheduledCommand() {
+            boolean visible = false;
+
+            @Override
+            public void execute() {
+                visible = !visible;
+                grid.setDetailsVisible(100, visible);
+            }
+        }, menupath);
     }
 }

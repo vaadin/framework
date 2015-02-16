@@ -328,6 +328,10 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
   .#{$primaryStyleName}-editor-save {
     margin-right: 4px;
   }
+  
+  .#{$primaryStyleName}-spacer {
+    border: $v-grid-border;
+  }
 
   // Renderers
 
