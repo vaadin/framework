@@ -54,6 +54,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
     private static final String DEPLOYMENT_PROPERTY = "com.vaadin.testbench.deployment.url";
+    private static final String HUB_URL = "com.vaadin.testbench.hub.url";
     private static final Properties properties = new Properties();
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
@@ -95,6 +96,16 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                             + SCREENSHOT_DIRECTORY + "=<path>");
         }
         return screenshotDirectory;
+    }
+
+    @Override
+    protected String getHubURL() {
+        String hubUrl = getProperty(HUB_URL);
+        if(hubUrl == null || hubUrl.trim().isEmpty()) {
+            return super.getHubURL();
+        }
+
+        return hubUrl;
     }
 
     @Override
