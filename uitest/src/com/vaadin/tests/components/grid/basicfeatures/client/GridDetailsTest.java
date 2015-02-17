@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -23,14 +26,22 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.ElementQuery;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridDetailsTest extends GridBasicClientFeaturesTest {
 
     private static final String[] SET_GENERATOR = new String[] { "Component",
             "Row details", "Set generator" };
+    private static final String[] SET_FAULTY_GENERATOR = new String[] {
+            "Component", "Row details", "Set faulty generator" };
+    private static final String[] SET_EMPTY_GENERATOR = new String[] {
+            "Component", "Row details", "Set empty generator" };
     private static final String[] TOGGLE_DETAILS_FOR_ROW_1 = new String[] {
             "Component", "Row details", "Toggle details for row 1" };
     private static final String[] TOGGLE_DETAILS_FOR_ROW_100 = new String[] {
@@ -38,6 +49,7 @@ public class GridDetailsTest extends GridBasicClientFeaturesTest {
 
     @Before
     public void setUp() {
+        setDebug(true);
         openTestURL();
     }
 
@@ -95,5 +107,78 @@ public class GridDetailsTest extends GridBasicClientFeaturesTest {
         TestBenchElement details = getGridElement().getDetails(100);
         assertTrue("Unexpected details content",
                 details.getText().startsWith("Row: 100."));
+    }
+
+    @Test
+    public void errorUpdaterShowsErrorNotification() {
+        assertFalse("No notifications should've been at the start",
+                $(NotificationElement.class).exists());
+
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        selectMenuPath(SET_FAULTY_GENERATOR);
+
+        ElementQuery<NotificationElement> notification = $(NotificationElement.class);
+        assertTrue("Was expecting an error notification here",
+                notification.exists());
+        notification.first().closeNotification();
+
+        assertEquals("The error details element should be empty", "",
+                getGridElement().getDetails(1).getText());
+    }
+
+    @Test
+    public void updaterStillWorksAfterError() {
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+
+        selectMenuPath(SET_FAULTY_GENERATOR);
+        $(NotificationElement.class).first().closeNotification();
+        selectMenuPath(SET_GENERATOR);
+
+        assertNotEquals(
+                "New details should've been generated even after error", "",
+                getGridElement().getDetails(1).getText());
+    }
+
+    @Test
+    public void updaterRendersExpectedWidgets() {
+        selectMenuPath(SET_GENERATOR);
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+
+        TestBenchElement detailsElement = getGridElement().getDetails(1);
+        assertNotNull(detailsElement.findElement(By.className("gwt-Label")));
+        assertNotNull(detailsElement.findElement(By.className("gwt-Button")));
+    }
+
+    @Test
+    public void widgetsInUpdaterWorkAsExpected() {
+        selectMenuPath(SET_GENERATOR);
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+
+        TestBenchElement detailsElement = getGridElement().getDetails(1);
+        WebElement button = detailsElement.findElement(By
+                .className("gwt-Button"));
+        button.click();
+
+        WebElement label = detailsElement
+                .findElement(By.className("gwt-Label"));
+        assertEquals("clicked", label.getText());
+    }
+
+    @Test
+    public void emptyGenerator() {
+        selectMenuPath(SET_EMPTY_GENERATOR);
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+
+        assertEquals("empty generator did not produce an empty details row",
+                "", getGridElement().getDetails(1).getText());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void removeDetailsRow() {
+        selectMenuPath(SET_GENERATOR);
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+
+        getGridElement().getDetails(1);
     }
 }

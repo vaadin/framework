@@ -2776,19 +2776,44 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private class GridSpacerUpdater implements SpacerUpdater {
+
+        private final Map<Element, Widget> elementToWidgetMap = new HashMap<Element, Widget>();
+
         @Override
         public void init(Spacer spacer) {
+
+            assert spacer.getElement().getFirstChild() == null : "The spacer's"
+                    + " element should be empty at this point. (row: "
+                    + spacer.getRow() + ", child: "
+                    + spacer.getElement().getFirstChild() + ")";
+
             int rowIndex = spacer.getRow();
 
-            String string = detailsGenerator.getDetails(rowIndex);
-            if (string == null) {
-                destroy(spacer);
+            Widget detailsWidget = null;
+            try {
+                detailsWidget = detailsGenerator.getDetails(rowIndex);
+            } catch (Throwable e) {
+                getLogger().log(
+                        Level.SEVERE,
+                        "Exception while generating details for row "
+                                + rowIndex, e);
+            }
+
+            if (detailsWidget == null) {
+                spacer.getElement().removeAllChildren();
                 escalator.getBody().setSpacer(rowIndex,
                         DETAILS_ROW_INITIAL_HEIGHT);
                 return;
             }
 
-            spacer.getElement().setInnerText(string);
+            Element element = detailsWidget.getElement();
+            spacer.getElement().appendChild(element);
+            setParent(detailsWidget, Grid.this);
+            Widget previousWidget = elementToWidgetMap.put(element,
+                    detailsWidget);
+
+            assert previousWidget == null : "Overwrote a pre-existing widget on row "
+                    + rowIndex + " without proper removal first.";
 
             /*
              * Once we have the content properly inside the DOM, we should
@@ -2803,7 +2828,30 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void destroy(Spacer spacer) {
-            spacer.getElement().setInnerText("");
+
+            assert getElement().isOrHasChild(spacer.getElement()) : "Trying "
+                    + "to destroy a spacer that is not connected to this "
+                    + "Grid's DOM. (row: " + spacer.getRow() + ", element: "
+                    + spacer.getElement() + ")";
+
+            Widget detailsWidget = elementToWidgetMap.remove(spacer
+                    .getElement().getFirstChildElement());
+
+            if (detailsWidget != null) {
+                /*
+                 * The widget may be null here if the previous generator
+                 * returned a null widget.
+                 */
+
+                assert spacer.getElement().getFirstChild() != null : "The "
+                        + "details row to destroy did not contain a widget - "
+                        + "probably removed by something else without "
+                        + "permission? (row: " + spacer.getRow()
+                        + ", element: " + spacer.getElement() + ")";
+
+                setParent(detailsWidget, null);
+                spacer.getElement().removeAllChildren();
+            }
         }
     }
 

@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.widget.grid;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * A callback interface for generating details for a particular row in Grid.
  * 
@@ -25,7 +27,7 @@ public interface DetailsGenerator {
 
     public static final DetailsGenerator NULL = new DetailsGenerator() {
         @Override
-        public String getDetails(int rowIndex) {
+        public Widget getDetails(int rowIndex) {
             return null;
         }
     };
@@ -40,6 +42,5 @@ public interface DetailsGenerator {
      *         details empty.
      */
     // TODO: provide a row object instead of index (maybe, needs discussion?)
-    // TODO: return a Widget instead of a String
-    String getDetails(int rowIndex);
+    Widget getDetails(int rowIndex);
 }

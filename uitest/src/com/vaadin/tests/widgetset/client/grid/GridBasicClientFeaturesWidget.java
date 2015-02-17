@@ -33,9 +33,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.DateRenderer;
@@ -1224,17 +1226,59 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 grid.setDetailsGenerator(new DetailsGenerator() {
                     @Override
-                    public String getDetails(int rowIndex) {
-                        return "Row: " + rowIndex + ". Lorem ipsum "
-                                + "dolor sit amet, consectetur adipiscing "
-                                + "elit. Morbi congue massa non augue "
-                                + "pulvinar, nec consectetur justo efficitur. "
-                                + "In nec arcu sit amet lorem hendrerit "
-                                + "mollis.";
+                    public Widget getDetails(int rowIndex) {
+                        FlowPanel panel = new FlowPanel();
+
+                        final Label label = new Label("Row: " + rowIndex + ".");
+                        Button button = new Button("Button",
+                                new ClickHandler() {
+                                    @Override
+                                    public void onClick(ClickEvent event) {
+                                        label.setText("clicked");
+                                    }
+                                });
+
+                        panel.add(label);
+                        panel.add(button);
+                        return panel;
                     }
                 });
             }
         }, menupath);
+
+        addMenuCommand("Set faulty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        throw new RuntimeException("This is by design.");
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Set empty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    /*
+                     * While this is functionally equivalent to the NULL
+                     * generator, it's good to be explicit, since the behavior
+                     * isn't strictly tied between them. NULL generator might be
+                     * changed to render something different by default, and an
+                     * empty generator might behave differently also in the
+                     * future.
+                     */
+
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        return null;
+                    }
+                });
+            }
+        }, menupath);
+
         addMenuCommand("Toggle details for row 1", new ScheduledCommand() {
             boolean visible = false;
 
@@ -1244,6 +1288,7 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setDetailsVisible(1, visible);
             }
         }, menupath);
+
         addMenuCommand("Toggle details for row 100", new ScheduledCommand() {
             boolean visible = false;
 
@@ -1253,5 +1298,6 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setDetailsVisible(100, visible);
             }
         }, menupath);
+
     }
 }
