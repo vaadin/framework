@@ -130,6 +130,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
+import com.vaadin.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.client.widgets.Grid.Editor.State;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -5250,153 +5251,77 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        // Parse SubPart string to type and indices
-        String[] splitArgs = subPart.split("\\[");
 
-        String type = splitArgs[0];
-        int[] indices = new int[splitArgs.length - 1];
-        for (int i = 0; i < indices.length; ++i) {
-            String tmp = splitArgs[i + 1];
-            indices[i] = Integer.parseInt(tmp.substring(0, tmp.length() - 1));
+        Element subPartElement = escalator.getSubPartElement(subPart
+                .replaceFirst("^details\\[", "spacer["));
+        if (subPartElement != null) {
+            return DOM.asOld(subPartElement);
         }
 
-        // Get correct RowContainer for type from Escalator
-        RowContainer container = null;
-        if (type.equalsIgnoreCase("header")) {
-            container = escalator.getHeader();
-        } else if (type.equalsIgnoreCase("cell")) {
-            // If wanted row is not visible, we need to scroll there.
-            Range visibleRowRange = escalator.getVisibleRowRange();
-            if (indices.length > 0 && !visibleRowRange.contains(indices[0])) {
-                try {
-                    scrollToRow(indices[0]);
-                } catch (IllegalArgumentException e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
-                }
-                // Scrolling causes a lazy loading event. No element can
-                // currently be retrieved.
-                return null;
-            }
-            container = escalator.getBody();
-        } else if (type.equalsIgnoreCase("footer")) {
-            container = escalator.getFooter();
-        } else if (type.equalsIgnoreCase("editor")) {
-            if (editor.getState() != State.ACTIVE) {
-                // Editor is not there.
-                return null;
-            }
+        SubPartArguments args = Escalator.parseSubPartArguments(subPart);
 
-            if (indices.length == 0) {
-                return DOM.asOld(editor.editorOverlay);
-            } else if (indices.length == 1 && indices[0] < columns.size()) {
-                escalator.scrollToColumn(indices[0], ScrollDestination.ANY, 0);
-                return editor.getWidget(columns.get(indices[0])).getElement();
-            } else {
-                return null;
-            }
+        Element editor = getSubPartElementEditor(args);
+        if (editor != null) {
+            return DOM.asOld(editor);
         }
 
-        if (null != container) {
-            if (indices.length == 0) {
-                // No indexing. Just return the wanted container element
-                return DOM.asOld(container.getElement());
-            } else {
-                try {
-                    return DOM.asOld(getSubPart(container, indices));
-                } catch (Exception e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
-                }
-            }
-        }
         return null;
     }
 
-    private Element getSubPart(RowContainer container, int[] indices) {
-        Element targetElement = container.getRowElement(indices[0]);
+    private Element getSubPartElementEditor(SubPartArguments args) {
 
-        // Scroll wanted column to view if able
-        if (indices.length > 1 && targetElement != null) {
-            if (escalator.getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
-                escalator.scrollToColumn(indices[1], ScrollDestination.ANY, 0);
-            }
-
-            targetElement = getCellFromRow(TableRowElement.as(targetElement),
-                    indices[1]);
-
-            for (int i = 2; i < indices.length && targetElement != null; ++i) {
-                targetElement = (Element) targetElement.getChild(indices[i]);
-            }
-        }
-
-        return targetElement;
-    }
-
-    private Element getCellFromRow(TableRowElement rowElement, int index) {
-        int childCount = rowElement.getCells().getLength();
-        if (index < 0 || index >= childCount) {
+        if (!args.getType().equalsIgnoreCase("editor")
+                || editor.getState() != State.ACTIVE) {
             return null;
         }
 
-        TableCellElement currentCell = null;
-        boolean indexInColspan = false;
-        int i = 0;
-
-        while (!indexInColspan) {
-            currentCell = rowElement.getCells().getItem(i);
-
-            // Calculate if this is the cell we are looking for
-            int colSpan = currentCell.getColSpan();
-            indexInColspan = index < colSpan + i;
-
-            // Increment by colspan to skip over hidden cells
-            i += colSpan;
-        }
-        return currentCell;
-    }
-
-    @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
-        // Containers and matching SubPart types
-        List<RowContainer> containers = Arrays.asList(escalator.getHeader(),
-                escalator.getBody(), escalator.getFooter());
-        List<String> containerType = Arrays.asList("header", "cell", "footer");
-
-        for (int i = 0; i < containers.size(); ++i) {
-            RowContainer container = containers.get(i);
-            boolean containerRow = (subElement.getTagName().equalsIgnoreCase(
-                    "tr") && subElement.getParentElement() == container
-                    .getElement());
-            if (containerRow) {
-                // Wanted SubPart is row that is a child of containers root
-                // To get indices, we use a cell that is a child of this row
-                subElement = DOM.asOld(subElement.getFirstChildElement());
-            }
-
-            Cell cell = container.getCell(subElement);
-            if (cell != null) {
-                // Skip the column index if subElement was a child of root
-                return containerType.get(i) + "[" + cell.getRow()
-                        + (containerRow ? "]" : "][" + cell.getColumn() + "]");
-            }
-        }
-
-        // Check if subelement is part of editor.
-        if (editor.getState() == State.ACTIVE) {
-            if (editor.editorOverlay.isOrHasChild(subElement)) {
-                int i = 0;
-                for (Column<?, T> column : columns) {
-                    if (editor.getWidget(column).getElement()
-                            .isOrHasChild(subElement)) {
-                        return "editor[" + i + "]";
-                    }
-                    ++i;
-                }
-                return "editor";
-            }
+        if (args.getIndicesLength() == 0) {
+            return editor.editorOverlay;
+        } else if (args.getIndicesLength() == 1
+                && args.getIndex(0) < columns.size()) {
+            escalator
+                    .scrollToColumn(args.getIndex(0), ScrollDestination.ANY, 0);
+            return editor.getWidget(columns.get(args.getIndex(0))).getElement();
         }
 
         return null;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+
+        String escalatorStructureName = escalator.getSubPartName(subElement);
+        if (escalatorStructureName != null) {
+            return escalatorStructureName.replaceFirst("^spacer", "details");
+        }
+
+        String editorName = getSubPartNameEditor(subElement);
+        if (editorName != null) {
+            return editorName;
+        }
+
+        return null;
+    }
+
+    private String getSubPartNameEditor(Element subElement) {
+
+        if (editor.getState() != State.ACTIVE
+                || !editor.editorOverlay.isOrHasChild(subElement)) {
+            return null;
+        }
+
+        int i = 0;
+        for (Column<?, T> column : columns) {
+            if (editor.getWidget(column).getElement().isOrHasChild(subElement)) {
+                return "editor[" + i + "]";
+            }
+            ++i;
+        }
+
+        return "editor";
     }
 
     private void setSelectColumnRenderer(

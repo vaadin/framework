@@ -16,6 +16,7 @@
 package com.vaadin.client.widgets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,6 +58,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -267,7 +269,8 @@ abstract class JsniWorkaround {
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Escalator extends Widget implements RequiresResize, DeferredWorker {
+public class Escalator extends Widget implements RequiresResize,
+        DeferredWorker, SubPartAware {
 
     // todo comments legend
     /*
@@ -4319,6 +4322,26 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator during attaching";
             assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator during attaching";
         }
+
+        public String getSubPartName(Element subElement) {
+            for (SpacerImpl spacer : rowIndexToSpacer.values()) {
+                if (spacer.getRootElement().isOrHasChild(subElement)) {
+                    return "spacer[" + spacer.getRow() + "]";
+                }
+            }
+            return null;
+        }
+
+        public Element getSubPartElement(int index) {
+            getLogger().warning("SpacerContainer.getSubPartElement " + index);
+
+            SpacerImpl spacer = rowIndexToSpacer.get(Integer.valueOf(index));
+            if (spacer != null) {
+                return spacer.getElement();
+            } else {
+                return null;
+            }
+        }
     }
 
     private class ElementPositionBookkeeper {
@@ -4344,6 +4367,50 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         public void remove(Element e) {
             elementTopPositionMap.remove(e);
+        }
+    }
+
+    public static class SubPartArguments {
+        private String type;
+        private int[] indices;
+
+        private SubPartArguments(String type, int[] indices) {
+            /*
+             * The constructor is private so that no third party would by
+             * mistake start using this parsing scheme, since it's not official
+             * by TestBench (yet?).
+             */
+
+            this.type = type;
+            this.indices = indices;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public int getIndicesLength() {
+            return indices.length;
+        }
+
+        public int getIndex(int i) {
+            return indices[i];
+        }
+
+        public int[] getIndices() {
+            return Arrays.copyOf(indices, indices.length);
+        }
+
+        static SubPartArguments create(String subPart) {
+            String[] splitArgs = subPart.split("\\[");
+            String type = splitArgs[0];
+            int[] indices = new int[splitArgs.length - 1];
+            for (int i = 0; i < indices.length; ++i) {
+                String tmp = splitArgs[i + 1];
+                indices[i] = Integer
+                        .parseInt(tmp.substring(0, tmp.length() - 1));
+            }
+            return new SubPartArguments(type, indices);
         }
     }
 
@@ -5294,5 +5361,176 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         int from = (int) Math.floor(verticalScrollbar.getScrollPos());
         int to = (int) Math.ceil(body.heightOfSection);
         return Range.between(from, to);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+        SubPartArguments args = parseSubPartArguments(subPart);
+
+        Element tableStructureElement = getSubPartElementTableStructure(args);
+        if (tableStructureElement != null) {
+            return DOM.asOld(tableStructureElement);
+        }
+
+        Element spacerElement = getSubPartElementSpacer(args);
+        if (spacerElement != null) {
+            return DOM.asOld(spacerElement);
+        }
+
+        return null;
+    }
+
+    private Element getSubPartElementTableStructure(SubPartArguments args) {
+
+        String type = args.getType();
+        int[] indices = args.getIndices();
+
+        // Get correct RowContainer for type from Escalator
+        RowContainer container = null;
+        if (type.equalsIgnoreCase("header")) {
+            container = getHeader();
+        } else if (type.equalsIgnoreCase("cell")) {
+            // If wanted row is not visible, we need to scroll there.
+            Range visibleRowRange = getVisibleRowRange();
+            if (indices.length > 0 && !visibleRowRange.contains(indices[0])) {
+                try {
+                    scrollToRow(indices[0], ScrollDestination.ANY, 0);
+                } catch (IllegalArgumentException e) {
+                    getLogger().log(Level.SEVERE, e.getMessage());
+                }
+                // Scrolling causes a lazy loading event. No element can
+                // currently be retrieved.
+                return null;
+            }
+            container = getBody();
+        } else if (type.equalsIgnoreCase("footer")) {
+            container = getFooter();
+        }
+
+        if (null != container) {
+            if (indices.length == 0) {
+                // No indexing. Just return the wanted container element
+                return container.getElement();
+            } else {
+                try {
+                    return getSubPart(container, indices);
+                } catch (Exception e) {
+                    getLogger().log(Level.SEVERE, e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    private Element getSubPart(RowContainer container, int[] indices) {
+        Element targetElement = container.getRowElement(indices[0]);
+
+        // Scroll wanted column to view if able
+        if (indices.length > 1 && targetElement != null) {
+            if (getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
+                scrollToColumn(indices[1], ScrollDestination.ANY, 0);
+            }
+
+            targetElement = getCellFromRow(TableRowElement.as(targetElement),
+                    indices[1]);
+
+            for (int i = 2; i < indices.length && targetElement != null; ++i) {
+                targetElement = (Element) targetElement.getChild(indices[i]);
+            }
+        }
+
+        return targetElement;
+    }
+
+    private static Element getCellFromRow(TableRowElement rowElement, int index) {
+        int childCount = rowElement.getCells().getLength();
+        if (index < 0 || index >= childCount) {
+            return null;
+        }
+
+        TableCellElement currentCell = null;
+        boolean indexInColspan = false;
+        int i = 0;
+
+        while (!indexInColspan) {
+            currentCell = rowElement.getCells().getItem(i);
+
+            // Calculate if this is the cell we are looking for
+            int colSpan = currentCell.getColSpan();
+            indexInColspan = index < colSpan + i;
+
+            // Increment by colspan to skip over hidden cells
+            i += colSpan;
+        }
+        return currentCell;
+    }
+
+    private Element getSubPartElementSpacer(SubPartArguments args) {
+        if ("spacer".equals(args.getType()) && args.getIndicesLength() == 1) {
+            return body.spacerContainer.getSubPartElement(args.getIndex(0));
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+
+        /*
+         * The spacer check needs to be before table structure check, because
+         * (for now) the table structure will take spacer elements into account
+         * as well, when it shouldn't.
+         */
+
+        String spacer = getSubPartNameSpacer(subElement);
+        if (spacer != null) {
+            return spacer;
+        }
+
+        String tableStructure = getSubPartNameTableStructure(subElement);
+        if (tableStructure != null) {
+            return tableStructure;
+        }
+
+        return null;
+    }
+
+    private String getSubPartNameTableStructure(Element subElement) {
+
+        List<RowContainer> containers = Arrays.asList(getHeader(), getBody(),
+                getFooter());
+        List<String> containerType = Arrays.asList("header", "cell", "footer");
+
+        for (int i = 0; i < containers.size(); ++i) {
+            RowContainer container = containers.get(i);
+            boolean containerRow = (subElement.getTagName().equalsIgnoreCase(
+                    "tr") && subElement.getParentElement() == container
+                    .getElement());
+            if (containerRow) {
+                /*
+                 * Wanted SubPart is row that is a child of containers root to
+                 * get indices, we use a cell that is a child of this row
+                 */
+                subElement = subElement.getFirstChildElement();
+            }
+
+            Cell cell = container.getCell(subElement);
+            if (cell != null) {
+                // Skip the column index if subElement was a child of root
+                return containerType.get(i) + "[" + cell.getRow()
+                        + (containerRow ? "]" : "][" + cell.getColumn() + "]");
+            }
+        }
+        return null;
+    }
+
+    private String getSubPartNameSpacer(Element subElement) {
+        return body.spacerContainer.getSubPartName(subElement);
+    }
+
+    public static SubPartArguments parseSubPartArguments(String subPart) {
+        return SubPartArguments.create(subPart);
     }
 }
