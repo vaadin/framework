@@ -508,6 +508,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 });
+        createBooleanAction("Column Reordering Allowed", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.setColumnReorderingAllowed(value);
+                    }
+                });
     }
 
     protected void createHeaderActions() {

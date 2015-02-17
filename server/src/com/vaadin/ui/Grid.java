@@ -3469,6 +3469,31 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return columnKeys.get(columnId);
     }
 
+    /**
+     * Returns whether column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since
+     * @return true if reordering is allowed
+     */
+    public boolean isColumnReorderingAllowed() {
+        return getState(false).columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether or not column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        if (isColumnReorderingAllowed() != columnReorderingAllowed) {
+            getState().columnReorderingAllowed = columnReorderingAllowed;
+        }
+    }
+
     @Override
     protected GridState getState() {
         return (GridState) super.getState();
