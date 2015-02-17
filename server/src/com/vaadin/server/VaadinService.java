@@ -1574,30 +1574,11 @@ public abstract class VaadinService implements Serializable {
             String message, String details, String url) {
         String returnString = "";
         try {
-            if (message == null) {
-                message = details;
-            } else if (details != null) {
-                message += "<br/><br/>" + details;
-            }
-
             JsonObject appError = Json.createObject();
-            if (caption == null) {
-                appError.put("caption", Json.createNull());
-            } else {
-                appError.put("caption", caption);
-            }
-
-            if (message == null) {
-                appError.put("message", Json.createNull());
-            } else {
-                appError.put("message", message);
-            }
-
-            if (url == null) {
-                appError.put("url", Json.createNull());
-            } else {
-                appError.put("url", url);
-            }
+            putValueOrJsonNull(appError, "caption", caption);
+            putValueOrJsonNull(appError, "url", url);
+            putValueOrJsonNull(appError, "message",
+                    createCriticalNotificationMessage(message, details));
 
             JsonObject meta = Json.createObject();
             meta.put("appError", appError);
@@ -1615,6 +1596,24 @@ public abstract class VaadinService implements Serializable {
         }
 
         return "for(;;);[" + returnString + "]";
+    }
+
+    private static String createCriticalNotificationMessage(String message, String details) {
+        if(message == null) {
+            return details;
+        } else if(details != null) {
+            return message + "<br/><br/>" + details;
+        }
+
+        return message;
+    }
+
+    private static void putValueOrJsonNull(JsonObject json, String key, String value) {
+        if(value == null) {
+            json.put(key, Json.createNull());
+        } else {
+            json.put(key, value);
+        }
     }
 
     /**
