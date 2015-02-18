@@ -267,6 +267,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             }
 
             @Override
+            public void sendDateArray(Date[] date) {
+                rpc.sendDateArray(date);
+            }
+
+            @Override
             public void sendJson(JsonValue value1, JsonValue value2,
                     JsonString string) {
                 if (value1.getType() != JsonType.BOOLEAN) {
@@ -347,6 +352,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
         rpc.log("state.jsonString: "
                 + ((JsonString) getState().jsonString).getString());
         rpc.log("state.jsonBoolean: " + getState().jsonBoolean.getBoolean());
+
+        rpc.log("state.date1: " + getState().date1);
+        rpc.log("state.date2: " + getState().date2);
+        String arrStr = "";
+        for (Date d : getState().dateArray) {
+            arrStr += d + " ";
+        }
+        rpc.log("state.dateArray: " + arrStr);
 
         /*
          * TODO public double doubleValue; public Double DoubleValue; public
