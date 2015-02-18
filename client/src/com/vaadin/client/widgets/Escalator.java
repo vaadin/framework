@@ -52,6 +52,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -1692,6 +1693,11 @@ public class Escalator extends Widget implements RequiresResize,
         public void setColumnFrozen(int column, boolean frozen) {
             final NodeList<TableRowElement> childRows = root.getRows();
 
+            if (column == 0 && this instanceof BodyRowContainer) {
+                // TODO
+                getLogger().warning("[[spacers]] freezing columns");
+            }
+
             for (int row = 0; row < childRows.getLength(); row++) {
                 final TableRowElement tr = childRows.getItem(row);
 
@@ -1711,6 +1717,11 @@ public class Escalator extends Widget implements RequiresResize,
 
         public void updateFreezePosition(int column, double scrollLeft) {
             final NodeList<TableRowElement> childRows = root.getRows();
+
+            if (column == 0 && this instanceof BodyRowContainer) {
+                // TODO
+                getLogger().warning("[[spacers]] update freeze position");
+            }
 
             for (int row = 0; row < childRows.getLength(); row++) {
                 final TableRowElement tr = childRows.getItem(row);
@@ -2507,6 +2518,9 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             if (rowsWereMoved) {
+                // TODO
+                getLogger().warning("[[spacers]] rotating rows during scroll");
+
                 fireRowVisibilityChangeEvent();
 
                 if (scroller.touchHandlerBundle.touches == 0) {
@@ -2525,6 +2539,9 @@ public class Escalator extends Widget implements RequiresResize,
             if (numberOfRows == 0) {
                 return;
             }
+
+            // TODO
+            getLogger().warning("[[spacers]] inserting rows");
 
             /*
              * TODO: this method should probably only add physical rows, and not
@@ -2813,6 +2830,9 @@ public class Escalator extends Widget implements RequiresResize,
             if (numberOfRows == 0) {
                 return;
             }
+
+            // TODO
+            getLogger().warning("[[spacers]] removing rows");
 
             final Range viewportRange = getVisibleRowRange();
             final Range removedRowsRange = Range
@@ -3238,6 +3258,7 @@ public class Escalator extends Widget implements RequiresResize,
          *         current viewport. The first visual row has the index 0.
          */
         private Range convertToVisual(final Range logicalRange) {
+
             if (logicalRange.isEmpty()) {
                 return logicalRange;
             } else if (visualRowOrder.isEmpty()) {
@@ -3341,6 +3362,10 @@ public class Escalator extends Widget implements RequiresResize,
          * instead.
          */
         public void verifyEscalatorCount() {
+
+            // TODO
+            getLogger().warning("[[spacers]] verifying escalator row count");
+
             /*
              * This method indeed has a smell very similar to paintRemoveRows
              * and paintInsertRows.
@@ -3373,6 +3398,11 @@ public class Escalator extends Widget implements RequiresResize,
 
             if (neededEscalatorRowsDiff > 0) {
                 // needs more
+
+                // TODO
+                getLogger().warning(
+                        "[[spacers]] adding more rows while expanding the "
+                                + "body section");
 
                 /*
                  * This is a workaround for the issue where we might be scrolled
@@ -3443,6 +3473,11 @@ public class Escalator extends Widget implements RequiresResize,
 
             else if (neededEscalatorRowsDiff < 0) {
                 // needs less
+
+                // TODO
+                getLogger().warning(
+                        "[[spacers]] removing rows while shrinking the body "
+                                + "section");
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(visualRowOrder.size());
@@ -3651,6 +3686,44 @@ public class Escalator extends Widget implements RequiresResize,
         @Override
         public SpacerUpdater getSpacerUpdater() {
             return spacerContainer.getSpacerUpdater();
+        }
+
+        private double calculateRowTop(int logicalIndex) {
+            double top = spacerContainer.getSpacerHeightsSumUntil(logicalIndex);
+            return top + (logicalIndex * getDefaultRowHeight());
+        }
+
+        public void shiftRowPositions(int row, double diff) {
+            for (TableRowElement tr : getVisibleRowsAfter(row)) {
+                setRowPosition(tr, 0, getRowTop(tr) + diff);
+            }
+
+            if (row > getTopRowLogicalIndex()) {
+                // TODO
+                getLogger().warning(
+                        "scrollbar compensation not yet implemented");
+            }
+        }
+
+        private List<TableRowElement> getVisibleRowsAfter(int logicalRow) {
+            Range visibleRowLogicalRange = getVisibleRowRange();
+
+            boolean allRowsAreInView = logicalRow < visibleRowLogicalRange
+                    .getStart();
+            boolean noRowsAreInView = logicalRow >= visibleRowLogicalRange
+                    .getEnd() - 1;
+
+            if (allRowsAreInView) {
+                return Collections.unmodifiableList(visualRowOrder);
+            } else if (noRowsAreInView) {
+                return Collections.emptyList();
+            } else {
+                int fromIndex = (logicalRow - visibleRowLogicalRange.getStart()) + 1;
+                int toIndex = visibleRowLogicalRange.length();
+                List<TableRowElement> sublist = visualRowOrder.subList(
+                        fromIndex, toIndex);
+                return Collections.unmodifiableList(sublist);
+            }
         }
     }
 
@@ -4136,17 +4209,23 @@ public class Escalator extends Widget implements RequiresResize,
             private TableCellElement spacerElement;
             private TableRowElement root;
             private final int rowIndex;
+            private double height = -1;
+            private boolean domHasBeenSetup = false;
 
-            public SpacerImpl(int rowIndex, double height) {
+            public SpacerImpl(int rowIndex) {
                 this.rowIndex = rowIndex;
 
-                // Build DOM structure
                 root = TableRowElement.as(DOM.createTR());
                 spacerElement = TableCellElement.as(DOM.createTD());
                 root.appendChild(spacerElement);
                 root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
+            }
 
-                // Configure DOM structure
+            public void setupDom(double height) {
+                assert !domHasBeenSetup : "DOM can't be set up twice.";
+                assert RootPanel.get().getElement().isOrHasChild(root) : "Root element should've been attached to the DOM by now.";
+                domHasBeenSetup = true;
+
                 setHeight(height);
                 root.getStyle().setWidth(100, Unit.PCT);
 
@@ -4162,18 +4241,25 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             public void setPosition(double x, double y) {
-                positions.set(root, x, y);
+                positions.set(getRootElement(), x, y);
             }
 
             public void setStylePrimaryName(String style) {
                 UIObject.setStylePrimaryName(root, style + "-spacer");
             }
 
-            public void setHeight(double newHeight) {
-                root.getStyle().setHeight(newHeight, Unit.PX);
-                getLogger().warning(
-                        "spacer's height changed, but pushing rows out of "
-                                + "the way not implemented yet");
+            public void setHeight(double height) {
+
+                assert height >= 0 : "Height must be more >= 0 (was " + height
+                        + ")";
+
+                double diff = height - Math.max(0, this.height);
+                this.height = height;
+                root.getStyle().setHeight(height, Unit.PX);
+
+                shiftSpacerPositions(getRow(), diff);
+                body.shiftRowPositions(getRow(), diff);
+                body.verifyEscalatorCount();
             }
 
             @Override
@@ -4184,6 +4270,15 @@ public class Escalator extends Widget implements RequiresResize,
             @Override
             public int getRow() {
                 return rowIndex;
+            }
+
+            public double getHeight() {
+                assert height >= 0 : "Height was not previously set by setHeight.";
+                return height;
+            }
+
+            public double getTop() {
+                return positions.getTop(getRootElement());
             }
         }
 
@@ -4209,6 +4304,16 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        @SuppressWarnings("boxing")
+        public double getSpacerHeightsSumUntil(int logicalIndex) {
+            double heights = 0;
+            for (SpacerImpl spacer : rowIndexToSpacer.headMap(logicalIndex,
+                    false).values()) {
+                heights += spacer.getHeight();
+            }
+            return heights;
+        }
+
         private boolean spacerExists(int rowIndex) {
             return rowIndexToSpacer.containsKey(Integer.valueOf(rowIndex));
         }
@@ -4216,15 +4321,16 @@ public class Escalator extends Widget implements RequiresResize,
         @SuppressWarnings("boxing")
         private void insertNewSpacer(int rowIndex, double height) {
 
-            SpacerImpl spacer = new SpacerImpl(rowIndex, height);
+            SpacerImpl spacer = new SpacerImpl(rowIndex);
 
             rowIndexToSpacer.put(rowIndex, spacer);
-            spacer.setPosition(0, getSpacerTop(rowIndex));
+            spacer.setPosition(0, calculateSpacerTop(rowIndex));
 
             TableRowElement spacerRoot = spacer.getRootElement();
             spacerRoot.getStyle().setWidth(
                     columnConfiguration.calculateRowWidth(), Unit.PX);
             body.getElement().appendChild(spacerRoot);
+            spacer.setupDom(height);
 
             initSpacerContent(spacer);
         }
@@ -4235,29 +4341,6 @@ public class Escalator extends Widget implements RequiresResize,
 
         private SpacerImpl getSpacer(int rowIndex) {
             return rowIndexToSpacer.get(Integer.valueOf(rowIndex));
-        }
-
-        private double getSpacerTop(int rowIndex) {
-            double spacerHeights = 0;
-
-            /*-
-             * TODO: uncomment this bit once the spacers start pushing the
-             * rows downwards, offseting indices. OTOH this entire method 
-             * probably needs to be usable by BodyContainerImpl as well, 
-             * since this same logic can/should be used for calculating the 
-             * top position for rows. 
-
-            // Sum all spacer heights that occur before rowIndex.
-            for (Double spacerHeight : rowIndexToHeight.headMap(
-                    Integer.valueOf(rowIndex), false).values()) {
-                spacerHeights += spacerHeight.doubleValue();
-            }
-             */
-
-            double rowHeights = getBody().getDefaultRowHeight()
-                    * (rowIndex + 1);
-
-            return rowHeights + spacerHeights;
         }
 
         @SuppressWarnings("boxing")
@@ -4333,13 +4416,24 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         public Element getSubPartElement(int index) {
-            getLogger().warning("SpacerContainer.getSubPartElement " + index);
-
             SpacerImpl spacer = rowIndexToSpacer.get(Integer.valueOf(index));
             if (spacer != null) {
                 return spacer.getElement();
             } else {
                 return null;
+            }
+        }
+
+        private double calculateSpacerTop(int logicalIndex) {
+            return body.calculateRowTop(logicalIndex)
+                    + body.getDefaultRowHeight();
+        }
+
+        @SuppressWarnings("boxing")
+        private void shiftSpacerPositions(int changedRowIndex, double diffPx) {
+            for (SpacerImpl spacer : rowIndexToSpacer.tailMap(changedRowIndex,
+                    false).values()) {
+                spacer.setPosition(0, spacer.getTop() + diffPx);
             }
         }
     }
@@ -5025,7 +5119,8 @@ public class Escalator extends Widget implements RequiresResize,
 
     /**
      * Adds an event handler that gets notified when the range of visible rows
-     * changes e.g. because of scrolling or row resizing.
+     * changes e.g. because of scrolling, row resizing or spacers
+     * appearing/disappearing.
      * 
      * @param rowVisibilityChangeHandler
      *            the event handler
@@ -5053,14 +5148,13 @@ public class Escalator extends Widget implements RequiresResize,
     }
 
     /**
-     * Gets the range of currently visible rows.
+     * Gets the logical index range of currently visible rows.
      * 
-     * @return range of visible rows
+     * @return logical index range of visible rows
      */
     public Range getVisibleRowRange() {
         if (!body.visualRowOrder.isEmpty()) {
-            return Range.withLength(
-                    body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
+            return Range.withLength(body.getTopRowLogicalIndex(),
                     body.visualRowOrder.size());
         } else {
             return Range.withLength(0, 0);

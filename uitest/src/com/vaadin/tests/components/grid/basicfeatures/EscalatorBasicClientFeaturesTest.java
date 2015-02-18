@@ -240,17 +240,16 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected void scrollVerticallyTo(int px) {
-        executeScript("arguments[0].scrollTop = " + px, getVeticalScrollbar());
+        getVerticalScrollbar().scroll(px);
     }
 
-    private TestBenchElement getVeticalScrollbar() {
+    private TestBenchElement getVerticalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
     }
 
     protected void scrollHorizontallyTo(int px) {
-        executeScript("arguments[0].scrollLeft = " + px,
-                getHorizontalScrollbar());
+        getHorizontalScrollbar().scrollLeft(px);
     }
 
     private TestBenchElement getHorizontalScrollbar() {
