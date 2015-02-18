@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 
 import com.vaadin.server.AbstractJavaScriptExtension;
+
 import elemental.json.JsonArray;
 
 /**
@@ -26,9 +27,9 @@ import elemental.json.JsonArray;
  * the corresponding JavaScript function is called, the {@link #call(JsonArray)}
  * method is invoked.
  * 
- * @see JavaScript#addFunction(String, JavaScriptCallback)
- * @see AbstractJavaScriptComponent#addFunction(String, JavaScriptCallback)
- * @see AbstractJavaScriptExtension#addFunction(String, JavaScriptCallback)
+ * @see JavaScript#addFunction(String, JavaScriptFunction)
+ * @see AbstractJavaScriptComponent#addFunction(String, JavaScriptFunction)
+ * @see AbstractJavaScriptExtension#addFunction(String, JavaScriptFunction)
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
