@@ -248,8 +248,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         addFilterActions();
 
+        addInternalActions();
+
         this.grid = grid;
         return grid;
+    }
+
+    private void addInternalActions() {
+        createClickAction("Update column order without updating client",
+                "Internals", new Command<Grid, Void>() {
+                    @Override
+                    public void execute(Grid grid, Void value, Object data) {
+                        List<Column> columns = grid.getColumns();
+                        grid.setColumnOrder(columns.get(1).getPropertyId(),
+                                columns.get(0).getPropertyId());
+                        grid.getUI().getConnectorTracker().markClean(grid);
+                    }
+                }, null);
     }
 
     private void addFilterActions() {
@@ -656,6 +671,33 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             } else {
                                 grid.removeColumn(columnProperty);
                             }
+                        }
+                    }, null, c);
+            createClickAction("Move left", getColumnProperty(c),
+                    new Command<Grid, String>() {
+
+                        @Override
+                        public void execute(Grid grid, String value, Object data) {
+                            final String columnProperty = getColumnProperty((Integer) data);
+                            List<Column> cols = grid.getColumns();
+                            List<Object> reordered = new ArrayList<Object>();
+                            boolean addAsLast = false;
+                            for (int i = 0; i < cols.size(); i++) {
+                                Column col = cols.get(i);
+                                if (col.getPropertyId().equals(columnProperty)) {
+                                    if (i == 0) {
+                                        addAsLast = true;
+                                    } else {
+                                        reordered.add(i - 1, columnProperty);
+                                    }
+                                } else {
+                                    reordered.add(col.getPropertyId());
+                                }
+                            }
+                            if (addAsLast) {
+                                reordered.add(columnProperty);
+                            }
+                            grid.setColumnOrder(reordered.toArray());
                         }
                     }, null, c);
 

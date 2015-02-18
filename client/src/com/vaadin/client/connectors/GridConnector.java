@@ -50,6 +50,8 @@ import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
@@ -360,6 +362,24 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
+    private ColumnReorderHandler<JsonObject> columnReorderHandler = new ColumnReorderHandler<JsonObject>() {
+
+        @Override
+        public void onColumnReorder(ColumnReorderEvent<JsonObject> event) {
+            if (!columnsUpdatedFromState) {
+                List<Column<?, JsonObject>> columns = getWidget().getColumns();
+                final List<String> newColumnOrder = new ArrayList<String>();
+                for (Column<?, JsonObject> column : columns) {
+                    newColumnOrder.add(((CustomGridColumn) column).id);
+                }
+                getRpcProxy(GridServerRpc.class).columnsReordered(
+                        newColumnOrder, columnOrder);
+                columnOrder = newColumnOrder;
+                getState().columnOrder = newColumnOrder;
+            }
+        }
+    };
+
     /**
      * Maps a generated column id to a grid column instance
      */
@@ -370,13 +390,22 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private List<String> columnOrder = new ArrayList<String>();
 
     /**
-     * updateFromState is set to true when {@link #updateSelectionFromState()}
-     * makes changes to selection. This flag tells the
-     * {@code internalSelectionChangeHandler} to not send same data straight
-     * back to server. Said listener sets it back to false when handling that
-     * event.
+     * {@link #selectionUpdatedFromState} is set to true when
+     * {@link #updateSelectionFromState()} makes changes to selection. This flag
+     * tells the {@code internalSelectionChangeHandler} to not send same data
+     * straight back to server. Said listener sets it back to false when
+     * handling that event.
      */
-    private boolean updatedFromState = false;
+    private boolean selectionUpdatedFromState;
+
+    /**
+     * {@link #columnsUpdatedFromState} is set to true when
+     * {@link #updateColumnOrderFromState(List)} is updating the column order
+     * for the widget. This flag tells the {@link #columnReorderHandler} to not
+     * send same data straight back to server. After updates, listener sets the
+     * value back to false.
+     */
+    private boolean columnsUpdatedFromState;
 
     private RpcDataSource dataSource;
 
@@ -386,7 +415,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             if (event.isBatchedSelection()) {
                 return;
             }
-            if (!updatedFromState) {
+            if (!selectionUpdatedFromState) {
                 for (JsonObject row : event.getRemoved()) {
                     selectedKeys.remove(dataSource.getRowKey(row));
                 }
@@ -398,7 +427,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 getRpcProxy(GridServerRpc.class).select(
                         new ArrayList<String>(selectedKeys));
             } else {
-                updatedFromState = false;
+                selectionUpdatedFromState = false;
             }
         }
     };
@@ -496,6 +525,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         });
 
         getWidget().setEditorHandler(new CustomEditorHandler());
+
+        getWidget().addColumnReorderHandler(columnReorderHandler);
+
         getLayoutManager().registerDependency(this, getWidget().getElement());
         layout();
     }
@@ -589,7 +621,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             columns[i] = columnIdToColumn.get(id);
             i++;
         }
+        columnsUpdatedFromState = true;
         getWidget().setColumnOrder(columns);
+        columnsUpdatedFromState = false;
         columnOrder = stateColumnOrder;
     }
 
@@ -886,7 +920,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         if (changed) {
             // At least for now there's no way to send the selected and/or
             // deselected row data. Some data is only stored as keys
-            updatedFromState = true;
+            selectionUpdatedFromState = true;
             getWidget().fireEvent(
                     new SelectionEvent<JsonObject>(getWidget(),
                             (List<JsonObject>) null, null, false));

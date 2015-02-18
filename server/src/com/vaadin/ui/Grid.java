@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,6 +71,7 @@ import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.EncodeResult;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
@@ -3087,6 +3089,44 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 Object propertyId = getPropertyIdByColumnId(columnId);
                 fireEvent(new ItemClickEvent(Grid.this, item, itemId,
                         propertyId, details));
+            }
+
+            @Override
+            public void columnsReordered(List<String> newColumnOrder,
+                    List<String> oldColumnOrder) {
+                final String diffStateKey = "columnOrder";
+                ConnectorTracker connectorTracker = getUI()
+                        .getConnectorTracker();
+                JsonObject diffState = connectorTracker.getDiffState(Grid.this);
+                // discard the change if the columns have been reordered from
+                // the server side, as the server side is always right
+                if (getState(false).columnOrder.equals(oldColumnOrder)) {
+                    // Don't mark as dirty since client has the state already
+                    getState(false).columnOrder = newColumnOrder;
+                    // write changes to diffState so that possible reverting the
+                    // column order is sent to client
+                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    Type type = null;
+                    try {
+                        type = (getState(false).getClass().getDeclaredField(
+                                diffStateKey).getGenericType());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                    EncodeResult encodeResult = JsonCodec.encode(
+                            getState(false).columnOrder, diffState, type,
+                            connectorTracker);
+
+                    diffState.put(diffStateKey, encodeResult.getEncodedValue());
+                    // TODO fire column reorder event
+                } else {
+                    // make sure the client is reverted to the order that the
+                    // server thinks it is
+                    diffState.remove(diffStateKey);
+                    markAsDirty();
+                }
             }
         });
 
