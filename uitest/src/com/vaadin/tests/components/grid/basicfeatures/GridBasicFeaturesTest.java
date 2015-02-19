@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,5 +134,46 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         testUrl = testUrl.replace("?restartApplication", "?");
         testUrl = testUrl.replace("?&", "?");
         driver.get(testUrl);
+    }
+
+    protected void focusCell(int row, int column) {
+        getGridElement().getCell(row, column).click();
+    }
+
+    protected void assertColumnHeaderOrder(int... indices) {
+        List<TestBenchElement> headers = getGridHeaderRowCells();
+        for (int i = 0; i < indices.length; i++) {
+            assertColumnHeader("Column " + indices[i], headers.get(i));
+        }
+    }
+
+    protected void assertColumnHeader(String expectedHeaderCaption,
+            TestBenchElement testBenchElement) {
+        assertEquals(expectedHeaderCaption.toLowerCase(), testBenchElement
+                .getText().toLowerCase());
+    }
+
+    protected WebElement getDefaultColumnHeader(int index) {
+        List<TestBenchElement> headerRowCells = getGridHeaderRowCells();
+        return headerRowCells.get(index);
+    }
+
+    protected void dragDefaultColumnHeader(int draggedColumnHeaderIndex,
+            int onTopOfColumnHeaderIndex, int xOffsetFromColumnTopLeftCorner) {
+        new Actions(getDriver())
+                .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
+                .moveToElement(
+                        getDefaultColumnHeader(onTopOfColumnHeaderIndex),
+                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+    }
+
+    protected void assertColumnIsSorted(int index) {
+        WebElement columnHeader = getDefaultColumnHeader(index);
+        assertTrue(columnHeader.getAttribute("class").contains("sort"));
+    }
+
+    protected void assertFocusedCell(int row, int column) {
+        assertTrue(getGridElement().getCell(row, column).getAttribute("class")
+                .contains("focused"));
     }
 }

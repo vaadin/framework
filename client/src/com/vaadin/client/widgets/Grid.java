@@ -2932,10 +2932,6 @@ public class Grid<T> extends ResizeComposite implements
             dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
         }
 
-        private void resolveDragElementVerticalPosition() {
-            dragElement.getStyle().setTop(-10, Unit.PX);
-        }
-
         private void resolveDragElementHorizontalPosition(final int clientX) {
             int left = clientX - table.getAbsoluteLeft();
             left = Math.max(0, Math.min(left, table.getClientWidth()));
@@ -2946,22 +2942,23 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void showDragElement() {
             initHeaderDragElementDOM();
-            // TODO this clones also some unwanted style names, should confirm
-            // with UX what we want to show (focus/sort indicator)
+            // needs to clone focus and sorting indicators too (UX)
             dragElement = DOM.clone(eventCell.getElement(), true);
             dragElement.getStyle().clearWidth();
             dropMarker.getStyle().setProperty("height",
                     dragElement.getStyle().getHeight());
             tableHeader.appendChild(dragElement);
-            // might need to change this on fly once sorting with multiple
-            // header rows is possible
-            resolveDragElementVerticalPosition();
+            // mark the column being dragged for styling
+            eventCell.getElement().addClassName("dragged");
+            // mark the floating cell, for styling & testing
+            dragElement.addClassName("dragged-column-header");
         }
 
         @Override
         public void removeDragElement() {
             table.removeFromParent();
             dragElement.removeFromParent();
+            eventCell.getElement().removeClassName("dragged");
         }
 
         @Override
@@ -2980,8 +2977,38 @@ public class Grid<T> extends ResizeComposite implements
                 @SuppressWarnings("unchecked")
                 Column<?, T>[] array = reordered.toArray(new Column[reordered
                         .size()]);
+                transferCellFocusOnDrop();
                 setColumnOrder(array);
             } // else no reordering
+        }
+
+        private void transferCellFocusOnDrop() {
+            final Cell focusedCell = cellFocusHandler.getFocusedCell();
+            if (focusedCell != null) {
+                final int focusedCellColumnIndex = focusedCell.getColumn();
+                final int focusedRowIndex = focusedCell.getRow();
+                final int draggedColumnIndex = eventCell.getColumnIndex();
+                // transfer focus if it was effected by the new column order
+                // FIXME if the dragged column is partly outside of the view
+                // port and the focused cell is +-1 of the dragged column, the
+                // grid scrolls to the right end. maybe fixed when the automatic
+                // scroll handling is implemented?
+                final RowContainer rowContainer = escalator
+                        .findRowContainer(focusedCell.getElement());
+                if (focusedCellColumnIndex == draggedColumnIndex) {
+                    // move with the dragged column
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            latestColumnDropIndex, rowContainer);
+                } else if (latestColumnDropIndex <= focusedCellColumnIndex
+                        && draggedColumnIndex > focusedCellColumnIndex) {
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            focusedCellColumnIndex + 1, rowContainer);
+                } else if (latestColumnDropIndex >= focusedCellColumnIndex
+                        && draggedColumnIndex < focusedCellColumnIndex) {
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            focusedCellColumnIndex - 1, rowContainer);
+                }
+            }
         }
 
         @Override

@@ -40,6 +40,15 @@ $v-grid-animations-enabled: $v-animations-enabled !default;
     text-shadow: valo-text-shadow($font-color: valo-font-color($v-grid-header-background-color), $background-color: $v-grid-header-background-color);
   }
 
+  .#{$primary-stylename}-header .#{$primary-stylename}-cell.dragged {
+    @include opacity(0.5, false);
+    @include transition (opacity .3s ease-in-out);
+   }
+
+   .#{$primary-stylename}-header .#{$primary-stylename}-cell.dragged-column-header {
+    margin-top: round($v-grid-row-height/-2);
+   }
+
   .#{$primary-stylename}-footer .#{$primary-stylename}-cell {
     @include valo-gradient($v-grid-footer-background-color);
     text-shadow: valo-text-shadow($font-color: valo-font-color($v-grid-footer-background-color), $background-color: $v-grid-footer-background-color);

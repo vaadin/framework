@@ -15,18 +15,12 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 /**
@@ -212,30 +206,4 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertFalse(logRow.contains("Columns reordered"));
     }
 
-    private void assertColumnHeaderOrder(int... indices) {
-        List<TestBenchElement> headers = getGridHeaderRowCells();
-        for (int i = 0; i < indices.length; i++) {
-            assertColumnHeader("Column " + indices[i], headers.get(i));
-        }
-    }
-
-    private void assertColumnHeader(String expectedHeaderCaption,
-            TestBenchElement testBenchElement) {
-        assertEquals(expectedHeaderCaption.toLowerCase(), testBenchElement
-                .getText().toLowerCase());
-    }
-
-    private WebElement getDefaultColumnHeader(int index) {
-        List<TestBenchElement> headerRowCells = getGridHeaderRowCells();
-        return headerRowCells.get(index);
-    }
-
-    private void dragDefaultColumnHeader(int draggedColumnHeaderIndex,
-            int onTopOfColumnHeaderIndex, int xOffsetFromColumnTopLeftCorner) {
-        new Actions(getDriver())
-                .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
-                .moveToElement(
-                        getDefaultColumnHeader(onTopOfColumnHeaderIndex),
-                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
-    }
 }
