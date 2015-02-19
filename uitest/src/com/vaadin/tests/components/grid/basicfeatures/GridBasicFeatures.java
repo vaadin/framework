@@ -50,6 +50,8 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.ColumnReorderEvent;
+import com.vaadin.ui.Grid.ColumnReorderListener;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -106,6 +108,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             log("Item " + (event.isDoubleClick() ? "double " : "")
                     + "click on " + event.getPropertyId() + ", item "
                     + event.getItemId());
+        }
+    };
+
+    private ColumnReorderListener columnReorderListener = new ColumnReorderListener() {
+
+        @Override
+        public void columnReorder(ColumnReorderEvent event) {
+            log("Columns reordered, userOriginated: "
+                    + event.isUserOriginated());
         }
     };
 
@@ -508,6 +519,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
 
+                });
+        createBooleanAction("ColumnReorderListener", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        if (value) {
+                            grid.addColumnReorderListener(columnReorderListener);
+                        } else {
+                            grid.removeColumnReorderListener(columnReorderListener);
+                        }
+                    }
                 });
 
         createBooleanAction("Single select allow deselect", "State",

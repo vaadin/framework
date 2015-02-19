@@ -16,6 +16,8 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -36,6 +38,8 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
     private static final String[] COLUMN_REORDERING_PATH = { "Component",
             "State", "Column Reordering Allowed" };
+    private static final String[] COLUMN_REORDER_LISTENER_PATH = { "Component",
+            "State", "ColumnReorderListener" };
 
     @Before
     public void setUp() {
@@ -135,13 +139,77 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(1, 0, 2);
     }
 
+    @Test
+    public void testColumnReordering_triggersReorderEvent_isUserInitiated() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+
+        // when
+        toggleColumnReorderListener();
+        dragDefaultColumnHeader(0, 2, 10);
+
+        // then
+        assertColumnReorderEvent(true);
+    }
+
+    @Test
+    public void testColumnReordering_addAndRemoveListener_registerUnRegisterWorks() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        dragDefaultColumnHeader(0, 2, 10);
+        assertNoColumnReorderEvent();
+
+        // when
+        toggleColumnReorderListener();
+        dragDefaultColumnHeader(0, 2, 110);
+
+        // then
+        assertColumnReorderEvent(true);
+
+        // when
+        toggleColumnReorderListener();
+        dragDefaultColumnHeader(0, 3, 10);
+
+        // then
+        assertNoColumnReorderEvent();
+    }
+
+    @Test
+    public void testColumnReorderingEvent_serverSideReorder_triggersReorderEvent() {
+        openTestURL();
+
+        // when
+        toggleColumnReorderListener();
+        moveColumnManuallyLeftByOne(3);
+
+        // then
+        assertColumnReorderEvent(false);
+    }
+
     private void toggleColumnReordering() {
         selectMenuPath(COLUMN_REORDERING_PATH);
+    }
+
+    private void toggleColumnReorderListener() {
+        selectMenuPath(COLUMN_REORDER_LISTENER_PATH);
     }
 
     private void moveColumnManuallyLeftByOne(int index) {
         selectMenuPath(new String[] { "Component", "Columns",
                 "Column " + index, "Move left" });
+    }
+
+    private void assertColumnReorderEvent(boolean userOriginated) {
+        final String logRow = getLogRow(0);
+        assertTrue(logRow.contains("Columns reordered, userOriginated: "
+                + userOriginated));
+    }
+
+    private void assertNoColumnReorderEvent() {
+        final String logRow = getLogRow(0);
+        assertFalse(logRow.contains("Columns reordered"));
     }
 
     private void assertColumnHeaderOrder(int... indices) {

@@ -337,6 +337,58 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
+     * An event listener for column reorder events in the Grid.
+     * 
+     * @since
+     */
+    public interface ColumnReorderListener extends Serializable {
+        /**
+         * Called when the columns of the grid have been reordered.
+         * 
+         * @param event
+         *            An event providing more information
+         */
+        void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * An event that is fired when the columns are reordered.
+     * 
+     * @since
+     */
+    public static class ColumnReorderEvent extends Component.Event {
+
+        /**
+         * Is the column reorder related to this event initiated by the user
+         */
+        private final boolean userOriginated;
+
+        /**
+         * 
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+            super(source);
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+
+    }
+
+    /**
      * Default error handler for the editor
      * 
      */
@@ -2896,6 +2948,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
             .findMethod(SortListener.class, "sort", SortEvent.class);
 
+    private static final Method COLUMN_REORDER_METHOD = ReflectTools
+            .findMethod(ColumnReorderListener.class, "columnReorder",
+                    ColumnReorderEvent.class);
+
     /**
      * Creates a new Grid with a new {@link IndexedContainer} as the data
      * source.
@@ -3120,7 +3176,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                             connectorTracker);
 
                     diffState.put(diffStateKey, encodeResult.getEncodedValue());
-                    // TODO fire column reorder event
+                    fireColumnReorderEvent(true);
                 } else {
                     // make sure the client is reverted to the order that the
                     // server thinks it is
@@ -3632,6 +3688,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             columnOrder.addAll(stateColumnOrder);
         }
         getState().columnOrder = columnOrder;
+        fireColumnReorderEvent(false);
     }
 
     /**
@@ -4096,6 +4153,33 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     @Override
     public void removeSelectionListener(SelectionListener listener) {
         removeListener(SelectionEvent.class, listener, SELECTION_CHANGE_METHOD);
+    }
+
+    private void fireColumnReorderEvent(boolean userOriginated) {
+        fireEvent(new ColumnReorderEvent(this, userOriginated));
+    }
+
+    /**
+     * Registers a new column reorder listener.
+     * 
+     * @since
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnReorderListener(ColumnReorderListener listener) {
+        addListener(ColumnReorderEvent.class, listener, COLUMN_REORDER_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column reorder listener.
+     * 
+     * @since
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnReorderListener(ColumnReorderListener listener) {
+        removeListener(ColumnReorderEvent.class, listener,
+                COLUMN_REORDER_METHOD);
     }
 
     /**
