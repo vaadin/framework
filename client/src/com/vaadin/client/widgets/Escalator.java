@@ -2406,10 +2406,23 @@ public class Escalator extends Widget implements RequiresResize,
 
             boolean rowsWereMoved = false;
 
-            final double topRowPos = getRowTop(visualRowOrder.getFirst());
+            final double topElementPosition;
+            final double nextRowBottomOffset;
+            SpacerContainer.SpacerImpl topSpacer = spacerContainer
+                    .getSpacer(getTopRowLogicalIndex() - 1);
+
+            if (topSpacer != null) {
+                topElementPosition = topSpacer.getTop();
+                nextRowBottomOffset = topSpacer.getHeight()
+                        + getDefaultRowHeight();
+            } else {
+                topElementPosition = getRowTop(visualRowOrder.getFirst());
+                nextRowBottomOffset = getDefaultRowHeight();
+            }
+
             // TODO [[mpixscroll]]
             final double scrollTop = tBodyScrollTop;
-            final double viewportOffset = topRowPos - scrollTop;
+            final double viewportOffset = topElementPosition - scrollTop;
 
             /*
              * TODO [[optimize]] this if-else can most probably be refactored
@@ -2419,14 +2432,17 @@ public class Escalator extends Widget implements RequiresResize,
             if (viewportOffset > 0) {
                 // there's empty room on top
 
-                int originalRowsToMove = (int) Math.ceil(viewportOffset
+                double rowPx = getRowHeightsSumBetweenPx(scrollTop,
+                        topElementPosition);
+                int originalRowsToMove = (int) Math.ceil(rowPx
                         / getDefaultRowHeight());
                 int rowsToMove = Math.min(originalRowsToMove,
                         visualRowOrder.size());
 
                 final int end = visualRowOrder.size();
                 final int start = end - rowsToMove;
-                final int logicalRowIndex = (int) (scrollTop / getDefaultRowHeight());
+                final int logicalRowIndex = getLogicalRowIndex(scrollTop);
+
                 moveAndUpdateEscalatorRows(Range.between(start, end), 0,
                         logicalRowIndex);
 
@@ -2435,14 +2451,16 @@ public class Escalator extends Widget implements RequiresResize,
                 rowsWereMoved = true;
             }
 
-            else if (viewportOffset + getDefaultRowHeight() <= 0) {
+            else if (viewportOffset + nextRowBottomOffset <= 0) {
                 /*
                  * the viewport has been scrolled more than the topmost visual
                  * row.
                  */
 
-                int originalRowsToMove = (int) Math.abs(viewportOffset
-                        / getDefaultRowHeight());
+                double rowPx = getRowHeightsSumBetweenPx(topElementPosition,
+                        scrollTop);
+
+                int originalRowsToMove = (int) (rowPx / getDefaultRowHeight());
                 int rowsToMove = Math.min(originalRowsToMove,
                         visualRowOrder.size());
 
@@ -2460,7 +2478,7 @@ public class Escalator extends Widget implements RequiresResize,
                      * calculate the first logical row index from the scroll
                      * position.
                      */
-                    logicalRowIndex = (int) (scrollTop / getDefaultRowHeight());
+                    logicalRowIndex = getLogicalRowIndex(scrollTop);
                 }
 
                 /*
@@ -2518,9 +2536,6 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             if (rowsWereMoved) {
-                // TODO
-                getLogger().warning("[[spacers]] rotating rows during scroll");
-
                 fireRowVisibilityChangeEvent();
 
                 if (scroller.touchHandlerBundle.touches == 0) {
@@ -2532,6 +2547,27 @@ public class Escalator extends Widget implements RequiresResize,
                     domSorter.reschedule();
                 }
             }
+        }
+
+        private double getRowHeightsSumBetweenPx(double y1, double y2) {
+            assert y1 < y2 : "y1 must be smaller than y2";
+
+            double viewportPx = y2 - y1;
+            double spacerPx = spacerContainer.getSpacerHeightsSumBetweenPx(y1,
+                    SpacerMeasurementStrategy.PARTIAL, y2,
+                    SpacerMeasurementStrategy.PARTIAL);
+
+            return viewportPx - spacerPx;
+        }
+
+        private int getLogicalRowIndex(final double px) {
+            /*
+             * FIXME: this is buggy! if px is mid-spacer, it will return the
+             * pixel count up until PX, not the one after (or before) it.
+             */
+            double rowPx = px
+                    - spacerContainer.getSpacerCompleteHeightsSumUntilPx(px);
+            return (int) (rowPx / getDefaultRowHeight());
         }
 
         @Override
@@ -2632,12 +2668,6 @@ public class Escalator extends Widget implements RequiresResize,
          *            the visual index where the rows will be placed to
          * @param logicalTargetIndex
          *            the logical index to be assigned to the first moved row
-         * @throws IllegalArgumentException
-         *             if any of <code>visualSourceRange.getStart()</code>,
-         *             <code>visualTargetIndex</code> or
-         *             <code>logicalTargetIndex</code> is a negative number; or
-         *             if <code>visualTargetInfo</code> is greater than the
-         *             number of escalator rows.
          */
         private void moveAndUpdateEscalatorRows(final Range visualSourceRange,
                 final int visualTargetIndex, final int logicalTargetIndex)
@@ -2647,28 +2677,24 @@ public class Escalator extends Widget implements RequiresResize,
                 return;
             }
 
-            if (visualSourceRange.getStart() < 0) {
-                throw new IllegalArgumentException(
-                        "Logical source start must be 0 or greater (was "
-                                + visualSourceRange.getStart() + ")");
-            } else if (logicalTargetIndex < 0) {
-                throw new IllegalArgumentException(
-                        "Logical target must be 0 or greater");
-            } else if (visualTargetIndex < 0) {
-                throw new IllegalArgumentException(
-                        "Visual target must be 0 or greater");
-            } else if (visualTargetIndex > root.getChildCount()) {
-                throw new IllegalArgumentException(
-                        "Visual target must not be greater than the number of escalator rows");
-            } else if (logicalTargetIndex + visualSourceRange.length() > getRowCount()) {
-                Range logicalTargetRange = Range.withLength(logicalTargetIndex,
-                        visualSourceRange.length());
-                Range availableRange = Range.withLength(0, getRowCount());
-                throw new IllegalArgumentException("Logical target leads "
-                        + "to rows outside of the data range ("
-                        + logicalTargetRange + " goes beyond " + availableRange
-                        + ")");
-            }
+            assert visualSourceRange.getStart() >= 0 : "Visual source start "
+                    + "must be 0 or greater (was "
+                    + visualSourceRange.getStart() + ")";
+
+            assert logicalTargetIndex >= 0 : "Logical target must be 0 or "
+                    + "greater";
+
+            assert visualTargetIndex >= 0 : "Visual target must be 0 or greater";
+
+            assert visualTargetIndex <= root.getChildCount() : "Visual target "
+                    + "must not be greater than the number of escalator rows";
+
+            assert logicalTargetIndex + visualSourceRange.length() <= getRowCount() : "Logical "
+                    + "target leads to rows outside of the data range ("
+                    + Range.withLength(logicalTargetIndex,
+                            visualSourceRange.length())
+                    + " goes beyond "
+                    + Range.withLength(0, getRowCount()) + ")";
 
             /*
              * Since we move a range into another range, the indices might move
@@ -2723,7 +2749,7 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             { // Reposition the rows that were moved
-                double newRowTop = logicalTargetIndex * getDefaultRowHeight();
+                double newRowTop = getRowTop(logicalTargetIndex);
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(adjustedVisualTargetIndex);
@@ -3688,8 +3714,9 @@ public class Escalator extends Widget implements RequiresResize,
             return spacerContainer.getSpacerUpdater();
         }
 
-        private double calculateRowTop(int logicalIndex) {
-            double top = spacerContainer.getSpacerHeightsSumUntil(logicalIndex);
+        private double getRowTop(int logicalIndex) {
+            double top = spacerContainer
+                    .getSpacerHeightsSumUntilIndex(logicalIndex);
             return top + (logicalIndex * getDefaultRowHeight());
         }
 
@@ -3701,7 +3728,8 @@ public class Escalator extends Widget implements RequiresResize,
             if (row > getTopRowLogicalIndex()) {
                 // TODO
                 getLogger().warning(
-                        "scrollbar compensation not yet implemented");
+                        "[[spacers]] scrollbar compensation not yet "
+                                + "implemented");
             }
         }
 
@@ -4200,6 +4228,21 @@ public class Escalator extends Widget implements RequiresResize,
         }
     }
 
+    /**
+     * A decision on how to measure a spacer when it is partially within a
+     * designated range.
+     */
+    public enum SpacerMeasurementStrategy {
+        /** Take the entire spacer's height into account. */
+        COMPLETE,
+
+        /** Take the visible part into account. */
+        PARTIAL,
+
+        /** Exclude the entire spacer. */
+        NONE
+    }
+
     private class SpacerContainer {
 
         /** This is used mainly for testing purposes */
@@ -4283,10 +4326,12 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
+
         private SpacerUpdater spacerUpdater = SpacerUpdater.NULL;
 
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
+
             if (rowIndex < 0 || rowIndex >= getBody().getRowCount()) {
                 throw new IllegalArgumentException("invalid row index: "
                         + rowIndex + ", while the body only has "
@@ -4304,8 +4349,154 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        /**
+         * Gets the amount of pixels occupied by spacers between two pixel
+         * points.
+         * 
+         * @param rangeTop
+         *            the top pixel point
+         * @param topInclusion
+         *            how to measure a spacer that happens to lie in the middle
+         *            of {@code rangeTop}.
+         * @param rangeBottom
+         *            the bottom pixel point
+         * @param bottomInclusion
+         *            how to measure a spacer that happens to lie in the middle
+         *            of {@code rangeBottom}.
+         * @return the pixels occupied by spacers between {@code rangeTop} and
+         *         {@code rangeBottom}
+         */
+        public double getSpacerHeightsSumBetweenPx(double rangeTop,
+                SpacerMeasurementStrategy topInclusion, double rangeBottom,
+                SpacerMeasurementStrategy bottomInclusion) {
+
+            assert rangeTop <= rangeBottom : "rangeTop must be less than rangeBottom";
+
+            double heights = 0;
+
+            /*
+             * TODO [[optimize]]: this might be somewhat inefficient (due to
+             * iterator-based scanning, instead of using the treemap's search
+             * functionalities). But it should be easy to write, read, verify
+             * and maintain.
+             */
+            for (SpacerImpl spacer : rowIndexToSpacer.values()) {
+                double top = spacer.getTop();
+                double height = spacer.getHeight();
+                double bottom = top + height;
+
+                /*
+                 * If we happen to implement a DoubleRange (in addition to the
+                 * int-based Range) at some point, the following logic should
+                 * probably be converted into using the
+                 * Range.partitionWith-equivalent.
+                 */
+
+                boolean topIsAboveRange = top < rangeTop;
+                boolean topIsInRange = rangeTop <= top && top <= rangeBottom;
+                boolean topIsBelowRange = rangeBottom < top;
+
+                boolean bottomIsAboveRange = bottom < rangeTop;
+                boolean bottomIsInRange = rangeTop <= bottom
+                        && bottom <= rangeBottom;
+                boolean bottomIsBelowRange = rangeBottom < bottom;
+
+                assert topIsAboveRange ^ topIsBelowRange ^ topIsInRange : "Bad top logic";
+                assert bottomIsAboveRange ^ bottomIsBelowRange
+                        ^ bottomIsInRange : "Bad bottom logic";
+
+                if (bottomIsAboveRange) {
+                    continue;
+                } else if (topIsBelowRange) {
+                    return heights;
+                }
+
+                else if (topIsAboveRange && bottomIsInRange) {
+                    switch (topInclusion) {
+                    case PARTIAL:
+                        heights += bottom - rangeTop;
+                        break;
+                    case COMPLETE:
+                        heights += height;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+
+                else if (topIsAboveRange && bottomIsBelowRange) {
+
+                    /*
+                     * Here we arbitrarily decide that the top inclusion will
+                     * have the honor of overriding the bottom inclusion if
+                     * happens to be a conflict of interests.
+                     */
+                    switch (topInclusion) {
+                    case NONE:
+                        return 0;
+                    case COMPLETE:
+                        return height;
+                    case PARTIAL:
+                        return rangeBottom - rangeTop;
+                    default:
+                        throw new IllegalArgumentException(
+                                "Unexpected inclusion state :" + topInclusion);
+                    }
+
+                } else if (topIsInRange && bottomIsInRange) {
+                    heights += height;
+                }
+
+                else if (topIsInRange && bottomIsBelowRange) {
+                    switch (bottomInclusion) {
+                    case PARTIAL:
+                        heights += rangeBottom - top;
+                        break;
+                    case COMPLETE:
+                        heights += height;
+                        break;
+                    default:
+                        break;
+                    }
+
+                    return heights;
+                }
+
+                else {
+                    assert false : "Unnaccounted-for situation";
+                }
+            }
+
+            return heights;
+        }
+
+        /**
+         * Gets the amount of pixels occupied by spacers from the top until a
+         * certain spot from the top of the body.
+         * <p>
+         * If a spacer lies in the middle of {@code px}, then the entire height
+         * of the spacer will be taken into account.
+         * 
+         * @param px
+         *            pixels counted from the top
+         * @return the pixels occupied by entire spacers up until {@code px}
+         */
+        public double getSpacerCompleteHeightsSumUntilPx(double px) {
+            return getSpacerHeightsSumBetweenPx(0,
+                    SpacerMeasurementStrategy.COMPLETE, px,
+                    SpacerMeasurementStrategy.COMPLETE);
+        }
+
+        /**
+         * Gets the amount of pixels occupied by spacers until a logical row
+         * index.
+         * 
+         * @param logicalIndex
+         *            a logical row index
+         * @return the pixels occupied by spacers up until {@code logicalIndex}
+         */
         @SuppressWarnings("boxing")
-        public double getSpacerHeightsSumUntil(int logicalIndex) {
+        public double getSpacerHeightsSumUntilIndex(int logicalIndex) {
             double heights = 0;
             for (SpacerImpl spacer : rowIndexToSpacer.headMap(logicalIndex,
                     false).values()) {
@@ -4339,7 +4530,7 @@ public class Escalator extends Widget implements RequiresResize,
             getSpacer(rowIndex).setHeight(newHeight);
         }
 
-        private SpacerImpl getSpacer(int rowIndex) {
+        public SpacerImpl getSpacer(int rowIndex) {
             return rowIndexToSpacer.get(Integer.valueOf(rowIndex));
         }
 
@@ -4425,8 +4616,7 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         private double calculateSpacerTop(int logicalIndex) {
-            return body.calculateRowTop(logicalIndex)
-                    + body.getDefaultRowHeight();
+            return body.getRowTop(logicalIndex) + body.getDefaultRowHeight();
         }
 
         @SuppressWarnings("boxing")
