@@ -97,16 +97,19 @@
         <property name="jar.file"
             location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
         <antcall target="common.jar">
-            <param name="src" value="${result.dir}/src" />
+            <param name="src" value="${result.src}" />
             <reference refid="jar.includes" torefid="extra.jar.includes" />
         </antcall>
     </target>
 
     <target name="publish-local" depends="jar">
         <antcall target="common.sources.jar">
+            <param name="src" value="${result.src}" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
-        <antcall target="common.javadoc.jar" />
+        <antcall target="common.javadoc.jar">
+             <param name="src" value="${result.src}" />
+        </antcall>
 
         <antcall target="common.publish-local" />
     </target>
