@@ -20,17 +20,14 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.util.Log;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-public class CloseUI extends AbstractTestUI {
+public class CloseUI extends AbstractTestUIWithLog {
     private static final String OLD_HASH_PARAM = "oldHash";
     private static final String OLD_SESSION_ID_PARAM = "oldSessionId";
-
-    private final Log log = new Log(6);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -39,59 +36,56 @@ public class CloseUI extends AbstractTestUI {
         final int sessionHash = getSession().hashCode();
         final String sessionId = request.getWrappedSession().getId();
 
-        log.log("Current session hashcode: " + sessionHash);
-        log.log("Current WrappedSession id: " + sessionId);
+        log("Current session hashcode: " + sessionHash);
+        log("Current WrappedSession id: " + sessionId);
 
         // Log previous values to make it easier to see what has changed
         String oldHashValue = request.getParameter(OLD_HASH_PARAM);
         if (oldHashValue != null) {
-            log.log("Old session hashcode: " + oldHashValue);
-            log.log("Same hash as current? "
+            log("Old session hashcode: " + oldHashValue);
+            log("Same hash as current? "
                     + oldHashValue.equals(Integer.toString(sessionHash)));
         }
 
         String oldSessionId = request.getParameter(OLD_SESSION_ID_PARAM);
         if (oldSessionId != null) {
-            log.log("Old WrappedSession id: " + oldSessionId);
-            log.log("Same WrappedSession id? " + oldSessionId.equals(sessionId));
+            log("Old WrappedSession id: " + oldSessionId);
+            log("Same WrappedSession id? " + oldSessionId.equals(sessionId));
         }
 
-        addComponent(log);
-        addComponent(new Button("Log 'hello'", new Button.ClickListener() {
+        addButton("Log 'hello'", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                log.log("Hello");
+                log("Hello");
             }
-        }));
-        addComponent(new Button("Close UI", new Button.ClickListener() {
+        });
+        addButton("Close UI", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 close();
             }
-        }));
+        });
 
-        addComponent(new Button("Close UI (background)",
-                new Button.ClickListener() {
+        addButton("Close UI (background)", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                new UIRunSafelyThread(CloseUI.this) {
                     @Override
-                    public void buttonClick(ClickEvent event) {
-                        new UIRunSafelyThread(CloseUI.this) {
-                            @Override
-                            protected void runSafely() {
-                                close();
-                            }
-                        }.start();
+                    protected void runSafely() {
+                        close();
                     }
-                }));
-        addComponent(new Button(
-                "Close UI and redirect to /statictestfiles/static.html",
+                }.start();
+            }
+        });
+        addButton("Close UI and redirect to /statictestfiles/static.html",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getPage().setLocation("/statictestfiles/static.html");
                         close();
                     }
-                }));
-        addComponent(new Button(
+                });
+        addButton(
                 "Close UI and redirect to /statictestfiles/static.html (background)",
                 new Button.ClickListener() {
                     @Override
@@ -106,29 +100,8 @@ public class CloseUI extends AbstractTestUI {
                             }
                         }.start();
                     }
-                }));
+                });
 
-    }
-
-    private abstract class RunSafelyThread extends Thread {
-        private UI ui;
-
-        public RunSafelyThread(UI ui) {
-            this.ui = ui;
-        }
-
-        @Override
-        public void run() {
-            ui.accessSynchronously(new Runnable() {
-
-                @Override
-                public void run() {
-                    runSafely();
-                }
-            });
-        }
-
-        protected abstract void runSafely();
     }
 
     @Override
@@ -144,17 +117,15 @@ public class CloseUI extends AbstractTestUI {
     @Override
     public void detach() {
         super.detach();
-        log.log("Detach of " + this + " (" + getUIId() + ")");
+        log("Detach of " + this + " (" + getUIId() + ")");
         boolean correctUI = (UI.getCurrent() == this);
         boolean correctPage = (Page.getCurrent() == getPage());
         boolean correctVaadinSession = (VaadinSession.getCurrent() == getSession());
         boolean correctVaadinService = (VaadinService.getCurrent() == getSession()
                 .getService());
-        log.log("UI.current correct in detach: " + correctUI);
-        log.log("Page.current correct in detach: " + correctPage);
-        log.log("VaadinSession.current correct in detach: "
-                + correctVaadinSession);
-        log.log("VaadinService.current correct in detach: "
-                + correctVaadinService);
+        log("UI.current correct in detach: " + correctUI);
+        log("Page.current correct in detach: " + correctPage);
+        log("VaadinSession.current correct in detach: " + correctVaadinSession);
+        log("VaadinService.current correct in detach: " + correctVaadinService);
     }
 }
