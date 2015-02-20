@@ -2197,7 +2197,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setLastFrozenColumn() {
             checkColumnIsAttached();
             grid.setFrozenColumnCount(grid.getState(false).columnOrder
-                    .indexOf(this) + 1);
+                    .indexOf(getState().id) + 1);
             return this;
         }
 
