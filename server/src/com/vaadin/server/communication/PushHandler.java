@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
+import org.atmosphere.cpr.AtmosphereResourceImpl;
 import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 
 import com.vaadin.server.ErrorEvent;
@@ -45,6 +46,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonException;
 
 /**
@@ -472,6 +474,15 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
+        if (resource instanceof AtmosphereResourceImpl
+                && !((AtmosphereResourceImpl) resource).isInScope()) {
+            // The resource is no longer valid so we should not write
+            // anything to it
+            getLogger()
+                    .fine("sendRefreshAndDisconnect called for resource no longer in scope");
+            return;
+        }
+
         AtmospherePushConnection connection = new AtmospherePushConnection(null);
         connection.connect(resource);
         try {
@@ -490,6 +501,14 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             AtmosphereResource resource, String notificationJson) {
         // TODO Implemented differently from sendRefreshAndDisconnect
         try {
+            if (resource instanceof AtmosphereResourceImpl
+                    && !((AtmosphereResourceImpl) resource).isInScope()) {
+                // The resource is no longer valid so we should not write
+                // anything to it
+                getLogger()
+                        .fine("sendNotificationAndDisconnect called for resource no longer in scope");
+                return;
+            }
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {
