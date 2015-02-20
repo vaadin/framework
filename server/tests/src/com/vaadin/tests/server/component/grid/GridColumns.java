@@ -185,6 +185,25 @@ public class GridColumns {
     }
 
     @Test
+    public void testSetFrozenColumnCount() {
+        assertEquals("Grid should not start with a frozen column", 0,
+                grid.getFrozenColumnCount());
+        grid.setFrozenColumnCount(2);
+        assertEquals("Freezing two columns should freeze two columns", 2,
+                grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void testSetFrozenColumnCountThroughColumn() {
+        assertEquals("Grid should not start with a frozen column", 0,
+                grid.getFrozenColumnCount());
+        grid.getColumns().get(2).setLastFrozenColumn();
+        assertEquals(
+                "Setting the third column as last frozen should freeze three columns",
+                3, grid.getFrozenColumnCount());
+    }
+
+    @Test
     public void testFrozenColumnRemoveColumn() {
         assertEquals("Grid should not start with a frozen column", 0,
                 grid.getFrozenColumnCount());
