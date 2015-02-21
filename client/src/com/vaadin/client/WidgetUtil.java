@@ -439,7 +439,13 @@ public class WidgetUtil {
         if (BrowserInfo.get().requiresOverflowAutoFix()) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
-            if ("hidden".equals(originalOverflow)) {
+            final String originalOverflowX = elem.getStyle().getProperty(
+                    "overflowX");
+            final String originalOverflowY = elem.getStyle().getProperty(
+                    "overflowY");
+            if ("hidden".equals(originalOverflow)
+                    || "hidden".equals(originalOverflowX)
+                    || "hidden".equals(originalOverflowY)) {
                 return;
             }
 
@@ -453,6 +459,14 @@ public class WidgetUtil {
                 public void execute() {
                     // Dough, Safari scroll auto means actually just a moped
                     elem.getStyle().setProperty("overflow", originalOverflow);
+                    if (!originalOverflowX.isEmpty()) {
+                        elem.getStyle().setProperty("overflowX",
+                                originalOverflowX);
+                    }
+                    if (!originalOverflowY.isEmpty()) {
+                        elem.getStyle().setProperty("overflowY",
+                                originalOverflowY);
+                    }
 
                     if (scrolltop > 0 || elem.getScrollTop() > 0) {
                         int scrollvalue = scrolltop;
