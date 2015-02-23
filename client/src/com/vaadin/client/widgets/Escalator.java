@@ -2756,7 +2756,13 @@ public class Escalator extends Widget implements RequiresResize,
                 for (int i = 0; i < visualSourceRange.length(); i++) {
                     final TableRowElement tr = iter.next();
                     setRowPosition(tr, 0, newRowTop);
+
                     newRowTop += getDefaultRowHeight();
+                    SpacerContainer.SpacerImpl spacer = spacerContainer
+                            .getSpacer(logicalTargetIndex + i);
+                    if (spacer != null) {
+                        newRowTop += spacer.getHeight();
+                    }
                 }
             }
         }
