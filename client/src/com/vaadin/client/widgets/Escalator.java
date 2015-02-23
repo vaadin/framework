@@ -1144,6 +1144,9 @@ public class Escalator extends Widget implements RequiresResize,
 
         public void scrollToRow(final int rowIndex,
                 final ScrollDestination destination, final double padding) {
+
+            getLogger().warning("[[spacers]] scrollToRow");
+
             final double targetStartPx = body.getDefaultRowHeight() * rowIndex;
             final double targetEndPx = targetStartPx
                     + body.getDefaultRowHeight();
@@ -2317,7 +2320,7 @@ public class Escalator extends Widget implements RequiresResize,
             this.topRowLogicalIndex = topRowLogicalIndex;
         }
 
-        private int getTopRowLogicalIndex() {
+        public int getTopRowLogicalIndex() {
             return topRowLogicalIndex;
         }
 
@@ -2610,7 +2613,7 @@ public class Escalator extends Widget implements RequiresResize,
                  */
 
                 final double yDelta = numberOfRows * getDefaultRowHeight();
-                adjustScrollPosIgnoreEvents(yDelta);
+                moveViewportAndContent(yDelta);
                 updateTopRowLogicalIndex(numberOfRows);
             }
 
@@ -2768,30 +2771,53 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /**
-         * Adjust the scroll position without having the scroll handler have any
-         * side-effects.
+         * Adjust the scroll position and move the contained rows.
          * <p>
-         * <em>Note:</em> {@link Scroller#onScroll()} <em>will</em> be
-         * triggered, but it will not do anything, with the help of
-         * {@link Escalator#internalScrollEventCalls}.
+         * <em>Note:</em> This method does not account for spacers.
+         * <p>
+         * The difference between using this method and simply scrolling is that
+         * this method "takes the rows with it" and renders them appropriately.
+         * The viewport may be scrolled any arbitrary amount, and the rows are
+         * moved appropriately, but always snapped into a plausible place.
+         * <p>
+         * <dl>
+         * <dt>Example 1</dt>
+         * <dd>An Escalator with default row height 20px. Adjusting the scroll
+         * position with 7.5px will move the viewport 7.5px down, but leave the
+         * row where it is.</dd>
+         * <dt>Example 2</dt>
+         * <dd>An Escalator with default row height 20px. Adjusting the scroll
+         * position with 27.5px will move the viewport 27.5px down, and place
+         * the row at 20px.</dd>
+         * </dl>
          * 
          * @param yDelta
-         *            the delta of pixels to scrolls. A positive value moves the
-         *            viewport downwards, while a negative value moves the
-         *            viewport upwards
+         *            the delta of pixels by which to move the viewport and
+         *            content. A positive value moves everything downwards,
+         *            while a negative value moves everything upwards
          */
-        public void adjustScrollPosIgnoreEvents(final double yDelta) {
+        public void moveViewportAndContent(final double yDelta) {
+
+            /*
+             * TODO: When adding and removing rows starts supporting spacers,
+             * this method should also take spacers into account. Remember to
+             * adjust the javadoc as well.
+             */
+
             if (yDelta == 0) {
                 return;
             }
 
-            verticalScrollbar.setScrollPosByDelta(yDelta);
+            double newTop = tBodyScrollTop + yDelta;
+            final double rowTopPos = body.getRowTop(getLogicalRowIndex(newTop));
 
-            final double rowTopPos = yDelta - (yDelta % getDefaultRowHeight());
-            for (final TableRowElement tr : visualRowOrder) {
-                setRowPosition(tr, 0, getRowTop(tr) + rowTopPos);
+            verticalScrollbar.setScrollPos(newTop);
+
+            for (int i = 0; i < visualRowOrder.size(); i++) {
+                final TableRowElement tr = visualRowOrder.get(i);
+                setRowPosition(tr, 0, rowTopPos + getDefaultRowHeight() * i);
             }
-            setBodyScrollPosition(tBodyScrollLeft, tBodyScrollTop + yDelta);
+            setBodyScrollPosition(tBodyScrollLeft, newTop);
         }
 
         /**
@@ -2915,7 +2941,7 @@ public class Escalator extends Widget implements RequiresResize,
                      * to do is to adjust the scroll position to account for the
                      * removed rows
                      */
-                    adjustScrollPosIgnoreEvents(-yDelta);
+                    moveViewportAndContent(-yDelta);
                 } else if (removalScrollsToShowFirstLogicalRow) {
                     /*
                      * It seems like we've removed all rows from above, and also
@@ -2924,8 +2950,7 @@ public class Escalator extends Widget implements RequiresResize,
                      * current negative scrolltop, presto!), so that it isn't
                      * aligned funnily
                      */
-                    adjustScrollPosIgnoreEvents(-verticalScrollbar
-                            .getScrollPos());
+                    moveViewportAndContent(-verticalScrollbar.getScrollPos());
                 }
             }
 
@@ -3730,13 +3755,6 @@ public class Escalator extends Widget implements RequiresResize,
             for (TableRowElement tr : getVisibleRowsAfter(row)) {
                 setRowPosition(tr, 0, getRowTop(tr) + diff);
             }
-
-            if (row > getTopRowLogicalIndex()) {
-                // TODO
-                getLogger().warning(
-                        "[[spacers]] scrollbar compensation not yet "
-                                + "implemented");
-            }
         }
 
         private List<TableRowElement> getVisibleRowsAfter(int logicalRow) {
@@ -4302,13 +4320,80 @@ public class Escalator extends Widget implements RequiresResize,
                 assert height >= 0 : "Height must be more >= 0 (was " + height
                         + ")";
 
-                double diff = height - Math.max(0, this.height);
+                final double heightDiff = height - Math.max(0, this.height);
+                final double oldHeight = this.height;
+
                 this.height = height;
                 root.getStyle().setHeight(height, Unit.PX);
 
-                shiftSpacerPositions(getRow(), diff);
-                body.shiftRowPositions(getRow(), diff);
-                body.verifyEscalatorCount();
+                // move the visible spacers getRow row onwards.
+                shiftSpacerPositions(getRow(), heightDiff);
+
+                /*
+                 * If we're growing, we'll adjust the scroll size first, then
+                 * adjust scrolling. If we're shrinking, we do it after the
+                 * second if-clause.
+                 */
+                boolean spacerIsGrowing = heightDiff > 0;
+                if (spacerIsGrowing) {
+                    verticalScrollbar.setScrollSize(verticalScrollbar
+                            .getScrollSize() + heightDiff);
+                }
+
+                boolean viewportNeedsScrolling = getRow() < body
+                        .getTopRowLogicalIndex();
+                if (viewportNeedsScrolling) {
+
+                    /*
+                     * We can't use adjustScrollPos here, probably because of a
+                     * bookkeeping-related race condition.
+                     * 
+                     * This particular situation is easier, however, since we
+                     * know exactly how many pixels we need to move (heightDiff)
+                     * and all elements below the spacer always need to move
+                     * that pixel amount.
+                     */
+
+                    for (TableRowElement row : body.visualRowOrder) {
+                        body.setRowPosition(row, 0, body.getRowTop(row)
+                                + heightDiff);
+                    }
+
+                    double top = getTop();
+                    double bottom = top + oldHeight;
+                    double scrollTop = verticalScrollbar.getScrollPos();
+
+                    boolean viewportTopIsAtMidSpacer = top < scrollTop
+                            && scrollTop < bottom;
+
+                    final double moveDiff;
+                    if (viewportTopIsAtMidSpacer && !spacerIsGrowing) {
+
+                        /*
+                         * If the scroll top is in the middle of the modified
+                         * spacer, we want to scroll the viewport up as usual,
+                         * but we don't want to scroll past the top of it.
+                         * 
+                         * Math.max ensures this (remember: the result is going
+                         * to be negative).
+                         */
+
+                        moveDiff = Math.max(heightDiff, top - scrollTop);
+                    } else {
+                        moveDiff = heightDiff;
+                    }
+                    body.setBodyScrollPosition(tBodyScrollLeft, tBodyScrollTop
+                            + moveDiff);
+                    verticalScrollbar.setScrollPosByDelta(moveDiff);
+
+                } else {
+                    body.shiftRowPositions(getRow(), heightDiff);
+                }
+
+                if (!spacerIsGrowing) {
+                    verticalScrollbar.setScrollSize(verticalScrollbar
+                            .getScrollSize() + heightDiff);
+                }
             }
 
             @Override
