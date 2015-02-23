@@ -1498,7 +1498,9 @@ public class ApplicationConnection implements HasHandlers {
             VConsole.log("Postponing UIDL handling due to lock...");
             pendingUIDLMessages.add(new PendingUIDLMessage(start, jsonText,
                     json));
-            forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
+            if (!forceHandleMessage.isRunning()) {
+                forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
+            }
             return;
         }
 
