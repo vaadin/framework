@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -103,18 +104,20 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         VERTICAL, HORIZONTAL;
     }
 
-    private class TemporaryResizer extends Object {
+    private class TemporaryResizer {
         private static final int TEMPORARY_RESIZE_DELAY = 1000;
 
         private final Timer timer = new Timer() {
             @Override
             public void run() {
                 internalSetScrollbarThickness(1);
+                root.getStyle().setVisibility(Visibility.HIDDEN);
             }
         };
 
         public void show() {
             internalSetScrollbarThickness(OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX);
+            root.getStyle().setVisibility(Visibility.VISIBLE);
             timer.schedule(TEMPORARY_RESIZE_DELAY);
         }
     }
@@ -666,9 +669,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                     invisibleScrollbarTemporaryResizer.show();
                 }
             });
+            root.getStyle().setVisibility(Visibility.HIDDEN);
         } else {
             Event.sinkEvents(root, 0);
             Event.setEventListener(root, null);
+            root.getStyle().clearVisibility();
         }
 
         internalSetScrollbarThickness(Math.max(1d, px));
