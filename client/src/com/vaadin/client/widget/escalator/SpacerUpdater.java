@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.widget.escalator;
 
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+
 /**
  * An interface that handles the display of content for spacers.
  * <p>
@@ -24,7 +26,7 @@ package com.vaadin.client.widget.escalator;
  * @since
  * @author Vaadin Ltd
  * @see Spacer
- * @see SpacerContainer
+ * @see BodyRowContainer
  */
 public interface SpacerUpdater {
 

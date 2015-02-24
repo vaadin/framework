@@ -16,9 +16,10 @@
 package com.vaadin.client.widget.escalator;
 
 import com.google.gwt.dom.client.Element;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 
 /**
- * A representation of a spacer element in a {@link SpacerContainer}.
+ * A representation of a spacer element in a {@link BodyRowContainer}.
  * 
  * @since
  * @author Vaadin Ltd
