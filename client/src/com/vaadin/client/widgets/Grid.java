@@ -3175,7 +3175,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         void reapplyWidth() {
-            setWidth(getWidth());
+            scheduleColumnWidthRecalculator();
         }
 
         /**

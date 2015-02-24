@@ -19,9 +19,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
@@ -120,6 +124,37 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
 
         assertEquals("Neighbour cell should be updated", "(1, 0)", gridElement
                 .getCell(1, 0).getText());
+    }
+
+    @Test
+    public void testColumnWidths_onColumnReorder_columnWidthsKeptTheSame() {
+        // given
+        openTestURL();
+        GridElement gridElement = getGridElement();
+        List<GridCellElement> headerCells = gridElement.getHeaderCells(0);
+
+        final List<Integer> columnWidths = new ArrayList<Integer>();
+        for (GridCellElement cell : headerCells) {
+            columnWidths.add(cell.getSize().getWidth());
+        }
+
+        // when
+        selectMenuPath("Component", "State", "Reverse grid columns");
+
+        // then
+        gridElement = getGridElement();
+        headerCells = gridElement.getHeaderCells(0);
+        final int size = headerCells.size();
+        // skip last column since there is a bug in the width of the last column
+        for (int i = 0; i < size - 1; i++) {
+            assertEquals(
+                    "Column widths don't match after reset, index after flip "
+                            + i,
+                    columnWidths.get(i),
+                    Integer.valueOf(headerCells.get(size - 1 - i).getSize()
+                            .getWidth()));
+        }
+
     }
 
     private boolean cellIsFrozen(int row, int col) {
