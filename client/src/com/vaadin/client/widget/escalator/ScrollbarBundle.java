@@ -428,8 +428,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                 @Override
                 public void onScroll(ScrollEvent event) {
                     setOffsetSizeNow(px);
-                    offsetSizeTemporaryScrollHandler.removeHandler();
-                    offsetSizeTemporaryScrollHandler = null;
                 }
             });
             setScrollPos(0);
@@ -443,6 +441,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         recalculateMaxScrollPos();
         forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
+        if (offsetSizeTemporaryScrollHandler != null) {
+            offsetSizeTemporaryScrollHandler.removeHandler();
+            offsetSizeTemporaryScrollHandler = null;
+        }
     }
 
     /**
@@ -609,8 +611,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                 @Override
                 public void onScroll(ScrollEvent event) {
                     setScrollSizeNow(px);
-                    scrollSizeTemporaryScrollHandler.removeHandler();
-                    scrollSizeTemporaryScrollHandler = null;
                 }
             });
             setScrollPos(0);
@@ -624,6 +624,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         recalculateMaxScrollPos();
         forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
+        if (scrollSizeTemporaryScrollHandler != null) {
+            scrollSizeTemporaryScrollHandler.removeHandler();
+            scrollSizeTemporaryScrollHandler = null;
+        }
     }
 
     /**
