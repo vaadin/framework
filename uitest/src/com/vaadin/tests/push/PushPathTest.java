@@ -33,9 +33,7 @@ public class PushPathTest extends WebsocketTest {
     }
 
     @Override
-    public String getDeploymentPath() {
-        Class<?> uiClass = getUIClass();
+    protected String getDeploymentPath(Class<?> uiClass) {
         return "/run-pushpath/" + uiClass.getCanonicalName();
     }
-
 }
