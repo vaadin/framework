@@ -47,8 +47,11 @@ public class DragAndDropHandler {
     public interface DragAndDropCallback {
         /**
          * Called when the drag has started.
+         * 
+         * @param startEvent
+         *            the original event that started the drag
          */
-        void showDragElement();
+        void onDragStart(NativeEvent startEvent);
 
         /**
          * Called on drag.
@@ -56,12 +59,12 @@ public class DragAndDropHandler {
          * @param event
          *            the event related to the drag
          */
-        void updateDragElement(NativePreviewEvent event);
+        void onDragUpdate(NativePreviewEvent event);
 
         /**
-         * Called when the has ended on a drop or cancel.
+         * Called after the has ended on a drop or cancel.
          */
-        void removeDragElement();
+        void onDragEnd();
 
         /**
          * Called when the drag has ended on a drop.
@@ -69,7 +72,7 @@ public class DragAndDropHandler {
         void onDrop();
 
         /**
-         * Called when the drag has been canceled before drop.
+         * Called when the drag has been canceled.
          */
         void onDragCancel();
     }
@@ -97,7 +100,7 @@ public class DragAndDropHandler {
                     break;
                 case Event.ONMOUSEMOVE:
                 case Event.ONTOUCHMOVE:
-                    callback.updateDragElement(event);
+                    callback.onDragUpdate(event);
                     // prevent text selection on IE
                     event.getNativeEvent().preventDefault();
                     break;
@@ -109,7 +112,7 @@ public class DragAndDropHandler {
                     event.getNativeEvent().preventDefault();
                     //$FALL-THROUGH$
                 case Event.ONMOUSEUP:
-                    callback.updateDragElement(event);
+                    callback.onDragUpdate(event);
                     callback.onDrop();
                     stopDrag();
                     event.cancel();
@@ -120,14 +123,6 @@ public class DragAndDropHandler {
             } else {
                 stopDrag();
             }
-        }
-
-        private void cancelDrag(NativePreviewEvent event) {
-            callback.onDragCancel();
-            callback.removeDragElement();
-            stopDrag();
-            event.cancel();
-            event.getNativeEvent().preventDefault();
         }
 
     };
@@ -194,7 +189,7 @@ public class DragAndDropHandler {
                             if (Math.abs(startX - currentX) > 3
                                     || Math.abs(startY - currentY) > 3) {
                                 removeNativePreviewHandlerRegistration();
-                                startDrag(event, callback);
+                                startDrag(dragStartingEvent, event, callback);
                             }
                             break;
                         default:
@@ -207,15 +202,15 @@ public class DragAndDropHandler {
                 });
     }
 
-    private void startDrag(NativePreviewEvent event,
-            DragAndDropCallback callback) {
+    private void startDrag(NativeEvent startEvent,
+            NativePreviewEvent triggerEvent, DragAndDropCallback callback) {
         dragging = true;
         // just capture something to prevent text selection in IE
         Event.setCapture(RootPanel.getBodyElement());
         this.callback = callback;
         dragHandlerRegistration = Event.addNativePreviewHandler(dragHandler);
-        callback.showDragElement();
-        callback.updateDragElement(event);
+        callback.onDragStart(startEvent);
+        callback.onDragUpdate(triggerEvent);
     }
 
     private void stopDrag() {
@@ -226,9 +221,17 @@ public class DragAndDropHandler {
         }
         Event.releaseCapture(RootPanel.getBodyElement());
         if (callback != null) {
-            callback.removeDragElement();
+            callback.onDragEnd();
             callback = null;
         }
+    }
+
+    private void cancelDrag(NativePreviewEvent event) {
+        callback.onDragCancel();
+        callback.onDragEnd();
+        stopDrag();
+        event.cancel();
+        event.getNativeEvent().preventDefault();
     }
 
     private void removeNativePreviewHandlerRegistration() {

@@ -83,6 +83,9 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
+import com.vaadin.client.widget.grid.AutoScroller;
+import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
+import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
@@ -2865,8 +2868,22 @@ public class Grid<T> extends ResizeComposite implements
 
     private DragAndDropHandler dndHandler = new DragAndDropHandler();
 
+    private AutoScroller autoScroller = new AutoScroller(this);
+
     private DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
+        private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
+
+            @Override
+            public void onVerticalAutoScroll(int scrollDiff) {
+                // NOP
+            }
+
+            @Override
+            public void onHorizontalAutoScroll(int scrollDiff) {
+                onDragUpdate(null);
+            }
+        };
         /**
          * Elements for displaying the dragged column(s) and drop marker
          * properly
@@ -2883,6 +2900,8 @@ public class Grid<T> extends ResizeComposite implements
          * Makes sure that drag cancel doesn't cause anything unwanted like sort
          */
         private HandlerRegistration columnSortPreventRegistration;
+
+        private int clientX;
 
         private void initHeaderDragElementDOM() {
             if (table == null) {
@@ -2902,9 +2921,11 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public void updateDragElement(NativePreviewEvent event) {
-            int clientX = WidgetUtil.getTouchOrMouseClientX(event
-                    .getNativeEvent());
+        public void onDragUpdate(NativePreviewEvent event) {
+            if (event != null) {
+                clientX = WidgetUtil.getTouchOrMouseClientX(event
+                        .getNativeEvent());
+            }
             resolveDragElementHorizontalPosition(clientX);
             updateDragDropMarker(clientX);
         }
@@ -2940,7 +2961,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public void showDragElement() {
+        public void onDragStart(NativeEvent startingEvent) {
             initHeaderDragElementDOM();
             // needs to clone focus and sorting indicators too (UX)
             dragElement = DOM.clone(eventCell.getElement(), true);
@@ -2952,10 +2973,14 @@ public class Grid<T> extends ResizeComposite implements
             eventCell.getElement().addClassName("dragged");
             // mark the floating cell, for styling & testing
             dragElement.addClassName("dragged-column-header");
+            // start the auto scroll handler
+            autoScroller.setScrollAreaPX(60);
+            autoScroller.start(startingEvent, ScrollAxis.HORIZONTAL,
+                    autoScrollerCallback);
         }
 
         @Override
-        public void removeDragElement() {
+        public void onDragEnd() {
             table.removeFromParent();
             dragElement.removeFromParent();
             eventCell.getElement().removeClassName("dragged");
@@ -2977,8 +3002,8 @@ public class Grid<T> extends ResizeComposite implements
                 @SuppressWarnings("unchecked")
                 Column<?, T>[] array = reordered.toArray(new Column[reordered
                         .size()]);
-                transferCellFocusOnDrop();
                 setColumnOrder(array);
+                transferCellFocusOnDrop();
             } // else no reordering
         }
 
@@ -3007,6 +3032,9 @@ public class Grid<T> extends ResizeComposite implements
                         && draggedColumnIndex < focusedCellColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
                             focusedCellColumnIndex - 1, rowContainer);
+                } else {
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            focusedCellColumnIndex, rowContainer);
                 }
             }
         }
@@ -3032,7 +3060,9 @@ public class Grid<T> extends ResizeComposite implements
                             }
                         });
             }
+            autoScroller.stop();
         }
+
     };
 
     /**
@@ -4970,6 +5000,17 @@ public class Grid<T> extends ResizeComposite implements
      */
     public double getScrollTop() {
         return escalator.getScrollTop();
+    }
+
+    /**
+     * Sets the horizontal scroll offset
+     * 
+     * @since
+     * @param px
+     *            the number of pixels this grid should be scrolled right
+     */
+    public void setScrollLeft(double px) {
+        escalator.setScrollLeft(px);
     }
 
     /**
