@@ -65,6 +65,15 @@ public class SliderTest {
         } catch (Slider.ValueOutOfBoundsException e) {
             // TODO: handle exception
         }
+    }
 
+    @Test
+    public void valueCanHaveLargePrecision() {
+        Slider slider = new Slider();
+        slider.setResolution(20);
+
+        slider.setValue(99.01234567891234567890123456789);
+
+        assertThat(slider.getValue(), is(99.01234567891234567890123456789));
     }
 }
