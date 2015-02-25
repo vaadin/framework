@@ -1913,6 +1913,18 @@ public class Escalator extends Widget implements RequiresResize,
             positions.set(tr, x, y);
         }
 
+        /**
+         * Returns <em>the assigned</em> top position for the given element.
+         * <p>
+         * <em>Note:</em> This method does not calculate what a row's top
+         * position should be. It just returns an assigned value, correct or
+         * not.
+         * 
+         * @param tr
+         *            the table row element to measure
+         * @return the current top position for {@code tr}
+         * @see BodyRowContainerImpl#getRowTop(int)
+         */
         protected double getRowTop(final TableRowElement tr) {
             return positions.getTop(tr);
         }
@@ -2564,12 +2576,8 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         private int getLogicalRowIndex(final double px) {
-            /*
-             * FIXME: this is buggy! if px is mid-spacer, it will return the
-             * pixel count up until PX, not the one after (or before) it.
-             */
             double rowPx = px
-                    - spacerContainer.getSpacerCompleteHeightsSumUntilPx(px);
+                    - spacerContainer.getSpacerHeightsSumUntilPx(px);
             return (int) (rowPx / getDefaultRowHeight());
         }
 
@@ -2685,12 +2693,15 @@ public class Escalator extends Widget implements RequiresResize,
                     + visualSourceRange.getStart() + ")";
 
             assert logicalTargetIndex >= 0 : "Logical target must be 0 or "
-                    + "greater";
+                    + "greater (was " + logicalTargetIndex + ")";
 
-            assert visualTargetIndex >= 0 : "Visual target must be 0 or greater";
+            assert visualTargetIndex >= 0 : "Visual target must be 0 or greater (was "
+                    + visualTargetIndex + ")";
 
             assert visualTargetIndex <= root.getChildCount() : "Visual target "
-                    + "must not be greater than the number of escalator rows";
+                    + "must not be greater than the number of escalator rows (was "
+                    + visualTargetIndex + ", escalator rows "
+                    + root.getChildCount() + ")";
 
             assert logicalTargetIndex + visualSourceRange.length() <= getRowCount() : "Logical "
                     + "target leads to rows outside of the data range ("
@@ -3745,6 +3756,20 @@ public class Escalator extends Widget implements RequiresResize,
             return spacerContainer.getSpacerUpdater();
         }
 
+        /**
+         * <em>Calculates</em> the correct top position of a row at a logical
+         * index, regardless if there is one there or not.
+         * <p>
+         * A correct result requires that both {@link #getDefaultRowHeight()} is
+         * consistent, and the placement and height of all spacers above the
+         * given logical index are consistent.
+         * 
+         * @param logicalIndex
+         *            the logical index of the row for which to calculate the
+         *            top position
+         * @return the position at which to place a row in {@code logicalIndex}
+         * @see #getRowTop(TableRowElement)
+         */
         private double getRowTop(int logicalIndex) {
             double top = spacerContainer
                     .getSpacerHeightsSumUntilIndex(logicalIndex);
@@ -4564,18 +4589,15 @@ public class Escalator extends Widget implements RequiresResize,
         /**
          * Gets the amount of pixels occupied by spacers from the top until a
          * certain spot from the top of the body.
-         * <p>
-         * If a spacer lies in the middle of {@code px}, then the entire height
-         * of the spacer will be taken into account.
          * 
          * @param px
          *            pixels counted from the top
-         * @return the pixels occupied by entire spacers up until {@code px}
+         * @return the pixels occupied by spacers up until {@code px}
          */
-        public double getSpacerCompleteHeightsSumUntilPx(double px) {
+        public double getSpacerHeightsSumUntilPx(double px) {
             return getSpacerHeightsSumBetweenPx(0,
-                    SpacerMeasurementStrategy.COMPLETE, px,
-                    SpacerMeasurementStrategy.COMPLETE);
+                    SpacerMeasurementStrategy.PARTIAL, px,
+                    SpacerMeasurementStrategy.PARTIAL);
         }
 
         /**
