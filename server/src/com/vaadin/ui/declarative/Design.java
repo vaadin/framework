@@ -57,6 +57,119 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
  * @author Vaadin Ltd
  */
 public class Design implements Serializable {
+
+    /**
+     * Callback for creating instances of a given component class when reading
+     * designs. The default implementation, {@link DefaultComponentFactory} will
+     * use <code>Class.forName(className).newInstance()</code>, which might not
+     * be suitable e.g. in an OSGi environment or if the Component instances
+     * should be created as managed CDI beans.
+     * <p>
+     * Use {@link Design#setComponentFactory(ComponentFactory)} to configure
+     * Vaadin to use a custom component factory.
+     * 
+     * 
+     * @since 7.4.1
+     */
+    public interface ComponentFactory extends Serializable {
+        /**
+         * Creates a component based on the fully qualified name derived from
+         * the tag name in the design.
+         * 
+         * @param fullyQualifiedClassName
+         *            the fully qualified name of the component to create
+         * @param context
+         *            the design context for which the component is created
+         * 
+         * @return a newly created component
+         */
+        public Component createComponent(String fullyQualifiedClassName,
+                DesignContext context);
+    }
+
+    /**
+     * Default implementation of {@link ComponentFactory}, using
+     * <code>Class.forName(className).newInstance()</code> for finding the
+     * component class and creating a component instance.
+     * 
+     * @since 7.4.1
+     */
+    public static class DefaultComponentFactory implements ComponentFactory {
+        @Override
+        public Component createComponent(String fullyQualifiedClassName,
+                DesignContext context) {
+            Class<? extends Component> componentClass = resolveComponentClass(
+                    fullyQualifiedClassName, context);
+
+            assert Component.class.isAssignableFrom(componentClass) : "resolveComponentClass returned "
+                    + componentClass + " which is not a Vaadin Component class";
+
+            try {
+                return componentClass.newInstance();
+            } catch (Exception e) {
+                throw new DesignException("Could not create component "
+                        + fullyQualifiedClassName, e);
+            }
+        }
+
+        /**
+         * Resolves a component class based on the fully qualified name of the
+         * class.
+         * 
+         * @param qualifiedClassName
+         *            the fully qualified name of the resolved class
+         * @param context
+         *            the design context for which the class is resolved
+         * @return a component class object representing the provided class name
+         */
+        protected Class<? extends Component> resolveComponentClass(
+                String qualifiedClassName, DesignContext context) {
+            try {
+                Class<?> componentClass = Class.forName(qualifiedClassName);
+                return componentClass.asSubclass(Component.class);
+            } catch (ClassNotFoundException e) {
+                throw new DesignException(
+                        "Unable to load component for design", e);
+            }
+        }
+
+    }
+
+    private static volatile ComponentFactory componentFactory = new DefaultComponentFactory();
+
+    /**
+     * Sets the component factory that is used for creating component instances
+     * based on fully qualified class names derived from a design file.
+     * <p>
+     * Please note that this setting is global, so care should be taken to avoid
+     * conflicting changes.
+     * 
+     * @param componentFactory
+     *            the component factory to set; not <code>null</code>
+     * 
+     * @since 7.4.1
+     */
+    public static void setComponentFactory(ComponentFactory componentFactory) {
+        if (componentFactory == null) {
+            throw new IllegalArgumentException(
+                    "Cannot set null component factory");
+        }
+        Design.componentFactory = componentFactory;
+    }
+
+    /**
+     * Gets the currently used component factory.
+     * 
+     * @see #setComponentFactory(ComponentFactory)
+     * 
+     * @return the component factory
+     * 
+     * @since 7.4.1
+     */
+    public static ComponentFactory getComponentFactory() {
+        return componentFactory;
+    }
+
     /**
      * Parses the given input stream into a jsoup document
      * 
