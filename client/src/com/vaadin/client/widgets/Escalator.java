@@ -4714,6 +4714,28 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     }
 
     /**
+     * Returns the scroll width for the escalator. Note that this is not
+     * necessary the same as {@code Element.scrollWidth} in the DOM.
+     * 
+     * @since
+     * @return the scroll width in pixels
+     */
+    public double getScrollWidth() {
+        return horizontalScrollbar.getScrollSize();
+    }
+
+    /**
+     * Returns the scroll height for the escalator. Note that this is not
+     * necessary the same as {@code Element.scrollHeight} in the DOM.
+     * 
+     * @since
+     * @return the scroll height in pixels
+     */
+    public double getScrollHeight() {
+        return verticalScrollbar.getScrollSize();
+    }
+
+    /**
      * Scrolls the body horizontally so that the column at the given index is
      * visible and there is at least {@code padding} pixels in the direction of
      * the given scroll destination.

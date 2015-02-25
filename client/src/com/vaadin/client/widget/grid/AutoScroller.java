@@ -43,28 +43,34 @@ public class AutoScroller {
     /**
      * Callback that notifies when the cursor is on top of a new row or column
      * because of the automatic scrolling.
-     * 
-     * @since
      */
     public interface AutoScrollerCallback {
 
         /**
-         * Triggered when doing automatic horizontal scrolling.
+         * Triggered when doing automatic scrolling.
+         * <p>
+         * Because the auto scroller currently only supports scrolling in one
+         * axis, this method is used for both vertical and horizontal scrolling.
          * 
          * @param scrollDiff
          *            the amount of pixels that have been auto scrolled since
          *            last call
          */
-        void onHorizontalAutoScroll(int scrollDiff);
+        void onAutoScroll(int scrollDiff);
 
         /**
-         * Triggered when doing automatic vertical scrolling.
-         * 
-         * @param scrollDiff
-         *            the amount of pixels that have been auto scrolled since
-         *            last call
+         * Triggered when the grid scroll has reached the minimum scroll
+         * position. Depending on the scroll axis, either scrollLeft or
+         * scrollTop is 0.
          */
-        void onVerticalAutoScroll(int scrollDiff);
+        void onAutoScrollReachedMin();
+
+        /**
+         * Triggered when the grid scroll has reached the max scroll position.
+         * Depending on the scroll axis, either scrollLeft or scrollTop is at
+         * its maximum value.
+         */
+        void onAutoScrollReachedMax();
     }
 
     public enum ScrollAxis {
@@ -229,12 +235,30 @@ public class AutoScroller {
             pixelsToScroll -= intPixelsToScroll;
 
             if (intPixelsToScroll != 0) {
+                double scrollPos;
+                double maxScrollPos;
+                double newScrollPos;
                 if (scrollDirection == ScrollAxis.VERTICAL) {
-                    grid.setScrollTop(grid.getScrollTop() + intPixelsToScroll);
-                    callback.onVerticalAutoScroll(intPixelsToScroll);
+                    scrollPos = grid.getScrollTop();
+                    maxScrollPos = getMaxScrollTop();
                 } else {
-                    grid.setScrollLeft(grid.getScrollLeft() + intPixelsToScroll);
-                    callback.onHorizontalAutoScroll(intPixelsToScroll);
+                    scrollPos = grid.getScrollLeft();
+                    maxScrollPos = getMaxScrollLeft();
+                }
+                if (intPixelsToScroll > 0 && scrollPos < maxScrollPos
+                        || intPixelsToScroll < 0 && scrollPos > 0) {
+                    newScrollPos = scrollPos + intPixelsToScroll;
+                    if (scrollDirection == ScrollAxis.VERTICAL) {
+                        grid.setScrollTop(newScrollPos);
+                    } else {
+                        grid.setScrollLeft(newScrollPos);
+                    }
+                    callback.onAutoScroll(intPixelsToScroll);
+                    if (newScrollPos <= 0) {
+                        callback.onAutoScrollReachedMin();
+                    } else if (newScrollPos >= maxScrollPos) {
+                        callback.onAutoScrollReachedMax();
+                    }
                 }
             }
 
@@ -521,10 +545,7 @@ public class AutoScroller {
     private void updateScrollBounds() {
         double startBorder = getBodyClientStart();
         final int endBorder = getBodyClientEnd();
-
-        for (int i = 0; i < grid.getFrozenColumnCount(); i++) {
-            startBorder += grid.getColumn(i).getWidthActual();
-        }
+        startBorder += getFrozenColumnsWidth();
 
         final int scrollCompensation = getScrollCompensation();
         startingBound = scrollCompensation + startBorder + scrollAreaPX;
@@ -645,5 +666,23 @@ public class AutoScroller {
         } else {
             return getClientLeft(getTbodyElement());
         }
+    }
+
+    private double getFrozenColumnsWidth() {
+        double value = 0;
+        for (int i = 0; i < grid.getFrozenColumnCount(); i++) {
+            value += grid.getColumn(i).getWidthActual();
+        }
+        return value;
+    }
+
+    private double getMaxScrollLeft() {
+        return grid.getScrollWidth()
+                - (getTableElement().getParentElement().getOffsetWidth() - getFrozenColumnsWidth());
+    }
+
+    private double getMaxScrollTop() {
+        return grid.getScrollHeight() - getTfootElement().getOffsetHeight()
+                - getTheadElement().getOffsetHeight();
     }
 }

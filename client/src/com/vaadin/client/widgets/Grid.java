@@ -2875,13 +2875,23 @@ public class Grid<T> extends ResizeComposite implements
         private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
 
             @Override
-            public void onVerticalAutoScroll(int scrollDiff) {
-                // NOP
+            public void onAutoScroll(int scrollDiff) {
+                autoScrollX = scrollDiff;
+                onDragUpdate(null);
             }
 
             @Override
-            public void onHorizontalAutoScroll(int scrollDiff) {
-                onDragUpdate(null);
+            public void onAutoScrollReachedMin() {
+                // make sure the drop marker is visible on the left
+                autoScrollX = 0;
+                updateDragDropMarker(clientX);
+            }
+
+            @Override
+            public void onAutoScrollReachedMax() {
+                // make sure the drop marker is visible on the right
+                autoScrollX = 0;
+                updateDragDropMarker(clientX);
             }
         };
         /**
@@ -2902,6 +2912,9 @@ public class Grid<T> extends ResizeComposite implements
         private HandlerRegistration columnSortPreventRegistration;
 
         private int clientX;
+
+        /** How much the grid is being auto scrolled while dragging. */
+        private int autoScrollX;
 
         private void initHeaderDragElementDOM() {
             if (table == null) {
@@ -2925,6 +2938,7 @@ public class Grid<T> extends ResizeComposite implements
             if (event != null) {
                 clientX = WidgetUtil.getTouchOrMouseClientX(event
                         .getNativeEvent());
+                autoScrollX = 0;
             }
             resolveDragElementHorizontalPosition(clientX);
             updateDragDropMarker(clientX);
@@ -2946,6 +2960,7 @@ public class Grid<T> extends ResizeComposite implements
                     dropMarkerLeft += cellWidth;
                 }
             }
+            dropMarkerLeft += autoScrollX;
             if (dropMarkerLeft > header.getElement().getOffsetWidth()
                     || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
@@ -3014,10 +3029,6 @@ public class Grid<T> extends ResizeComposite implements
                 final int focusedRowIndex = focusedCell.getRow();
                 final int draggedColumnIndex = eventCell.getColumnIndex();
                 // transfer focus if it was effected by the new column order
-                // FIXME if the dragged column is partly outside of the view
-                // port and the focused cell is +-1 of the dragged column, the
-                // grid scrolls to the right end. maybe fixed when the automatic
-                // scroll handling is implemented?
                 final RowContainer rowContainer = escalator
                         .findRowContainer(focusedCell.getElement());
                 if (focusedCellColumnIndex == draggedColumnIndex) {
@@ -3032,9 +3043,6 @@ public class Grid<T> extends ResizeComposite implements
                         && draggedColumnIndex < focusedCellColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
                             focusedCellColumnIndex - 1, rowContainer);
-                } else {
-                    cellFocusHandler.setCellFocus(focusedRowIndex,
-                            focusedCellColumnIndex, rowContainer);
                 }
             }
         }
@@ -5020,6 +5028,26 @@ public class Grid<T> extends ResizeComposite implements
      */
     public double getScrollLeft() {
         return escalator.getScrollLeft();
+    }
+
+    /**
+     * Returns the height of the scrollable area in pixels.
+     * 
+     * @since
+     * @return the height of the scrollable area in pixels
+     */
+    public double getScrollHeight() {
+        return escalator.getScrollHeight();
+    }
+
+    /**
+     * Returns the width of the scrollable area in pixels.
+     * 
+     * @since
+     * @return the width of the scrollable area in pixels.
+     */
+    public double getScrollWidth() {
+        return escalator.getScrollWidth();
     }
 
     private static final Logger getLogger() {
