@@ -267,7 +267,7 @@ public class Slider extends AbstractField<Double> {
 
         if (resolution > 0) {
             // Round up to resolution
-            newValue = (int) (v * Math.pow(10, resolution));
+            newValue = Math.floor(v * Math.pow(10, resolution));
             newValue = newValue / Math.pow(10, resolution);
             if (getMin() > newValue || getMax() < newValue) {
                 throw new ValueOutOfBoundsException(newValue);
