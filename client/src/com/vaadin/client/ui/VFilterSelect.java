@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -219,6 +221,50 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
     }
 
+    /** An inner class that handles all logic related to mouse wheel. */
+    private class MouseWheeler extends JsniMousewheelHandler {
+
+        public MouseWheeler() {
+            super(VFilterSelect.this);
+        }
+
+        @Override
+        protected native JavaScriptObject createMousewheelListenerFunction(
+                Widget widget)
+        /*-{
+            return $entry(function(e) {
+                var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
+                var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
+                
+                // IE8 has only delta y
+                if (isNaN(deltaY)) {
+                    deltaY = -0.5*e.wheelDelta;
+                }
+
+                @com.vaadin.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e);
+            });
+        }-*/;
+
+    }
+
+    /**
+     * A utility class that contains utility methods that are usually called
+     * from JSNI.
+     * <p>
+     * The methods are moved in this class to minimize the amount of JSNI code
+     * as much as feasible.
+     */
+    static class JsniUtil {
+        public static void moveScrollFromEvent(final Widget widget,
+                final double deltaX, final double deltaY,
+                final NativeEvent event) {
+
+            if (!Double.isNaN(deltaY)) {
+                ((VFilterSelect) widget).suggestionPopup.scroll(deltaY);
+            }
+        }
+    }
+
     /**
      * Represents the popup box with the selection options. Wraps a suggestion
      * menu.
@@ -242,6 +288,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private int popupOuterPadding = -1;
 
         private int topPosition;
+
+        private final MouseWheeler mouseWheeler = new MouseWheeler();
 
         /**
          * Default constructor
@@ -273,6 +321,18 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             Roles.getListRole().set(getElement());
 
             setPreviewingAllNativeEvents(true);
+        }
+
+        @Override
+        protected void onLoad() {
+            super.onLoad();
+            mouseWheeler.attachMousewheelListener(getElement());
+        }
+
+        @Override
+        protected void onUnload() {
+            mouseWheeler.detachMousewheelListener(getElement());
+            super.onUnload();
         }
 
         /**
@@ -531,6 +591,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
+        private void scroll(double deltaY) {
+            boolean scrollActive = menu.isScrollActive();
+
+            debug("VFS.SP: scroll() scrollActive: " + scrollActive);
+
+            if (!scrollActive) {
+                if (deltaY > 0d) {
+                    lazyPageScroller.scrollDown();
+                } else {
+                    lazyPageScroller.scrollUp();
+                }
+            }
+        }
+
         @Override
         public void onBrowserEvent(Event event) {
             debug("VFS.SP: onBrowserEvent()");
@@ -543,24 +617,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     lazyPageScroller.scrollDown();
                 }
 
-            } else if (event.getTypeInt() == Event.ONMOUSEWHEEL) {
-
-                boolean scrollNotActive = !menu.isScrollActive();
-
-                debug("VFS.SP: onBrowserEvent() scrollNotActive: "
-                        + scrollNotActive);
-
-                if (scrollNotActive) {
-                    int velocity = event.getMouseWheelVelocityY();
-
-                    debug("VFS.SP: onBrowserEvent() velocity: " + velocity);
-
-                    if (velocity > 0) {
-                        lazyPageScroller.scrollDown();
-                    } else {
-                        lazyPageScroller.scrollUp();
-                    }
-                }
             }
 
             /*
