@@ -17,6 +17,7 @@ package com.vaadin.client.widgets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -2569,15 +2570,14 @@ public class Escalator extends Widget implements RequiresResize,
 
             double viewportPx = y2 - y1;
             double spacerPx = spacerContainer.getSpacerHeightsSumBetweenPx(y1,
-                    SpacerMeasurementStrategy.PARTIAL, y2,
-                    SpacerMeasurementStrategy.PARTIAL);
+                    SpacerInclusionStrategy.PARTIAL, y2,
+                    SpacerInclusionStrategy.PARTIAL);
 
             return viewportPx - spacerPx;
         }
 
         private int getLogicalRowIndex(final double px) {
-            double rowPx = px
-                    - spacerContainer.getSpacerHeightsSumUntilPx(px);
+            double rowPx = px - spacerContainer.getSpacerHeightsSumUntilPx(px);
             return (int) (rowPx / getDefaultRowHeight());
         }
 
@@ -2586,9 +2586,6 @@ public class Escalator extends Widget implements RequiresResize,
             if (numberOfRows == 0) {
                 return;
             }
-
-            // TODO
-            getLogger().warning("[[spacers]] inserting rows");
 
             /*
              * TODO: this method should probably only add physical rows, and not
@@ -2635,6 +2632,13 @@ public class Escalator extends Widget implements RequiresResize,
                 final int visualOffset = getLogicalRowIndex(visualRowOrder
                         .getFirst());
 
+                final double pxDiff = numberOfRows * getDefaultRowHeight();
+                for (SpacerContainer.SpacerImpl spacer : spacerContainer
+                        .getSpacersForRowAndAfter(index)) {
+                    spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
+
                 /*
                  * At this point, we have added new escalator rows, if so
                  * needed.
@@ -2646,7 +2650,7 @@ public class Escalator extends Widget implements RequiresResize,
                 final int rowsStillNeeded = numberOfRows - addedRows.size();
                 final Range unupdatedVisual = convertToVisual(Range.withLength(
                         unupdatedLogicalStart, rowsStillNeeded));
-                final int end = root.getChildCount();
+                final int end = getEscalatorRowCount();
                 final int start = end - unupdatedVisual.length();
                 final int visualTargetIndex = unupdatedLogicalStart
                         - visualOffset;
@@ -2658,7 +2662,16 @@ public class Escalator extends Widget implements RequiresResize,
                         * getDefaultRowHeight();
                 final ListIterator<TableRowElement> i = visualRowOrder
                         .listIterator(visualTargetIndex + (end - start));
+
+                int logicalRowIndexCursor = unupdatedLogicalStart;
                 while (i.hasNext()) {
+                    SpacerContainer.SpacerImpl spacer = spacerContainer
+                            .getSpacer(logicalRowIndexCursor);
+                    if (spacer != null) {
+                        rowTop += spacer.getHeight();
+                    }
+                    logicalRowIndexCursor++;
+
                     final TableRowElement tr = i.next();
                     setRowPosition(tr, 0, rowTop);
                     rowTop += getDefaultRowHeight();
@@ -2698,10 +2711,11 @@ public class Escalator extends Widget implements RequiresResize,
             assert visualTargetIndex >= 0 : "Visual target must be 0 or greater (was "
                     + visualTargetIndex + ")";
 
-            assert visualTargetIndex <= root.getChildCount() : "Visual target "
+            assert visualTargetIndex <= getEscalatorRowCount() : "Visual target "
                     + "must not be greater than the number of escalator rows (was "
-                    + visualTargetIndex + ", escalator rows "
-                    + root.getChildCount() + ")";
+                    + visualTargetIndex
+                    + ", escalator rows "
+                    + getEscalatorRowCount() + ")";
 
             assert logicalTargetIndex + visualSourceRange.length() <= getRowCount() : "Logical "
                     + "target leads to rows outside of the data range ("
@@ -2784,12 +2798,11 @@ public class Escalator extends Widget implements RequiresResize,
         /**
          * Adjust the scroll position and move the contained rows.
          * <p>
-         * <em>Note:</em> This method does not account for spacers.
-         * <p>
          * The difference between using this method and simply scrolling is that
-         * this method "takes the rows with it" and renders them appropriately.
-         * The viewport may be scrolled any arbitrary amount, and the rows are
-         * moved appropriately, but always snapped into a plausible place.
+         * this method "takes the rows and spacers with it" and renders them
+         * appropriately. The viewport may be scrolled any arbitrary amount, and
+         * the contents are moved appropriately, but always snapped into a
+         * plausible place.
          * <p>
          * <dl>
          * <dt>Example 1</dt>
@@ -2809,25 +2822,31 @@ public class Escalator extends Widget implements RequiresResize,
          */
         public void moveViewportAndContent(final double yDelta) {
 
-            /*
-             * TODO: When adding and removing rows starts supporting spacers,
-             * this method should also take spacers into account. Remember to
-             * adjust the javadoc as well.
-             */
-
             if (yDelta == 0) {
                 return;
             }
 
             double newTop = tBodyScrollTop + yDelta;
-            final double rowTopPos = body.getRowTop(getLogicalRowIndex(newTop));
-
             verticalScrollbar.setScrollPos(newTop);
 
-            for (int i = 0; i < visualRowOrder.size(); i++) {
-                final TableRowElement tr = visualRowOrder.get(i);
-                setRowPosition(tr, 0, rowTopPos + getDefaultRowHeight() * i);
+            final double defaultRowHeight = getDefaultRowHeight();
+            double rowPxDelta = yDelta - (yDelta % defaultRowHeight);
+            int rowIndexDelta = (int) (yDelta / defaultRowHeight);
+            if (!WidgetUtil.pixelValuesEqual(rowPxDelta, 0)) {
+
+                Collection<SpacerContainer.SpacerImpl> spacers = spacerContainer
+                        .getSpacersAfterPx(tBodyScrollTop,
+                                SpacerInclusionStrategy.PARTIAL);
+                for (SpacerContainer.SpacerImpl spacer : spacers) {
+                    spacer.setPositionDiff(0, rowPxDelta);
+                    spacer.setRowIndex(spacer.getRow() + rowIndexDelta);
+                }
+
+                for (TableRowElement tr : visualRowOrder) {
+                    setRowPosition(tr, 0, getRowTop(tr) + rowPxDelta);
+                }
             }
+
             setBodyScrollPosition(tBodyScrollLeft, newTop);
         }
 
@@ -2850,7 +2869,7 @@ public class Escalator extends Widget implements RequiresResize,
                 final int index, final int numberOfRows) {
 
             final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
-                    - root.getChildCount();
+                    - getEscalatorRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
 
@@ -3802,6 +3821,21 @@ public class Escalator extends Widget implements RequiresResize,
                 return Collections.unmodifiableList(sublist);
             }
         }
+
+        /**
+         * This method calculates the current escalator row count directly from
+         * the DOM.
+         * <p>
+         * While Escalator is stable, this value should equal to
+         * {@link #visualRowOrder}.size(), but while row counts are being
+         * updated, these two values might differ for a short while.
+         * 
+         * @return the actual DOM count of escalator rows
+         */
+        private int getEscalatorRowCount() {
+            return root.getChildCount()
+                    - spacerContainer.getSpacersInDom().size();
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -4280,15 +4314,18 @@ public class Escalator extends Widget implements RequiresResize,
     /**
      * A decision on how to measure a spacer when it is partially within a
      * designated range.
+     * <p>
+     * The meaning of each value may differ depending on the context it is being
+     * used in. Check that particular method's JavaDoc.
      */
-    public enum SpacerMeasurementStrategy {
-        /** Take the entire spacer's height into account. */
+    public enum SpacerInclusionStrategy {
+        /** A representation of "the entire spacer". */
         COMPLETE,
 
-        /** Take the visible part into account. */
+        /** A representation of "a partial spacer". */
         PARTIAL,
 
-        /** Exclude the entire spacer. */
+        /** A representation of "no spacer at all". */
         NONE
     }
 
@@ -4300,7 +4337,7 @@ public class Escalator extends Widget implements RequiresResize,
         private final class SpacerImpl implements Spacer {
             private TableCellElement spacerElement;
             private TableRowElement root;
-            private final int rowIndex;
+            private int rowIndex;
             private double height = -1;
             private boolean domHasBeenSetup = false;
 
@@ -4311,6 +4348,15 @@ public class Escalator extends Widget implements RequiresResize,
                 spacerElement = TableCellElement.as(DOM.createTD());
                 root.appendChild(spacerElement);
                 root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
+            }
+
+            public void setPositionDiff(double x, double y) {
+                setPosition(getLeft() + x, getTop() + y);
+            }
+
+            public double getLeft() {
+                // not implemented yet.
+                return 0;
             }
 
             public void setupDom(double height) {
@@ -4352,7 +4398,7 @@ public class Escalator extends Widget implements RequiresResize,
                 root.getStyle().setHeight(height, Unit.PX);
 
                 // move the visible spacers getRow row onwards.
-                shiftSpacerPositions(getRow(), heightDiff);
+                shiftSpacerPositionsAfterRow(getRow(), heightDiff);
 
                 /*
                  * If we're growing, we'll adjust the scroll size first, then
@@ -4439,6 +4485,14 @@ public class Escalator extends Widget implements RequiresResize,
             public double getTop() {
                 return positions.getTop(getRootElement());
             }
+
+            @SuppressWarnings("boxing")
+            public void setRowIndex(int rowIndex) {
+                SpacerImpl spacer = rowIndexToSpacer.remove(this.rowIndex);
+                assert this == spacer : "trying to move an unexpected spacer.";
+                this.rowIndex = rowIndex;
+                rowIndexToSpacer.put(this.rowIndex, this);
+            }
         }
 
         private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
@@ -4465,26 +4519,100 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        @SuppressWarnings("boxing")
+        public Collection<SpacerImpl> getSpacersForRowAndAfter(
+                int logicalRowIndex) {
+            return new ArrayList<SpacerImpl>(rowIndexToSpacer.tailMap(
+                    logicalRowIndex, true).values());
+        }
+
+        /**
+         * Get all spacers from one pixel point onwards.
+         * <p>
+         * 
+         * In this method, the {@link SpacerInclusionStrategy} has the following
+         * meaning when a spacer lies in the middle of either pixel argument:
+         * <dl>
+         * <dt>{@link SpacerInclusionStrategy#COMPLETE COMPLETE}
+         * <dd>include the spacer
+         * <dt>{@link SpacerInclusionStrategy#PARTIAL PARTIAL}
+         * <dd>include the spacer
+         * <dt>{@link SpacerInclusionStrategy#NONE NONE}
+         * <dd>ignore the spacer
+         * </dl>
+         * 
+         * @param px
+         *            the pixel point after which to return all spacers
+         * @param strategy
+         *            the inclusion strategy regarding the {@code px}
+         * @return a collection of the spacers that exist after {@code px}
+         */
+        public Collection<SpacerImpl> getSpacersAfterPx(final double px,
+                final SpacerInclusionStrategy strategy) {
+
+            ArrayList<SpacerImpl> spacers = new ArrayList<SpacerImpl>(
+                    rowIndexToSpacer.values());
+
+            for (int i = 0; i < spacers.size(); i++) {
+                SpacerImpl spacer = spacers.get(i);
+
+                double top = spacer.getTop();
+                double bottom = top + spacer.getHeight();
+
+                if (top > px) {
+                    return spacers.subList(i, spacers.size());
+                } else if (bottom > px) {
+                    if (strategy == SpacerInclusionStrategy.NONE) {
+                        return spacers.subList(i + 1, spacers.size());
+                    } else {
+                        return spacers.subList(i, spacers.size());
+                    }
+                }
+            }
+
+            return Collections.emptySet();
+        }
+
+        /**
+         * Gets the spacers currently rendered in the DOM.
+         * 
+         * @return an unmodifiable (but live) collection of the spacers
+         *         currently in the DOM
+         */
+        public Collection<SpacerImpl> getSpacersInDom() {
+            return Collections
+                    .unmodifiableCollection(rowIndexToSpacer.values());
+        }
+
         /**
          * Gets the amount of pixels occupied by spacers between two pixel
          * points.
+         * <p>
+         * In this method, the {@link SpacerInclusionStrategy} has the following
+         * meaning when a spacer lies in the middle of either pixel argument:
+         * <dl>
+         * <dt>{@link SpacerInclusionStrategy#COMPLETE COMPLETE}
+         * <dd>take the entire spacer into account
+         * <dt>{@link SpacerInclusionStrategy#PARTIAL PARTIAL}
+         * <dd>take only the visible area into account
+         * <dt>{@link SpacerInclusionStrategy#NONE NONE}
+         * <dd>ignore that spacer
+         * </dl>
          * 
          * @param rangeTop
          *            the top pixel point
          * @param topInclusion
-         *            how to measure a spacer that happens to lie in the middle
-         *            of {@code rangeTop}.
+         *            the inclusion strategy regarding {@code rangeTop}.
          * @param rangeBottom
          *            the bottom pixel point
          * @param bottomInclusion
-         *            how to measure a spacer that happens to lie in the middle
-         *            of {@code rangeBottom}.
+         *            the inclusion strategy regarding {@code rangeBottom}.
          * @return the pixels occupied by spacers between {@code rangeTop} and
          *         {@code rangeBottom}
          */
         public double getSpacerHeightsSumBetweenPx(double rangeTop,
-                SpacerMeasurementStrategy topInclusion, double rangeBottom,
-                SpacerMeasurementStrategy bottomInclusion) {
+                SpacerInclusionStrategy topInclusion, double rangeBottom,
+                SpacerInclusionStrategy bottomInclusion) {
 
             assert rangeTop <= rangeBottom : "rangeTop must be less than rangeBottom";
 
@@ -4596,8 +4724,8 @@ public class Escalator extends Widget implements RequiresResize,
          */
         public double getSpacerHeightsSumUntilPx(double px) {
             return getSpacerHeightsSumBetweenPx(0,
-                    SpacerMeasurementStrategy.PARTIAL, px,
-                    SpacerMeasurementStrategy.PARTIAL);
+                    SpacerInclusionStrategy.PARTIAL, px,
+                    SpacerInclusionStrategy.PARTIAL);
         }
 
         /**
@@ -4733,7 +4861,8 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         @SuppressWarnings("boxing")
-        private void shiftSpacerPositions(int changedRowIndex, double diffPx) {
+        private void shiftSpacerPositionsAfterRow(int changedRowIndex,
+                double diffPx) {
             for (SpacerImpl spacer : rowIndexToSpacer.tailMap(changedRowIndex,
                     false).values()) {
                 spacer.setPosition(0, spacer.getTop() + diffPx);
