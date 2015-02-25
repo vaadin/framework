@@ -64,7 +64,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                 throws IOException {
             super.onStateChange(event);
             if (event.isCancelled() || event.isResumedOnTimeout()) {
-                disconnect(event);
+                connectionLost(event);
             }
         }
 
@@ -329,17 +329,17 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
     public void onDisconnect(AtmosphereResourceEvent event) {
         // Log event on trace level
         super.onDisconnect(event);
-        disconnect(event);
+        connectionLost(event);
     }
 
     @Override
     public void onThrowable(AtmosphereResourceEvent event) {
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
-        disconnect(event);
+        connectionLost(event);
     }
 
-    private void disconnect(AtmosphereResourceEvent event) {
+    private void connectionLost(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
@@ -425,12 +425,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-                if (pushConnection.isConnected()) {
-                    // disconnect() assumes the push connection is connected but
-                    // this method can currently be called more than once during
-                    // disconnect, depending on the situation
-                    pushConnection.disconnect();
-                }
+
+                pushConnection.connectionLost();
             }
 
         } catch (final Exception e) {
