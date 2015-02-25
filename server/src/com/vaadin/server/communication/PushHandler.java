@@ -63,9 +63,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
         public void onStateChange(AtmosphereResourceEvent event)
                 throws IOException {
             super.onStateChange(event);
-
-            if (event.isResumedOnTimeout()) {
-                connectionLost(event);
+            if (event.isCancelled() || event.isResumedOnTimeout()) {
+                disconnect(event);
             }
         }
 
@@ -330,30 +329,17 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
     public void onDisconnect(AtmosphereResourceEvent event) {
         // Log event on trace level
         super.onDisconnect(event);
-
-        // Called no matter if the client closed the connection cleanly
-        // (event.isClosedByClient()) or if it was unexpectedly disconnected
-        // (event.isCancelled)
-        connectionLost(event);
-    }
-
-    @Override
-    public void onResume(AtmosphereResourceEvent event) {
-        super.onResume(event);
-
-        // If a long polling connection is resumed, we no longer have a
-        // connection up and must update the state of AtmospherePushConnection
-        connectionLost(event);
+        disconnect(event);
     }
 
     @Override
     public void onThrowable(AtmosphereResourceEvent event) {
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
-        connectionLost(event);
+        disconnect(event);
     }
 
-    private void connectionLost(AtmosphereResourceEvent event) {
+    private void disconnect(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
@@ -439,8 +425,12 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-
-                pushConnection.connectionLost();
+                if (pushConnection.isConnected()) {
+                    // disconnect() assumes the push connection is connected but
+                    // this method can currently be called more than once during
+                    // disconnect, depending on the situation
+                    pushConnection.disconnect();
+                }
             }
 
         } catch (final Exception e) {

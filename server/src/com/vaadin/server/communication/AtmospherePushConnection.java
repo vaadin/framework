@@ -156,9 +156,9 @@ public class AtmospherePushConnection implements PushConnection {
     public void push(boolean async) {
         if (!isConnected()) {
             if (async && state != State.RESPONSE_PENDING) {
-                setState(State.PUSH_PENDING);
+                state = State.PUSH_PENDING;
             } else {
-                setState(State.RESPONSE_PENDING);
+                state = State.RESPONSE_PENDING;
             }
         } else {
             try {
@@ -229,22 +229,23 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Associates this {@code AtmospherePushConnection} with the given
      * {@AtmosphereResource} representing an established
-     * push connection.
-     * <p>
+     * push connection. If already connected, calls {@link #disconnect()} first.
      * If there is a deferred push, carries it out via the new connection.
-     * <p>
-     * This method must never be called when there is an existing connection
      * 
      * @since 7.2
      */
     public void connect(AtmosphereResource resource) {
+
         assert resource != null;
         assert resource != this.resource;
-        assert !isConnected();
+
+        if (isConnected()) {
+            disconnect();
+        }
 
         this.resource = resource;
         State oldState = state;
-        setState(State.CONNECTED);
+        state = State.CONNECTED;
 
         if (oldState == State.PUSH_PENDING
                 || oldState == State.RESPONSE_PENDING) {
@@ -272,17 +273,14 @@ public class AtmospherePushConnection implements PushConnection {
     @Override
     public void disconnect() {
         assert isConnected();
-        if (!isConnected() || resource.isResumed()) {
-            // Server has asked to push connection to be disconnected but there
-            // is no current connection
 
-            // This could be a timing issue during session expiration or
-            // similar and should not happen in an ideal world. Might require
-            // some logic changes in session expiration handling to avoid
-            // triggering this
-            getLogger().info(
-                    "Server requested disconnect for inactive push connection");
-            connectionLost();
+        if (resource.isResumed()) {
+            // Calling disconnect may end up invoking it again via
+            // resource.resume and PushHandler.onResume. Bail out here if
+            // the resource is already resumed; this is a bit hacky and should
+            // be implemented in a better way in 7.2.
+            resource = null;
+            state = State.DISCONNECTED;
             return;
         }
 
@@ -304,24 +302,13 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         try {
-            // Close the push connection
             resource.close();
         } catch (IOException e) {
             getLogger()
                     .log(Level.INFO, "Error when closing push connection", e);
         }
-        connectionLost();
-    }
-
-    /**
-     * Called when the connection to the client has been lost.
-     * 
-     * @since
-     */
-    public void connectionLost() {
         resource = null;
-        setState(State.DISCONNECTED);
-
+        state = State.DISCONNECTED;
     }
 
     /**
@@ -332,16 +319,6 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     /**
-     * Sets the state of this connection
-     * 
-     * @param state
-     *            the new state
-     */
-    private void setState(State state) {
-        this.state = state;
-    }
-
-    /**
      * Reinitializes this PushConnection after deserialization. The connection
      * is initially in disconnected state; the client will handle the
      * reconnecting.
@@ -349,7 +326,7 @@ public class AtmospherePushConnection implements PushConnection {
     private void readObject(ObjectInputStream stream) throws IOException,
             ClassNotFoundException {
         stream.defaultReadObject();
-        setState(State.DISCONNECTED);
+        state = State.DISCONNECTED;
     }
 
     private static Logger getLogger() {
