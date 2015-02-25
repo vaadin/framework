@@ -17,8 +17,11 @@
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -42,6 +45,9 @@ import com.vaadin.testbench.parallel.BrowserUtil;
  * @author Vaadin Ltd
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
+
+    @Rule
+    public TestName testName = new TestName();
 
     protected List<DesiredCapabilities> getBrowsersSupportingWebSocket() {
         // No WebSocket support in IE8-9 and PhantomJS
@@ -87,6 +93,12 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                         false);
             }
         }
+
+        desiredCapabilities.setCapability("project", "Vaadin Framework");
+        desiredCapabilities.setCapability("build", String.format("%s / %s",
+                getDeploymentHostname(), Calendar.getInstance().getTime()));
+        desiredCapabilities.setCapability("name", String.format("%s.%s",
+                getClass().getCanonicalName(), testName.getMethodName()));
 
         super.setDesiredCapabilities(desiredCapabilities);
     }
