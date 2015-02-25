@@ -2961,7 +2961,16 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
             dropMarkerLeft += autoScrollX;
-            if (dropMarkerLeft > header.getElement().getOffsetWidth()
+
+            final double frozenColumnsWidth = getFrozenColumnsWidth();
+            if (dropMarkerLeft < frozenColumnsWidth) {
+                latestColumnDropIndex = getFrozenColumnCount();
+                if (getScrollLeft() == 0) {
+                    dropMarkerLeft = frozenColumnsWidth;
+                } else {
+                    dropMarkerLeft = -10000000;
+                }
+            } else if (dropMarkerLeft > header.getElement().getOffsetWidth()
                     || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
@@ -2971,6 +2980,11 @@ public class Grid<T> extends ResizeComposite implements
         private void resolveDragElementHorizontalPosition(final int clientX) {
             int left = clientX - table.getAbsoluteLeft();
             left = Math.max(0, Math.min(left, table.getClientWidth()));
+            final double frozenColumnsWidth = getFrozenColumnsWidth();
+            if (left < frozenColumnsWidth) {
+                left = (int) frozenColumnsWidth;
+            }
+
             left -= dragElement.getClientWidth() / 2;
             dragElement.getStyle().setLeft(left, Unit.PX);
         }
@@ -3071,6 +3085,13 @@ public class Grid<T> extends ResizeComposite implements
             autoScroller.stop();
         }
 
+        private double getFrozenColumnsWidth() {
+            double result = 0.0d;
+            for (int i = 0; i < getFrozenColumnCount(); i++) {
+                result += getColumn(i).getWidthActual();
+            }
+            return result;
+        }
     };
 
     /**

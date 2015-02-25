@@ -131,7 +131,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         sortColumn(0);
 
         // when
-        dragDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, 10);
 
         // then
         assertColumnIsSorted(1);
@@ -158,7 +158,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusDefaultHeader(0);
 
         // when
-        dragDefaultColumnHeader(0, 3, 10);
+        dragAndDropDefaultColumnHeader(0, 3, 10);
 
         // then
         WebElement defaultColumnHeader = getDefaultColumnHeader(2);
@@ -173,7 +173,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(2, 2);
 
         // when
-        dragDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, 10);
 
         // then
         assertFocusedCell(2, 0);
@@ -186,7 +186,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(1, 3);
 
         // when
-        dragDefaultColumnHeader(4, 1, 10);
+        dragAndDropDefaultColumnHeader(4, 1, 10);
 
         // then
         assertFocusedCell(1, 4);
@@ -199,7 +199,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(4, 2);
 
         // when
-        dragDefaultColumnHeader(0, 4, 10);
+        dragAndDropDefaultColumnHeader(0, 4, 10);
 
         // then
         assertFocusedCell(4, 1);

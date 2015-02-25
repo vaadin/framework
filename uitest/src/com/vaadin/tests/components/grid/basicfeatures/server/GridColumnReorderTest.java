@@ -48,7 +48,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, 10);
 
         // then
         assertColumnHeaderOrder(1, 0, 2);
@@ -62,7 +62,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, 110);
 
         // then
         assertColumnHeaderOrder(1, 2, 0);
@@ -76,13 +76,13 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, 10);
 
         // then
         assertColumnHeaderOrder(2, 0, 1, 3);
 
         // when
-        dragDefaultColumnHeader(1, 3, 110);
+        dragAndDropDefaultColumnHeader(1, 3, 110);
 
         // then
         assertColumnHeaderOrder(2, 1, 3, 0);
@@ -95,7 +95,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2);
 
         // when
-        dragDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, 110);
 
         // then
         assertColumnHeaderOrder(0, 1, 2);
@@ -109,7 +109,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, 10);
         assertColumnHeaderOrder(1, 0, 2);
         moveColumnManuallyLeftByOne(0);
 
@@ -127,7 +127,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         // when
         selectMenuPath(new String[] { "Component", "Internals",
                 "Update column order without updating client" });
-        dragDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, 10);
 
         // then
         assertColumnHeaderOrder(1, 0, 2);
@@ -141,7 +141,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // when
         toggleColumnReorderListener();
-        dragDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, 10);
 
         // then
         assertColumnReorderEvent(true);
@@ -152,19 +152,19 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         // given
         openTestURL();
         toggleColumnReordering();
-        dragDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, 10);
         assertNoColumnReorderEvent();
 
         // when
         toggleColumnReorderListener();
-        dragDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, 110);
 
         // then
         assertColumnReorderEvent(true);
 
         // when
         toggleColumnReorderListener();
-        dragDefaultColumnHeader(0, 3, 10);
+        dragAndDropDefaultColumnHeader(0, 3, 10);
 
         // then
         assertNoColumnReorderEvent();
@@ -180,6 +180,36 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         assertColumnReorderEvent(false);
+    }
+
+    @Test
+    public void testColumnReorder_draggingFrozenColumns_impossible() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        setFrozenColumns(2);
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        // when
+        dragAndDropDefaultColumnHeader(0, 2, 10);
+
+        // then
+        assertColumnHeaderOrder(0, 1, 2, 3);
+    }
+
+    @Test
+    public void testColumnReorder_draggingColumnOnTopOfFrozenColumn_columnDroppedRightOfFrozenColumns() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        setFrozenColumns(1);
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        // when
+        dragAndDropDefaultColumnHeader(2, 0, 10);
+
+        // then
+        assertColumnHeaderOrder(0, 2, 1, 3);
     }
 
     private void toggleColumnReordering() {

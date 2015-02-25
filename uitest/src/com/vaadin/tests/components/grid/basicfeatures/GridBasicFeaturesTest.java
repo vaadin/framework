@@ -140,6 +140,11 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         getGridElement().getCell(row, column).click();
     }
 
+    protected void setFrozenColumns(int numberOfFrozenColumns) {
+        selectMenuPath("Component", "State", "Frozen column count",
+                Integer.toString(numberOfFrozenColumns));
+    }
+
     protected void assertColumnHeaderOrder(int... indices) {
         List<TestBenchElement> headers = getGridHeaderRowCells();
         for (int i = 0; i < indices.length; i++) {
@@ -158,7 +163,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return headerRowCells.get(index);
     }
 
-    protected void dragDefaultColumnHeader(int draggedColumnHeaderIndex,
+    protected void dragAndDropDefaultColumnHeader(int draggedColumnHeaderIndex,
             int onTopOfColumnHeaderIndex, int xOffsetFromColumnTopLeftCorner) {
         new Actions(getDriver())
                 .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
