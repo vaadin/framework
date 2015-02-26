@@ -55,11 +55,12 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName} .header-drag-table {
     border-spacing: 0;
+    position: relative;
     table-layout: fixed;
     width: inherit; // a decent default fallback
 
     .#{$primaryStyleName}-header {
-
+      position: absolute;
       > .#{$primaryStyleName}-cell {
         border: $v-grid-border;
         margin-top: -10px;

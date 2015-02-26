@@ -212,6 +212,37 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 2, 1, 3);
     }
 
+    @Test
+    public void testColumnReordering_twoHeaderRows_dndReorderingPossibleFromFirstRow() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "Header", "Append row");
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        // when
+        dragAndDropColumnHeader(0, 0, 2, 100);
+
+        // then
+        assertColumnHeaderOrder(1, 2, 0, 3);
+    }
+
+    @Test
+    public void testColumnReordering_twoHeaderRows_dndReorderingPossibleFromSecondRow() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "Header", "Append row");
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        // when
+        // when
+        dragAndDropColumnHeader(1, 0, 2, 100);
+
+        // then
+        assertColumnHeaderOrder(1, 2, 0, 3);
+    }
+
     private void toggleColumnReordering() {
         selectMenuPath(COLUMN_REORDERING_PATH);
     }

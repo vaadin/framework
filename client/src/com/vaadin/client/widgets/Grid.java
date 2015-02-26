@@ -2930,6 +2930,13 @@ public class Grid<T> extends ResizeComposite implements
             tableHeader.setClassName(escalator.getHeader().getElement()
                     .getClassName());
             dropMarker.setClassName(getStylePrimaryName() + "-drop-marker");
+            int topOffset = 0;
+            for (int i = 0; i < eventCell.getRowIndex(); i++) {
+                topOffset += escalator.getHeader().getRowElement(i)
+                        .getFirstChildElement().getOffsetHeight();
+            }
+            tableHeader.getStyle().setTop(topOffset, Unit.PX);
+
             getElement().appendChild(table);
         }
 
@@ -5375,15 +5382,10 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean handleHeaderCellDragStartEvent(Event event,
             RowContainer container) {
-        if (!columnReorderingAllowed) {
+        if (!isColumnReorderingAllowed()) {
             return false;
         }
         if (container != escalator.getHeader()) {
-            return false;
-        }
-        // for now only support reordering of default row as the only row
-        if (!getHeader().getRow(eventCell.getRowIndex()).isDefault()
-                || getHeader().getRowCount() != 1) {
             return false;
         }
         if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()

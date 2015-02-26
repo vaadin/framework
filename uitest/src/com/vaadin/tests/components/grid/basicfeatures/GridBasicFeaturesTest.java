@@ -30,6 +30,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -158,8 +159,9 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 .getText().toLowerCase());
     }
 
-    protected WebElement getDefaultColumnHeader(int index) {
-        List<TestBenchElement> headerRowCells = getGridHeaderRowCells();
+    protected GridCellElement getDefaultColumnHeader(int index) {
+        List<GridCellElement> headerRowCells = getGridElement().getHeaderCells(
+                0);
         return headerRowCells.get(index);
     }
 
@@ -169,6 +171,19 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
                 .moveToElement(
                         getDefaultColumnHeader(onTopOfColumnHeaderIndex),
+                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+    }
+
+    protected void dragAndDropColumnHeader(int headerRow,
+            int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
+            int xOffsetFromColumnTopLeftCorner) {
+        new Actions(getDriver())
+                .clickAndHold(
+                        getGridElement().getHeaderCell(headerRow,
+                                draggedColumnHeaderIndex))
+                .moveToElement(
+                        getGridElement().getHeaderCell(headerRow,
+                                onTopOfColumnHeaderIndex),
                         xOffsetFromColumnTopLeftCorner, 0).release().perform();
     }
 
