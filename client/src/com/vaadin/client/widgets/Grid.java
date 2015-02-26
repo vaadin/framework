@@ -6182,6 +6182,23 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    @Override
+    public void onResize() {
+        super.onResize();
+        /*
+         * Delay calculation to be deferred so Escalator can do it's magic.
+         */
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                if (!autoColumnWidthsRecalculator.isScheduled()) {
+                    autoColumnWidthsRecalculator.schedule();
+                }
+            }
+        });
+    }
+
     /**
      * Grid does not support adding Widgets this way.
      * <p>
