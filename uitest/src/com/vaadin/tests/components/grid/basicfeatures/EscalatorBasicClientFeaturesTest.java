@@ -38,8 +38,10 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLUMNS = "Columns";
     protected static final String ADD_ONE_COLUMN_TO_BEGINNING = "Add one column to beginning";
     protected static final String ADD_ONE_ROW_TO_BEGINNING = "Add one row to beginning";
+    protected static final String ADD_ONE_ROW_TO_END = "Add one row to end";
     protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
     protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
+    protected static final String REMOVE_ALL_ROWS = "Remove all rows";
     protected static final String REMOVE_50_ROWS_FROM_BOTTOM = "Remove 50 rows from bottom";
     protected static final String REMOVE_50_ROWS_FROM_ALMOST_BOTTOM = "Remove 50 rows from almost bottom";
     protected static final String ADD_ONE_OF_EACH_ROW = "Add one of each row";

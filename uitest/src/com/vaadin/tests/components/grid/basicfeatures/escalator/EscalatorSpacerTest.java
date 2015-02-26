@@ -25,10 +25,12 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
+@SuppressWarnings("boxing")
 public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     //@formatter:off
@@ -98,7 +100,6 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     }
 
     @Test
-    @SuppressWarnings("boxing")
     public void spacerPushesVisibleRowsDown() {
         double oldTop = getElementTop(getBodyRow(2));
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
@@ -107,7 +108,51 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         assertGreater("Row below a spacer was not pushed down", newTop, oldTop);
     }
 
-    private static double getElementTop(TestBenchElement element) {
+    @Test
+    public void addingRowAboveSpacerPushesItDown() {
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_ALL_ROWS);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        double oldTop = getElementTop(getSpacer(1));
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+        double newTop = getElementTop(getSpacer(1));
+
+        assertGreater("Spacer should've been pushed down", newTop, oldTop);
+    }
+
+    @Test
+    public void addingRowBelowSpacerDoesNotPushItDown() {
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_ALL_ROWS);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        double oldTop = getElementTop(getSpacer(1));
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_END);
+        double newTop = getElementTop(getSpacer(1));
+
+        assertEquals("Spacer should've not been pushed down", newTop, oldTop,
+                WidgetUtil.PIXEL_EPSILON);
+    }
+
+    @Test
+    public void addingRowBelowSpacerIsActuallyRenderedBelowWhenEscalatorIsEmpty() {
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_ALL_ROWS);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
+
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        double spacerTop = getElementTop(getSpacer(1));
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_END);
+        double rowTop = getElementTop(getBodyRow(2));
+
+        assertEquals("Next row should've been rendered below the spacer",
+                spacerTop + 100, rowTop, WidgetUtil.PIXEL_EPSILON);
+    }
+
+    private static double getElementTop(WebElement element) {
         /*
          * we need to parse the style attribute, since using getCssValue gets a
          * normalized value that is harder to parse.
