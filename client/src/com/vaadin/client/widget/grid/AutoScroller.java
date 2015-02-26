@@ -669,6 +669,7 @@ public class AutoScroller {
     }
 
     private double getFrozenColumnsWidth() {
+        // TODO handle the case where the checkbox column is present
         double value = 0;
         for (int i = 0; i < grid.getFrozenColumnCount(); i++) {
             value += grid.getColumn(i).getWidthActual();

@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +39,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
@@ -413,6 +414,16 @@ public class Grid<T> extends ResizeComposite implements
                     return cellGroups.get(cellGroup);
                 }
                 return cells.get(column);
+            }
+
+            /**
+             * Returns <code>true</code> if this row contains spanned cells.
+             * 
+             * @since
+             * @return does this row contain spanned cells
+             */
+            public boolean hasSpannedCells() {
+                return !cellGroups.isEmpty();
             }
 
             /**
@@ -2907,6 +2918,11 @@ public class Grid<T> extends ResizeComposite implements
         /** Tracks index of the column whose left side the drop would occur */
         private int latestColumnDropIndex;
         /**
+         * Map of possible drop positions for the column and the corresponding
+         * column index.
+         */
+        private final TreeMap<Double, Integer> possibleDropPositions = new TreeMap<Double, Integer>();
+        /**
          * Makes sure that drag cancel doesn't cause anything unwanted like sort
          */
         private HandlerRegistration columnSortPreventRegistration;
@@ -2952,33 +2968,33 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void updateDragDropMarker(final int clientX) {
-            RowContainer header = escalator.getHeader();
-            NodeList<TableCellElement> cells = header.getRowElement(
-                    eventCell.getRowIndex()).getCells();
-            double dropMarkerLeft = 0 - escalator.getScrollLeft();
-            latestColumnDropIndex = 0;
-            for (int i = 0; i < cells.getLength(); i++, latestColumnDropIndex++) {
-                TableCellElement cellElement = cells.getItem(i);
-                int cellX = cellElement.getAbsoluteLeft();
-                int cellWidth = cellElement.getOffsetWidth();
-                if (clientX < cellX || clientX < cellX + (cellWidth / 2)) {
-                    break;
-                } else {
-                    dropMarkerLeft += cellWidth;
-                }
+            final double scrollLeft = getScrollLeft();
+            final double cursorXCoordinate = clientX
+                    - escalator.getHeader().getElement().getAbsoluteLeft();
+            final Entry<Double, Integer> cellEdgeOnRight = possibleDropPositions
+                    .ceilingEntry(cursorXCoordinate);
+            final Entry<Double, Integer> cellEdgeOnLeft = possibleDropPositions
+                    .floorEntry(cursorXCoordinate);
+            final double diffToRightEdge = cellEdgeOnRight == null ? Double.MAX_VALUE
+                    : cellEdgeOnRight.getKey() - cursorXCoordinate;
+            final double diffToLeftEdge = cellEdgeOnLeft == null ? Double.MAX_VALUE
+                    : cursorXCoordinate - cellEdgeOnLeft.getKey();
+
+            double dropMarkerLeft = 0 - scrollLeft;
+            if (diffToRightEdge > diffToLeftEdge) {
+                latestColumnDropIndex = cellEdgeOnLeft.getValue();
+                dropMarkerLeft += cellEdgeOnLeft.getKey();
+            } else {
+                latestColumnDropIndex = cellEdgeOnRight.getValue();
+                dropMarkerLeft += cellEdgeOnRight.getKey();
             }
+
             dropMarkerLeft += autoScrollX;
 
             final double frozenColumnsWidth = getFrozenColumnsWidth();
-            if (dropMarkerLeft < frozenColumnsWidth) {
-                latestColumnDropIndex = getFrozenColumnCount();
-                if (getScrollLeft() == 0) {
-                    dropMarkerLeft = frozenColumnsWidth;
-                } else {
-                    dropMarkerLeft = -10000000;
-                }
-            } else if (dropMarkerLeft > header.getElement().getOffsetWidth()
-                    || dropMarkerLeft < 0) {
+            if (dropMarkerLeft < frozenColumnsWidth
+                    || dropMarkerLeft > escalator.getHeader().getElement()
+                            .getOffsetWidth() || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
             dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
@@ -3009,6 +3025,9 @@ public class Grid<T> extends ResizeComposite implements
             eventCell.getElement().addClassName("dragged");
             // mark the floating cell, for styling & testing
             dragElement.addClassName("dragged-column-header");
+
+            calculatePossibleDropPositions();
+
             // start the auto scroll handler
             autoScroller.setScrollAreaPX(60);
             autoScroller.start(startingEvent, ScrollAxis.HORIZONTAL,
@@ -3098,6 +3117,58 @@ public class Grid<T> extends ResizeComposite implements
                 result += getColumn(i).getWidthActual();
             }
             return result;
+        }
+
+        private void calculatePossibleDropPositions() {
+            possibleDropPositions.clear();
+
+            if (!calculatePossibleDropPositionInsideSpannedHeader()) {
+                HashMap<Integer, Double> columnIndexToDropPositionMap = new HashMap<Integer, Double>();
+
+                final int frozenColumns = Math.max(0, getFrozenColumnCount());
+                double position = getFrozenColumnsWidth();
+                // add all columns except frozen columns
+                // TODO handle the case where the checkbox column is present
+                for (int i = frozenColumns; i < getColumnCount(); i++) {
+                    columnIndexToDropPositionMap.put(i, position);
+                    position += getColumn(i).getWidthActual();
+                }
+                // add the right side of the last column as columns.size()
+                columnIndexToDropPositionMap.put(getColumnCount(), position);
+
+                // can't drop inside a spanned header from outside it
+                // -> remove all column indexes that are inside a spanned cell
+                // in any header row
+                for (int c = frozenColumns; c < getColumnCount(); c++) {
+                    for (int r = 0; r < getHeaderRowCount(); r++) {
+                        HeaderRow headerRow = getHeaderRow(r);
+                        if (headerRow.hasSpannedCells()) {
+                            HeaderCell cell = headerRow.getCell(getColumn(c));
+                            assert cell != null : "Somehow got a null cell for row:cell "
+                                    + r + ":" + c;
+                            int colspan = cell.getColspan();
+                            while (colspan > 1) {
+                                c++;
+                                colspan--;
+                                columnIndexToDropPositionMap.remove(Integer
+                                        .valueOf(c));
+                            }
+                        }
+                    }
+                }
+                // finally lets flip the map, because while dragging we want the
+                // column index matching the X-coordinate
+                for (Entry<Integer, Double> entry : columnIndexToDropPositionMap
+                        .entrySet()) {
+                    possibleDropPositions.put(entry.getValue(), entry.getKey());
+                }
+            }
+        }
+
+        private boolean calculatePossibleDropPositionInsideSpannedHeader() {
+            // TODO if the dragged column is inside a spanned header on any row,
+            // then dragging is limited to inside that spanned cell
+            return false;
         }
     };
 
@@ -5391,6 +5462,16 @@ public class Grid<T> extends ResizeComposite implements
         if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()
                 .getFrozenColumnCount()) {
             return false;
+        }
+        // for now prevent dragging of spanned cells
+        if (eventCell.getElement().getColSpan() > 1) {
+            return false;
+        }
+        // for now prevent dragging of columns belonging to a spanned cell
+        for (int r = 0; r < getHeaderRowCount(); r++) {
+            if (getHeaderRow(r).getCell(eventCell.getColumn()).getColspan() > 1) {
+                return false;
+            }
         }
         if (event.getTypeInt() == Event.ONMOUSEDOWN
                 && event.getButton() == NativeEvent.BUTTON_LEFT

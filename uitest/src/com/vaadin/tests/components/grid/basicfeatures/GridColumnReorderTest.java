@@ -205,6 +205,36 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertFocusedCell(4, 1);
     }
 
+    @Test
+    public void testColumnReorder_draggingHeaderRowThatHasColumnHeadersSpanned_cantDropInsideSpannedHeaderFromOutside() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(1, 3, 1, 80);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_anotherRowHasColumnHeadersSpanned_cantDropInsideSpannedHeaderFromOutside() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 0, 2, 20);
+
+        // then
+        assertColumnHeaderOrder(1, 2, 0, 3, 4);
+    }
+
     private void toggleColumnReorder() {
         selectMenuPath("Component", "State", "Column Reordering");
     }
