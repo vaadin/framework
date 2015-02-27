@@ -18,9 +18,12 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 /**
@@ -213,6 +216,77 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testColumnReorder_draggingColumnLeftOfMultiSelectionColumn_columnDroppedRight() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+        List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
+
+        // when
+        dragAndDropDefaultColumnHeader(2, 0, 2);
+
+        // then
+        gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
+    }
+
+    @Test
+    public void testColumnReorder_multiSelectionAndFrozenColumns_columnDroppedRight() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+        setFrozenColumns(1);
+        List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
+
+        // when
+        dragAndDropDefaultColumnHeader(3, 0, 2);
+
+        // then
+        gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(3));
+    }
+
+    @Test
+    public void testColumnReordering_multiSelectionColumnNotFrozen_stillCantDropLeftSide() {
+        // given
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+        setFrozenColumns(-1);
+        List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
+
+        // when
+        dragAndDropDefaultColumnHeader(2, 0, 2);
+
+        // then
+        gridHeaderRowCells = getGridHeaderRowCells();
+        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertColumnHeader("Column 1", gridHeaderRowCells.get(1));
+        assertColumnHeader("Column 0", gridHeaderRowCells.get(2));
+        assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
+    }
+
+    @Test
     public void testColumnReordering_twoHeaderRows_dndReorderingPossibleFromFirstRow() {
         // given
         openTestURL();
@@ -235,7 +309,6 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         assertColumnHeaderOrder(0, 1, 2, 3);
 
-        // when
         // when
         dragAndDropColumnHeader(1, 0, 2, 100);
 

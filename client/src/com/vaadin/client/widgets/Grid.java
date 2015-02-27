@@ -3054,6 +3054,9 @@ public class Grid<T> extends ResizeComposite implements
                     latestColumnDropIndex--;
                 }
                 reordered.add(latestColumnDropIndex, moved);
+                reordered.remove(selectionColumn); // since setColumnOrder will
+                                                   // add it anyway!
+
                 @SuppressWarnings("unchecked")
                 Column<?, T>[] array = reordered.toArray(new Column[reordered
                         .size()]);
@@ -3112,11 +3115,36 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private double getFrozenColumnsWidth() {
-            double result = 0.0d;
+            double value = getMultiSelectColumnWidth();
             for (int i = 0; i < getFrozenColumnCount(); i++) {
-                result += getColumn(i).getWidthActual();
+                value += getColumn(i).getWidthActual();
             }
-            return result;
+            return value;
+        }
+
+        private double getMultiSelectColumnWidth() {
+            if (getSelectionModel().getSelectionColumnRenderer() != null) {
+                // frozen checkbox column is present, it is always the first
+                // column
+                return escalator.getHeader().getElement()
+                        .getFirstChildElement().getFirstChildElement()
+                        .getOffsetWidth();
+            }
+            return 0.0;
+        }
+
+        /**
+         * Returns the amount of frozen columns. The selection column is always
+         * considered frozen, since it can't be moved.
+         */
+        private int getSelectionAndFrozenColumnCount() {
+            // no matter if selection column is frozen or not, it is considered
+            // frozen for column dnd reorder
+            if (getSelectionModel().getSelectionColumnRenderer() != null) {
+                return Math.max(0, getFrozenColumnCount()) + 1;
+            } else {
+                return Math.max(0, getFrozenColumnCount());
+            }
         }
 
         private void calculatePossibleDropPositions() {
@@ -3125,10 +3153,9 @@ public class Grid<T> extends ResizeComposite implements
             if (!calculatePossibleDropPositionInsideSpannedHeader()) {
                 HashMap<Integer, Double> columnIndexToDropPositionMap = new HashMap<Integer, Double>();
 
-                final int frozenColumns = Math.max(0, getFrozenColumnCount());
+                final int frozenColumns = getSelectionAndFrozenColumnCount();
                 double position = getFrozenColumnsWidth();
                 // add all columns except frozen columns
-                // TODO handle the case where the checkbox column is present
                 for (int i = frozenColumns; i < getColumnCount(); i++) {
                     columnIndexToDropPositionMap.put(i, position);
                     position += getColumn(i).getWidthActual();

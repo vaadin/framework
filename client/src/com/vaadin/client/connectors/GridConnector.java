@@ -370,7 +370,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 List<Column<?, JsonObject>> columns = getWidget().getColumns();
                 final List<String> newColumnOrder = new ArrayList<String>();
                 for (Column<?, JsonObject> column : columns) {
-                    newColumnOrder.add(((CustomGridColumn) column).id);
+                    if (column instanceof CustomGridColumn) {
+                        newColumnOrder.add(((CustomGridColumn) column).id);
+                    } // the other case would be the multi selection column
                 }
                 getRpcProxy(GridServerRpc.class).columnsReordered(
                         newColumnOrder, columnOrder);
