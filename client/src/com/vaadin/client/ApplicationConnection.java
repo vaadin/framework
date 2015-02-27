@@ -62,6 +62,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -898,13 +899,11 @@ public class ApplicationConnection implements HasHandlers {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
             public void onError(Request request, Throwable exception) {
-                handleCommunicationError(exception.getMessage(), -1);
+                handleError(exception.getMessage(), -1);
             }
 
-            private void handleCommunicationError(String details, int statusCode) {
-                if (!handleErrorInDelegate(details, statusCode)) {
-                    showCommunicationError(details, statusCode);
-                }
+            private void handleError(String details, int statusCode) {
+                handleCommunicationError(details, statusCode);
                 endRequest();
 
                 // Consider application not running any more and prevent all
@@ -948,7 +947,7 @@ public class ApplicationConnection implements HasHandlers {
                             }
                         }).schedule(100);
                     } else {
-                        handleCommunicationError(
+                        handleError(
                                 "Invalid status code 0 (server down?)",
                                 statusCode);
                     }
@@ -994,7 +993,7 @@ public class ApplicationConnection implements HasHandlers {
                 } else if ((statusCode / 100) == 5) {
                     // Something's wrong on the server, there's nothing the
                     // client can do except maybe try again.
-                    handleCommunicationError("Server error. Error code: "
+                    handleError("Server error. Error code: "
                             + statusCode, statusCode);
                     return;
                 }
@@ -3571,11 +3570,17 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    private boolean handleErrorInDelegate(String details, int statusCode) {
-        if (communicationErrorDelegate == null) {
-            return false;
+    private void handleCommunicationError(String details, int statusCode) {
+        boolean handled = false;
+        if (communicationErrorDelegate != null) {
+            handled = communicationErrorDelegate.onError(details, statusCode);
+
         }
-        return communicationErrorDelegate.onError(details, statusCode);
+
+        if (!handled) {
+            showCommunicationError(details, statusCode);
+        }
+
     }
 
     /**
@@ -3650,7 +3655,7 @@ public class ApplicationConnection implements HasHandlers {
             push.init(this, pushState, new CommunicationErrorHandler() {
                 @Override
                 public boolean onError(String details, int statusCode) {
-                    showCommunicationError(details, statusCode);
+                    handleCommunicationError(details,statusCode);
                     return true;
                 }
             });
