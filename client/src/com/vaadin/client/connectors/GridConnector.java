@@ -454,6 +454,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     }
                 });
             }
+
+            @Override
+            public void recalculateColumnWidths() {
+                getWidget().recalculateColumnWidths();
+            }
         });
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);

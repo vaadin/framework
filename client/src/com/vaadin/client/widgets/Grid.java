@@ -3027,11 +3027,11 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             if (this.grid != null) {
-                this.grid.autoColumnWidthsRecalculator.schedule();
+                this.grid.recalculateColumnWidths();
             }
             this.grid = grid;
             if (this.grid != null) {
-                this.grid.autoColumnWidthsRecalculator.schedule();
+                this.grid.recalculateColumnWidths();
                 updateHeader();
             }
         }
@@ -3415,7 +3415,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void scheduleColumnWidthRecalculator() {
             if (grid != null) {
-                grid.autoColumnWidthsRecalculator.schedule();
+                grid.recalculateColumnWidths();
             } else {
                 /*
                  * NOOP
@@ -6278,5 +6278,18 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void resetSizesFromDom() {
         getEscalator().resetSizesFromDom();
+    }
+
+    /**
+     * Requests that the column widths should be recalculated.
+     * <p>
+     * The actual recalculation is not necessarily done immediately so you
+     * cannot rely on the columns being the correct width after the call
+     * returns.
+     * 
+     * @since
+     */
+    public void recalculateColumnWidths() {
+        autoColumnWidthsRecalculator.schedule();
     }
 }
