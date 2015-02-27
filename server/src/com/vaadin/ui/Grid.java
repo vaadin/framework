@@ -5080,4 +5080,17 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     public void removeListener(ItemClickListener listener) {
         removeItemClickListener(listener);
     }
+
+    /**
+     * Requests that the column widths should be recalculated.
+     * <p>
+     * In most cases Grid will know when column widths need to be recalculated
+     * but this method can be used to force recalculation in situations when
+     * grid does not recalculate automatically.
+     * 
+     * @since
+     */
+    public void recalculateColumnWidths() {
+        getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
+    }
 }
