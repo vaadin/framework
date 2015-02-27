@@ -1433,6 +1433,10 @@ public abstract class VaadinService implements Serializable {
             ErrorHandler errorHandler = ErrorEvent
                     .findErrorHandler(vaadinSession);
 
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(t));
+            }
+
             // if this was an UIDL request, send UIDL back to the client
             if (ServletPortletHelper.isUIDLRequest(request)) {
                 SystemMessages ci = getSystemMessages(
@@ -1454,14 +1458,7 @@ public abstract class VaadinService implements Serializable {
                                     "Failed to write critical notification response to the client",
                                     e);
                 }
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(t));
-                }
             } else {
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(t));
-                }
-
                 // Re-throw other exceptions
                 throw new ServiceException(t);
             }
@@ -1598,18 +1595,20 @@ public abstract class VaadinService implements Serializable {
         return "for(;;);[" + returnString + "]";
     }
 
-    private static String createCriticalNotificationMessage(String message, String details) {
-        if(message == null) {
+    private static String createCriticalNotificationMessage(String message,
+            String details) {
+        if (message == null) {
             return details;
-        } else if(details != null) {
+        } else if (details != null) {
             return message + "<br/><br/>" + details;
         }
 
         return message;
     }
 
-    private static void putValueOrJsonNull(JsonObject json, String key, String value) {
-        if(value == null) {
+    private static void putValueOrJsonNull(JsonObject json, String key,
+            String value) {
+        if (value == null) {
             json.put(key, Json.createNull());
         } else {
             json.put(key, value);
