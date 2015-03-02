@@ -310,8 +310,11 @@ public class LayoutManager {
         dump = needsMeasure.dump();
         dumpLength = dump.length();
         for (int i = 0; i < dumpLength; i++) {
-            String layoutId = dump.get(i);
-            currentDependencyTree.setNeedsMeasure(layoutId, true);
+            ServerConnector connector = connectorMap.getConnector(dump.get(i));
+            if (connector != null) {
+                currentDependencyTree.setNeedsMeasure(
+                        (ComponentConnector) connector, true);
+            }
         }
         needsMeasure = FastStringSet.create();
 
@@ -661,7 +664,7 @@ public class LayoutManager {
                 parentElement.getStyle().setProperty("overflow",
                         originalOverflows.get(parentElement));
 
-                layoutDependencyTree.setNeedsMeasure(connectorId, true);
+                layoutDependencyTree.setNeedsMeasure(componentConnector, true);
             }
             Profiler.leave("Overflow fix restore");
 
@@ -695,8 +698,7 @@ public class LayoutManager {
                 measureConnector(connectors.get(i));
             }
             for (int i = 0; i < connectorCount; i++) {
-                layoutDependencyTree.setNeedsMeasure(connectors.get(i)
-                        .getConnectorId(), false);
+                layoutDependencyTree.setNeedsMeasure(connectors.get(i), false);
             }
             measureCount += connectorCount;
 
@@ -715,8 +717,9 @@ public class LayoutManager {
                 measureCount++;
             }
             for (int i = 0; i < length; i++) {
-                String connectorId = measureTargets.get(i);
-                layoutDependencyTree.setNeedsMeasure(connectorId, false);
+                ComponentConnector connector = (ComponentConnector) connectorMap
+                        .getConnector(measureTargets.get(i));
+                layoutDependencyTree.setNeedsMeasure(connector, false);
             }
         }
         Profiler.leave("Layout measure from tree");

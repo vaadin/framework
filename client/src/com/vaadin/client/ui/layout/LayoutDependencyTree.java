@@ -429,6 +429,15 @@ public class LayoutDependencyTree {
         setNeedsVerticalMeasure(connector, needsMeasure);
     }
 
+    /**
+     * @param connectorId
+     * @param needsMeasure
+     * 
+     * @deprecated As of 7.4.2, use
+     *             {@link #setNeedsMeasure(ComponentConnector, boolean)} for
+     *             improved performance.
+     */
+    @Deprecated
     public void setNeedsMeasure(String connectorId, boolean needsMeasure) {
         ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
                 connection).getConnector(connectorId);
