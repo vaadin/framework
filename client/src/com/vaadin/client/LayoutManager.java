@@ -605,15 +605,7 @@ public class LayoutManager {
                 ComponentConnector componentConnector = (ComponentConnector) connectorMap
                         .getConnector(connectorId);
 
-                // Delay the overflow fix if the involved connectors might still
-                // change
-                boolean connectorChangesExpected = !currentDependencyTree
-                        .noMoreChangesExpected(componentConnector);
-                boolean parentChangesExcpected = componentConnector.getParent() instanceof ComponentConnector
-                        && !currentDependencyTree
-                                .noMoreChangesExpected((ComponentConnector) componentConnector
-                                        .getParent());
-                if (connectorChangesExpected || parentChangesExcpected) {
+                if (delayOverflowFix(componentConnector)) {
                     delayedOverflowFixes.add(connectorId);
                     continue;
                 }
@@ -730,6 +722,23 @@ public class LayoutManager {
         Profiler.leave("Layout measure from tree");
 
         return measureCount;
+    }
+
+    /*
+     * Delay the overflow fix if the involved connectors might still change
+     */
+    private boolean delayOverflowFix(ComponentConnector componentConnector) {
+        if (!currentDependencyTree.noMoreChangesExpected(componentConnector)) {
+            return true;
+        }
+        ServerConnector parent = componentConnector.getParent();
+        if (parent instanceof ComponentConnector
+                && !currentDependencyTree
+                        .noMoreChangesExpected((ComponentConnector) parent)) {
+            return true;
+        }
+
+        return false;
     }
 
     private void measureConnector(ComponentConnector connector) {
