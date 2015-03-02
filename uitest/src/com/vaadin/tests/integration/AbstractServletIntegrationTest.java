@@ -39,8 +39,8 @@ public abstract class AbstractServletIntegrationTest extends
     }
 
     @Override
-    protected String getDeploymentPath() {
-        return "/demo" + super.getDeploymentPath();
+    protected String getDeploymentPath(Class<?> uiClass) {
+        return "/demo" + super.getDeploymentPath(uiClass);
     }
 
 }
