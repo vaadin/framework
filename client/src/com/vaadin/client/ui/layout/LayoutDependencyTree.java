@@ -690,19 +690,10 @@ public class LayoutDependencyTree {
     }
 
     public JsArrayString getMeasureTargetsJsArray() {
-        FastStringSet horizontalQueue = getMeasureQueue(HORIZONTAL);
-        JsArrayString measureTargets = horizontalQueue.dump();
-
-        JsArrayString verticalDump = getMeasureQueue(VERTICAL).dump();
-        int length = verticalDump.length();
-        for (int i = 0; i < length; i++) {
-            String connectorId = verticalDump.get(i);
-            if (!horizontalQueue.contains(connectorId)) {
-                measureTargets.push(connectorId);
-            }
-        }
-
-        return measureTargets;
+        FastStringSet allMeasuredTargets = FastStringSet.create();
+        allMeasuredTargets.addAll(getMeasureQueue(HORIZONTAL));
+        allMeasuredTargets.addAll(getMeasureQueue(VERTICAL));
+        return allMeasuredTargets.dump();
     }
 
     public void logDependencyStatus(ComponentConnector connector) {
