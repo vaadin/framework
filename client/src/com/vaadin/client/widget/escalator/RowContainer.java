@@ -50,6 +50,10 @@ public interface RowContainer {
          * <p>
          * If a spacer is already registered with the given row index, that
          * spacer will be updated with the given height.
+         * <p>
+         * <em>Note:</em> The row index for a spacer will change if rows are
+         * inserted or removed above the current position. Spacers will also be
+         * removed alongside their associated rows
          * 
          * @param rowIndex
          *            the row index for the spacer to modify. The affected
@@ -59,6 +63,8 @@ public interface RowContainer {
          *            negative, the affected spacer (if exists) will be removed
          * @throws IllegalArgumentException
          *             if {@code rowIndex} is not a valid row index
+         * @see #insertRows(int, int)
+         * @see #removeRows(int, int)
          */
         void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException;
@@ -88,6 +94,26 @@ public interface RowContainer {
          */
         SpacerUpdater getSpacerUpdater();
 
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Any spacers underneath {@code index} will be offset and "pushed"
+         * down. This also modifies the row index they are associated with.
+         */
+        @Override
+        public void insertRows(int index, int numberOfRows)
+                throws IndexOutOfBoundsException, IllegalArgumentException;
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Any spacers underneath {@code index} will be offset and "pulled" up.
+         * This also modifies the row index they are associated with. Any
+         * spacers in the removed range will also be closed and removed.
+         */
+        @Override
+        public void removeRows(int index, int numberOfRows)
+                throws IndexOutOfBoundsException, IllegalArgumentException;
     }
 
     /**

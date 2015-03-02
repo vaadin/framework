@@ -2925,6 +2925,12 @@ public class Escalator extends Widget implements RequiresResize,
             /*
              * Removing spacers as the very first step will correct the
              * scrollbars and row offsets right away.
+             * 
+             * TODO: actually, it kinda sounds like a Grid feature that a spacer
+             * would be associated with a particular row. Maybe it would be
+             * better to have a spacer separate from rows, and simply collapse
+             * them if they happen to end up on top of each other. This would
+             * probably make supporting the -1 row pretty easy, too.
              */
             spacerContainer.paintRemoveSpacers(removedRowsRange);
 
@@ -3576,7 +3582,7 @@ public class Escalator extends Widget implements RequiresResize,
 
                 // TODO
                 getLogger().warning(
-                        "[[spacers]] removing rows while shrinking the body "
+                        "[[spacers]] removing spacers while shrinking the body "
                                 + "section");
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
@@ -4511,6 +4517,7 @@ public class Escalator extends Widget implements RequiresResize,
                 SpacerImpl spacer = rowIndexToSpacer.remove(this.rowIndex);
                 assert this == spacer : "trying to move an unexpected spacer.";
                 this.rowIndex = rowIndex;
+                root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
                 rowIndexToSpacer.put(this.rowIndex, this);
             }
         }

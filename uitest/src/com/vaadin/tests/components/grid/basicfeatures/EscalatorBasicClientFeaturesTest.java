@@ -70,6 +70,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLSPAN_NONE = "Apply no colspan";
     protected static final String SPACERS = "Spacers";
     protected static final String ROW_1 = "Row 1";
+    protected static final String ROW_99 = "Row 99";
     protected static final String SET_100PX = "Set 100px";
     protected static final String REMOVE = "Remove";
 
@@ -245,6 +246,11 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         getVerticalScrollbar().scroll(px);
     }
 
+    protected long getScrollTop() {
+        return ((Long) executeScript("return arguments[0].scrollTop;",
+                getVerticalScrollbar())).longValue();
+    }
+
     private TestBenchElement getVerticalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
@@ -252,6 +258,11 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected void scrollHorizontallyTo(int px) {
         getHorizontalScrollbar().scrollLeft(px);
+    }
+
+    private long getScrollLeft() {
+        return ((Long) executeScript("return arguments[0].scrollLeft;",
+                getHorizontalScrollbar())).longValue();
     }
 
     private TestBenchElement getHorizontalScrollbar() {
@@ -269,6 +280,11 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     private List<WebElement> getSpacers() {
         return getEscalator().findElements(By.className("v-escalator-spacer"));
+    }
+
+    protected boolean spacersAreFoundInDom() {
+        List<WebElement> spacers = getSpacers();
+        return spacers != null && !spacers.isEmpty();
     }
 
     @SuppressWarnings("boxing")

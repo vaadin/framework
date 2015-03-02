@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -28,6 +29,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 @SuppressWarnings("boxing")
@@ -87,7 +89,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void openVisibleSpacer() {
-        assertNull("No spacers should be shown at the start", getSpacer(1));
+        assertFalse("No spacers should be shown at the start",
+                spacersAreFoundInDom());
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
         assertNotNull("Spacer should be shown after setting it", getSpacer(1));
     }
@@ -117,7 +120,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
         double oldTop = getElementTop(getSpacer(1));
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
-        double newTop = getElementTop(getSpacer(1));
+        double newTop = getElementTop(getSpacer(2));
 
         assertGreater("Spacer should've been pushed down", newTop, oldTop);
     }
@@ -150,6 +153,64 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
         assertEquals("Next row should've been rendered below the spacer",
                 spacerTop + 100, rowTop, WidgetUtil.PIXEL_EPSILON);
+    }
+
+    @Test
+    public void addSpacerAtBottomThenScrollThere() {
+        selectMenuPath(FEATURES, SPACERS, ROW_99, SET_100PX);
+        scrollVerticallyTo(999999);
+
+        assertFalse("Did not expect a notification",
+                $(NotificationElement.class).exists());
+    }
+
+    @Test
+    public void scrollToBottomThenAddSpacerThere() {
+        scrollVerticallyTo(999999);
+        long oldBottomScrollTop = getScrollTop();
+        selectMenuPath(FEATURES, SPACERS, ROW_99, SET_100PX);
+
+        assertEquals("Adding a spacer underneath the current viewport should "
+                + "not scroll anywhere", oldBottomScrollTop, getScrollTop());
+        assertFalse("Got an unexpected notification",
+                $(NotificationElement.class).exists());
+
+        scrollVerticallyTo(999999);
+
+        assertFalse("Got an unexpected notification",
+                $(NotificationElement.class).exists());
+        assertGreater("Adding a spacer should've made the scrollbar scroll "
+                + "further", getScrollTop(), oldBottomScrollTop);
+    }
+
+    @Test
+    public void removingRowAboveSpacerMovesSpacerUp() {
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        WebElement spacer = getSpacer(1);
+        double originalElementTop = getElementTop(spacer);
+
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS,
+                REMOVE_ONE_ROW_FROM_BEGINNING);
+        assertLessThan("spacer should've moved up", getElementTop(spacer),
+                originalElementTop);
+        assertNull("No spacer for row 1 should be found after removing the "
+                + "top row", getSpacer(1));
+    }
+
+    @Test
+    public void removingSpacedRowRemovesSpacer() {
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        assertTrue("Spacer should've been found in the DOM",
+                spacersAreFoundInDom());
+
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS,
+                REMOVE_ONE_ROW_FROM_BEGINNING);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS,
+                REMOVE_ONE_ROW_FROM_BEGINNING);
+
+        assertFalse("No spacers should be in the DOM after removing "
+                + "associated spacer", spacersAreFoundInDom());
+
     }
 
     private static double getElementTop(WebElement element) {
