@@ -647,6 +647,7 @@ public class EscalatorBasicClientFeaturesWidget extends
 
         createSpacersMenuForRow(1, menupath);
         createSpacersMenuForRow(50, menupath);
+        createSpacersMenuForRow(99, menupath);
     }
 
     private void createSpacersMenuForRow(final int rowIndex, String[] menupath) {

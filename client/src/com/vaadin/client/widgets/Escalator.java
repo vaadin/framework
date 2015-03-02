@@ -2421,13 +2421,6 @@ public class Escalator extends Widget implements RequiresResize,
                 return;
             }
 
-            /*
-             * TODO This will break the logical index calculation, as it will
-             * try to search for non-
-             */
-            getLogger().warning(
-                    "[[spacers]] scrolling and spacers near the bottom");
-
             boolean rowsWereMoved = false;
 
             final double topElementPosition;
@@ -2526,6 +2519,13 @@ public class Escalator extends Widget implements RequiresResize,
                     rowsToMove--;
                     aRowWasLeftBehind = true;
                 }
+
+                /*
+                 * Make sure we don't scroll beyond the row content. This can
+                 * happen if we have spacers for the last rows.
+                 */
+                rowsToMove = Math.max(0,
+                        Math.min(rowsToMove, getRowCount() - logicalRowIndex));
 
                 moveAndUpdateEscalatorRows(Range.between(0, rowsToMove),
                         targetVisualIndex, logicalRowIndex);
