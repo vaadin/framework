@@ -139,6 +139,8 @@ import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
 import com.vaadin.client.widgets.Grid.Editor.State;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -3183,15 +3185,15 @@ public class Grid<T> extends ResizeComposite implements
             int leftBound = -1;
             int rightBound = getColumnCount() + 1;
 
-            for (int r = 0; r < getHeaderRowCount(); r++) {
-                HeaderRow headerRow = getHeaderRow(r);
-                if (!headerRow.hasSpannedCells()) {
+            final List<StaticRow<?>> rows = new ArrayList<StaticRow<?>>();
+            rows.addAll(header.getRows());
+            rows.addAll(footer.getRows());
+            for (StaticRow<?> row : rows) {
+                if (!row.hasSpannedCells()) {
                     continue;
                 }
                 for (int c = frozenColumns; c < getColumnCount(); c++) {
-                    HeaderCell cell = headerRow.getCell(getColumn(c));
-                    assert cell != null : "Somehow got a null cell for row:cell "
-                            + r + ":" + c;
+                    StaticCell cell = row.getCell(getColumn(c));
                     int colspan = cell.getColspan();
                     if (colspan <= 1) {
                         continue;

@@ -236,7 +236,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     }
 
     @Test
-    public void testColumnReorder_cellInsideASpannedHeader_cantBeDroppedOutsideSpannedArea() {
+    public void testColumnReorder_cellInsideSpannedHeader_cantBeDroppedOutsideSpannedArea() {
         // given
         toggleColumnReorder();
         selectMenuPath("Component", "Header", "Append row");
@@ -340,6 +340,79 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         dragAndDropColumnHeader(0, 1, 4, 80);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+
+        // when then
+        dragAndDropColumnHeader(0, 1, 3, 80);
+        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+
+        dragAndDropColumnHeader(0, 2, 4, 10);
+        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+
+        dragAndDropColumnHeader(0, 2, 0, 10);
+        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+    }
+
+    @Test
+    public void testColumnReorder_footerHasSpannedCells_cantDropInside() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Footer", "Row 1", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 3, 1, 80);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellInsideASpannedFooter_cantBeDroppedOutsideSpannedArea() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Footer", "Row 1", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 2, 0, 20);
+
+        // then
+        assertColumnHeaderOrder(0, 2, 1, 3, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellInsideTwoCrossingSpanningFooters_cantTouchThis() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
+        selectMenuPath("Component", "Footer", "Row 2", "Join columns 1, 2");
+        dragAndDropColumnHeader(0, 3, 0, 10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 2, 0, 10);
+
+        // then
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellsInsideTwoAdjacentSpannedHeaderAndFooter_reorderingLimited() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(0, 0, 4, 80);
+        scrollGridHorizontallyTo(0);
+        dragAndDropColumnHeader(0, 1, 4, 80);
+        scrollGridHorizontallyTo(0);
+        selectMenuPath("Component", "Footer", "Row 1", "Join columns 1, 2");
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
 
         // when then
