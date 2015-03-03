@@ -44,7 +44,15 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     private final static String TRANSLATE_VALUE_REGEX = 
             "translate(?:3d|)" // "translate" or "translate3d"
             + "\\(" // literal "("
-                + ".+?, " // the x argument, uninteresting
+                + "(" // start capturing the x argument
+                    + "[0-9]+" // the integer part of the value
+                    + "(?:" // start of the subpixel part of the value
+                        + "\\.[0-9]" // if we have a period, there must be at least one number after it
+                        + "[0-9]*" // any amount of accuracy afterwards is fine
+                    + ")?" // the subpixel part is optional
+                + ")"
+            + "(?:px)?" // we don't care if the values are suffixed by "px" or not.
+            + ", "
                 + "(" // start capturing the y argument
                     + "[0-9]+" // the integer part of the value
                     + "(?:" // start of the subpixel part of the value
@@ -52,14 +60,14 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
                         + "[0-9]*" // any amount of accuracy afterwards is fine
                     + ")?" // the subpixel part is optional
                 + ")"
-                + "(?:px)?" // we don't care if the values are suffixed by "px" or not.
-                + "(?:, .*?)?" // the possible z argument, uninteresting (translate doesn't have one, translate3d does)
-                + "\\)" // literal ")"
-                + ";?"; // optional ending semicolon
+            + "(?:px)?" // we don't care if the values are suffixed by "px" or not.
+            + "(?:, .*?)?" // the possible z argument, uninteresting (translate doesn't have one, translate3d does)
+            + "\\)" // literal ")"
+            + ";?"; // optional ending semicolon
     
     // 40px;
     // 12.34px
-    private final static String TOP_VALUE_REGEX =
+    private final static String PIXEL_VALUE_REGEX =
             "(" // capture the pixel value
                 + "[0-9]+" // the pixel argument
                 + "(?:" // start of the subpixel part of the value
@@ -75,11 +83,13 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
             .compile("transform: (.*?);"); // also matches "-webkit-transform";
     private final static Pattern TOP_CSS_PATTERN = Pattern
             .compile("top: (.*?);");
+    private final static Pattern LEFT_CSS_PATTERN = Pattern
+            .compile("left: (.*?);");
 
     private final static Pattern TRANSLATE_VALUE_PATTERN = Pattern
             .compile(TRANSLATE_VALUE_REGEX);
-    private final static Pattern TOP_VALUE_PATTERN = Pattern
-            .compile(TOP_VALUE_REGEX);
+    private final static Pattern PIXEL_VALUE_PATTERN = Pattern
+            .compile(PIXEL_VALUE_REGEX);
 
     @Before
     public void before() {
@@ -213,7 +223,33 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     }
 
-    private static double getElementTop(WebElement element) {
+   @Test
+    public void spacersAreFixedInViewport_firstFreezeThenScroll() {
+        selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        assertEquals("Spacer's left position should've been 0 at the "
+                + "beginning", 0d, getElementLeft(getSpacer(1)),
+                WidgetUtil.PIXEL_EPSILON);
+
+        int scrollTo = 10;
+        scrollHorizontallyTo(scrollTo);
+        assertEquals("Spacer's left position should've been " + scrollTo
+                + " after scrolling " + scrollTo + "px", scrollTo,
+                getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
+    }
+
+    @Test
+    public void spacersAreFixedInViewport_firstScrollThenFreeze() {
+        selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
+        int scrollTo = 10;
+        scrollHorizontallyTo(scrollTo);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        assertEquals("Spacer's left position should've been " + scrollTo
+                + " after scrolling " + scrollTo + "px", scrollTo,
+                getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
+    }
+
+    private static double[] getElementDimensions(WebElement element) {
         /*
          * we need to parse the style attribute, since using getCssValue gets a
          * normalized value that is harder to parse.
@@ -222,17 +258,34 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
         String transform = getTransformFromStyle(style);
         if (transform != null) {
-            return getTranslateYValue(transform);
+            return getTranslateValues(transform);
         }
 
+        double[] result = new double[] { -1, -1 };
+        String left = getLeftFromStyle(style);
+        if (left != null) {
+            result[1] = getPixelValue(left);
+        }
         String top = getTopFromStyle(style);
         if (top != null) {
-            return getTopValue(top);
+            result[0] = getPixelValue(top);
         }
 
-        throw new IllegalArgumentException(
-                "Could not parse the top position from the CSS \"" + style
-                        + "\"");
+        if (result[0] != -1 && result[1] != -1) {
+            return result;
+        } else {
+            throw new IllegalArgumentException(
+                    "Could not parse the top position from the CSS \"" + style
+                            + "\"");
+        }
+    }
+
+    private static double getElementTop(WebElement element) {
+        return getElementDimensions(element)[1];
+    }
+
+    private static double getElementLeft(WebElement element) {
+        return getElementDimensions(element)[0];
     }
 
     private static String getTransformFromStyle(String style) {
@@ -241,6 +294,10 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     private static String getTopFromStyle(String style) {
         return getFromStyle(TOP_CSS_PATTERN, style);
+    }
+
+    private static String getLeftFromStyle(String style) {
+        return getFromStyle(LEFT_CSS_PATTERN, style);
     }
 
     private static String getFromStyle(Pattern pattern, String style) {
@@ -254,19 +311,25 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         }
     }
 
-    private static double getTranslateYValue(String translate) {
-        return getValueFromCss(TRANSLATE_VALUE_PATTERN, translate);
-    }
-
-    private static double getTopValue(String top) {
-        return getValueFromCss(TOP_VALUE_PATTERN, top);
-    }
-
-    private static double getValueFromCss(Pattern pattern, String css) {
-        Matcher matcher = pattern.matcher(css);
-        assertTrue("no matches for " + css + " against "
+    /**
+     * @return {@code [0] == x}, {@code [1] == y}
+     */
+    private static double[] getTranslateValues(String translate) {
+        Matcher matcher = TRANSLATE_VALUE_PATTERN.matcher(translate);
+        assertTrue("no matches for " + translate + " against "
                 + TRANSLATE_VALUE_PATTERN, matcher.find());
-        assertEquals("wrong amount of groups matched in " + css, 1,
+        assertEquals("wrong amout of groups matched in " + translate, 2,
+                matcher.groupCount());
+
+        return new double[] { Double.parseDouble(matcher.group(1)),
+                Double.parseDouble(matcher.group(2)) };
+    }
+
+    private static double getPixelValue(String top) {
+        Matcher matcher = PIXEL_VALUE_PATTERN.matcher(top);
+        assertTrue("no matches for " + top + " against " + PIXEL_VALUE_PATTERN,
+                matcher.find());
+        assertEquals("wrong amount of groups matched in " + top, 1,
                 matcher.groupCount());
         return Double.parseDouble(matcher.group(1));
     }

@@ -1698,13 +1698,11 @@ public class Escalator extends Widget implements RequiresResize,
         public void setColumnFrozen(int column, boolean frozen) {
             final NodeList<TableRowElement> childRows = root.getRows();
 
-            if (column == 0 && this instanceof BodyRowContainer) {
-                // TODO
-                getLogger().warning("[[spacers]] freezing columns");
-            }
-
             for (int row = 0; row < childRows.getLength(); row++) {
                 final TableRowElement tr = childRows.getItem(row);
+                if (!rowCanBeFrozen(tr)) {
+                    continue;
+                }
 
                 TableCellElement cell = tr.getCells().getItem(column);
                 if (frozen) {
@@ -1723,18 +1721,30 @@ public class Escalator extends Widget implements RequiresResize,
         public void updateFreezePosition(int column, double scrollLeft) {
             final NodeList<TableRowElement> childRows = root.getRows();
 
-            if (column == 0 && this instanceof BodyRowContainer) {
-                // TODO
-                getLogger().warning("[[spacers]] update freeze position");
-            }
-
             for (int row = 0; row < childRows.getLength(); row++) {
                 final TableRowElement tr = childRows.getItem(row);
 
-                TableCellElement cell = tr.getCells().getItem(column);
-                position.set(cell, scrollLeft, 0);
+                if (rowCanBeFrozen(tr)) {
+                    TableCellElement cell = tr.getCells().getItem(column);
+                    position.set(cell, scrollLeft, 0);
+                }
             }
         }
+
+        /**
+         * Checks whether a row is an element, or contains such elements, that
+         * can be frozen.
+         * <p>
+         * In practice, this applies for all header and footer rows. For body
+         * rows, it applies for all rows except spacer rows.
+         * 
+         * @param tr
+         *            the row element to check for if it is or has elements that
+         *            can be frozen
+         * @return <code>true</code> iff this the given element, or any of its
+         *         descendants, can be frozen
+         */
+        abstract protected boolean rowCanBeFrozen(TableRowElement tr);
 
         /**
          * Iterates through all the cells in a column and returns the width of
@@ -2230,6 +2240,12 @@ public class Escalator extends Widget implements RequiresResize,
         @Override
         protected void paintInsertRows(int visualIndex, int numberOfRows) {
             paintInsertStaticRows(visualIndex, numberOfRows);
+        }
+
+        @Override
+        protected boolean rowCanBeFrozen(TableRowElement tr) {
+            assert root.isOrHasChild(tr) : "Row does not belong to this table section";
+            return true;
         }
     }
 
@@ -3858,6 +3874,15 @@ public class Escalator extends Widget implements RequiresResize,
             return root.getChildCount()
                     - spacerContainer.getSpacersInDom().size();
         }
+
+        @Override
+        protected boolean rowCanBeFrozen(TableRowElement tr) {
+            return visualRowOrder.contains(tr);
+        }
+
+        public void reapplySpacerWidths() {
+            spacerContainer.reapplySpacerWidths();
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -4376,18 +4401,13 @@ public class Escalator extends Widget implements RequiresResize,
                 setPosition(getLeft() + x, getTop() + y);
             }
 
-            public double getLeft() {
-                // not implemented yet.
-                return 0;
-            }
-
             public void setupDom(double height) {
                 assert !domHasBeenSetup : "DOM can't be set up twice.";
                 assert RootPanel.get().getElement().isOrHasChild(root) : "Root element should've been attached to the DOM by now.";
                 domHasBeenSetup = true;
 
+                getRootElement().getStyle().setWidth(getInnerWidth(), Unit.PX);
                 setHeight(height);
-                root.getStyle().setWidth(100, Unit.PCT);
 
                 spacerElement.getStyle().setWidth(100, Unit.PCT);
                 spacerElement.setColSpan(getColumnConfiguration()
@@ -4508,6 +4528,10 @@ public class Escalator extends Widget implements RequiresResize,
                 return positions.getTop(getRootElement());
             }
 
+            public double getLeft() {
+                return positions.getLeft(getRootElement());
+            }
+
             /**
              * Sets a new row index for this spacer. Also updates the bookeeping
              * at {@link SpacerContainer#rowIndexToSpacer}.
@@ -4525,6 +4549,23 @@ public class Escalator extends Widget implements RequiresResize,
         private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
 
         private SpacerUpdater spacerUpdater = SpacerUpdater.NULL;
+
+        private final ScrollHandler spacerScroller = new ScrollHandler() {
+            private double prevScrollX = 0;
+
+            @Override
+            public void onScroll(ScrollEvent event) {
+                if (WidgetUtil.pixelValuesEqual(getScrollLeft(), prevScrollX)) {
+                    return;
+                }
+
+                prevScrollX = getScrollLeft();
+                for (SpacerImpl spacer : rowIndexToSpacer.values()) {
+                    spacer.setPosition(prevScrollX, spacer.getTop());
+                }
+            }
+        };
+        private HandlerRegistration spacerScrollerRegistration;
 
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
@@ -4546,6 +4587,13 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        public void reapplySpacerWidths() {
+            for (SpacerImpl spacer : rowIndexToSpacer.values()) {
+                spacer.getRootElement().getStyle()
+                        .setWidth(getInnerWidth(), Unit.PX);
+            }
+        }
+
         public void paintRemoveSpacers(Range removedRowsRange) {
             removeSpacers(removedRowsRange);
             shiftSpacersByRows(removedRowsRange.getStart(),
@@ -4558,6 +4606,10 @@ public class Escalator extends Widget implements RequiresResize,
             Map<Integer, SpacerImpl> removedSpacers = rowIndexToSpacer
                     .subMap(removedRange.getStart(), true,
                             removedRange.getEnd(), false);
+
+            if (removedSpacers.isEmpty()) {
+                return;
+            }
 
             for (SpacerImpl spacer : removedSpacers.values()) {
                 /*
@@ -4572,6 +4624,12 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             removedSpacers.clear();
+
+            if (rowIndexToSpacer.isEmpty()) {
+                assert spacerScrollerRegistration != null : "Spacer scroller registration was null";
+                spacerScrollerRegistration.removeHandler();
+                spacerScrollerRegistration = null;
+            }
         }
 
         /**
@@ -4846,10 +4904,14 @@ public class Escalator extends Widget implements RequiresResize,
         @SuppressWarnings("boxing")
         private void insertNewSpacer(int rowIndex, double height) {
 
+            if (spacerScrollerRegistration == null) {
+                spacerScrollerRegistration = addScrollHandler(spacerScroller);
+            }
+
             SpacerImpl spacer = new SpacerImpl(rowIndex);
 
             rowIndexToSpacer.put(rowIndex, spacer);
-            spacer.setPosition(0, calculateSpacerTop(rowIndex));
+            spacer.setPosition(getScrollLeft(), calculateSpacerTop(rowIndex));
 
             TableRowElement spacerRoot = spacer.getRootElement();
             spacerRoot.getStyle().setWidth(
@@ -4949,7 +5011,7 @@ public class Escalator extends Widget implements RequiresResize,
                 double diffPx) {
             for (SpacerImpl spacer : rowIndexToSpacer.tailMap(changedRowIndex,
                     false).values()) {
-                spacer.setPosition(0, spacer.getTop() + diffPx);
+                spacer.setPositionDiff(0, diffPx);
             }
         }
 
@@ -4982,11 +5044,13 @@ public class Escalator extends Widget implements RequiresResize,
          * A map containing cached values of an element's current top position.
          */
         private final Map<Element, Double> elementTopPositionMap = new HashMap<Element, Double>();
+        private final Map<Element, Double> elementLeftPositionMap = new HashMap<Element, Double>();
 
         public void set(final Element e, final double x, final double y) {
             assert e != null : "Element was null";
             position.set(e, x, y);
             elementTopPositionMap.put(e, Double.valueOf(y));
+            elementLeftPositionMap.put(e, Double.valueOf(x));
         }
 
         public double getTop(final Element e) {
@@ -4998,8 +5062,18 @@ public class Escalator extends Widget implements RequiresResize,
             return top.doubleValue();
         }
 
+        public double getLeft(final Element e) {
+            Double left = elementLeftPositionMap.get(e);
+            if (left == null) {
+                throw new IllegalArgumentException("Element " + e
+                        + " was not found in the position bookkeeping");
+            }
+            return left.doubleValue();
+        }
+
         public void remove(Element e) {
             elementTopPositionMap.remove(e);
+            elementLeftPositionMap.remove(e);
         }
     }
 
@@ -5621,6 +5695,7 @@ public class Escalator extends Widget implements RequiresResize,
 
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
+        body.reapplySpacerWidths();
         Profiler.leave("Escalator.recalculateElementSizes");
     }
 
