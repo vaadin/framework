@@ -47,7 +47,8 @@ public class GeneratePackageExports {
             System.err
                     .println("Invalid number of parameters\n"
                             + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>\n"
-                            + "Use -Dvaadin.version to specify the version to be used for the packages");
+                            + "Use -Dvaadin.version to specify the version to be used for the packages\n"
+                            + "Use -DincludeNumberPackages=1 to include package names which start with a number (not 100% OSGi compatible)");
             System.exit(1);
         }
 
@@ -67,8 +68,14 @@ public class GeneratePackageExports {
             acceptedPackagePrefixes.add(args[i]);
         }
 
+        boolean includeNumberPackages = false;
+        if ("1".equals(System.getProperty("includeNumberPackages"))) {
+            includeNumberPackages = true;
+        }
+
         // List the included Java packages
-        HashSet<String> packages = getPackages(jar, acceptedPackagePrefixes);
+        HashSet<String> packages = getPackages(jar, acceptedPackagePrefixes,
+                includeNumberPackages);
 
         // Avoid writing empty Export-Package attribute
         if (packages.isEmpty()) {
@@ -171,7 +178,7 @@ public class GeneratePackageExports {
     }
 
     private static HashSet<String> getPackages(JarFile jar,
-            List<String> acceptedPackagePrefixes) {
+            List<String> acceptedPackagePrefixes, boolean includeNumberPackages) {
         HashSet<String> packages = new HashSet<String>();
 
         Pattern startsWithNumber = Pattern.compile("\\.\\d");
@@ -194,7 +201,7 @@ public class GeneratePackageExports {
             String pkg = entry.getName().substring(0, lastSlash)
                     .replace('/', '.');
 
-            if (startsWithNumber.matcher(pkg).find()) {
+            if (!includeNumberPackages && startsWithNumber.matcher(pkg).find()) {
                 continue;
             }
 

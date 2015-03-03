@@ -163,6 +163,7 @@
             <param name="bundle-name" value="${module.name}" />
             <param name="bundle-symbolic" value="${module.symbolic}" />
             <param name="bundle-vendor" value="${vaadin.vendor}" />
+            <param name="includeNumberPackages" value="${osgi.includeNumberPackages}" />
         </antcall>
 
     </target>
@@ -174,7 +175,7 @@
         <fail unless="bundle-symbolic" message="No bundle-symbolic parameter given" />
         <fail unless="bundle-version" message="No bundle-version parameter given" />
         <fail unless="bundle-vendor" message="No bundle-vendor parameter given" />
-
+        <fail unless="includeNumberPackages" message="No includeNumberPackages parameter given" />
         <property name="bundle-manifestversion" value="2" />
 
         <jar file="${jar}" update="true">
@@ -228,6 +229,7 @@
             <arg line="com/vaadin com/google ${osgi.extra.package.prefixes}" />
             <classpath refid="buildhelpers.classpath" />
             <jvmarg value="-Dvaadin.version=${vaadin.version}" />
+            <jvmarg value="-DincludeNumberPackages=${includeNumberPackages}" />
         </java>
     </target>
 
