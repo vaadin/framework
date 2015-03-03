@@ -78,6 +78,11 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 getGridVerticalScrollbar());
     }
 
+    protected void scrollGridHorizontallyTo(double px) {
+        executeScript("arguments[0].scrollLeft = " + px,
+                getGridHorizontalScrollbar());
+    }
+
     protected int getGridVerticalScrollPos() {
         return ((Number) executeScript("return arguments[0].scrollTop",
                 getGridVerticalScrollbar())).intValue();
@@ -124,6 +129,12 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return getDriver()
                 .findElement(
                         By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
+    }
+
+    protected WebElement getGridHorizontalScrollbar() {
+        return getDriver()
+                .findElement(
+                        By.xpath("//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
     }
 
     /**

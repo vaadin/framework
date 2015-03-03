@@ -46,12 +46,15 @@ public class DragAndDropHandler {
      */
     public interface DragAndDropCallback {
         /**
-         * Called when the drag has started.
+         * Called when the drag has started. The drag can be canceled by
+         * returning {@code false}.
          * 
          * @param startEvent
          *            the original event that started the drag
+         * @return {@code true} if the drag is OK to start, {@code false} to
+         *         cancel
          */
-        void onDragStart(NativeEvent startEvent);
+        boolean onDragStart(NativeEvent startEvent);
 
         /**
          * Called on drag.
@@ -204,13 +207,15 @@ public class DragAndDropHandler {
 
     private void startDrag(NativeEvent startEvent,
             NativePreviewEvent triggerEvent, DragAndDropCallback callback) {
-        dragging = true;
-        // just capture something to prevent text selection in IE
-        Event.setCapture(RootPanel.getBodyElement());
-        this.callback = callback;
-        dragHandlerRegistration = Event.addNativePreviewHandler(dragHandler);
-        callback.onDragStart(startEvent);
-        callback.onDragUpdate(triggerEvent);
+        if (callback.onDragStart(startEvent)) {
+            dragging = true;
+            // just capture something to prevent text selection in IE
+            Event.setCapture(RootPanel.getBodyElement());
+            this.callback = callback;
+            dragHandlerRegistration = Event
+                    .addNativePreviewHandler(dragHandler);
+            callback.onDragUpdate(triggerEvent);
+        }
     }
 
     private void stopDrag() {

@@ -235,6 +235,124 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(1, 2, 0, 3, 4);
     }
 
+    @Test
+    public void testColumnReorder_cellInsideASpannedHeader_cantBeDroppedOutsideSpannedArea() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 2, 0, 20);
+
+        // then
+        assertColumnHeaderOrder(0, 2, 1, 3, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellInsideTwoCrossingSpanningHeaders_cantTouchThis() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        dragAndDropColumnHeader(0, 3, 0, 10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 2, 0, 10);
+
+        // then
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellsInsideSpannedHeaderAndBlockedByOtherSpannedCells_cantTouchThose() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        dragAndDropColumnHeader(0, 3, 0, 10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+
+        // when then
+        dragAndDropColumnHeader(0, 1, 3, 10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+
+        dragAndDropColumnHeader(1, 2, 1, 10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+
+        dragAndDropColumnHeader(2, 1, 3, -10);
+        assertColumnHeaderOrder(3, 0, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_cellsInsideSpannedHeaderAndBlockedByOtherSpannedCells_reorderingLimited() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(0, 0, 4, 100);
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+
+        // when then
+        dragAndDropColumnHeader(0, 1, 4, 10);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+
+        dragAndDropColumnHeader(0, 2, 4, 10);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+
+        dragAndDropColumnHeader(0, 3, 4, 80);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 5, 4);
+
+        dragAndDropColumnHeader(0, 4, 2, 100);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+
+        dragAndDropColumnHeader(2, 3, 4, 80);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 5, 4);
+
+        dragAndDropColumnHeader(2, 4, 2, 100);
+        scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void testColumnReorder_cellsInsideTwoAdjacentSpannedHeaders_reorderingLimited() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(0, 0, 4, 100);
+        scrollGridHorizontallyTo(0);
+        dragAndDropColumnHeader(0, 1, 4, 80);
+        scrollGridHorizontallyTo(0);
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+
+        // when then
+        dragAndDropColumnHeader(0, 1, 3, 80);
+        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+
+        dragAndDropColumnHeader(0, 2, 4, 10);
+        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+
+        dragAndDropColumnHeader(0, 2, 0, 10);
+        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+    }
+
     private void toggleColumnReorder() {
         selectMenuPath("Component", "State", "Column Reordering");
     }
