@@ -4453,8 +4453,15 @@ public class Escalator extends Widget implements RequiresResize,
                             .getScrollSize() + heightDiff);
                 }
 
+                /*
+                 * Don't modify the scrollbars if we're expanding the -1 spacer
+                 * while we're scrolled to the top.
+                 */
+                boolean minusOneSpacerException = spacerIsGrowing
+                        && getRow() == -1 && body.getTopRowLogicalIndex() == 0;
+
                 boolean viewportNeedsScrolling = getRow() < body
-                        .getTopRowLogicalIndex();
+                        .getTopRowLogicalIndex() && !minusOneSpacerException;
                 if (viewportNeedsScrolling) {
 
                     /*
@@ -4570,7 +4577,7 @@ public class Escalator extends Widget implements RequiresResize,
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
 
-            if (rowIndex < 0 || rowIndex >= getBody().getRowCount()) {
+            if (rowIndex < -1 || rowIndex >= getBody().getRowCount()) {
                 throw new IllegalArgumentException("invalid row index: "
                         + rowIndex + ", while the body only has "
                         + getBody().getRowCount() + " rows.");

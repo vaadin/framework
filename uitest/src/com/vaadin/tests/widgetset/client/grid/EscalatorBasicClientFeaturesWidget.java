@@ -645,6 +645,7 @@ public class EscalatorBasicClientFeaturesWidget extends
             }
         }, menupath);
 
+        createSpacersMenuForRow(-1, menupath);
         createSpacersMenuForRow(1, menupath);
         createSpacersMenuForRow(50, menupath);
         createSpacersMenuForRow(99, menupath);

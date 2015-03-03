@@ -57,7 +57,8 @@ public interface RowContainer {
          * 
          * @param rowIndex
          *            the row index for the spacer to modify. The affected
-         *            spacer is underneath the given index
+         *            spacer is underneath the given index. Use -1 to insert a
+         *            spacer before the first row
          * @param height
          *            the pixel height of the spacer. If {@code height} is
          *            negative, the affected spacer (if exists) will be removed

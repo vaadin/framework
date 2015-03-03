@@ -223,7 +223,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     }
 
-   @Test
+    @Test
     public void spacersAreFixedInViewport_firstFreezeThenScroll() {
         selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
@@ -247,6 +247,24 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         assertEquals("Spacer's left position should've been " + scrollTo
                 + " after scrolling " + scrollTo + "px", scrollTo,
                 getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
+    }
+
+    @Test
+    public void addingMinusOneSpacerDoesNotScrollWhenScrolledAtTop() {
+        scrollVerticallyTo(5);
+        selectMenuPath(FEATURES, SPACERS, ROW_MINUS1, SET_100PX);
+        assertEquals(
+                "No scroll adjustment should've happened when adding the -1 spacer",
+                5, getScrollTop());
+    }
+
+    @Test
+    public void removingMinusOneSpacerScrolls() {
+        scrollVerticallyTo(5);
+        selectMenuPath(FEATURES, SPACERS, ROW_MINUS1, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_MINUS1, REMOVE);
+        assertEquals("Scroll adjustment should've happened when removing the "
+                + "-1 spacer", 0, getScrollTop());
     }
 
     private static double[] getElementDimensions(WebElement element) {

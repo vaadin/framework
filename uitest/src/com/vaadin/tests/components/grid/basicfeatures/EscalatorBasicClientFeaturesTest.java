@@ -69,6 +69,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLSPAN_NORMAL = "Apply normal colspan";
     protected static final String COLSPAN_NONE = "Apply no colspan";
     protected static final String SPACERS = "Spacers";
+    protected static final String ROW_MINUS1 = "Row -1";
     protected static final String ROW_1 = "Row 1";
     protected static final String ROW_99 = "Row 99";
     protected static final String SET_100PX = "Set 100px";
