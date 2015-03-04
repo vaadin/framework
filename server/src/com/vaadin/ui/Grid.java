@@ -51,7 +51,6 @@ import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -2647,7 +2646,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * Getting a field before the editor has been opened depends on special
          * support from the {@link FieldGroup} in use. Using this method with a
          * user-provided <code>FieldGroup</code> might cause
-         * {@link BindException} to be thrown.
+         * {@link com.vaadin.data.fieldgroup.FieldGroup.BindException
+         * BindException} to be thrown.
          * 
          * @return the bound field; or <code>null</code> if the respective
          *         column is not editable

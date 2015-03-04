@@ -1150,9 +1150,9 @@ public class Escalator extends Widget implements RequiresResize,
         public void scrollToRow(final int rowIndex,
                 final ScrollDestination destination, final double padding) {
 
-            getLogger().warning("[[spacers]] scrollToRow");
-
-            final double targetStartPx = body.getDefaultRowHeight() * rowIndex;
+            final double targetStartPx = (body.getDefaultRowHeight() * rowIndex)
+                    + body.spacerContainer
+                            .getSpacerHeightsSumUntilIndex(rowIndex);
             final double targetEndPx = targetStartPx
                     + body.getDefaultRowHeight();
 

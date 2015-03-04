@@ -267,6 +267,24 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
                 + "-1 spacer", 0, getScrollTop());
     }
 
+    @Test
+    public void scrollToRowWorksProperlyWithSpacers() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_MINUS1, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+
+        /*
+         * we check for row -2 instead of -1, because escalator has the one row
+         * buffered underneath the footer
+         */
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_75);
+        Thread.sleep(500);
+        assertEquals("Row 75: 0,75", getBodyCell(-2, 0).getText());
+
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_25);
+        Thread.sleep(500);
+        assertEquals("Row 25: 0,25", getBodyCell(0, 0).getText());
+    }
+
     private static double[] getElementDimensions(WebElement element) {
         /*
          * we need to parse the style attribute, since using getCssValue gets a

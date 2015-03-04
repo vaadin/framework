@@ -16,6 +16,7 @@ import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widgets.Escalator;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 
 public class EscalatorBasicClientFeaturesWidget extends
         PureGWTTestApplication<Escalator> {
@@ -571,6 +572,19 @@ public class EscalatorBasicClientFeaturesWidget extends
                         escalator.setScrollTop(40);
                     }
                 }, menupath);
+
+        String[] scrollToRowMenuPath = new String[menupath.length + 1];
+        System.arraycopy(menupath, 0, scrollToRowMenuPath, 0, menupath.length);
+        scrollToRowMenuPath[scrollToRowMenuPath.length - 1] = "Scroll to...";
+        for (int i = 0; i < 100; i += 25) {
+            final int rowIndex = i;
+            addMenuCommand("Row " + i, new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    escalator.scrollToRow(rowIndex, ScrollDestination.ANY, 0);
+                }
+            }, scrollToRowMenuPath);
+        }
     }
 
     private void createRowsMenu(final RowContainer container, String[] menupath) {
