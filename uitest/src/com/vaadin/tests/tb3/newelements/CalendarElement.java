@@ -5,7 +5,7 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ServerClass;
+import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.Calendar")
 public class CalendarElement extends

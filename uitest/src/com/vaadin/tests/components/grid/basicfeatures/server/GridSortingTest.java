@@ -33,11 +33,9 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
-@TestCategory("grid")
 public class GridSortingTest extends GridBasicFeaturesTest {
 
     private static class SortInfo {

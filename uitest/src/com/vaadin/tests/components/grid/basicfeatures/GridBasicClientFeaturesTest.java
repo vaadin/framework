@@ -21,10 +21,10 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 
 /**
- * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
+ * GridBasicClientFeatures.
  * 
  * @since
  * @author Vaadin Ltd
@@ -79,12 +79,12 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
     }
 
     @Override
-    protected GridElement getGridElement() {
+    protected CustomGridElement getGridElement() {
         if (composite) {
             // Composite requires the basic client features widget for subparts
             return ((TestBenchElement) findElement(By
                     .vaadin("//TestWidgetComponent")))
-                    .wrap(GridElement.class);
+                    .wrap(CustomGridElement.class);
         } else {
             return super.getGridElement();
         }

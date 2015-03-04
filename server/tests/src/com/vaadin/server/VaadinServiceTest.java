@@ -15,6 +15,9 @@
  */
 package com.vaadin.server;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -37,6 +40,11 @@ public class VaadinServiceTest {
         public void sessionDestroy(SessionDestroyEvent event) {
             callCount++;
         }
+    }
+
+    private String createCriticalNotification(String caption, String message, String details, String url) {
+        return VaadinService
+                .createCriticalNotificationJSON(caption, message, details, url);
     }
 
     @Test
@@ -65,5 +73,69 @@ public class VaadinServiceTest {
 
         Assert.assertEquals("SessionDestroyListeners not called exactly once",
                 1, listener.callCount);
+    }
+
+    @Test
+    public void captionIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("foobar", "message", "details", "url");
+
+        assertThat(notification, containsString("\"caption\":\"foobar\""));
+    }
+
+    @Test
+    public void nullCaptionIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification(null, "message", "details", "url");
+
+        assertThat(notification, containsString("\"caption\":null"));
+    }
+
+    @Test
+    public void messageWithDetailsIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", "foo", "bar", "url");
+
+        assertThat(notification, containsString("\"message\":\"foo<br/><br/>bar\""));
+    }
+
+    @Test
+    public void nullMessageIsReplacedByDetailsInACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", null, "foobar", "url");
+
+        assertThat(notification, containsString("\"message\":\"foobar\""));
+    }
+
+    @Test
+    public void nullMessageIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", null, null, "url");
+
+        assertThat(notification, containsString("\"message\":null"));
+    }
+
+    @Test
+    public void messageSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", "foobar", null, "url");
+
+        assertThat(notification, containsString("\"message\":\"foobar\""));
+    }
+
+    @Test
+    public void urlIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", "message", "details", "foobar");
+
+        assertThat(notification, containsString("\"url\":\"foobar\""));
+    }
+
+    @Test
+    public void nullUrlIsSetToACriticalNotification() {
+        String notification =
+                createCriticalNotification("caption", "message", "details", null);
+
+        assertThat(notification, containsString("\"url\":null"));
     }
 }

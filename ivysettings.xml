@@ -27,6 +27,10 @@
     <modules>
         <module organisation="com.vaadin" name="vaadin-testbench"
             resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-core"
+            resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-api"
+            resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-shared"

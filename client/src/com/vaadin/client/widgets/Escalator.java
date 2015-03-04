@@ -50,6 +50,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -340,7 +341,6 @@ public class Escalator extends Widget implements RequiresResize,
             private double touches = 0;
             private int lastX = 0;
             private int lastY = 0;
-            private double lastTime = 0;
             private boolean snappedScrollEnabled = true;
             private double deltaX = 0;
             private double deltaY = 0;
@@ -350,7 +350,10 @@ public class Escalator extends Widget implements RequiresResize,
             private CustomTouchEvent latestTouchMoveEvent;
 
             /** The timestamp of {@link #flickPageX1} and {@link #flickPageY1} */
-            private double flickTimestamp = Double.MIN_VALUE;
+            private double flickStartTime = 0;
+
+            /** The timestamp of {@link #flickPageX2} and {@link #flickPageY2} */
+            private double flickTimestamp = 0;
 
             /** The most recent flick touch reference Y */
             private double flickPageY1 = -1;
@@ -373,6 +376,7 @@ public class Escalator extends Widget implements RequiresResize,
              * over here.
              */
             private AnimationCallback mover = new AnimationCallback() {
+
                 @Override
                 public void execute(double timestamp) {
                     if (touches != 1) {
@@ -383,29 +387,22 @@ public class Escalator extends Widget implements RequiresResize,
                     final int y = latestTouchMoveEvent.getPageY();
 
                     /*
-                     * Check if we need a new flick coordinate sample (more than
-                     * FLICK_POLL_FREQUENCY ms have passed since the last
-                     * sample)
+                     * Check if we need a new flick coordinate sample ( more
+                     * than FLICK_POLL_FREQUENCY ms have passed since the last
+                     * sample )
                      */
-                    if (timestamp - flickTimestamp > FLICK_POLL_FREQUENCY) {
-                        flickTimestamp = timestamp;
-                        flickPageY2 = flickPageY1;
-                        flickPageY1 = y;
+                    if (System.currentTimeMillis() - flickTimestamp > FLICK_POLL_FREQUENCY) {
 
-                        flickPageX2 = flickPageX1;
-                        flickPageX1 = x;
+                        flickTimestamp = System.currentTimeMillis();
+                        // Set target coordinates
+                        flickPageY2 = y;
+                        flickPageX2 = x;
                     }
 
                     deltaX = x - lastX;
                     deltaY = y - lastY;
                     lastX = x;
                     lastY = y;
-
-                    /*
-                     * Instead of using the provided arbitrary timestamp, let's
-                     * use a known-format and reproducible timestamp.
-                     */
-                    lastTime = Duration.currentTimeMillis();
 
                     // snap the scroll to the major axes, at first.
                     if (snappedScrollEnabled) {
@@ -482,6 +479,14 @@ public class Escalator extends Widget implements RequiresResize,
                 lastX = event.getPageX();
                 lastY = event.getPageY();
 
+                // Reset flick parameters
+                flickPageX1 = lastX;
+                flickPageX2 = -1;
+                flickPageY1 = lastY;
+                flickPageY2 = -1;
+                flickStartTime = System.currentTimeMillis();
+                flickTimestamp = 0;
+
                 snappedScrollEnabled = true;
             }
 
@@ -519,25 +524,18 @@ public class Escalator extends Widget implements RequiresResize,
 
                     final double finalPageY;
                     final double finalPageX;
-                    double deltaT = lastTime - flickTimestamp;
+                    double deltaT = flickTimestamp - flickStartTime;
                     boolean onlyOneSample = flickPageX2 < 0 || flickPageY2 < 0;
-                    if (onlyOneSample || deltaT > FLICK_POLL_FREQUENCY / 3) {
-                        finalPageY = flickPageY1;
-                        finalPageX = flickPageX1;
+                    if (onlyOneSample) {
+                        finalPageX = latestTouchMoveEvent.getPageX();
+                        finalPageY = latestTouchMoveEvent.getPageY();
                     } else {
-                        deltaT += FLICK_POLL_FREQUENCY;
                         finalPageY = flickPageY2;
                         finalPageX = flickPageX2;
                     }
 
-                    flickPageY1 = -1;
-                    flickPageY2 = -1;
-                    flickTimestamp = Double.MIN_VALUE;
-
-                    double deltaX = latestTouchMoveEvent.getPageX()
-                            - finalPageX;
-                    double deltaY = latestTouchMoveEvent.getPageY()
-                            - finalPageY;
+                    double deltaX = finalPageX - flickPageX1;
+                    double deltaY = finalPageY - flickPageY1;
 
                     escalator.scroller
                             .handleFlickScroll(deltaX, deltaY, deltaT);
@@ -5239,6 +5237,46 @@ public class Escalator extends Widget implements RequiresResize,
         final Element root = DOM.createDiv();
         setElement(root);
 
+        setupScrollbars(root);
+
+        tableWrapper = DivElement.as(DOM.createDiv());
+
+        root.appendChild(tableWrapper);
+
+        final Element table = DOM.createTable();
+        tableWrapper.appendChild(table);
+
+        table.appendChild(headElem);
+        table.appendChild(bodyElem);
+        table.appendChild(footElem);
+
+        Style hCornerStyle = headerDeco.getStyle();
+        hCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        hCornerStyle.setDisplay(Display.NONE);
+        root.appendChild(headerDeco);
+
+        Style fCornerStyle = footerDeco.getStyle();
+        fCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        fCornerStyle.setDisplay(Display.NONE);
+        root.appendChild(footerDeco);
+
+        Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
+        hWrapperStyle.setDisplay(Display.NONE);
+        hWrapperStyle.setHeight(horizontalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        root.appendChild(horizontalScrollbarDeco);
+
+        setStylePrimaryName("v-escalator");
+
+        // init default dimensions
+        setHeight(null);
+        setWidth(null);
+    }
+
+    private void setupScrollbars(final Element root) {
+
         ScrollHandler scrollHandler = new ScrollHandler() {
             @Override
             public void onScroll(ScrollEvent event) {
@@ -5293,40 +5331,20 @@ public class Escalator extends Widget implements RequiresResize,
                     }
                 });
 
-        tableWrapper = DivElement.as(DOM.createDiv());
-
-        root.appendChild(tableWrapper);
-
-        final Element table = DOM.createTable();
-        tableWrapper.appendChild(table);
-
-        table.appendChild(headElem);
-        table.appendChild(bodyElem);
-        table.appendChild(footElem);
-
-        Style hCornerStyle = headerDeco.getStyle();
-        hCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        hCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(headerDeco);
-
-        Style fCornerStyle = footerDeco.getStyle();
-        fCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        fCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(footerDeco);
-
-        Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
-        hWrapperStyle.setDisplay(Display.NONE);
-        hWrapperStyle.setHeight(horizontalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        root.appendChild(horizontalScrollbarDeco);
-
-        setStylePrimaryName("v-escalator");
-
-        // init default dimensions
-        setHeight(null);
-        setWidth(null);
+        /*
+         * Because of all the IE hacks we've done above, we now have scrollbars
+         * hiding underneath a lot of DOM elements.
+         * 
+         * This leads to problems with OSX (and many touch-only devices) when
+         * scrollbars are only shown when scrolling, as the scrollbar elements
+         * are hidden underneath everything. We trust that the scrollbars behave
+         * properly in these situations and simply pop them out with a bit of
+         * z-indexing.
+         */
+        if (WidgetUtil.getNativeScrollbarSize() == 0) {
+            verticalScrollbar.getElement().getStyle().setZIndex(90);
+            horizontalScrollbar.getElement().getStyle().setZIndex(90);
+        }
     }
 
     @Override
@@ -5339,7 +5357,28 @@ public class Escalator extends Widget implements RequiresResize,
 
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
-        recalculateElementSizes();
+
+        // recalculateElementSizes();
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                /*
+                 * Not a faintest idea why we have to defer this call, but
+                 * unless it is deferred, the size of the escalator will be 0x0
+                 * after it is first detached and then reattached to the DOM.
+                 * This only applies to a bare Escalator; inside a Grid
+                 * everything works fine either way.
+                 * 
+                 * The three autodetectRowHeightLater calls above seem obvious
+                 * suspects at first. However, they don't seem to have anything
+                 * to do with the issue, as they are no-ops in the
+                 * detach-reattach case.
+                 */
+                recalculateElementSizes();
+            }
+        });
+
         /*
          * Note: There's no need to explicitly insert rows into the body.
          * 
@@ -5365,6 +5404,9 @@ public class Escalator extends Widget implements RequiresResize,
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
         }
+
+        verticalScrollbar.onLoad();
+        horizontalScrollbar.onLoad();
 
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());

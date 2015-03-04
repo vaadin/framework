@@ -653,6 +653,15 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setEnabled(!grid.isEnabled());
             }
         }, "Component", "State");
+        addMenuCommand("Reverse grid columns", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                List<Column> columns = new ArrayList<Column>(grid.getColumns());
+                Collections.reverse(columns);
+                grid.setColumnOrder(columns.toArray(new Column[columns.size()]));
+            }
+        }, "Component", "State");
     }
 
     private void createColumnsMenu() {

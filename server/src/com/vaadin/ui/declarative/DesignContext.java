@@ -31,6 +31,7 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.declarative.Design.ComponentFactory;
 
 /**
  * This class contains contextual information that is collected when a component
@@ -482,14 +483,17 @@ public class DesignContext implements Serializable {
     private Component instantiateComponent(Node node) {
         // Extract the package and class names.
         String qualifiedClassName = tagNameToClassName(node);
-        try {
-            Class<? extends Component> componentClass = resolveComponentClass(qualifiedClassName);
-            Component newComponent = componentClass.newInstance();
-            return newComponent;
-        } catch (Exception e) {
-            throw new DesignException("No component class could be found for "
-                    + node.nodeName() + ".", e);
+
+        ComponentFactory factory = Design.getComponentFactory();
+        Component component = factory.createComponent(qualifiedClassName, this);
+
+        if (component == null) {
+            throw new DesignException("Got unexpected null component from "
+                    + factory.getClass().getName() + " for class "
+                    + qualifiedClassName);
         }
+
+        return component;
     }
 
     /**
@@ -528,39 +532,6 @@ public class DesignContext implements Serializable {
             className += SharedUtil.capitalize(classNamePart);
         }
         return packageName + "." + className;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Class<? extends Component> resolveComponentClass(
-            String qualifiedClassName) throws ClassNotFoundException {
-        Class<?> componentClass = null;
-        componentClass = Class.forName(qualifiedClassName);
-
-        // Check that we're dealing with a Component.
-        if (isComponent(componentClass)) {
-            return (Class<? extends Component>) componentClass;
-        } else {
-            throw new IllegalArgumentException(String.format(
-                    "Resolved class %s is not a %s.", componentClass.getName(),
-                    Component.class.getName()));
-        }
-    }
-
-    /**
-     * Returns {@code true} if the given {@link Class} implements the
-     * {@link Component} interface of Vaadin Framework otherwise {@code false}.
-     * 
-     * @param componentClass
-     *            {@link Class} to check against {@link Component} interface.
-     * @return {@code true} if the given {@link Class} is a {@link Component},
-     *         {@code false} otherwise.
-     */
-    private static boolean isComponent(Class<?> componentClass) {
-        if (componentClass != null) {
-            return Component.class.isAssignableFrom(componentClass);
-        } else {
-            return false;
-        }
     }
 
     /**

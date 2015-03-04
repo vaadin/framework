@@ -20,11 +20,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class FontIconsTest extends MultiBrowserTest {
 
@@ -37,29 +36,21 @@ public class FontIconsTest extends MultiBrowserTest {
     @Test
     public void comboBoxItemIconsOnKeyboardNavigation() throws Exception {
         openTestURL();
-        WebElement comboBoxInput = getDriver().findElement(
-                By.className("v-filterselect-input"));
+
+        ComboBoxElement comboBox = $(ComboBoxElement.class).first();
 
         // No initial value.
-        assertEquals("", comboBoxInput.getText());
+        assertEquals("", comboBox.getText());
 
         // Navigate to the first item with keyboard navigation.
-        sendKeys(comboBoxInput, Keys.ARROW_DOWN, Keys.ARROW_DOWN,
-                Keys.ARROW_DOWN);
+        comboBox.sendKeys(400, Keys.ARROW_DOWN, Keys.ARROW_DOWN);
 
         // Value must be "One" without any extra characters.
         // See ticket #14660
-        assertEquals("One", comboBoxInput.getAttribute("value"));
+        assertEquals("One", comboBox.getText());
 
         // Check also the second item.
-        sendKeys(comboBoxInput, Keys.ARROW_DOWN);
-        assertEquals("Two", comboBoxInput.getAttribute("value"));
-    }
-
-    private void sendKeys(WebElement element, Keys... keys) throws Exception {
-        for (Keys key : keys) {
-            element.sendKeys(key);
-            sleep(10); // For PhantomJS.
-        }
+        comboBox.sendKeys(Keys.ARROW_DOWN);
+        assertEquals("Two", comboBox.getText());
     }
 }

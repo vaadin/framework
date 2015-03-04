@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
+import org.atmosphere.cpr.AtmosphereResourceImpl;
 import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 
 import com.vaadin.server.ErrorEvent;
@@ -45,6 +46,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonException;
 
 /**
@@ -62,7 +64,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                 throws IOException {
             super.onStateChange(event);
             if (event.isCancelled() || event.isResumedOnTimeout()) {
-                disconnect(event);
+                connectionLost(event);
             }
         }
 
@@ -327,17 +329,17 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
     public void onDisconnect(AtmosphereResourceEvent event) {
         // Log event on trace level
         super.onDisconnect(event);
-        disconnect(event);
+        connectionLost(event);
     }
 
     @Override
     public void onThrowable(AtmosphereResourceEvent event) {
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
-        disconnect(event);
+        connectionLost(event);
     }
 
-    private void disconnect(AtmosphereResourceEvent event) {
+    private void connectionLost(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
@@ -423,12 +425,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-                if (pushConnection.isConnected()) {
-                    // disconnect() assumes the push connection is connected but
-                    // this method can currently be called more than once during
-                    // disconnect, depending on the situation
-                    pushConnection.disconnect();
-                }
+
+                pushConnection.connectionLost();
             }
 
         } catch (final Exception e) {
@@ -472,6 +470,15 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
+        if (resource instanceof AtmosphereResourceImpl
+                && !((AtmosphereResourceImpl) resource).isInScope()) {
+            // The resource is no longer valid so we should not write
+            // anything to it
+            getLogger()
+                    .fine("sendRefreshAndDisconnect called for resource no longer in scope");
+            return;
+        }
+
         AtmospherePushConnection connection = new AtmospherePushConnection(null);
         connection.connect(resource);
         try {
@@ -490,6 +497,14 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             AtmosphereResource resource, String notificationJson) {
         // TODO Implemented differently from sendRefreshAndDisconnect
         try {
+            if (resource instanceof AtmosphereResourceImpl
+                    && !((AtmosphereResourceImpl) resource).isInScope()) {
+                // The resource is no longer valid so we should not write
+                // anything to it
+                getLogger()
+                        .fine("sendNotificationAndDisconnect called for resource no longer in scope");
+                return;
+            }
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {

@@ -36,12 +36,7 @@ public class TextFieldBevelTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-
-        // IE8 doesn't support box-shadow.
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-
-        return browsers;
+        return getBrowsersExcludingIE8();
     }
 
     @Test

@@ -31,7 +31,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Unit test class for Notification ARIA (Accessible Rich Internet Applications)
  * roles.
- *
+ * 
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -39,7 +39,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
 
     /**
      * Checks if the ARIA roles are correctly applied to Notification.
-     *
+     * 
      * @since 7.2
      * @throws Exception
      */
@@ -80,10 +80,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         Assert.assertTrue("Expected '- press ESC to close', found " + text,
                 text.equals("- press ESC to close"));
 
-        try {
-            notification.closeNotification();
-        } catch (Exception e) {
-        }
+        notification.close();
 
         type.selectByText(StringToEnumConverter.enumToString(
                 NotificationRole.STATUS, null));
@@ -97,10 +94,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         Assert.assertTrue("Expected attribute 'role' to equal 'status', found "
                 + text, text.equals("status"));
 
-        try {
-            notification.closeNotification();
-        } catch (Exception e) {
-        }
+        notification.close();
 
         prefix.clear();
         postfix.clear();

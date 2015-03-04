@@ -16,8 +16,6 @@
 package com.vaadin.tests.components.table;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -29,22 +27,19 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class AddSelectionToRemovedRangeTest extends MultiBrowserTest {
 
     @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.unmodifiableList(Arrays.asList(Browser.CHROME
-                .getDesiredCapabilities()));
+    protected boolean requireWindowFocusForIE() {
+        return true;
     }
 
     @Override
-    protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities cap = new DesiredCapabilities(
-                super.getDesiredCapabilities());
-        cap.setCapability("requireWindowFocus", true);
-        return cap;
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Test

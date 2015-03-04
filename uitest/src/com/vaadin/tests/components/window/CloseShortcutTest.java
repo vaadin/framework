@@ -24,11 +24,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.elements.WindowElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -101,12 +103,9 @@ public class CloseShortcutTest extends MultiBrowserTest {
     public void testOtherWithAll() {
         attemptOtherShortcut();
         // TODO: remove this check once #14902 has been fixed
-        if (!Browser.IE8.getDesiredCapabilities().equals(
-                getDesiredCapabilities())
-                && !Browser.FIREFOX.getDesiredCapabilities().equals(
-                        getDesiredCapabilities())
-                && !Browser.CHROME.getDesiredCapabilities().equals(
-                        getDesiredCapabilities())) {
+        DesiredCapabilities cap = getDesiredCapabilities();
+        if ((BrowserUtil.isIE(cap) && !BrowserUtil.isIE8(cap))
+                || BrowserUtil.isPhantomJS(cap)) {
             ensureWindowClosed();
         }
     }
@@ -123,8 +122,7 @@ public class CloseShortcutTest extends MultiBrowserTest {
     public void testCtrlWithAll() {
         attemptCtrlShortcut();
         // TODO: remove this check once #14902 has been fixed
-        if (Browser.PHANTOMJS.getDesiredCapabilities().equals(
-                getDesiredCapabilities())) {
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
             ensureWindowClosed();
         }
     }
@@ -141,9 +139,8 @@ public class CloseShortcutTest extends MultiBrowserTest {
     public void testShiftWithAll() {
         attemptShiftShortcut();
         // TODO: remove this check once #14902 has been fixed
-        if (getBrowsersExcludingIE().contains(getDesiredCapabilities())
-                || Browser.IE8.getDesiredCapabilities().equals(
-                        getDesiredCapabilities())) {
+        DesiredCapabilities capabilities = getDesiredCapabilities();
+        if (!BrowserUtil.isIE(capabilities) || BrowserUtil.isIE8(capabilities)) {
             ensureWindowClosed();
         }
     }

@@ -18,7 +18,6 @@ package com.vaadin.tests.components.table;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -31,6 +30,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -47,15 +47,11 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
 
     private WebElement wrapper;
 
-
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Sending PageDown has no effect on PhantomJS. On IE focus
         // in Table is often lost, so default scrolling happens on PageDown.
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
-                getBrowsersExcludingIE());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
+        return getBrowserCapabilities(Browser.FIREFOX, Browser.CHROME);
     }
 
     @Override
@@ -73,7 +69,7 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
     }
 
     private void sendKeyUntilEndIsReached(Keys key) {
-        while(true) {
+        while (true) {
             int lastVisibleRowNumber = getLastVisibleRowNumber();
             sendKey(key);
 
@@ -116,7 +112,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
 
     @Test
     public void navigatePageDown() {
-        // Scroll to a point where you can reach the bottom with a couple of page downs.
+        // Scroll to a point where you can reach the bottom with a couple of
+        // page downs.
         // Can't use v-table-body height because lower rows haven't been
         // fetched yet.
         testBenchElement(wrapper).scroll(
@@ -132,7 +129,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
 
     @Test
     public void navigatePageUp() {
-        // Scroll to a point where you can reach the top with a couple of page ups.
+        // Scroll to a point where you can reach the top with a couple of page
+        // ups.
         testBenchElement(wrapper).scroll((int) (2.8 * pageHeight));
         waitForScrollToFinish();
 

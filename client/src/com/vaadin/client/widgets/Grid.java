@@ -3118,11 +3118,11 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             if (this.grid != null) {
-                this.grid.autoColumnWidthsRecalculator.schedule();
+                this.grid.recalculateColumnWidths();
             }
             this.grid = grid;
             if (this.grid != null) {
-                this.grid.autoColumnWidthsRecalculator.schedule();
+                this.grid.recalculateColumnWidths();
                 updateHeader();
             }
         }
@@ -3266,7 +3266,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         void reapplyWidth() {
-            setWidth(getWidth());
+            scheduleColumnWidthRecalculator();
         }
 
         /**
@@ -3506,7 +3506,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void scheduleColumnWidthRecalculator() {
             if (grid != null) {
-                grid.autoColumnWidthsRecalculator.schedule();
+                grid.recalculateColumnWidths();
             } else {
                 /*
                  * NOOP
@@ -6210,6 +6210,23 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    @Override
+    public void onResize() {
+        super.onResize();
+        /*
+         * Delay calculation to be deferred so Escalator can do it's magic.
+         */
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                if (!autoColumnWidthsRecalculator.isScheduled()) {
+                    autoColumnWidthsRecalculator.schedule();
+                }
+            }
+        });
+    }
+
     /**
      * Grid does not support adding Widgets this way.
      * <p>
@@ -6349,5 +6366,18 @@ public class Grid<T> extends ResizeComposite implements
     public void setDetailsVisible(int rowIndex, boolean visible) {
         double height = visible ? DETAILS_ROW_INITIAL_HEIGHT : -1;
         escalator.getBody().setSpacer(rowIndex, height);
+    }
+
+    /**
+     * Requests that the column widths should be recalculated.
+     * <p>
+     * The actual recalculation is not necessarily done immediately so you
+     * cannot rely on the columns being the correct width after the call
+     * returns.
+     * 
+     * @since
+     */
+    public void recalculateColumnWidths() {
+        autoColumnWidthsRecalculator.schedule();
     }
 }

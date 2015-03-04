@@ -15,8 +15,12 @@
  */
 package com.vaadin.tests.themes;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -24,11 +28,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.io.IOException;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
 
@@ -36,9 +37,7 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Seems like stylesheet onload is not fired on PhantomJS
         // https://github.com/ariya/phantomjs/issues/12332
-        List<DesiredCapabilities> l = super.getBrowsersToTest();
-        l.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return l;
+        return getBrowsersExcludingPhantomJS();
     }
 
     @Test

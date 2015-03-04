@@ -233,6 +233,18 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testRemoveFirstRowTwice() {
+        openTestURL();
+
+        selectMenuPath("Component", "Body rows", "Remove first row");
+        selectMenuPath("Component", "Body rows", "Remove first row");
+
+        getGridElement().scrollToRow(50);
+        assertFalse("Listener setup problem occurred.",
+                logContainsText("AssertionError: Value change listeners"));
+    }
+
+    @Test
     public void testVerticalScrollBarVisibilityWhenEnoughRows()
             throws Exception {
         openTestURL();

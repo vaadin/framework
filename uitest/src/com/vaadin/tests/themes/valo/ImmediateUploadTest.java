@@ -19,12 +19,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.UploadElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -35,11 +33,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class ImmediateUploadTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getAllBrowsers();
-    }
 
     @Override
     public void setup() throws Exception {

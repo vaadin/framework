@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -26,25 +25,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class NativeSelectsAndChromeKeyboardNavigationTest extends
         MultiBrowserTest {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.MultiBrowserTest#getBrowsersToTest()
-     */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
-                .getDesiredCapabilities());
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Test
@@ -72,30 +61,17 @@ public class NativeSelectsAndChromeKeyboardNavigationTest extends
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getUIClass()
-     */
     @Override
     protected Class<?> getUIClass() {
         return NativeSelects.class;
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menuSub(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();
         new Actions(getDriver()).moveByOffset(100, 0).build().perform();
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menu(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();

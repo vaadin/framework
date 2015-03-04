@@ -1,26 +1,23 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableColumnResizeContentsWidthIE8Test extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = new ArrayList<DesiredCapabilities>();
-
-        browsersToTest.add(Browser.IE8.getDesiredCapabilities());
-
-        return browsersToTest;
+        return getBrowserCapabilities(Browser.IE8);
     }
 
     @Override

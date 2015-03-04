@@ -425,7 +425,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                             + ".");
         } else {
             if (session == null) {
-                detach();
+                try {
+                    detach();
+                } catch (Exception e) {
+                    getLogger().log(Level.WARNING,
+                            "Error while detaching UI from session", e);
+                }
                 // Disable push when the UI is detached. Otherwise the
                 // push connection and possibly VaadinSession will live on.
                 getPushConfiguration().setPushMode(PushMode.DISABLED);

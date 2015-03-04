@@ -21,13 +21,15 @@ import com.vaadin.ui.VerticalLayout;
 
 public class TableSqlContainer extends AbstractTestUI {
 
+    protected Table table;
+
     @Override
     protected void setup(VaadinRequest request) {
         setLocale(Locale.ENGLISH);
         VerticalLayout layout = new VerticalLayout();
         addComponent(layout);
 
-        final Table table = new Table("Table with SQLContainer");
+        table = new Table("Table with SQLContainer");
         layout.addComponent(table);
 
         final Label selectedLabel = new Label("Selected: null");

@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.tb3;
 
+import java.io.IOException;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
@@ -27,7 +29,7 @@ public class ServletIntegrationTests {
 
     public static class ServletIntegrationTestSuite extends TB3TestSuite {
         public ServletIntegrationTestSuite(Class<?> klass)
-                throws InitializationError {
+                throws InitializationError, IOException {
             super(klass, AbstractServletIntegrationTest.class,
                     "com.vaadin.tests.integration", new String[] {});
         }

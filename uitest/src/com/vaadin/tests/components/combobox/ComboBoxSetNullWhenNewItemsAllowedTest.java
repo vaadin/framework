@@ -25,6 +25,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

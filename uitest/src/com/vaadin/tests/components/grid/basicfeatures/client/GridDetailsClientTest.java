@@ -34,7 +34,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
-public class GridDetailsTest extends GridBasicClientFeaturesTest {
+public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     private static final String[] SET_GENERATOR = new String[] { "Component",
             "Row details", "Set generator" };
@@ -120,7 +120,7 @@ public class GridDetailsTest extends GridBasicClientFeaturesTest {
         ElementQuery<NotificationElement> notification = $(NotificationElement.class);
         assertTrue("Was expecting an error notification here",
                 notification.exists());
-        notification.first().closeNotification();
+        notification.first().close();
 
         assertEquals("The error details element should be empty", "",
                 getGridElement().getDetails(1).getText());
@@ -131,7 +131,7 @@ public class GridDetailsTest extends GridBasicClientFeaturesTest {
         selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
 
         selectMenuPath(SET_FAULTY_GENERATOR);
-        $(NotificationElement.class).first().closeNotification();
+        $(NotificationElement.class).first().close();
         selectMenuPath(SET_GENERATOR);
 
         assertNotEquals(

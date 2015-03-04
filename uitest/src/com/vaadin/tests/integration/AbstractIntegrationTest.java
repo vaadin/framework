@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.integration;
 
+import com.vaadin.testbench.parallel.TestNameSuffix;
 import com.vaadin.tests.tb3.PrivateTB3Configuration;
-import com.vaadin.tests.tb3.TestNameSuffix;
 
 /**
  * Base class for integration tests. Integration tests use the

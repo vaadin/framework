@@ -26,21 +26,18 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * Test case creating and deleting table component in a loop, testing memory
  * lead in Table component. This test should not be used in auto testing.
- *
+ * 
  * To test memory consuption. Run test in debug mode. Take memory snapshot in
  * Profiler in browser before and after the loop. Compare memory consuption.
- *
+ * 
  * @since
  * @author Vaadin Ltd
  */
-@RunLocally(Browser.CHROME)
 public class MemoryLeakTableTest extends MultiBrowserTest {
 
     /**

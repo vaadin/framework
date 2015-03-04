@@ -899,13 +899,11 @@ public class ApplicationConnection implements HasHandlers {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
             public void onError(Request request, Throwable exception) {
-                handleCommunicationError(exception.getMessage(), -1);
+                handleError(exception.getMessage(), -1);
             }
 
-            private void handleCommunicationError(String details, int statusCode) {
-                if (!handleErrorInDelegate(details, statusCode)) {
-                    showCommunicationError(details, statusCode);
-                }
+            private void handleError(String details, int statusCode) {
+                handleCommunicationError(details, statusCode);
                 endRequest();
 
                 // Consider application not running any more and prevent all
@@ -949,7 +947,7 @@ public class ApplicationConnection implements HasHandlers {
                             }
                         }).schedule(100);
                     } else {
-                        handleCommunicationError(
+                        handleError(
                                 "Invalid status code 0 (server down?)",
                                 statusCode);
                     }
@@ -995,7 +993,7 @@ public class ApplicationConnection implements HasHandlers {
                 } else if ((statusCode / 100) == 5) {
                     // Something's wrong on the server, there's nothing the
                     // client can do except maybe try again.
-                    handleCommunicationError("Server error. Error code: "
+                    handleError("Server error. Error code: "
                             + statusCode, statusCode);
                     return;
                 }
@@ -1062,8 +1060,17 @@ public class ApplicationConnection implements HasHandlers {
         if (isApplicationRunning()) {
             handleReceivedJSONMessage(start, jsonText, json);
         } else {
-            setApplicationRunning(true);
-            handleWhenCSSLoaded(jsonText, json);
+            if (!cssLoaded) {
+                // Application is starting up for the first time
+                setApplicationRunning(true);
+                handleWhenCSSLoaded(jsonText, json);
+            } else {
+                getLogger()
+                        .warning(
+                                "Ignored received message because application has already been stopped");
+                return;
+
+            }
         }
     }
 
@@ -1498,7 +1505,9 @@ public class ApplicationConnection implements HasHandlers {
             VConsole.log("Postponing UIDL handling due to lock...");
             pendingUIDLMessages.add(new PendingUIDLMessage(start, jsonText,
                     json));
-            forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
+            if (!forceHandleMessage.isRunning()) {
+                forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
+            }
             return;
         }
 
@@ -3561,11 +3570,17 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    private boolean handleErrorInDelegate(String details, int statusCode) {
-        if (communicationErrorDelegate == null) {
-            return false;
+    private void handleCommunicationError(String details, int statusCode) {
+        boolean handled = false;
+        if (communicationErrorDelegate != null) {
+            handled = communicationErrorDelegate.onError(details, statusCode);
+
         }
-        return communicationErrorDelegate.onError(details, statusCode);
+
+        if (!handled) {
+            showCommunicationError(details, statusCode);
+        }
+
     }
 
     /**
@@ -3640,7 +3655,7 @@ public class ApplicationConnection implements HasHandlers {
             push.init(this, pushState, new CommunicationErrorHandler() {
                 @Override
                 public boolean onError(String details, int statusCode) {
-                    showCommunicationError(details, statusCode);
+                    handleCommunicationError(details,statusCode);
                     return true;
                 }
             });

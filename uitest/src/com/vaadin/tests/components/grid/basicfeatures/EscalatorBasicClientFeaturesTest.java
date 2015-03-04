@@ -28,7 +28,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("escalator")
@@ -56,6 +56,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected static final String GENERAL = "General";
     protected static final String DETACH_ESCALATOR = "Detach Escalator";
+    protected static final String ATTACH_ESCALATOR = "Attach Escalator";
     protected static final String POPULATE_COLUMN_ROW = "Populate Escalator (columns, then rows)";
     protected static final String POPULATE_ROW_COLUMN = "Populate Escalator (rows, then columns)";
     protected static final String CLEAR_COLUMN_ROW = "Clear (columns, then rows)";
@@ -261,12 +262,12 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         getHorizontalScrollbar().scrollLeft(px);
     }
 
-    private long getScrollLeft() {
+    protected long getScrollLeft() {
         return ((Long) executeScript("return arguments[0].scrollLeft;",
                 getHorizontalScrollbar())).longValue();
     }
 
-    private TestBenchElement getHorizontalScrollbar() {
+    protected TestBenchElement getHorizontalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-horizontal"));
     }
