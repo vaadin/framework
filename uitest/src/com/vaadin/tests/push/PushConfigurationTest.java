@@ -29,17 +29,17 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 abstract class PushConfigurationTest extends MultiBrowserTest {
 
     @Override
-    public void setup() throws Exception {
-        super.setup();
-
-        openTestURL();
-        disablePush();
+    protected Class<?> getUIClass() {
+        return PushConfiguration.class;
     }
 
     @Override
-    protected String getDeploymentPath() {
-        return "/run/" + PushConfiguration.class.getCanonicalName()
-                + "?restartApplication&debug";
+    public void setup() throws Exception {
+        super.setup();
+        setDebug(true);
+
+        openTestURL("restartApplication");
+        disablePush();
     }
 
     protected String getStatusText() {

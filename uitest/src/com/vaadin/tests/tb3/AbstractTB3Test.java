@@ -22,9 +22,12 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -229,9 +232,21 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * {@link #isPush()}.
      */
     protected void openTestURL(Class<?> uiClass, String... parameters) {
+        openTestURL(uiClass, new HashSet<String>(Arrays.asList(parameters)));
+    }
+
+    private void openTestURL(Class<?> uiClass, Set<String> parameters) {
         String url = getTestURL(uiClass);
 
-        if (parameters.length > 0) {
+        if(isDebug()) {
+            parameters.add("debug");
+        }
+
+        if (LegacyApplication.class.isAssignableFrom(uiClass)) {
+            parameters.add("restartApplication");
+        }
+
+        if (parameters.size() > 0) {
             url += "?" + Joiner.on("&").join(parameters);
         }
 
@@ -687,12 +702,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
 
         if (UI.class.isAssignableFrom(uiClass)
-                || UIProvider.class.isAssignableFrom(uiClass)) {
-            return runPath + "/" + uiClass.getCanonicalName()
-                    + (isDebug() ? "?debug" : "");
-        } else if (LegacyApplication.class.isAssignableFrom(uiClass)) {
-            return runPath + "/" + uiClass.getCanonicalName()
-                    + "?restartApplication" + (isDebug() ? "&debug" : "");
+                || UIProvider.class.isAssignableFrom(uiClass)
+                || LegacyApplication.class.isAssignableFrom(uiClass)) {
+            return runPath + "/" + uiClass.getCanonicalName();
         } else {
             throw new IllegalArgumentException(
                     "Unable to determine path for enclosing class "
