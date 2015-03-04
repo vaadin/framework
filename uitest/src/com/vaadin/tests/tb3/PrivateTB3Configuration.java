@@ -22,21 +22,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.safari.SafariDriver;
-
-import com.vaadin.testbench.TestBench;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+import com.vaadin.testbench.annotations.BrowserFactory;
+import com.vaadin.testbench.annotations.RunOnHub;
 
 /**
  * Provides values for parameters which depend on where the test is run.
@@ -45,6 +35,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
  * 
  * @author Vaadin Ltd
  */
+@RunOnHub("tb3-hub.intra.itmill.com")
+@BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      * 
@@ -101,16 +93,11 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     @Override
     protected String getHubURL() {
         String hubUrl = getProperty(HUB_URL);
-        if(hubUrl == null || hubUrl.trim().isEmpty()) {
+        if (hubUrl == null || hubUrl.trim().isEmpty()) {
             return super.getHubURL();
         }
 
         return hubUrl;
-    }
-
-    @Override
-    protected String getHubHostname() {
-        return "tb3-hub.intra.itmill.com";
     }
 
     @Override
@@ -202,82 +189,5 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
         throw new RuntimeException(
                 "No compatible (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) ip address found.");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#setupLocalDriver()
-     */
-    @Override
-    protected void setupLocalDriver(DesiredCapabilities desiredCapabilities) {
-        WebDriver driver;
-        if (BrowserUtil.isFirefox(desiredCapabilities)) {
-            String firefoxPath = getProperty("firefox.path");
-            if (firefoxPath != null) {
-                driver = new FirefoxDriver(new FirefoxBinary(new File(
-                        firefoxPath)), null);
-            } else {
-                driver = new FirefoxDriver();
-            }
-        } else if (BrowserUtil.isChrome(desiredCapabilities)) {
-            String propertyName = "chrome.driver.path";
-            String chromeDriverPath = getProperty(propertyName);
-            if (chromeDriverPath == null) {
-                throw new RuntimeException(
-                        "You need to install ChromeDriver to use @"
-                                + RunLocally.class.getSimpleName()
-                                + " with Chrome."
-                                + "\nFirst install it from https://code.google.com/p/selenium/wiki/ChromeDriver."
-                                + "\nThen update "
-                                + propertiesFile.getAbsolutePath()
-                                + " to define a property named "
-                                + propertyName
-                                + " containing the path of your local ChromeDriver installation.");
-            }
-            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-
-            // Tells chrome not to show warning
-            // "You are using an unsupported command-line flag: --ignore-certifcate-errors".
-            // #14319
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--test-type ");
-            driver = new ChromeDriver(options);
-        } else if (BrowserUtil.isSafari(desiredCapabilities)) {
-            driver = new SafariDriver();
-        } else if (BrowserUtil.isPhantomJS(desiredCapabilities)) {
-            driver = new PhantomJSDriver();
-        } else {
-            throw new RuntimeException(
-                    "Not implemented support for running locally on "
-                            + BrowserUtil
-                                    .getBrowserIdentifier(desiredCapabilities));
-        }
-        setDriver(TestBench.createDriver(driver));
-        setDesiredCapabilities(desiredCapabilities);
-    }
-
-    @Override
-    protected Browser getRunLocallyBrowser() {
-        Browser runLocallyBrowser = super.getRunLocallyBrowser();
-        if (runLocallyBrowser != null) {
-            // Always use annotation value if present
-            return runLocallyBrowser;
-        }
-
-        String runLocallyValue = getProperty(RUN_LOCALLY_PROPERTY);
-        if (runLocallyValue == null || runLocallyValue.trim().isEmpty()) {
-            return null;
-        }
-
-        String browserName = runLocallyValue.trim().toUpperCase();
-        try {
-            return Browser.valueOf(browserName);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid " + RUN_LOCALLY_PROPERTY
-                    + " property from " + getSource(RUN_LOCALLY_PROPERTY)
-                    + ": " + runLocallyValue + ". Expected one of "
-                    + Arrays.toString(Browser.values()));
-        }
     }
 }

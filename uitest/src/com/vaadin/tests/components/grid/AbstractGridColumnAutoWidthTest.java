@@ -24,7 +24,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @SuppressWarnings("boxing")

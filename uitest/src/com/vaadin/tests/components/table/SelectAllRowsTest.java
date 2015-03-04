@@ -18,7 +18,6 @@ package com.vaadin.tests.components.table;
 import static com.vaadin.tests.components.table.SelectAllRows.TOTAL_NUMBER_OF_ROWS;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -51,12 +50,7 @@ public class SelectAllRowsTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Pressing Shift modifier key does not work with Firefox and PhantomJS
-        ArrayList<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
-                super.getBrowsersToTest());
-        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
+        return getBrowsersSupportingShiftClick();
     }
 
     @Test

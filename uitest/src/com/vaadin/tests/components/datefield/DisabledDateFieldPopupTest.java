@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.datefield;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -33,13 +32,7 @@ public class DisabledDateFieldPopupTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>();
-        for (DesiredCapabilities browser : super.getBrowsersToTest()) {
-            if (BrowserUtil.isIE(browser)) {
-                browsers.add(browser);
-            }
-        }
-        return browsers;
+        return getIEBrowsersOnly();
     }
 
     @Test

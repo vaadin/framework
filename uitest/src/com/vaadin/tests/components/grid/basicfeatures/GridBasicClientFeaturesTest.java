@@ -24,7 +24,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
 
 /**
- * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
+ * GridBasicClientFeatures.
  * 
  * @since
  * @author Vaadin Ltd
@@ -83,8 +83,7 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
         if (composite) {
             // Composite requires the basic client features widget for subparts
             return ((TestBenchElement) findElement(By
-                    .vaadin("//TestWidgetComponent")))
-                    .wrap(GridElement.class);
+                    .vaadin("//TestWidgetComponent"))).wrap(GridElement.class);
         } else {
             return super.getGridElement();
         }

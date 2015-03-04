@@ -19,7 +19,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -28,25 +27,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for context menu position and size.
- *
+ * 
  * @author Vaadin Ltd
  */
 public class ContextMenuSizeTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
-                getAllBrowsers());
-
         // context menu doesn't work in phantom JS and works weirdly with IE8
         // and selenium.
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        return browsers;
+        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
+                Browser.FIREFOX, Browser.CHROME);
     }
 
     @Override

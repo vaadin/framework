@@ -19,27 +19,13 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class VerifyBrowserVersionTest extends MultiBrowserTest {
-
-    private Map<DesiredCapabilities, String> expectedUserAgent = new HashMap<DesiredCapabilities, String>();
-
-    {
-        expectedUserAgent.put(Browser.FIREFOX.getDesiredCapabilities(), "Firefox/");
-        expectedUserAgent.put(Browser.IE8.getDesiredCapabilities(), "MSIE ");
-        expectedUserAgent.put(Browser.IE9.getDesiredCapabilities(), "MSIE ");
-        expectedUserAgent.put(Browser.IE10.getDesiredCapabilities(), "MSIE ");
-        expectedUserAgent.put(Browser.IE11.getDesiredCapabilities(), "Trident/7.0; rv:");
-        expectedUserAgent.put(Browser.CHROME.getDesiredCapabilities(), "Chrome/");
-        expectedUserAgent.put(Browser.PHANTOMJS.getDesiredCapabilities(), "PhantomJS/");
-    }
 
     @Test
     public void verifyUserAgent() {
@@ -48,11 +34,31 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
         DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
 
         assertThat(vaadinElementById("userAgent").getText(),
-            containsString(expectedUserAgent.get(desiredCapabilities)
-                                         + desiredCapabilities.getVersion()));
+                containsString(getExpectedUserAgentString(desiredCapabilities)
+                        + desiredCapabilities.getVersion()));
 
         assertThat(vaadinElementById("touchDevice").getText(),
-                                                        is("Touch device? No"));
+                is("Touch device? No"));
+    }
+
+    private String getExpectedUserAgentString(DesiredCapabilities dCap) {
+        if (BrowserUtil.isIE(dCap)) {
+            if (!BrowserUtil.isIE(dCap, 11)) {
+                // IE8-10
+                return "MSIE ";
+            } else {
+                // IE11
+                return "Trident/7.0; rv:";
+            }
+        } else if (BrowserUtil.isFirefox(dCap)) {
+            return "Firefox/";
+        } else if (BrowserUtil.isChrome(dCap)) {
+            return "Chrome/";
+        } else if (BrowserUtil.isPhantomJS(dCap)) {
+            return "PhantomJS/";
+        }
+        throw new UnsupportedOperationException(
+                "Test is being run on unknown browser.");
     }
 
 }

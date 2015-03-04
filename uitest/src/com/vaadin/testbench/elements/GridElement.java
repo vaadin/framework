@@ -23,6 +23,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elementsbase.AbstractElement;
+import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
  * TestBench Element API for Grid

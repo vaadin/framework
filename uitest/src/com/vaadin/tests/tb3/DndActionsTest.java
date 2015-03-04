@@ -19,6 +19,8 @@ import org.junit.Ignore;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.parallel.BrowserUtil;
+
 /**
  * Base class for TestBench 3+ tests that use DnD. This class contains utility
  * methods for DnD operations.

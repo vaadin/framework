@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
@@ -15,12 +16,8 @@ public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
     // This method should be removed once #12785 is fixed
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        // Send Keys does not function correctly on these browsers.
-        browsers.remove(Browser.CHROME.getDesiredCapabilities());
-        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        return browsers;
+        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
+                Browser.PHANTOMJS);
     }
 
     @Test

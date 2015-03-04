@@ -31,10 +31,6 @@ import com.vaadin.testbench.screenshot.ImageComparison;
 import com.vaadin.testbench.screenshot.ReferenceNameGenerator;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @author Vaadin Ltd
- */
 public class TableScrollAfterAddRowTest extends MultiBrowserTest {
 
     @Before
@@ -45,6 +41,7 @@ public class TableScrollAfterAddRowTest extends MultiBrowserTest {
     @Test
     public void testJumpToFirstRow() throws InterruptedException {
         jumpToFifteenthRow();
+        sleep(300);
         jumpToFirstRow();
         assertEquals("0", getCurrentPageFirstItemIndex());
     }
