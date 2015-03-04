@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.TextField;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -109,9 +111,32 @@ public class ComponentFactoryTest {
         Design.read(new ByteArrayInputStream("<v-label />".getBytes()));
     }
 
+    @Test
+    public void testGetDefaultInstanceUsesComponentFactory() {
+        final List<String> classes = new ArrayList<String>();
+        currentComponentFactory.set(new ComponentFactory() {
+            @Override
+            public Component createComponent(String fullyQualifiedClassName,
+                                             DesignContext context) {
+                classes.add(fullyQualifiedClassName);
+                return defaultFactory.createComponent(fullyQualifiedClassName,
+                        context);
+            }
+        });
+
+        DesignContext designContext = new DesignContext();
+        designContext.getDefaultInstance(new DefaultInstanceTestComponent());
+
+        Assert.assertEquals("There should be one class requests", 1, classes.size());
+        Assert.assertEquals("First class should be DefaultInstanceTestComponent",
+                DefaultInstanceTestComponent.class.getName(), classes.get(0));
+    }
+
     @After
     public void cleanup() {
         currentComponentFactory.remove();
     }
 
+    public static class DefaultInstanceTestComponent extends AbstractComponent {
+    }
 }

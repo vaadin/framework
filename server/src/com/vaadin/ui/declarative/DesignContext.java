@@ -278,16 +278,8 @@ public class DesignContext implements Serializable {
             Class<? extends Component> componentClass) {
         Component instance = instanceCache.get(componentClass);
         if (instance == null) {
-            try {
-                instance = componentClass.newInstance();
-                instanceCache.put(componentClass, instance);
-            } catch (InstantiationException e) {
-                throw new RuntimeException("Could not instantiate "
-                        + componentClass.getName());
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Could not instantiate "
-                        + componentClass.getName());
-            }
+            instance = instantiateClass(componentClass.getName());
+            instanceCache.put(componentClass, instance);
         }
         return instance;
     }
@@ -484,6 +476,15 @@ public class DesignContext implements Serializable {
         // Extract the package and class names.
         String qualifiedClassName = tagNameToClassName(node);
 
+        return instantiateClass(qualifiedClassName);
+    }
+
+    /**
+     * Instantiates given class via ComponentFactory.
+     * @param qualifiedClassName class name to instantiate
+     * @return instance of a given class
+     */
+    private Component instantiateClass(String qualifiedClassName) {
         ComponentFactory factory = Design.getComponentFactory();
         Component component = factory.createComponent(qualifiedClassName, this);
 
