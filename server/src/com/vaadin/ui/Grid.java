@@ -5088,7 +5088,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * but this method can be used to force recalculation in situations when
      * grid does not recalculate automatically.
      * 
-     * @since
+     * @since 7.4.1
      */
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();

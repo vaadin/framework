@@ -311,7 +311,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called when the connection to the client has been lost.
      * 
-     * @since
+     * @since 7.4.1
      */
     public void connectionLost() {
         resource = null;
