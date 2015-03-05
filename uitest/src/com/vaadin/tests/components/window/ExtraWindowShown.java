@@ -1,17 +1,18 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.ThemeResource;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class ExtraWindowShown extends TestBase {
+public class ExtraWindowShown extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Button b = new Button("Open window", new Button.ClickListener() {
 
             @Override
@@ -37,21 +38,20 @@ public class ExtraWindowShown extends TestBase {
             }
 
         });
-        getLayout().setHeight("100%");
+        getLayout().getParent().setSizeFull();
+        getLayout().setSizeFull();
         getLayout().addComponent(b);
         getLayout().setComponentAlignment(b, Alignment.MIDDLE_CENTER);
     }
 
     @Override
-    protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+    protected String getTestDescription() {
+        return "Sub window shouldn't reappear after closing.";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return 5987;
     }
 
 }
