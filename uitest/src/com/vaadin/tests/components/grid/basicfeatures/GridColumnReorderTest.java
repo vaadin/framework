@@ -426,6 +426,174 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
     }
 
+    @Test
+    public void testColumnReorder_draggingASpannedCell_dragWorksNormally() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(1, 1, 4, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 1, 2, 4);
+    }
+
+    @Test
+    public void testColumnReorder_twoEqualSpannedCells_bothCanBeDragged() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(1, 1, 4, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 1, 2, 4);
+
+        // when
+        dragAndDropColumnHeader(2, 3, 0, 10);
+
+        // then
+        assertColumnHeaderOrder(1, 2, 0, 3, 4);
+    }
+
+    @Test
+    public void testColumReorder_twoCrossingSpanningHeaders_neitherCanBeDragged() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join column cells 0, 1");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(1, 1, 4, 10);
+
+        // then
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(2, 0, 3, 100);
+
+        // then
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+    }
+
+    @Test
+    public void testColumnReorder_spannedCellHasAnotherSpannedCellInside_canBeDraggedNormally() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(1, 3, 1, 10);
+        scrollGridHorizontallyTo(0);
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+
+        // when
+        dragAndDropColumnHeader(1, 1, 0, 10);
+
+        // then
+        assertColumnHeaderOrder(3, 4, 5, 0, 1);
+    }
+
+    @Test
+    public void testColumnReorder_spannedCellInsideAnotherSpanned_canBeDraggedWithBoundaries() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(1, 3, 1, 10);
+        scrollGridHorizontallyTo(0);
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+
+        // when
+        dragAndDropColumnHeader(2, 1, 3, 100);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 5, 3, 4, 1);
+
+        // when
+        dragAndDropColumnHeader(2, 2, 0, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+    }
+
+    @Test
+    public void testColumnReorder_cellInsideAndNextToSpannedCells_canBeDraggedWithBoundaries() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        dragAndDropColumnHeader(1, 3, 1, 10);
+        scrollGridHorizontallyTo(0);
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+
+        // when
+        dragAndDropColumnHeader(2, 3, 0, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 5, 3, 4, 1);
+
+        // when
+        dragAndDropColumnHeader(2, 1, 4, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+    }
+
+    @Test
+    public void testColumnReorder_multipleSpannedCells_dragWorksNormally() {
+        toggleColumnReorder();
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(1, 3, 2, -10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+
+        // when
+        scrollGridHorizontallyTo(100);
+        dragAndDropColumnHeader(2, 4, 2, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+
+        // when
+        dragAndDropColumnHeader(0, 0, 3, 10);
+        scrollGridHorizontallyTo(0);
+
+        // then
+        assertColumnHeaderOrder(1, 2, 0, 3, 4);
+    }
+
     private void toggleColumnReorder() {
         selectMenuPath("Component", "State", "Column Reordering");
     }

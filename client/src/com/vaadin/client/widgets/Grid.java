@@ -3064,20 +3064,32 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void onDrop() {
             final int draggedColumnIndex = eventCell.getColumnIndex();
+            final int colspan = header.getRow(eventCell.getRowIndex())
+                    .getCell(eventCell.getColumn()).getColspan();
             if (latestColumnDropIndex != draggedColumnIndex
-                    && latestColumnDropIndex != (draggedColumnIndex + 1)) {
+                    && latestColumnDropIndex != (draggedColumnIndex + colspan)) {
                 List<Column<?, T>> columns = getColumns();
-                List<Column<?, T>> reordered = new ArrayList<Column<?, T>>(
-                        columns);
-                Column<?, T> moved = reordered.remove(draggedColumnIndex);
+                List<Column<?, T>> reordered = new ArrayList<Column<?, T>>();
                 if (draggedColumnIndex < latestColumnDropIndex) {
-                    latestColumnDropIndex--;
+                    reordered.addAll(columns.subList(0, draggedColumnIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex
+                            + colspan, latestColumnDropIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex,
+                            draggedColumnIndex + colspan));
+                    reordered.addAll(columns.subList(latestColumnDropIndex,
+                            columns.size()));
+                } else {
+                    reordered.addAll(columns.subList(0, latestColumnDropIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex,
+                            draggedColumnIndex + colspan));
+                    reordered.addAll(columns.subList(latestColumnDropIndex,
+                            draggedColumnIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex
+                            + colspan, columns.size()));
                 }
-                reordered.add(latestColumnDropIndex, moved);
                 reordered.remove(selectionColumn); // since setColumnOrder will
                                                    // add it anyway!
 
-                @SuppressWarnings("unchecked")
                 Column<?, T>[] array = reordered.toArray(new Column[reordered
                         .size()]);
                 setColumnOrder(array);
@@ -3096,13 +3108,15 @@ public class Grid<T> extends ResizeComposite implements
                         .findRowContainer(focusedCell.getElement());
                 if (focusedCellColumnIndex == draggedColumnIndex) {
                     // move with the dragged column
+                    final int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex ? latestColumnDropIndex - 1
+                            : latestColumnDropIndex;
                     cellFocusHandler.setCellFocus(focusedRowIndex,
-                            latestColumnDropIndex, rowContainer);
+                            adjustedDropIndex, rowContainer);
                 } else if (latestColumnDropIndex <= focusedCellColumnIndex
                         && draggedColumnIndex > focusedCellColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
                             focusedCellColumnIndex + 1, rowContainer);
-                } else if (latestColumnDropIndex >= focusedCellColumnIndex
+                } else if (latestColumnDropIndex > focusedCellColumnIndex
                         && draggedColumnIndex < focusedCellColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
                             focusedCellColumnIndex - 1, rowContainer);
@@ -3171,12 +3185,17 @@ public class Grid<T> extends ResizeComposite implements
         private void calculatePossibleDropPositions() {
             possibleDropPositions.clear();
 
-            final int draggedColumnIndex = eventCell.getColumnIndex();
-            HashSet<Integer> unavailableColumnDropIndices = new HashSet<Integer>();
-
+            final int draggedCellIndex = eventCell.getColumnIndex();
+            final StaticRow<?> draggedCellRow = header.getRow(eventCell
+                    .getRowIndex());
+            final int draggedCellRightIndex = draggedCellIndex
+                    + draggedCellRow.getCell(eventCell.getColumn())
+                            .getColspan();
             final int frozenColumns = getSelectionAndFrozenColumnCount();
+            final Range draggedCellRange = Range.between(draggedCellIndex,
+                    draggedCellRightIndex);
             /*
-             * If the dragged cell is adjacent to a spanned cell in any other
+             * If the dragged cell intersects with a spanned cell in any other
              * header or footer row, then the drag is limited inside that
              * spanned cell. The same rules apply: the cell can't be dropped
              * inside another spanned cell. The left and right bounds keep track
@@ -3185,6 +3204,7 @@ public class Grid<T> extends ResizeComposite implements
             int leftBound = -1;
             int rightBound = getColumnCount() + 1;
 
+            final HashSet<Integer> unavailableColumnDropIndices = new HashSet<Integer>();
             final List<StaticRow<?>> rows = new ArrayList<StaticRow<?>>();
             rows.addAll(header.getRows());
             rows.addAll(footer.getRows());
@@ -3192,30 +3212,52 @@ public class Grid<T> extends ResizeComposite implements
                 if (!row.hasSpannedCells()) {
                     continue;
                 }
-                for (int c = frozenColumns; c < getColumnCount(); c++) {
-                    StaticCell cell = row.getCell(getColumn(c));
+                final boolean isDraggedCellRow = row.equals(draggedCellRow);
+                for (int cellColumnIndex = frozenColumns; cellColumnIndex < getColumnCount(); cellColumnIndex++) {
+                    StaticCell cell = row.getCell(getColumn(cellColumnIndex));
                     int colspan = cell.getColspan();
                     if (colspan <= 1) {
                         continue;
                     }
-                    final int spannedCellRightEdgeIndex = c + colspan;
-                    if (c <= draggedColumnIndex
-                            && spannedCellRightEdgeIndex > draggedColumnIndex) {
-                        // the spanned cell overlaps the dragged cell
-                        if (c <= draggedColumnIndex && c > leftBound) {
-                            leftBound = c;
+                    final int cellColumnRightIndex = cellColumnIndex + colspan;
+                    final Range cellRange = Range.between(cellColumnIndex,
+                            cellColumnRightIndex);
+                    final boolean intersects = draggedCellRange
+                            .intersects(cellRange);
+                    if (intersects && !isDraggedCellRow) {
+                        // if the currently iterated cell is inside or same as
+                        // the dragged cell, then it doesn't restrict the drag
+                        if (cellRange.isSubsetOf(draggedCellRange)) {
+                            cellColumnIndex = cellColumnRightIndex - 1;
+                            continue;
                         }
-                        if (spannedCellRightEdgeIndex < rightBound) {
-                            rightBound = spannedCellRightEdgeIndex;
+                        /*
+                         * if the dragged cell is a spanned cell and it crosses
+                         * with the currently iterated cell without sharing
+                         * either start or end then not possible to drag the
+                         * cell.
+                         */
+                        if (!draggedCellRange.isSubsetOf(cellRange)) {
+                            return;
                         }
-                        c = spannedCellRightEdgeIndex - 1;
+                        // the spanned cell overlaps the dragged cell (but is
+                        // not the dragged cell)
+                        if (cellColumnIndex <= draggedCellIndex
+                                && cellColumnIndex > leftBound) {
+                            leftBound = cellColumnIndex;
+                        }
+                        if (cellColumnRightIndex < rightBound) {
+                            rightBound = cellColumnRightIndex;
+                        }
+                        cellColumnIndex = cellColumnRightIndex - 1;
                     }
 
-                    else { // can't drop inside a spanned cell
+                    else { // can't drop inside a spanned cell, or this is the
+                           // dragged cell
                         while (colspan > 1) {
-                            c++;
+                            cellColumnIndex++;
                             colspan--;
-                            unavailableColumnDropIndices.add(c);
+                            unavailableColumnDropIndices.add(cellColumnIndex);
                         }
                     }
                 }
@@ -3244,6 +3286,7 @@ public class Grid<T> extends ResizeComposite implements
                 possibleDropPositions.put(position, getColumnCount());
             }
         }
+
     };
 
     /**
@@ -5535,10 +5578,6 @@ public class Grid<T> extends ResizeComposite implements
         }
         if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()
                 .getFrozenColumnCount()) {
-            return false;
-        }
-        // for now prevent dragging of spanned cells
-        if (eventCell.getElement().getColSpan() > 1) {
             return false;
         }
 
