@@ -1782,6 +1782,12 @@ public class Grid<T> extends ResizeComposite implements
 
     private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
+    /**
+     * An initial height that is given to new details rows before rendering the
+     * appropriate widget that we then can be measure
+     * 
+     * @see GridSpacerUpdater
+     */
     private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
 
     private EventCellReference<T> eventCell = new EventCellReference<T>(this);
@@ -2929,8 +2935,9 @@ public class Grid<T> extends ResizeComposite implements
     private boolean enabled = true;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
-
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
+    /** A set keeping track of the indices of all currently open details */
+    private Set<Integer> visibleDetails = new HashSet<Integer>();
 
     /**
      * Enumeration for easy setting of selection mode.
@@ -6341,17 +6348,60 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Shows or hides the details for a specific row.
+     * <p>
+     * This method does nothing if trying to set show already-visible details,
+     * or hide already-hidden details.
      * 
      * @since
-     * @param row
+     * @param rowIndex
      *            the index of the affected row
      * @param visible
      *            <code>true</code> to show the details, or <code>false</code>
      *            to hide them
+     * @see #isDetailsVisible(int)
      */
     public void setDetailsVisible(int rowIndex, boolean visible) {
-        double height = visible ? DETAILS_ROW_INITIAL_HEIGHT : -1;
-        escalator.getBody().setSpacer(rowIndex, height);
+        Integer rowIndexInteger = Integer.valueOf(rowIndex);
+
+        /*
+         * We want to prevent opening a details row twice, so any subsequent
+         * openings (or closings) of details is a NOOP.
+         * 
+         * When a details row is opened, it is given an arbitrary height
+         * (because Escalator requires a height upon opening). Only when it's
+         * opened, Escalator will ask the generator to generate a widget, which
+         * we then can measure. When measured, we correct the initial height by
+         * the original height.
+         * 
+         * Without this check, we would override the measured height, and revert
+         * back to the initial, arbitrary, height which would most probably be
+         * wrong.
+         * 
+         * see GridSpacerUpdater.init for implementation details.
+         */
+
+        if (visible && !isDetailsVisible(rowIndex)) {
+            escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
+            visibleDetails.add(rowIndexInteger);
+        }
+
+        else if (!visible && isDetailsVisible(rowIndex)) {
+            escalator.getBody().setSpacer(rowIndex, -1);
+            visibleDetails.remove(rowIndexInteger);
+        }
+    }
+
+    /**
+     * Check whether the details for a row is visible or not.
+     * 
+     * @since
+     * @param rowIndex
+     *            the index of the row for which to check details
+     * @return <code>true</code> iff the details for the given row is visible
+     * @see #setDetailsVisible(int, boolean)
+     */
+    public boolean isDetailsVisible(int rowIndex) {
+        return visibleDetails.contains(Integer.valueOf(rowIndex));
     }
 
     /**
