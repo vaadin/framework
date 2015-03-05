@@ -145,14 +145,12 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         gridElement = getGridElement();
         headerCells = gridElement.getHeaderCells(0);
         final int size = headerCells.size();
-        // skip last column since there is a bug in the width of the last column
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
+            // Avoid issues with inaccuracies regarding subpixels.
             assertEquals(
                     "Column widths don't match after reset, index after flip "
-                            + i,
-                    columnWidths.get(i),
-                    Integer.valueOf(headerCells.get(size - 1 - i).getSize()
-                            .getWidth()));
+                            + i, columnWidths.get(i),
+                    headerCells.get(size - 1 - i).getSize().getWidth(), 1.0d);
         }
 
     }

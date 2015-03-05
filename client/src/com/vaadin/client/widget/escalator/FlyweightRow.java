@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.dom.client.TableRowElement;
-import com.vaadin.client.widgets.Escalator;
 
 /**
  * An internal implementation of the {@link Row} interface.
