@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -282,9 +280,16 @@ public class DownloadStream implements Serializable {
                     }
                 }
 
-                // Content-Disposition: attachment generally forces download
-                response.setHeader("Content-Disposition",
-                        getContentDispositionValue());
+                // suggest local filename from DownloadStream if
+                // Content-Disposition
+                // not explicitly set
+                String contentDispositionValue = getParameter("Content-Disposition");
+                if (contentDispositionValue == null) {
+                    contentDispositionValue = "filename=\"" + getFileName()
+                            + "\"";
+                    response.setHeader("Content-Disposition",
+                            contentDispositionValue);
+                }
 
                 int bufferSize = getBufferSize();
                 if (bufferSize <= 0 || bufferSize > Constants.MAX_BUFFER_SIZE) {
@@ -310,21 +315,6 @@ public class DownloadStream implements Serializable {
                 tryToCloseStream(data);
             }
         }
-    }
-
-    private String getContentDispositionValue()
-            throws UnsupportedEncodingException {
-        String contentDispositionValue = getParameter("Content-Disposition");
-
-        if (contentDispositionValue == null) {
-            String encodedFilename = URLEncoder.encode(getFileName(), "utf-8");
-
-            contentDispositionValue = String.format(
-                    "attachment; filename=\"%s\"; filename*=utf-8''%s",
-                    encodedFilename, encodedFilename);
-        }
-
-        return contentDispositionValue;
     }
 
     /**
