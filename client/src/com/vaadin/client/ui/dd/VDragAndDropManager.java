@@ -38,9 +38,9 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
@@ -240,6 +240,12 @@ public class VDragAndDropManager {
 
     }
 
+    /*
+     * #13381, #14796. The drag only actually starts when the mouse move or
+     * touch move event is more than 3 pixel away.
+     */
+    public static final int MINIMUM_DISTANCE_TO_START_DRAG = 3;
+
     private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;
     private VDragEvent currentDrag;
@@ -425,8 +431,8 @@ public class VDragAndDropManager {
                                 int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(event
                                                 .getNativeEvent());
-                                if (Math.abs(startX - currentX) > 3
-                                        || Math.abs(startY - currentY) > 3) {
+                                if (Math.abs(startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                        || Math.abs(startY - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
                                     if (deferredStartRegistration != null) {
                                         deferredStartRegistration
                                                 .removeHandler();
