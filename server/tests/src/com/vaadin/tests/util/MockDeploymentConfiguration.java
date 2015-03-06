@@ -22,6 +22,7 @@ public class MockDeploymentConfiguration extends
     private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
     private boolean syncIdCheckEnabled = true;
     private boolean sendUrlsAsParameters = true;
+    private String pushPath = "PUSH";
 
     @Override
     public boolean isProductionMode() {
@@ -123,6 +124,11 @@ public class MockDeploymentConfiguration extends
     @Override
     public boolean isSendUrlsAsParameters() {
         return sendUrlsAsParameters;
+    }
+
+    @Override
+    public String getPushPath() {
+        return pushPath;
     }
 
 }

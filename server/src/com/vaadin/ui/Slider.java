@@ -161,6 +161,11 @@ public class Slider extends AbstractField<Double> {
      */
     public void setMax(double max) {
         getState().maxValue = max;
+
+        if (getMin() > max) {
+            getState().minValue = max;
+        }
+
         if (getValue() > max) {
             setValue(max);
         }
@@ -179,11 +184,16 @@ public class Slider extends AbstractField<Double> {
      * Set the minimum slider value. If the current value of the slider is
      * smaller than this, the value is set to the new minimum.
      * 
-     * @param max
+     * @param min
      *            The new minimum slider value
      */
     public void setMin(double min) {
         getState().minValue = min;
+
+        if (getMax() < min) {
+            getState().maxValue = min;
+        }
+
         if (getValue() < min) {
             setValue(min);
         }
@@ -260,12 +270,12 @@ public class Slider extends AbstractField<Double> {
             newValue = (int) (v * Math.pow(10, resolution));
             newValue = newValue / Math.pow(10, resolution);
             if (getMin() > newValue || getMax() < newValue) {
-                throw new ValueOutOfBoundsException(value);
+                throw new ValueOutOfBoundsException(newValue);
             }
         } else {
             newValue = (int) v;
             if (getMin() > newValue || getMax() < newValue) {
-                throw new ValueOutOfBoundsException(value);
+                throw new ValueOutOfBoundsException(newValue);
             }
         }
 
@@ -313,6 +323,8 @@ public class Slider extends AbstractField<Double> {
          * @param valueOutOfBounds
          */
         public ValueOutOfBoundsException(Double valueOutOfBounds) {
+            super(String.format("Value %s is out of bounds: [%s, %s]",
+                    valueOutOfBounds, getMin(), getMax()));
             value = valueOutOfBounds;
         }
 

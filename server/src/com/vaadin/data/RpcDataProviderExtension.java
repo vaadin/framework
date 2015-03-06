@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -325,10 +326,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private class ActiveRowHandler implements Serializable {
         /**
-         * A map from itemId to the value change listener used for all of its
+         * A map from index to the value change listener used for all of column
          * properties
          */
-        private final Map<Object, GridValueChangeListener> valueChangeListeners = new HashMap<Object, GridValueChangeListener>();
+        private final Map<Integer, GridValueChangeListener> valueChangeListeners = new HashMap<Integer, GridValueChangeListener>();
 
         /**
          * The currently active range. Practically, it's the range of row
@@ -388,36 +389,27 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         private void addValueChangeListeners(Range range) {
-            for (int i = range.getStart(); i < range.getEnd(); i++) {
+            for (Integer i = range.getStart(); i < range.getEnd(); i++) {
 
                 final Object itemId = container.getIdByIndex(i);
                 final Item item = container.getItem(itemId);
 
-                if (valueChangeListeners.containsKey(itemId)) {
-                    /*
-                     * This might occur when items are removed from above the
-                     * viewport, the escalator scrolls up to compensate, but the
-                     * same items remain in the view: It looks as if one row was
-                     * scrolled, when in fact the whole viewport was shifted up.
-                     */
-                    continue;
-                }
+                assert valueChangeListeners.get(i) == null : "Overwriting existing listener";
 
                 GridValueChangeListener listener = new GridValueChangeListener(
                         itemId, item);
-                valueChangeListeners.put(itemId, listener);
+                valueChangeListeners.put(i, listener);
             }
         }
 
         private void removeValueChangeListeners(Range range) {
-            for (int i = range.getStart(); i < range.getEnd(); i++) {
-                final Object itemId = container.getIdByIndex(i);
+            for (Integer i = range.getStart(); i < range.getEnd(); i++) {
                 final GridValueChangeListener listener = valueChangeListeners
-                        .remove(itemId);
+                        .remove(i);
 
-                if (listener != null) {
-                    listener.removeListener();
-                }
+                assert listener != null : "Trying to remove nonexisting listener";
+
+                listener.removeListener();
             }
         }
 
@@ -478,12 +470,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
          */
         public void insertRows(int firstIndex, int count) {
             if (firstIndex < activeRange.getStart()) {
+                moveListeners(activeRange, count);
                 activeRange = activeRange.offsetBy(count);
             } else if (firstIndex < activeRange.getEnd()) {
-                final Range deprecatedRange = Range.withLength(
-                        activeRange.getEnd(), count);
-                removeValueChangeListeners(deprecatedRange);
-
+                int end = activeRange.getEnd();
+                // Move rows from first added index by count
+                Range movedRange = Range.between(firstIndex, end);
+                moveListeners(movedRange, count);
+                // Remove excess listeners from extra rows
+                removeValueChangeListeners(Range.withLength(end, count));
+                // Add listeners for new rows
                 final Range freshRange = Range.withLength(firstIndex, count);
                 addValueChangeListeners(freshRange);
             } else {
@@ -509,22 +505,51 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public void removeRows(int firstIndex, int count) {
             Range removed = Range.withLength(firstIndex, count);
             if (removed.intersects(activeRange)) {
-                final Range deprecated = removed.restrictTo(activeRange);
-                for (int i = deprecated.getStart(); i < deprecated.getEnd(); ++i) {
-                    Object itemId = keyMapper.itemIdAtIndex(i);
-                    // Item doesn't exist anymore.
-                    valueChangeListeners.remove(itemId);
-                }
+                final Range[] deprecated = activeRange.partitionWith(removed);
+                // Remove the listeners that are no longer existing
+                removeValueChangeListeners(deprecated[1]);
 
+                // Move remaining listeners to fill the listener map correctly
+                moveListeners(deprecated[2], -deprecated[1].length());
                 activeRange = Range.withLength(activeRange.getStart(),
-                        activeRange.length() - deprecated.length());
+                        activeRange.length() - deprecated[1].length());
+
             } else {
                 if (removed.getEnd() < activeRange.getStart()) {
                     /* firstIndex < lastIndex < start */
+                    moveListeners(activeRange, -count);
                     activeRange = activeRange.offsetBy(-count);
                 }
                 /* else: end <= firstIndex, no need to do anything */
             }
+        }
+
+        /**
+         * Moves value change listeners in map with given index range by count
+         */
+        private void moveListeners(Range movedRange, int diff) {
+            if (diff < 0) {
+                for (Integer i = movedRange.getStart(); i < movedRange.getEnd(); ++i) {
+                    moveListener(i, i + diff);
+                }
+            } else if (diff > 0) {
+                for (Integer i = movedRange.getEnd() - 1; i >= movedRange
+                        .getStart(); --i) {
+                    moveListener(i, i + diff);
+                }
+            } else {
+                // diff == 0 should not happen. If it does, should be no-op
+                return;
+            }
+        }
+
+        private void moveListener(Integer oldIndex, Integer newIndex) {
+            assert valueChangeListeners.get(newIndex) == null : "Overwriting existing listener";
+
+            GridValueChangeListener listener = valueChangeListeners
+                    .remove(oldIndex);
+            assert listener != null : "Moving nonexisting listener.";
+            valueChangeListeners.put(newIndex, listener);
         }
     }
 
@@ -663,7 +688,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * taking all the corner cases into account.
                  */
 
-                Map<Object, GridValueChangeListener> listeners = activeRowHandler.valueChangeListeners;
+                Map<Integer, GridValueChangeListener> listeners = activeRowHandler.valueChangeListeners;
                 for (GridValueChangeListener listener : listeners.values()) {
                     listener.removeListener();
                 }
@@ -691,7 +716,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private CellReference cellReference;
 
     /** Set of updated item ids */
-    private Set<Object> updatedItemIds = new HashSet<Object>();
+    private Set<Object> updatedItemIds = new LinkedHashSet<Object>();
 
     /**
      * Queued RPC calls for adding and removing rows. Queue will be handled in

@@ -20,7 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

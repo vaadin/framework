@@ -25,6 +25,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
@@ -67,17 +68,9 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        // Can't handle ctrl
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
-
-        // Can't handle shift or ctrl
-        browsers.remove(Browser.IE9.getDesiredCapabilities());
-        browsers.remove(Browser.IE10.getDesiredCapabilities());
-        browsers.remove(Browser.IE11.getDesiredCapabilities());
-        return browsers;
-
+        // IE8 and Firefox can't handle ctrl.
+        // IE9-11 has issues with shift and ctrl
+        return getBrowserCapabilities(Browser.CHROME, Browser.PHANTOMJS);
     }
 
     @Override

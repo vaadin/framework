@@ -676,7 +676,15 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setEnabled(!grid.isEnabled());
             }
         }, "Component", "State");
+        addMenuCommand("Reverse grid columns", new ScheduledCommand() {
 
+            @Override
+            public void execute() {
+                List<Column> columns = new ArrayList<Column>(grid.getColumns());
+                Collections.reverse(columns);
+                grid.setColumnOrder(columns.toArray(new Column[columns.size()]));
+            }
+        }, "Component", "State");
         addMenuCommand("Column Reordering", new ScheduledCommand() {
 
             @Override
@@ -685,6 +693,34 @@ public class GridBasicClientFeaturesWidget extends
                         .isColumnReorderingAllowed());
             }
         }, "Component", "State");
+        addMenuCommand("250px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("250px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("500px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("500px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("750px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("750px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("1000px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("1000px");
+            }
+        }, "Component", "State", "Width");
     }
 
     private void createColumnsMenu() {

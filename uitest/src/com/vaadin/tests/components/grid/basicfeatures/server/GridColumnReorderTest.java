@@ -75,17 +75,18 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
     public void testColumnReordering_reorderingTwiceBackForth_reordered() {
         // given
         openTestURL();
-        assertColumnHeaderOrder(0, 1, 2);
+        selectMenuPath("Component", "Size", "Width", "800px");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
         toggleColumnReordering();
 
         // when
         dragAndDropDefaultColumnHeader(2, 0, 10);
 
         // then
-        assertColumnHeaderOrder(2, 0, 1, 3);
+        assertColumnHeaderOrder(2, 0, 1, 3, 4);
 
         // when
-        dragAndDropDefaultColumnHeader(1, 3, 110);
+        dragAndDropDefaultColumnHeader(1, 3, 150);
 
         // then
         assertColumnHeaderOrder(2, 1, 3, 0);

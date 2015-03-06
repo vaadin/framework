@@ -88,8 +88,6 @@ public class TableWithPollingTest extends MultiBrowserTest {
         // Selenium has issues with drag-and-drop on IE8 making it impossible to
         // drag a target as small as the table resizer. So we'll just have to
         // ignore IE8 completely.
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        return browsers;
+        return getBrowsersExcludingIE8();
     }
 }

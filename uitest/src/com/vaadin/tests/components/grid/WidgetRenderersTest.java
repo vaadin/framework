@@ -15,22 +15,23 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * TB tests for the various builtin widget-based renderers.
@@ -97,7 +98,8 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         waitUntilmageSrcEndsWith(image, "window/img/maximize.png");
     }
 
-    private void waitUntilmageSrcEndsWith(final WebElement image, final String expectedText) {
+    private void waitUntilmageSrcEndsWith(final WebElement image,
+            final String expectedText) {
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override
@@ -108,8 +110,9 @@ public class WidgetRenderersTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String.format("image source to update. Supposed to end with '%s' (was: '%s').",
-                        expectedText, image.getAttribute("src"));
+                return String
+                        .format("image source to update. Supposed to end with '%s' (was: '%s').",
+                                expectedText, image.getAttribute("src"));
             }
         });
     }

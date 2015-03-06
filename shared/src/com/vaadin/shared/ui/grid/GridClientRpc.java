@@ -50,4 +50,9 @@ public interface GridClientRpc extends ClientRpc {
      */
     public void scrollToEnd();
 
+    /**
+     * Command client Grid to recalculate column widths.
+     */
+    public void recalculateColumnWidths();
+
 }

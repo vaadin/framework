@@ -189,8 +189,7 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private final MeasuredSize getMeasuredSize(ComponentConnector connector) {
-        Element element = connector.getWidget().getElement();
+    private final MeasuredSize getMeasuredSize(Element element) {
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
             measuredSize = new MeasuredSize();
@@ -736,7 +735,7 @@ public class LayoutManager {
     private void measureConnector(ComponentConnector connector) {
         Profiler.enter("LayoutManager.measureConnector");
         Element element = connector.getWidget().getElement();
-        MeasuredSize measuredSize = getMeasuredSize(connector);
+        MeasuredSize measuredSize = getMeasuredSize(element);
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
@@ -1442,14 +1441,14 @@ public class LayoutManager {
      *            of the component in pixels
      */
     public void reportOuterHeight(ComponentConnector component, int outerHeight) {
-        MeasuredSize measuredSize = getMeasuredSize(component);
+        Element element = component.getWidget().getElement();
+        MeasuredSize measuredSize = getMeasuredSize(element);
         if (isLayoutRunning()) {
             boolean heightChanged = measuredSize.setOuterHeight(outerHeight);
 
             if (heightChanged) {
                 onConnectorChange(component, false, true);
-                notifyListenersAndDepdendents(component.getWidget()
-                        .getElement(), false, true);
+                notifyListenersAndDepdendents(element, false, true);
             }
             currentDependencyTree.setNeedsVerticalMeasure(component, false);
         } else if (measuredSize.getOuterHeight() != outerHeight) {
@@ -1523,14 +1522,14 @@ public class LayoutManager {
      *            of the component in pixels
      */
     public void reportOuterWidth(ComponentConnector component, int outerWidth) {
-        MeasuredSize measuredSize = getMeasuredSize(component);
+        Element element = component.getWidget().getElement();
+        MeasuredSize measuredSize = getMeasuredSize(element);
         if (isLayoutRunning()) {
             boolean widthChanged = measuredSize.setOuterWidth(outerWidth);
 
             if (widthChanged) {
                 onConnectorChange(component, true, false);
-                notifyListenersAndDepdendents(component.getWidget()
-                        .getElement(), true, false);
+                notifyListenersAndDepdendents(element, true, false);
             }
             currentDependencyTree.setNeedsHorizontalMeasure(component, false);
         } else if (measuredSize.getOuterWidth() != outerWidth) {

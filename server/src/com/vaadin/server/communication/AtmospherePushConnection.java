@@ -275,12 +275,10 @@ public class AtmospherePushConnection implements PushConnection {
         assert isConnected();
 
         if (resource.isResumed()) {
-            // Calling disconnect may end up invoking it again via
-            // resource.resume and PushHandler.onResume. Bail out here if
-            // the resource is already resumed; this is a bit hacky and should
-            // be implemented in a better way in 7.2.
-            resource = null;
-            state = State.DISCONNECTED;
+            // This can happen for long polling because of
+            // http://dev.vaadin.com/ticket/16919
+            // Once that is fixed, this should never happen
+            connectionLost();
             return;
         }
 
@@ -307,8 +305,23 @@ public class AtmospherePushConnection implements PushConnection {
             getLogger()
                     .log(Level.INFO, "Error when closing push connection", e);
         }
+        connectionLost();
+    }
+
+    /**
+     * Called when the connection to the client has been lost.
+     * 
+     * @since 7.4.1
+     */
+    public void connectionLost() {
         resource = null;
-        state = State.DISCONNECTED;
+        if (state == State.CONNECTED) {
+            // Guard against connectionLost being (incorrectly) called when
+            // state is PUSH_PENDING or RESPONSE_PENDING
+            // (http://dev.vaadin.com/ticket/16919)
+            state = State.DISCONNECTED;
+        }
+
     }
 
     /**

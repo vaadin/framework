@@ -41,11 +41,8 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Tooltip tests work unreliably on IE due to an issue with the
-        // WebDriver (see #13854)
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        return browsers;
+        // Tooltip test is unreliable on IE8
+        return getBrowsersExcludingIE8();
     };
 
     @Test
@@ -59,6 +56,5 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
         WebElement tooltip = getTooltipElement();
         assertThat(tooltip.getLocation().x, is(lessThan(menuLocation.onPage().x
                 - tooltip.getSize().getWidth())));
-
     }
 }

@@ -47,6 +47,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -334,7 +335,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             private double touches = 0;
             private int lastX = 0;
             private int lastY = 0;
-            private double lastTime = 0;
             private boolean snappedScrollEnabled = true;
             private double deltaX = 0;
             private double deltaY = 0;
@@ -344,7 +344,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             private CustomTouchEvent latestTouchMoveEvent;
 
             /** The timestamp of {@link #flickPageX1} and {@link #flickPageY1} */
-            private double flickTimestamp = Double.MIN_VALUE;
+            private double flickStartTime = 0;
+
+            /** The timestamp of {@link #flickPageX2} and {@link #flickPageY2} */
+            private double flickTimestamp = 0;
 
             /** The most recent flick touch reference Y */
             private double flickPageY1 = -1;
@@ -367,6 +370,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * over here.
              */
             private AnimationCallback mover = new AnimationCallback() {
+
                 @Override
                 public void execute(double timestamp) {
                     if (touches != 1) {
@@ -377,29 +381,22 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     final int y = latestTouchMoveEvent.getPageY();
 
                     /*
-                     * Check if we need a new flick coordinate sample (more than
-                     * FLICK_POLL_FREQUENCY ms have passed since the last
-                     * sample)
+                     * Check if we need a new flick coordinate sample ( more
+                     * than FLICK_POLL_FREQUENCY ms have passed since the last
+                     * sample )
                      */
-                    if (timestamp - flickTimestamp > FLICK_POLL_FREQUENCY) {
-                        flickTimestamp = timestamp;
-                        flickPageY2 = flickPageY1;
-                        flickPageY1 = y;
+                    if (System.currentTimeMillis() - flickTimestamp > FLICK_POLL_FREQUENCY) {
 
-                        flickPageX2 = flickPageX1;
-                        flickPageX1 = x;
+                        flickTimestamp = System.currentTimeMillis();
+                        // Set target coordinates
+                        flickPageY2 = y;
+                        flickPageX2 = x;
                     }
 
                     deltaX = x - lastX;
                     deltaY = y - lastY;
                     lastX = x;
                     lastY = y;
-
-                    /*
-                     * Instead of using the provided arbitrary timestamp, let's
-                     * use a known-format and reproducible timestamp.
-                     */
-                    lastTime = Duration.currentTimeMillis();
 
                     // snap the scroll to the major axes, at first.
                     if (snappedScrollEnabled) {
@@ -476,6 +473,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 lastX = event.getPageX();
                 lastY = event.getPageY();
 
+                // Reset flick parameters
+                flickPageX1 = lastX;
+                flickPageX2 = -1;
+                flickPageY1 = lastY;
+                flickPageY2 = -1;
+                flickStartTime = System.currentTimeMillis();
+                flickTimestamp = 0;
+
                 snappedScrollEnabled = true;
             }
 
@@ -513,25 +518,18 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
                     final double finalPageY;
                     final double finalPageX;
-                    double deltaT = lastTime - flickTimestamp;
+                    double deltaT = flickTimestamp - flickStartTime;
                     boolean onlyOneSample = flickPageX2 < 0 || flickPageY2 < 0;
-                    if (onlyOneSample || deltaT > FLICK_POLL_FREQUENCY / 3) {
-                        finalPageY = flickPageY1;
-                        finalPageX = flickPageX1;
+                    if (onlyOneSample) {
+                        finalPageX = latestTouchMoveEvent.getPageX();
+                        finalPageY = latestTouchMoveEvent.getPageY();
                     } else {
-                        deltaT += FLICK_POLL_FREQUENCY;
                         finalPageY = flickPageY2;
                         finalPageX = flickPageX2;
                     }
 
-                    flickPageY1 = -1;
-                    flickPageY2 = -1;
-                    flickTimestamp = Double.MIN_VALUE;
-
-                    double deltaX = latestTouchMoveEvent.getPageX()
-                            - finalPageX;
-                    double deltaY = latestTouchMoveEvent.getPageY()
-                            - finalPageY;
+                    double deltaX = finalPageX - flickPageX1;
+                    double deltaY = finalPageY - flickPageY1;
 
                     escalator.scroller
                             .handleFlickScroll(deltaX, deltaY, deltaT);
@@ -821,18 +819,23 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             double tableWrapperWidth = widthOfEscalator;
 
             boolean verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
-                    - header.heightOfSection - footer.heightOfSection;
-            boolean horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth;
+                    + WidgetUtil.PIXEL_EPSILON
+                    - header.heightOfSection
+                    - footer.heightOfSection;
+            boolean horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth
+                    + WidgetUtil.PIXEL_EPSILON;
 
             // One dimension got scrollbars, but not the other. Recheck time!
             if (verticalScrollNeeded != horizontalScrollNeeded) {
                 if (!verticalScrollNeeded && horizontalScrollNeeded) {
                     verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
+                            + WidgetUtil.PIXEL_EPSILON
                             - header.heightOfSection
                             - footer.heightOfSection
                             - horizontalScrollbar.getScrollbarThickness();
                 } else {
                     horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth
+                            + WidgetUtil.PIXEL_EPSILON
                             - verticalScrollbar.getScrollbarThickness();
                 }
             }
@@ -1812,12 +1815,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          */
         protected void reapplyRowWidths() {
             double rowWidth = columnConfiguration.calculateRowWidth();
+            if (rowWidth < 0) {
+                return;
+            }
 
-            com.google.gwt.dom.client.Element row = root.getFirstChildElement();
+            Element row = root.getFirstChildElement();
             while (row != null) {
-                if (rowWidth >= 0) {
-                    row.getStyle().setWidth(rowWidth, Unit.PX);
-                }
+                row.getStyle().setWidth(rowWidth, Unit.PX);
                 row = row.getNextSiblingElement();
             }
         }
@@ -2037,22 +2041,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
-
-                /*
-                 * [[subpixelworkaround]] (6.2.2015, Henrik Paul) FIXME: not
-                 * using the double-version is a workaround for a bug. It'll be
-                 * converted to use the double version at a later time
-                 */
                 double requiredWidth = WidgetUtil
-                        .getRequiredWidthBoundingClientRect(cellClone);
+                        .getRequiredWidthBoundingClientRectDouble(cellClone);
 
-                if (BrowserInfo.get().isIE9()) {
+                if (BrowserInfo.get().isIE()) {
                     /*
-                     * IE9 does not support subpixels. Usually it is rounded
-                     * down which leads to content not shown. Increase the
-                     * counted required size by one just to be on the safe side.
+                     * IE browsers have some issues with subpixels. Occasionally
+                     * content is overflown even if not necessary. Increase the
+                     * counted required size by 0.01 just to be on the safe
+                     * side.
                      */
-                    requiredWidth += 1;
+                    requiredWidth += 0.01;
                 }
 
                 maxCellWidth = Math.max(requiredWidth, maxCellWidth);
@@ -3794,7 +3793,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     } else {
                         /*
                          * the column's width is calculated at Escalator.onLoad
-                         * via measureIfNeeded!
+                         * via measureAndSetWidthIfNeeded!
                          */
                         measuringRequested = true;
                     }
@@ -3820,7 +3819,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                  * widths yet.
                  * 
                  * This is fixed during Escalator.onLoad, by the call to
-                 * "measureIfNeeded", which fixes "everything".
+                 * "measureAndSetWidthIfNeeded", which fixes "everything".
                  */
                 if (!measuringRequested) {
                     return calculatedWidth;
@@ -3835,7 +3834,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * Called by {@link Escalator#onLoad()}.
              */
             public boolean measureAndSetWidthIfNeeded() {
-                assert isAttached() : "Column.measureIfNeeded() was called even though Escalator was not attached!";
+                assert isAttached() : "Column.measureAndSetWidthIfNeeded() was called even though Escalator was not attached!";
 
                 if (measuringRequested) {
                     measuringRequested = false;
@@ -3853,6 +3852,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         private final List<Column> columns = new ArrayList<Column>();
         private int frozenColumns = 0;
 
+        /*
+         * TODO: this is a bit of a duplicate functionality with the
+         * Column.calculatedWidth caching. Probably should use one or the other,
+         * not both
+         */
         /**
          * A cached array of all the calculated column widths.
          * 
@@ -3997,6 +4001,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          */
         @Override
         public void insertColumns(final int index, final int numberOfColumns) {
+            subpixelBrowserBugDetector.invalidateFix();
+
             // Validate
             if (index < 0 || index > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given index(" + index
@@ -4148,14 +4154,23 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
                 int index = entry.getKey().intValue();
                 double width = entry.getValue().doubleValue();
+
+                if (index == getColumnCount() - 1) {
+                    subpixelBrowserBugDetector.invalidateFix();
+                }
+
                 checkValidColumnIndex(index);
                 columns.get(index).setWidth(width);
+
             }
 
             widthsArray = null;
             header.reapplyColumnWidths();
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
+
+            subpixelBrowserBugDetector.checkAndFix();
+
             recalculateElementSizes();
         }
 
@@ -4247,6 +4262,137 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             header.refreshColumns(index, numberOfColumns);
             body.refreshColumns(index, numberOfColumns);
             footer.refreshColumns(index, numberOfColumns);
+        }
+    }
+
+    private class SubpixelBrowserBugDetector {
+        private static final double SUBPIXEL_ADJUSTMENT = .1;
+        private boolean hasAlreadyBeenFixed = false;
+
+        /**
+         * This is a fix essentially for Firefox and how it handles subpixels.
+         * <p>
+         * Even if an element has {@code style="width: 1000.12px"}, the bounding
+         * box's width in Firefox is usually nothing of that sort. It's actually
+         * 1000.11669921875 (in version 35.0.1). That's not even close, when
+         * talking about floating point precision. Other browsers handle the
+         * subpixels way better
+         * <p>
+         * In any case, we need to fix that. And that's fixed by simply checking
+         * if the sum of the width of all the cells is larger than the width of
+         * the row. If it is, we <i>hack</i> the last column
+         * {@value #SUBPIXEL_ADJUSTMENT}px narrower.
+         */
+        public void checkAndFix() {
+            if (!hasAlreadyBeenFixed && hasSubpixelBrowserBug()) {
+                fixSubpixelBrowserBug();
+                hasAlreadyBeenFixed = true;
+            }
+        }
+
+        public void invalidateFix() {
+            adjustBookkeepingPixels(SUBPIXEL_ADJUSTMENT);
+            hasAlreadyBeenFixed = false;
+        }
+
+        private boolean hasSubpixelBrowserBug() {
+            final RowContainer rowContainer;
+            if (header.getRowCount() > 0) {
+                rowContainer = header;
+            } else if (body.getRowCount() > 0) {
+                rowContainer = body;
+            } else if (footer.getRowCount() > 0) {
+                rowContainer = footer;
+            } else {
+                return false;
+            }
+
+            double sumOfCellWidths = 0;
+            TableRowElement tr = rowContainer.getElement().getRows().getItem(0);
+
+            if (tr == null) {
+                /*
+                 * for some weird reason, the row might be null at this point in
+                 * (some?) webkit browsers.
+                 */
+                return false;
+            }
+
+            NodeList<TableCellElement> cells = tr.getCells();
+            assert cells != null : "cells was null, why is it null?";
+
+            for (int i = 0; i < cells.getLength(); i++) {
+                TableCellElement cell = cells.getItem(i);
+                if (!cell.getStyle().getDisplay()
+                        .equals(Display.NONE.getCssName())) {
+                    sumOfCellWidths += WidgetUtil.getBoundingClientRect(cell)
+                            .getWidth();
+                }
+            }
+
+            double rowWidth = WidgetUtil.getBoundingClientRect(tr).getWidth();
+            return sumOfCellWidths >= rowWidth;
+        }
+
+        private void fixSubpixelBrowserBug() {
+            assert columnConfiguration.getColumnCount() > 0 : "Why are we running this code if there are no columns?";
+
+            adjustBookkeepingPixels(-SUBPIXEL_ADJUSTMENT);
+
+            fixSubpixelBrowserBugFor(header);
+            fixSubpixelBrowserBugFor(body);
+            fixSubpixelBrowserBugFor(footer);
+        }
+
+        private void adjustBookkeepingPixels(double adjustment) {
+            int lastColumnIndex = columnConfiguration.columns.size() - 1;
+            if (lastColumnIndex < 0) {
+                return;
+            }
+
+            columnConfiguration.columns.get(lastColumnIndex).calculatedWidth += adjustment;
+            if (columnConfiguration.widthsArray != null) {
+                columnConfiguration.widthsArray[lastColumnIndex] += adjustment;
+            }
+        }
+
+        /**
+         * Adjust the last non-spanned cell by {@link #SUBPIXEL_ADJUSTMENT} (
+         * {@value #SUBPIXEL_ADJUSTMENT}px).
+         * <p>
+         * We'll do this brute-force, by individually measuring and shrinking
+         * the last non-spanned cell. Brute-force, since each row might be
+         * spanned differently - we can't simply pick one index and one width,
+         * and mass-apply that to everything :(
+         */
+        private void fixSubpixelBrowserBugFor(RowContainer rowContainer) {
+            if (rowContainer.getRowCount() == 0) {
+                return;
+            }
+
+            NodeList<TableRowElement> rows = rowContainer.getElement()
+                    .getRows();
+            for (int i = 0; i < rows.getLength(); i++) {
+
+                NodeList<TableCellElement> cells = rows.getItem(i).getCells();
+                TableCellElement lastNonspannedCell = null;
+                for (int j = cells.getLength() - 1; j >= 0; j--) {
+                    TableCellElement cell = cells.getItem(j);
+                    if (!cell.getStyle().getDisplay()
+                            .equals(Display.NONE.getCssName())) {
+                        lastNonspannedCell = cell;
+                        break;
+                    }
+                }
+
+                assert lastNonspannedCell != null : "all cells were \"display: none\" on row "
+                        + i + " in " + rowContainer.getElement().getTagName();
+
+                double cellWidth = WidgetUtil.getBoundingClientRect(
+                        lastNonspannedCell).getWidth();
+                double newWidth = cellWidth - SUBPIXEL_ADJUSTMENT;
+                lastNonspannedCell.getStyle().setWidth(newWidth, Unit.PX);
+            }
         }
     }
 
@@ -4346,6 +4492,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
     };
 
+    private final SubpixelBrowserBugDetector subpixelBrowserBugDetector = new SubpixelBrowserBugDetector();
+
     /**
      * Creates a new Escalator widget instance.
      */
@@ -4358,6 +4506,46 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         final Element root = DOM.createDiv();
         setElement(root);
+
+        setupScrollbars(root);
+
+        tableWrapper = DivElement.as(DOM.createDiv());
+
+        root.appendChild(tableWrapper);
+
+        final Element table = DOM.createTable();
+        tableWrapper.appendChild(table);
+
+        table.appendChild(headElem);
+        table.appendChild(bodyElem);
+        table.appendChild(footElem);
+
+        Style hCornerStyle = headerDeco.getStyle();
+        hCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        hCornerStyle.setDisplay(Display.NONE);
+        root.appendChild(headerDeco);
+
+        Style fCornerStyle = footerDeco.getStyle();
+        fCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        fCornerStyle.setDisplay(Display.NONE);
+        root.appendChild(footerDeco);
+
+        Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
+        hWrapperStyle.setDisplay(Display.NONE);
+        hWrapperStyle.setHeight(horizontalScrollbar.getScrollbarThickness(),
+                Unit.PX);
+        root.appendChild(horizontalScrollbarDeco);
+
+        setStylePrimaryName("v-escalator");
+
+        // init default dimensions
+        setHeight(null);
+        setWidth(null);
+    }
+
+    private void setupScrollbars(final Element root) {
 
         ScrollHandler scrollHandler = new ScrollHandler() {
             @Override
@@ -4413,40 +4601,20 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     }
                 });
 
-        tableWrapper = DivElement.as(DOM.createDiv());
-
-        root.appendChild(tableWrapper);
-
-        final Element table = DOM.createTable();
-        tableWrapper.appendChild(table);
-
-        table.appendChild(headElem);
-        table.appendChild(bodyElem);
-        table.appendChild(footElem);
-
-        Style hCornerStyle = headerDeco.getStyle();
-        hCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        hCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(headerDeco);
-
-        Style fCornerStyle = footerDeco.getStyle();
-        fCornerStyle.setWidth(verticalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        fCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(footerDeco);
-
-        Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
-        hWrapperStyle.setDisplay(Display.NONE);
-        hWrapperStyle.setHeight(horizontalScrollbar.getScrollbarThickness(),
-                Unit.PX);
-        root.appendChild(horizontalScrollbarDeco);
-
-        setStylePrimaryName("v-escalator");
-
-        // init default dimensions
-        setHeight(null);
-        setWidth(null);
+        /*
+         * Because of all the IE hacks we've done above, we now have scrollbars
+         * hiding underneath a lot of DOM elements.
+         * 
+         * This leads to problems with OSX (and many touch-only devices) when
+         * scrollbars are only shown when scrolling, as the scrollbar elements
+         * are hidden underneath everything. We trust that the scrollbars behave
+         * properly in these situations and simply pop them out with a bit of
+         * z-indexing.
+         */
+        if (WidgetUtil.getNativeScrollbarSize() == 0) {
+            verticalScrollbar.getElement().getStyle().setZIndex(90);
+            horizontalScrollbar.getElement().getStyle().setZIndex(90);
+        }
     }
 
     @Override
@@ -4459,7 +4627,28 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
-        recalculateElementSizes();
+
+        // recalculateElementSizes();
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                /*
+                 * Not a faintest idea why we have to defer this call, but
+                 * unless it is deferred, the size of the escalator will be 0x0
+                 * after it is first detached and then reattached to the DOM.
+                 * This only applies to a bare Escalator; inside a Grid
+                 * everything works fine either way.
+                 * 
+                 * The three autodetectRowHeightLater calls above seem obvious
+                 * suspects at first. However, they don't seem to have anything
+                 * to do with the issue, as they are no-ops in the
+                 * detach-reattach case.
+                 */
+                recalculateElementSizes();
+            }
+        });
+
         /*
          * Note: There's no need to explicitly insert rows into the body.
          * 
@@ -4485,6 +4674,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
         }
+
+        verticalScrollbar.onLoad();
+        horizontalScrollbar.onLoad();
 
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());

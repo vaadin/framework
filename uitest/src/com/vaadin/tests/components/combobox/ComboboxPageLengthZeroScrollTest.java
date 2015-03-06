@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -26,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -67,6 +67,6 @@ public class ComboboxPageLengthZeroScrollTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.IE8.getDesiredCapabilities());
+        return getBrowserCapabilities(Browser.IE8);
     }
 }

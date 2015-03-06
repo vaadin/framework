@@ -27,7 +27,7 @@ import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")

@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -33,9 +33,10 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.ImageElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Image;
 
 /**
  * Tests that {@link Embedded} uses correct theme when the theme is set with
@@ -50,7 +51,7 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Seems like stylesheet onload is not fired on PhantomJS
         // https://github.com/ariya/phantomjs/issues/12332
-        return Arrays.asList(MultiBrowserTest.Browser.FIREFOX
+        return Collections.singletonList(Browser.FIREFOX
                 .getDesiredCapabilities());
     }
 

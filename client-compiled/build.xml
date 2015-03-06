@@ -124,6 +124,7 @@
     <target name="jar" depends="default-widgetset">
         <antcall target="common.jar">
             <param name="osgi.extra.package.prefixes" value="VAADIN/widgetsets/" />
+            <param name="osgi.includeNumberPackages" value="1" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
     </target>

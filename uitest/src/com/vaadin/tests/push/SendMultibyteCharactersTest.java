@@ -1,10 +1,11 @@
 package com.vaadin.tests.push;
 
+import org.junit.Test;
+
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TextAreaElement;
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
 
 @TestCategory("push")
 public abstract class SendMultibyteCharactersTest extends MultiBrowserTest {

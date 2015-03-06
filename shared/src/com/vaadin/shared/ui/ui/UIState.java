@@ -110,6 +110,7 @@ public class UIState extends TabIndexState {
         public static final String FALLBACK_TRANSPORT_PARAM = "fallbackTransport";
 
         public PushMode mode = PushMode.DISABLED;
+        public String pushPath;
         public Map<String, String> parameters = new HashMap<String, String>();
         {
             parameters

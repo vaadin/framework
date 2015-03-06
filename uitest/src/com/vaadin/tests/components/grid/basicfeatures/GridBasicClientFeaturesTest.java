@@ -26,7 +26,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
 
 /**
- * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
+ * GridBasicClientFeatures.
  * 
  * @since
  * @author Vaadin Ltd

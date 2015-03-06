@@ -1225,7 +1225,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // Without this call the scroll position is messed up in IE even after
         // the lazy scroller has set the scroll position to the first visible
         // item
-        scrollBodyPanel.getScrollPosition();
+        int pos = scrollBodyPanel.getScrollPosition();
+
+        // Reset first row in view port so client requests correct last row.
+        if (pos == 0) {
+            firstRowInViewPort = 0;
+        }
 
         scrollBody = createScrollBody();
 
@@ -3380,7 +3385,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Saves natural column width if it hasn't been saved already.
-         *
+         * 
          * @param columnIndex
          * @since 7.3.9
          */
@@ -3612,9 +3617,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     c.setText(caption);
                 }
 
+                c.setSorted(false);
                 if (col.hasAttribute("sortable")) {
                     c.setSortable(true);
-                    c.setSorted(false);
                 } else {
                     c.setSortable(false);
                 }
@@ -4322,7 +4327,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Saves natural column width if it hasn't been saved already.
-         *
+         * 
          * @param columnIndex
          * @since 7.3.9
          */

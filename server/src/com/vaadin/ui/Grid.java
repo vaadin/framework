@@ -2251,7 +2251,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setLastFrozenColumn() {
             checkColumnIsAttached();
             grid.setFrozenColumnCount(grid.getState(false).columnOrder
-                    .indexOf(this) + 1);
+                    .indexOf(getState().id) + 1);
             return this;
         }
 
@@ -5228,5 +5228,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     @Deprecated
     public void removeListener(ItemClickListener listener) {
         removeItemClickListener(listener);
+    }
+
+    /**
+     * Requests that the column widths should be recalculated.
+     * <p>
+     * In most cases Grid will know when column widths need to be recalculated
+     * but this method can be used to force recalculation in situations when
+     * grid does not recalculate automatically.
+     * 
+     * @since 7.4.1
+     */
+    public void recalculateColumnWidths() {
+        getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
     }
 }

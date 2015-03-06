@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ServerClass;
+import com.vaadin.testbench.elementsbase.ServerClass;
 
 /*
  Suggestions for new elemental api for Window
@@ -59,6 +59,7 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
     /**
      * @return the caption of the window
      */
+    @Override
     public String getCaption() {
         return findElement(By.className("v-window-header")).getText();
     }

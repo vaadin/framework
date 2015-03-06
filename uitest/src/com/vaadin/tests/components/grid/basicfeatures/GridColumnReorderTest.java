@@ -25,7 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 
 /**
  * 
@@ -294,6 +294,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_cellsInsideSpannedHeaderAndBlockedByOtherSpannedCells_reorderingLimited() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
@@ -311,7 +312,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(0, 3, 4, 80);
+        dragAndDropColumnHeader(0, 3, 4, 100);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 5, 4);
 
@@ -319,7 +320,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(2, 3, 4, 80);
+        dragAndDropColumnHeader(2, 3, 4, 100);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 5, 4);
 
@@ -332,6 +333,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_cellsInsideTwoAdjacentSpannedHeaders_reorderingLimited() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
@@ -405,6 +407,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_cellsInsideTwoAdjacentSpannedHeaderAndFooter_reorderingLimited() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Footer", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
@@ -493,6 +496,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_spannedCellHasAnotherSpannedCellInside_canBeDraggedNormally() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         dragAndDropColumnHeader(1, 3, 1, 10);
@@ -512,6 +516,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_spannedCellInsideAnotherSpanned_canBeDraggedWithBoundaries() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         dragAndDropColumnHeader(1, 3, 1, 10);
@@ -539,6 +544,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_cellInsideAndNextToSpannedCells_canBeDraggedWithBoundaries() {
         // given
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         dragAndDropColumnHeader(1, 3, 1, 10);
@@ -565,6 +571,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     @Test
     public void testColumnReorder_multipleSpannedCells_dragWorksNormally() {
         toggleColumnReorder();
+        selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         selectMenuPath("Component", "Header", "Append row");

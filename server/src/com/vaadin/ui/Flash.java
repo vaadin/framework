@@ -97,7 +97,7 @@ public class Flash extends AbstractEmbedded {
      * Returns the codebase.
      * 
      * @see #setCodebase(String)
-     * @since 7.4
+     * @since 7.4.1
      * @return Current codebase.
      */
     public String getCodebase() {
@@ -126,7 +126,7 @@ public class Flash extends AbstractEmbedded {
      * Returns the current codetype.
      * 
      * @see #setCodetype(String)
-     * @since 7.4
+     * @since 7.4.1
      * @return Current codetype.
      */
     public String getCodetype() {
@@ -157,7 +157,7 @@ public class Flash extends AbstractEmbedded {
      * Returns current archive.
      * 
      * @see #setArchive(String)
-     * @since 7.4
+     * @since 7.4.1
      * @return Current archive.
      */
     public String getArchive() {
@@ -181,7 +181,7 @@ public class Flash extends AbstractEmbedded {
     /**
      * Returns standby.
      * 
-     * @since
+     * @since 7.4.1
      * @return Standby string.
      */
     public String getStandby() {
@@ -247,7 +247,7 @@ public class Flash extends AbstractEmbedded {
      * 
      * @see #setParameter(String, String)
      * @see #getParameter(String)
-     * @since 7.4
+     * @since 7.4.1
      * @return An iterable with declared parameter names.
      */
     public Iterable<String> getParameterNames() {

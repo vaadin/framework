@@ -195,7 +195,7 @@ public interface DeploymentConfiguration extends Serializable {
      * 
      * @since 7.4
      * 
-     * @return UI class name
+     * @return the name of the widgetset
      */
     public String getWidgetset(String defaultValue);
 
@@ -212,6 +212,14 @@ public interface DeploymentConfiguration extends Serializable {
      * @since 7.4
      */
     public String getClassLoaderName();
+
+    /**
+     * Returns the push path configuration option value. Should never be null.
+     * 
+     * @since 7.4.1
+     * @return the path used with server push
+     */
+    public String getPushPath();
 
     /**
      * Returns to legacy Property.toString() mode used. See

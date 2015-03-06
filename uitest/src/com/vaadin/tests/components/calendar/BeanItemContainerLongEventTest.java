@@ -32,6 +32,11 @@ public class BeanItemContainerLongEventTest extends MultiBrowserTest {
         return "/run/BeanItemContainerTestUI?restartApplication";
     }
 
+    @Override
+    protected void openTestURL(String... parameters) {
+        driver.get(getTestUrl());
+    }
+
     @Test
     public void testEventDisplayedInWeekView() {
         openTestURL();

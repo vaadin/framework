@@ -20,12 +20,12 @@ import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
+
 public abstract class SingleBrowserTest extends PrivateTB3Configuration {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.unmodifiableList(Collections
-                .singletonList(MultiBrowserTest.Browser.PHANTOMJS
-                        .getDesiredCapabilities()));
+        return Collections.singletonList(Browser.PHANTOMJS
+                .getDesiredCapabilities());
     }
-
 }

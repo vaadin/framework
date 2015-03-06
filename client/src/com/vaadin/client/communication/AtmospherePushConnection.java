@@ -24,6 +24,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
@@ -41,7 +43,7 @@ import elemental.json.JsonObject;
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
  * handling the communication channel.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -133,6 +135,8 @@ public class AtmospherePushConnection implements PushConnection {
      */
     private Command pendingDisconnectCommand;
 
+    private String pushPath;
+
     public AtmospherePushConnection() {
     }
 
@@ -150,6 +154,25 @@ public class AtmospherePushConnection implements PushConnection {
         this.connection = connection;
         this.errorHandler = errorHandler;
 
+        connection.addHandler(ApplicationStoppedEvent.TYPE,
+                new ApplicationStoppedHandler() {
+
+                    @Override
+                    public void onApplicationStopped(
+                            ApplicationStoppedEvent event) {
+                        if (state == State.DISCONNECT_PENDING
+                                || state == State.DISCONNECTED) {
+                            return;
+                        }
+
+                        disconnect(new Command() {
+                            @Override
+                            public void execute() {
+                            }
+                        });
+
+                    }
+                });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
         if ("push".equals(debugParameter)) {
@@ -159,6 +182,9 @@ public class AtmospherePushConnection implements PushConnection {
             config.setStringValue(param,
                     pushConfiguration.parameters.get(param));
         }
+
+        pushPath = pushConfiguration.pushPath;
+        assert pushPath != null;
 
         runWhenAtmosphereLoaded(new Command() {
             @Override
@@ -176,7 +202,7 @@ public class AtmospherePushConnection implements PushConnection {
     private void connect() {
         String baseUrl = connection
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.PUSH_PATH + '/');
+                        + pushPath + '/');
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
@@ -251,9 +277,9 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called whenever a server push connection is established (or
      * re-established).
-     *
+     * 
      * @param response
-     *
+     * 
      * @since 7.2
      */
     protected void onConnect(AtmosphereResponse response) {
@@ -319,14 +345,6 @@ public class AtmospherePushConnection implements PushConnection {
             message = message.substring(9, message.length() - 1);
             connection.handlePushMessage(message);
         }
-
-        if (!connection.isApplicationRunning()) {
-            disconnect(new Command() {
-                @Override
-                public void execute() {
-                }
-            });
-        }
     }
 
     /**
@@ -342,7 +360,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called if the push connection fails. Atmosphere will automatically retry
      * the connection until successful.
-     *
+     * 
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;

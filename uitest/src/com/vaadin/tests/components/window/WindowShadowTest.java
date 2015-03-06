@@ -17,7 +17,6 @@ package com.vaadin.tests.components.window;
 
 import java.awt.AWTException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -61,9 +60,6 @@ public class WindowShadowTest extends MultiBrowserTest {
     // ignore this browser in testing
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
-                getAllBrowsers());
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        return browsers;
+        return getBrowsersExcludingIE8();
     }
 }
