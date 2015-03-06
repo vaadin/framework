@@ -470,23 +470,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
-        if (resource instanceof AtmosphereResourceImpl
-                && !((AtmosphereResourceImpl) resource).isInScope()) {
-            // The resource is no longer valid so we should not write
-            // anything to it
-            getLogger()
-                    .fine("sendRefreshAndDisconnect called for resource no longer in scope");
-            return;
-        }
-
-        AtmospherePushConnection connection = new AtmospherePushConnection(null);
-        connection.connect(resource);
-        try {
-            connection.sendMessage(VaadinService
-                    .createCriticalNotificationJSON(null, null, null, null));
-        } finally {
-            connection.disconnect();
-        }
+        sendNotificationAndDisconnect(resource,
+                VaadinService.createCriticalNotificationJSON(null, null, null,
+                        null));
     }
 
     /**
