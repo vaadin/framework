@@ -6326,9 +6326,16 @@ public class Grid<T> extends ResizeComposite implements
      * @since
      * @param detailsGenerator
      *            the details generator to set
+     * @throws IllegalArgumentException
+     *             if detailsGenerator is <code>null</code>;
      */
     public void setDetailsGenerator(DetailsGenerator detailsGenerator)
             throws IllegalArgumentException {
+
+        if (detailsGenerator == null) {
+            throw new IllegalArgumentException(
+                    "Details generator may not be null");
+        }
 
         this.detailsGenerator = detailsGenerator;
 

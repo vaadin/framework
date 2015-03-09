@@ -95,7 +95,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             // private implementation
         }
 
-        void setActiveRange(Range newActiveRange) {
+        public void setActiveRange(Range newActiveRange) {
             final Range[] removed = activeRange.partitionWith(newActiveRange);
             final Range[] added = newActiveRange.partitionWith(activeRange);
 
@@ -163,7 +163,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return String.valueOf(rollingIndex++);
         }
 
-        String getKey(Object itemId) {
+        public String getKey(Object itemId) {
             String key = itemIdToKey.get(itemId);
             if (key == null) {
                 key = nextKey();
@@ -241,6 +241,20 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         /**
+         * Gets the row index for a given item.
+         * 
+         * @since
+         * @param itemId
+         *            the item id of the item for which to get the item
+         * @return the index of the item, or -1 if no such item could be found
+         */
+        @SuppressWarnings("boxing")
+        public int getIndex(Object itemId) {
+            Integer integer = indexToItemId.inverse().get(itemId);
+            return integer != null ? integer : -1;
+        }
+
+        /**
          * Pin an item id to be cached indefinitely.
          * <p>
          * Normally when an itemId is not an active row, it is discarded from
@@ -304,7 +318,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return pinnedItemIds.contains(itemId);
         }
 
-        Object itemIdAtIndex(int index) {
+        private Object itemIdAtIndex(int index) {
             return indexToItemId.get(Integer.valueOf(index));
         }
     }
@@ -728,6 +742,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private boolean bareItemSetTriggeredSizeChange = false;
 
     /**
+     * This map represents all the details that are user-defined as visible.
+     * This does not reflect the status in the DOM.
+     */
+    private Set<Object> visibleDetails = new HashSet<Object>();
+
+    /**
      * Creates a new data provider using the given container.
      * 
      * @param container
@@ -858,6 +878,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
         final JsonObject rowObject = Json.createObject();
         rowObject.put(GridState.JSONKEY_DATA, rowData);
         rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
+
+        if (visibleDetails.contains(itemId)) {
+            rowObject.put(GridState.JSONKEY_DETAILS_VISIBLE, true);
+        }
 
         rowReference.set(itemId);
 
@@ -1116,4 +1140,46 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return Logger.getLogger(RpcDataProviderExtension.class.getName());
     }
 
+    /**
+     * Marks a row's details to be visible or hidden.
+     * <p>
+     * If that row is currently in the client side's cache, this information
+     * will be sent over to the client.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item of which to change the details visibility
+     * @param visible
+     *            <code>true</code> to show the details, <code>false</code> to
+     *            hide
+     */
+    public void setDetailsVisible(Object itemId, boolean visible) {
+        final boolean modified;
+        if (visible) {
+            modified = visibleDetails.add(itemId);
+        } else {
+            modified = visibleDetails.remove(itemId);
+        }
+
+        int rowIndex = keyMapper.getIndex(itemId);
+        boolean modifiedRowIsActive = activeRowHandler.activeRange
+                .contains(rowIndex);
+        if (modified && modifiedRowIsActive) {
+            updateRowData(itemId);
+        }
+    }
+
+    /**
+     * Checks whether the details for a row is marked as visible.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item of which to check the visibility
+     * @return <code>true</code> iff the detials are visible for the item. This
+     *         might return <code>true</code> even if the row is not currently
+     *         visible in the DOM
+     */
+    public boolean isDetailsVisible(Object itemId) {
+        return visibleDetails.contains(itemId);
+    }
 }

@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface DetailsGenerator {
 
+    /** A details generator that provides no details */
     public static final DetailsGenerator NULL = new DetailsGenerator() {
         @Override
         public Widget getDetails(int rowIndex) {

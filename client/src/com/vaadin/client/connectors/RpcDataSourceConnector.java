@@ -17,6 +17,7 @@
 package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
@@ -43,6 +44,28 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.data.RpcDataProviderExtension.class)
 public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
+    /**
+     * A callback interface to let {@link GridConnector} know that detail
+     * visibilities might have changed.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    interface DetailsListener {
+
+        /**
+         * A request to verify (and correct) the visibility for a row, given
+         * updated metadata.
+         * 
+         * @param rowIndex
+         *            the index of the row that should be checked
+         * @param row
+         *            the row object to check visibility for
+         * @see GridState#JSONKEY_DETAILS_VISIBLE
+         */
+        void reapplyDetailsVisibility(int rowIndex, JsonObject row);
+    }
+
     public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
 
         protected RpcDataSource() {
@@ -56,27 +79,28 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                         rows.add(rowObject);
                     }
 
-                    dataSource.setRowData(firstRow, rows);
+                    RpcDataSource.this.setRowData(firstRow, rows);
                 }
 
                 @Override
                 public void removeRowData(int firstRow, int count) {
-                    dataSource.removeRowData(firstRow, count);
+                    RpcDataSource.this.removeRowData(firstRow, count);
                 }
 
                 @Override
                 public void insertRowData(int firstRow, int count) {
-                    dataSource.insertRowData(firstRow, count);
+                    RpcDataSource.this.insertRowData(firstRow, count);
                 }
 
                 @Override
                 public void resetDataAndSize(int size) {
-                    dataSource.resetDataAndSize(size);
+                    RpcDataSource.this.resetDataAndSize(size);
                 }
             });
         }
 
         private DataRequestRpc rpcProxy = getRpcProxy(DataRequestRpc.class);
+        private DetailsListener detailsListener;
 
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows,
@@ -170,7 +194,24 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             if (!handle.isPinned()) {
                 rpcProxy.setPinned(key, false);
             }
+        }
 
+        void setDetailsListener(DetailsListener detailsListener) {
+            this.detailsListener = detailsListener;
+        }
+
+        @Override
+        protected void setRowData(int firstRowIndex, List<JsonObject> rowData) {
+            super.setRowData(firstRowIndex, rowData);
+
+            /*
+             * Intercepting details information from the data source, rerouting
+             * them back to the GridConnector (as a details listener)
+             */
+            for (int i = 0; i < rowData.size(); i++) {
+                detailsListener.reapplyDetailsVisibility(firstRowIndex + i,
+                        rowData.get(i));
+            }
         }
     }
 
@@ -178,6 +219,8 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        ((GridConnector) target).setDataSource(dataSource);
+        GridConnector gridConnector = (GridConnector) target;
+        dataSource.setDetailsListener(gridConnector);
+        gridConnector.setDataSource(dataSource);
     }
 }

@@ -165,6 +165,34 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
+     * A callback interface for generating details for a particular row in Grid.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public interface DetailsGenerator extends Serializable {
+
+        /** A details generator that provides no details */
+        public DetailsGenerator NULL = new DetailsGenerator() {
+            @Override
+            public Component getDetails(RowReference rowReference) {
+                return null;
+            }
+        };
+
+        /**
+         * This method is called for whenever a new details row needs to be
+         * generated.
+         * 
+         * @param rowReference
+         *            the reference for the row for which to generate details
+         * @return the details for the given row, or <code>null</code> to leave
+         *         the details empty.
+         */
+        Component getDetails(RowReference rowReference);
+    }
+
+    /**
      * Custom field group that allows finding property types before an item has
      * been bound.
      */
@@ -2888,6 +2916,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     private EditorErrorHandler editorErrorHandler = new DefaultEditorErrorHandler();
 
+    private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionListener.class, "select", SelectionEvent.class);
 
@@ -5092,5 +5122,66 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
+    }
+
+    /**
+     * Sets a new details generator for row details.
+     * <p>
+     * The currently opened row details will be re-rendered.
+     * 
+     * @since
+     * @param detailsGenerator
+     *            the details generator to set
+     * @throws IllegalArgumentException
+     *             if detailsGenerator is <code>null</code>;
+     */
+    public void setDetailsGenerator(DetailsGenerator detailsGenerator)
+            throws IllegalArgumentException {
+        if (detailsGenerator == null) {
+            throw new IllegalArgumentException(
+                    "Details generator may not be null");
+        } else if (detailsGenerator == this.detailsGenerator) {
+            return;
+        }
+
+        this.detailsGenerator = detailsGenerator;
+
+        getLogger().warning("[[details]] update details on generator swap");
+    }
+
+    /**
+     * Gets the current details generator for row details.
+     * 
+     * @since
+     * @return the detailsGenerator the current details generator
+     */
+    public DetailsGenerator getDetailsGenerator() {
+        return detailsGenerator;
+    }
+
+    /**
+     * Shows or hides the details for a specific item.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item for which to set details visibility
+     * @param visible
+     *            <code>true</code> to show the details, or <code>false</code>
+     *            to hide them
+     */
+    public void setDetailsVisible(Object itemId, boolean visible) {
+        datasourceExtension.setDetailsVisible(itemId, visible);
+    }
+
+    /**
+     * Checks whether details are visible for the given item.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item for which to check details visibility
+     * @return <code>true</code> iff the details are visible
+     */
+    public boolean isDetailsVisible(Object itemId) {
+        return datasourceExtension.isDetailsVisible(itemId);
     }
 }

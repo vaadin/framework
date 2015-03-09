@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -45,6 +46,7 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
@@ -101,7 +103,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, RpcDataSourceConnector.DetailsListener {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -360,6 +362,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
+    private class CustomDetailsGenerator implements DetailsGenerator {
+        @Override
+        public Widget getDetails(int rowIndex) {
+            // TODO
+            return new Label("[todo]");
+        }
+    }
+
     /**
      * Maps a generated column id to a grid column instance
      */
@@ -501,7 +511,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         });
 
         getWidget().setEditorHandler(new CustomEditorHandler());
+
+        getWidget().setDetailsGenerator(new CustomDetailsGenerator());
+
         getLayoutManager().registerDependency(this, getWidget().getElement());
+
         layout();
     }
 
@@ -993,5 +1007,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void layout() {
         getWidget().onResize();
+    }
+
+    @Override
+    public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
+        if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE)) {
+            getWidget().setDetailsVisible(rowIndex, true);
+        } else {
+            getWidget().setDetailsVisible(rowIndex, false);
+        }
     }
 }

@@ -248,6 +248,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         addFilterActions();
 
+        createDetailsActions();
+
         this.grid = grid;
         return grid;
     }
@@ -1049,6 +1051,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.setHeightByRows(i);
                     }
                 }, null);
+    }
+
+    private void createDetailsActions() {
+        createBooleanAction("firstItemId", "Details", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    @SuppressWarnings("boxing")
+                    public void execute(Grid g, Boolean visible, Object data) {
+                        g.setDetailsVisible(g.getContainerDataSource()
+                                .firstItemId(), visible);
+                    }
+                });
     }
 
     @Override
