@@ -142,7 +142,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
-
     }
 
     /**
@@ -244,7 +243,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     private void openTestURL(Class<?> uiClass, Set<String> parameters) {
         String url = getTestURL(uiClass);
 
-        if(isDebug()) {
+        if (isDebug()) {
             parameters.add("debug");
         }
 
