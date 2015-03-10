@@ -570,6 +570,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }
 
+    @SuppressWarnings("boxing")
     private void moveRowFromIndexToIndex(int oldIndex, int newIndex) {
         T row = indexToRowMap.remove(oldIndex);
         if (indexToRowMap.containsKey(newIndex)) {

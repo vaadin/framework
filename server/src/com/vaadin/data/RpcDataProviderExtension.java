@@ -51,6 +51,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.DetailComponentManager;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.renderers.Renderer;
@@ -113,6 +114,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 final Object itemId = indexToItemId.get(ii);
 
                 if (!isPinned(itemId)) {
+                    detailComponentManager.destroyDetails(itemId);
                     itemIdToKey.remove(itemId);
                     indexToItemId.remove(ii);
                 }
@@ -154,6 +156,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     }
 
                     indexToItemId.forcePut(index, itemId);
+                    detailComponentManager.createDetails(itemId, index);
                 }
                 index++;
             }
@@ -747,14 +750,18 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private Set<Object> visibleDetails = new HashSet<Object>();
 
+    private DetailComponentManager detailComponentManager;
+
     /**
      * Creates a new data provider using the given container.
      * 
      * @param container
      *            the container to make available
      */
-    public RpcDataProviderExtension(Indexed container) {
+    public RpcDataProviderExtension(Indexed container,
+            DetailComponentManager detailComponentManager) {
         this.container = container;
+        this.detailComponentManager = detailComponentManager;
         rpc = getRpcProxy(DataProviderRpc.class);
 
         registerRpc(new DataRequestRpc() {
@@ -1018,6 +1025,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
             JsonArray rowArray = Json.createArray();
             rowArray.set(0, row);
             rpc.setRowData(index, rowArray);
+
+            if (isDetailsVisible(itemId)) {
+                detailComponentManager.createDetails(itemId, index);
+            }
         }
     }
 
@@ -1155,10 +1166,28 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void setDetailsVisible(Object itemId, boolean visible) {
         final boolean modified;
+
         if (visible) {
             modified = visibleDetails.add(itemId);
+
+            /*
+             * We don't want to create the component here, since the component
+             * might be out of view, and thus we don't know where the details
+             * should end up on the client side. This is also a great thing to
+             * optimize away, so that in case a lot of things would be opened at
+             * once, a huge chunk of data doesn't get sent over immediately.
+             */
+
         } else {
             modified = visibleDetails.remove(itemId);
+
+            /*
+             * Here we can try to destroy the component no matter what. The
+             * component has been removed and should be detached from the
+             * component hierarchy. The details row will be closed on the client
+             * side automatically.
+             */
+            detailComponentManager.destroyDetails(itemId);
         }
 
         int rowIndex = keyMapper.getIndex(itemId);

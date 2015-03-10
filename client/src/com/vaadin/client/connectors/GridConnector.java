@@ -29,12 +29,14 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -72,8 +74,10 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.ConnectorIndexChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -103,7 +107,8 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout, RpcDataSourceConnector.DetailsListener {
+        SimpleManagedLayout, RpcDataSourceConnector.DetailsListener,
+        DeferredWorker {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -362,11 +367,119 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    private class CustomDetailsGenerator implements DetailsGenerator {
+    private static class CustomDetailsGenerator implements DetailsGenerator {
+
+        private final Map<Integer, ComponentConnector> indexToDetailsMap = new HashMap<Integer, ComponentConnector>();
+
         @Override
+        @SuppressWarnings("boxing")
         public Widget getDetails(int rowIndex) {
-            // TODO
-            return new Label("[todo]");
+            ComponentConnector componentConnector = indexToDetailsMap
+                    .get(rowIndex);
+            if (componentConnector != null) {
+                return componentConnector.getWidget();
+            } else {
+                return null;
+            }
+        }
+
+        public void setDetailsConnectorChanges(Set<ConnectorIndexChange> changes) {
+            /*
+             * To avoid overwriting connectors while moving them about, we'll
+             * take all the affected connectors, first all remove those that are
+             * removed or moved, then we add back those that are moved or added.
+             */
+
+            /* Remove moved/removed connectors from bookkeeping */
+            for (ConnectorIndexChange change : changes) {
+                Integer oldIndex = change.getOldIndex();
+                Connector removedConnector = indexToDetailsMap.remove(oldIndex);
+
+                Connector connector = change.getConnector();
+                assert removedConnector == null || connector == null
+                        || removedConnector.equals(connector) : "Index "
+                        + oldIndex + " points to " + removedConnector
+                        + " while " + connector + " was expected";
+            }
+
+            /* Add moved/added connectors to bookkeeping */
+            for (ConnectorIndexChange change : changes) {
+                Integer newIndex = change.getNewIndex();
+                ComponentConnector connector = (ComponentConnector) change
+                        .getConnector();
+
+                if (connector != null) {
+                    assert newIndex != null : "An existing connector has a missing new index.";
+
+                    ComponentConnector prevConnector = indexToDetailsMap.put(
+                            newIndex, connector);
+
+                    assert prevConnector == null : "Connector collision at index "
+                            + newIndex
+                            + " between old "
+                            + prevConnector
+                            + " and new " + connector;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("boxing")
+    private class DetailsConnectorFetcher implements DeferredWorker {
+
+        /** A flag making sure that we don't call scheduleFinally many times. */
+        private boolean fetcherHasBeenCalled = false;
+
+        /** A rolling counter for unique values. */
+        private int detailsFetchCounter = 0;
+
+        /** A collection that tracks the amount of requests currently underway. */
+        private Set<Integer> pendingFetches = new HashSet<Integer>(5);
+
+        private final ScheduledCommand lazyDetailsFetcher = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                int currentFetchId = detailsFetchCounter++;
+                pendingFetches.add(currentFetchId);
+                getRpcProxy(GridServerRpc.class).sendDetailsComponents(
+                        currentFetchId);
+                fetcherHasBeenCalled = false;
+
+                assert assertRequestDoesNotTimeout(currentFetchId);
+            }
+        };
+
+        public void schedule() {
+            if (!fetcherHasBeenCalled) {
+                Scheduler.get().scheduleFinally(lazyDetailsFetcher);
+                fetcherHasBeenCalled = true;
+            }
+        }
+
+        public void responseReceived(int fetchId) {
+            boolean success = pendingFetches.remove(fetchId);
+            assert success : "Received a response with an unidentified fetch id";
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return fetcherHasBeenCalled || !pendingFetches.isEmpty();
+        }
+
+        private boolean assertRequestDoesNotTimeout(final int fetchId) {
+            /*
+             * This method will not be compiled without asserts enabled. This
+             * only makes sure that any request does not time out.
+             * 
+             * TODO Should this be an explicit check? Is it worth the overhead?
+             */
+            new Timer() {
+                @Override
+                public void run() {
+                    assert !pendingFetches.contains(fetchId);
+                }
+            }.schedule(1000);
+            return true;
         }
     }
 
@@ -416,6 +529,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     private String lastKnownTheme = null;
+
+    private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
+
+    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -469,6 +586,24 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
             }
+
+            @Override
+            public void setDetailsConnectorChanges(
+                    Set<ConnectorIndexChange> connectorChanges, int fetchId) {
+                customDetailsGenerator
+                        .setDetailsConnectorChanges(connectorChanges);
+
+                // refresh moved/added details rows
+                for (ConnectorIndexChange change : connectorChanges) {
+                    Integer newIndex = change.getNewIndex();
+                    if (newIndex != null) {
+                        int index = newIndex.intValue();
+                        getWidget().setDetailsVisible(index, false);
+                        getWidget().setDetailsVisible(index, true);
+                    }
+                }
+                detailsConnectorFetcher.responseReceived(fetchId);
+            }
         });
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);
@@ -512,7 +647,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().setEditorHandler(new CustomEditorHandler());
 
-        getWidget().setDetailsGenerator(new CustomDetailsGenerator());
+        getWidget().setDetailsGenerator(customDetailsGenerator);
 
         getLayoutManager().registerDependency(this, getWidget().getElement());
 
@@ -1017,5 +1152,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         } else {
             getWidget().setDetailsVisible(rowIndex, false);
         }
+
+        detailsConnectorFetcher.schedule();
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return detailsConnectorFetcher.isWorkPending();
     }
 }
