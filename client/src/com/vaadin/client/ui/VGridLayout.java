@@ -889,6 +889,10 @@ public class VGridLayout extends ComplexPanel {
                 cell.slot.setCaption(null);
                 cell.slot.getWrapperElement().removeFromParent();
                 cell.slot = null;
+                Style style = w.getElement().getStyle();
+                style.clearTop();
+                style.clearLeft();
+                style.clearPosition();
 
                 if (cells.length < cell.col && cells.length != 0
                         && cells[0].length < cell.row
