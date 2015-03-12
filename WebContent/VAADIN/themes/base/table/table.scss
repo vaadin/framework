@@ -247,6 +247,12 @@
 .v-off {
 	color: #ddd;
 }
+
+/* CheckBox and selection fix #9064 */
+.#{$primaryStyleName} .v-checkbox {
+    display: inline-block;
+}
+
 /*************************************
  * Drag'n'drop styles
  *************************************/

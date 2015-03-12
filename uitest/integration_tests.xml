@@ -150,6 +150,13 @@
         </antcall>
     </target>
 
+    <target name="integration-test-osgi">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="osgi" />
+        </antcall>
+    </target>
+
     <target name="integration-test-tomcat6">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -304,16 +311,6 @@
         </antcall>
     </target>
 
-    <target name="integration-test-exo3">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
-            <param name="test_browsers" value="winxp-firefox17-esr" />
-            <param name="target-server" value="exo3" />
-        </antcall>
-    </target>
-
     <target name="integration-test-websphere8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -406,7 +403,6 @@
             <antcall target="integration-test-liferay6ee" />
             <antcall target="integration-test-liferay6-theme" />
             <antcall target="integration-test-liferay6ee-theme" />
-            <antcall target="integration-test-exo3" />
             <antcall target="integration-test-weblogicPortal" />
             <antcall target="integration-test-liferay5" />
             <antcall target="integration-test-weblogic10" />
@@ -426,6 +422,7 @@
             <antcall target="integration-test-tomcat6" />
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
+            <antcall target="integration-test-osgi" />
             <antcall target="integration-test-tomcat7apacheproxy" />
             <antcall target="integration-test-websphere8" />
             <antcall target="integration-test-websphereportal8" />

@@ -6411,7 +6411,7 @@ public class Grid<T> extends ResizeComposite implements
      * cannot rely on the columns being the correct width after the call
      * returns.
      * 
-     * @since
+     * @since 7.4.1
      */
     public void recalculateColumnWidths() {
         autoColumnWidthsRecalculator.schedule();

@@ -429,6 +429,15 @@ public class LayoutDependencyTree {
         setNeedsVerticalMeasure(connector, needsMeasure);
     }
 
+    /**
+     * @param connectorId
+     * @param needsMeasure
+     * 
+     * @deprecated As of 7.4.2, use
+     *             {@link #setNeedsMeasure(ComponentConnector, boolean)} for
+     *             improved performance.
+     */
+    @Deprecated
     public void setNeedsMeasure(String connectorId, boolean needsMeasure) {
         ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
                 connection).getConnector(connectorId);
@@ -690,19 +699,10 @@ public class LayoutDependencyTree {
     }
 
     public JsArrayString getMeasureTargetsJsArray() {
-        FastStringSet horizontalQueue = getMeasureQueue(HORIZONTAL);
-        JsArrayString measureTargets = horizontalQueue.dump();
-
-        JsArrayString verticalDump = getMeasureQueue(VERTICAL).dump();
-        int length = verticalDump.length();
-        for (int i = 0; i < length; i++) {
-            String connectorId = verticalDump.get(i);
-            if (!horizontalQueue.contains(connectorId)) {
-                measureTargets.push(connectorId);
-            }
-        }
-
-        return measureTargets;
+        FastStringSet allMeasuredTargets = FastStringSet.create();
+        allMeasuredTargets.addAll(getMeasureQueue(HORIZONTAL));
+        allMeasuredTargets.addAll(getMeasureQueue(VERTICAL));
+        return allMeasuredTargets.dump();
     }
 
     public void logDependencyStatus(ComponentConnector connector) {

@@ -158,6 +158,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
     }
 
+    protected WebElement getTooltipErrorElement() {
+        WebElement tooltip = getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip"));
+        return tooltip.findElement(By.className("v-errormessage"));
+    }
+
     protected WebElement getTooltipElement() {
         return getDriver().findElement(
                 com.vaadin.testbench.By.className("v-tooltip-text"));

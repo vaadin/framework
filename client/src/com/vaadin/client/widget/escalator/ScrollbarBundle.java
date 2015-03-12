@@ -518,6 +518,8 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Should be called whenever this bundle is attached to the DOM (typically,
      * from the onLoad of the containing widget). Used to ensure the DOM scroll
      * position is maintained when detaching and reattaching the bundle.
+     * 
+     * @since 7.4.1
      */
     public void onLoad() {
         internalSetScrollPos(toInt32(scrollPos));
