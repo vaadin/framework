@@ -454,7 +454,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             // Set the text.
             setText(suggestion.getReplacementString());
 
-            menu.updateKeyboardSelectedItem();
         }
 
         /*
@@ -739,13 +738,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public class SuggestionMenu extends MenuBar implements SubPartAware,
             LoadHandler {
 
-        /**
-         * Tracks the item that is currently selected using the keyboard. This
-         * is need only because mouseover changes the selection and we do not
-         * want to use that selection when pressing enter to select the item.
-         */
-        private MenuItem keyboardSelectedItem;
-
         private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
                 100, new ScheduledCommand() {
 
@@ -807,9 +799,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (enableDebug) {
                 debug("VFS.SM: setSuggestions(" + suggestions + ")");
             }
-            // Reset keyboard selection when contents is updated to avoid
-            // reusing old, invalid data
-            setKeyboardSelectedItem(null);
 
             clearItems();
             final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
@@ -984,14 +973,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         }
 
-        private MenuItem getKeyboardSelectedItem() {
-            return keyboardSelectedItem;
-        }
-
-        public void setKeyboardSelectedItem(MenuItem menuItem) {
-            keyboardSelectedItem = menuItem;
-        }
-
         /**
          * @deprecated use {@link SuggestionPopup#selectFirstItem()} instead.
          */
@@ -1011,13 +992,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             List<MenuItem> items = getItems();
             MenuItem lastItem = items.get(items.size() - 1);
             selectItem(lastItem);
-        }
-
-        /*
-         * Sets the keyboard item as the current selected one.
-         */
-        void updateKeyboardSelectedItem() {
-            setKeyboardSelectedItem(getSelectedItem());
         }
 
         /*
@@ -1787,25 +1761,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             break;
         case KeyCodes.KEY_TAB:
         case KeyCodes.KEY_ENTER:
-            if (suggestionPopup.menu.getKeyboardSelectedItem() == null) {
-                /*
-                 * Nothing selected using up/down. Happens e.g. when entering a
-                 * text (causes popup to open) and then pressing enter.
-                 */
-                if (!allowNewItem) {
-                    onSuggestionSelected(currentSuggestions
-                            .get(suggestionPopup.menu.getSelectedIndex()));
-                } else {
-                    // Handle addition of new items.
-                    suggestionPopup.menu.doSelectedItemAction();
-                }
+
+            if (!allowNewItem) {
+                onSuggestionSelected(currentSuggestions
+                        .get(suggestionPopup.menu.getSelectedIndex()));
             } else {
-                /*
-                 * Get the suggestion that was navigated to using up/down.
-                 */
-                currentSuggestion = ((FilterSelectSuggestion) suggestionPopup.menu
-                        .getKeyboardSelectedItem().getCommand());
-                onSuggestionSelected(currentSuggestion);
+                // Handle addition of new items.
+                suggestionPopup.menu.doSelectedItemAction();
             }
 
             event.stopPropagation();
