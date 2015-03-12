@@ -141,11 +141,16 @@ public class FileDownloader extends AbstractExtension {
             }
             stream = ((ConnectorResource) resource).getStream();
 
-            if (stream.getParameter("Content-Disposition") == null) {
-                // Content-Disposition: attachment generally forces download
-                stream.setParameter("Content-Disposition",
-                        "attachment; filename=\"" + stream.getFileName() + "\"");
+            String contentDisposition = stream
+                    .getParameter(DownloadStream.CONTENT_DISPOSITION);
+            if (contentDisposition == null) {
+                contentDisposition = "attachment; "
+                        + DownloadStream.getContentDispositionFilename(stream
+                                .getFileName());
             }
+
+            stream.setParameter(DownloadStream.CONTENT_DISPOSITION,
+                    contentDisposition);
 
             // Content-Type to block eager browser plug-ins from hijacking
             // the file
@@ -158,4 +163,5 @@ public class FileDownloader extends AbstractExtension {
         stream.writeResponse(request, response);
         return true;
     }
+
 }

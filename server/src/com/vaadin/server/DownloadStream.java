@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @SuppressWarnings("serial")
 public class DownloadStream implements Serializable {
+
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
 
     /**
      * Maximum cache time.
@@ -280,16 +285,13 @@ public class DownloadStream implements Serializable {
                     }
                 }
 
-                // suggest local filename from DownloadStream if
-                // Content-Disposition
-                // not explicitly set
-                String contentDispositionValue = getParameter("Content-Disposition");
-                if (contentDispositionValue == null) {
-                    contentDispositionValue = "filename=\"" + getFileName()
-                            + "\"";
-                    response.setHeader("Content-Disposition",
-                            contentDispositionValue);
+                // Content-Disposition: attachment generally forces download
+                String contentDisposition = getParameter(CONTENT_DISPOSITION);
+                if (contentDisposition == null) {
+                    contentDisposition = getContentDispositionFilename(getFileName());
                 }
+
+                response.setHeader(CONTENT_DISPOSITION, contentDisposition);
 
                 int bufferSize = getBufferSize();
                 if (bufferSize <= 0 || bufferSize > Constants.MAX_BUFFER_SIZE) {
@@ -315,6 +317,30 @@ public class DownloadStream implements Serializable {
                 tryToCloseStream(data);
             }
         }
+    }
+
+    /**
+     * Returns the filename formatted for inclusion in a Content-Disposition
+     * header. Includes both a plain version of the name and a UTF-8 version
+     * 
+     * @since
+     * @param filename
+     *            The filename to include
+     * @return A value for inclusion in a Content-Disposition header
+     */
+    public static String getContentDispositionFilename(String filename) {
+        try {
+            String encodedFilename = URLEncoder.encode(filename, "UTF-8");
+            return String.format("filename=\"%s\"; filename*=utf-8''%s",
+                    encodedFilename, encodedFilename);
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+
+    }
+
+    public static Logger getLogger() {
+        return Logger.getLogger(DownloadStream.class.getName());
     }
 
     /**
