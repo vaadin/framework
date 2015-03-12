@@ -201,7 +201,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
          * applied to call code for parentElement only in case it exists.
          */
         if (getElement().hasParentElement()) {
-            final Element p = getElement().getParentElement();
+            final Element p = getElement();
             if (p.getPropertyInt(domProperty) > MIN_SIZE) {
                 if (isVertical()) {
                     setHeight();
@@ -216,8 +216,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
                     @Override
                     public void execute() {
-                        final Element p = getElement().getParentElement();
-                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
+                        final Element p = getElement();
+                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)
+                                || propertyNotNullOrEmpty(styleAttribute,
+                                        p)) {
                             if (isVertical()) {
                                 setHeight();
                             } else {
@@ -226,6 +228,14 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                             // Ensure correct position
                             setValue(value, false);
                         }
+                    }
+
+                    // Style has non empty property
+                    private boolean propertyNotNullOrEmpty(
+                            final String styleAttribute, final Element p) {
+                        return p.getStyle().getProperty(styleAttribute) != null
+                                && !p.getStyle().getProperty(styleAttribute)
+                                        .isEmpty();
                     }
                 });
             }
