@@ -2477,7 +2477,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
             double freeSpace = escalator.getInnerWidth();
-            for (Column<?, ?> column : getColumns()) {
+            for (Column<?, ?> column : getVisibleColumns()) {
                 if (column.getWidth() >= 0) {
                     freeSpace -= column.getWidth();
                 } else if (column.getMinimumWidth() >= 0) {
@@ -2493,7 +2493,7 @@ public class Grid<T> extends ResizeComposite implements
             /* Step 1: Apply all column widths as they are. */
 
             Map<Integer, Double> selfWidths = new LinkedHashMap<Integer, Double>();
-            List<Column<?, T>> columns = getColumns();
+            List<Column<?, T>> columns = getVisibleColumns();
             for (int index = 0; index < columns.size(); index++) {
                 selfWidths.put(index, columns.get(index).getWidth());
             }
@@ -2534,6 +2534,7 @@ public class Grid<T> extends ResizeComposite implements
             final Set<Column<?, T>> columnsToExpand = new HashSet<Column<?, T>>();
             List<Column<?, T>> nonFixedColumns = new ArrayList<Column<?, T>>();
             Map<Integer, Double> columnSizes = new HashMap<Integer, Double>();
+            final List<Column<?, T>> visibleColumns = getVisibleColumns();
 
             /*
              * Set all fixed widths and also calculate the size-to-fit widths
@@ -2542,7 +2543,7 @@ public class Grid<T> extends ResizeComposite implements
              * This way we know with how many pixels we have left to expand the
              * rest.
              */
-            for (Column<?, T> column : getColumns()) {
+            for (Column<?, T> column : visibleColumns) {
                 final double widthAsIs = column.getWidth();
                 final boolean isFixedWidth = widthAsIs >= 0;
                 final double widthFixed = Math.max(widthAsIs,
@@ -2551,11 +2552,11 @@ public class Grid<T> extends ResizeComposite implements
                         && column.getExpandRatio() == -1;
 
                 if (isFixedWidth) {
-                    columnSizes.put(indexOfColumn(column), widthFixed);
+                    columnSizes.put(visibleColumns.indexOf(column), widthFixed);
                     reservedPixels += widthFixed;
                 } else {
                     nonFixedColumns.add(column);
-                    columnSizes.put(indexOfColumn(column), -1.0d);
+                    columnSizes.put(visibleColumns.indexOf(column), -1.0d);
                 }
             }
 
@@ -2572,7 +2573,7 @@ public class Grid<T> extends ResizeComposite implements
                     columnsToExpand.add(column);
                 }
                 reservedPixels += newWidth;
-                columnSizes.put(indexOfColumn(column), newWidth);
+                columnSizes.put(visibleColumns.indexOf(column), newWidth);
             }
 
             /*
@@ -2600,8 +2601,8 @@ public class Grid<T> extends ResizeComposite implements
                     final Column<?, T> column = i.next();
                     final int expandRatio = getExpandRatio(column,
                             defaultExpandRatios);
-                    final double autoWidth = columnSizes
-                            .get(indexOfColumn(column));
+                    final int columnIndex = visibleColumns.indexOf(column);
+                    final double autoWidth = columnSizes.get(columnIndex);
                     final double maxWidth = getMaxWidth(column);
                     double expandedWidth = autoWidth + widthPerRatio
                             * expandRatio;
@@ -2611,7 +2612,7 @@ public class Grid<T> extends ResizeComposite implements
                         totalRatios -= expandRatio;
                         aColumnHasMaxedOut = true;
                         pixelsToDistribute -= maxWidth - autoWidth;
-                        columnSizes.put(indexOfColumn(column), maxWidth);
+                        columnSizes.put(columnIndex, maxWidth);
                     }
                 }
             } while (aColumnHasMaxedOut);
@@ -2647,13 +2648,14 @@ public class Grid<T> extends ResizeComposite implements
             for (Column<?, T> column : columnsToExpand) {
                 final int expandRatio = getExpandRatio(column,
                         defaultExpandRatios);
-                final double autoWidth = columnSizes.get(indexOfColumn(column));
+                final int columnIndex = visibleColumns.indexOf(column);
+                final double autoWidth = columnSizes.get(columnIndex);
                 double totalWidth = autoWidth + widthPerRatio * expandRatio;
                 if (leftOver > 0) {
                     totalWidth += 1;
                     leftOver--;
                 }
-                columnSizes.put(indexOfColumn(column), totalWidth);
+                columnSizes.put(columnIndex, totalWidth);
 
                 totalRatios -= expandRatio;
             }
@@ -2674,7 +2676,7 @@ public class Grid<T> extends ResizeComposite implements
                  * remove those pixels from other columns
                  */
                 double pixelsToRemoveFromOtherColumns = 0;
-                for (Column<?, T> column : getColumns()) {
+                for (Column<?, T> column : visibleColumns) {
                     /*
                      * We can't iterate over columnsToExpand, even though that
                      * would be convenient. This is because some column without
@@ -2683,11 +2685,11 @@ public class Grid<T> extends ResizeComposite implements
                      */
 
                     double minWidth = getMinWidth(column);
-                    double currentWidth = columnSizes
-                            .get(indexOfColumn(column));
+                    final int columnIndex = visibleColumns.indexOf(column);
+                    double currentWidth = columnSizes.get(columnIndex);
                     boolean hasAutoWidth = column.getWidth() < 0;
                     if (hasAutoWidth && currentWidth < minWidth) {
-                        columnSizes.put(indexOfColumn(column), minWidth);
+                        columnSizes.put(columnIndex, minWidth);
                         pixelsToRemoveFromOtherColumns += (minWidth - currentWidth);
                         minWidthsCausedReflows = true;
 
@@ -2713,7 +2715,7 @@ public class Grid<T> extends ResizeComposite implements
                 for (Column<?, T> column : columnsToExpand) {
                     final double pixelsToRemove = pixelsToRemovePerRatio
                             * getExpandRatio(column, defaultExpandRatios);
-                    int colIndex = indexOfColumn(column);
+                    int colIndex = visibleColumns.indexOf(column);
                     columnSizes.put(colIndex, columnSizes.get(colIndex)
                             - pixelsToRemove);
                 }
@@ -3379,6 +3381,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean editable = true;
 
+        private boolean hidden = false;
+
         private String headerCaption = "";
 
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
@@ -3549,6 +3553,9 @@ public class Grid<T> extends ResizeComposite implements
          * This action is done "finally", once the current execution loop
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
+         * <p>
+         * If the column is currently {@link #isHidden() hidden}, then this set
+         * width has effect only once the column has been made visible again.
          * 
          * @param pixels
          *            the width in pixels or negative for auto sizing
@@ -3556,14 +3563,17 @@ public class Grid<T> extends ResizeComposite implements
         public Column<C, T> setWidth(double pixels) {
             if (!WidgetUtil.pixelValuesEqual(widthUser, pixels)) {
                 widthUser = pixels;
-                scheduleColumnWidthRecalculator();
+                if (!isHidden()) {
+                    scheduleColumnWidthRecalculator();
+                }
             }
             return this;
         }
 
         void doSetWidth(double pixels) {
+            assert !isHidden() : "applying width for a hidden column";
             if (grid != null) {
-                int index = grid.columns.indexOf(this);
+                int index = grid.getVisibleColumns().indexOf(this);
                 ColumnConfiguration conf = grid.escalator
                         .getColumnConfiguration();
                 conf.setColumnWidth(index, pixels);
@@ -3575,6 +3585,9 @@ public class Grid<T> extends ResizeComposite implements
          * <p>
          * <em>Note:</em> If a negative value was given to
          * {@link #setWidth(double)}, that same negative value is returned here.
+         * <p>
+         * <em>Note:</em> Returns the value, even if the column is currently
+         * {@link #isHidden() hidden}.
          * 
          * @return pixel width of the column, or a negative number if the column
          *         width has been automatically calculated.
@@ -3589,13 +3602,18 @@ public class Grid<T> extends ResizeComposite implements
          * Returns the effective pixel width of the column.
          * <p>
          * This differs from {@link #getWidth()} only when the column has been
-         * automatically resized.
+         * automatically resized, or when the column is currently
+         * {@link #isHidden() hidden}, when the value is 0.
          * 
          * @return pixel width of the column.
          */
         public double getWidthActual() {
+            if (isHidden()) {
+                return 0;
+            }
             return grid.escalator.getColumnConfiguration()
-                    .getColumnWidthActual(grid.columns.indexOf(this));
+                    .getColumnWidthActual(
+                            grid.getVisibleColumns().indexOf(this));
         }
 
         void reapplyWidth() {
@@ -3630,6 +3648,41 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isSortable() {
             return sortable;
+        }
+
+        /**
+         * Hides or shows the column. By default columns are visible before
+         * explicitly hiding them.
+         * 
+         * @since
+         * @param hidden
+         *            <code>true</code> to hide the column, <code>false</code>
+         *            to show
+         */
+        public void setHidden(boolean hidden) {
+            if (this.hidden != hidden) {
+                if (hidden) {
+                    grid.escalator.getColumnConfiguration().removeColumns(
+                            grid.getVisibleColumns().indexOf(this), 1);
+                    this.hidden = hidden;
+                } else {
+                    this.hidden = hidden;
+                    grid.escalator.getColumnConfiguration().insertColumns(
+                            grid.getVisibleColumns().indexOf(this), 1);
+                }
+                scheduleColumnWidthRecalculator();
+            }
+        }
+
+        /**
+         * Is this column hidden. Default is {@code false}.
+         * 
+         * @since
+         * @return <code>true</code> if the column is currently hidden,
+         *         <code>false</code> otherwise
+         */
+        public boolean isHidden() {
+            return hidden;
         }
 
         @Override
@@ -4577,7 +4630,8 @@ public class Grid<T> extends ResizeComposite implements
         int columnIndex = columns.indexOf(column);
 
         // Remove from column configuration
-        escalator.getColumnConfiguration().removeColumns(columnIndex, 1);
+        escalator.getColumnConfiguration().removeColumns(
+                getVisibleColumns().indexOf(column), 1);
 
         updateFrozenColumns();
 
@@ -4592,6 +4646,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Returns the amount of columns in the grid.
+     * <p>
+     * <em>NOTE:</em> this includes the hidden columns in the count.
      * 
      * @return The number of columns in the grid
      */
@@ -4600,13 +4656,33 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Returns a list of columns in the grid.
+     * Returns a list columns in the grid, including hidden columns.
+     * <p>
+     * For currently visible columns, use {@link #getVisibleColumns()}.
      * 
      * @return A unmodifiable list of the columns in the grid
      */
     public List<Column<?, T>> getColumns() {
         return Collections
                 .unmodifiableList(new ArrayList<Column<?, T>>(columns));
+    }
+
+    /**
+     * Returns a list of the currently visible columns in the grid.
+     * <p>
+     * No {@link Column#isHidden() hidden} columns included.
+     * 
+     * @since
+     * @return A unmodifiable list of the currently visible columns in the grid
+     */
+    public List<Column<?, T>> getVisibleColumns() {
+        ArrayList<Column<?, T>> visible = new ArrayList<Column<?, T>>();
+        for (Column<?, T> c : columns) {
+            if (!c.isHidden()) {
+                visible.add(c);
+            }
+        }
+        return Collections.unmodifiableList(visible);
     }
 
     /**
@@ -4623,17 +4699,6 @@ public class Grid<T> extends ResizeComposite implements
             throw new IllegalStateException("Column not found.");
         }
         return columns.get(index);
-    }
-
-    /**
-     * Returns current index of given column
-     * 
-     * @param column
-     *            column in grid
-     * @return column index, or <code>-1</code> if not in this Grid
-     */
-    protected int indexOfColumn(Column<?, T> column) {
-        return columns.indexOf(column);
     }
 
     /**
