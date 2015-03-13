@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -76,8 +75,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         selectMenuPath(FIRST_ITEM_DETAILS);
         selectMenuPath(FIRST_ITEM_DETAILS);
 
-        // this will throw before assertNull
-        assertNull(getGridElement().getDetails(0));
+        getGridElement().getDetails(0);
     }
 
     @Test
@@ -118,6 +116,31 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         TestBenchElement details = getGridElement().getDetails(0);
         assertNotNull("No widget detected inside details",
                 details.findElement(By.className("v-widget")));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void scrollingDoesNotCreateAFloodOfDetailsRows() {
+        selectMenuPath(CUSTOM_DETAILS_GENERATOR);
+
+        // scroll somewhere to hit uncached rows
+        getGridElement().scrollToRow(101);
+
+        // this should throw
+        getGridElement().getDetails(100);
+    }
+
+    @Test
+    public void openingDetailsOutOfView() {
+        getGridElement().scrollToRow(500);
+
+        selectMenuPath(CUSTOM_DETAILS_GENERATOR);
+        selectMenuPath(FIRST_ITEM_DETAILS);
+
+        getGridElement().scrollToRow(0);
+
+        // if this fails, it'll fail before the assertNotNull
+        assertNotNull("unexpected null details row", getGridElement()
+                .getDetails(0));
     }
 
     @Test

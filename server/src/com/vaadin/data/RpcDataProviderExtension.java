@@ -156,7 +156,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     }
 
                     indexToItemId.forcePut(index, itemId);
-                    detailComponentManager.createDetails(itemId, index);
+
+                    if (visibleDetails.contains(itemId)) {
+                        detailComponentManager.createDetails(itemId, index);
+                    }
                 }
                 index++;
             }
