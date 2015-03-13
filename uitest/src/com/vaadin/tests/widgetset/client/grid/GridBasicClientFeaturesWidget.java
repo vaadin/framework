@@ -57,6 +57,8 @@ import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
@@ -471,6 +473,46 @@ public class GridBasicClientFeaturesWidget extends
                         });
             }
         }, listenersPath);
+        addMenuCommand("Add Column Visibility Change listener",
+                new ScheduledCommand() {
+                    private HandlerRegistration columnVisibilityHandler = null;
+
+                    @Override
+                    public void execute() {
+                        if (columnVisibilityHandler != null) {
+                            return;
+                        }
+                        final Label columnOrderLabel = new Label();
+                        columnOrderLabel.getElement().setId("columnvisibility");
+                        addLineEnd(columnOrderLabel, 250);
+                        ColumnVisibilityChangeHandler handler = new ColumnVisibilityChangeHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onVisibilityChange(
+                                    ColumnVisibilityChangeEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "counter", "" + (++eventIndex));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "useroriginated",
+                                        (Boolean.toString(event
+                                                .isUserOriginated())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "ishidden",
+                                        (Boolean.toString(event.isHidden())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columnindex",
+                                        ""
+                                                + grid.getColumns().indexOf(
+                                                        event.getColumn()));
+                            }
+                        };
+
+                        columnVisibilityHandler = grid
+                                .addColumnVisibilityChangeHandler(handler);
+                    }
+                }, listenersPath);
     }
 
     private void createStateMenu() {

@@ -18,8 +18,7 @@ package com.vaadin.client.widget.grid.events;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * An event for notifying that the columns in the Grid's columns have been
- * reordered.
+ * An event for notifying that the columns in the Grid have been reordered.
  * 
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where

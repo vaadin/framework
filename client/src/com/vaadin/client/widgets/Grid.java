@@ -107,6 +107,8 @@ import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -3671,6 +3673,8 @@ public class Grid<T> extends ResizeComposite implements
                             grid.getVisibleColumns().indexOf(this), 1);
                 }
                 scheduleColumnWidthRecalculator();
+                this.grid.fireEvent(new ColumnVisibilityChangeEvent<T>(this,
+                        hidden, false));
             }
         }
 
@@ -6415,6 +6419,20 @@ public class Grid<T> extends ResizeComposite implements
     public HandlerRegistration addColumnReorderHandler(
             ColumnReorderHandler<T> handler) {
         return addHandler(handler, ColumnReorderEvent.getType());
+    }
+
+    /**
+     * Register a column visibility change handler to this Grid. The event for
+     * this handler is fired when the Grid's columns change visibility.
+     * 
+     * @since
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addColumnVisibilityChangeHandler(
+            ColumnVisibilityChangeHandler<T> handler) {
+        return addHandler(handler, ColumnVisibilityChangeEvent.getType());
     }
 
     /**
