@@ -89,6 +89,9 @@ public class VTooltip extends VOverlay {
                 LiveValue.ASSERTIVE);
         Roles.getTooltipRole().setAriaRelevantProperty(getElement(),
                 RelevantValue.ADDITIONS);
+
+        // Tooltip needs to be on top of other VOverlay elements.
+        setZIndex(VOverlay.Z_INDEX + 1);
     }
 
     /**
