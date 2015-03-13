@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -83,7 +83,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
         waitForDebugMessage("Reopening push connection");
     }
 
-    private void clearDebugMessages() {
+    @Override
+    protected void clearDebugMessages() {
         driver.findElement(
                 By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
                 .click();
@@ -99,7 +100,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
                 message)));
     }
 
-    private void waitForDebugMessage(final String expectedMessage) {
+    @Override
+    protected void waitForDebugMessage(final String expectedMessage) {
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override

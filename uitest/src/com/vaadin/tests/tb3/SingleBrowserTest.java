@@ -13,38 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.applicationservlet;
+package com.vaadin.tests.tb3;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class NoApplicationClassTest extends MultiBrowserTest {
-
-    @Test
-    public void testInvalidApplicationClass() {
-        openTestURL();
-        String exceptionMessage = getDriver().findElement(By.xpath("//pre[2]"))
-                .getText();
-        Assert.assertTrue(exceptionMessage
-                .contains("ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent"));
-    }
-
+public abstract class SingleBrowserTest extends PrivateTB3Configuration {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
+        return Collections.singletonList(Browser.PHANTOMJS
                 .getDesiredCapabilities());
-    }
-
-    @Override
-    protected String getDeploymentPath() {
-        return "/run/ClassThatIsNotPresent";
     }
 }

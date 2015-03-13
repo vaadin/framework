@@ -24,11 +24,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * Test case creating and deleting table component in a loop, testing memory

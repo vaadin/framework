@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,6 +24,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
@@ -54,8 +55,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
         Assert.assertEquals("Just a button", activeElement.getText());
 
         DesiredCapabilities capabilities = getDesiredCapabilities();
-        if (capabilities.equals(BrowserUtil.ie(8))
-                || capabilities.equals(BrowserUtil.ie(9))) {
+        if (capabilities.equals(BrowserUtil.ie8())
+                || capabilities.equals(BrowserUtil.ie9())) {
             // IE8 and IE9 insert cursor in the start of input instead of end.
             Assert.assertEquals(incrementalText + initialText,
                     tf1.getAttribute("value"));
@@ -86,8 +87,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
 
         new Actions(getDriver()).sendKeys(secondText).build().perform();
         DesiredCapabilities capabilities = getDesiredCapabilities();
-        if (capabilities.equals(BrowserUtil.ie(8))
-                || capabilities.equals(BrowserUtil.ie(9))) {
+        if (capabilities.equals(BrowserUtil.ie8())
+                || capabilities.equals(BrowserUtil.ie9())) {
             // IE8 and IE9 insert cursor in the start of input instead of end.
             Assert.assertEquals(secondText + firstText,
                     tf2.getAttribute("value"));

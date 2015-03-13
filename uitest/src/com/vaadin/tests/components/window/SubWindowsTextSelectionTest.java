@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,12 +27,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for issue #12726, IE's make text selection when sub windows are
  * dragged(moved).
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -56,9 +57,9 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         ArrayList<DesiredCapabilities> list = new ArrayList<DesiredCapabilities>();
-        list.add(BrowserUtil.ie(9));
-        list.add(BrowserUtil.ie(10));
-        list.add(BrowserUtil.ie(11));
+        list.add(BrowserUtil.ie9());
+        list.add(BrowserUtil.ie10());
+        list.add(BrowserUtil.ie11());
         return list;
     }
 
