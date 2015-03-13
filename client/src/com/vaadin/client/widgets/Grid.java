@@ -3385,6 +3385,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean hidden = false;
 
+        private boolean hideable = false;
+
         private String headerCaption = "";
 
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
@@ -3687,6 +3689,38 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isHidden() {
             return hidden;
+        }
+
+        /**
+         * Set whether it is possible for the user to hide this column or not.
+         * Default is {@code false}.
+         * <p>
+         * <em>Note:</em> it is still possible to hide the column
+         * programmatically using {@link #setHidden(boolean)}.
+         * 
+         * @since
+         * @param hideable
+         *            <code>true</code> if the user can hide this column,
+         *            <code>false</code> if not
+         */
+        public void setHideable(boolean hideable) {
+            this.hideable = hideable;
+            // TODO update whether sidebar/popup can be opened
+        }
+
+        /**
+         * Is it possible for the the user to hide this column. Default is
+         * {@code false}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically hidden using
+         * {@link #setHidden(boolean)} regardless of the returned value.
+         * 
+         * @since
+         * @return <code>true</code> if the user can hide the column,
+         *         <code>false</code> if not
+         */
+        public boolean isHideable() {
+            return hideable;
         }
 
         @Override
