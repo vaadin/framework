@@ -53,6 +53,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final Properties properties = new Properties();
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
+    private static final String FIREFOX_PATH = "firefox.path";
 
     static {
         if (propertiesFile.exists()) {
@@ -65,6 +66,10 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                             "browsers.include",
                             localBrowser.getBrowserName()
                                     + localBrowser.getVersion());
+                }
+                if (properties.containsKey(FIREFOX_PATH)) {
+                    System.setProperty(FIREFOX_PATH,
+                            properties.getProperty(FIREFOX_PATH));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
