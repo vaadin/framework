@@ -58,6 +58,7 @@ public class SerializerTestState extends AbstractComponentState {
     public double[] doubleArray;
 
     public String string;
+    public String[] stringArray;
 
     public String nullString;
 

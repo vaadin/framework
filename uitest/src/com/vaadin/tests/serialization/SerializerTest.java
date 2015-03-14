@@ -51,7 +51,7 @@ import elemental.json.JsonValue;
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class SerializerTest extends AbstractTestUI {
 
-    private Log log = new Log(45);
+    private Log log = new Log(50);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -120,8 +120,9 @@ public class SerializerTest extends AbstractTestUI {
         state.doubleObjectValue = Double.valueOf(-Math.E);
         state.doubleArray = new double[] { Double.MAX_VALUE, Double.MIN_VALUE };
 
-        rpc.sendString("This is a tesing string ‡");
+        rpc.sendString("This is a tesing string ‡", new String[] { "‡", null });
         state.string = "This is a tesing string ‡";
+        state.stringArray = new String[] { null, "‡" };
 
         rpc.sendConnector(this);
         state.connector = this;
@@ -317,8 +318,8 @@ public class SerializerTest extends AbstractTestUI {
             }
 
             @Override
-            public void sendString(String value) {
-                log.log("sendString: " + value);
+            public void sendString(String value, String[] array) {
+                log.log("sendString: " + value + ", " + Arrays.toString(array));
             }
 
             @Override
