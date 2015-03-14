@@ -417,7 +417,7 @@ public class JsonCodec implements Serializable {
                     connectorTracker);
 
         } else if (JsonConstants.VTYPE_STRINGARRAY.equals(transportType)) {
-            return decodeStringArray((JsonArray) encodedJsonValue);
+            return decodeArray(String.class, (JsonArray) encodedJsonValue, null);
         }
 
         // Special Vaadin types
@@ -573,15 +573,6 @@ public class JsonCodec implements Serializable {
         return Enum.valueOf(cls, value.getString());
     }
 
-    private static String[] decodeStringArray(JsonArray jsonArray) {
-        int length = jsonArray.length();
-        List<String> tokens = new ArrayList<String>(length);
-        for (int i = 0; i < length; ++i) {
-            tokens.add(jsonArray.getString(i));
-        }
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
     private static Object[] decodeObjectArray(Type targetType,
             JsonArray jsonArray, ConnectorTracker connectorTracker) {
         List<Object> list = decodeList(List.class, true, jsonArray,
@@ -659,8 +650,6 @@ public class JsonCodec implements Serializable {
             toReturn = Json.create(((Number) value).doubleValue());
         } else if (value instanceof Character) {
             toReturn = Json.create(Character.toString((Character) value));
-        } else if (value instanceof String[]) {
-            toReturn = toJsonArray((String[]) value);
         } else if (value instanceof Collection) {
             toReturn = encodeCollection(valueType, (Collection<?>) value,
                     connectorTracker);
@@ -997,13 +986,4 @@ public class JsonCodec implements Serializable {
         JSONSerializer serializer = customSerializers.get(value.getClass());
         return serializer.serialize(value, connectorTracker);
     }
-
-    private static JsonArray toJsonArray(String[] array) {
-        JsonArray jsonArray = Json.createArray();
-        for (int i = 0; i < array.length; ++i) {
-            jsonArray.set(i, array[i]);
-        }
-        return jsonArray;
-    }
-
 }

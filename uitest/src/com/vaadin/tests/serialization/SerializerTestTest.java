@@ -62,7 +62,7 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals(
                 "sendConnector: com.vaadin.tests.widgetset.server.SerializerTestExtension",
                 getLogRow(logRow++));
-        Assert.assertEquals("sendString: Taegghiiiinnrsssstt‡",
+        Assert.assertEquals("sendString: Taegghiiiinnrsssstt‡, [null, ‡]",
                 getLogRow(logRow++));
         Assert.assertEquals(
                 "sendDouble: 0.423310825130748, 5.859874482048838, [2.0, 1.7976931348623157E308, 4.9E-324]",
@@ -83,6 +83,9 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
         Assert.assertEquals("state.jsonString: a string", getLogRow(logRow++));
         Assert.assertEquals("state.jsonNull: NULL", getLogRow(logRow++));
+        Assert.assertEquals("state.stringArray: [null, ‡]", getLogRow(logRow++));
+        Assert.assertEquals("state.string: This is a tesing string ‡",
+                getLogRow(logRow++));
         Assert.assertEquals(
                 "state.doubleArray: [1.7976931348623157e+308, 5e-324]",
                 getLogRow(logRow++));

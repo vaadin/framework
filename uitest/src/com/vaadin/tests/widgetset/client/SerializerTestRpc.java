@@ -45,7 +45,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendDouble(double value, Double boxedValue, double[] array);
 
-    public void sendString(String value);
+    public void sendString(String value, String[] array);
 
     public void sendConnector(Connector connector);
 
