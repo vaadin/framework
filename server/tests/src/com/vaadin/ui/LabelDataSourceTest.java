@@ -22,9 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.MockUI;
 
 public class LabelDataSourceTest {
 
@@ -102,18 +102,6 @@ public class LabelDataSourceTest {
         Assert.assertEquals(STRING_DS_VALUE, label.getValue());
         label.setValue("after");
         Assert.assertEquals("after", label.getValue());
-    }
-
-    public class MockUI extends UI {
-
-        public MockUI() {
-            setSession(vaadinSession);
-        }
-
-        @Override
-        protected void init(VaadinRequest request) {
-        }
-
     }
 
     @Test
