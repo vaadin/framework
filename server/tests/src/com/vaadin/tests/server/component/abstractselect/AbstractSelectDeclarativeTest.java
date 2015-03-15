@@ -137,10 +137,16 @@ public class AbstractSelectDeclarativeTest extends
     }
 
     @Test
-    public void testWriteInlineData() {
+    public void testWriteInlineDataIgnored() {
         // No data is written by default
         testWrite(stripOptionTags(getDesignForInlineData()),
                 getExpectedComponentForInlineData());
+    }
+
+    @Test
+    public void testWriteInlineData() {
+        testWrite(getDesignForInlineData(),
+                getExpectedComponentForInlineData(), true);
     }
 
     private String getDesignForInlineData() {

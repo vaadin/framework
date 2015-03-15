@@ -75,6 +75,8 @@ public class DesignContext implements Serializable {
     // component creation listeners
     private List<ComponentCreationListener> listeners = new ArrayList<ComponentCreationListener>();
 
+    private ShouldWriteDataDelegate shouldWriteDataDelegate = ShouldWriteDataDelegate.DEFAULT;
+
     public DesignContext(Document doc) {
         this.doc = doc;
         // Initialize the mapping between prefixes and package names.
@@ -661,4 +663,56 @@ public class DesignContext implements Serializable {
 
         return true;
     }
+
+    /**
+     * Determines whether the container data of a component should be written
+     * out by delegating to a {@link ShouldWriteDataDelegate}. The default
+     * delegate assumes that all component data is provided by a data source
+     * connected to a back end system and that the data should thus not be
+     * written.
+     * 
+     * @since
+     * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
+     * @param component
+     *            the component to check
+     * @return <code>true</code> if container data should be written out for the
+     *         provided component; otherwise <code>false</code>.
+     */
+    public boolean shouldWriteData(Component component) {
+        return getShouldWriteDataDelegate().shouldWriteData(component);
+    }
+
+    /**
+     * Sets the delegate that determines whether the container data of a
+     * component should be written out.
+     * 
+     * @since
+     * @see #shouldWriteChildren(Component, Component)
+     * @see #getShouldWriteDataDelegate()
+     * @param shouldWriteDataDelegate
+     *            the delegate to set, not <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided delegate is <code>null</code>
+     */
+    public void setShouldWriteDataDelegate(
+            ShouldWriteDataDelegate shouldWriteDataDelegate) {
+        if (shouldWriteDataDelegate == null) {
+            throw new IllegalArgumentException("Delegate cannot be null");
+        }
+        this.shouldWriteDataDelegate = shouldWriteDataDelegate;
+    }
+
+    /**
+     * Gets the delegate that determines whether the container data of a
+     * component should be written out.
+     * 
+     * @since
+     * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
+     * @see #shouldWriteChildren(Component, Component)
+     * @return the shouldWriteDataDelegate the currently use delegate
+     */
+    public ShouldWriteDataDelegate getShouldWriteDataDelegate() {
+        return shouldWriteDataDelegate;
+    }
+
 }

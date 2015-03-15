@@ -2222,4 +2222,30 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             }
         }
     }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        // Write default attributes
+        super.writeDesign(design, designContext);
+
+        // Write options if warranted
+        if (designContext.shouldWriteData(this)) {
+            for (Object itemId : getItemIds()) {
+                Element optionElement = design.appendElement("option");
+
+                optionElement.html(getItemCaption(itemId));
+
+                Resource icon = getItemIcon(itemId);
+                if (icon != null) {
+                    DesignAttributeHandler.writeAttribute("icon",
+                            optionElement.attributes(), icon, null,
+                            Resource.class);
+                }
+
+                if (isSelected(itemId)) {
+                    optionElement.attr("selected", "");
+                }
+            }
+        }
+    }
 }
