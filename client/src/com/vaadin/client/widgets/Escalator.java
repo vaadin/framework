@@ -1390,10 +1390,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                      * first time.
                      */
                     Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
-                    Double width = Double
-                            .valueOf(ColumnConfigurationImpl.Column.DEFAULT_COLUMN_WIDTH_PX);
                     for (int i = 0; i < getColumnConfiguration()
                             .getColumnCount(); i++) {
+                        Double width = Double.valueOf(getColumnConfiguration()
+                                .getColumnWidth(i));
                         Integer col = Integer.valueOf(i);
                         colWidths.put(col, width);
                     }

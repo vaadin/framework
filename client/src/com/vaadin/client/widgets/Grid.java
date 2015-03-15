@@ -2119,6 +2119,8 @@ public class Grid<T> extends ResizeComposite implements
             boolean insertionIsAboveFocusedCell = (added.getStart() <= rowWithFocus);
             if (bodyHasFocus && insertionIsAboveFocusedCell) {
                 rowWithFocus += added.length();
+                rowWithFocus = Math.min(rowWithFocus, escalator.getBody()
+                        .getRowCount() - 1);
                 refreshRow(rowWithFocus);
             }
         }
@@ -4578,6 +4580,10 @@ public class Grid<T> extends ResizeComposite implements
                     Range visibleRowRange = escalator.getVisibleRowRange();
                     dataSource.ensureAvailability(visibleRowRange.getStart(),
                             visibleRowRange.length());
+                } else {
+                    // We won't expect any data more data updates, so just make
+                    // the bookkeeping happy
+                    dataAvailable(0, 0);
                 }
 
                 assert body.getRowCount() == newSize;
