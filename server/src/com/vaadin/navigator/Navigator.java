@@ -745,9 +745,15 @@ public class Navigator implements Serializable {
      * the requested view name is found.
      * 
      * @param provider
-     *            provider to register
+     *            provider to register, not <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided view provider is <code>null</code>
      */
     public void addProvider(ViewProvider provider) {
+        if (provider == null) {
+            throw new IllegalArgumentException(
+                    "Cannot add a null view provider");
+        }
         providers.add(provider);
     }
 
