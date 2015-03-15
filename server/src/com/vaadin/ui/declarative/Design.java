@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -362,59 +364,6 @@ public class Design implements Serializable {
 
     /**
      * Constructs a component hierarchy from the design specified as an html
-     * document. The hierarchy must contain at most one top-level component,
-     * which should be located under &lt;body&gt;. Also invalid html containing
-     * the hierarchy without &lt;html&gt;, &lt;head&gt; and &lt;body&gt; tags is
-     * accepted. You can optionally pass an instance for the root component with
-     * some uninitialized instance fields. The fields will be automatically
-     * populated when parsing the design based on the component ids, local ids,
-     * and captions of the components in the design.
-     * 
-     * @param html
-     *            the html document describing the component design
-     * @param rootInstance
-     *            the root instance with fields to be mapped to components in
-     *            the design
-     * @return the DesignContext created while traversing the tree. The
-     *         top-level component of the created component hierarchy can be
-     *         accessed using result.getRootComponent(), where result is the
-     *         object returned by this method.
-     * @throws IOException
-     */
-    private static DesignContext parse(InputStream html, Component rootInstance) {
-        Document doc = parse(html);
-        return designToComponentTree(doc, rootInstance);
-    }
-
-    /**
-     * Constructs a component hierarchy from the design specified as an html
-     * document given as a string. The hierarchy must contain at most one
-     * top-level component, which should be located under &lt;body&gt;. Also
-     * invalid html containing the hierarchy without &lt;html&gt;, &lt;head&gt;
-     * and &lt;body&gt; tags is accepted. You can optionally pass an instance
-     * for the root component with some uninitialized instance fields. The
-     * fields will be automatically populated when parsing the design based on
-     * the component ids, local ids, and captions of the components in the
-     * design.
-     * 
-     * @param html
-     *            the html document describing the component design
-     * @param rootInstance
-     *            the root instance with fields to be mapped to components in
-     *            the design
-     * @return the DesignContext created while traversing the tree. The
-     *         top-level component of the created component hierarchy can be
-     *         accessed using result.getRootComponent(), where result is the
-     *         object returned by this method.
-     * @throws IOException
-     */
-    private static DesignContext parse(String html, Component rootInstance) {
-        Document doc = Jsoup.parse(html);
-        return designToComponentTree(doc, rootInstance);
-    }
-
-    /**
-     * Constructs a component hierarchy from the design specified as an html
      * tree.
      * 
      * <p>
@@ -602,13 +551,23 @@ public class Design implements Serializable {
             throw new DesignException("Unable to find design file " + filename
                     + " in " + annotatedClass.getPackage().getName());
         }
+        try {
+            Document doc = parse(stream);
+            DesignContext context = designToComponentTree(doc, rootComponent,
+                    annotatedClass);
 
-        Document doc = parse(stream);
-        DesignContext context = designToComponentTree(doc, rootComponent,
-                annotatedClass);
+            return context;
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                getLogger().log(Level.FINE, "Error closing design stream", e);
+            }
+        }
+    }
 
-        return context;
-
+    private static Logger getLogger() {
+        return Logger.getLogger(Design.class.getName());
     }
 
     /**
@@ -638,7 +597,7 @@ public class Design implements Serializable {
             return null;
         }
 
-        return findClassWithAnnotation((Class<? extends Component>) superClass,
+        return findClassWithAnnotation(superClass.asSubclass(Component.class),
                 annotationClass);
     }
 
@@ -670,7 +629,15 @@ public class Design implements Serializable {
                     + " was not found in the package "
                     + rootComponent.getClass().getPackage().getName());
         }
-        return read(stream, rootComponent);
+        try {
+            return read(stream, rootComponent);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                getLogger().log(Level.FINE, "Error closing design stream", e);
+            }
+        }
     }
 
     /**
@@ -693,11 +660,11 @@ public class Design implements Serializable {
      * @throws DesignException
      *             If the design could not be loaded
      */
-    public static DesignContext read(InputStream design, Component rootComponent) {
-        if (design == null) {
+    public static DesignContext read(InputStream stream, Component rootComponent) {
+        if (stream == null) {
             throw new DesignException("Stream cannot be null");
         }
-        Document doc = parse(design);
+        Document doc = parse(stream);
         DesignContext context = designToComponentTree(doc, rootComponent);
 
         return context;
@@ -726,6 +693,7 @@ public class Design implements Serializable {
      *            the output stream to write the design to. The design is always
      *            written as UTF-8
      * @throws IOException
+     *             if writing fails
      */
     public static void write(Component component, OutputStream outputStream)
             throws IOException {
@@ -771,7 +739,6 @@ public class Design implements Serializable {
         doc.outputSettings().indentAmount(4);
         doc.outputSettings().syntax(Syntax.html);
         doc.outputSettings().prettyPrint(true);
-        doc.outputSettings();
         outputStream.write(doc.html().getBytes(UTF8));
     }
 
