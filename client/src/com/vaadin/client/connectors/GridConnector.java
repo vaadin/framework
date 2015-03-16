@@ -77,7 +77,7 @@ import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.ConnectorIndexChange;
+import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -382,7 +382,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        public void setDetailsConnectorChanges(Set<ConnectorIndexChange> changes) {
+        public void setDetailsConnectorChanges(
+                Set<DetailsConnectorChange> changes) {
             /*
              * To avoid overwriting connectors while moving them about, we'll
              * take all the affected connectors, first all remove those that are
@@ -390,7 +391,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
              */
 
             /* Remove moved/removed connectors from bookkeeping */
-            for (ConnectorIndexChange change : changes) {
+            for (DetailsConnectorChange change : changes) {
                 Integer oldIndex = change.getOldIndex();
                 Connector removedConnector = indexToDetailsMap.remove(oldIndex);
 
@@ -402,7 +403,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
 
             /* Add moved/added connectors to bookkeeping */
-            for (ConnectorIndexChange change : changes) {
+            for (DetailsConnectorChange change : changes) {
                 Integer newIndex = change.getNewIndex();
                 ComponentConnector connector = (ComponentConnector) change
                         .getConnector();
@@ -456,8 +457,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         public void responseReceived(int fetchId) {
-            boolean success = pendingFetches.remove(fetchId);
-            assert success : "Received a response with an unidentified fetch id";
+            /* Ignore negative fetchIds (they're pushed, not fetched) */
+            if (fetchId >= 0) {
+                boolean success = pendingFetches.remove(fetchId);
+                assert success : "Received a response with an unidentified fetch id";
+            }
         }
 
         @Override
@@ -607,18 +611,20 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
             @Override
             public void setDetailsConnectorChanges(
-                    Set<ConnectorIndexChange> connectorChanges, int fetchId) {
+                    Set<DetailsConnectorChange> connectorChanges, int fetchId) {
                 customDetailsGenerator
                         .setDetailsConnectorChanges(connectorChanges);
 
                 // refresh moved/added details rows
-                for (ConnectorIndexChange change : connectorChanges) {
-                    Integer newIndex = change.getNewIndex();
-                    if (newIndex != null) {
-                        int index = newIndex.intValue();
-                        getWidget().setDetailsVisible(index, false);
-                        getWidget().setDetailsVisible(index, true);
+                for (DetailsConnectorChange change : connectorChanges) {
+                    Integer index = change.getNewIndex();
+                    if (index == null) {
+                        index = change.getOldIndex();
                     }
+
+                    int i = index.intValue();
+                    getWidget().setDetailsVisible(i, false);
+                    getWidget().setDetailsVisible(i, true);
                 }
                 detailsConnectorFetcher.responseReceived(fetchId);
             }

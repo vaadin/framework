@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
 import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
+import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
@@ -77,7 +78,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.grid.ConnectorIndexChange;
+import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -2840,7 +2841,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * {@link Collection#isEmpty() empty}, then this field is consistent
          * with the connector hierarchy.
          */
-        private final Map<Object, Component> visibleDetailsComponents = new HashMap<Object, Component>();
+        private final Map<Object, Component> visibleDetailsComponents = Maps
+                .newHashMap();
 
         /** A lookup map for which row contains which details component. */
         private BiMap<Integer, Component> rowIndexToDetails = HashBiMap
@@ -2863,7 +2865,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * could find out the same thing by taking out all the other components
          * and checking whether Grid is their parent or not.
          */
-        private final Set<Component> unattachedComponents = new HashSet<Component>();
+        private final Set<Component> unattachedComponents = Sets.newHashSet();
+
+        /**
+         * Keeps tabs on all the details that did not get a component during
+         * {@link #createDetails(Object, int)}.
+         */
+        private final Map<Object, Integer> emptyDetails = Maps.newHashMap();
 
         /**
          * Creates a details component by the request of the client side, with
@@ -2887,14 +2895,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             assert itemId != null : "itemId was null";
             Integer newRowIndex = Integer.valueOf(rowIndex);
 
-            assert !visibleDetailsComponents.containsKey(itemId) : "itemId already has a component. Should be destroyed first.";
+            assert !visibleDetailsComponents.containsKey(itemId) : "itemId "
+                    + "already has a component. Should be destroyed first.";
 
             RowReference rowReference = new RowReference(Grid.this);
             rowReference.set(itemId);
 
             Component details = getDetailsGenerator().getDetails(rowReference);
             if (details != null) {
-
                 if (details.getParent() != null) {
                     String generatorName = getDetailsGenerator().getClass()
                             .getName();
@@ -2916,6 +2924,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 visibleDetailsComponents.put(itemId, details);
                 rowIndexToDetails.put(newRowIndex, details);
                 unattachedComponents.add(details);
+
+                assert !emptyDetails.containsKey(itemId) : "Bookeeping thinks "
+                        + "itemId is empty even though we just created a "
+                        + "component for it (" + itemId + ")";
+            } else {
+                assert !emptyDetails.containsKey(itemId) : "Bookkeeping has "
+                        + "already itemId marked as empty (itemId: " + itemId
+                        + ", old index: " + emptyDetails.get(itemId)
+                        + ", new index: " + newRowIndex + ")";
+                assert !emptyDetails.containsValue(newRowIndex) : "Bookkeeping"
+                        + " already had another itemId for this empty index "
+                        + "(index: " + newRowIndex + ", new itemId: " + itemId
+                        + ")";
+                emptyDetails.put(itemId, newRowIndex);
             }
 
             /*
@@ -2934,6 +2956,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          *            the item id for which to destroy the details component
          */
         public void destroyDetails(Object itemId) {
+            emptyDetails.remove(itemId);
+
             Component removedComponent = visibleDetailsComponents
                     .remove(itemId);
             if (removedComponent == null) {
@@ -2972,8 +2996,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * 
          * @return information on how the connectors have changed
          */
-        Set<ConnectorIndexChange> getAndResetConnectorChanges() {
-            Set<ConnectorIndexChange> changes = new HashSet<ConnectorIndexChange>();
+        Set<DetailsConnectorChange> getAndResetConnectorChanges() {
+            Set<DetailsConnectorChange> changes = new HashSet<DetailsConnectorChange>();
 
             // populate diff with added/changed
             for (Entry<Integer, Component> entry : rowIndexToDetails.entrySet()) {
@@ -2996,7 +3020,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 }
 
                 if (!SharedUtil.equals(oldIndex, newIndex)) {
-                    changes.add(new ConnectorIndexChange(component, oldIndex,
+                    changes.add(new DetailsConnectorChange(component, oldIndex,
                             newIndex));
                 }
             }
@@ -3008,7 +3032,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 Component component = entry.getValue();
                 Integer newIndex = rowIndexToDetails.inverse().get(component);
                 if (newIndex == null) {
-                    changes.add(new ConnectorIndexChange(null, oldIndex, null));
+                    changes.add(new DetailsConnectorChange(null, oldIndex, null));
                 }
             }
 
@@ -3016,6 +3040,21 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             prevRowIndexToDetails = HashBiMap.create(rowIndexToDetails);
 
             return changes;
+        }
+
+        public void refresh(Object itemId) {
+            Component component = visibleDetailsComponents.get(itemId);
+            Integer rowIndex = null;
+            if (component != null) {
+                rowIndex = rowIndexToDetails.inverse().get(component);
+                destroyDetails(itemId);
+            } else {
+                rowIndex = emptyDetails.remove(itemId);
+            }
+
+            assert rowIndex != null : "Given itemId does not map to an existing detail row ("
+                    + itemId + ")";
+            createDetails(itemId, rowIndex.intValue());
         }
     }
 
@@ -5374,7 +5413,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         this.detailsGenerator = detailsGenerator;
 
-        getLogger().warning("[[details]] update details on generator swap");
+        datasourceExtension.refreshDetails();
+        getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
+                detailComponentManager.getAndResetConnectorChanges(), -1);
     }
 
     /**

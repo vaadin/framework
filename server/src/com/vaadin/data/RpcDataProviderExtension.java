@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
 import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
+import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -1213,5 +1214,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public boolean isDetailsVisible(Object itemId) {
         return visibleDetails.contains(itemId);
+    }
+
+    public void refreshDetails() {
+        for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
+            detailComponentManager.refresh(itemId);
+        }
     }
 }

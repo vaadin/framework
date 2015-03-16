@@ -26,14 +26,14 @@ import com.vaadin.shared.Connector;
  * @since
  * @author Vaadin Ltd
  */
-public class ConnectorIndexChange implements Serializable {
+public class DetailsConnectorChange implements Serializable {
 
     private Connector connector;
     private Integer oldIndex;
     private Integer newIndex;
 
     /** Create a new connector index change */
-    public ConnectorIndexChange() {
+    public DetailsConnectorChange() {
     }
 
     /**
@@ -49,7 +49,7 @@ public class ConnectorIndexChange implements Serializable {
      * @param newIndex
      *            the new index
      */
-    public ConnectorIndexChange(Connector connector, Integer oldIndex,
+    public DetailsConnectorChange(Connector connector, Integer oldIndex,
             Integer newIndex) {
         this.connector = connector;
         this.oldIndex = oldIndex;
@@ -59,8 +59,12 @@ public class ConnectorIndexChange implements Serializable {
     }
 
     private boolean assertStateIsOk() {
-        assert (connector != null && newIndex != null)
-                || (connector == null && oldIndex != null && newIndex == null) : "connector: "
+        boolean connectorAndNewIndexIsNotNull = connector != null
+                && newIndex != null;
+        boolean connectorAndNewIndexIsNullThenOldIndexIsSet = connector == null
+                && newIndex == null && oldIndex != null;
+
+        assert (connectorAndNewIndexIsNotNull || connectorAndNewIndexIsNullThenOldIndexIsSet) : "connector: "
                 + nullityString(connector)
                 + ", oldIndex: "
                 + nullityString(oldIndex)

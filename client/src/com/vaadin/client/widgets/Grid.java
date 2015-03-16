@@ -6387,12 +6387,13 @@ public class Grid<T> extends ResizeComposite implements
          * see GridSpacerUpdater.init for implementation details.
          */
 
-        if (visible && !isDetailsVisible(rowIndex)) {
+        boolean isVisible = isDetailsVisible(rowIndex);
+        if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
         }
 
-        else if (!visible && isDetailsVisible(rowIndex)) {
+        else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }

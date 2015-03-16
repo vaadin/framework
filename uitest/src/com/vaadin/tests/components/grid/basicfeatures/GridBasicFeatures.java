@@ -47,10 +47,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -60,6 +62,7 @@ import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SelectionModel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -113,6 +116,53 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     };
 
     private Panel detailsPanel;
+
+    private final DetailsGenerator detailedDetailsGenerator = new DetailsGenerator() {
+        @Override
+        public Component getDetails(final RowReference rowReference) {
+            CssLayout cssLayout = new CssLayout();
+            cssLayout.setHeight("200px");
+            cssLayout.setWidth("100%");
+
+            Item item = rowReference.getItem();
+            for (Object propertyId : item.getItemPropertyIds()) {
+                Property<?> prop = item.getItemProperty(propertyId);
+                String string = prop.getValue().toString();
+                cssLayout.addComponent(new Label(string));
+            }
+
+            final int rowIndex = grid.getContainerDataSource().indexOfId(
+                    rowReference.getItemId());
+            ClickListener clickListener = new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    Notification.show("You clicked on the "
+                            + "button in the details for " + "row " + rowIndex);
+                }
+            };
+            cssLayout.addComponent(new Button("Press me", clickListener));
+            return cssLayout;
+        }
+    };
+
+    private final DetailsGenerator watchingDetailsGenerator = new DetailsGenerator() {
+        private int id = 0;
+
+        @Override
+        public Component getDetails(RowReference rowReference) {
+            return new Label("You are watching item id "
+                    + rowReference.getItemId() + " (" + (id++) + ")");
+        }
+    };
+
+    private final DetailsGenerator hierarchicalDetailsGenerator = new DetailsGenerator() {
+        @Override
+        public Component getDetails(RowReference rowReference) {
+            detailsPanel = new Panel();
+            detailsPanel.setContent(new Label("One"));
+            return detailsPanel;
+        }
+    };
 
     @Override
     @SuppressWarnings("unchecked")
@@ -1059,40 +1109,32 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     private void createDetailsActions() {
-        createClickAction("custom details generator", "Details",
-                new Command<Grid, Void>() {
-                    @Override
-                    public void execute(Grid c, Void value, Object data) {
-                        grid.setDetailsGenerator(new Grid.DetailsGenerator() {
-                            private int seq = 0;
+        Command<Grid, DetailsGenerator> swapDetailsGenerator = new Command<Grid, DetailsGenerator>() {
+            @Override
+            public void execute(Grid c, DetailsGenerator generator, Object data) {
+                grid.setDetailsGenerator(generator);
+            }
+        };
 
-                            @Override
-                            public Component getDetails(
-                                    RowReference rowReference) {
-                                return new Label("You are watching item id "
-                                        + rowReference.getItemId() + " ("
-                                        + (seq++) + ")");
-                            }
-                        });
-                    }
-                }, null);
-        createClickAction("hierarchy details generator", "Details",
-                new Command<Grid, Void>() {
-                    @Override
-                    public void execute(Grid c, Void value, Object data) {
-                        grid.setDetailsGenerator(new Grid.DetailsGenerator() {
-                            @Override
-                            public Component getDetails(
-                                    RowReference rowReference) {
-                                detailsPanel = new Panel();
-                                detailsPanel.setContent(new Label("One"));
-                                return detailsPanel;
-                            }
-                        });
-                    }
-                }, null);
+        Command<Grid, Boolean> openOrCloseItemId = new Command<Grid, Boolean>() {
+            @Override
+            @SuppressWarnings("boxing")
+            public void execute(Grid g, Boolean visible, Object itemId) {
+                g.setDetailsVisible(itemId, visible);
+            }
+        };
 
-        createClickAction("change hierarchy in generator", "Details",
+        createCategory("Generators", "Details");
+        createClickAction("NULL", "Generators", swapDetailsGenerator,
+                DetailsGenerator.NULL);
+        createClickAction("\"Watching\"", "Generators", swapDetailsGenerator,
+                watchingDetailsGenerator);
+        createClickAction("Detailed", "Generators", swapDetailsGenerator,
+                detailedDetailsGenerator);
+        createClickAction("Hierarchical", "Generators", swapDetailsGenerator,
+                hierarchicalDetailsGenerator);
+
+        createClickAction("- Change Component", "Generators",
                 new Command<Grid, Void>() {
                     @Override
                     public void execute(Grid c, Void value, Object data) {
@@ -1105,7 +1147,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
-        createClickAction("toggle firstItemId", "Details",
+        createClickAction("Toggle firstItemId", "Details",
                 new Command<Grid, Void>() {
                     @Override
                     public void execute(Grid g, Void value, Object data) {
@@ -1117,26 +1159,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
-        createBooleanAction("firstItemId", "Details", false,
-                new Command<Grid, Boolean>() {
-                    @Override
-                    @SuppressWarnings("boxing")
-                    public void execute(Grid g, Boolean visible, Object data) {
-                        g.setDetailsVisible(g.getContainerDataSource()
-                                .firstItemId(), visible);
-                    }
-                });
+        createBooleanAction("Open firstItemId", "Details", false,
+                openOrCloseItemId, ds.firstItemId());
 
-        createBooleanAction("lastItemId-5", "Details", false,
-                new Command<Grid, Boolean>() {
-                    @Override
-                    @SuppressWarnings("boxing")
-                    public void execute(Grid g, Boolean visible, Object data) {
-                        Object fifthLastItemId = g.getContainerDataSource()
-                                .getItemIds(ROWS - 6, 1).get(0);
-                        g.setDetailsVisible(fifthLastItemId, visible);
-                    }
-                });
+        createBooleanAction("Open 995", "Details", false, openOrCloseItemId,
+                ds.getIdByIndex(995));
     }
 
     @Override

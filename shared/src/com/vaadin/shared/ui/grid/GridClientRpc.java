@@ -65,9 +65,10 @@ public interface GridClientRpc extends ClientRpc {
      * @param connectorChanges
      *            the indexing changes of details connectors
      * @param fetchId
-     *            the id of the request for fetching the changes
+     *            the id of the request for fetching the changes. A negative
+     *            number indicates a push (not requested by the client side)
      */
     public void setDetailsConnectorChanges(
-            Set<ConnectorIndexChange> connectorChanges, int fetchId);
+            Set<DetailsConnectorChange> connectorChanges, int fetchId);
 
 }
