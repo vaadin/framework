@@ -433,23 +433,14 @@ public class VDragAndDropManager {
                                                 .getNativeEvent());
                                 if (Math.abs(startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
                                         || Math.abs(startY - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
-                                    if (deferredStartRegistration != null) {
-                                        deferredStartRegistration
-                                                .removeHandler();
-                                        deferredStartRegistration = null;
-                                    }
+                                    ensureDeferredRegistrationCleanup();
                                     currentDrag.setCurrentGwtEvent(event
                                             .getNativeEvent());
                                     startDrag.execute();
                                 }
                                 break;
                             default:
-                                // on any other events, clean up the
-                                // deferred drag start
-                                if (deferredStartRegistration != null) {
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
-                                }
+                                ensureDeferredRegistrationCleanup();
                                 currentDrag = null;
                                 clearDragElement();
                                 break;
@@ -540,10 +531,10 @@ public class VDragAndDropManager {
     }
 
     private void endDrag(boolean doDrop) {
-        if (handlerRegistration != null) {
-            handlerRegistration.removeHandler();
-            handlerRegistration = null;
-        }
+
+        ensureDeferredRegistrationCleanup();
+        ensureHandlerRegistrationCleanup();
+
         boolean sendTransferableToServer = false;
         if (currentDropHandler != null) {
             if (doDrop) {
@@ -599,6 +590,20 @@ public class VDragAndDropManager {
         // release the capture (set to prevent text selection in IE)
         Event.releaseCapture(RootPanel.getBodyElement());
 
+    }
+
+    private void ensureHandlerRegistrationCleanup() {
+        if (handlerRegistration != null) {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
+        }
+    }
+
+    private void ensureDeferredRegistrationCleanup() {
+        if (deferredStartRegistration != null) {
+            deferredStartRegistration.removeHandler();
+            deferredStartRegistration = null;
+        }
     }
 
     private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {
