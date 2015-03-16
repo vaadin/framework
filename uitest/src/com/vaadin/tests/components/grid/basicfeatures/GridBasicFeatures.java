@@ -50,6 +50,8 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.ColumnReorderEvent;
+import com.vaadin.ui.Grid.ColumnReorderListener;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -106,6 +108,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             log("Item " + (event.isDoubleClick() ? "double " : "")
                     + "click on " + event.getPropertyId() + ", item "
                     + event.getItemId());
+        }
+    };
+
+    private ColumnReorderListener columnReorderListener = new ColumnReorderListener() {
+
+        @Override
+        public void columnReorder(ColumnReorderEvent event) {
+            log("Columns reordered, userOriginated: "
+                    + event.isUserOriginated());
         }
     };
 
@@ -248,8 +259,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         addFilterActions();
 
+        addInternalActions();
+
         this.grid = grid;
         return grid;
+    }
+
+    private void addInternalActions() {
+        createClickAction("Update column order without updating client",
+                "Internals", new Command<Grid, Void>() {
+                    @Override
+                    public void execute(Grid grid, Void value, Object data) {
+                        List<Column> columns = grid.getColumns();
+                        grid.setColumnOrder(columns.get(1).getPropertyId(),
+                                columns.get(0).getPropertyId());
+                        grid.getUI().getConnectorTracker().markClean(grid);
+                    }
+                }, null);
     }
 
     private void addFilterActions() {
@@ -494,6 +520,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
 
                 });
+        createBooleanAction("ColumnReorderListener", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        if (value) {
+                            grid.addColumnReorderListener(columnReorderListener);
+                        } else {
+                            grid.removeColumnReorderListener(columnReorderListener);
+                        }
+                    }
+                });
 
         createBooleanAction("Single select allow deselect", "State",
                 singleSelectAllowDeselect, new Command<Grid, Boolean>() {
@@ -506,6 +544,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             ((SelectionModel.Single) model)
                                     .setDeselectAllowed(singleSelectAllowDeselect);
                         }
+                    }
+                });
+        createBooleanAction("Column Reordering Allowed", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.setColumnReorderingAllowed(value);
                     }
                 });
     }
@@ -648,6 +694,33 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             } else {
                                 grid.removeColumn(columnProperty);
                             }
+                        }
+                    }, null, c);
+            createClickAction("Move left", getColumnProperty(c),
+                    new Command<Grid, String>() {
+
+                        @Override
+                        public void execute(Grid grid, String value, Object data) {
+                            final String columnProperty = getColumnProperty((Integer) data);
+                            List<Column> cols = grid.getColumns();
+                            List<Object> reordered = new ArrayList<Object>();
+                            boolean addAsLast = false;
+                            for (int i = 0; i < cols.size(); i++) {
+                                Column col = cols.get(i);
+                                if (col.getPropertyId().equals(columnProperty)) {
+                                    if (i == 0) {
+                                        addAsLast = true;
+                                    } else {
+                                        reordered.add(i - 1, columnProperty);
+                                    }
+                                } else {
+                                    reordered.add(col.getPropertyId());
+                                }
+                            }
+                            if (addAsLast) {
+                                reordered.add(columnProperty);
+                            }
+                            grid.setColumnOrder(reordered.toArray());
                         }
                     }, null, c);
 

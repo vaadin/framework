@@ -156,4 +156,8 @@ public class GridState extends AbstractComponentState {
     /** The caption for the cancel button in the editor */
     @DelegateToWidget
     public String editorCancelCaption = GridConstants.DEFAULT_CANCEL_CAPTION;
+
+    /** Whether the columns can be reordered */
+    @DelegateToWidget
+    public boolean columnReorderingAllowed;
 }

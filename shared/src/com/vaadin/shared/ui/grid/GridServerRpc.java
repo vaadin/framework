@@ -47,4 +47,16 @@ public interface GridServerRpc extends ServerRpc {
      *            mouse event details
      */
     void itemClick(String rowKey, String columnId, MouseEventDetails details);
+
+    /**
+     * Informs the server that the columns of the Grid have been reordered.
+     * 
+     * @since
+     * @param newColumnOrder
+     *            a list of column ids in the new order
+     * @param oldColumnOrder
+     *            a list of column ids in order before the change
+     */
+    void columnsReordered(List<String> newColumnOrder,
+            List<String> oldColumnOrder);
 }

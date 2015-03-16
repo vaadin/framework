@@ -12,7 +12,11 @@ import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widgets.Escalator;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 
 public class EscalatorBasicClientFeaturesWidget extends
         PureGWTTestApplication<Escalator> {
@@ -303,6 +307,7 @@ public class EscalatorBasicClientFeaturesWidget extends
         createColumnsAndRowsMenu();
         createFrozenMenu();
         createColspanMenu();
+        createSpacerMenu();
     }
 
     private void createFrozenMenu() {
@@ -567,6 +572,19 @@ public class EscalatorBasicClientFeaturesWidget extends
                         escalator.setScrollTop(40);
                     }
                 }, menupath);
+
+        String[] scrollToRowMenuPath = new String[menupath.length + 1];
+        System.arraycopy(menupath, 0, scrollToRowMenuPath, 0, menupath.length);
+        scrollToRowMenuPath[scrollToRowMenuPath.length - 1] = "Scroll to...";
+        for (int i = 0; i < 100; i += 25) {
+            final int rowIndex = i;
+            addMenuCommand("Row " + i, new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    escalator.scrollToRow(rowIndex, ScrollDestination.ANY, 0);
+                }
+            }, scrollToRowMenuPath);
+        }
     }
 
     private void createRowsMenu(final RowContainer container, String[] menupath) {
@@ -608,6 +626,63 @@ public class EscalatorBasicClientFeaturesWidget extends
                 if (container.getRowCount() > 0) {
                     removeRows(container, 0, container.getRowCount());
                 }
+            }
+        }, menupath);
+    }
+
+    private void createSpacerMenu() {
+        String[] menupath = { "Features", "Spacers" };
+
+        addMenuCommand("Swap Spacer Updater", new ScheduledCommand() {
+            private final SpacerUpdater CUSTOM = new SpacerUpdater() {
+                @Override
+                public void destroy(Spacer spacer) {
+                    spacer.getElement().setInnerText("");
+                }
+
+                @Override
+                public void init(Spacer spacer) {
+                    spacer.getElement().setInnerText(
+                            "Spacer for row " + spacer.getRow());
+                }
+            };
+
+            @Override
+            public void execute() {
+                BodyRowContainer body = escalator.getBody();
+
+                if (body.getSpacerUpdater().equals(SpacerUpdater.NULL)) {
+                    body.setSpacerUpdater(CUSTOM);
+                } else {
+                    body.setSpacerUpdater(SpacerUpdater.NULL);
+                }
+            }
+        }, menupath);
+
+        createSpacersMenuForRow(-1, menupath);
+        createSpacersMenuForRow(1, menupath);
+        createSpacersMenuForRow(50, menupath);
+        createSpacersMenuForRow(99, menupath);
+    }
+
+    private void createSpacersMenuForRow(final int rowIndex, String[] menupath) {
+        menupath = new String[] { menupath[0], menupath[1], "Row " + rowIndex };
+        addMenuCommand("Set 100px", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, 100);
+            }
+        }, menupath);
+        addMenuCommand("Set 50px", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, 50);
+            }
+        }, menupath);
+        addMenuCommand("Remove", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacer(rowIndex, -1);
             }
         }, menupath);
     }

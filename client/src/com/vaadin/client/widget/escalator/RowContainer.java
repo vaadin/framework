@@ -22,15 +22,100 @@ import com.google.gwt.dom.client.TableSectionElement;
 
 /**
  * A representation of the rows in each of the sections (header, body and
- * footer) in an {@link Escalator}.
+ * footer) in an {@link com.vaadin.client.widgets.Escalator}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
- * @see Escalator#getHeader()
- * @see Escalator#getBody()
- * @see Escalator#getFooter()
+ * @see com.vaadin.client.widgets.Escalator#getHeader()
+ * @see com.vaadin.client.widgets.Escalator#getBody()
+ * @see com.vaadin.client.widgets.Escalator#getFooter()
+ * @see SpacerContainer
  */
 public interface RowContainer {
+
+    /**
+     * The row container for the body section in an
+     * {@link com.vaadin.client.widgets.Escalator}.
+     * <p>
+     * The body section can contain both rows and spacers.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     * @see com.vaadin.client.widgets.Escalator#getBody()
+     */
+    public interface BodyRowContainer extends RowContainer {
+
+        /**
+         * Marks a spacer and its height.
+         * <p>
+         * If a spacer is already registered with the given row index, that
+         * spacer will be updated with the given height.
+         * <p>
+         * <em>Note:</em> The row index for a spacer will change if rows are
+         * inserted or removed above the current position. Spacers will also be
+         * removed alongside their associated rows
+         * 
+         * @param rowIndex
+         *            the row index for the spacer to modify. The affected
+         *            spacer is underneath the given index. Use -1 to insert a
+         *            spacer before the first row
+         * @param height
+         *            the pixel height of the spacer. If {@code height} is
+         *            negative, the affected spacer (if exists) will be removed
+         * @throws IllegalArgumentException
+         *             if {@code rowIndex} is not a valid row index
+         * @see #insertRows(int, int)
+         * @see #removeRows(int, int)
+         */
+        void setSpacer(int rowIndex, double height)
+                throws IllegalArgumentException;
+
+        /**
+         * Sets a new spacer updater.
+         * <p>
+         * Spacers that are currently visible will be updated, i.e.
+         * {@link SpacerUpdater#destroy(Spacer) destroyed} with the previous
+         * one, and {@link SpacerUpdater#init(Spacer) initialized} with the new
+         * one.
+         * 
+         * @param spacerUpdater
+         *            the new spacer updater
+         * @throws IllegalArgumentException
+         *             if {@code spacerUpdater} is {@code null}
+         */
+        void setSpacerUpdater(SpacerUpdater spacerUpdater)
+                throws IllegalArgumentException;
+
+        /**
+         * Gets the spacer updater currently in use.
+         * <p>
+         * {@link SpacerUpdater#NULL} is the default.
+         * 
+         * @return the spacer updater currently in use. Never <code>null</code>
+         */
+        SpacerUpdater getSpacerUpdater();
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Any spacers underneath {@code index} will be offset and "pushed"
+         * down. This also modifies the row index they are associated with.
+         */
+        @Override
+        public void insertRows(int index, int numberOfRows)
+                throws IndexOutOfBoundsException, IllegalArgumentException;
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Any spacers underneath {@code index} will be offset and "pulled" up.
+         * This also modifies the row index they are associated with. Any
+         * spacers in the removed range will also be closed and removed.
+         */
+        @Override
+        public void removeRows(int index, int numberOfRows)
+                throws IndexOutOfBoundsException, IllegalArgumentException;
+    }
 
     /**
      * An arbitrary pixel height of a row, before any autodetection for the row

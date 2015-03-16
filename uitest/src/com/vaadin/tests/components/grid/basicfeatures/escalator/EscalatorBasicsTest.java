@@ -66,10 +66,8 @@ public class EscalatorBasicsTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(GENERAL, DETACH_ESCALATOR);
         selectMenuPath(GENERAL, ATTACH_ESCALATOR);
 
-        assertEquals("Vertical scroll position", "50", getVerticalScrollbar()
-                .getAttribute("scrollTop"));
-        assertEquals("Horizontal scroll position", "50",
-                getHorizontalScrollbar().getAttribute("scrollLeft"));
+        assertEquals("Vertical scroll position", 50, getScrollTop());
+        assertEquals("Horizontal scroll position", 50, getScrollLeft());
 
         assertEquals("First cell of first visible row", "Row 2: 0,2",
                 getBodyCell(0, 0).getText());

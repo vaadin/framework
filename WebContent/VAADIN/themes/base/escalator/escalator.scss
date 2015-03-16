@@ -133,4 +133,15 @@
     z-index: 1;
   }
 
+  .#{$primaryStyleName}-spacer {
+    position: absolute;
+    display: block;
+    
+    background-color: $background-color;
+    
+    > td {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }

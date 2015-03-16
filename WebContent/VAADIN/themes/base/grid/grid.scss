@@ -14,6 +14,7 @@ $v-grid-row-focused-background-color: null !default;
 $v-grid-header-row-height: null !default;
 $v-grid-header-font-size: $v-font-size !default;
 $v-grid-header-background-color: $v-grid-row-background-color !default;
+$v-grid-header-drag-marked-color: $v-grid-row-selected-background-color !default;
 
 $v-grid-footer-row-height: $v-grid-header-row-height !default;
 $v-grid-footer-font-size: $v-grid-header-font-size !default;
@@ -50,6 +51,30 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName}-tablewrapper {
     border: $v-grid-border;
+  }
+
+  .#{$primaryStyleName} .header-drag-table {
+    border-spacing: 0;
+    position: relative;
+    table-layout: fixed;
+    width: inherit; // a decent default fallback
+
+    .#{$primaryStyleName}-header {
+      position: absolute;
+      > .#{$primaryStyleName}-cell {
+        border: $v-grid-border;
+        margin-top: -10px;
+        opacity: 0.9;
+        filter: alpha(opacity=90); // IE8
+        z-index: 30000;
+      }
+
+      > .#{$primaryStyleName}-drop-marker {
+        background-color: $v-grid-header-drag-marked-color;
+        position: absolute;
+        width: 3px;
+      }
+    }
   }
 
   // Common cell styles
@@ -327,6 +352,10 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName}-editor-save {
     margin-right: 4px;
+  }
+  
+  .#{$primaryStyleName}-spacer {
+    border: $v-grid-border;
   }
 
   // Renderers

@@ -33,9 +33,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.DateRenderer;
@@ -46,6 +48,7 @@ import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
@@ -55,6 +58,10 @@ import com.vaadin.client.widget.grid.datasources.ListSorter;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
@@ -400,6 +407,7 @@ public class GridBasicClientFeaturesWidget extends
         createEditorMenu();
         createInternalsMenu();
         createDataSourceMenu();
+        createDetailsMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -444,6 +452,71 @@ public class GridBasicClientFeaturesWidget extends
                 });
             }
         }, listenersPath);
+        addMenuCommand("Add ColumnReorder listener", new ScheduledCommand() {
+            private HandlerRegistration columnReorderHandler = null;
+
+            @Override
+            public void execute() {
+                if (columnReorderHandler != null) {
+                    return;
+                }
+                final Label columnOrderLabel = new Label();
+                columnOrderLabel.getElement().setId("columnreorder");
+                addLineEnd(columnOrderLabel, 300);
+                columnReorderHandler = grid
+                        .addColumnReorderHandler(new ColumnReorderHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onColumnReorder(
+                                    ColumnReorderEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columns", "" + (++eventIndex));
+                            }
+                        });
+            }
+        }, listenersPath);
+        addMenuCommand("Add Column Visibility Change listener",
+                new ScheduledCommand() {
+                    private HandlerRegistration columnVisibilityHandler = null;
+
+                    @Override
+                    public void execute() {
+                        if (columnVisibilityHandler != null) {
+                            return;
+                        }
+                        final Label columnOrderLabel = new Label();
+                        columnOrderLabel.getElement().setId("columnvisibility");
+                        addLineEnd(columnOrderLabel, 250);
+                        ColumnVisibilityChangeHandler handler = new ColumnVisibilityChangeHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onVisibilityChange(
+                                    ColumnVisibilityChangeEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "counter", "" + (++eventIndex));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "useroriginated",
+                                        (Boolean.toString(event
+                                                .isUserOriginated())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "ishidden",
+                                        (Boolean.toString(event.isHidden())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columnindex",
+                                        ""
+                                                + grid.getColumns().indexOf(
+                                                        event.getColumn()));
+                            }
+                        };
+
+                        columnVisibilityHandler = grid
+                                .addColumnVisibilityChangeHandler(handler);
+                    }
+                }, listenersPath);
     }
 
     private void createStateMenu() {
@@ -658,6 +731,42 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setColumnOrder(columns.toArray(new Column[columns.size()]));
             }
         }, "Component", "State");
+        addMenuCommand("Column Reordering", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setColumnReorderingAllowed(!grid
+                        .isColumnReorderingAllowed());
+            }
+        }, "Component", "State");
+        addMenuCommand("250px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("250px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("500px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("500px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("750px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("750px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("1000px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("1000px");
+            }
+        }, "Component", "State", "Width");
     }
 
     private void createColumnsMenu() {
@@ -669,6 +778,12 @@ public class GridBasicClientFeaturesWidget extends
                 @Override
                 public void execute() {
                     column.setSortable(!column.isSortable());
+                }
+            }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Hidden", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    column.setHidden(!column.isHidden());
                 }
             }, "Component", "Columns", "Column " + i);
 
@@ -766,6 +881,24 @@ public class GridBasicClientFeaturesWidget extends
                             originalRenderer.render(cell, data);
                         }
                     });
+                }
+            }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Move column left", new ScheduledCommand() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void execute() {
+                    List<Column<?, List<Data>>> cols = grid.getColumns();
+                    ArrayList<Column> reordered = new ArrayList<Column>(cols);
+                    if (index == 0) {
+                        Column<?, List<Data>> col = reordered.remove(0);
+                        reordered.add(col);
+                    } else {
+                        Column<?, List<Data>> col = reordered.remove(index);
+                        reordered.add(index - 1, col);
+                    }
+                    grid.setColumnOrder(reordered.toArray(new Column[reordered
+                            .size()]));
                 }
             }, "Component", "Columns", "Column " + i);
         }
@@ -1222,5 +1355,87 @@ public class GridBasicClientFeaturesWidget extends
     private void updateLabel(VLabel label, String output, int object, int column) {
         String coords = "(" + object + ", " + column + ")";
         label.setText(coords + " " + output);
+    }
+
+    private void createDetailsMenu() {
+        String[] menupath = new String[] { "Component", "Row details" };
+        addMenuCommand("Set generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        FlowPanel panel = new FlowPanel();
+
+                        final Label label = new Label("Row: " + rowIndex + ".");
+                        Button button = new Button("Button",
+                                new ClickHandler() {
+                                    @Override
+                                    public void onClick(ClickEvent event) {
+                                        label.setText("clicked");
+                                    }
+                                });
+
+                        panel.add(label);
+                        panel.add(button);
+                        return panel;
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Set faulty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        throw new RuntimeException("This is by design.");
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Set empty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    /*
+                     * While this is functionally equivalent to the NULL
+                     * generator, it's good to be explicit, since the behavior
+                     * isn't strictly tied between them. NULL generator might be
+                     * changed to render something different by default, and an
+                     * empty generator might behave differently also in the
+                     * future.
+                     */
+
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        return null;
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Toggle details for row 1", new ScheduledCommand() {
+            boolean visible = false;
+
+            @Override
+            public void execute() {
+                visible = !visible;
+                grid.setDetailsVisible(1, visible);
+            }
+        }, menupath);
+
+        addMenuCommand("Toggle details for row 100", new ScheduledCommand() {
+            boolean visible = false;
+
+            @Override
+            public void execute() {
+                visible = !visible;
+                grid.setDetailsVisible(100, visible);
+            }
+        }, menupath);
+
     }
 }

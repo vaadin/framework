@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,7 +52,6 @@ import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -70,6 +70,7 @@ import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.EncodeResult;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
@@ -330,6 +331,58 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          */
         public void setUserErrorMessage(String userErrorMessage) {
             this.userErrorMessage = userErrorMessage;
+        }
+
+    }
+
+    /**
+     * An event listener for column reorder events in the Grid.
+     * 
+     * @since
+     */
+    public interface ColumnReorderListener extends Serializable {
+        /**
+         * Called when the columns of the grid have been reordered.
+         * 
+         * @param event
+         *            An event providing more information
+         */
+        void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * An event that is fired when the columns are reordered.
+     * 
+     * @since
+     */
+    public static class ColumnReorderEvent extends Component.Event {
+
+        /**
+         * Is the column reorder related to this event initiated by the user
+         */
+        private final boolean userOriginated;
+
+        /**
+         * 
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+            super(source);
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
 
     }
@@ -2647,7 +2700,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * Getting a field before the editor has been opened depends on special
          * support from the {@link FieldGroup} in use. Using this method with a
          * user-provided <code>FieldGroup</code> might cause
-         * {@link BindException} to be thrown.
+         * {@link com.vaadin.data.fieldgroup.FieldGroup.BindException
+         * BindException} to be thrown.
          * 
          * @return the bound field; or <code>null</code> if the respective
          *         column is not editable
@@ -2894,6 +2948,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
             .findMethod(SortListener.class, "sort", SortEvent.class);
 
+    private static final Method COLUMN_REORDER_METHOD = ReflectTools
+            .findMethod(ColumnReorderListener.class, "columnReorder",
+                    ColumnReorderEvent.class);
+
     /**
      * Creates a new Grid with a new {@link IndexedContainer} as the data
      * source.
@@ -3087,6 +3145,44 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 Object propertyId = getPropertyIdByColumnId(columnId);
                 fireEvent(new ItemClickEvent(Grid.this, item, itemId,
                         propertyId, details));
+            }
+
+            @Override
+            public void columnsReordered(List<String> newColumnOrder,
+                    List<String> oldColumnOrder) {
+                final String diffStateKey = "columnOrder";
+                ConnectorTracker connectorTracker = getUI()
+                        .getConnectorTracker();
+                JsonObject diffState = connectorTracker.getDiffState(Grid.this);
+                // discard the change if the columns have been reordered from
+                // the server side, as the server side is always right
+                if (getState(false).columnOrder.equals(oldColumnOrder)) {
+                    // Don't mark as dirty since client has the state already
+                    getState(false).columnOrder = newColumnOrder;
+                    // write changes to diffState so that possible reverting the
+                    // column order is sent to client
+                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    Type type = null;
+                    try {
+                        type = (getState(false).getClass().getDeclaredField(
+                                diffStateKey).getGenericType());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                    EncodeResult encodeResult = JsonCodec.encode(
+                            getState(false).columnOrder, diffState, type,
+                            connectorTracker);
+
+                    diffState.put(diffStateKey, encodeResult.getEncodedValue());
+                    fireColumnReorderEvent(true);
+                } else {
+                    // make sure the client is reverted to the order that the
+                    // server thinks it is
+                    diffState.remove(diffStateKey);
+                    markAsDirty();
+                }
             }
         });
 
@@ -3469,6 +3565,31 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return columnKeys.get(columnId);
     }
 
+    /**
+     * Returns whether column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since
+     * @return true if reordering is allowed
+     */
+    public boolean isColumnReorderingAllowed() {
+        return getState(false).columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether or not column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        if (isColumnReorderingAllowed() != columnReorderingAllowed) {
+            getState().columnReorderingAllowed = columnReorderingAllowed;
+        }
+    }
+
     @Override
     protected GridState getState() {
         return (GridState) super.getState();
@@ -3567,6 +3688,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             columnOrder.addAll(stateColumnOrder);
         }
         getState().columnOrder = columnOrder;
+        fireColumnReorderEvent(false);
     }
 
     /**
@@ -4031,6 +4153,33 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     @Override
     public void removeSelectionListener(SelectionListener listener) {
         removeListener(SelectionEvent.class, listener, SELECTION_CHANGE_METHOD);
+    }
+
+    private void fireColumnReorderEvent(boolean userOriginated) {
+        fireEvent(new ColumnReorderEvent(this, userOriginated));
+    }
+
+    /**
+     * Registers a new column reorder listener.
+     * 
+     * @since
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnReorderListener(ColumnReorderListener listener) {
+        addListener(ColumnReorderEvent.class, listener, COLUMN_REORDER_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column reorder listener.
+     * 
+     * @since
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnReorderListener(ColumnReorderListener listener) {
+        removeListener(ColumnReorderEvent.class, listener,
+                COLUMN_REORDER_METHOD);
     }
 
     /**

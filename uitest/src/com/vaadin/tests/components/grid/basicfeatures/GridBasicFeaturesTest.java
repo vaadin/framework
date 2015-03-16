@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +28,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
@@ -59,14 +63,19 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         }
     }
 
-    protected GridElement getGridElement() {
+    protected CustomGridElement getGridElement() {
         return ((TestBenchElement) findElement(By.id("testComponent")))
-                .wrap(GridElement.class);
+                .wrap(CustomGridElement.class);
     }
 
     protected void scrollGridVerticallyTo(double px) {
         executeScript("arguments[0].scrollTop = " + px,
                 getGridVerticalScrollbar());
+    }
+
+    protected void scrollGridHorizontallyTo(double px) {
+        executeScript("arguments[0].scrollLeft = " + px,
+                getGridHorizontalScrollbar());
     }
 
     protected int getGridVerticalScrollPos() {
@@ -117,6 +126,12 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                         By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
     }
 
+    protected WebElement getGridHorizontalScrollbar() {
+        return getDriver()
+                .findElement(
+                        By.xpath("//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
+    }
+
     /**
      * Reloads the page without restartApplication. This occasionally breaks
      * stuff.
@@ -126,5 +141,65 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         testUrl = testUrl.replace("?restartApplication", "?");
         testUrl = testUrl.replace("?&", "?");
         driver.get(testUrl);
+    }
+
+    protected void focusCell(int row, int column) {
+        getGridElement().getCell(row, column).click();
+    }
+
+    protected void setFrozenColumns(int numberOfFrozenColumns) {
+        selectMenuPath("Component", "State", "Frozen column count",
+                Integer.toString(numberOfFrozenColumns));
+    }
+
+    protected void assertColumnHeaderOrder(int... indices) {
+        List<TestBenchElement> headers = getGridHeaderRowCells();
+        for (int i = 0; i < indices.length; i++) {
+            assertColumnHeader("Column " + indices[i], headers.get(i));
+        }
+    }
+
+    protected void assertColumnHeader(String expectedHeaderCaption,
+            TestBenchElement testBenchElement) {
+        assertEquals(expectedHeaderCaption.toLowerCase(), testBenchElement
+                .getText().toLowerCase());
+    }
+
+    protected GridCellElement getDefaultColumnHeader(int index) {
+        List<GridCellElement> headerRowCells = getGridElement().getHeaderCells(
+                0);
+        return headerRowCells.get(index);
+    }
+
+    protected void dragAndDropDefaultColumnHeader(int draggedColumnHeaderIndex,
+            int onTopOfColumnHeaderIndex, int xOffsetFromColumnTopLeftCorner) {
+        new Actions(getDriver())
+                .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
+                .moveToElement(
+                        getDefaultColumnHeader(onTopOfColumnHeaderIndex),
+                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+    }
+
+    protected void dragAndDropColumnHeader(int headerRow,
+            int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
+            int xOffsetFromColumnTopLeftCorner) {
+        new Actions(getDriver())
+                .clickAndHold(
+                        getGridElement().getHeaderCell(headerRow,
+                                draggedColumnHeaderIndex))
+                .moveToElement(
+                        getGridElement().getHeaderCell(headerRow,
+                                onTopOfColumnHeaderIndex),
+                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+    }
+
+    protected void assertColumnIsSorted(int index) {
+        WebElement columnHeader = getDefaultColumnHeader(index);
+        assertTrue(columnHeader.getAttribute("class").contains("sort"));
+    }
+
+    protected void assertFocusedCell(int row, int column) {
+        assertTrue(getGridElement().getCell(row, column).getAttribute("class")
+                .contains("focused"));
     }
 }

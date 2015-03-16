@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +38,8 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
@@ -53,6 +57,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -69,6 +75,8 @@ import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.dd.DragAndDropHandler;
+import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -78,10 +86,16 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widget.grid.AutoScroller;
+import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
+import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EventCellReference;
@@ -95,6 +109,10 @@ import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -127,7 +145,10 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
+import com.vaadin.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.client.widgets.Grid.Editor.State;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -403,6 +424,16 @@ public class Grid<T> extends ResizeComposite implements
                     return cellGroups.get(cellGroup);
                 }
                 return cells.get(column);
+            }
+
+            /**
+             * Returns <code>true</code> if this row contains spanned cells.
+             * 
+             * @since
+             * @return does this row contain spanned cells
+             */
+            public boolean hasSpannedCells() {
+                return !cellGroups.isEmpty();
             }
 
             /**
@@ -1777,6 +1808,14 @@ public class Grid<T> extends ResizeComposite implements
 
     private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
+    /**
+     * An initial height that is given to new details rows before rendering the
+     * appropriate widget that we then can be measure
+     * 
+     * @see GridSpacerUpdater
+     */
+    private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
+
     private EventCellReference<T> eventCell = new EventCellReference<T>(this);
     private GridKeyDownEvent keyDown = new GridKeyDownEvent(this, eventCell);
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this, eventCell);
@@ -2457,7 +2496,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
             double freeSpace = escalator.getInnerWidth();
-            for (Column<?, ?> column : getColumns()) {
+            for (Column<?, ?> column : getVisibleColumns()) {
                 if (column.getWidth() >= 0) {
                     freeSpace -= column.getWidth();
                 } else if (column.getMinimumWidth() >= 0) {
@@ -2473,7 +2512,7 @@ public class Grid<T> extends ResizeComposite implements
             /* Step 1: Apply all column widths as they are. */
 
             Map<Integer, Double> selfWidths = new LinkedHashMap<Integer, Double>();
-            List<Column<?, T>> columns = getColumns();
+            List<Column<?, T>> columns = getVisibleColumns();
             for (int index = 0; index < columns.size(); index++) {
                 selfWidths.put(index, columns.get(index).getWidth());
             }
@@ -2514,6 +2553,7 @@ public class Grid<T> extends ResizeComposite implements
             final Set<Column<?, T>> columnsToExpand = new HashSet<Column<?, T>>();
             List<Column<?, T>> nonFixedColumns = new ArrayList<Column<?, T>>();
             Map<Integer, Double> columnSizes = new HashMap<Integer, Double>();
+            final List<Column<?, T>> visibleColumns = getVisibleColumns();
 
             /*
              * Set all fixed widths and also calculate the size-to-fit widths
@@ -2522,7 +2562,7 @@ public class Grid<T> extends ResizeComposite implements
              * This way we know with how many pixels we have left to expand the
              * rest.
              */
-            for (Column<?, T> column : getColumns()) {
+            for (Column<?, T> column : visibleColumns) {
                 final double widthAsIs = column.getWidth();
                 final boolean isFixedWidth = widthAsIs >= 0;
                 final double widthFixed = Math.max(widthAsIs,
@@ -2531,11 +2571,11 @@ public class Grid<T> extends ResizeComposite implements
                         && column.getExpandRatio() == -1;
 
                 if (isFixedWidth) {
-                    columnSizes.put(indexOfColumn(column), widthFixed);
+                    columnSizes.put(visibleColumns.indexOf(column), widthFixed);
                     reservedPixels += widthFixed;
                 } else {
                     nonFixedColumns.add(column);
-                    columnSizes.put(indexOfColumn(column), -1.0d);
+                    columnSizes.put(visibleColumns.indexOf(column), -1.0d);
                 }
             }
 
@@ -2552,7 +2592,7 @@ public class Grid<T> extends ResizeComposite implements
                     columnsToExpand.add(column);
                 }
                 reservedPixels += newWidth;
-                columnSizes.put(indexOfColumn(column), newWidth);
+                columnSizes.put(visibleColumns.indexOf(column), newWidth);
             }
 
             /*
@@ -2580,8 +2620,8 @@ public class Grid<T> extends ResizeComposite implements
                     final Column<?, T> column = i.next();
                     final int expandRatio = getExpandRatio(column,
                             defaultExpandRatios);
-                    final double autoWidth = columnSizes
-                            .get(indexOfColumn(column));
+                    final int columnIndex = visibleColumns.indexOf(column);
+                    final double autoWidth = columnSizes.get(columnIndex);
                     final double maxWidth = getMaxWidth(column);
                     double expandedWidth = autoWidth + widthPerRatio
                             * expandRatio;
@@ -2591,7 +2631,7 @@ public class Grid<T> extends ResizeComposite implements
                         totalRatios -= expandRatio;
                         aColumnHasMaxedOut = true;
                         pixelsToDistribute -= maxWidth - autoWidth;
-                        columnSizes.put(indexOfColumn(column), maxWidth);
+                        columnSizes.put(columnIndex, maxWidth);
                     }
                 }
             } while (aColumnHasMaxedOut);
@@ -2627,13 +2667,14 @@ public class Grid<T> extends ResizeComposite implements
             for (Column<?, T> column : columnsToExpand) {
                 final int expandRatio = getExpandRatio(column,
                         defaultExpandRatios);
-                final double autoWidth = columnSizes.get(indexOfColumn(column));
+                final int columnIndex = visibleColumns.indexOf(column);
+                final double autoWidth = columnSizes.get(columnIndex);
                 double totalWidth = autoWidth + widthPerRatio * expandRatio;
                 if (leftOver > 0) {
                     totalWidth += 1;
                     leftOver--;
                 }
-                columnSizes.put(indexOfColumn(column), totalWidth);
+                columnSizes.put(columnIndex, totalWidth);
 
                 totalRatios -= expandRatio;
             }
@@ -2654,7 +2695,7 @@ public class Grid<T> extends ResizeComposite implements
                  * remove those pixels from other columns
                  */
                 double pixelsToRemoveFromOtherColumns = 0;
-                for (Column<?, T> column : getColumns()) {
+                for (Column<?, T> column : visibleColumns) {
                     /*
                      * We can't iterate over columnsToExpand, even though that
                      * would be convenient. This is because some column without
@@ -2663,11 +2704,11 @@ public class Grid<T> extends ResizeComposite implements
                      */
 
                     double minWidth = getMinWidth(column);
-                    double currentWidth = columnSizes
-                            .get(indexOfColumn(column));
+                    final int columnIndex = visibleColumns.indexOf(column);
+                    double currentWidth = columnSizes.get(columnIndex);
                     boolean hasAutoWidth = column.getWidth() < 0;
                     if (hasAutoWidth && currentWidth < minWidth) {
-                        columnSizes.put(indexOfColumn(column), minWidth);
+                        columnSizes.put(columnIndex, minWidth);
                         pixelsToRemoveFromOtherColumns += (minWidth - currentWidth);
                         minWidthsCausedReflows = true;
 
@@ -2693,7 +2734,7 @@ public class Grid<T> extends ResizeComposite implements
                 for (Column<?, T> column : columnsToExpand) {
                     final double pixelsToRemove = pixelsToRemovePerRatio
                             * getExpandRatio(column, defaultExpandRatios);
-                    int colIndex = indexOfColumn(column);
+                    int colIndex = visibleColumns.indexOf(column);
                     columnSizes.put(colIndex, columnSizes.get(colIndex)
                             - pixelsToRemove);
                 }
@@ -2757,6 +2798,86 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isScheduled() {
             return isScheduled;
+        }
+    }
+
+    private class GridSpacerUpdater implements SpacerUpdater {
+
+        private final Map<Element, Widget> elementToWidgetMap = new HashMap<Element, Widget>();
+
+        @Override
+        public void init(Spacer spacer) {
+
+            assert spacer.getElement().getFirstChild() == null : "The spacer's"
+                    + " element should be empty at this point. (row: "
+                    + spacer.getRow() + ", child: "
+                    + spacer.getElement().getFirstChild() + ")";
+
+            int rowIndex = spacer.getRow();
+
+            Widget detailsWidget = null;
+            try {
+                detailsWidget = detailsGenerator.getDetails(rowIndex);
+            } catch (Throwable e) {
+                getLogger().log(
+                        Level.SEVERE,
+                        "Exception while generating details for row "
+                                + rowIndex, e);
+            }
+
+            if (detailsWidget == null) {
+                spacer.getElement().removeAllChildren();
+                escalator.getBody().setSpacer(rowIndex,
+                        DETAILS_ROW_INITIAL_HEIGHT);
+                return;
+            }
+
+            Element element = detailsWidget.getElement();
+            spacer.getElement().appendChild(element);
+            setParent(detailsWidget, Grid.this);
+            Widget previousWidget = elementToWidgetMap.put(element,
+                    detailsWidget);
+
+            assert previousWidget == null : "Overwrote a pre-existing widget on row "
+                    + rowIndex + " without proper removal first.";
+
+            /*
+             * Once we have the content properly inside the DOM, we should
+             * re-measure it to make sure that it's the correct height.
+             */
+            double measuredHeight = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(spacer
+                            .getElement());
+            assert getElement().isOrHasChild(spacer.getElement()) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
+            escalator.getBody().setSpacer(rowIndex, measuredHeight);
+        }
+
+        @Override
+        public void destroy(Spacer spacer) {
+
+            assert getElement().isOrHasChild(spacer.getElement()) : "Trying "
+                    + "to destroy a spacer that is not connected to this "
+                    + "Grid's DOM. (row: " + spacer.getRow() + ", element: "
+                    + spacer.getElement() + ")";
+
+            Widget detailsWidget = elementToWidgetMap.remove(spacer
+                    .getElement().getFirstChildElement());
+
+            if (detailsWidget != null) {
+                /*
+                 * The widget may be null here if the previous generator
+                 * returned a null widget.
+                 */
+
+                assert spacer.getElement().getFirstChild() != null : "The "
+                        + "details row to destroy did not contain a widget - "
+                        + "probably removed by something else without "
+                        + "permission? (row: " + spacer.getRow()
+                        + ", element: " + spacer.getElement() + ")";
+
+                setParent(detailsWidget, null);
+                spacer.getElement().removeAllChildren();
+            }
         }
     }
 
@@ -2844,6 +2965,424 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
+
+
+    private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
+    private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
+    /** A set keeping track of the indices of all currently open details */
+    private Set<Integer> visibleDetails = new HashSet<Integer>();
+
+    private boolean columnReorderingAllowed;
+
+    private DragAndDropHandler dndHandler = new DragAndDropHandler();
+
+    private AutoScroller autoScroller = new AutoScroller(this);
+
+    private DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
+
+        private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
+
+            @Override
+            public void onAutoScroll(int scrollDiff) {
+                autoScrollX = scrollDiff;
+                onDragUpdate(null);
+            }
+
+            @Override
+            public void onAutoScrollReachedMin() {
+                // make sure the drop marker is visible on the left
+                autoScrollX = 0;
+                updateDragDropMarker(clientX);
+            }
+
+            @Override
+            public void onAutoScrollReachedMax() {
+                // make sure the drop marker is visible on the right
+                autoScrollX = 0;
+                updateDragDropMarker(clientX);
+            }
+        };
+        /**
+         * Elements for displaying the dragged column(s) and drop marker
+         * properly
+         */
+        private Element table;
+        private Element tableHeader;
+        /** Marks the column drop location */
+        private Element dropMarker;
+        /** A copy of the dragged column(s), moves with cursor. */
+        private Element dragElement;
+        /** Tracks index of the column whose left side the drop would occur */
+        private int latestColumnDropIndex;
+        /**
+         * Map of possible drop positions for the column and the corresponding
+         * column index.
+         */
+        private final TreeMap<Double, Integer> possibleDropPositions = new TreeMap<Double, Integer>();
+        /**
+         * Makes sure that drag cancel doesn't cause anything unwanted like sort
+         */
+        private HandlerRegistration columnSortPreventRegistration;
+
+        private int clientX;
+
+        /** How much the grid is being auto scrolled while dragging. */
+        private int autoScrollX;
+
+        private void initHeaderDragElementDOM() {
+            if (table == null) {
+                tableHeader = DOM.createTHead();
+                dropMarker = DOM.createDiv();
+                tableHeader.appendChild(dropMarker);
+                table = DOM.createTable();
+                table.appendChild(tableHeader);
+                table.setClassName("header-drag-table");
+            }
+            // update the style names on each run in case primary name has been
+            // modified
+            tableHeader.setClassName(escalator.getHeader().getElement()
+                    .getClassName());
+            dropMarker.setClassName(getStylePrimaryName() + "-drop-marker");
+            int topOffset = 0;
+            for (int i = 0; i < eventCell.getRowIndex(); i++) {
+                topOffset += escalator.getHeader().getRowElement(i)
+                        .getFirstChildElement().getOffsetHeight();
+            }
+            tableHeader.getStyle().setTop(topOffset, Unit.PX);
+
+            getElement().appendChild(table);
+        }
+
+        @Override
+        public void onDragUpdate(NativePreviewEvent event) {
+            if (event != null) {
+                clientX = WidgetUtil.getTouchOrMouseClientX(event
+                        .getNativeEvent());
+                autoScrollX = 0;
+            }
+            resolveDragElementHorizontalPosition(clientX);
+            updateDragDropMarker(clientX);
+        }
+
+        private void updateDragDropMarker(final int clientX) {
+            final double scrollLeft = getScrollLeft();
+            final double cursorXCoordinate = clientX
+                    - escalator.getHeader().getElement().getAbsoluteLeft();
+            final Entry<Double, Integer> cellEdgeOnRight = possibleDropPositions
+                    .ceilingEntry(cursorXCoordinate);
+            final Entry<Double, Integer> cellEdgeOnLeft = possibleDropPositions
+                    .floorEntry(cursorXCoordinate);
+            final double diffToRightEdge = cellEdgeOnRight == null ? Double.MAX_VALUE
+                    : cellEdgeOnRight.getKey() - cursorXCoordinate;
+            final double diffToLeftEdge = cellEdgeOnLeft == null ? Double.MAX_VALUE
+                    : cursorXCoordinate - cellEdgeOnLeft.getKey();
+
+            double dropMarkerLeft = 0 - scrollLeft;
+            if (diffToRightEdge > diffToLeftEdge) {
+                latestColumnDropIndex = cellEdgeOnLeft.getValue();
+                dropMarkerLeft += cellEdgeOnLeft.getKey();
+            } else {
+                latestColumnDropIndex = cellEdgeOnRight.getValue();
+                dropMarkerLeft += cellEdgeOnRight.getKey();
+            }
+
+            dropMarkerLeft += autoScrollX;
+
+            final double frozenColumnsWidth = getFrozenColumnsWidth();
+            if (dropMarkerLeft < frozenColumnsWidth
+                    || dropMarkerLeft > escalator.getHeader().getElement()
+                            .getOffsetWidth() || dropMarkerLeft < 0) {
+                dropMarkerLeft = -10000000;
+            }
+            dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
+        }
+
+        private void resolveDragElementHorizontalPosition(final int clientX) {
+            double left = clientX - table.getAbsoluteLeft();
+            final double frozenColumnsWidth = getFrozenColumnsWidth();
+            if (left < frozenColumnsWidth) {
+                left = (int) frozenColumnsWidth;
+            }
+
+            // do not show the drag element beyond a spanned header cell
+            // limitation
+            final Double leftBound = possibleDropPositions.firstKey();
+            final Double rightBound = possibleDropPositions.lastKey();
+            double scrollLeft = getScrollLeft();
+            if (left + scrollLeft < leftBound) {
+                left = leftBound - scrollLeft + autoScrollX;
+            } else if (left + scrollLeft > rightBound) {
+                left = rightBound - scrollLeft + autoScrollX;
+            }
+
+            // do not show the drag element beyond the grid
+            left = Math.max(0, Math.min(left, table.getClientWidth()));
+
+            left -= dragElement.getClientWidth() / 2;
+            dragElement.getStyle().setLeft(left, Unit.PX);
+        }
+
+        @Override
+        public boolean onDragStart(NativeEvent startingEvent) {
+            calculatePossibleDropPositions();
+
+            if (possibleDropPositions.isEmpty()) {
+                return false;
+            }
+
+            initHeaderDragElementDOM();
+            // needs to clone focus and sorting indicators too (UX)
+            dragElement = DOM.clone(eventCell.getElement(), true);
+            dragElement.getStyle().clearWidth();
+            dropMarker.getStyle().setProperty("height",
+                    dragElement.getStyle().getHeight());
+            tableHeader.appendChild(dragElement);
+            // mark the column being dragged for styling
+            eventCell.getElement().addClassName("dragged");
+            // mark the floating cell, for styling & testing
+            dragElement.addClassName("dragged-column-header");
+
+            // start the auto scroll handler
+            autoScroller.setScrollAreaPX(60);
+            autoScroller.start(startingEvent, ScrollAxis.HORIZONTAL,
+                    autoScrollerCallback);
+            return true;
+        }
+
+        @Override
+        public void onDragEnd() {
+            table.removeFromParent();
+            dragElement.removeFromParent();
+            eventCell.getElement().removeClassName("dragged");
+        }
+
+        @Override
+        public void onDrop() {
+            final int draggedColumnIndex = eventCell.getColumnIndex();
+            final int colspan = header.getRow(eventCell.getRowIndex())
+                    .getCell(eventCell.getColumn()).getColspan();
+            if (latestColumnDropIndex != draggedColumnIndex
+                    && latestColumnDropIndex != (draggedColumnIndex + colspan)) {
+                List<Column<?, T>> columns = getColumns();
+                List<Column<?, T>> reordered = new ArrayList<Column<?, T>>();
+                if (draggedColumnIndex < latestColumnDropIndex) {
+                    reordered.addAll(columns.subList(0, draggedColumnIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex
+                            + colspan, latestColumnDropIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex,
+                            draggedColumnIndex + colspan));
+                    reordered.addAll(columns.subList(latestColumnDropIndex,
+                            columns.size()));
+                } else {
+                    reordered.addAll(columns.subList(0, latestColumnDropIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex,
+                            draggedColumnIndex + colspan));
+                    reordered.addAll(columns.subList(latestColumnDropIndex,
+                            draggedColumnIndex));
+                    reordered.addAll(columns.subList(draggedColumnIndex
+                            + colspan, columns.size()));
+                }
+                reordered.remove(selectionColumn); // since setColumnOrder will
+                                                   // add it anyway!
+
+                Column<?, T>[] array = reordered.toArray(new Column[reordered
+                        .size()]);
+                setColumnOrder(array);
+                transferCellFocusOnDrop();
+            } // else no reordering
+        }
+
+        private void transferCellFocusOnDrop() {
+            final Cell focusedCell = cellFocusHandler.getFocusedCell();
+            if (focusedCell != null) {
+                final int focusedCellColumnIndex = focusedCell.getColumn();
+                final int focusedRowIndex = focusedCell.getRow();
+                final int draggedColumnIndex = eventCell.getColumnIndex();
+                // transfer focus if it was effected by the new column order
+                final RowContainer rowContainer = escalator
+                        .findRowContainer(focusedCell.getElement());
+                if (focusedCellColumnIndex == draggedColumnIndex) {
+                    // move with the dragged column
+                    final int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex ? latestColumnDropIndex - 1
+                            : latestColumnDropIndex;
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            adjustedDropIndex, rowContainer);
+                } else if (latestColumnDropIndex <= focusedCellColumnIndex
+                        && draggedColumnIndex > focusedCellColumnIndex) {
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            focusedCellColumnIndex + 1, rowContainer);
+                } else if (latestColumnDropIndex > focusedCellColumnIndex
+                        && draggedColumnIndex < focusedCellColumnIndex) {
+                    cellFocusHandler.setCellFocus(focusedRowIndex,
+                            focusedCellColumnIndex - 1, rowContainer);
+                }
+            }
+        }
+
+        @Override
+        public void onDragCancel() {
+            // cancel next click so that we may prevent column sorting if
+            // mouse was released on top of the dragged cell
+            if (columnSortPreventRegistration == null) {
+                columnSortPreventRegistration = Event
+                        .addNativePreviewHandler(new NativePreviewHandler() {
+
+                            @Override
+                            public void onPreviewNativeEvent(
+                                    NativePreviewEvent event) {
+                                if (event.getTypeInt() == Event.ONCLICK) {
+                                    event.cancel();
+                                    event.getNativeEvent().preventDefault();
+                                    columnSortPreventRegistration
+                                            .removeHandler();
+                                    columnSortPreventRegistration = null;
+                                }
+                            }
+                        });
+            }
+            autoScroller.stop();
+        }
+
+        private double getFrozenColumnsWidth() {
+            double value = getMultiSelectColumnWidth();
+            for (int i = 0; i < getFrozenColumnCount(); i++) {
+                value += getColumn(i).getWidthActual();
+            }
+            return value;
+        }
+
+        private double getMultiSelectColumnWidth() {
+            if (getSelectionModel().getSelectionColumnRenderer() != null) {
+                // frozen checkbox column is present, it is always the first
+                // column
+                return escalator.getHeader().getElement()
+                        .getFirstChildElement().getFirstChildElement()
+                        .getOffsetWidth();
+            }
+            return 0.0;
+        }
+
+        /**
+         * Returns the amount of frozen columns. The selection column is always
+         * considered frozen, since it can't be moved.
+         */
+        private int getSelectionAndFrozenColumnCount() {
+            // no matter if selection column is frozen or not, it is considered
+            // frozen for column dnd reorder
+            if (getSelectionModel().getSelectionColumnRenderer() != null) {
+                return Math.max(0, getFrozenColumnCount()) + 1;
+            } else {
+                return Math.max(0, getFrozenColumnCount());
+            }
+        }
+
+        @SuppressWarnings("boxing")
+        private void calculatePossibleDropPositions() {
+            possibleDropPositions.clear();
+
+            final int draggedCellIndex = eventCell.getColumnIndex();
+            final StaticRow<?> draggedCellRow = header.getRow(eventCell
+                    .getRowIndex());
+            final int draggedCellRightIndex = draggedCellIndex
+                    + draggedCellRow.getCell(eventCell.getColumn())
+                            .getColspan();
+            final int frozenColumns = getSelectionAndFrozenColumnCount();
+            final Range draggedCellRange = Range.between(draggedCellIndex,
+                    draggedCellRightIndex);
+            /*
+             * If the dragged cell intersects with a spanned cell in any other
+             * header or footer row, then the drag is limited inside that
+             * spanned cell. The same rules apply: the cell can't be dropped
+             * inside another spanned cell. The left and right bounds keep track
+             * of the edges of the most limiting spanned cell.
+             */
+            int leftBound = -1;
+            int rightBound = getColumnCount() + 1;
+
+            final HashSet<Integer> unavailableColumnDropIndices = new HashSet<Integer>();
+            final List<StaticRow<?>> rows = new ArrayList<StaticRow<?>>();
+            rows.addAll(header.getRows());
+            rows.addAll(footer.getRows());
+            for (StaticRow<?> row : rows) {
+                if (!row.hasSpannedCells()) {
+                    continue;
+                }
+                final boolean isDraggedCellRow = row.equals(draggedCellRow);
+                for (int cellColumnIndex = frozenColumns; cellColumnIndex < getColumnCount(); cellColumnIndex++) {
+                    StaticCell cell = row.getCell(getColumn(cellColumnIndex));
+                    int colspan = cell.getColspan();
+                    if (colspan <= 1) {
+                        continue;
+                    }
+                    final int cellColumnRightIndex = cellColumnIndex + colspan;
+                    final Range cellRange = Range.between(cellColumnIndex,
+                            cellColumnRightIndex);
+                    final boolean intersects = draggedCellRange
+                            .intersects(cellRange);
+                    if (intersects && !isDraggedCellRow) {
+                        // if the currently iterated cell is inside or same as
+                        // the dragged cell, then it doesn't restrict the drag
+                        if (cellRange.isSubsetOf(draggedCellRange)) {
+                            cellColumnIndex = cellColumnRightIndex - 1;
+                            continue;
+                        }
+                        /*
+                         * if the dragged cell is a spanned cell and it crosses
+                         * with the currently iterated cell without sharing
+                         * either start or end then not possible to drag the
+                         * cell.
+                         */
+                        if (!draggedCellRange.isSubsetOf(cellRange)) {
+                            return;
+                        }
+                        // the spanned cell overlaps the dragged cell (but is
+                        // not the dragged cell)
+                        if (cellColumnIndex <= draggedCellIndex
+                                && cellColumnIndex > leftBound) {
+                            leftBound = cellColumnIndex;
+                        }
+                        if (cellColumnRightIndex < rightBound) {
+                            rightBound = cellColumnRightIndex;
+                        }
+                        cellColumnIndex = cellColumnRightIndex - 1;
+                    }
+
+                    else { // can't drop inside a spanned cell, or this is the
+                           // dragged cell
+                        while (colspan > 1) {
+                            cellColumnIndex++;
+                            colspan--;
+                            unavailableColumnDropIndices.add(cellColumnIndex);
+                        }
+                    }
+                }
+            }
+
+            if (leftBound == (rightBound - 1)) {
+                return;
+            }
+
+            double position = getFrozenColumnsWidth();
+            // iterate column indices and add possible drop positions
+            for (int i = frozenColumns; i < getColumnCount(); i++) {
+                if (!unavailableColumnDropIndices.contains(i)) {
+                    if (leftBound != -1) {
+                        if (i >= leftBound && i <= rightBound) {
+                            possibleDropPositions.put(position, i);
+                        }
+                    } else {
+                        possibleDropPositions.put(position, i);
+                    }
+                }
+                position += getColumn(i).getWidthActual();
+            }
+            if (leftBound == -1) {
+                // add the right side of the last column as columns.size()
+                possibleDropPositions.put(position, getColumnCount());
+            }
+        }
+
+    };
 
     /**
      * Enumeration for easy setting of selection mode.
@@ -2946,6 +3485,10 @@ public class Grid<T> extends ResizeComposite implements
         private boolean sortable = false;
 
         private boolean editable = true;
+
+        private boolean hidden = false;
+
+        private boolean hideable = false;
 
         private String headerCaption = "";
 
@@ -3117,6 +3660,9 @@ public class Grid<T> extends ResizeComposite implements
          * This action is done "finally", once the current execution loop
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
+         * <p>
+         * If the column is currently {@link #isHidden() hidden}, then this set
+         * width has effect only once the column has been made visible again.
          * 
          * @param pixels
          *            the width in pixels or negative for auto sizing
@@ -3124,14 +3670,17 @@ public class Grid<T> extends ResizeComposite implements
         public Column<C, T> setWidth(double pixels) {
             if (!WidgetUtil.pixelValuesEqual(widthUser, pixels)) {
                 widthUser = pixels;
-                scheduleColumnWidthRecalculator();
+                if (!isHidden()) {
+                    scheduleColumnWidthRecalculator();
+                }
             }
             return this;
         }
 
         void doSetWidth(double pixels) {
+            assert !isHidden() : "applying width for a hidden column";
             if (grid != null) {
-                int index = grid.columns.indexOf(this);
+                int index = grid.getVisibleColumns().indexOf(this);
                 ColumnConfiguration conf = grid.escalator
                         .getColumnConfiguration();
                 conf.setColumnWidth(index, pixels);
@@ -3143,6 +3692,9 @@ public class Grid<T> extends ResizeComposite implements
          * <p>
          * <em>Note:</em> If a negative value was given to
          * {@link #setWidth(double)}, that same negative value is returned here.
+         * <p>
+         * <em>Note:</em> Returns the value, even if the column is currently
+         * {@link #isHidden() hidden}.
          * 
          * @return pixel width of the column, or a negative number if the column
          *         width has been automatically calculated.
@@ -3157,13 +3709,18 @@ public class Grid<T> extends ResizeComposite implements
          * Returns the effective pixel width of the column.
          * <p>
          * This differs from {@link #getWidth()} only when the column has been
-         * automatically resized.
+         * automatically resized, or when the column is currently
+         * {@link #isHidden() hidden}, when the value is 0.
          * 
          * @return pixel width of the column.
          */
         public double getWidthActual() {
+            if (isHidden()) {
+                return 0;
+            }
             return grid.escalator.getColumnConfiguration()
-                    .getColumnWidthActual(grid.columns.indexOf(this));
+                    .getColumnWidthActual(
+                            grid.getVisibleColumns().indexOf(this));
         }
 
         void reapplyWidth() {
@@ -3198,6 +3755,75 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isSortable() {
             return sortable;
+        }
+
+        /**
+         * Hides or shows the column. By default columns are visible before
+         * explicitly hiding them.
+         * 
+         * @since
+         * @param hidden
+         *            <code>true</code> to hide the column, <code>false</code>
+         *            to show
+         */
+        public void setHidden(boolean hidden) {
+            if (this.hidden != hidden) {
+                if (hidden) {
+                    grid.escalator.getColumnConfiguration().removeColumns(
+                            grid.getVisibleColumns().indexOf(this), 1);
+                    this.hidden = hidden;
+                } else {
+                    this.hidden = hidden;
+                    grid.escalator.getColumnConfiguration().insertColumns(
+                            grid.getVisibleColumns().indexOf(this), 1);
+                }
+                scheduleColumnWidthRecalculator();
+                this.grid.fireEvent(new ColumnVisibilityChangeEvent<T>(this,
+                        hidden, false));
+            }
+        }
+
+        /**
+         * Is this column hidden. Default is {@code false}.
+         * 
+         * @since
+         * @return <code>true</code> if the column is currently hidden,
+         *         <code>false</code> otherwise
+         */
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        /**
+         * Set whether it is possible for the user to hide this column or not.
+         * Default is {@code false}.
+         * <p>
+         * <em>Note:</em> it is still possible to hide the column
+         * programmatically using {@link #setHidden(boolean)}.
+         * 
+         * @since
+         * @param hideable
+         *            <code>true</code> if the user can hide this column,
+         *            <code>false</code> if not
+         */
+        public void setHideable(boolean hideable) {
+            this.hideable = hideable;
+            // TODO update whether sidebar/popup can be opened
+        }
+
+        /**
+         * Is it possible for the the user to hide this column. Default is
+         * {@code false}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically hidden using
+         * {@link #setHidden(boolean)} regardless of the returned value.
+         * 
+         * @since
+         * @return <code>true</code> if the user can hide the column,
+         *         <code>false</code> if not
+         */
+        public boolean isHideable() {
+            return hideable;
         }
 
         @Override
@@ -4145,7 +4771,8 @@ public class Grid<T> extends ResizeComposite implements
         int columnIndex = columns.indexOf(column);
 
         // Remove from column configuration
-        escalator.getColumnConfiguration().removeColumns(columnIndex, 1);
+        escalator.getColumnConfiguration().removeColumns(
+                getVisibleColumns().indexOf(column), 1);
 
         updateFrozenColumns();
 
@@ -4160,6 +4787,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Returns the amount of columns in the grid.
+     * <p>
+     * <em>NOTE:</em> this includes the hidden columns in the count.
      * 
      * @return The number of columns in the grid
      */
@@ -4168,13 +4797,33 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Returns a list of columns in the grid.
+     * Returns a list columns in the grid, including hidden columns.
+     * <p>
+     * For currently visible columns, use {@link #getVisibleColumns()}.
      * 
      * @return A unmodifiable list of the columns in the grid
      */
     public List<Column<?, T>> getColumns() {
         return Collections
                 .unmodifiableList(new ArrayList<Column<?, T>>(columns));
+    }
+
+    /**
+     * Returns a list of the currently visible columns in the grid.
+     * <p>
+     * No {@link Column#isHidden() hidden} columns included.
+     * 
+     * @since
+     * @return A unmodifiable list of the currently visible columns in the grid
+     */
+    public List<Column<?, T>> getVisibleColumns() {
+        ArrayList<Column<?, T>> visible = new ArrayList<Column<?, T>>();
+        for (Column<?, T> c : columns) {
+            if (!c.isHidden()) {
+                visible.add(c);
+            }
+        }
+        return Collections.unmodifiableList(visible);
     }
 
     /**
@@ -4191,17 +4840,6 @@ public class Grid<T> extends ResizeComposite implements
             throw new IllegalStateException("Column not found.");
         }
         return columns.get(index);
-    }
-
-    /**
-     * Returns current index of given column
-     * 
-     * @param column
-     *            column in grid
-     * @return column index, or <code>-1</code> if not in this Grid
-     */
-    protected int indexOfColumn(Column<?, T> column) {
-        return columns.indexOf(column);
     }
 
     /**
@@ -4649,7 +5287,7 @@ public class Grid<T> extends ResizeComposite implements
                             + getColumnCount() + ")");
         }
 
-        this.frozenColumnCount = numberOfColumns;
+        frozenColumnCount = numberOfColumns;
         updateFrozenColumns();
     }
 
@@ -4791,12 +5429,43 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * Sets the horizontal scroll offset
+     * 
+     * @since
+     * @param px
+     *            the number of pixels this grid should be scrolled right
+     */
+    public void setScrollLeft(double px) {
+        escalator.setScrollLeft(px);
+    }
+
+    /**
      * Gets the horizontal scroll offset
      * 
      * @return the number of pixels this grid is scrolled to the right
      */
     public double getScrollLeft() {
         return escalator.getScrollLeft();
+    }
+
+    /**
+     * Returns the height of the scrollable area in pixels.
+     * 
+     * @since
+     * @return the height of the scrollable area in pixels
+     */
+    public double getScrollHeight() {
+        return escalator.getScrollHeight();
+    }
+
+    /**
+     * Returns the width of the scrollable area in pixels.
+     * 
+     * @since
+     * @return the width of the scrollable area in pixels.
+     */
+    public double getScrollWidth() {
+        return escalator.getScrollWidth();
     }
 
     private static final Logger getLogger() {
@@ -4902,7 +5571,7 @@ public class Grid<T> extends ResizeComposite implements
 
         EventTarget target = event.getEventTarget();
 
-        if (!Element.is(target)) {
+        if (!Element.is(target) || isOrContainsInSpacer(Element.as(target))) {
             return;
         }
 
@@ -4949,6 +5618,10 @@ public class Grid<T> extends ResizeComposite implements
 
         if (!isElementInChildWidget(e)) {
 
+            if (handleHeaderCellDragStartEvent(event, container)) {
+                return;
+            }
+
             // Sorting through header Click / KeyUp
             if (handleHeaderDefaultRowEvent(event, container)) {
                 return;
@@ -4966,6 +5639,19 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
         }
+    }
+
+    private boolean isOrContainsInSpacer(Node node) {
+        Node n = node;
+        while (n != null && n != getElement()) {
+            if (Element.is(n)
+                    && Element.as(n).getClassName()
+                            .equals(getStylePrimaryName() + "-spacer")) {
+                return true;
+            }
+            n = n.getParentNode();
+        }
+        return false;
     }
 
     private boolean isElementInChildWidget(Element e) {
@@ -5097,6 +5783,31 @@ public class Grid<T> extends ResizeComposite implements
         return true;
     }
 
+    private boolean handleHeaderCellDragStartEvent(Event event,
+            RowContainer container) {
+        if (!isColumnReorderingAllowed()) {
+            return false;
+        }
+        if (container != escalator.getHeader()) {
+            return false;
+        }
+        if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()
+                .getFrozenColumnCount()) {
+            return false;
+        }
+
+        if (event.getTypeInt() == Event.ONMOUSEDOWN
+                && event.getButton() == NativeEvent.BUTTON_LEFT
+                || event.getTypeInt() == Event.ONTOUCHSTART) {
+            dndHandler.onDragStartOnDraggableElement(event,
+                    headerCellDndCallback);
+            event.preventDefault();
+            event.stopPropagation();
+            return true;
+        }
+        return false;
+    }
+
     private Point rowEventTouchStartingPoint;
     private CellStyleGenerator<T> cellStyleGenerator;
     private RowStyleGenerator<T> rowStyleGenerator;
@@ -5195,153 +5906,77 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        // Parse SubPart string to type and indices
-        String[] splitArgs = subPart.split("\\[");
 
-        String type = splitArgs[0];
-        int[] indices = new int[splitArgs.length - 1];
-        for (int i = 0; i < indices.length; ++i) {
-            String tmp = splitArgs[i + 1];
-            indices[i] = Integer.parseInt(tmp.substring(0, tmp.length() - 1));
+        Element subPartElement = escalator.getSubPartElement(subPart
+                .replaceFirst("^details\\[", "spacer["));
+        if (subPartElement != null) {
+            return DOM.asOld(subPartElement);
         }
 
-        // Get correct RowContainer for type from Escalator
-        RowContainer container = null;
-        if (type.equalsIgnoreCase("header")) {
-            container = escalator.getHeader();
-        } else if (type.equalsIgnoreCase("cell")) {
-            // If wanted row is not visible, we need to scroll there.
-            Range visibleRowRange = escalator.getVisibleRowRange();
-            if (indices.length > 0 && !visibleRowRange.contains(indices[0])) {
-                try {
-                    scrollToRow(indices[0]);
-                } catch (IllegalArgumentException e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
-                }
-                // Scrolling causes a lazy loading event. No element can
-                // currently be retrieved.
-                return null;
-            }
-            container = escalator.getBody();
-        } else if (type.equalsIgnoreCase("footer")) {
-            container = escalator.getFooter();
-        } else if (type.equalsIgnoreCase("editor")) {
-            if (editor.getState() != State.ACTIVE) {
-                // Editor is not there.
-                return null;
-            }
+        SubPartArguments args = Escalator.parseSubPartArguments(subPart);
 
-            if (indices.length == 0) {
-                return DOM.asOld(editor.editorOverlay);
-            } else if (indices.length == 1 && indices[0] < columns.size()) {
-                escalator.scrollToColumn(indices[0], ScrollDestination.ANY, 0);
-                return editor.getWidget(columns.get(indices[0])).getElement();
-            } else {
-                return null;
-            }
+        Element editor = getSubPartElementEditor(args);
+        if (editor != null) {
+            return DOM.asOld(editor);
         }
 
-        if (null != container) {
-            if (indices.length == 0) {
-                // No indexing. Just return the wanted container element
-                return DOM.asOld(container.getElement());
-            } else {
-                try {
-                    return DOM.asOld(getSubPart(container, indices));
-                } catch (Exception e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
-                }
-            }
-        }
         return null;
     }
 
-    private Element getSubPart(RowContainer container, int[] indices) {
-        Element targetElement = container.getRowElement(indices[0]);
+    private Element getSubPartElementEditor(SubPartArguments args) {
 
-        // Scroll wanted column to view if able
-        if (indices.length > 1 && targetElement != null) {
-            if (escalator.getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
-                escalator.scrollToColumn(indices[1], ScrollDestination.ANY, 0);
-            }
-
-            targetElement = getCellFromRow(TableRowElement.as(targetElement),
-                    indices[1]);
-
-            for (int i = 2; i < indices.length && targetElement != null; ++i) {
-                targetElement = (Element) targetElement.getChild(indices[i]);
-            }
-        }
-
-        return targetElement;
-    }
-
-    private Element getCellFromRow(TableRowElement rowElement, int index) {
-        int childCount = rowElement.getCells().getLength();
-        if (index < 0 || index >= childCount) {
+        if (!args.getType().equalsIgnoreCase("editor")
+                || editor.getState() != State.ACTIVE) {
             return null;
         }
 
-        TableCellElement currentCell = null;
-        boolean indexInColspan = false;
-        int i = 0;
-
-        while (!indexInColspan) {
-            currentCell = rowElement.getCells().getItem(i);
-
-            // Calculate if this is the cell we are looking for
-            int colSpan = currentCell.getColSpan();
-            indexInColspan = index < colSpan + i;
-
-            // Increment by colspan to skip over hidden cells
-            i += colSpan;
-        }
-        return currentCell;
-    }
-
-    @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
-        // Containers and matching SubPart types
-        List<RowContainer> containers = Arrays.asList(escalator.getHeader(),
-                escalator.getBody(), escalator.getFooter());
-        List<String> containerType = Arrays.asList("header", "cell", "footer");
-
-        for (int i = 0; i < containers.size(); ++i) {
-            RowContainer container = containers.get(i);
-            boolean containerRow = (subElement.getTagName().equalsIgnoreCase(
-                    "tr") && subElement.getParentElement() == container
-                    .getElement());
-            if (containerRow) {
-                // Wanted SubPart is row that is a child of containers root
-                // To get indices, we use a cell that is a child of this row
-                subElement = DOM.asOld(subElement.getFirstChildElement());
-            }
-
-            Cell cell = container.getCell(subElement);
-            if (cell != null) {
-                // Skip the column index if subElement was a child of root
-                return containerType.get(i) + "[" + cell.getRow()
-                        + (containerRow ? "]" : "][" + cell.getColumn() + "]");
-            }
-        }
-
-        // Check if subelement is part of editor.
-        if (editor.getState() == State.ACTIVE) {
-            if (editor.editorOverlay.isOrHasChild(subElement)) {
-                int i = 0;
-                for (Column<?, T> column : columns) {
-                    if (editor.getWidget(column).getElement()
-                            .isOrHasChild(subElement)) {
-                        return "editor[" + i + "]";
-                    }
-                    ++i;
-                }
-                return "editor";
-            }
+        if (args.getIndicesLength() == 0) {
+            return editor.editorOverlay;
+        } else if (args.getIndicesLength() == 1
+                && args.getIndex(0) < columns.size()) {
+            escalator
+                    .scrollToColumn(args.getIndex(0), ScrollDestination.ANY, 0);
+            return editor.getWidget(columns.get(args.getIndex(0))).getElement();
         }
 
         return null;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+
+        String escalatorStructureName = escalator.getSubPartName(subElement);
+        if (escalatorStructureName != null) {
+            return escalatorStructureName.replaceFirst("^spacer", "details");
+        }
+
+        String editorName = getSubPartNameEditor(subElement);
+        if (editorName != null) {
+            return editorName;
+        }
+
+        return null;
+    }
+
+    private String getSubPartNameEditor(Element subElement) {
+
+        if (editor.getState() != State.ACTIVE
+                || !editor.editorOverlay.isOrHasChild(subElement)) {
+            return null;
+        }
+
+        int i = 0;
+        for (Column<?, T> column : columns) {
+            if (editor.getWidget(column).getElement().isOrHasChild(subElement)) {
+                return "editor[" + i + "]";
+            }
+            ++i;
+        }
+
+        return "editor";
     }
 
     private void setSelectColumnRenderer(
@@ -5855,6 +6490,34 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * Register a column reorder handler to this Grid. The event for this
+     * handler is fired when the Grid's columns are reordered.
+     * 
+     * @since
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addColumnReorderHandler(
+            ColumnReorderHandler<T> handler) {
+        return addHandler(handler, ColumnReorderEvent.getType());
+    }
+
+    /**
+     * Register a column visibility change handler to this Grid. The event for
+     * this handler is fired when the Grid's columns change visibility.
+     * 
+     * @since
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addColumnVisibilityChangeHandler(
+            ColumnVisibilityChangeHandler<T> handler) {
+        return addHandler(handler, ColumnVisibilityChangeEvent.getType());
+    }
+
+    /**
      * Apply sorting to data source.
      */
     private void sort(boolean userOriginated) {
@@ -5903,6 +6566,27 @@ public class Grid<T> extends ResizeComposite implements
     public boolean isWorkPending() {
         return escalator.isWorkPending() || dataIsBeingFetched
                 || autoColumnWidthsRecalculator.isScheduled();
+    }
+
+    /**
+     * Returns whether columns can be reordered with drag and drop.
+     * 
+     * @since
+     * @return <code>true</code> if columns can be reordered, false otherwise
+     */
+    public boolean isColumnReorderingAllowed() {
+        return columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether column reordering with drag and drop is allowed or not.
+     * 
+     * @since
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        this.columnReorderingAllowed = columnReorderingAllowed;
     }
 
     /**
@@ -5956,6 +6640,8 @@ public class Grid<T> extends ResizeComposite implements
         for (FooterRow row : footer.getRows()) {
             row.calculateColspans();
         }
+
+        fireEvent(new ColumnReorderEvent<T>());
     }
 
     /**
@@ -6293,6 +6979,92 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void resetSizesFromDom() {
         getEscalator().resetSizesFromDom();
+    }
+
+    /**
+     * Sets a new details generator for row details.
+     * <p>
+     * The currently opened row details will be re-rendered.
+     * 
+     * @since
+     * @param detailsGenerator
+     *            the details generator to set
+     */
+    public void setDetailsGenerator(DetailsGenerator detailsGenerator)
+            throws IllegalArgumentException {
+
+        this.detailsGenerator = detailsGenerator;
+
+        // this will refresh all visible spacers
+        escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
+    }
+
+    /**
+     * Gets the current details generator for row details.
+     * 
+     * @since
+     * @return the detailsGenerator the current details generator
+     */
+    public DetailsGenerator getDetailsGenerator() {
+        return detailsGenerator;
+    }
+
+    /**
+     * Shows or hides the details for a specific row.
+     * <p>
+     * This method does nothing if trying to set show already-visible details,
+     * or hide already-hidden details.
+     * 
+     * @since
+     * @param rowIndex
+     *            the index of the affected row
+     * @param visible
+     *            <code>true</code> to show the details, or <code>false</code>
+     *            to hide them
+     * @see #isDetailsVisible(int)
+     */
+    public void setDetailsVisible(int rowIndex, boolean visible) {
+        Integer rowIndexInteger = Integer.valueOf(rowIndex);
+
+        /*
+         * We want to prevent opening a details row twice, so any subsequent
+         * openings (or closings) of details is a NOOP.
+         * 
+         * When a details row is opened, it is given an arbitrary height
+         * (because Escalator requires a height upon opening). Only when it's
+         * opened, Escalator will ask the generator to generate a widget, which
+         * we then can measure. When measured, we correct the initial height by
+         * the original height.
+         * 
+         * Without this check, we would override the measured height, and revert
+         * back to the initial, arbitrary, height which would most probably be
+         * wrong.
+         * 
+         * see GridSpacerUpdater.init for implementation details.
+         */
+
+        if (visible && !isDetailsVisible(rowIndex)) {
+            escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
+            visibleDetails.add(rowIndexInteger);
+        }
+
+        else if (!visible && isDetailsVisible(rowIndex)) {
+            escalator.getBody().setSpacer(rowIndex, -1);
+            visibleDetails.remove(rowIndexInteger);
+        }
+    }
+
+    /**
+     * Check whether the details for a row is visible or not.
+     * 
+     * @since
+     * @param rowIndex
+     *            the index of the row for which to check details
+     * @return <code>true</code> iff the details for the given row is visible
+     * @see #setDetailsVisible(int, boolean)
+     */
+    public boolean isDetailsVisible(int rowIndex) {
+        return visibleDetails.contains(Integer.valueOf(rowIndex));
     }
 
     /**
