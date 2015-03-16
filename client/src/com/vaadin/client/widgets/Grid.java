@@ -2148,10 +2148,12 @@ public class Grid<T> extends ResizeComposite implements
                     rowWithFocus = removed.getStart() - 1;
                 } else {
                     if (escalator.getHeader().getRowCount() > 0) {
-                        rowWithFocus = lastFocusedHeaderRow;
+                        rowWithFocus = Math.min(lastFocusedHeaderRow, escalator
+                                .getHeader().getRowCount() - 1);
                         containerWithFocus = escalator.getHeader();
                     } else if (escalator.getFooter().getRowCount() > 0) {
-                        rowWithFocus = lastFocusedFooterRow;
+                        rowWithFocus = Math.min(lastFocusedFooterRow, escalator
+                                .getFooter().getRowCount() - 1);
                         containerWithFocus = escalator.getFooter();
                     }
                 }
@@ -4571,8 +4573,12 @@ public class Grid<T> extends ResizeComposite implements
 
                 if (newSize > oldSize) {
                     body.insertRows(oldSize, newSize - oldSize);
+                    cellFocusHandler.rowsAddedToBody(Range.withLength(oldSize,
+                            newSize - oldSize));
                 } else if (newSize < oldSize) {
                     body.removeRows(newSize, oldSize - newSize);
+                    cellFocusHandler.rowsRemovedFromBody(Range.withLength(
+                            newSize, oldSize - newSize));
                 }
 
                 if (newSize > 0) {
