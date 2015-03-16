@@ -356,9 +356,13 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                     "Could not get session. This should never happen", e);
             return;
         } catch (SessionExpiredException e) {
+            // This happens at least if the server is restarted without
+            // preserving the session. After restart the client reconnects, gets
+            // a session expired notification and then closes the connection and
+            // ends up here
             getLogger()
-                    .log(Level.SEVERE,
-                            "Session expired before push was disconnected. This should never happen",
+                    .log(Level.FINER,
+                            "Session expired before push disconnect event was received",
                             e);
             return;
         }
