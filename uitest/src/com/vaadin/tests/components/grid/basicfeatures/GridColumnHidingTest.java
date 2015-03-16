@@ -16,7 +16,12 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -125,6 +130,85 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertEquals(2, columnIndex);
         assertEquals(false, userOriginated);
         assertEquals(false, hidden);
+    }
+
+    @Test
+    public void testColumnHidability_onTriggerColumnHidability_showsSidebarButton() {
+        WebElement sidebar = getSidebar();
+        assertNull(sidebar);
+
+        toggleHidableColumn(0);
+
+        sidebar = getSidebar();
+        assertNotNull(sidebar);
+    }
+
+    @Test
+    public void testColumnHidability_triggeringColumnHidabilityWithSeveralColumns_showsAndHidesSiderbarButton() {
+        verifySidebarNotVisible();
+
+        toggleHidableColumn(3);
+        toggleHidableColumn(4);
+
+        verifySidebarVisible();
+
+        toggleHidableColumn(3);
+
+        verifySidebarVisible();
+
+        toggleHidableColumn(4);
+
+        verifySidebarNotVisible();
+    }
+
+    @Test
+    public void testColumnHidability_clickingSidebarButton_opensClosesSidebar() {
+        toggleHidableColumn(0);
+        verifySidebarClosed();
+
+        getSidebarOpenButton().click();
+
+        verifySidebarOpened();
+
+        getSidebarOpenButton().click();
+
+        verifySidebarClosed();
+    }
+
+    private void verifySidebarOpened() {
+        WebElement sidebar = getSidebar();
+        assertTrue(sidebar.getAttribute("class").contains("opened"));
+    }
+
+    private void verifySidebarClosed() {
+        WebElement sidebar = getSidebar();
+        assertFalse(sidebar.getAttribute("class").contains("opened"));
+    }
+
+    private void verifySidebarNotVisible() {
+        WebElement sidebar = getSidebar();
+        assertNull(sidebar);
+    }
+
+    private void verifySidebarVisible() {
+        WebElement sidebar = getSidebar();
+        assertNotNull(sidebar);
+    }
+
+    private WebElement getSidebar() {
+        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    private WebElement getSidebarOpenButton() {
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-button"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    private void toggleHidableColumn(int columnIndex) {
+        selectMenuPath("Component", "Columns", "Column " + columnIndex,
+                "Hidable");
     }
 
     private void toggleHideColumn(int columnIndex) {

@@ -61,9 +61,12 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
@@ -74,6 +77,7 @@ import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
 import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.widget.escalator.Cell;
@@ -2785,6 +2789,92 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * Sidebar displaying toggles for hidable columns and additional custom
+     * widgets.
+     * 
+     * @since
+     */
+    public static class Sidebar extends Composite {
+
+        private final ClickHandler openCloseButtonHandler = new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (!open) {
+                    open();
+                } else {
+                    close();
+                }
+            }
+        };
+
+        private final VerticalPanel rootContainer;
+
+        private final VButton openCloseButton;
+
+        private boolean open;
+
+        public Sidebar() {
+            rootContainer = new VerticalPanel();
+            initWidget(rootContainer);
+
+            openCloseButton = new VButton();
+            openCloseButton.addClickHandler(openCloseButtonHandler);
+
+            rootContainer.add(openCloseButton);
+            rootContainer
+                    .setCellHorizontalAlignment(
+                            openCloseButton,
+                            HorizontalAlignmentConstant
+                                    .endOf(com.google.gwt.i18n.client.HasDirection.Direction.LTR));
+        }
+
+        /**
+         * Opens the sidebar if not yet opened.
+         * 
+         * @since
+         */
+        public void open() {
+            if (!open) {
+                addStyleName("opened");
+                open = true;
+            }
+        }
+
+        /**
+         * Closes the sidebar if not yet closed.
+         * 
+         * @since
+         */
+        public void close() {
+            if (open) {
+                removeStyleName("opened");
+                open = false;
+            }
+        }
+
+        /**
+         * Returns whether the sidebar is open or not.
+         * <p>
+         * <em>Note:</em> The sidebar can be in "open state" but not actually
+         * visible inside grid. See {@link #isVisibleInGrid()}.
+         * 
+         * @since
+         * @return <code>true</code> if open, <code>false</code> if not
+         */
+        public boolean isOpen() {
+            return open;
+        }
+
+        @Override
+        public void setStylePrimaryName(String styleName) {
+            super.setStylePrimaryName(styleName);
+            openCloseButton.setStylePrimaryName(styleName + "-button");
+        }
+
+    }
+
+    /**
      * Escalator used internally by grid to render the rows
      */
     private Escalator escalator = GWT.create(Escalator.class);
@@ -2792,6 +2882,8 @@ public class Grid<T> extends ResizeComposite implements
     private final Header header = GWT.create(Header.class);
 
     private final Footer footer = GWT.create(Footer.class);
+
+    private final Sidebar sidebar = GWT.create(Sidebar.class);
 
     /**
      * List of columns in the grid. Order defines the visible order.
@@ -3385,7 +3477,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean hidden = false;
 
-        private boolean hideable = false;
+        private boolean hidable = false;
 
         private String headerCaption = "";
 
@@ -3699,13 +3791,13 @@ public class Grid<T> extends ResizeComposite implements
          * programmatically using {@link #setHidden(boolean)}.
          * 
          * @since
-         * @param hideable
+         * @param hidable
          *            <code>true</code> if the user can hide this column,
          *            <code>false</code> if not
          */
-        public void setHideable(boolean hideable) {
-            this.hideable = hideable;
-            // TODO update whether sidebar/popup can be opened
+        public void setHidable(boolean hidable) {
+            this.hidable = hidable;
+            grid.updateSideBarVisibility();
         }
 
         /**
@@ -3719,8 +3811,8 @@ public class Grid<T> extends ResizeComposite implements
          * @return <code>true</code> if the user can hide the column,
          *         <code>false</code> if not
          */
-        public boolean isHideable() {
-            return hideable;
+        public boolean isHidable() {
+            return hidable;
         }
 
         @Override
@@ -4444,6 +4536,7 @@ public class Grid<T> extends ResizeComposite implements
         super.setStylePrimaryName(style);
         escalator.setStylePrimaryName(style);
         editor.setStylePrimaryName(style);
+        sidebar.setStylePrimaryName(style + "-sidebar");
 
         String rowStyle = getStylePrimaryName() + "-row";
         rowHasDataStyleName = rowStyle + "-has-data";
@@ -6945,4 +7038,52 @@ public class Grid<T> extends ResizeComposite implements
     public void recalculateColumnWidths() {
         autoColumnWidthsRecalculator.schedule();
     }
+
+    /**
+     * Setter for displaying the grid's {@link Sidebar}. The sidebar is visible
+     * automatically when there are {@link Column#setHidable(boolean) hidable
+     * columns}.
+     * <p>
+     * Setting the sidebar visible doens't open it - it only shows the button
+     * for opening it. For opening and closing the sidebar use
+     * {@link Sidebar#open()} and {@link Sidebar#close()}.
+     * 
+     * @since
+     * @param visible
+     *            <code>true</code> for showing the sidebar, <code>false</code>
+     *            for removing it
+     */
+    public void setSidebarVisible(boolean visible) {
+        if ((sidebar.getParent() != null) != visible) {
+            if (visible) {
+                getElement().appendChild(sidebar.getElement());
+                setParent(sidebar, this);
+            } else {
+                sidebar.getElement().removeFromParent();
+                sidebar.removeFromParent();
+            }
+        }
+    }
+
+    /**
+     * Returns the sidebar for this grid.
+     * 
+     * @since
+     * @return
+     */
+    public Sidebar getSidebar() {
+        return sidebar;
+    }
+
+    private void updateSideBarVisibility() {
+        boolean visible = false;
+        for (Column<?, T> c : getColumns()) {
+            if (c.isHidable()) {
+                visible = true;
+                break;
+            }
+        }
+        setSidebarVisible(visible);
+    }
+
 }
