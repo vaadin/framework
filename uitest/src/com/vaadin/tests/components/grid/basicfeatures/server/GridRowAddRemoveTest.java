@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NotificationElement;
@@ -36,27 +35,6 @@ public class GridRowAddRemoveTest extends GridBasicFeaturesTest {
         Assert.assertTrue(
                 "All added rows should be fetched in the same round trip.",
                 logContainsText("Requested items 0 - 18"));
-    }
-
-    @Test
-    @Ignore("This test checks the parameters passed to Container. Has nothing to do with what's sent to client.")
-    public void removeRows_loadAllAtOnce() {
-        openTestURL();
-
-        selectMenuPath("Component", "Size", "HeightMode Row");
-        selectMenuPath("Settings", "Clear log");
-        selectMenuPath("Component", "Body rows", "Remove 18 first rows");
-
-        Assert.assertTrue(
-                "All newly required rows should be fetched in the same round trip.",
-                logContainsText("Requested items 37 - 55"));
-
-        selectMenuPath("Settings", "Clear log");
-        selectMenuPath("Component", "Body rows", "Remove 18 first rows");
-
-        Assert.assertTrue(
-                "All newly required rows should be fetched in the same round trip.",
-                logContainsText("Requested items 37 - 55"));
     }
 
     @Test
