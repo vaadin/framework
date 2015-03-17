@@ -29,6 +29,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  */
 public class ImageRenderer extends ClickableRenderer<String, Image> {
 
+    public static final String TRANSPARENT_GIF_1PX = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
+
     @Override
     public Image createWidget() {
         Image image = GWT.create(Image.class);
@@ -38,6 +40,11 @@ public class ImageRenderer extends ClickableRenderer<String, Image> {
 
     @Override
     public void render(RendererCellReference cell, String url, Image image) {
-        image.setUrl(url);
+        if (url == null) {
+            image.setUrl(TRANSPARENT_GIF_1PX);
+        }
+        else {
+            image.setUrl(url);
+        }
     }
 }

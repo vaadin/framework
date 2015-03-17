@@ -28,7 +28,7 @@ import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
 public class MyBeanJSRenderer extends AbstractJavaScriptRenderer<MyBean> {
 
     public MyBeanJSRenderer() {
-        super(MyBean.class);
+        super(MyBean.class, "");
     }
 
 }

@@ -16,18 +16,33 @@
 package com.vaadin.ui.renderers;
 
 import com.vaadin.ui.Grid.AbstractRenderer;
+import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting HTML content.
- * 
- * @since 7.4
+ *
  * @author Vaadin Ltd
+ * @since 7.4
  */
 public class HtmlRenderer extends AbstractRenderer<String> {
     /**
      * Creates a new HTML renderer.
+     *
+     * @param nullRepresentation the html representation of {@code null} value
+     */
+    public HtmlRenderer(String nullRepresentation) {
+        super(String.class, nullRepresentation);
+    }
+
+    /**
+     * Creates a new HTML renderer.
      */
     public HtmlRenderer() {
-        super(String.class);
+        this("");
+    }
+
+    @Override
+    public String getNullRepresentation() {
+        return super.getNullRepresentation();
     }
 }

@@ -41,7 +41,7 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * representation for the default locale.
      */
     public DateRenderer() {
-        this(Locale.getDefault());
+        this(Locale.getDefault(), "");
     }
 
     /**
@@ -56,7 +56,24 @@ public class DateRenderer extends AbstractRenderer<Date> {
      *             if {@code locale} is {@code null}
      */
     public DateRenderer(Locale locale) throws IllegalArgumentException {
-        this("%s", locale);
+        this("%s", locale, "");
+    }
+
+    /**
+     * Creates a new date renderer.
+     * <p>
+     * The renderer is configured to render with the {@link Date#toString()}
+     * representation for the given locale.
+     *
+     * @param locale
+     *            the locale in which to present dates
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
+     * @throws IllegalArgumentException
+     *             if {@code locale} is {@code null}
+     */
+    public DateRenderer(Locale locale, String nullRepresentation) throws IllegalArgumentException {
+        this("%s", locale, nullRepresentation);
     }
 
     /**
@@ -74,7 +91,27 @@ public class DateRenderer extends AbstractRenderer<Date> {
      *      String Syntax</a>
      */
     public DateRenderer(String formatString) throws IllegalArgumentException {
-        this(formatString, Locale.getDefault());
+        this(formatString, "");
+    }
+
+    /**
+     * Creates a new date renderer.
+     * <p>
+     * The renderer is configured to render with the given string format, as
+     * displayed in the default locale.
+     *
+     * @param formatString
+     *            the format string with which to format the date
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
+     * @throws IllegalArgumentException
+     *             if {@code formatString} is {@code null}
+     * @see <a
+     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
+     *      String Syntax</a>
+     */
+    public DateRenderer(String formatString, String nullRepresentation) throws IllegalArgumentException {
+        this(formatString, Locale.getDefault(), nullRepresentation);
     }
 
     /**
@@ -95,7 +132,29 @@ public class DateRenderer extends AbstractRenderer<Date> {
      */
     public DateRenderer(String formatString, Locale locale)
             throws IllegalArgumentException {
-        super(Date.class);
+        this(formatString,locale, "");
+    }
+    /**
+     * Creates a new date renderer.
+     * <p>
+     * The renderer is configured to render with the given string format, as
+     * displayed in the given locale.
+     *
+     * @param formatString
+     *            the format string to format the date with
+     * @param locale
+     *            the locale to use
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
+     * @throws IllegalArgumentException
+     *             if either argument is {@code null}
+     * @see <a
+     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
+     *      String Syntax</a>
+     */
+    public DateRenderer(String formatString, Locale locale, String nullRepresentation)
+            throws IllegalArgumentException {
+        super(Date.class, nullRepresentation);
 
         if (formatString == null) {
             throw new IllegalArgumentException("format string may not be null");
@@ -121,7 +180,20 @@ public class DateRenderer extends AbstractRenderer<Date> {
      *             if {@code dateFormat} is {@code null}
      */
     public DateRenderer(DateFormat dateFormat) throws IllegalArgumentException {
-        super(Date.class);
+        this(dateFormat, "");
+    }
+    /**
+     * Creates a new date renderer.
+     * <p>
+     * The renderer is configured to render with he given date format.
+     *
+     * @param dateFormat
+     *            the date format to use when rendering dates
+     * @throws IllegalArgumentException
+     *             if {@code dateFormat} is {@code null}
+     */
+    public DateRenderer(DateFormat dateFormat, String nullRepresentation) throws IllegalArgumentException {
+        super(Date.class, nullRepresentation);
         if (dateFormat == null) {
             throw new IllegalArgumentException("date format may not be null");
         }
@@ -132,9 +204,16 @@ public class DateRenderer extends AbstractRenderer<Date> {
     }
 
     @Override
+    public String getNullRepresentation() {
+        return super.getNullRepresentation();
+    }
+
+    @Override
     public JsonValue encode(Date value) {
         String dateString;
-        if (dateFormat != null) {
+        if (value == null) {
+            dateString = getNullRepresentation();
+        } else if (dateFormat != null) {
             dateString = dateFormat.format(value);
         } else {
             dateString = String.format(locale, formatString, value);

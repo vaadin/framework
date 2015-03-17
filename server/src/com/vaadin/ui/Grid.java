@@ -3286,8 +3286,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private final Class<T> presentationType;
 
-        protected AbstractRenderer(Class<T> presentationType) {
+        private final String nullRepresentation;
+
+        protected AbstractRenderer(Class<T> presentationType, String nullRepresentation) {
             this.presentationType = presentationType;
+            this.nullRepresentation = nullRepresentation;
+        }
+
+        protected AbstractRenderer(Class<T> presentationType) {
+            this(presentationType, null);
         }
 
         /**
@@ -3317,7 +3324,19 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         @Override
         public JsonValue encode(T value) {
-            return encode(value, getPresentationType());
+            if (value == null) {
+                return encode(getNullRepresentation(), String.class);
+            } else {
+                return encode(value, getPresentationType());
+            }
+        }
+
+        /**
+         * Null representation for the renderer
+         * @return a textual representation of {@code null}
+         */
+        protected String getNullRepresentation() {
+            return nullRepresentation;
         }
 
         /**
