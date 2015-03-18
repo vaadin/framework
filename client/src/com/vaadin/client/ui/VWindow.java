@@ -558,6 +558,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 w.bringToFrontSequence = -1;
             }
         }
+        focusTopmostModalWindow();
+    }
+
+    private static void focusTopmostModalWindow() {
+        // If we call focus() directly without scheduling, it does not work in
+        // IE and FF.
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                VWindow topmost = getTopmostWindow();
+                if ((topmost != null) && (topmost.vaadinModality)) {
+                    topmost.focus();
+                }
+            }
+        });
     }
 
     @Override
@@ -690,6 +705,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         while (curIndex < windowOrder.size()) {
             windowOrder.get(curIndex).setWindowOrder(curIndex++);
         }
+        focusTopmostModalWindow();
     }
 
     private void fixIE8FocusCaptureIssue() {
