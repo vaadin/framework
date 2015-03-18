@@ -52,6 +52,8 @@ import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ColumnReorderEvent;
 import com.vaadin.ui.Grid.ColumnReorderListener;
+import com.vaadin.ui.Grid.ColumnVisibilityChangeEvent;
+import com.vaadin.ui.Grid.ColumnVisibilityChangeListener;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -117,6 +119,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         public void columnReorder(ColumnReorderEvent event) {
             log("Columns reordered, userOriginated: "
                     + event.isUserOriginated());
+        }
+    };
+
+    private ColumnVisibilityChangeListener columnVisibilityListener = new ColumnVisibilityChangeListener() {
+        @Override
+        public void columnVisibilityChanged(ColumnVisibilityChangeEvent event) {
+            log("Visibility changed: "//
+                    + "propertyId: " + event.getColumn().getPropertyId() //
+                    + ", isHidden: " + event.getColumn().isHidden() //
+                    + ", userOriginated: " + event.isUserOriginated());
         }
     };
 
@@ -532,6 +544,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 });
+        createBooleanAction("ColumnVisibilityChangeListener", "State", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        if (value) {
+                            grid.addColumnVisibilityChangeListener(columnVisibilityListener);
+                        } else {
+                            grid.removeColumnVisibilityChangeListener(columnVisibilityListener);
+                        }
+                    }
+                });
 
         createBooleanAction("Single select allow deselect", "State",
                 singleSelectAllowDeselect, new Command<Grid, Boolean>() {
@@ -676,6 +699,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
     }
 
+    @SuppressWarnings("boxing")
     protected void createColumnActions() {
         createCategory("Columns", null);
 
@@ -736,6 +760,24 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, c);
 
+            createBooleanAction("Hidable", getColumnProperty(c), false,
+                    new Command<Grid, Boolean>() {
+                        @Override
+                        public void execute(Grid c, Boolean hidable,
+                                Object propertyId) {
+                            grid.getColumn(propertyId).setHidable(hidable);
+                        }
+                    }, getColumnProperty(c));
+
+            createBooleanAction("Hidden", getColumnProperty(c), false,
+                    new Command<Grid, Boolean>() {
+                        @Override
+                        public void execute(Grid c, Boolean hidden,
+                                Object propertyId) {
+                            grid.getColumn(propertyId).setHidden(hidden);
+                        }
+                    }, getColumnProperty(c));
+
             createCategory("Column " + c + " Width", getColumnProperty(c));
 
             createClickAction("Auto", "Column " + c + " Width",
@@ -753,7 +795,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             createClickAction("25.5px", "Column " + c + " Width",
                     new Command<Grid, Void>() {
                         @Override
-                        @SuppressWarnings("boxing")
                         public void execute(Grid grid, Void value,
                                 Object columnIndex) {
                             grid.getColumns().get((Integer) columnIndex)

@@ -167,6 +167,67 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
+     * An event listener for column visibility change events in the Grid.
+     * 
+     * @since
+     */
+    public interface ColumnVisibilityChangeListener extends Serializable {
+        /**
+         * Called when a column has become hidden or unhidden.
+         * 
+         * @param event
+         */
+        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
+    }
+
+    /**
+     * An event that is fired when a column becomes hidden or unhidden.
+     * 
+     * @since
+     */
+    public static class ColumnVisibilityChangeEvent extends Component.Event {
+
+        private final Column column;
+        private final boolean userOriginated;
+
+        /**
+         * Constructor for a column visibility change event.
+         * 
+         * @param column
+         *            the column that changed its visibility
+         * @param isUserOriginated
+         *            <code>true</code> iff the event was triggered by an UI
+         *            interaction
+         */
+        public ColumnVisibilityChangeEvent(Component source, Column column,
+                boolean isUserOriginated) {
+            super(source);
+            this.column = column;
+            userOriginated = isUserOriginated;
+        }
+
+        /**
+         * Gets the column that became hidden or unhidden.
+         * 
+         * @return the column that became hidden or unhidden.
+         * @see Column#isHidden()
+         */
+        public Column getColumn() {
+            return column;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+    }
+
+    /**
      * Custom field group that allows finding property types before an item has
      * been bound.
      */
@@ -2715,6 +2776,66 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Field<?> getEditorField() {
             return grid.getEditorField(getPropertyId());
         }
+
+        /**
+         * Hides or shows the column. By default columns are visible before
+         * explicitly hiding them.
+         * 
+         * @since
+         * @param hidden
+         *            <code>true</code> to hide the column, <code>false</code>
+         *            to show
+         */
+        public void setHidden(boolean hidden) {
+            if (hidden != getState().hidden) {
+                getState().hidden = hidden;
+                grid.markAsDirty();
+                grid.fireColumnVisibilityChangeEvent(this, false);
+            }
+        }
+
+        /**
+         * Is this column hidden. Default is {@code false}.
+         * 
+         * @since
+         * @return <code>true</code> if the column is currently hidden,
+         *         <code>false</code> otherwise
+         */
+        public boolean isHidden() {
+            return getState().hidden;
+        }
+
+        /**
+         * Set whether it is possible for the user to hide this column or not.
+         * Default is {@code false}.
+         * <p>
+         * <em>Note:</em> it is still possible to hide the column
+         * programmatically using {@link #setHidden(boolean)}
+         * 
+         * @since
+         * @param hidable
+         *            <code>true</code> iff the column may be hidable by the
+         *            user via UI interaction
+         */
+        public void setHidable(boolean hidable) {
+            getState().hidable = hidable;
+            grid.markAsDirty();
+        }
+
+        /**
+         * Is it possible for the the user to hide this column. Default is
+         * {@code false}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically hidden using
+         * {@link #setHidden(boolean)} regardless of the returned value.
+         * 
+         * @since
+         * @return <code>true</code> if the user can hide the column,
+         *         <code>false</code> if not
+         */
+        public boolean isHidable() {
+            return getState().hidable;
+        }
     }
 
     /**
@@ -2951,6 +3072,11 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private static final Method COLUMN_REORDER_METHOD = ReflectTools
             .findMethod(ColumnReorderListener.class, "columnReorder",
                     ColumnReorderEvent.class);
+
+    private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
+            .findMethod(ColumnVisibilityChangeListener.class,
+                    "columnVisibilityChanged",
+                    ColumnVisibilityChangeEvent.class);
 
     /**
      * Creates a new Grid with a new {@link IndexedContainer} as the data
@@ -5242,4 +5368,37 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
     }
+
+    /**
+     * Registers a new column visibility change listener
+     * 
+     * @since
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnVisibilityChangeListener(
+            ColumnVisibilityChangeListener listener) {
+        addListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column visibility change listener
+     * 
+     * @since
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnVisibilityChangeListener(
+            ColumnVisibilityChangeListener listener) {
+        removeListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
+    }
+
+    private void fireColumnVisibilityChangeEvent(Column column,
+            boolean isUserOriginated) {
+        fireEvent(new ColumnVisibilityChangeEvent(this, column,
+                isUserOriginated));
+    }
+
 }

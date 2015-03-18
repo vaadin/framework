@@ -76,4 +76,10 @@ public class GridColumnState implements Serializable {
      * minWidth is less than the calculated width, minWidth will win.
      */
     public double minWidth = GridConstants.DEFAULT_MIN_WIDTH;
+
+    /** Is the column currently hidden. */
+    public boolean hidden = false;
+
+    /** Can the column be hidden by the UI. */
+    public boolean hidable = false;
 }
