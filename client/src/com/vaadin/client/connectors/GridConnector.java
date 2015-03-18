@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Timer;
@@ -40,6 +39,7 @@ import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
@@ -107,8 +107,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout, RpcDataSourceConnector.DetailsListener,
-        DeferredWorker {
+        SimpleManagedLayout, DeferredWorker {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -533,6 +532,25 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
 
     private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher();
+
+    private final DetailsListener detailsListener = new DetailsListener() {
+        @Override
+        public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
+            if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE)) {
+                getWidget().setDetailsVisible(rowIndex, true);
+            } else {
+                getWidget().setDetailsVisible(rowIndex, false);
+            }
+
+            detailsConnectorFetcher.schedule();
+        }
+
+        @Override
+        public void closeDetails(int rowIndex) {
+            getWidget().setDetailsVisible(rowIndex, false);
+        }
+    };
 
     @Override
     @SuppressWarnings("unchecked")
@@ -1145,19 +1163,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
-    public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
-        if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
-                && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE)) {
-            getWidget().setDetailsVisible(rowIndex, true);
-        } else {
-            getWidget().setDetailsVisible(rowIndex, false);
-        }
-
-        detailsConnectorFetcher.schedule();
-    }
-
-    @Override
     public boolean isWorkPending() {
         return detailsConnectorFetcher.isWorkPending();
+    }
+
+    public DetailsListener getDetailsListener() {
+        return detailsListener;
     }
 }

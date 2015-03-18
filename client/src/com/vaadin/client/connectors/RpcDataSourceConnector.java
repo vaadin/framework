@@ -64,6 +64,14 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
          * @see GridState#JSONKEY_DETAILS_VISIBLE
          */
         void reapplyDetailsVisibility(int rowIndex, JsonObject row);
+
+        /**
+         * Closes details for a row.
+         * 
+         * @param rowIndex
+         *            the index of the row for which to close details
+         */
+        void closeDetails(int rowIndex);
     }
 
     public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
@@ -213,6 +221,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                         rowData.get(i));
             }
         }
+
+        @Override
+        protected void onDropFromCache(int rowIndex) {
+            detailsListener.closeDetails(rowIndex);
+        }
     }
 
     private final RpcDataSource dataSource = new RpcDataSource();
@@ -220,7 +233,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         GridConnector gridConnector = (GridConnector) target;
-        dataSource.setDetailsListener(gridConnector);
+        dataSource.setDetailsListener(gridConnector.getDetailsListener());
         gridConnector.setDataSource(dataSource);
     }
 }
