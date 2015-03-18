@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
@@ -110,22 +111,28 @@ public class DesignFormatter implements Serializable {
         converterMap.put(boolean.class, booleanConverter);
 
         // floats and doubles use formatters
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
-                "en_US"));
+        final DecimalFormatSymbols symbols = new DecimalFormatSymbols(
+                new Locale("en_US"));
         final DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
-        converterMap.put(Float.class, new StringToFloatConverter() {
+
+        Converter<String, ?> floatConverter = new StringToFloatConverter() {
             @Override
-            protected java.text.NumberFormat getFormat(Locale locale) {
+            protected NumberFormat getFormat(Locale locale) {
                 return fmt;
             };
-        });
-        converterMap.put(Double.class, new StringToDoubleConverter() {
+        };
+        converterMap.put(Float.class, floatConverter);
+        converterMap.put(float.class, floatConverter);
+
+        Converter<String, ?> doubleConverter = new StringToDoubleConverter() {
             @Override
-            protected java.text.NumberFormat getFormat(Locale locale) {
+            protected NumberFormat getFormat(Locale locale) {
                 return fmt;
             };
-        });
+        };
+        converterMap.put(Double.class, doubleConverter);
+        converterMap.put(double.class, doubleConverter);
 
         // strings do nothing
         converterMap.put(String.class, new Converter<String, String>() {
@@ -169,7 +176,7 @@ public class DesignFormatter implements Serializable {
 
         };
         converterMap.put(Character.class, charConverter);
-        converterMap.put(Character.TYPE, charConverter);
+        converterMap.put(char.class, charConverter);
 
         converterMap.put(Date.class, new DesignDateConverter());
         converterMap.put(ShortcutAction.class,
