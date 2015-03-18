@@ -66,6 +66,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -2791,6 +2792,11 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Sidebar displaying toggles for hidable columns and additional custom
      * widgets.
+     * <p>
+     * The button for opening the sidebar is automatically visible inside the
+     * grid, if it contains any column hiding options or custom widgets. The
+     * column hiding toggles and custom widgets become visible once the sidebar
+     * has been opened.
      * 
      * @since
      */
@@ -2808,13 +2814,23 @@ public class Grid<T> extends ResizeComposite implements
             }
         };
 
+        /**
+         * Contains all the widgets which should be shown once the sidebar is
+         * opened
+         */
+        private final List<Widget> widgets = new ArrayList<Widget>();
+
         private final VerticalPanel rootContainer;
 
         private final VButton openCloseButton;
 
+        private final Grid<?> grid;
+
         private boolean open;
 
-        public Sidebar() {
+        public Sidebar(Grid<?> grid) {
+            this.grid = grid;
+
             rootContainer = new VerticalPanel();
             initWidget(rootContainer);
 
@@ -2838,6 +2854,9 @@ public class Grid<T> extends ResizeComposite implements
             if (!open) {
                 addStyleName("opened");
                 open = true;
+                for (Widget w : widgets) {
+                    rootContainer.add(w);
+                }
             }
         }
 
@@ -2850,6 +2869,8 @@ public class Grid<T> extends ResizeComposite implements
             if (open) {
                 removeStyleName("opened");
                 open = false;
+                rootContainer.clear();
+                rootContainer.add(openCloseButton);
             }
         }
 
@@ -2866,10 +2887,156 @@ public class Grid<T> extends ResizeComposite implements
             return open;
         }
 
+        /**
+         * Adds or moves the given widget to the end of the sidebar.
+         * 
+         * @param widget
+         *            the widget to add or move
+         */
+        public void add(Widget widget) {
+            widgets.remove(widget);
+            widgets.add(widget);
+            if (open) {
+                rootContainer.add(widget);
+            }
+            updateVisibility();
+        }
+
+        /**
+         * Removes the given widget from the sidebar.
+         * 
+         * @param widget
+         *            the widget to remove
+         */
+        public void remove(Widget widget) {
+            widgets.remove(widget);
+            if (open) {
+                rootContainer.remove(widget);
+            }
+            updateVisibility();
+        }
+
+        /**
+         * Inserts given widget to the given index inside the sidebar. If the
+         * widget is already in the sidebar, then it is moved to the new index.
+         * <p>
+         * See
+         * {@link VerticalPanel#insert(com.google.gwt.user.client.ui.IsWidget, int)}
+         * for further details.
+         * 
+         * @param widget
+         *            the widget to insert
+         * @param beforeIndex
+         *            0-based index position for the widget.
+         */
+        public void insert(Widget widget, int beforeIndex) {
+            widgets.remove(widget);
+            widgets.add(beforeIndex, widget);
+            if (open) {
+                // the first widget in the container is always the open button
+                rootContainer.insert(widget, beforeIndex + 1);
+            }
+            updateVisibility();
+        }
+
         @Override
         public void setStylePrimaryName(String styleName) {
             super.setStylePrimaryName(styleName);
             openCloseButton.setStylePrimaryName(styleName + "-button");
+        }
+
+        private void updateVisibility() {
+            final boolean hasWidgets = widgets.size() > 0;
+            final boolean isVisible = getParent() != null;
+            if (isVisible && !hasWidgets) {
+                getElement().removeFromParent();
+                removeFromParent();
+            } else if (!isVisible && hasWidgets) {
+                grid.getElement().appendChild(getElement());
+                Grid.setParent(this, grid);
+            }
+        }
+
+    }
+
+    /**
+     * UI and functionality related to hiding columns with toggles in the
+     * sidebar.
+     */
+    private final class ColumnHider extends VerticalPanel {
+
+        ColumnHider() {
+            setStyleName("column-hiding-panel");
+        }
+
+        /** Map from columns to their hiding toggles, component might change */
+        private HashMap<Column<?, T>, ToggleButton> columnToHidingToggleMap = new HashMap<Grid.Column<?, T>, ToggleButton>();
+
+        private void updateColumnHidable(final Column<?, T> column) {
+            if (column.isHidable()) {
+                ToggleButton cb = columnToHidingToggleMap.get(column);
+                if (cb == null) {
+                    cb = createToggle(column);
+                }
+                updateToggleValue(cb, column.isHidden());
+            } else if (columnToHidingToggleMap.containsValue(column)) {
+                ((Widget) columnToHidingToggleMap.remove(column))
+                        .removeFromParent();
+            }
+            updateTogglesOrder();
+            updatePanelVisibility();
+        }
+
+        private ToggleButton createToggle(final Column<?, T> column) {
+            ToggleButton toggle = new ToggleButton(column.headerCaption);
+            toggle.addStyleName("column-hiding-toggle");
+            toggle.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                @Override
+                public void onValueChange(ValueChangeEvent<Boolean> event) {
+                    column.setHidden(!event.getValue(), true);
+                }
+            });
+            columnToHidingToggleMap.put(column, toggle);
+            return toggle;
+        }
+
+        private void updateTogglesOrder() {
+            clear();
+            for (Column<?, T> c : getColumns()) {
+                if (c.isHidable()) {
+                    add(columnToHidingToggleMap.get(c));
+                }
+            }
+        }
+
+        private void updatePanelVisibility() {
+            final boolean columnHidable = getWidgetCount() > 0;
+            // parent for the panel might be null sidebar is not open
+            final boolean columnTogglesPanelIsVisible = sidebar.widgets
+                    .contains(this);
+
+            if (columnHidable && !columnTogglesPanelIsVisible) {
+                sidebar.insert(this, 0);
+            } else if (!columnHidable && columnTogglesPanelIsVisible) {
+                sidebar.remove(this);
+            }
+        }
+
+        private void updateToggleValue(Column<?, T> column) {
+            if (column.isHidable()) {
+                updateToggleValue(columnToHidingToggleMap.get(column),
+                        column.isHidden());
+            } // else we can just ignore
+        }
+
+        private void updateToggleValue(ToggleButton hasValue, boolean hidden) {
+            hasValue.setValue(!hidden, false);
+            hasValue.setStyleName("hidden", hidden);
+        }
+
+        private void updateColumnHidingToggleCaption(Column<?, T> column) {
+            columnToHidingToggleMap.get(column).setText(column.headerCaption);
         }
 
     }
@@ -2883,7 +3050,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private final Footer footer = GWT.create(Footer.class);
 
-    private final Sidebar sidebar = GWT.create(Sidebar.class);
+    private final Sidebar sidebar = new Sidebar(this);
 
     /**
      * List of columns in the grid. Order defines the visible order.
@@ -2962,6 +3129,8 @@ public class Grid<T> extends ResizeComposite implements
     private boolean enabled = true;
 
     private boolean columnReorderingAllowed;
+
+    private ColumnHider columnHider = new ColumnHider();
 
     private DragAndDropHandler dndHandler = new DragAndDropHandler();
 
@@ -3589,6 +3758,9 @@ public class Grid<T> extends ResizeComposite implements
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
                 row.getCell(this).setText(headerCaption);
+                if (isHidable()) {
+                    grid.columnHider.updateColumnHidingToggleCaption(this);
+                }
             }
         }
 
@@ -3756,6 +3928,10 @@ public class Grid<T> extends ResizeComposite implements
          *            to show
          */
         public void setHidden(boolean hidden) {
+            setHidden(hidden, false);
+        }
+
+        private void setHidden(boolean hidden, boolean userOriginated) {
             if (this.hidden != hidden) {
                 if (hidden) {
                     grid.escalator.getColumnConfiguration().removeColumns(
@@ -3766,9 +3942,10 @@ public class Grid<T> extends ResizeComposite implements
                     grid.escalator.getColumnConfiguration().insertColumns(
                             grid.getVisibleColumns().indexOf(this), 1);
                 }
+                grid.columnHider.updateToggleValue(this);
                 scheduleColumnWidthRecalculator();
                 this.grid.fireEvent(new ColumnVisibilityChangeEvent<T>(this,
-                        hidden, false));
+                        hidden, userOriginated));
             }
         }
 
@@ -3796,8 +3973,10 @@ public class Grid<T> extends ResizeComposite implements
          *            <code>false</code> if not
          */
         public void setHidable(boolean hidable) {
-            this.hidable = hidable;
-            grid.updateSideBarVisibility();
+            if (this.hidable != hidable) {
+                this.hidable = hidable;
+                grid.columnHider.updateColumnHidable(this);
+            }
         }
 
         /**
@@ -6686,6 +6865,8 @@ public class Grid<T> extends ResizeComposite implements
             row.calculateColspans();
         }
 
+        columnHider.updateTogglesOrder();
+
         fireEvent(new ColumnReorderEvent<T>());
     }
 
@@ -7040,50 +7221,16 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Setter for displaying the grid's {@link Sidebar}. The sidebar is visible
-     * automatically when there are {@link Column#setHidable(boolean) hidable
-     * columns}.
-     * <p>
-     * Setting the sidebar visible doens't open it - it only shows the button
-     * for opening it. For opening and closing the sidebar use
-     * {@link Sidebar#open()} and {@link Sidebar#close()}.
-     * 
-     * @since
-     * @param visible
-     *            <code>true</code> for showing the sidebar, <code>false</code>
-     *            for removing it
-     */
-    public void setSidebarVisible(boolean visible) {
-        if ((sidebar.getParent() != null) != visible) {
-            if (visible) {
-                getElement().appendChild(sidebar.getElement());
-                setParent(sidebar, this);
-            } else {
-                sidebar.getElement().removeFromParent();
-                sidebar.removeFromParent();
-            }
-        }
-    }
-
-    /**
      * Returns the sidebar for this grid.
+     * <p>
+     * The grid's sidebar shows the column hiding options for those columns that
+     * have been set as {@link Column#setHidable(boolean) hidable}.
      * 
      * @since
-     * @return
+     * @return the sidebar widget for this grid
      */
     public Sidebar getSidebar() {
         return sidebar;
-    }
-
-    private void updateSideBarVisibility() {
-        boolean visible = false;
-        for (Column<?, T> c : getColumns()) {
-            if (c.isHidable()) {
-                visible = true;
-                break;
-            }
-        }
-        setSidebarVisible(visible);
     }
 
 }

@@ -98,4 +98,9 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
             assertColumnHeader("HEADER (0," + indices[i] + ")", headers.get(i));
         }
     }
+
+    protected void toggleColumnReorder() {
+        selectMenuPath("Component", "State", "Column Reordering");
+    }
+
 }
