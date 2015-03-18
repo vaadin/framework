@@ -87,6 +87,17 @@
     </servlet>
 
     <servlet>
+        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
+        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+        <!-- Force web sockets to use JSR 356 standard -->
+        <init-param>
+            <param-name>org.atmosphere.cpr.asyncSupport</param-name>
+            <param-value>org.atmosphere.container.JSR356AsyncSupport</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet>
         <!-- This servlet is a separate instance for the sole purpose of 
             testing #12446 (com.vaadin.tests.components.ui.TimeoutRedirectResetsOnActivity) 
             because it modifies the VaadinService timeout parameters -->
@@ -146,6 +157,11 @@
     <servlet-mapping>
         <servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
         <url-pattern>/run-push/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
+        <url-pattern>/run-jsr356/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

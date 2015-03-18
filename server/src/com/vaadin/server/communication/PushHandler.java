@@ -22,14 +22,11 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.atmosphere.cpr.AtmosphereHandler;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
-import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.atmosphere.cpr.AtmosphereResourceImpl;
-import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
@@ -50,37 +47,13 @@ import com.vaadin.ui.UI;
 import elemental.json.JsonException;
 
 /**
- * Establishes bidirectional ("push") communication channels
+ * Handles incoming push connections and messages and dispatches them to the
+ * correct {@link UI}/ {@link AtmospherePushConnection}
  * 
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushHandler extends AtmosphereResourceEventListenerAdapter {
-
-    AtmosphereHandler handler = new AbstractReflectorAtmosphereHandler() {
-
-        @Override
-        public void onStateChange(AtmosphereResourceEvent event)
-                throws IOException {
-            super.onStateChange(event);
-            if (event.isCancelled() || event.isResumedOnTimeout()) {
-                connectionLost(event);
-            }
-        }
-
-        @Override
-        public void onRequest(AtmosphereResource resource) {
-            AtmosphereRequest req = resource.getRequest();
-
-            if (req.getMethod().equalsIgnoreCase("GET")) {
-                callWithUi(resource, establishCallback, false);
-            } else if (req.getMethod().equalsIgnoreCase("POST")) {
-                callWithUi(resource, receiveCallback,
-                        resource.transport() == TRANSPORT.WEBSOCKET);
-            }
-        }
-
-    };
+public class PushHandler {
 
     /**
      * Callback interface used internally to process an event with the
@@ -102,8 +75,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             getLogger().log(Level.FINER,
                     "New push connection for resource {0} with transport {1}",
                     new Object[] { resource.uuid(), resource.transport() });
-
-            resource.addEventListener(PushHandler.this);
 
             resource.getResponse().setContentType("text/plain; charset=UTF-8");
 
@@ -325,21 +296,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
         }
     }
 
-    @Override
-    public void onDisconnect(AtmosphereResourceEvent event) {
-        // Log event on trace level
-        super.onDisconnect(event);
-        connectionLost(event);
-    }
-
-    @Override
-    public void onThrowable(AtmosphereResourceEvent event) {
-        getLogger().log(Level.SEVERE, "Exception in push connection",
-                event.throwable());
-        connectionLost(event);
-    }
-
-    private void connectionLost(AtmosphereResourceEvent event) {
+    void connectionLost(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
@@ -506,4 +463,28 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
     private static final Logger getLogger() {
         return Logger.getLogger(PushHandler.class.getName());
     }
+
+    /**
+     * Called when a new push connection is requested to be opened by the client
+     * 
+     * @since
+     * @param resource
+     *            The related atmosphere resources
+     */
+    void onConnect(AtmosphereResource resource) {
+        callWithUi(resource, establishCallback, false);
+    }
+
+    /**
+     * Called when a message is received through the push connection
+     * 
+     * @since
+     * @param resource
+     *            The related atmosphere resources
+     */
+    void onMessage(AtmosphereResource resource) {
+        callWithUi(resource, receiveCallback,
+                resource.transport() == TRANSPORT.WEBSOCKET);
+    }
+
 }
