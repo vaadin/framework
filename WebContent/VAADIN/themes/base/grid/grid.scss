@@ -52,6 +52,8 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
   .#{$primaryStyleName}-tablewrapper {
     border: $v-grid-border;
   }
+  
+  // Column drag and drop elements
 
   .#{$primaryStyleName} .header-drag-table {
     border-spacing: 0;
@@ -73,6 +75,31 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
         background-color: $v-grid-header-drag-marked-color;
         position: absolute;
         width: 3px;
+      }
+    }
+  }
+  
+  // Sidebar
+  
+  .#{$primaryStyleName}-sidebar {
+    position: absolute;
+    top: 1px;
+    right : 0;
+    
+    background-color: $v-grid-header-background-color;
+    border-left: $v-grid-header-border;
+    border-bottom: $v-grid-header-border;    
+    z-index: 5;
+    
+    .#{$primaryStyleName}-sidebar-button {
+      height: $v-grid-header-row-height;
+      
+      &:after {
+        content: "\f0c9";
+        font-family: FontAwesome, sans-serif;
+        font-size: $v-grid-header-font-size;
+        line-height: $v-grid-header-row-height;
+        padding: 0 $v-grid-cell-padding-horizontal;
       }
     }
   }

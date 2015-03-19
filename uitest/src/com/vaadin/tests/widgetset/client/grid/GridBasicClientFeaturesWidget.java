@@ -786,7 +786,12 @@ public class GridBasicClientFeaturesWidget extends
                     column.setHidden(!column.isHidden());
                 }
             }, "Component", "Columns", "Column " + i);
-
+            addMenuCommand("Hidable", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    column.setHidable(!column.isHidable());
+                }
+            }, "Component", "Columns", "Column " + i);
             addMenuCommand("auto", new ScheduledCommand() {
                 @Override
                 public void execute() {

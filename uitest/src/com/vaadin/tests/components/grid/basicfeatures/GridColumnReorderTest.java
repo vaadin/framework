@@ -601,10 +601,6 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(1, 2, 0, 3, 4);
     }
 
-    private void toggleColumnReorder() {
-        selectMenuPath("Component", "State", "Column Reordering");
-    }
-
     private void toggleSortableColumn(int index) {
         selectMenuPath("Component", "Columns", "Column " + index, "Sortable");
     }
