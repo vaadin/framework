@@ -63,8 +63,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -2887,8 +2887,8 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Sidebar displaying toggles for hidable columns and additional custom
-     * widgets.
+     * Sidebar displaying toggles for hidable columns and custom widgets
+     * provided by the application.
      * <p>
      * The button for opening the sidebar is automatically visible inside the
      * grid, if it contains any column hiding options or custom widgets. The
@@ -2903,7 +2903,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             public void onClick(ClickEvent event) {
-                if (!open) {
+                if (!isOpen()) {
                     open();
                 } else {
                     close();
@@ -2911,77 +2911,67 @@ public class Grid<T> extends ResizeComposite implements
             }
         };
 
-        /**
-         * Contains all the widgets which should be shown once the sidebar is
-         * opened
-         */
-        private final List<Widget> widgets = new ArrayList<Widget>();
+        private final FlowPanel rootContainer;
 
-        private final VerticalPanel rootContainer;
+        private final FlowPanel content;
 
         private final VButton openCloseButton;
 
         private final Grid<?> grid;
 
-        private boolean open;
-
-        public Sidebar(Grid<?> grid) {
+        private Sidebar(Grid<?> grid) {
             this.grid = grid;
 
-            rootContainer = new VerticalPanel();
+            rootContainer = new FlowPanel();
             initWidget(rootContainer);
 
             openCloseButton = new VButton();
             openCloseButton.addClickHandler(openCloseButtonHandler);
 
             rootContainer.add(openCloseButton);
-            rootContainer
-                    .setCellHorizontalAlignment(
-                            openCloseButton,
-                            HorizontalAlignmentConstant
-                                    .endOf(com.google.gwt.i18n.client.HasDirection.Direction.LTR));
+
+            content = new FlowPanel() {
+                @Override
+                public boolean remove(Widget w) {
+                    // Check here to catch child.removeFromParent() calls
+                    boolean removed = super.remove(w);
+                    if (removed) {
+                        updateVisibility();
+                    }
+
+                    return removed;
+                }
+            };
         }
 
         /**
-         * Opens the sidebar if not yet opened.
-         * 
-         * @since
+         * Opens the sidebar if not yet opened. Opening the sidebar has no
+         * effect if it is empty.
          */
         public void open() {
-            if (!open) {
+            if (!isOpen() && isInDOM()) {
                 addStyleName("opened");
-                open = true;
-                for (Widget w : widgets) {
-                    rootContainer.add(w);
-                }
+                rootContainer.add(content);
             }
         }
 
         /**
          * Closes the sidebar if not yet closed.
-         * 
-         * @since
          */
         public void close() {
-            if (open) {
+            if (isOpen()) {
                 removeStyleName("opened");
-                open = false;
-                rootContainer.clear();
-                rootContainer.add(openCloseButton);
+                content.removeFromParent();
             }
         }
 
         /**
          * Returns whether the sidebar is open or not.
-         * <p>
-         * <em>Note:</em> The sidebar can be in "open state" but not actually
-         * visible inside grid. See {@link #isVisibleInGrid()}.
          * 
-         * @since
          * @return <code>true</code> if open, <code>false</code> if not
          */
         public boolean isOpen() {
-            return open;
+            return content.getParent() == rootContainer;
         }
 
         /**
@@ -2991,11 +2981,7 @@ public class Grid<T> extends ResizeComposite implements
          *            the widget to add or move
          */
         public void add(Widget widget) {
-            widgets.remove(widget);
-            widgets.add(widget);
-            if (open) {
-                rootContainer.add(widget);
-            }
+            content.add(widget);
             updateVisibility();
         }
 
@@ -3006,11 +2992,8 @@ public class Grid<T> extends ResizeComposite implements
          *            the widget to remove
          */
         public void remove(Widget widget) {
-            widgets.remove(widget);
-            if (open) {
-                rootContainer.remove(widget);
-            }
-            updateVisibility();
+            content.remove(widget);
+            // updateVisibility is called by remove listener
         }
 
         /**
@@ -3018,7 +3001,7 @@ public class Grid<T> extends ResizeComposite implements
          * widget is already in the sidebar, then it is moved to the new index.
          * <p>
          * See
-         * {@link VerticalPanel#insert(com.google.gwt.user.client.ui.IsWidget, int)}
+         * {@link FlowPanel#insert(com.google.gwt.user.client.ui.IsWidget, int)}
          * for further details.
          * 
          * @param widget
@@ -3027,31 +3010,32 @@ public class Grid<T> extends ResizeComposite implements
          *            0-based index position for the widget.
          */
         public void insert(Widget widget, int beforeIndex) {
-            widgets.remove(widget);
-            widgets.add(beforeIndex, widget);
-            if (open) {
-                // the first widget in the container is always the open button
-                rootContainer.insert(widget, beforeIndex + 1);
-            }
+            content.insert(widget, beforeIndex);
             updateVisibility();
         }
 
         @Override
         public void setStylePrimaryName(String styleName) {
             super.setStylePrimaryName(styleName);
+            content.setStylePrimaryName(styleName + "-content");
             openCloseButton.setStylePrimaryName(styleName + "-button");
         }
 
         private void updateVisibility() {
-            final boolean hasWidgets = widgets.size() > 0;
-            final boolean isVisible = getParent() != null;
+            final boolean hasWidgets = content.getWidgetCount() > 0;
+            final boolean isVisible = isInDOM();
             if (isVisible && !hasWidgets) {
+                Grid.setParent(this, null);
                 getElement().removeFromParent();
-                removeFromParent();
             } else if (!isVisible && hasWidgets) {
+                close();
                 grid.getElement().appendChild(getElement());
                 Grid.setParent(this, grid);
             }
+        }
+
+        private boolean isInDOM() {
+            return getParent() != null;
         }
 
     }
@@ -3109,9 +3093,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updatePanelVisibility() {
             final boolean columnHidable = getWidgetCount() > 0;
-            // parent for the panel might be null sidebar is not open
-            final boolean columnTogglesPanelIsVisible = sidebar.widgets
-                    .contains(this);
+            final boolean columnTogglesPanelIsVisible = getParent() != null;
 
             if (columnHidable && !columnTogglesPanelIsVisible) {
                 sidebar.insert(this, 0);
@@ -3224,7 +3206,6 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
-
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -7245,6 +7226,30 @@ public class Grid<T> extends ResizeComposite implements
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
+
+    private static native final void onAttach(Widget widget)
+    /*-{
+        widget.@Widget::onAttach()();
+    }-*/;
+
+    private static native final void onDetach(Widget widget)
+    /*-{
+        widget.@Widget::onDetach()();
+    }-*/;
+
+    @Override
+    protected void doAttachChildren() {
+        if (getSidebar().getParent() == this) {
+            onAttach(getSidebar());
+        }
+    }
+
+    @Override
+    protected void doDetachChildren() {
+        if (getSidebar().getParent() == this) {
+            onDetach(getSidebar());
+        }
+    }
 
     /**
      * Resets all cached pixel sizes and reads new values from the DOM. This
