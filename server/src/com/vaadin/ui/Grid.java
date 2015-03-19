@@ -254,7 +254,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * <em>Note:</em> If a component gets generated, it may not be manually
          * attached anywhere, nor may it be a reused instance &ndash; each
          * invocation of this method should produce a unique and isolated
-         * component instance.
+         * component instance. Essentially, this should mostly be a
+         * self-contained fire-and-forget method, as external references to the
+         * generated component might cause unexpected behavior.
          * 
          * @param rowReference
          *            the reference for the row for which to generate details
