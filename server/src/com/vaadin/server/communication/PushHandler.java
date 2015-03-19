@@ -387,9 +387,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
 
                 if (ui == null) {
                     getLogger()
-                            .log(Level.SEVERE,
+                            .log(Level.FINE,
                                     "Could not get UI. This should never happen,"
-                                            + " except when reloading in Firefox -"
+                                            + " except when reloading in Firefox and Chrome -"
                                             + " see http://dev.vaadin.com/ticket/14251.");
                     return;
                 } else {
