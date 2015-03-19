@@ -158,9 +158,5 @@ public class AbstractDeploymentConfigurationTest {
             return DefaultDeploymentConfiguration.DEFAULT_SEND_URLS_AS_PARAMETERS;
         }
 
-        @Override
-        public String getPushPath() {
-            return null;
-        }
     }
 }

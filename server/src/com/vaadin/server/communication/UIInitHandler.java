@@ -198,11 +198,10 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         PushMode pushMode = provider.getPushMode(event);
         if (pushMode == null) {
-            pushMode = session.getConfiguration().getPushMode();
+            pushMode = session.getService().getDeploymentConfiguration()
+                    .getPushMode();
         }
         ui.getPushConfiguration().setPushMode(pushMode);
-        ui.getPushConfiguration().setPushPath(
-                session.getConfiguration().getPushPath());
 
         Transport transport = provider.getPushTransport(event);
         if (transport != null) {

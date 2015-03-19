@@ -87,9 +87,9 @@
     </servlet>
 
     <servlet>
-        <!-- This servlet is a separate instance for the sole purpose of testing 
-            #12446 (com.vaadin.tests.components.ui.TimeoutRedirectResetsOnActivity) because 
-            it modifies the VaadinService timeout parameters -->
+        <!-- This servlet is a separate instance for the sole purpose of 
+            testing #12446 (com.vaadin.tests.components.ui.TimeoutRedirectResetsOnActivity) 
+            because it modifies the VaadinService timeout parameters -->
         <servlet-name>VaadinApplicationRunnerWithTimeoutRedirect</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
     </servlet>
@@ -111,17 +111,6 @@
         <init-param>
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
-        </init-param>
-        <async-supported>true</async-supported>
-    </servlet>
-
-    <!-- For testing custom push path with, for example, Weblogic 12.1.2 -->
-    <servlet>
-        <servlet-name>VaadinApplicationRunnerWithPushPathTest</servlet-name>
-        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-        <init-param>
-            <param-name>pushPath</param-name>
-            <param-value>ws</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
@@ -157,11 +146,6 @@
     <servlet-mapping>
         <servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
         <url-pattern>/run-push/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>VaadinApplicationRunnerWithPushPathTest</servlet-name>
-        <url-pattern>/run-pushpath/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

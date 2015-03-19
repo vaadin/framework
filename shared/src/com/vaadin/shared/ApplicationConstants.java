@@ -28,6 +28,8 @@ public class ApplicationConstants implements Serializable {
 
     public static final String HEARTBEAT_PATH = "HEARTBEAT";
 
+    public static final String PUSH_PATH = "PUSH";
+
     public static final String PUBLISHED_FILE_PATH = APP_PATH + '/'
             + "PUBLISHED";
 
@@ -74,7 +76,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the javascript containing the bootstrap code. The file is
      * located in the VAADIN directory.
-     * 
+     *
      * @since 7.3
      */
     public static final String VAADIN_BOOTSTRAP_JS = "vaadinBootstrap.js";
@@ -88,7 +90,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the debug version of the javascript containing push support.
      * The file is located in the VAADIN directory.
-     * 
+     *
      * @since 7.1.6
      */
     public static final String VAADIN_PUSH_DEBUG_JS = "vaadinPush.debug.js";
@@ -100,14 +102,14 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * The name of the parameter used to transmit RPC invocations
-     * 
+     *
      * @since 7.2
      */
     public static final String RPC_INVOCATIONS = "rpc";
 
     /**
      * The name of the parameter used to transmit the CSRF token
-     * 
+     *
      * @since 7.2
      */
     public static final String CSRF_TOKEN = "csrfToken";
@@ -116,7 +118,7 @@ public class ApplicationConstants implements Serializable {
      * The name of the parameter used to transmit the sync id. The value can be
      * set to -1 e.g. when testing with pre-recorded requests to make the
      * framework ignore the sync id.
-     * 
+     *
      * @see com.vaadin.ui.ConnectorTracker#getCurrentSyncId()
      * @since 7.2
      */

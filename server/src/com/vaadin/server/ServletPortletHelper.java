@@ -124,8 +124,7 @@ public class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isPushRequest(VaadinRequest request) {
-        return hasPathPrefix(request, request.getService()
-                .getDeploymentConfiguration().getPushPath() + '/');
+        return hasPathPrefix(request, ApplicationConstants.PUSH_PATH + '/');
     }
 
     public static void initDefaultUIProvider(VaadinSession session,
