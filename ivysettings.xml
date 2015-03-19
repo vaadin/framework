@@ -49,6 +49,8 @@
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-widgets"
             resolver="build-temp" />
+        <module organisation="com.vaadin" name="vaadin-bom"
+            resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-liferay"
             resolver="build-temp" />
     </modules>

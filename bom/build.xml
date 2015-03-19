@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-bom" basedir="." default="publish-local"
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+    <description>
+        Compiles a BOM (Bill of Materials) Maven artifact
+    </description>
+    <include file="../common.xml" as="common" />
+    <include file="../build.xml" as="vaadin" />
+
+    <!-- global properties -->
+    <property name="module.name" value="vaadin-bom" />
+    <property name="result.dir" value="result" />
+
+	<target name="bom" description="Generates a BOM (Bill of Materials) pom.xml. Either for a snapshot or a release version">
+        <fail unless="result.dir" message="No result.dir parameter given" />
+        <condition property="vaadin.maven.version" value="${vaadin.version}">
+            <isset property="build.release" />
+        </condition>
+        <!-- if this wasn't already set by the condition, this is a snapshot -->
+        <property name="vaadin.maven.version" value="${vaadin.version.major}.${vaadin.version.minor}-SNAPSHOT" />
+
+        <property name="bom.xml" location="${result.dir}/lib/vaadin-bom-${vaadin.version}.pom" />
+
+        <copy file="vaadin-bom.pom" tofile="${bom.xml}" overwrite="true">
+            <filterchain>
+                <replacestring from="@vaadin.version@" to="${vaadin.maven.version}" />
+            </filterchain>
+        </copy>
+    </target>
+	
+    <target name="publish-local" depends="bom">
+    	<antcall target="common.publish-local" />
+    </target>
+
+    <target name="clean">
+        <antcall target="common.clean" />
+    </target>
+    <target name="checkstyle">
+        <!-- No code in this module -->
+    </target>
+    <target name="test" depends="checkstyle">
+        <!-- No tests for this BOM.. -->
+    </target>
+
+</project>
