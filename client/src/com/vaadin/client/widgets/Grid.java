@@ -7263,9 +7263,16 @@ public class Grid<T> extends ResizeComposite implements
      * @since
      * @param detailsGenerator
      *            the details generator to set
+     * @throws IllegalArgumentException
+     *             if detailsGenerator is <code>null</code>;
      */
     public void setDetailsGenerator(DetailsGenerator detailsGenerator)
             throws IllegalArgumentException {
+
+        if (detailsGenerator == null) {
+            throw new IllegalArgumentException(
+                    "Details generator may not be null");
+        }
 
         this.detailsGenerator = detailsGenerator;
 
@@ -7317,12 +7324,13 @@ public class Grid<T> extends ResizeComposite implements
          * see GridSpacerUpdater.init for implementation details.
          */
 
-        if (visible && !isDetailsVisible(rowIndex)) {
+        boolean isVisible = isDetailsVisible(rowIndex);
+        if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
         }
 
-        else if (!visible && isDetailsVisible(rowIndex)) {
+        else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }

@@ -31,12 +31,15 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
@@ -45,6 +48,7 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
@@ -72,8 +76,10 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -103,7 +109,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, DeferredWorker {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -382,6 +388,127 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
+    private static class CustomDetailsGenerator implements DetailsGenerator {
+
+        private final Map<Integer, ComponentConnector> indexToDetailsMap = new HashMap<Integer, ComponentConnector>();
+
+        @Override
+        @SuppressWarnings("boxing")
+        public Widget getDetails(int rowIndex) {
+            ComponentConnector componentConnector = indexToDetailsMap
+                    .get(rowIndex);
+            if (componentConnector != null) {
+                return componentConnector.getWidget();
+            } else {
+                return null;
+            }
+        }
+
+        public void setDetailsConnectorChanges(
+                Set<DetailsConnectorChange> changes) {
+            /*
+             * To avoid overwriting connectors while moving them about, we'll
+             * take all the affected connectors, first all remove those that are
+             * removed or moved, then we add back those that are moved or added.
+             */
+
+            /* Remove moved/removed connectors from bookkeeping */
+            for (DetailsConnectorChange change : changes) {
+                Integer oldIndex = change.getOldIndex();
+                Connector removedConnector = indexToDetailsMap.remove(oldIndex);
+
+                Connector connector = change.getConnector();
+                assert removedConnector == null || connector == null
+                        || removedConnector.equals(connector) : "Index "
+                        + oldIndex + " points to " + removedConnector
+                        + " while " + connector + " was expected";
+            }
+
+            /* Add moved/added connectors to bookkeeping */
+            for (DetailsConnectorChange change : changes) {
+                Integer newIndex = change.getNewIndex();
+                ComponentConnector connector = (ComponentConnector) change
+                        .getConnector();
+
+                if (connector != null) {
+                    assert newIndex != null : "An existing connector has a missing new index.";
+
+                    ComponentConnector prevConnector = indexToDetailsMap.put(
+                            newIndex, connector);
+
+                    assert prevConnector == null : "Connector collision at index "
+                            + newIndex
+                            + " between old "
+                            + prevConnector
+                            + " and new " + connector;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("boxing")
+    private class DetailsConnectorFetcher implements DeferredWorker {
+
+        /** A flag making sure that we don't call scheduleFinally many times. */
+        private boolean fetcherHasBeenCalled = false;
+
+        /** A rolling counter for unique values. */
+        private int detailsFetchCounter = 0;
+
+        /** A collection that tracks the amount of requests currently underway. */
+        private Set<Integer> pendingFetches = new HashSet<Integer>(5);
+
+        private final ScheduledCommand lazyDetailsFetcher = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                int currentFetchId = detailsFetchCounter++;
+                pendingFetches.add(currentFetchId);
+                getRpcProxy(GridServerRpc.class).sendDetailsComponents(
+                        currentFetchId);
+                fetcherHasBeenCalled = false;
+
+                assert assertRequestDoesNotTimeout(currentFetchId);
+            }
+        };
+
+        public void schedule() {
+            if (!fetcherHasBeenCalled) {
+                Scheduler.get().scheduleFinally(lazyDetailsFetcher);
+                fetcherHasBeenCalled = true;
+            }
+        }
+
+        public void responseReceived(int fetchId) {
+            /* Ignore negative fetchIds (they're pushed, not fetched) */
+            if (fetchId >= 0) {
+                boolean success = pendingFetches.remove(fetchId);
+                assert success : "Received a response with an unidentified fetch id";
+            }
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return fetcherHasBeenCalled || !pendingFetches.isEmpty();
+        }
+
+        private boolean assertRequestDoesNotTimeout(final int fetchId) {
+            /*
+             * This method will not be compiled without asserts enabled. This
+             * only makes sure that any request does not time out.
+             * 
+             * TODO Should this be an explicit check? Is it worth the overhead?
+             */
+            new Timer() {
+                @Override
+                public void run() {
+                    assert !pendingFetches.contains(fetchId) : "Fetch id "
+                            + fetchId + " timed out.";
+                }
+            }.schedule(1000);
+            return true;
+        }
+    }
+
     /**
      * Maps a generated column id to a grid column instance
      */
@@ -438,6 +565,29 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private String lastKnownTheme = null;
 
+    private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
+
+    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher();
+
+    private final DetailsListener detailsListener = new DetailsListener() {
+        @Override
+        public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
+            if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE)) {
+                getWidget().setDetailsVisible(rowIndex, true);
+            } else {
+                getWidget().setDetailsVisible(rowIndex, false);
+            }
+
+            detailsConnectorFetcher.schedule();
+        }
+
+        @Override
+        public void closeDetails(int rowIndex) {
+            getWidget().setDetailsVisible(rowIndex, false);
+        }
+    };
+
     @Override
     @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
@@ -490,6 +640,36 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
             }
+
+            @Override
+            @SuppressWarnings("boxing")
+            public void setDetailsConnectorChanges(
+                    Set<DetailsConnectorChange> connectorChanges, int fetchId) {
+                customDetailsGenerator
+                        .setDetailsConnectorChanges(connectorChanges);
+
+                // refresh moved/added details rows
+                for (DetailsConnectorChange change : connectorChanges) {
+                    Integer oldIndex = change.getOldIndex();
+                    Integer newIndex = change.getNewIndex();
+
+                    assert oldIndex == null || oldIndex >= 0 : "Got an "
+                            + "invalid old index: " + oldIndex
+                            + " (connector: " + change.getConnector() + ")";
+                    assert newIndex == null || newIndex >= 0 : "Got an "
+                            + "invalid new index: " + newIndex
+                            + " (connector: " + change.getConnector() + ")";
+
+                    Integer index = newIndex;
+                    if (index == null) {
+                        index = oldIndex;
+                    }
+
+                    getWidget().setDetailsVisible(index, false);
+                    getWidget().setDetailsVisible(index, true);
+                }
+                detailsConnectorFetcher.responseReceived(fetchId);
+            }
         });
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);
@@ -532,10 +712,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         });
 
         getWidget().setEditorHandler(new CustomEditorHandler());
-
         getWidget().addColumnReorderHandler(columnReorderHandler);
-
+        getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
+
         layout();
     }
 
@@ -826,7 +1006,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setSortable(state.sortable);
 
         column.setHidden(state.hidden);
-        column.setHideable(state.hidable);
+        column.setHidable(state.hidable);
 
         column.setEditable(state.editable);
         column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
@@ -1033,5 +1213,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void layout() {
         getWidget().onResize();
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return detailsConnectorFetcher.isWorkPending();
+    }
+
+    public DetailsListener getDetailsListener() {
+        return detailsListener;
     }
 }

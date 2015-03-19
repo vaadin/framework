@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
 import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
+import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -51,6 +52,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.DetailComponentManager;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.renderers.Renderer;
@@ -110,11 +112,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             for (Object itemId : itemsRemoved) {
+                detailComponentManager.destroyDetails(itemId);
                 itemIdToKey.remove(itemId);
             }
 
             for (Object itemId : itemSet) {
                 itemIdToKey.put(itemId, getKey(itemId));
+                if (visibleDetails.contains(itemId)) {
+                    detailComponentManager.createDetails(itemId,
+                            indexOf(itemId));
+                }
             }
         }
 
@@ -122,7 +129,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return String.valueOf(rollingIndex++);
         }
 
-        String getKey(Object itemId) {
+        public String getKey(Object itemId) {
             String key = itemIdToKey.get(itemId);
             if (key == null) {
                 key = nextKey();
@@ -673,13 +680,23 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private boolean bareItemSetTriggeredSizeChange = false;
 
     /**
+     * This map represents all the details that are user-defined as visible.
+     * This does not reflect the status in the DOM.
+     */
+    private Set<Object> visibleDetails = new HashSet<Object>();
+
+    private DetailComponentManager detailComponentManager;
+
+    /**
      * Creates a new data provider using the given container.
      * 
      * @param container
      *            the container to make available
      */
-    public RpcDataProviderExtension(Indexed container) {
+    public RpcDataProviderExtension(Indexed container,
+            DetailComponentManager detailComponentManager) {
         this.container = container;
+        this.detailComponentManager = detailComponentManager;
         rpc = getRpcProxy(DataProviderRpc.class);
 
         registerRpc(new DataRequestRpc() {
@@ -813,6 +830,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
         final JsonObject rowObject = Json.createObject();
         rowObject.put(GridState.JSONKEY_DATA, rowData);
         rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
+
+        if (visibleDetails.contains(itemId)) {
+            rowObject.put(GridState.JSONKEY_DETAILS_VISIBLE, true);
+        }
 
         rowReference.set(itemId);
 
@@ -949,6 +970,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
             JsonArray rowArray = Json.createArray();
             rowArray.set(0, row);
             rpc.setRowData(index, rowArray);
+
+            if (isDetailsVisible(itemId)) {
+                detailComponentManager.createDetails(itemId, index);
+            }
         }
     }
 
@@ -1071,4 +1096,79 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return Logger.getLogger(RpcDataProviderExtension.class.getName());
     }
 
+    /**
+     * Marks a row's details to be visible or hidden.
+     * <p>
+     * If that row is currently in the client side's cache, this information
+     * will be sent over to the client.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item of which to change the details visibility
+     * @param visible
+     *            <code>true</code> to show the details, <code>false</code> to
+     *            hide
+     */
+    public void setDetailsVisible(Object itemId, boolean visible) {
+        final boolean modified;
+
+        if (visible) {
+            modified = visibleDetails.add(itemId);
+
+            /*
+             * We don't want to create the component here, since the component
+             * might be out of view, and thus we don't know where the details
+             * should end up on the client side. This is also a great thing to
+             * optimize away, so that in case a lot of things would be opened at
+             * once, a huge chunk of data doesn't get sent over immediately.
+             */
+
+        } else {
+            modified = visibleDetails.remove(itemId);
+
+            /*
+             * Here we can try to destroy the component no matter what. The
+             * component has been removed and should be detached from the
+             * component hierarchy. The details row will be closed on the client
+             * side automatically.
+             */
+            detailComponentManager.destroyDetails(itemId);
+        }
+
+        int rowIndex = indexOf(itemId);
+        boolean modifiedRowIsActive = activeRowHandler.activeRange
+                .contains(rowIndex);
+        if (modified && modifiedRowIsActive) {
+            updateRowData(itemId);
+        }
+    }
+
+    /**
+     * Checks whether the details for a row is marked as visible.
+     * 
+     * @since
+     * @param itemId
+     *            the id of the item of which to check the visibility
+     * @return <code>true</code> iff the detials are visible for the item. This
+     *         might return <code>true</code> even if the row is not currently
+     *         visible in the DOM
+     */
+    public boolean isDetailsVisible(Object itemId) {
+        return visibleDetails.contains(itemId);
+    }
+
+    public void refreshDetails() {
+        for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
+            detailComponentManager.refresh(itemId);
+        }
+    }
+
+    private int indexOf(Object itemId) {
+        /*
+         * It would be great if we could optimize this method away, since the
+         * normal usage of Grid doesn't need any indices to be known. It was
+         * already optimized away once, maybe we can do away with these as well.
+         */
+        return container.indexOfId(itemId);
+    }
 }
