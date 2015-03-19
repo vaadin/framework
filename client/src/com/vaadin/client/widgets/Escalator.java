@@ -3483,10 +3483,6 @@ public class Escalator extends Widget implements RequiresResize,
          * instead.
          */
         public void verifyEscalatorCount() {
-
-            // TODO
-            getLogger().warning("[[spacers]] verifying escalator row count");
-
             /*
              * This method indeed has a smell very similar to paintRemoveRows
              * and paintInsertRows.
@@ -3519,11 +3515,6 @@ public class Escalator extends Widget implements RequiresResize,
 
             if (neededEscalatorRowsDiff > 0) {
                 // needs more
-
-                // TODO
-                getLogger().warning(
-                        "[[spacers]] adding more rows while expanding the "
-                                + "body section");
 
                 /*
                  * This is a workaround for the issue where we might be scrolled
@@ -3595,11 +3586,6 @@ public class Escalator extends Widget implements RequiresResize,
             else if (neededEscalatorRowsDiff < 0) {
                 // needs less
 
-                // TODO
-                getLogger().warning(
-                        "[[spacers]] removing spacers while shrinking the body "
-                                + "section");
-
                 final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(visualRowOrder.size());
                 for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
@@ -3649,9 +3635,6 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             Profiler.enter("Escalator.BodyRowContainer.reapplyDefaultRowHeights");
-
-            // TODO
-            getLogger().warning("[[spacer]] reapply default body row heights");
 
             /* step 1: resize and reposition rows */
             for (int i = 0; i < visualRowOrder.size(); i++) {
