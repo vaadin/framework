@@ -18,6 +18,7 @@ package com.vaadin.client.widget.grid;
 import com.google.gwt.dom.client.TableCellElement;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Column;
 
 /**
  * A data class which contains information which identifies a cell being the
@@ -48,11 +49,14 @@ public class EventCellReference<T> extends CellReference<T> {
      */
     public void set(Cell targetCell) {
         int row = targetCell.getRow();
-        int column = targetCell.getColumn();
+        int columnIndexDOM = targetCell.getColumn();
+        Column<?, T> column = grid.getVisibleColumns().get(columnIndexDOM);
+
         // At least for now we don't need to have the actual TableRowElement
         // available.
         getRowReference().set(row, grid.getDataSource().getRow(row), null);
-        set(column, grid.getColumn(column));
+        int columnIndex = grid.getColumns().indexOf(column);
+        set(columnIndexDOM, columnIndex, column);
 
         this.element = targetCell.getElement();
     }

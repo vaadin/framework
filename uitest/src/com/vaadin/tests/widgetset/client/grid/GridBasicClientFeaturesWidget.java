@@ -908,6 +908,7 @@ public class GridBasicClientFeaturesWidget extends
                 public void execute() {
                     List<Column<?, List<Data>>> cols = grid.getColumns();
                     ArrayList<Column> reordered = new ArrayList<Column>(cols);
+                    final int index = cols.indexOf(column);
                     if (index == 0) {
                         Column<?, List<Data>> col = reordered.remove(0);
                         reordered.add(col);

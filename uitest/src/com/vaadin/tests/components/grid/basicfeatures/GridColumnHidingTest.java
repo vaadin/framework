@@ -27,8 +27,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 
 @TestCategory("grid")
@@ -403,10 +406,9 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         verifyColumnHidingTogglesOrder(4, 3, 1, 0);
     }
 
-    // know issue, will be fixed in next patch
     @Test
-    @Ignore
-    public void testColumnHidingAndReorder_reorderingOverHiddenColumns_orderIsKept() {
+    public void testColumnHidingAndReorder_reorderingOverHiddenColumn_orderIsKept() {
+        selectMenuPath("Component", "State", "Width", "1000px");
         toggleColumnReorder();
         toggleHideColumnAPI(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
@@ -416,6 +418,142 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
         toggleHideColumnAPI(0);
         assertColumnHeaderOrder(0, 2, 1, 3, 4, 5);
+
+        toggleHideColumnAPI(1);
+        assertColumnHeaderOrder(0, 2, 3, 4, 5);
+
+        // right side of hidden column
+        dragAndDropColumnHeader(0, 0, 2, 5);
+        assertColumnHeaderOrder(2, 0, 3, 4, 5);
+
+        toggleHideColumnAPI(1);
+        assertColumnHeaderOrder(2, 1, 0, 3, 4, 5);
+
+        toggleHideColumnAPI(0);
+        assertColumnHeaderOrder(2, 1, 3, 4, 5);
+
+        // left side of hidden column
+        dragAndDropColumnHeader(0, 0, 1, 100);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+
+        toggleHideColumnAPI(0);
+        assertColumnHeaderOrder(1, 0, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void testColumnHidingAndReorder_reorderingWithMultipleHiddenColumns_works() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        toggleColumnReorder();
+        toggleHideColumnAPI(2);
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        dragAndDropDefaultColumnHeader(0, 2, 5);
+        assertColumnHeaderOrder(1, 0, 4, 5, 6);
+
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(1, 3, 0, 4, 5, 6);
+
+        toggleHideColumnAPI(2);
+        assertColumnHeaderOrder(1, 2, 3, 0, 4, 5, 6);
+
+        toggleHideColumnAPI(0);
+        toggleHideColumnAPI(4);
+        assertColumnHeaderOrder(1, 2, 3, 5, 6);
+
+        dragAndDropDefaultColumnHeader(4, 3, 2);
+        assertColumnHeaderOrder(1, 2, 3, 6, 5);
+
+        dragAndDropDefaultColumnHeader(4, 2, 100);
+        assertColumnHeaderOrder(1, 2, 3, 5, 6);
+
+        toggleHideColumnAPI(0);
+        assertColumnHeaderOrder(1, 2, 3, 0, 5, 6);
+
+        toggleHideColumnAPI(4);
+        assertColumnHeaderOrder(1, 2, 3, 0, 4, 5, 6);
+    }
+
+    @Test
+    public void testReorderingHiddenColumns_movingHiddenColumn_indexIsUpdated() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        toggleHideColumnAPI(2);
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        moveColumnLeft(3);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(0, 1, 3, 4, 5, 6);
+        toggleHideColumnAPI(2);
+        assertColumnHeaderOrder(0, 1, 3, 2, 4, 5, 6);
+
+        toggleHideColumnAPI(2);
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        moveColumnLeft(2);
+        moveColumnLeft(2);
+        moveColumnLeft(2);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        toggleHideColumnAPI(2);
+        assertColumnHeaderOrder(2, 0, 1, 4, 5, 6);
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(2, 0, 1, 3, 4, 5, 6);
+    }
+
+    // keyboard actions not working in client side test case?
+    @Test
+    @Ignore
+    public void testNavigationWithHiddenColumns_navigatingOverHiddenColumn_goesToNextVisibleColumn() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        toggleHideColumnAPI(2);
+        toggleHideColumnAPI(3);
+        assertColumnHeaderOrder(0, 1, 4, 5, 6);
+
+        getGridElement().getCell(2, 4).click();
+        GridCellElement cell = getGridElement().getCell(2, 4);
+        assertTrue(cell.isFocused());
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_LEFT);
+        cell = getGridElement().getCell(2, 1);
+        assertTrue(cell.isFocused());
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT);
+        cell = getGridElement().getCell(2, 4);
+        assertTrue(cell.isFocused());
+    }
+
+    @Test
+    public void testNavigationWithHiddenColumns_hiddenFirstAndLastColumn_keepsNavigation() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        toggleHideColumnAPI(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 6);
+
+        getGridElement().getCell(2, 1).click();
+        assertTrue(getGridElement().getCell(2, 1).isFocused());
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_LEFT);
+        GridCellElement cell = getGridElement().getCell(2, 1);
+        assertTrue(cell.isFocused());
+
+        scrollGridHorizontallyTo(10000);
+
+        //
+        getGridElement().getHeaderCell(0, 9).click();
+        cell = getGridElement().getHeaderCell(0, 9);
+        assertTrue(cell.isFocused());
+        toggleHideColumnAPI(10);
+        toggleHideColumnAPI(11);
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT);
+        new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT);
+        toggleHideColumnAPI(10);
+        toggleHideColumnAPI(11);
+        cell = getGridElement().getHeaderCell(0, 9);
+        assertTrue(cell.isFocused());
     }
 
     private void verifyColumnHidingTogglesOrder(int... indices) {
@@ -485,6 +623,11 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     private void clickSidebarOpenButton() {
         getSidebarOpenButton().click();
+    }
+
+    private void moveColumnLeft(int index) {
+        selectMenuPath("Component", "Columns", "Column " + index,
+                "Move column left");
     }
 
     private void toggleHidableColumnAPI(int columnIndex) {

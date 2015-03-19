@@ -29,7 +29,6 @@ import com.vaadin.testbench.parallel.TestCategory;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
@@ -177,6 +176,27 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
 
         // then
         assertFocusedCell(2, 0);
+    }
+
+    @Test
+    public void testColumnReorderWithHiddenColumn_draggingFocusedCellColumnOverHiddenColumn_focusIsKeptOnCell() {
+        // given
+        toggleColumnReorder();
+        selectMenuPath("Component", "Columns", "Column 1", "Hidden");
+        focusCell(2, 2);
+        assertFocusedCell(2, 2);
+
+        // when
+        dragAndDropDefaultColumnHeader(1, 0, 10);
+
+        // then
+        assertFocusedCell(2, 2);
+
+        // when
+        dragAndDropDefaultColumnHeader(0, 2, 10);
+
+        // then
+        assertFocusedCell(2, 2);
     }
 
     @Test
@@ -339,7 +359,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         dragAndDropColumnHeader(0, 0, 4, 100);
         scrollGridHorizontallyTo(0);
-        dragAndDropColumnHeader(0, 1, 4, 80);
+        dragAndDropColumnHeader(0, 1, 4, 100);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         assertColumnHeaderOrder(1, 3, 4, 5, 2);

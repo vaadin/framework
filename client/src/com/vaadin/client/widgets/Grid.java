@@ -1449,7 +1449,7 @@ public class Grid<T> extends ResizeComposite implements
 
                 cellWrapper.appendChild(cell);
 
-                Column<?, T> column = grid.getColumn(i);
+                Column<?, T> column = grid.getVisibleColumn(i);
                 if (column.isEditable()) {
                     Widget editor = getHandler().getWidget(column);
                     if (editor != null) {
@@ -1913,28 +1913,32 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Sets the currently focused.
+         * <p>
+         * <em>NOTE:</em> the column index is the index in DOM, not the logical
+         * column index which includes hidden columns.
          * 
-         * @param row
+         * @param rowIndex
          *            the index of the row having focus
-         * @param column
-         *            the index of the column having focus
+         * @param columnIndexDOM
+         *            the index of the cell having focus
          * @param container
          *            the row container having focus
          */
-        private void setCellFocus(int row, int column, RowContainer container) {
-            if (row == rowWithFocus && cellFocusRange.contains(column)
+        private void setCellFocus(int rowIndex, int columnIndexDOM,
+                RowContainer container) {
+            if (rowIndex == rowWithFocus && cellFocusRange.contains(columnIndexDOM)
                     && container == this.containerWithFocus) {
                 refreshRow(rowWithFocus);
                 return;
             }
 
             int oldRow = rowWithFocus;
-            rowWithFocus = row;
+            rowWithFocus = rowIndex;
             Range oldRange = cellFocusRange;
 
             if (container == escalator.getBody()) {
                 scrollToRow(rowWithFocus);
-                cellFocusRange = Range.withLength(column, 1);
+                cellFocusRange = Range.withLength(columnIndexDOM, 1);
             } else {
                 int i = 0;
                 Element cell = container.getRowElement(rowWithFocus)
@@ -1943,7 +1947,7 @@ public class Grid<T> extends ResizeComposite implements
                     int colSpan = cell
                             .getPropertyInt(FlyweightCell.COLSPAN_ATTR);
                     Range cellRange = Range.withLength(i, colSpan);
-                    if (cellRange.contains(column)) {
+                    if (cellRange.contains(columnIndexDOM)) {
                         cellFocusRange = cellRange;
                         break;
                     }
@@ -1951,10 +1955,10 @@ public class Grid<T> extends ResizeComposite implements
                     ++i;
                 } while (cell != null);
             }
-
-            if (column >= escalator.getColumnConfiguration()
+            int columnIndex = getColumns().indexOf(getVisibleColumn(columnIndexDOM));
+            if (columnIndex >= escalator.getColumnConfiguration()
                     .getFrozenColumnCount()) {
-                escalator.scrollToColumn(column, ScrollDestination.ANY, 10);
+                escalator.scrollToColumn(columnIndexDOM, ScrollDestination.ANY, 10);
             }
 
             if (this.containerWithFocus == container) {
@@ -2000,7 +2004,7 @@ public class Grid<T> extends ResizeComposite implements
          *            a cell object
          */
         public void setCellFocus(CellReference<T> cell) {
-            setCellFocus(cell.getRowIndex(), cell.getColumnIndex(),
+            setCellFocus(cell.getRowIndex(), cell.getColumnIndexDOM(),
                     escalator.findRowContainer(cell.getElement()));
         }
 
@@ -2034,7 +2038,7 @@ public class Grid<T> extends ResizeComposite implements
                     --newRow;
                     break;
                 case KeyCodes.KEY_RIGHT:
-                    if (cellFocusRange.getEnd() >= getColumns().size()) {
+                    if (cellFocusRange.getEnd() >= getVisibleColumns().size()) {
                         return;
                     }
                     newColumn = cellFocusRange.getEnd();
@@ -3271,6 +3275,9 @@ public class Grid<T> extends ResizeComposite implements
         /** How much the grid is being auto scrolled while dragging. */
         private int autoScrollX;
 
+        /** Captures the value of the focused column before reordering */
+        private int focusedColumnIndex;
+
         private void initHeaderDragElementDOM() {
             if (table == null) {
                 tableHeader = DOM.createTHead();
@@ -3427,6 +3434,14 @@ public class Grid<T> extends ResizeComposite implements
                 reordered.remove(selectionColumn); // since setColumnOrder will
                                                    // add it anyway!
 
+                // capture focused cell column before reorder
+                Cell focusedCell = cellFocusHandler.getFocusedCell();
+                if (focusedCell != null) {
+                    // take hidden columns into account
+                    focusedColumnIndex = getColumns().indexOf(
+                            getVisibleColumn(focusedCell.getColumn()));
+                }
+
                 Column<?, T>[] array = reordered.toArray(new Column[reordered
                         .size()]);
                 setColumnOrder(array);
@@ -3437,26 +3452,29 @@ public class Grid<T> extends ResizeComposite implements
         private void transferCellFocusOnDrop() {
             final Cell focusedCell = cellFocusHandler.getFocusedCell();
             if (focusedCell != null) {
-                final int focusedCellColumnIndex = focusedCell.getColumn();
+                final int focusedColumnIndexDOM = focusedCell.getColumn();
                 final int focusedRowIndex = focusedCell.getRow();
                 final int draggedColumnIndex = eventCell.getColumnIndex();
                 // transfer focus if it was effected by the new column order
                 final RowContainer rowContainer = escalator
                         .findRowContainer(focusedCell.getElement());
-                if (focusedCellColumnIndex == draggedColumnIndex) {
+                if (focusedColumnIndex == draggedColumnIndex) {
                     // move with the dragged column
-                    final int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex ? latestColumnDropIndex - 1
+                    int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex ? latestColumnDropIndex - 1
                             : latestColumnDropIndex;
+                    // remove hidden columns from indexing
+                    adjustedDropIndex = getVisibleColumns().indexOf(
+                            getColumn(adjustedDropIndex));
                     cellFocusHandler.setCellFocus(focusedRowIndex,
                             adjustedDropIndex, rowContainer);
-                } else if (latestColumnDropIndex <= focusedCellColumnIndex
-                        && draggedColumnIndex > focusedCellColumnIndex) {
+                } else if (latestColumnDropIndex <= focusedColumnIndex
+                        && draggedColumnIndex > focusedColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
-                            focusedCellColumnIndex + 1, rowContainer);
-                } else if (latestColumnDropIndex > focusedCellColumnIndex
-                        && draggedColumnIndex < focusedCellColumnIndex) {
+                            focusedColumnIndexDOM + 1, rowContainer);
+                } else if (latestColumnDropIndex > focusedColumnIndex
+                        && draggedColumnIndex < focusedColumnIndex) {
                     cellFocusHandler.setCellFocus(focusedRowIndex,
-                            focusedCellColumnIndex - 1, rowContainer);
+                            focusedColumnIndexDOM - 1, rowContainer);
                 }
             }
         }
@@ -3522,15 +3540,15 @@ public class Grid<T> extends ResizeComposite implements
         private void calculatePossibleDropPositions() {
             possibleDropPositions.clear();
 
-            final int draggedCellIndex = eventCell.getColumnIndex();
+            final int draggedColumnIndex = eventCell.getColumnIndex();
             final StaticRow<?> draggedCellRow = header.getRow(eventCell
                     .getRowIndex());
-            final int draggedCellRightIndex = draggedCellIndex
+            final int draggedColumnRightIndex = draggedColumnIndex
                     + draggedCellRow.getCell(eventCell.getColumn())
                             .getColspan();
             final int frozenColumns = getSelectionAndFrozenColumnCount();
-            final Range draggedCellRange = Range.between(draggedCellIndex,
-                    draggedCellRightIndex);
+            final Range draggedCellRange = Range.between(draggedColumnIndex,
+                    draggedColumnRightIndex);
             /*
              * If the dragged cell intersects with a spanned cell in any other
              * header or footer row, then the drag is limited inside that
@@ -3579,7 +3597,7 @@ public class Grid<T> extends ResizeComposite implements
                         }
                         // the spanned cell overlaps the dragged cell (but is
                         // not the dragged cell)
-                        if (cellColumnIndex <= draggedCellIndex
+                        if (cellColumnIndex <= draggedColumnIndex
                                 && cellColumnIndex > leftBound) {
                             leftBound = cellColumnIndex;
                         }
@@ -3607,7 +3625,9 @@ public class Grid<T> extends ResizeComposite implements
             double position = getFrozenColumnsWidth();
             // iterate column indices and add possible drop positions
             for (int i = frozenColumns; i < getColumnCount(); i++) {
-                if (!unavailableColumnDropIndices.contains(i)) {
+                Column<?, T> column = getColumn(i);
+                if (!unavailableColumnDropIndices.contains(i)
+                        && !column.isHidden()) {
                     if (leftBound != -1) {
                         if (i >= leftBound && i <= rightBound) {
                             possibleDropPositions.put(position, i);
@@ -3616,8 +3636,9 @@ public class Grid<T> extends ResizeComposite implements
                         possibleDropPositions.put(position, i);
                     }
                 }
-                position += getColumn(i).getWidthActual();
+                position += column.getWidthActual();
             }
+
             if (leftBound == -1) {
                 // add the right side of the last column as columns.size()
                 possibleDropPositions.put(position, getColumnCount());
@@ -4311,8 +4332,9 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
+                        Column<?, T> column = getVisibleColumn(cell.getColumn());
                         rendererCellReference.set(cell,
-                                getColumn(cell.getColumn()));
+                                getColumns().indexOf(column), column);
                         ((ComplexRenderer<?>) renderer)
                                 .init(rendererCellReference);
                     } catch (RuntimeException e) {
@@ -4408,7 +4430,8 @@ public class Grid<T> extends ResizeComposite implements
             cellFocusHandler.updateFocusedRowStyle(row);
 
             for (FlyweightCell cell : cellsToUpdate) {
-                Column<?, T> column = getColumn(cell.getColumn());
+                Column<?, T> column = getVisibleColumn(cell.getColumn());
+                final int columnIndex = getColumns().indexOf(column);
 
                 assert column != null : "Column was not found from cell ("
                         + cell.getColumn() + "," + cell.getRow() + ")";
@@ -4418,7 +4441,8 @@ public class Grid<T> extends ResizeComposite implements
 
                 if (hasData && cellStyleGenerator != null) {
                     try {
-                        cellReference.set(cell.getColumn(), column);
+                        cellReference
+                                .set(cell.getColumn(), columnIndex, column);
                         String generatedStyle = cellStyleGenerator
                                 .getStyle(cellReference);
                         setCustomStyleName(cell.getElement(), generatedStyle);
@@ -4435,7 +4459,7 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer renderer = column.getRenderer();
 
                 try {
-                    rendererCellReference.set(cell, column);
+                    rendererCellReference.set(cell, columnIndex, column);
                     if (renderer instanceof ComplexRenderer) {
                         // Hide cell content if needed
                         ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
@@ -4509,8 +4533,9 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
+                        Column<?, T> column = getVisibleColumn(cell.getColumn());
                         rendererCellReference.set(cell,
-                                getColumn(cell.getColumn()));
+                                getColumns().indexOf(column), column);
                         ((ComplexRenderer) renderer)
                                 .destroy(rendererCellReference);
                     } catch (RuntimeException e) {
@@ -4539,7 +4564,7 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
             StaticSection.StaticRow<?> staticRow = section.getRow(row.getRow());
-            final List<Column<?, T>> columns = getColumns();
+            final List<Column<?, T>> columns = getVisibleColumns();
 
             setCustomStyleName(row.getElement(), staticRow.getStyleName());
 
@@ -4580,7 +4605,7 @@ public class Grid<T> extends ResizeComposite implements
 
             cleanup(cell);
 
-            Column<?, ?> column = getColumn(cell.getColumn());
+            Column<?, ?> column = getVisibleColumn(cell.getColumn());
             SortOrder sortingOrder = getSortOrder(column);
             if (!headerRow.isDefault() || !column.isSortable()
                     || sortingOrder == null) {
@@ -4632,7 +4657,7 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
             StaticSection.StaticRow<?> gridRow = section.getRow(row.getRow());
-            List<Column<?, T>> columns = getColumns();
+            List<Column<?, T>> columns = getVisibleColumns();
 
             for (FlyweightCell cell : attachedCells) {
                 StaticSection.StaticCell metadata = gridRow.getCell(columns
@@ -4662,7 +4687,7 @@ public class Grid<T> extends ResizeComposite implements
             if (section.getRowCount() > row.getRow()) {
                 StaticSection.StaticRow<?> gridRow = section.getRow(row
                         .getRow());
-                List<Column<?, T>> columns = getColumns();
+                List<Column<?, T>> columns = getVisibleColumns();
                 for (FlyweightCell cell : cellsToDetach) {
                     StaticSection.StaticCell metadata = gridRow.getCell(columns
                             .get(cell.getColumn()));
@@ -4999,7 +5024,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private Renderer<?> findRenderer(FlyweightCell cell) {
-        Column<?, T> column = getColumn(cell.getColumn());
+        Column<?, T> column = getVisibleColumn(cell.getColumn());
         assert column != null : "Could not find column at index:"
                 + cell.getColumn();
         return column.getRenderer();
@@ -5081,6 +5106,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Returns a column by its index in the grid.
+     * <p>
+     * <em>NOTE:</em> The indexing includes hidden columns.
      * 
      * @param index
      *            the index of the column
@@ -5093,6 +5120,15 @@ public class Grid<T> extends ResizeComposite implements
             throw new IllegalStateException("Column not found.");
         }
         return columns.get(index);
+    }
+
+    private Column<?, T> getVisibleColumn(int index)
+            throws IllegalArgumentException {
+        List<Column<?, T>> visibleColumns = getVisibleColumns();
+        if (index < 0 || index >= visibleColumns.size()) {
+            throw new IllegalStateException("Column not found.");
+        }
+        return visibleColumns.get(index);
     }
 
     /**
@@ -6878,8 +6914,10 @@ public class Grid<T> extends ResizeComposite implements
         }
         columns = newOrder;
 
+        List<Column<?, T>> visibleColumns = getVisibleColumns();
+
         // Do ComplexRenderer.init and render new content
-        conf.insertColumns(0, columns.size());
+        conf.insertColumns(0, visibleColumns.size());
 
         // Update column widths.
         for (Column<?, T> column : columns) {

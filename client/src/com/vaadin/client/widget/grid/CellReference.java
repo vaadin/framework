@@ -32,6 +32,8 @@ import com.vaadin.client.widgets.Grid;
  * @since 7.4
  */
 public class CellReference<T> {
+
+    private int columnIndexDOM;
     private int columnIndex;
     private Grid.Column<?, T> column;
     private final RowReference<T> rowReference;
@@ -42,13 +44,20 @@ public class CellReference<T> {
 
     /**
      * Sets the identifying information for this cell.
+     * <p>
+     * The difference between {@link #columnIndexDOM} and {@link #columnIndex}
+     * comes from hidden columns.
      * 
+     * @param columnIndexDOM
+     *            the index of the column in the DOM
      * @param columnIndex
      *            the index of the column
      * @param column
      *            the column object
      */
-    public void set(int columnIndex, Grid.Column<?, T> column) {
+    public void set(int columnIndexDOM, int columnIndex,
+            Grid.Column<?, T> column) {
+        this.columnIndexDOM = columnIndexDOM;
         this.columnIndex = columnIndex;
         this.column = column;
     }
@@ -82,11 +91,25 @@ public class CellReference<T> {
 
     /**
      * Gets the index of the column.
+     * <p>
+     * <em>NOTE:</em> The index includes hidden columns in the count, unlike
+     * {@link #getColumnIndexDOM()}.
      * 
      * @return the index of the column
      */
     public int getColumnIndex() {
         return columnIndex;
+    }
+
+    /**
+     * Gets the index of the cell in the DOM. The difference to
+     * {@link #getColumnIndex()} is caused by hidden columns.
+     * 
+     * @since
+     * @return the index of the column in the DOM
+     */
+    public int getColumnIndexDOM() {
+        return columnIndexDOM;
     }
 
     /**
@@ -113,7 +136,7 @@ public class CellReference<T> {
      * @return the element of the cell
      */
     public TableCellElement getElement() {
-        return rowReference.getElement().getCells().getItem(columnIndex);
+        return rowReference.getElement().getCells().getItem(columnIndexDOM);
     }
 
     /**
