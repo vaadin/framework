@@ -143,5 +143,13 @@
       width: 100%;
       height: 100%;
     }
+    
+    .v-ie8 &, .v-ie9 & {
+      // The inline style of margin-top from the <tbody> to offset the
+      // header's dimension is, for some strange reason, inherited into each
+      // contained <tr>. We need to cancel it:
+
+      margin-top: 0;
+    }
   }
 }
