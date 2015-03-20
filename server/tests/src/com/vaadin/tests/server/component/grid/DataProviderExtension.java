@@ -47,7 +47,7 @@ public class DataProviderExtension {
         container = new IndexedContainer();
         populate(container);
 
-        dataProvider = new RpcDataProviderExtension(container, null);
+        dataProvider = new RpcDataProviderExtension(container);
         keyMapper = dataProvider.getKeyMapper();
     }
 
