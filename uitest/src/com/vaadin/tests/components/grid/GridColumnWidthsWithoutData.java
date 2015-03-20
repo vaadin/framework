@@ -15,20 +15,40 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.util.EnumSet;
+
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridColumnWidthsWithoutData extends AbstractTestUI {
 
+    private SelectionMode selectionMode = SelectionMode.NONE;
     private Grid grid = createGrid(true);
 
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(grid);
+
+        NativeSelect selectionModeSelector = new NativeSelect("Selection mode",
+                EnumSet.allOf(SelectionMode.class));
+        selectionModeSelector.setValue(selectionMode);
+        selectionModeSelector.setNullSelectionAllowed(false);
+        selectionModeSelector.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                selectionMode = (SelectionMode) event.getProperty().getValue();
+                grid.setSelectionMode(selectionMode);
+            }
+        });
+        addComponent(selectionModeSelector);
 
         addComponent(new Button("Recreate without data",
                 new Button.ClickListener() {
@@ -72,6 +92,7 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
         grid.addColumn("foo");
         grid.addColumn("bar");
         grid.setWidth("300px");
+        grid.setSelectionMode(selectionMode);
 
         if (withData) {
             addDataToGrid(grid);

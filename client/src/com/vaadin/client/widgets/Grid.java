@@ -2528,7 +2528,7 @@ public class Grid<T> extends ResizeComposite implements
                 final double widthFixed = Math.max(widthAsIs,
                         column.getMinimumWidth());
                 defaultExpandRatios = defaultExpandRatios
-                        && column.getExpandRatio() == -1;
+                        && (column.getExpandRatio() == -1 || column == selectionColumn);
 
                 if (isFixedWidth) {
                     columnSizes.put(indexOfColumn(column), widthFixed);
@@ -2546,7 +2546,8 @@ public class Grid<T> extends ResizeComposite implements
                         .getExpandRatio());
                 final double newWidth = column.getWidthActual();
                 final double maxWidth = getMaxWidth(column);
-                boolean shouldExpand = newWidth < maxWidth && expandRatio > 0;
+                boolean shouldExpand = newWidth < maxWidth && expandRatio > 0
+                        && column != selectionColumn;
                 if (shouldExpand) {
                     totalRatios += expandRatio;
                     columnsToExpand.add(column);
