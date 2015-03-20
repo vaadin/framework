@@ -4494,7 +4494,7 @@ public class Escalator extends Widget implements RequiresResize,
      * The meaning of each value may differ depending on the context it is being
      * used in. Check that particular method's JavaDoc.
      */
-    public enum SpacerInclusionStrategy {
+    private enum SpacerInclusionStrategy {
         /** A representation of "the entire spacer". */
         COMPLETE,
 

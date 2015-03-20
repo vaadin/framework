@@ -42,6 +42,5 @@ public interface DetailsGenerator {
      * @return the details for the given row, or <code>null</code> to leave the
      *         details empty.
      */
-    // TODO: provide a row object instead of index (maybe, needs discussion?)
     Widget getDetails(int rowIndex);
 }

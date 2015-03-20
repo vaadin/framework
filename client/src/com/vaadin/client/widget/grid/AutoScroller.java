@@ -75,7 +75,7 @@ public class AutoScroller {
 
     public enum ScrollAxis {
         VERTICAL, HORIZONTAL
-    };
+    }
 
     /** The maximum number of pixels per second to autoscroll. */
     private static final int SCROLL_TOP_SPEED_PX_SEC = 500;
@@ -508,10 +508,10 @@ public class AutoScroller {
      * Defaults to 100px.
      * 
      * @param px
-     *            the height/width for the auto scroll area depending on
+     *            the pixel height/width for the auto scroll area depending on
      *            direction
      */
-    public void setScrollAreaPX(int px) {
+    public void setScrollArea(int px) {
         scrollAreaPX = px;
     }
 
@@ -522,7 +522,7 @@ public class AutoScroller {
      * 
      * @return size in pixels
      */
-    public int getScrollAreaPX() {
+    public int getScrollArea() {
         return scrollAreaPX;
     }
 

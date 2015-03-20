@@ -3385,7 +3385,7 @@ public class Grid<T> extends ResizeComposite implements
             dragElement.addClassName("dragged-column-header");
 
             // start the auto scroll handler
-            autoScroller.setScrollAreaPX(60);
+            autoScroller.setScrollArea(60);
             autoScroller.start(startingEvent, ScrollAxis.HORIZONTAL,
                     autoScrollerCallback);
             return true;

@@ -21,7 +21,7 @@ import com.vaadin.shared.Connector;
 
 /**
  * A description of an indexing modification for a connector. This is used by
- * Grid by internal bookkeeping updates.
+ * Grid for internal bookkeeping updates.
  * 
  * @since
  * @author Vaadin Ltd

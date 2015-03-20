@@ -33,7 +33,6 @@ public interface ColumnReorderHandler<T> extends EventHandler {
      * A column reorder event, fired by Grid when the columns of the Grid have
      * been reordered.
      * 
-     * @since
      * @param event
      *            column reorder event
      */

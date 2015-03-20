@@ -194,13 +194,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Constructor for a column visibility change event.
          * 
+         * @param source
+         *            the grid from which this event originates
          * @param column
          *            the column that changed its visibility
          * @param isUserOriginated
          *            <code>true</code> iff the event was triggered by an UI
          *            interaction
          */
-        public ColumnVisibilityChangeEvent(Component source, Column column,
+        public ColumnVisibilityChangeEvent(Grid source, Column column,
                 boolean isUserOriginated) {
             super(source);
             this.column = column;
