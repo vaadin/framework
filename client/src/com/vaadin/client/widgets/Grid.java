@@ -2901,7 +2901,7 @@ public class Grid<T> extends ResizeComposite implements
      * 
      * @since
      */
-    public static class Sidebar extends Composite {
+    private static class Sidebar extends Composite {
 
         private final ClickHandler openCloseButtonHandler = new ClickHandler() {
 
@@ -7414,7 +7414,7 @@ public class Grid<T> extends ResizeComposite implements
      * @since
      * @return the sidebar widget for this grid
      */
-    public Sidebar getSidebar() {
+    private Sidebar getSidebar() {
         return sidebar;
     }
 

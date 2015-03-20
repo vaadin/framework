@@ -80,7 +80,6 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.client.widgets.Grid.SelectionMode;
-import com.vaadin.client.widgets.Grid.Sidebar;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
@@ -199,17 +198,6 @@ public class GridBasicClientFeaturesWidget extends
     private final ListSorter<List<Data>> sorter;
 
     private boolean secondEditorError = false;
-
-    private Button sidebarEntry = new Button("Sidebar button",
-            new ClickHandler() {
-                private int count = 0;
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    count++;
-                    sidebarEntry.setText("Click count: " + count);
-                }
-            });
 
     /**
      * Our basic data object
@@ -420,7 +408,6 @@ public class GridBasicClientFeaturesWidget extends
         createInternalsMenu();
         createDataSourceMenu();
         createDetailsMenu();
-        createSidebarMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -1453,33 +1440,6 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 visible = !visible;
                 grid.setDetailsVisible(100, visible);
-            }
-        }, menupath);
-    }
-
-    private void createSidebarMenu() {
-        String[] menupath = new String[] { "Component", "Sidebar" };
-
-        addMenuCommand("Toggle sidebar visibility", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                Sidebar sidebar = grid.getSidebar();
-                if (sidebar.isOpen()) {
-                    sidebar.close();
-                } else {
-                    sidebar.open();
-                }
-            }
-        }, menupath);
-
-        addMenuCommand("Toggle sidebar entry", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (sidebarEntry.getParent() != null) {
-                    sidebarEntry.removeFromParent();
-                } else {
-                    grid.getSidebar().add(sidebarEntry);
-                }
             }
         }, menupath);
     }

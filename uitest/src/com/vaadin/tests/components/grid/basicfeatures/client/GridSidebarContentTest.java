@@ -49,54 +49,6 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
     }
 
-    @Test
-    public void testSidebarWithCustomContent() {
-        openTestURL();
-        CustomGridElement gridElement = getGridElement();
-
-        Assert.assertEquals("Sidebar should not be initially present", 0,
-                countBySelector(".v-grid-sidebar"));
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar entry");
-
-        gridElement.findElement(By.className("v-grid-sidebar-button")).click();
-
-        WebElement sidebarButton = gridElement.findElement(By
-                .cssSelector(".v-grid-sidebar-content button"));
-
-        Assert.assertEquals("Sidebar button", sidebarButton.getText());
-
-        sidebarButton.click();
-
-        Assert.assertEquals("Click count: 1", sidebarButton.getText());
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar entry");
-
-        Assert.assertEquals("Sidebar should disappear after content remove", 0,
-                countBySelector(".v-grid-sidebar"));
-    }
-
-    @Test
-    public void testProgrammaticSidebarToggle() {
-        openTestURL();
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
-
-        Assert.assertEquals("Toggling without content should't show anything",
-                0, countBySelector(".v-grid-sidebar-content button"));
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar entry");
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
-
-        Assert.assertEquals("Toggling with content should show sidebar", 1,
-                countBySelector(".v-grid-sidebar-content button"));
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
-
-        Assert.assertEquals("Toggling again should hide sidebar", 0,
-                countBySelector(".v-grid-sidebar-content button"));
-    }
-
     private int countBySelector(String cssSelector) {
         return getGridElement().findElements(By.cssSelector(cssSelector))
                 .size();
