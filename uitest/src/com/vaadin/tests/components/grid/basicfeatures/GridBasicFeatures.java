@@ -767,12 +767,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             createClickAction("Add / Remove", getColumnProperty(c),
                     new Command<Grid, String>() {
 
+                        boolean wasHidable;
+
                         @Override
                         public void execute(Grid grid, String value, Object data) {
                             String columnProperty = getColumnProperty((Integer) data);
                             if (grid.getColumn(columnProperty) == null) {
                                 grid.addColumn(columnProperty);
+                                grid.getColumn(columnProperty).setHidable(
+                                        wasHidable);
                             } else {
+                                wasHidable = grid.getColumn(columnProperty)
+                                        .isHidable();
                                 grid.removeColumn(columnProperty);
                             }
                         }

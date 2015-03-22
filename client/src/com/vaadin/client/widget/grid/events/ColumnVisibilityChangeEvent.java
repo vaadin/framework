@@ -60,7 +60,7 @@ public class ColumnVisibilityChangeEvent<T> extends
     }
 
     /**
-     * Is the column hidden or visible.
+     * Was the column set hidden or visible.
      * 
      * @return <code>true</code> if the column was hidden <code>false</code> if
      *         it was set visible

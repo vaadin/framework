@@ -68,7 +68,6 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
@@ -1926,7 +1925,8 @@ public class Grid<T> extends ResizeComposite implements
          */
         private void setCellFocus(int rowIndex, int columnIndexDOM,
                 RowContainer container) {
-            if (rowIndex == rowWithFocus && cellFocusRange.contains(columnIndexDOM)
+            if (rowIndex == rowWithFocus
+                    && cellFocusRange.contains(columnIndexDOM)
                     && container == this.containerWithFocus) {
                 refreshRow(rowWithFocus);
                 return;
@@ -1955,10 +1955,12 @@ public class Grid<T> extends ResizeComposite implements
                     ++i;
                 } while (cell != null);
             }
-            int columnIndex = getColumns().indexOf(getVisibleColumn(columnIndexDOM));
+            int columnIndex = getColumns().indexOf(
+                    getVisibleColumn(columnIndexDOM));
             if (columnIndex >= escalator.getColumnConfiguration()
                     .getFrozenColumnCount()) {
-                escalator.scrollToColumn(columnIndexDOM, ScrollDestination.ANY, 10);
+                escalator.scrollToColumn(columnIndexDOM, ScrollDestination.ANY,
+                        10);
             }
 
             if (this.containerWithFocus == container) {
@@ -3048,7 +3050,7 @@ public class Grid<T> extends ResizeComposite implements
      * UI and functionality related to hiding columns with toggles in the
      * sidebar.
      */
-    private final class ColumnHider extends VerticalPanel {
+    private final class ColumnHider extends FlowPanel {
 
         ColumnHider() {
             setStyleName("column-hiding-panel");
@@ -3073,7 +3075,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private ToggleButton createToggle(final Column<?, T> column) {
-            ToggleButton toggle = new ToggleButton(column.headerCaption);
+            ToggleButton toggle = new ToggleButton();
             toggle.addStyleName("column-hiding-toggle");
             toggle.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
@@ -3082,6 +3084,7 @@ public class Grid<T> extends ResizeComposite implements
                     column.setHidden(!event.getValue(), true);
                 }
             });
+            updateColumnHidingToggleCaption(column, toggle);
             columnToHidingToggleMap.put(column, toggle);
             return toggle;
         }
@@ -3119,7 +3122,19 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void updateColumnHidingToggleCaption(Column<?, T> column) {
-            columnToHidingToggleMap.get(column).setText(column.headerCaption);
+            updateColumnHidingToggleCaption(column,
+                    columnToHidingToggleMap.get(column));
+        }
+
+        private void updateColumnHidingToggleCaption(Column<?, T> column,
+                ToggleButton toggle) {
+            String caption = column.headerCaption;
+            if (caption == null || caption.isEmpty()) {
+                // TODO what if the content is a widget?
+                HeaderCell cell = getDefaultHeaderRow().getCell(column);
+                caption = cell.getText();
+            }
+            toggle.setText(caption);
         }
 
     }
@@ -5001,6 +5016,10 @@ public class Grid<T> extends ResizeComposite implements
         Set<String> events = new HashSet<String>();
         events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
 
+        if (column.isHidable()) {
+            columnHider.updateColumnHidable(column);
+        }
+
         sinkEvents(events);
     }
 
@@ -5061,6 +5080,10 @@ public class Grid<T> extends ResizeComposite implements
         ((Column<?, T>) column).setGrid(null);
 
         columns.remove(columnIndex);
+
+        if (column.isHidable()) {
+            columnHider.updateColumnHidable(column);
+        }
     }
 
     /**

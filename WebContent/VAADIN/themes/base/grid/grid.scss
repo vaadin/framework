@@ -84,16 +84,17 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
   .#{$primaryStyleName}-sidebar {
     position: absolute;
     top: 1px;
-    right : 0;
-    
+    right : 1px;
+
     background-color: $v-grid-header-background-color;
     border-left: $v-grid-header-border;
     border-bottom: $v-grid-header-border;    
     z-index: 5;
-    
+
     .#{$primaryStyleName}-sidebar-button {
       height: $v-grid-header-row-height;
-      
+      text-align: right;
+
       &:after {
         content: "\f0c9";
         font-family: FontAwesome, sans-serif;
@@ -101,6 +102,17 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
         line-height: $v-grid-header-row-height;
         padding: 0 $v-grid-cell-padding-horizontal;
       }
+    }
+
+    .#{$primaryStyleName}-sidebar-content {
+      
+      .column-hiding-panel {
+        display: block;
+        .column-hiding-toggle {
+          display: block;
+          padding: 3px 12px;
+        }
+      }      
     }
   }
 

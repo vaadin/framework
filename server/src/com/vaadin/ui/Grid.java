@@ -182,7 +182,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * An event that is fired when a column becomes hidden or unhidden.
+     * An event that is fired when a column's visibility changes.
      * 
      * @since
      */
@@ -190,6 +190,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private final Column column;
         private final boolean userOriginated;
+        private final boolean hidden;
 
         /**
          * Constructor for a column visibility change event.
@@ -198,25 +199,39 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          *            the grid from which this event originates
          * @param column
          *            the column that changed its visibility
+         * @param hidden
+         *            <code>true</code> if the column was hidden,
+         *            <code>false</code> if it became visible
          * @param isUserOriginated
          *            <code>true</code> iff the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid source, Column column,
-                boolean isUserOriginated) {
+                boolean hidden, boolean isUserOriginated) {
             super(source);
             this.column = column;
+            this.hidden = hidden;
             userOriginated = isUserOriginated;
         }
 
         /**
-         * Gets the column that became hidden or unhidden.
+         * Gets the column that became hidden or visible.
          * 
-         * @return the column that became hidden or unhidden.
+         * @return the column that became hidden or visible.
          * @see Column#isHidden()
          */
         public Column getColumn() {
             return column;
+        }
+
+        /**
+         * Was the column set hidden or visible.
+         * 
+         * @return <code>true</code> if the column was hidden <code>false</code>
+         *         if it was set visible
+         */
+        public boolean isHidden() {
+            return hidden;
         }
 
         /**
@@ -2828,7 +2843,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             if (hidden != getState().hidden) {
                 getState().hidden = hidden;
                 grid.markAsDirty();
-                grid.fireColumnVisibilityChangeEvent(this, false);
+                grid.fireColumnVisibilityChangeEvent(this, hidden, false);
             }
         }
 
@@ -3355,6 +3370,42 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     // server thinks it is
                     diffState.remove(diffStateKey);
                     markAsDirty();
+                }
+            }
+
+            @Override
+            public void columnVisibilityChanged(String id, boolean hidden,
+                    boolean userOriginated) {
+                final Column column = getColumnByColumnId(id);
+                final GridColumnState columnState = column.getState();
+
+                if (columnState.hidden != hidden) {
+                    columnState.hidden = hidden;
+
+                    final String diffStateKey = "columns";
+                    ConnectorTracker connectorTracker = getUI()
+                            .getConnectorTracker();
+                    JsonObject diffState = connectorTracker
+                            .getDiffState(Grid.this);
+
+                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    Type type = null;
+                    try {
+                        type = (getState(false).getClass().getDeclaredField(
+                                diffStateKey).getGenericType());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                    EncodeResult encodeResult = JsonCodec.encode(
+                            getState(false).columns, diffState, type,
+                            connectorTracker);
+
+                    diffState.put(diffStateKey, encodeResult.getEncodedValue());
+
+                    fireColumnVisibilityChangeEvent(column, hidden,
+                            userOriginated);
                 }
             }
 
@@ -5455,9 +5506,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 COLUMN_VISIBILITY_METHOD);
     }
 
-    private void fireColumnVisibilityChangeEvent(Column column,
+    private void fireColumnVisibilityChangeEvent(Column column, boolean hidden,
             boolean isUserOriginated) {
-        fireEvent(new ColumnVisibilityChangeEvent(this, column,
+        fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
                 isUserOriginated));
     }
 

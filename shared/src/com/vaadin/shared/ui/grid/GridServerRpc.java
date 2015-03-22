@@ -76,4 +76,19 @@ public interface GridServerRpc extends ServerRpc {
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
      */
     void sendDetailsComponents(int fetchId);
+
+    /**
+     * Informs the server that the column's visibility has been changed.
+     * 
+     * @since
+     * @param id
+     *            the id of the column
+     * @param hidden
+     *            <code>true</code> if hidden, <code>false</code> if unhidden
+     * @param userOriginated
+     *            <code>true</code> if triggered by user, <code>false</code> if
+     *            by code
+     */
+    void columnVisibilityChanged(String id, boolean hidden,
+            boolean userOriginated);
 }

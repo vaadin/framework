@@ -56,6 +56,8 @@ import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
@@ -388,6 +390,33 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
+    private ColumnVisibilityChangeHandler<JsonObject> columnVisibilityChangeHandler = new ColumnVisibilityChangeHandler<JsonObject>() {
+
+        @Override
+        public void onVisibilityChange(
+                ColumnVisibilityChangeEvent<JsonObject> event) {
+            if (!columnsUpdatedFromState) {
+                Column<?, JsonObject> column = event.getColumn();
+                if (column instanceof CustomGridColumn) {
+                    getRpcProxy(GridServerRpc.class).columnVisibilityChanged(
+                            ((CustomGridColumn) column).id, column.isHidden(),
+                            event.isUserOriginated());
+                    for (GridColumnState state : getState().columns) {
+                        if (state.id.equals(((CustomGridColumn) column).id)) {
+                            state.hidden = event.isHidden();
+                            break;
+                        }
+                    }
+                } else {
+                    getLogger().warning(
+                            "Visibility changed for a unknown column type in Grid: "
+                                    + column.toString() + ", type "
+                                    + column.getClass());
+                }
+            }
+        }
+    };
+
     private static class CustomDetailsGenerator implements DetailsGenerator {
 
         private final Map<Integer, ComponentConnector> indexToDetailsMap = new HashMap<Integer, ComponentConnector>();
@@ -713,6 +742,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().setEditorHandler(new CustomEditorHandler());
         getWidget().addColumnReorderHandler(columnReorderHandler);
+        getWidget().addColumnVisibilityChangeHandler(
+                columnVisibilityChangeHandler);
         getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
 
@@ -734,7 +765,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 if (!columnIdToColumn.containsKey(state.id)) {
                     addColumnFromStateChangeEvent(state);
                 }
-                updateColumnFromState(columnIdToColumn.get(state.id), state);
+                updateColumnFromStateChangeEvent(state);
             }
         }
 
@@ -947,7 +978,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private void updateColumnFromStateChangeEvent(GridColumnState columnState) {
         CustomGridColumn column = columnIdToColumn.get(columnState.id);
 
+        columnsUpdatedFromState = true;
         updateColumnFromState(column, columnState);
+        columnsUpdatedFromState = false;
 
         if (columnState.rendererConnector != column.getRendererConnector()) {
             throw new UnsupportedOperationException(

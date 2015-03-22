@@ -17,18 +17,22 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.List;
 
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.parallel.Browser;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 @TestCategory("grid")
-@RunLocally(Browser.PHANTOMJS)
 public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
 
     private static final String[] TOGGLE_LISTENER = new String[] { "Component",
@@ -40,6 +44,8 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
             + "changed: propertyId: Column 0, isHidden: true";
     private static final String COLUMN_0_BECAME_UNHIDDEN_MSG = "Visibility "
             + "changed: propertyId: Column 0, isHidden: false";
+    private static final String USER_ORIGINATED_TRUE = "userOriginated: true";
+    private static final String USER_ORIGINATED_FALSE = "userOriginated: false";
 
     @Before
     public void setUp() {
@@ -72,9 +78,11 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
 
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
         assertTrue(logContainsText(COLUMN_0_BECAME_HIDDEN_MSG));
+        assertTrue(logContainsText(USER_ORIGINATED_FALSE));
 
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
         assertTrue(logContainsText(COLUMN_0_BECAME_UNHIDDEN_MSG));
+        assertTrue(logContainsText(USER_ORIGINATED_FALSE));
     }
 
     @Test
@@ -85,5 +93,112 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         selectMenuPath(TOGGLE_LISTENER);
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
         assertFalse(logContainsText(COLUMN_0_BECAME_UNHIDDEN_MSG));
+    }
+
+    @Test
+    public void testColumnHiding_userOriginated_correctParams() {
+        selectMenuPath(TOGGLE_LISTENER);
+        toggleColumnHidable(0);
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(0).click();
+        getSidebarOpenButton().click();
+
+        assertColumnHeaderOrder(1, 2, 3);
+        assertTrue(logContainsText(COLUMN_0_BECAME_HIDDEN_MSG));
+        assertTrue(logContainsText(USER_ORIGINATED_TRUE));
+
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(0).click();
+        getSidebarOpenButton().click();
+
+        assertColumnHeaderOrder(0, 1, 2, 3);
+        assertTrue(logContainsText(COLUMN_0_BECAME_UNHIDDEN_MSG));
+        assertTrue(logContainsText(USER_ORIGINATED_TRUE));
+
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(0).click();
+        getSidebarOpenButton().click();
+
+        assertColumnHeaderOrder(1, 2, 3);
+        assertTrue(logContainsText(COLUMN_0_BECAME_HIDDEN_MSG));
+        assertTrue(logContainsText(USER_ORIGINATED_TRUE));
+    }
+
+    @Test
+    public void testColumnHiding_whenHidableColumnRemoved_toggleRemoved() {
+        toggleColumnHidable(0);
+        toggleColumnHidable(1);
+        getSidebarOpenButton().click();
+        assertNotNull(getColumnHidingToggle(0));
+
+        addRemoveColumn(0);
+
+        assertNull(getColumnHidingToggle(0));
+    }
+
+    @Test
+    @Ignore
+    // known issue, column caption not passed to toggle when added again
+    public void testColumnHiding_whenHidableColumnAdded_toggleAdded() {
+        selectMenuPath("Component", "Size", "Width", "100%");
+        toggleColumnHidable(0);
+        toggleColumnHidable(1);
+        addRemoveColumn(0);
+        addRemoveColumn(4);
+        addRemoveColumn(5);
+        addRemoveColumn(6);
+        addRemoveColumn(7);
+        addRemoveColumn(8);
+        addRemoveColumn(9);
+        addRemoveColumn(10);
+        assertColumnHeaderOrder(1, 2, 3, 11);
+
+        getSidebarOpenButton().click();
+        assertNull(getColumnHidingToggle(0));
+        getSidebarOpenButton().click();
+
+        addRemoveColumn(0);
+        assertColumnHeaderOrder(1, 2, 3, 11, 0);
+
+        getSidebarOpenButton().click();
+        assertNotNull(getColumnHidingToggle(0));
+    }
+
+    private void toggleColumnHidable(int index) {
+        selectMenuPath("Component", "Columns", "Column " + index, "Hidable");
+    }
+
+    private void addRemoveColumn(int index) {
+        selectMenuPath("Component", "Columns", "Column " + index,
+                "Add / Remove");
+    }
+
+    private WebElement getSidebar() {
+        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    private WebElement getSidebarOpenButton() {
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-button"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    /**
+     * Returns the toggle inside the sidebar for hiding the column at the given
+     * index, or null if not found.
+     */
+    private WebElement getColumnHidingToggle(int columnIndex) {
+        WebElement sidebar = getSidebar();
+        List<WebElement> elements = sidebar.findElements(By
+                .className("column-hiding-toggle"));
+        for (WebElement e : elements) {
+            if (("Column " + columnIndex).equalsIgnoreCase(e.getText())) {
+                return e;
+            }
+        }
+        return null;
     }
 }
