@@ -18,7 +18,6 @@ package com.vaadin.client.widget.grid;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
-import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
@@ -456,8 +455,7 @@ public class AutoScroller {
     }
 
     /**
-     * Starts the automatic scrolling detection. The given event must be a touch
-     * start or a left mouse triggered mouse down event.
+     * Starts the automatic scrolling detection.
      * 
      * @param startEvent
      *            the event that starts the automatic scroll
@@ -468,19 +466,12 @@ public class AutoScroller {
      */
     public void start(final NativeEvent startEvent, ScrollAxis scrollAxis,
             AutoScrollerCallback callback) {
-        if (BrowserEvents.TOUCHSTART.equals(startEvent.getType())
-                || (BrowserEvents.MOUSEDOWN.equals(startEvent.getType()) && startEvent
-                        .getButton() == NativeEvent.BUTTON_LEFT)) {
-            scrollDirection = scrollAxis;
-            this.callback = callback;
-            injectNativeHandler();
-            start(startEvent);
-            startEvent.preventDefault();
-            startEvent.stopPropagation();
-        } else {
-            throw new IllegalStateException("received unexpected event: "
-                    + startEvent.getType());
-        }
+        scrollDirection = scrollAxis;
+        this.callback = callback;
+        injectNativeHandler();
+        start();
+        startEvent.preventDefault();
+        startEvent.stopPropagation();
     }
 
     /**
@@ -526,7 +517,7 @@ public class AutoScroller {
         return scrollAreaPX;
     }
 
-    private void start(final NativeEvent event) {
+    private void start() {
         /*
          * bounds are updated whenever the autoscroll cycle starts, to make sure
          * that the widget hasn't changed in size, moved around, or whatnot.
