@@ -33,9 +33,20 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
 
         DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
 
-        assertThat(vaadinElementById("userAgent").getText(),
-                containsString(getExpectedUserAgentString(desiredCapabilities)
-                        + desiredCapabilities.getVersion()));
+        String userAgent = vaadinElementById("userAgent").getText();
+        String browserIdentifier;
+
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome version does not necessarily match the desired version
+            // because of auto updates...
+            browserIdentifier = getExpectedUserAgentString(getDesiredCapabilities())
+                    + "41";
+        } else {
+            browserIdentifier = getExpectedUserAgentString(desiredCapabilities)
+                    + desiredCapabilities.getVersion();
+        }
+
+        assertThat(userAgent, containsString(browserIdentifier));
 
         assertThat(vaadinElementById("touchDevice").getText(),
                 is("Touch device? No"));
