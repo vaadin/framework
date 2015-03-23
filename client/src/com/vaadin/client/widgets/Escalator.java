@@ -827,8 +827,8 @@ public class Escalator extends Widget implements RequiresResize,
 
             boolean verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
                     + WidgetUtil.PIXEL_EPSILON
-                    - header.heightOfSection
-                    - footer.heightOfSection;
+                    - header.getHeightOfSection()
+                    - footer.getHeightOfSection();
             boolean horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth
                     + WidgetUtil.PIXEL_EPSILON;
 
@@ -837,8 +837,8 @@ public class Escalator extends Widget implements RequiresResize,
                 if (!verticalScrollNeeded && horizontalScrollNeeded) {
                     verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
                             + WidgetUtil.PIXEL_EPSILON
-                            - header.heightOfSection
-                            - footer.heightOfSection
+                            - header.getHeightOfSection()
+                            - footer.getHeightOfSection()
                             - horizontalScrollbar.getScrollbarThickness();
                 } else {
                     horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth
@@ -860,8 +860,10 @@ public class Escalator extends Widget implements RequiresResize,
             tableWrapper.getStyle().setHeight(tableWrapperHeight, Unit.PX);
             tableWrapper.getStyle().setWidth(tableWrapperWidth, Unit.PX);
 
+            double footerHeight = footer.getHeightOfSection();
+            double headerHeight = header.getHeightOfSection();
             double vScrollbarHeight = Math.max(0, tableWrapperHeight
-                    - footer.heightOfSection - header.heightOfSection);
+                    - footerHeight - headerHeight);
             verticalScrollbar.setOffsetSize(vScrollbarHeight);
             verticalScrollbar.setScrollSize(scrollContentHeight);
 
@@ -1158,7 +1160,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             final double viewportStartPx = getScrollTop();
             final double viewportEndPx = viewportStartPx
-                    + body.calculateHeight();
+                    + body.getHeightOfSection();
 
             final double scrollTop = getScrollPos(destination, targetStartPx,
                     targetEndPx, viewportStartPx, viewportEndPx, padding);
@@ -1182,9 +1184,6 @@ public class Escalator extends Widget implements RequiresResize,
          * {@code <tfoot>}) the rows (i.e. {@code <tr>} tags) are contained in.
          */
         protected final TableSectionElement root;
-
-        /** The height of the combined rows in the DOM. Never negative. */
-        protected double heightOfSection = 0;
 
         /**
          * The primary style name of the escalator. Most commonly provided by
@@ -2097,10 +2096,24 @@ public class Escalator extends Widget implements RequiresResize,
                 refreshCells(rowRange, colRange);
             }
         }
+
+        /**
+         * The height of this table section.
+         * <p>
+         * Note that {@link Escalator#getBody() the body} will calculate its
+         * height, while the others will return a precomputed value.
+         * 
+         * @return the height of this table section
+         */
+        protected abstract double getHeightOfSection();
     }
 
     private abstract class AbstractStaticRowContainer extends
             AbstractRowContainer {
+
+        /** The height of the combined rows in the DOM. Never negative. */
+        private double heightOfSection = 0;
+
         public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
         }
@@ -2194,7 +2207,8 @@ public class Escalator extends Widget implements RequiresResize,
                  * indices are calculated from the scrollbar position.
                  */
                 verticalScrollbar.setOffsetSize(heightOfEscalator
-                        - header.heightOfSection - footer.heightOfSection);
+                        - header.getHeightOfSection()
+                        - footer.getHeightOfSection());
 
                 body.verifyEscalatorCount();
             }
@@ -2246,6 +2260,11 @@ public class Escalator extends Widget implements RequiresResize,
             assert root.isOrHasChild(tr) : "Row does not belong to this table section";
             return true;
         }
+
+        @Override
+        protected double getHeightOfSection() {
+            return Math.max(0, heightOfSection);
+        }
     }
 
     private class HeaderRowContainer extends AbstractStaticRowContainer {
@@ -2255,10 +2274,10 @@ public class Escalator extends Widget implements RequiresResize,
 
         @Override
         protected void sectionHeightCalculated() {
-            bodyElem.getStyle().setMarginTop(heightOfSection, Unit.PX);
+            bodyElem.getStyle().setMarginTop(getHeightOfSection(), Unit.PX);
             verticalScrollbar.getElement().getStyle()
-                    .setTop(heightOfSection, Unit.PX);
-            headerDeco.getStyle().setHeight(heightOfSection, Unit.PX);
+                    .setTop(getHeightOfSection(), Unit.PX);
+            headerDeco.getStyle().setHeight(getHeightOfSection(), Unit.PX);
         }
 
         @Override
@@ -2291,8 +2310,10 @@ public class Escalator extends Widget implements RequiresResize,
 
         @Override
         protected void sectionHeightCalculated() {
+            double headerHeight = header.getHeightOfSection();
+            double footerHeight = footer.getHeightOfSection();
             int vscrollHeight = (int) Math.floor(heightOfEscalator
-                    - header.heightOfSection - footer.heightOfSection);
+                    - headerHeight - footerHeight);
 
             final boolean horizontalScrollbarNeeded = columnConfiguration
                     .calculateRowWidth() > widthOfEscalator;
@@ -2300,7 +2321,8 @@ public class Escalator extends Widget implements RequiresResize,
                 vscrollHeight -= horizontalScrollbar.getScrollbarThickness();
             }
 
-            footerDeco.getStyle().setHeight(footer.heightOfSection, Unit.PX);
+            footerDeco.getStyle().setHeight(footer.getHeightOfSection(),
+                    Unit.PX);
 
             verticalScrollbar.setOffsetSize(vscrollHeight);
         }
@@ -2633,7 +2655,7 @@ public class Escalator extends Widget implements RequiresResize,
                     * getDefaultRowHeight() < getScrollTop();
             final boolean addedRowsBelowCurrentViewport = index
                     * getDefaultRowHeight() > getScrollTop()
-                    + calculateHeight();
+                    + getHeightOfSection();
 
             if (addedRowsAboveCurrentViewport) {
                 /*
@@ -2917,7 +2939,7 @@ public class Escalator extends Widget implements RequiresResize,
 
         private int getMaxEscalatorRowCapacity() {
             final int maxEscalatorRowCapacity = (int) Math
-                    .ceil(calculateHeight() / getDefaultRowHeight()) + 1;
+                    .ceil(getHeightOfSection() / getDefaultRowHeight()) + 1;
 
             /*
              * maxEscalatorRowCapacity can become negative if the headers and
@@ -3087,7 +3109,7 @@ public class Escalator extends Widget implements RequiresResize,
                     final double contentBottom = getRowCount()
                             * getDefaultRowHeight();
                     final double viewportBottom = tBodyScrollTop
-                            + calculateHeight();
+                            + getHeightOfSection();
                     if (viewportBottom <= contentBottom) {
                         /*
                          * We're in the middle of the row container, everything
@@ -3219,7 +3241,7 @@ public class Escalator extends Widget implements RequiresResize,
                          *  5       5
                          */
                         final double newScrollTop = contentBottom
-                                - calculateHeight();
+                                - getHeightOfSection();
                         setScrollTop(newScrollTop);
                         /*
                          * Manually call the scroll handler, so we get immediate
@@ -3406,15 +3428,14 @@ public class Escalator extends Widget implements RequiresResize,
             return "td";
         }
 
-        /**
-         * Calculates the height of the {@code <tbody>} as it should be rendered
-         * in the DOM.
-         */
-        private double calculateHeight() {
+        @Override
+        protected double getHeightOfSection() {
             final int tableHeight = tableWrapper.getOffsetHeight();
-            final double footerHeight = footer.heightOfSection;
-            final double headerHeight = header.heightOfSection;
-            return tableHeight - footerHeight - headerHeight;
+            final double footerHeight = footer.getHeightOfSection();
+            final double headerHeight = header.getHeightOfSection();
+
+            double heightOfSection = tableHeight - footerHeight - headerHeight;
+            return Math.max(0, heightOfSection);
         }
 
         @Override
@@ -3862,8 +3883,13 @@ public class Escalator extends Widget implements RequiresResize,
             return visualRowOrder.contains(tr);
         }
 
-        public void reapplySpacerWidths() {
+        void reapplySpacerWidths() {
             spacerContainer.reapplySpacerWidths();
+        }
+
+        void scrollToSpacer(int spacerIndex, ScrollDestination destination,
+                int padding) {
+            spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
         }
     }
 
@@ -4721,6 +4747,32 @@ public class Escalator extends Widget implements RequiresResize,
             } else if (spacerExists(rowIndex)) {
                 removeSpacer(rowIndex);
             }
+        }
+
+        @SuppressWarnings("boxing")
+        void scrollToSpacer(int spacerIndex, ScrollDestination destination,
+                int padding) {
+
+            assert !destination.equals(ScrollDestination.MIDDLE)
+                    || padding != 0 : "destination/padding check should be done before this method";
+
+            if (!rowIndexToSpacer.containsKey(spacerIndex)) {
+                throw new IllegalArgumentException("No spacer open at index "
+                        + spacerIndex);
+            }
+
+            SpacerImpl spacer = rowIndexToSpacer.get(spacerIndex);
+            double targetStartPx = spacer.getTop();
+            double targetEndPx = targetStartPx + spacer.getHeight();
+
+            Range viewportPixels = getViewportPixels();
+            double viewportStartPx = viewportPixels.getStart();
+            double viewportEndPx = viewportPixels.getEnd();
+
+            double scrollTop = getScrollPos(destination, targetStartPx,
+                    targetEndPx, viewportStartPx, viewportEndPx, padding);
+
+            setScrollTop(scrollTop);
         }
 
         public void reapplySpacerWidths() {
@@ -5812,10 +5864,7 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        if (destination == ScrollDestination.MIDDLE && padding != 0) {
-            throw new IllegalArgumentException(
-                    "You cannot have a padding with a MIDDLE destination");
-        }
+        validateScrollDestination(destination, padding);
         verifyValidColumnIndex(columnIndex);
 
         if (columnIndex < columnConfiguration.frozenColumns) {
@@ -5856,10 +5905,7 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        if (destination == ScrollDestination.MIDDLE && padding != 0) {
-            throw new IllegalArgumentException(
-                    "You cannot have a padding with a MIDDLE destination");
-        }
+        validateScrollDestination(destination, padding);
         verifyValidRowIndex(rowIndex);
 
         scroller.scrollToRow(rowIndex, destination, padding);
@@ -5869,6 +5915,39 @@ public class Escalator extends Widget implements RequiresResize,
         if (rowIndex < 0 || rowIndex >= body.getRowCount()) {
             throw new IndexOutOfBoundsException("The given row index "
                     + rowIndex + " does not exist.");
+        }
+    }
+
+    /**
+     * Scrolls the body vertically so that the spacer at the given row index is
+     * visible and there is at least {@literal padding} pixesl to the given
+     * scroll destination
+     * 
+     * @since
+     * @param spacerIndex
+     *            the row index of the spacer to scroll to
+     * @param destination
+     *            where the spacer should be aligned visually after scrolling
+     * @param padding
+     *            the number of pixels to place between the scrolled-to spacer
+     *            and the viewport edge
+     * @throws IllegalArgumentException
+     *             if {@code spacerIndex} is not an opened spacer if
+     *             {@code destination} is {@link ScrollDestination#MIDDLE} and
+     *             padding is nonzero
+     */
+    public void scrollToSpacer(final int spacerIndex,
+            ScrollDestination destination, final int padding)
+            throws IllegalArgumentException {
+        validateScrollDestination(destination, padding);
+        body.scrollToSpacer(spacerIndex, destination, padding);
+    }
+
+    private static void validateScrollDestination(
+            final ScrollDestination destination, final int padding) {
+        if (destination == ScrollDestination.MIDDLE && padding != 0) {
+            throw new IllegalArgumentException(
+                    "You cannot have a padding with a MIDDLE destination");
         }
     }
 
@@ -6074,8 +6153,8 @@ public class Escalator extends Widget implements RequiresResize,
             return;
         }
 
-        double headerHeight = header.heightOfSection;
-        double footerHeight = footer.heightOfSection;
+        double headerHeight = header.getHeightOfSection();
+        double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle() ? horizontalScrollbar
                 .getScrollbarThickness() : 0;
@@ -6271,8 +6350,8 @@ public class Escalator extends Widget implements RequiresResize,
 
     private Range getViewportPixels() {
         int from = (int) Math.floor(verticalScrollbar.getScrollPos());
-        int to = (int) Math.ceil(body.heightOfSection);
-        return Range.between(from, to);
+        int to = (int) body.getHeightOfSection();
+        return Range.withLength(from, to);
     }
 
     @Override

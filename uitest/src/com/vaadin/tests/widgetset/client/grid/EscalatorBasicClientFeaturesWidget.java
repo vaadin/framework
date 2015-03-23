@@ -585,6 +585,13 @@ public class EscalatorBasicClientFeaturesWidget extends
                 }
             }, scrollToRowMenuPath);
         }
+
+        addMenuCommand("Set 20px default height", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setDefaultRowHeight(20);
+            }
+        }, menupath);
     }
 
     private void createRowsMenu(final RowContainer container, String[] menupath) {
@@ -683,6 +690,12 @@ public class EscalatorBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 escalator.getBody().setSpacer(rowIndex, -1);
+            }
+        }, menupath);
+        addMenuCommand("Scroll here (ANY, 0)", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.scrollToSpacer(rowIndex, ScrollDestination.ANY, 0);
             }
         }, menupath);
     }

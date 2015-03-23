@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
@@ -96,6 +97,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     @Before
     public void before() {
         openTestURL();
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, "Set 20px default height");
         populate();
     }
 
@@ -297,6 +299,41 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
              */
             assertEquals("Row 24: 0,24", getBodyCell(0, 0).getText());
         }
+    }
+
+    @Test
+    public void scrollToSpacerFromAbove() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+
+        // Browsers might vary with a few pixels.
+        Range allowableScrollRange = Range.between(765, 780);
+        int scrollTop = (int) getScrollTop();
+        assertTrue("Scroll position was not " + allowableScrollRange + ", but "
+                + scrollTop, allowableScrollRange.contains(scrollTop));
+    }
+
+    @Test
+    public void scrollToSpacerFromBelow() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        scrollVerticallyTo(999999);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+
+        // Browsers might vary with a few pixels.
+        Range allowableScrollRange = Range.between(1015, 1025);
+        int scrollTop = (int) getScrollTop();
+        assertTrue("Scroll position was not " + allowableScrollRange + ", but "
+                + scrollTop, allowableScrollRange.contains(scrollTop));
+    }
+
+    @Test
+    public void scrollToSpacerAlreadyInViewport() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        scrollVerticallyTo(1000);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+
+        // Browsers might vary with a few pixels.
+        assertEquals(getScrollTop(), 1000);
     }
 
     private static double[] getElementDimensions(WebElement element) {
