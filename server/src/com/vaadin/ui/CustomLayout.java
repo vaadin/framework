@@ -23,12 +23,16 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -71,8 +75,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * {@link #setTemplateName(String)}, that makes layout fetch the template
      * from theme, or {@link #setTemplateContents(String)}.
      */
-    protected CustomLayout() {
-        setWidth(100, UNITS_PERCENTAGE);
+    public CustomLayout() {
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
@@ -305,4 +309,32 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        for (Element child : design.children()) {
+
+            Component childComponent = designContext.readDesign(child);
+
+            if (child.hasAttr(":location")) {
+                addComponent(childComponent, child.attr(":location"));
+            } else {
+                addComponent(childComponent);
+            }
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        for (Entry<String, Component> slot : slots.entrySet()) {
+            Element child = designContext.createElement(slot.getValue());
+            if (slots.size() > 1 || !"".equals(slot.getKey())) {
+                child.attr(":location", slot.getKey());
+            }
+            design.appendChild(child);
+        }
+    }
 }
