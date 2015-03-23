@@ -1157,6 +1157,7 @@ public class Grid<T> extends ResizeComposite implements
                                     + "Grid editor");
                     grid.getEscalator().setScrollLocked(Direction.VERTICAL,
                             false);
+                    updateSelectionCheckboxesAsNeeded(true);
                 }
             }
         };
@@ -1256,6 +1257,16 @@ public class Grid<T> extends ResizeComposite implements
                     null);
             handler.cancel(request);
             state = State.INACTIVE;
+            updateSelectionCheckboxesAsNeeded(true);
+        }
+
+        private void updateSelectionCheckboxesAsNeeded(boolean isEnabled) {
+            if (grid.getSelectionModel() instanceof Multi) {
+                grid.refreshBody();
+                CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
+                        .getCell(grid.selectionColumn).getWidget();
+                checkBox.setEnabled(isEnabled);
+            }
         }
 
         /**
@@ -1282,6 +1293,7 @@ public class Grid<T> extends ResizeComposite implements
             EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
                     saveRequestCallback);
             handler.save(request);
+            updateSelectionCheckboxesAsNeeded(true);
         }
 
         /**
@@ -1346,6 +1358,7 @@ public class Grid<T> extends ResizeComposite implements
                         rowIndex, bindRequestCallback);
                 handler.bind(request);
                 grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
+                updateSelectionCheckboxesAsNeeded(false);
             }
         }
 

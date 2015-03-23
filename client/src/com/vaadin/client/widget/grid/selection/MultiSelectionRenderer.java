@@ -569,6 +569,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         InputElement checkbox = InputElement.as(cell.getElement()
                 .getFirstChildElement());
         checkbox.setChecked(data.booleanValue());
+        checkbox.setDisabled(grid.isEditorActive());
         checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRowIndex());
     }
 
