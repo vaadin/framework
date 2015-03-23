@@ -847,6 +847,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Loads the new theme and removes references to the old theme
      * 
+     * @since 7.4.3
      * @param oldTheme
      *            The name of the old theme
      * @param newTheme
@@ -856,7 +857,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @param newThemeUrl
      *            The url of the new theme
      */
-    private void replaceTheme(final String oldTheme, final String newTheme,
+    protected void replaceTheme(final String oldTheme, final String newTheme,
             String oldThemeUrl, final String newThemeUrl) {
 
         LinkElement tagToReplace = null;
@@ -961,10 +962,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * Activates the new theme. Assumes the theme has been loaded and taken into
      * use in the browser.
      * 
-     * @since 7.3
+     * @since 7.4.3
      * @param newTheme
+     *            The name of the new theme
      */
-    private void activateTheme(String newTheme) {
+    protected void activateTheme(String newTheme) {
         if (activeTheme != null) {
             getWidget().getParent().removeStyleName(activeTheme);
             VOverlay.getOverlayContainer(getConnection()).removeClassName(

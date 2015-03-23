@@ -35,7 +35,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
@@ -404,7 +403,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * updated in another widget in addition to the one returned by the
      * <code>Connector</code>'s {@link #getWidget()}, or if the prefix should be
      * different. For example see
-     * {@link PopupDateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
+     * {@link com.vaadin.client.ui.datefield.DateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
      * 
      * @param styleName

@@ -20,7 +20,17 @@ import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -378,8 +388,7 @@ public class VTooltip extends VOverlay {
     }
 
     private class TooltipEventHandler implements MouseMoveHandler,
-            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler,
-            MouseUpHandler, TouchStartHandler {
+            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler {
 
         /**
          * Current element hovered
@@ -390,11 +399,6 @@ public class VTooltip extends VOverlay {
          * Marker for handling of tooltip through focus
          */
         private boolean handledByFocus;
-
-        /**
-         * Indicates whether the tooltip is being called after a touch event.
-         */
-        private boolean touchInitiated = false;
 
         /**
          * Locate the tooltip for given element
@@ -446,19 +450,7 @@ public class VTooltip extends VOverlay {
 
         @Override
         public void onMouseMove(MouseMoveEvent mme) {
-            if (!touchInitiated) {
-                handleShowHide(mme, false);
-            }
-        }
-
-        @Override
-        public void onMouseUp(MouseUpEvent event) {
-            touchInitiated = false;
-        }
-
-        @Override
-        public void onTouchStart(TouchStartEvent te) {
-            touchInitiated = true;
+            handleShowHide(mme, false);
         }
 
         @Override
@@ -558,11 +550,9 @@ public class VTooltip extends VOverlay {
         Profiler.enter("VTooltip.connectHandlersToWidget");
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
         widget.addDomHandler(tooltipEventHandler, MouseDownEvent.getType());
-        widget.addDomHandler(tooltipEventHandler, MouseUpEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, FocusEvent.getType());
         widget.addDomHandler(tooltipEventHandler, BlurEvent.getType());
-        widget.addDomHandler(tooltipEventHandler, TouchStartEvent.getType());
         Profiler.leave("VTooltip.connectHandlersToWidget");
     }
 

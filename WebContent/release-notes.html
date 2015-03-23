@@ -47,8 +47,7 @@
                     @version-minor@</a></li>
             <li><a href="#incompatible">Incompatible or Behavior-altering Changes in
                     @version-minor@</a></li>
-            <li><a href="#knownissues">Known Issues</a></li>
-            <li><a href="#limitations">Limitations</a></li>
+            <li><a href="#knownissues">Known Issues and Limitations</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
             <li><a href="#package">Package Contents</a></li>
             <li><a href="#migrating">Migrating from Vaadin 6</a></li>
@@ -90,7 +89,7 @@
 
         <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
-        <p>The @version-minor@ includes many major and minor
+        <p>Vaadin @version-minor@ includes many major and minor
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
@@ -137,16 +136,12 @@
             <li>Window's accessibility shortcut was moved to server-side. Now setCloseShortcut overrides the default value, while addCloseShortcut can be used to add more than one shortcut key for closing the window.
                 The protected value closeShortcut in Window was removed.</li>
         </ul>
-        <h3 id="knownissues">Known Issues</h3>
+        <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
             </li>
-        </ul>
-
-        <h3 id="limitations">Limitations</h3>
-        <ul>
             <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
@@ -155,17 +150,29 @@
                 because it results in fractional component sizes in many cases, which 
                 might cause unwanted 1px gaps between components.</p>
             </li>
-            <li>Push is currently not supported in portals (See <a
-                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+            <li>Up-to-date information about compatibility issues with push functionality is available in
+            <a href="https://vaadin.com/wiki/-/wiki/Main/Working+around+push+issues">this wiki page.</a>
+            <br />
+            The most prominent limitations are:
+            <ul>
+	            <li>HTTP proxies can prevent push requests from working
+	            properly. To mitigate the issues, avoid using streaming
+	            and configure your proxy so it allows response headers
+	            to pass through before the whole response is received. 
+	            <a href="http://dev.vaadin.com/ticket/17075">#17075</a>
+	            should make long-polling work seamlessly with all proxies.
+	            </li>
+	            <li>HTTP session can not be invalidated while using
+	                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
+	            </li>
+	            <li>Cookies are not available while using websockets (<a
+	                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
+	            </li>
+	            <li>Push is currently not supported in portals (See <a
+	                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+	            </li>
+            </ul>
             </li>
-            <li>HTTP session can not be invalidated while using
-                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
-            </li>
-            <li>Cookies are not available while using websockets (<a
-                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
-            </li>
-            <li>Not all proxies are compatible with websockets or streaming.
-                Use long polling to avoid these problems.</li>
         </ul>
 
         <h2 id="vaadin">Vaadin Installation</h2>

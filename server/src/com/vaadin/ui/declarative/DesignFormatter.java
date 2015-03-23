@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
@@ -67,8 +69,8 @@ public class DesignFormatter implements Serializable {
      */
     protected void mapDefaultTypes() {
         // numbers use standard toString/valueOf approach
-        for (Class<?> c : new Class<?>[] { Integer.class, Byte.class,
-                Short.class, Long.class, BigDecimal.class }) {
+        for (Class<?> c : new Class<?>[] { Byte.class, Short.class,
+                Integer.class, Long.class }) {
             DesignToStringConverter<?> conv = new DesignToStringConverter(c);
             converterMap.put(c, conv);
             try {
@@ -110,20 +112,36 @@ public class DesignFormatter implements Serializable {
         converterMap.put(boolean.class, booleanConverter);
 
         // floats and doubles use formatters
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
-                "en_US"));
+        final DecimalFormatSymbols symbols = new DecimalFormatSymbols(
+                new Locale("en_US"));
         final DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
-        converterMap.put(Float.class, new StringToFloatConverter() {
+
+        Converter<String, ?> floatConverter = new StringToFloatConverter() {
             @Override
-            protected java.text.NumberFormat getFormat(Locale locale) {
+            protected NumberFormat getFormat(Locale locale) {
                 return fmt;
             };
-        });
-        converterMap.put(Double.class, new StringToDoubleConverter() {
+        };
+        converterMap.put(Float.class, floatConverter);
+        converterMap.put(float.class, floatConverter);
+
+        Converter<String, ?> doubleConverter = new StringToDoubleConverter() {
             @Override
-            protected java.text.NumberFormat getFormat(Locale locale) {
+            protected NumberFormat getFormat(Locale locale) {
                 return fmt;
+            };
+        };
+        converterMap.put(Double.class, doubleConverter);
+        converterMap.put(double.class, doubleConverter);
+
+        final DecimalFormat bigDecimalFmt = new DecimalFormat("0.###", symbols);
+        bigDecimalFmt.setGroupingUsed(false);
+        bigDecimalFmt.setParseBigDecimal(true);
+        converterMap.put(BigDecimal.class, new StringToBigDecimalConverter() {
+            @Override
+            protected NumberFormat getFormat(Locale locale) {
+                return bigDecimalFmt;
             };
         });
 
@@ -169,7 +187,7 @@ public class DesignFormatter implements Serializable {
 
         };
         converterMap.put(Character.class, charConverter);
-        converterMap.put(Character.TYPE, charConverter);
+        converterMap.put(char.class, charConverter);
 
         converterMap.put(Date.class, new DesignDateConverter());
         converterMap.put(ShortcutAction.class,

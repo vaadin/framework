@@ -25,8 +25,11 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunOnHub;
+import com.vaadin.testbench.parallel.Browser;
 
 /**
  * Provides values for parameters which depend on where the test is run.
@@ -50,14 +53,41 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final Properties properties = new Properties();
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
+    private static final String FIREFOX_PATH = "firefox.path";
+
     static {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
+                if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+                    System.setProperty("useLocalWebDriver", "true");
+                    DesiredCapabilities localBrowser = getRunLocallyCapabilities();
+                    System.setProperty(
+                            "browsers.include",
+                            localBrowser.getBrowserName()
+                                    + localBrowser.getVersion());
+                }
+                if (properties.containsKey(FIREFOX_PATH)) {
+                    System.setProperty(FIREFOX_PATH,
+                            properties.getProperty(FIREFOX_PATH));
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static DesiredCapabilities getRunLocallyCapabilities() {
+        Browser localBrowser;
+        try {
+            localBrowser = Browser.valueOf(properties.getProperty(
+                    RUN_LOCALLY_PROPERTY).toUpperCase());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.err.println("Falling back to FireFox");
+            localBrowser = Browser.FIREFOX;
+        }
+        return localBrowser.getDesiredCapabilities();
     }
 
     protected static String getProperty(String name) {

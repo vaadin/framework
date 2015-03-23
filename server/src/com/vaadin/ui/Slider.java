@@ -343,4 +343,14 @@ public class Slider extends AbstractField<Double> {
         return Double.class;
     }
 
+    @Override
+    public void clear() {
+        super.setValue(Double.valueOf(getState().minValue));
+    }
+
+    @Override
+    public boolean isEmpty() {
+        // Slider is never really "empty"
+        return false;
+    }
 }
