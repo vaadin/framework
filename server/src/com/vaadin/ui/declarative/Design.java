@@ -33,6 +33,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
@@ -68,7 +69,6 @@ public class Design implements Serializable {
      * Use {@link Design#setComponentFactory(ComponentFactory)} to configure
      * Vaadin to use a custom component factory.
      * 
-     * 
      * @since 7.4.1
      */
     public interface ComponentFactory extends Serializable {
@@ -85,6 +85,50 @@ public class Design implements Serializable {
          */
         public Component createComponent(String fullyQualifiedClassName,
                 DesignContext context);
+    }
+
+    /**
+     * Delegate for handling the mapping between tag names and component
+     * instances.
+     * <p>
+     * Use {@link Design#setComponentMapper(ComponentMapper)} to configure
+     * Vaadin to use a custom component mapper.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public interface ComponentMapper extends Serializable {
+        /**
+         * Resolves and creates a component using the provided component factory
+         * based on a tag name.
+         * <p>
+         * This method should be in sync with
+         * {@link #componentToTag(Component, DesignContext)} so that the
+         * resolved tag for a created component is the same as the tag for which
+         * the component was created.
+         * 
+         * @param tag
+         *            the tag name to create a component for
+         * @param componentFactory
+         *            the component factory that actually creates a component
+         *            based on a fully qualified class name
+         * @param context
+         *            the design context for which the component is created
+         * @return a newly created component
+         */
+        public Component tagToComponent(String tag,
+                ComponentFactory componentFactory, DesignContext context);
+
+        /**
+         * Resolves a tag name from a component.
+         * 
+         * @param component
+         *            the component to get a tag name for
+         * @param context
+         *            the design context for which the tag name is needed
+         * @return the tag name corresponding to the component
+         */
+        public String componentToTag(Component component, DesignContext context);
     }
 
     /**
@@ -135,7 +179,100 @@ public class Design implements Serializable {
 
     }
 
+    /**
+     * Default implementation of {@link ComponentMapper},
+     * 
+     * @since
+     */
+    public static class DefaultComponentMapper implements ComponentMapper {
+
+        @Override
+        public Component tagToComponent(String tagName,
+                ComponentFactory componentFactory, DesignContext context) {
+            // Extract the package and class names.
+            // Otherwise, get the full class name using the prefix to package
+            // mapping. Example: "v-vertical-layout" ->
+            // "com.vaadin.ui.VerticalLayout"
+            String[] parts = tagName.split("-", 2);
+            if (parts.length < 2) {
+                throw new DesignException("The tagname '" + tagName
+                        + "' is invalid: missing prefix.");
+            }
+            String prefixName = parts[0];
+            String packageName = context.getPackage(prefixName);
+            if (packageName == null) {
+                throw new DesignException("Unknown tag: " + tagName);
+            }
+            String[] classNameParts = parts[1].split("-");
+            String className = "";
+            for (String classNamePart : classNameParts) {
+                // Split will ignore trailing and multiple dashes but that
+                // should be
+                // ok
+                // <v-button--> will be resolved to <v-button>
+                // <v--button> will be resolved to <v-button>
+                className += SharedUtil.capitalize(classNamePart);
+            }
+            String qualifiedClassName = packageName + "." + className;
+
+            Component component = componentFactory.createComponent(
+                    qualifiedClassName, context);
+
+            if (component == null) {
+                throw new DesignException("Got unexpected null component from "
+                        + componentFactory.getClass().getName() + " for class "
+                        + qualifiedClassName);
+            }
+
+            return component;
+        }
+
+        @Override
+        public String componentToTag(Component component, DesignContext context) {
+            Class<?> componentClass = component.getClass();
+            String packageName = componentClass.getPackage().getName();
+            String prefix = context.getPackagePrefix(packageName);
+            if (prefix == null) {
+                prefix = packageName.replace('.', '_');
+                context.addPackagePrefix(prefix, packageName);
+            }
+            prefix = prefix + "-";
+            String className = classNameToElementName(componentClass
+                    .getSimpleName());
+            String tagName = prefix + className;
+
+            return tagName;
+        }
+
+        /**
+         * Creates the name of the html tag corresponding to the given class
+         * name. The name is derived by converting each uppercase letter to
+         * lowercase and inserting a dash before the letter. No dash is inserted
+         * before the first letter of the class name.
+         * 
+         * @param className
+         *            the name of the class without a package name
+         * @return the html tag name corresponding to className
+         */
+        private String classNameToElementName(String className) {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < className.length(); i++) {
+                Character c = className.charAt(i);
+                if (Character.isUpperCase(c)) {
+                    if (i > 0) {
+                        result.append("-");
+                    }
+                    result.append(Character.toLowerCase(c));
+                } else {
+                    result.append(c);
+                }
+            }
+            return result.toString();
+        }
+    }
+
     private static volatile ComponentFactory componentFactory = new DefaultComponentFactory();
+    private static volatile ComponentMapper componentMapper = new DefaultComponentMapper();
 
     /**
      * Sets the component factory that is used for creating component instances
@@ -168,6 +305,39 @@ public class Design implements Serializable {
      */
     public static ComponentFactory getComponentFactory() {
         return componentFactory;
+    }
+
+    /**
+     * Sets the component mapper that is used for resolving between tag names
+     * and component instances.
+     * <p>
+     * Please note that this setting is global, so care should be taken to avoid
+     * conflicting changes.
+     * 
+     * @param componentMapper
+     *            the component mapper to set; not <code>null</code>
+     * 
+     * @since
+     */
+    public static void setComponentMapper(ComponentMapper componentMapper) {
+        if (componentMapper == null) {
+            throw new IllegalArgumentException(
+                    "Cannot set null component mapper");
+        }
+        Design.componentMapper = componentMapper;
+    }
+
+    /**
+     * Gets the currently used component mapper.
+     * 
+     * @see #setComponentMapper(ComponentMapper)
+     * 
+     * @return the component mapper
+     * 
+     * @since
+     */
+    public static ComponentMapper getComponentMapper() {
+        return componentMapper;
     }
 
     /**
