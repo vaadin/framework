@@ -82,4 +82,7 @@ public class GridColumnState implements Serializable {
 
     /** Can the column be hidden by the UI. */
     public boolean hidable = false;
+
+    /** The caption for the column hiding toggle. */
+    public String hidingToggleCaption;
 }

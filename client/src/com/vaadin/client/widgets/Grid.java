@@ -3096,7 +3096,7 @@ public class Grid<T> extends ResizeComposite implements
                     column.setHidden(!event.getValue(), true);
                 }
             });
-            updateColumnHidingToggleCaption(column, toggle);
+            updateHidingToggleCaption(column, toggle);
             columnToHidingToggleMap.put(column, toggle);
             return toggle;
         }
@@ -3133,22 +3133,20 @@ public class Grid<T> extends ResizeComposite implements
             hasValue.setStyleName("hidden", hidden);
         }
 
-        private void updateColumnHidingToggleCaption(Column<?, T> column) {
-            updateColumnHidingToggleCaption(column,
+        private void updateHidingToggleCaption(Column<?, T> column) {
+            updateHidingToggleCaption(column,
                     columnToHidingToggleMap.get(column));
         }
 
-        private void updateColumnHidingToggleCaption(Column<?, T> column,
+        private void updateHidingToggleCaption(Column<?, T> column,
                 ToggleButton toggle) {
-            String caption = column.headerCaption;
-            if (caption == null || caption.isEmpty()) {
-                // TODO what if the content is a widget?
-                HeaderCell cell = getDefaultHeaderRow().getCell(column);
-                caption = cell.getText();
+            String caption = column.getHidingToggleCaption();
+            if (caption == null) {
+                caption = column.headerCaption;
+                // the caption might still be null, but that is the users fault
             }
             toggle.setText(caption);
         }
-
     }
 
     /**
@@ -3782,6 +3780,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private String headerCaption = "";
 
+        private String hidingToggleCaption = null;
+
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
         private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
         private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
@@ -3891,7 +3891,7 @@ public class Grid<T> extends ResizeComposite implements
             if (row != null) {
                 row.getCell(this).setText(headerCaption);
                 if (isHidable()) {
-                    grid.columnHider.updateColumnHidingToggleCaption(this);
+                    grid.columnHider.updateHidingToggleCaption(this);
                 }
             }
         }
@@ -4141,6 +4141,36 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isHidable() {
             return hidable;
+        }
+
+        /**
+         * Sets the hiding toggle's caption for this column. Shown in the toggle
+         * for this column in the grid's sidebar when the column is
+         * {@link #isHidable() hidable}.
+         * <p>
+         * Defaults to <code>null</code>, when will use whatever is set with
+         * {@link #setHeaderCaption(String)}.
+         * 
+         * @since
+         * @param hidingToggleCaption
+         *            the caption for the hiding toggle for this column
+         */
+        public void setHidingToggleCaption(String hidingToggleCaption) {
+            this.hidingToggleCaption = hidingToggleCaption;
+            if (isHidable()) {
+                grid.columnHider.updateHidingToggleCaption(this);
+            }
+        }
+
+        /**
+         * Gets the hiding toggle caption for this column.
+         * 
+         * @since
+         * @see #setHidingToggleCaption(String)
+         * @return the hiding toggle's caption for this column
+         */
+        public String getHidingToggleCaption() {
+            return hidingToggleCaption;
         }
 
         @Override

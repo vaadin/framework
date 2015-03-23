@@ -369,7 +369,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 3, CellSide.RIGHT);
+        dragAndDropColumnHeader(0, 1, 4, CellSide.LEFT);
         assertColumnHeaderOrder(1, 4, 3, 5, 2);
 
         dragAndDropColumnHeader(0, 2, 4, CellSide.LEFT);

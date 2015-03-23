@@ -768,17 +768,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new Command<Grid, String>() {
 
                         boolean wasHidable;
+                        boolean wasHidden;
+                        String wasColumnHidingToggleCaption;
 
                         @Override
                         public void execute(Grid grid, String value, Object data) {
                             String columnProperty = getColumnProperty((Integer) data);
-                            if (grid.getColumn(columnProperty) == null) {
-                                grid.addColumn(columnProperty);
-                                grid.getColumn(columnProperty).setHidable(
-                                        wasHidable);
+                            Column column = grid.getColumn(columnProperty);
+                            if (column == null) {
+                                column = grid.addColumn(columnProperty);
+                                column.setHidable(wasHidable);
+                                column.setHidden(wasHidden);
+                                column.setHidingToggleCaption(wasColumnHidingToggleCaption);
                             } else {
-                                wasHidable = grid.getColumn(columnProperty)
-                                        .isHidable();
+                                wasHidable = column.isHidable();
+                                wasHidden = column.isHidden();
+                                wasColumnHidingToggleCaption = column
+                                        .getHidingToggleCaption();
                                 grid.removeColumn(columnProperty);
                             }
                         }
@@ -840,6 +846,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             grid.getColumn(propertyId).setHidden(hidden);
                         }
                     }, getColumnProperty(c));
+            createClickAction("Change hiding toggle caption",
+                    getColumnProperty(c), new Command<Grid, String>() {
+                        int count = 0;
+
+                        @Override
+                        public void execute(Grid grid, String value, Object data) {
+                            final String columnProperty = getColumnProperty((Integer) data);
+                            grid.getColumn(columnProperty)
+                                    .setHidingToggleCaption(
+                                            columnProperty + " caption "
+                                                    + count++);
+                        }
+                    }, null, c);
 
             createCategory("Column " + c + " Width", getColumnProperty(c));
 

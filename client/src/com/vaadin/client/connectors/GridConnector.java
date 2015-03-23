@@ -1197,6 +1197,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         column.setHidden(state.hidden);
         column.setHidable(state.hidable);
+        column.setHidingToggleCaption(state.hidingToggleCaption);
 
         column.setEditable(state.editable);
         column.setEditorConnector((AbstractFieldConnector) state.editorConnector);

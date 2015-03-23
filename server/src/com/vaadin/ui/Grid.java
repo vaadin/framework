@@ -2286,6 +2286,46 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
+         * Gets the caption of the hiding toggle for this column.
+         * 
+         * @since
+         * @see #setHidingToggleCaption(String)
+         * @return the caption for the hiding toggle for this column
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public String getHidingToggleCaption() throws IllegalStateException {
+            checkColumnIsAttached();
+            return state.hidingToggleCaption;
+        }
+
+        /**
+         * Sets the caption of the hiding toggle for this column. Shown in the
+         * toggle for this column in the grid's sidebar when the column is
+         * {@link #isHidable() hidable}.
+         * <p>
+         * By default, before triggering this setter, a user friendly version of
+         * the column's {@link #getPropertyId() property id} is used.
+         * <p>
+         * <em>NOTE:</em> setting this to <code>null</code> or empty string
+         * might cause the hiding toggle to not render correctly.
+         * 
+         * @since
+         * @param hidingToggleCaption
+         *            the text to show in the column hiding toggle
+         * @return the column itself
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column setHidingToggleCaption(String hidingToggleCaption)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+            state.hidingToggleCaption = hidingToggleCaption;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
          * Returns the width (in pixels). By default a column is 100px wide.
          * 
          * @return the width in pixels of the column
@@ -3860,8 +3900,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         header.addColumn(datasourcePropertyId);
         footer.addColumn(datasourcePropertyId);
 
-        column.setHeaderCaption(SharedUtil.propertyIdToHumanFriendly(String
-                .valueOf(datasourcePropertyId)));
+        String humanFriendlyPropertyId = SharedUtil
+                .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
+        column.setHeaderCaption(humanFriendlyPropertyId);
+        column.setHidingToggleCaption(humanFriendlyPropertyId);
 
         return column;
     }
