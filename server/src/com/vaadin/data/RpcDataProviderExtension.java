@@ -787,7 +787,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
                 if (!SharedUtil.equals(oldIndex, newIndex)) {
                     changes.add(new DetailsConnectorChange(component, oldIndex,
-                            newIndex));
+                            newIndex, emptyDetails.containsKey(component)));
                 }
             }
 
@@ -798,7 +798,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 Component component = entry.getValue();
                 Integer newIndex = rowIndexToDetails.inverse().get(component);
                 if (newIndex == null) {
-                    changes.add(new DetailsConnectorChange(null, oldIndex, null));
+                    changes.add(new DetailsConnectorChange(null, oldIndex,
+                            null, emptyDetails.containsValue(oldIndex)));
                 }
             }
 

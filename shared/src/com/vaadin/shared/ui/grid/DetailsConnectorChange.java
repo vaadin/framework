@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.grid;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import com.vaadin.shared.Connector;
 
@@ -28,9 +29,25 @@ import com.vaadin.shared.Connector;
  */
 public class DetailsConnectorChange implements Serializable {
 
+    public static final Comparator<DetailsConnectorChange> REMOVED_FIRST_COMPARATOR = new Comparator<DetailsConnectorChange>() {
+        @Override
+        public int compare(DetailsConnectorChange a, DetailsConnectorChange b) {
+            boolean deleteA = a.getNewIndex() == null;
+            boolean deleteB = b.getNewIndex() == null;
+            if (deleteA && !deleteB) {
+                return -1;
+            } else if (!deleteA && deleteB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    };
+
     private Connector connector;
     private Integer oldIndex;
     private Integer newIndex;
+    private boolean shouldStillBeVisible;
 
     /** Create a new connector index change */
     public DetailsConnectorChange() {
@@ -48,12 +65,15 @@ public class DetailsConnectorChange implements Serializable {
      *            the old index
      * @param newIndex
      *            the new index
+     * @param shouldStillBeVisible
+     *            details should be visible regardless of {@code connector}
      */
     public DetailsConnectorChange(Connector connector, Integer oldIndex,
-            Integer newIndex) {
+            Integer newIndex, boolean shouldStillBeVisible) {
         this.connector = connector;
         this.oldIndex = oldIndex;
         this.newIndex = newIndex;
+        this.shouldStillBeVisible = shouldStillBeVisible;
 
         assert assertStateIsOk();
     }
@@ -143,5 +163,28 @@ public class DetailsConnectorChange implements Serializable {
      */
     public void setNewIndex(Integer newIndex) {
         this.newIndex = newIndex;
+    }
+
+    /**
+     * Checks whether whether the details should remain open, even if connector
+     * might be <code>null</code>.
+     * 
+     * @return <code>true</code> iff the details should remain open, even if
+     *         connector might be <code>null</code>
+     */
+    public boolean isShouldStillBeVisible() {
+        return shouldStillBeVisible;
+    }
+
+    /**
+     * Sets whether the details should remain open, even if connector might be
+     * <code>null</code>.
+     * 
+     * @param shouldStillBeVisible
+     *            <code>true</code> iff the details should remain open, even if
+     *            connector might be <code>null</code>
+     */
+    public void setShouldStillBeVisible(boolean shouldStillBeVisible) {
+        this.shouldStillBeVisible = shouldStillBeVisible;
     }
 }

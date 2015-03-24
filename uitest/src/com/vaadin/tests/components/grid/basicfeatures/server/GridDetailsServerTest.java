@@ -81,6 +81,22 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void openVisiblePopulatedDetails() {
+        selectMenuPath(DETAILS_GENERATOR_WATCHING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        assertNotNull("details should've populated", getGridElement()
+                .getDetails(0).findElement(By.className("v-widget")));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void closeVisiblePopulatedDetails() {
+        selectMenuPath(DETAILS_GENERATOR_WATCHING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        getGridElement().getDetails(0);
+    }
+
+    @Test
     public void openDetailsOutsideOfActiveRange() throws InterruptedException {
         getGridElement().scroll(10000);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
@@ -260,8 +276,14 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         selectMenuPath(DETAILS_GENERATOR_NULL);
-        assertTrue("Details should be empty with null component",
-                getGridElement().getDetails(0).getText().isEmpty());
+
+        try {
+            assertTrue("Details should be empty with null component",
+                    getGridElement().getDetails(0).getText().isEmpty());
+        } catch (NoSuchElementException e) {
+            fail("Expected to find a details row with empty content");
+        }
+
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         assertFalse("Details should be not empty with details component",
                 getGridElement().getDetails(0).getText().isEmpty());

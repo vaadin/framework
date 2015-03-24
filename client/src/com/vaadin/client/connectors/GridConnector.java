@@ -19,6 +19,7 @@ package com.vaadin.client.connectors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -677,8 +678,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 customDetailsGenerator
                         .setDetailsConnectorChanges(connectorChanges);
 
+                List<DetailsConnectorChange> removedFirst = new ArrayList<DetailsConnectorChange>(
+                        connectorChanges);
+                Collections.sort(removedFirst,
+                        DetailsConnectorChange.REMOVED_FIRST_COMPARATOR);
+
                 // refresh moved/added details rows
-                for (DetailsConnectorChange change : connectorChanges) {
+                for (DetailsConnectorChange change : removedFirst) {
                     Integer oldIndex = change.getOldIndex();
                     Integer newIndex = change.getNewIndex();
 
@@ -689,13 +695,23 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             + "invalid new index: " + newIndex
                             + " (connector: " + change.getConnector() + ")";
 
-                    Integer index = newIndex;
-                    if (index == null) {
-                        index = oldIndex;
+                    if (oldIndex != null) {
+                        /* Close the old/removed index */
+                        getWidget().setDetailsVisible(oldIndex, false);
+
+                        if (change.isShouldStillBeVisible()) {
+                            getWidget().setDetailsVisible(oldIndex, true);
+                        }
                     }
 
-                    getWidget().setDetailsVisible(index, false);
-                    getWidget().setDetailsVisible(index, true);
+                    if (newIndex != null) {
+                        /*
+                         * Since the component was lazy loaded, we need to
+                         * refresh the details by toggling it.
+                         */
+                        getWidget().setDetailsVisible(newIndex, false);
+                        getWidget().setDetailsVisible(newIndex, true);
+                    }
                 }
                 detailsConnectorFetcher.responseReceived(fetchId);
             }
