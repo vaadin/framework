@@ -166,6 +166,75 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         assertNotNull(getColumnHidingToggle(0));
     }
 
+    @Test
+    public void testFrozenColumnHiding_hiddenColumnMadeFrozen_frozenWhenMadeVisible() {
+        selectMenuPath("Component", "Size", "Width", "100%");
+        toggleColumnHidable(0);
+        toggleColumnHidable(1);
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(0).click();
+        getColumnHidingToggle(1).click();
+
+        assertColumnHeaderOrder(2, 3, 4, 5);
+
+        setFrozenColumns(2);
+        verifyColumnNotFrozen(0);
+        verifyColumnNotFrozen(1);
+
+        getColumnHidingToggle(0).click();
+        assertColumnHeaderOrder(0, 2, 3, 4, 5);
+        verifyColumnFrozen(0);
+        verifyColumnNotFrozen(1);
+
+        getColumnHidingToggle(1).click();
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
+        verifyColumnFrozen(0);
+        verifyColumnFrozen(1);
+        verifyColumnNotFrozen(2);
+    }
+
+    @Test
+    public void testFrozenColumnHiding_hiddenFrozenColumnUnfrozen_notFrozenWhenMadeVisible() {
+        selectMenuPath("Component", "Size", "Width", "100%");
+        toggleColumnHidable(0);
+        toggleColumnHidable(1);
+        setFrozenColumns(2);
+        verifyColumnFrozen(0);
+        verifyColumnFrozen(1);
+        verifyColumnNotFrozen(2);
+        verifyColumnNotFrozen(3);
+
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(0).click();
+        getColumnHidingToggle(1).click();
+        assertColumnHeaderOrder(2, 3, 4, 5);
+        verifyColumnNotFrozen(0);
+        verifyColumnNotFrozen(1);
+
+        setFrozenColumns(0);
+        verifyColumnNotFrozen(0);
+        verifyColumnNotFrozen(1);
+
+        getColumnHidingToggle(0).click();
+        assertColumnHeaderOrder(0, 2, 3, 4, 5);
+        verifyColumnNotFrozen(0);
+        verifyColumnNotFrozen(1);
+
+        getColumnHidingToggle(1).click();
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
+        verifyColumnNotFrozen(0);
+        verifyColumnNotFrozen(1);
+        verifyColumnNotFrozen(2);
+    }
+
+    private void verifyColumnFrozen(int index) {
+        assertTrue(getGridElement().getHeaderCell(0, index).isFrozen());
+    }
+
+    private void verifyColumnNotFrozen(int index) {
+        assertFalse(getGridElement().getHeaderCell(0, index).isFrozen());
+    }
+
     private void toggleColumnHidable(int index) {
         selectMenuPath("Component", "Columns", "Column " + index, "Hidable");
     }

@@ -3954,6 +3954,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * columns will be frozen, but the built-in selection checkbox column will
      * still be frozen if it's in use. -1 means that not even the selection
      * column is frozen.
+     * <p>
+     * <em>NOTE:</em> this count includes {@link Column#isHidden() hidden
+     * columns} in the count.
      * 
      * @see #setFrozenColumnCount(int)
      * 

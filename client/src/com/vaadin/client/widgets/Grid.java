@@ -4279,8 +4279,23 @@ public class Grid<T> extends ResizeComposite implements
                     this.hidden = hidden;
                 } else {
                     this.hidden = hidden;
+
+                    final int columnIndex = grid.getVisibleColumns().indexOf(
+                            this);
                     grid.escalator.getColumnConfiguration().insertColumns(
-                            grid.getVisibleColumns().indexOf(this), 1);
+                            columnIndex, 1);
+
+                    // make sure column is set to frozen if it needs to be,
+                    // escalator doesn't handle situation where the added column
+                    // would be the last frozen column
+                    int gridFrozenColumns = grid.getFrozenColumnCount();
+                    int escalatorFrozenColumns = grid.escalator
+                            .getColumnConfiguration().getFrozenColumnCount();
+                    if (gridFrozenColumns > escalatorFrozenColumns
+                            && escalatorFrozenColumns == columnIndex) {
+                        grid.escalator.getColumnConfiguration()
+                                .setFrozenColumnCount(++escalatorFrozenColumns);
+                    }
                 }
                 grid.columnHider.updateToggleValue(this);
                 scheduleColumnWidthRecalculator();
@@ -5826,6 +5841,14 @@ public class Grid<T> extends ResizeComposite implements
     private void updateFrozenColumns() {
         int numberOfColumns = frozenColumnCount;
 
+        // for the escalator the hidden columns are not in the frozen column
+        // count, but for grid they are. thus need to convert the index
+        for (int i = 0; i < frozenColumnCount; i++) {
+            if (getColumn(i).isHidden()) {
+                numberOfColumns--;
+            }
+        }
+
         if (numberOfColumns == -1) {
             numberOfColumns = 0;
         } else if (selectionColumn != null) {
@@ -5842,6 +5865,9 @@ public class Grid<T> extends ResizeComposite implements
      * columns will be frozen, but the built-in selection checkbox column will
      * still be frozen if it's in use. -1 means that not even the selection
      * column is frozen.
+     * <p>
+     * <em>NOTE:</em> This includes {@link Column#isHidden() hidden columns} in
+     * the count.
      * 
      * @return the number of frozen columns
      */
