@@ -39,7 +39,11 @@ public class GridLayoutHideMiddleCells extends AbstractTestUI {
         VerticalLayout mainLayout = new VerticalLayout();
         HorizontalLayout horLayout = new HorizontalLayout();
         gridLayout = new GridLayout(ROWS, COLS);
+        gridLayout.setHideEmptyRowsAndColumns(true);
+
         gridLayout2 = new GridLayout(4, 4);
+        gridLayout2.setHideEmptyRowsAndColumns(true);
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 Label label = new Label("Slot " + i + " " + j);

@@ -1256,4 +1256,33 @@ public class GridLayout extends AbstractLayout implements
         defaultComponentAlignment = defaultAlignment;
     }
 
+    /**
+     * Sets whether empty rows and columns should be considered as non-existent
+     * when rendering or not. If this is set to true then the spacing between
+     * multiple empty columns (or rows) will be collapsed.
+     * 
+     * The default behavior is to consider all rows and columns as visible
+     * 
+     * NOTE that this must be set before the initial rendering takes place.
+     * Updating this on the fly is not supported.
+     * 
+     * @since 7.3
+     * @param hideEmptyRowsAndColumns
+     *            true to hide empty rows and columns, false to leave them as-is
+     */
+    public void setHideEmptyRowsAndColumns(boolean hideEmptyRowsAndColumns) {
+        getState().hideEmptyRowsAndColumns = hideEmptyRowsAndColumns;
+    }
+
+    /**
+     * Checks whether whether empty rows and columns should be considered as
+     * non-existent when rendering or not.
+     * 
+     * @see #setHideEmptyRowsAndColumns(boolean)
+     * @since 7.3
+     * @return true if empty rows and columns are hidden, false otherwise
+     */
+    public boolean isHideEmptyRowsAndColumns() {
+        return getState(false).hideEmptyRowsAndColumns;
+    }
 }

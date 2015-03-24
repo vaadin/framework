@@ -38,6 +38,7 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
      */
     public GridBaseLayoutTestUI() {
         super(GridLayout.class);
+        layout.setHideEmptyRowsAndColumns(true);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class MoveComponentsFromGridLayoutToInnerLayout extends TestBase {
     @Override
     protected void setup() {
         gl = new GridLayout();
+        gl.setHideEmptyRowsAndColumns(true);
         gl.setWidth("200px");
         gl.setHeight("200px");
 

@@ -2,7 +2,6 @@ package com.vaadin.tests.layouts.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -28,6 +27,7 @@ public class GridLayoutWidthChange extends AbstractTestUI {
         b.setHeight("200px");
 
         GridLayout layout = new GridLayout(3, 2);
+        layout.setHideEmptyRowsAndColumns(true);
         layout.setWidth("100%");
         layout.addComponent(fields1, 0, 0, 0, 1);
         layout.addComponent(b, 2, 1);

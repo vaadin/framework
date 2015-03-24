@@ -120,6 +120,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         gl.setWidth("564px");
         gl.setStyleName("borders");
         gl.setSpacing(true);
+        gl.setHideEmptyRowsAndColumns(true);
         addContent(gl, 4);
         TextArea largeTextarea = new TextArea("Large textarea");
         largeTextarea.setWidth("100%");
