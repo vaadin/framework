@@ -318,7 +318,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 4, 100);
+        dragAndDropColumnHeader(0, 0, 4, 120);
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
@@ -357,7 +357,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 4, 100);
+        dragAndDropColumnHeader(0, 0, 4, 120);
         scrollGridHorizontallyTo(0);
         dragAndDropColumnHeader(0, 1, 4, 100);
         scrollGridHorizontallyTo(0);

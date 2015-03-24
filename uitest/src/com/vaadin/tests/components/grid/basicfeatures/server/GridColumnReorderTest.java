@@ -199,6 +199,9 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         assertColumnHeaderOrder(0, 1, 2, 3);
+        assertTrue(getGridElement().getHeaderCell(0, 0).isFrozen());
+        assertTrue(getGridElement().getHeaderCell(0, 1).isFrozen());
+        assertFalse(getGridElement().getHeaderCell(0, 2).isFrozen());
     }
 
     @Test
@@ -296,7 +299,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropColumnHeader(0, 0, 2, 100);
+        dragAndDropColumnHeader(0, 0, 2, 110);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3);
@@ -311,7 +314,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropColumnHeader(1, 0, 2, 100);
+        dragAndDropColumnHeader(1, 0, 2, 110);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3);
