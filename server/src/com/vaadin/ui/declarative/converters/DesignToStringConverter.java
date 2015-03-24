@@ -64,8 +64,7 @@ public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
      *            must be public and static method that returns an object of
      *            passed type.
      */
-    public DesignToStringConverter(Class<? extends TYPE> type,
-            String staticMethodName) {
+    public DesignToStringConverter(Class<? extends TYPE> type, String staticMethodName) {
         this.type = type;
         this.staticMethodName = staticMethodName;
     }
@@ -82,7 +81,7 @@ public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
         } catch (IllegalArgumentException e) {
             throw new Converter.ConversionException(e);
         } catch (InvocationTargetException e) {
-            throw new Converter.ConversionException(e.getCause());
+            throw new Converter.ConversionException(e);
         } catch (NoSuchMethodException e) {
             throw new Converter.ConversionException(e);
         } catch (SecurityException e) {

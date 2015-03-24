@@ -53,114 +53,13 @@ public class DesignFormatterTest {
     @Test
     public void testSupportedClasses() {
 
-        for (Class<?> type : new Class<?>[] { boolean.class, char.class,
-                byte.class, short.class, int.class, long.class, float.class,
-                double.class, Boolean.class, Character.class, Byte.class,
-                Short.class, Integer.class, Long.class, Float.class,
-                Double.class, String.class, ShortcutAction.class, Date.class,
+        for (Class<?> type : new Class<?>[] { String.class, Boolean.class,
+                Integer.class, Float.class, Byte.class, Short.class,
+                Double.class, ShortcutAction.class, Date.class,
                 FileResource.class, ExternalResource.class,
                 ThemeResource.class, Resource.class, TimeZone.class }) {
             assertTrue("not supported " + type.getSimpleName(),
                     formatter.canConvert(type));
-        }
-    }
-
-    @Test
-    public void testBoolean() {
-        assertEquals("true", formatter.format(true));
-        assertEquals("false", formatter.format(false));
-
-        assertEquals(true, formatter.parse("true", boolean.class));
-        assertEquals(true, formatter.parse("foobar", boolean.class));
-        assertEquals(true, formatter.parse("", boolean.class));
-        assertEquals(false, formatter.parse("false", boolean.class));
-
-        assertEquals(true, formatter.parse("true", Boolean.class));
-        assertEquals(true, formatter.parse("foobar", Boolean.class));
-        assertEquals(true, formatter.parse("", Boolean.class));
-        assertEquals(false, formatter.parse("false", Boolean.class));
-    }
-
-    @Test
-    public void testIntegral() {
-        byte b = 123;
-        assertEquals("123", formatter.format(b));
-        assertEquals(b, (byte) formatter.parse("123", byte.class));
-        assertEquals((Byte) b, formatter.parse("123", Byte.class));
-
-        b = -123;
-        assertEquals("-123", formatter.format(b));
-        assertEquals(b, (byte) formatter.parse("-123", byte.class));
-        assertEquals((Byte) b, formatter.parse("-123", Byte.class));
-
-        short s = 12345;
-        assertEquals("12345", formatter.format(s));
-        assertEquals(s, (short) formatter.parse("12345", short.class));
-        assertEquals((Short) s, formatter.parse("12345", Short.class));
-
-        s = -12345;
-        assertEquals("-12345", formatter.format(s));
-        assertEquals(s, (short) formatter.parse("-12345", short.class));
-        assertEquals((Short) s, formatter.parse("-12345", Short.class));
-
-        int i = 123456789;
-        assertEquals("123456789", formatter.format(i));
-        assertEquals(i, (int) formatter.parse("123456789", int.class));
-        assertEquals((Integer) i, formatter.parse("123456789", Integer.class));
-
-        i = -123456789;
-        assertEquals("-123456789", formatter.format(i));
-        assertEquals(i, (int) formatter.parse("-123456789", int.class));
-        assertEquals((Integer) i, formatter.parse("-123456789", Integer.class));
-
-        long l = 123456789123456789L;
-        assertEquals("123456789123456789", formatter.format(l));
-        assertEquals(l,
-                (long) formatter.parse("123456789123456789", long.class));
-        assertEquals((Long) l,
-                formatter.parse("123456789123456789", Long.class));
-
-        l = -123456789123456789L;
-        assertEquals("-123456789123456789", formatter.format(l));
-        assertEquals(l,
-                (long) formatter.parse("-123456789123456789", long.class));
-        assertEquals((Long) l,
-                formatter.parse("-123456789123456789", Long.class));
-    }
-
-    @Test
-    public void testFloatingPoint() {
-        float f = 123.4567f;
-        assertEquals("123.457", formatter.format(f));
-        assertEquals(f, formatter.parse("123.4567", float.class), 1e-4);
-        assertEquals(f, formatter.parse("123.4567", Float.class), 1e-4);
-
-        double d = 123456789.123456789;
-        assertEquals("123456789.123", formatter.format(d));
-        assertEquals(d, formatter.parse("123456789.123456789", double.class),
-                1e-9);
-        assertEquals(d, formatter.parse("123456789.123456789", Double.class),
-                1e-9);
-
-    }
-
-    @Test
-    public void testChar() {
-        char c = '\uABCD';
-        assertEquals("\uABCD", formatter.format(c));
-        assertEquals(c, (char) formatter.parse("\uABCD", char.class));
-        assertEquals((Character) c, formatter.parse("\uABCD", Character.class));
-
-        c = 'y';
-        assertEquals(c, (char) formatter.parse("yes", char.class));
-    }
-
-    @Test
-    public void testString() {
-
-        for (String s : new String[] { "", "foobar", "\uABCD", "驯鹿" }) {
-            assertEquals(s, formatter.format(s));
-            assertEquals(s, formatter.parse(s, String.class));
         }
     }
 
