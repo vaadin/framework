@@ -166,12 +166,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         ) {
 
             String[] selectedKeys = uidl.getStringArrayVariable("selected");
-
-            // when filtering with empty filter, server sets the selected key
-            // to "", which we don't select here. Otherwise we won't be able to
-            // reset back to the item that was selected before filtering
-            // started.
-            if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
+            if (selectedKeys.length > 0) {
                 performSelection(selectedKeys[0]);
             } else {
                 resetSelection();

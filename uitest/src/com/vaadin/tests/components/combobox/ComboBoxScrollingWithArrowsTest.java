@@ -64,7 +64,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
     public void scrollDownArrowKeyTest() throws InterruptedException {
         WebElement dropDownComboBox = getDropDown();
 
-        for (int i = 0; i < PAGESIZE; i++) {
+        // go to the last item and then one more
+        for (int i = 0; i < PAGESIZE + 1; i++) {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
 
@@ -81,7 +82,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
     public void scrollUpArrowKeyTest() throws InterruptedException {
         WebElement dropDownComboBox = getDropDown();
 
-        for (int i = 0; i < PAGESIZE; i++) {
+        // go to the last item and then one more
+        for (int i = 0; i < PAGESIZE + 1; i++) {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
 

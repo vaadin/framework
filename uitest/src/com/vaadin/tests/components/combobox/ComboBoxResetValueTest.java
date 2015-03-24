@@ -15,96 +15,152 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ComboBoxResetValueTest extends MultiBrowserTest {
 
-    private ComboBoxElement comboBoxWithNullSelectionItemId;
-    private ComboBoxElement comboBoxWithoutNullSelectionItemId;
-    private ComboBoxElement comboBoxWithNullNotAllowed;
-
-    @Override
-    public void setup() throws Exception {
-        super.setup();
-
-        openTestURL();
-
-        comboBoxWithNullSelectionItemId = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.WITH_SET_NULL_SELECTION_ITEM_ID);
-
-        comboBoxWithoutNullSelectionItemId = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.WITHOUT_NULL_SELECTION_ITEM_ID);
-
-        comboBoxWithNullNotAllowed = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.NULL_SELECTION_NOT_ALLOWED);
-
-        clickResetButton();
-    }
+    static final String FILTER_STRING = "filter";
 
     @Test
     public void testNullSelectionAllowedAndSetNullSelectionItemId() {
-        comboBoxWithNullSelectionItemId.openPopup();
+        openTestURL();
 
-        assertThatNullSelectionItemSelected(comboBoxWithNullSelectionItemId);
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.NULL_SELECTION_ALLOWED_WITH_SET_NULL_SELECTION_ITEM_ID);
+        clickResetButton();
+
+        openPopup(comboBoxWebElement);
+
+        assertEquals("There should be selected: "
+                + ComboBoxResetValue.EMPTY_VALUE,
+                ComboBoxResetValue.EMPTY_VALUE, getSelectedInPopupValue());
     }
 
     @Test
     public void testFilterNullSelectionAllowedAndSetNullSelectionItemId() {
-        comboBoxWithNullSelectionItemId.sendKeys("foo", Keys.TAB);
+        openTestURL();
 
-        assertThatNullSelectionItemSelected(comboBoxWithNullSelectionItemId);
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.NULL_SELECTION_ALLOWED_WITH_SET_NULL_SELECTION_ITEM_ID);
+        clickResetButton();
+        printFilterAndRemoveIt(getComboBoxInput(comboBoxWebElement));
+
+        assertEquals("There should be " + ComboBoxResetValue.EMPTY_VALUE,
+                ComboBoxResetValue.EMPTY_VALUE,
+                getComboBoxValue(comboBoxWebElement));
     }
 
     @Test
     public void testNullSelectionAllowedWithoutNullSelectionItemId() {
-        comboBoxWithoutNullSelectionItemId.openPopup();
+        openTestURL();
 
-        assertThatSelectionIsEmpty(comboBoxWithoutNullSelectionItemId);
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.NULL_SELECTION_ALLOWED_WITHOUT_NULL_SELECTION_ITEM_ID);
+        clickResetButton();
+
+        openPopup(comboBoxWebElement);
+
+        // not sure about expected result here.. Should be first empty string
+        // selected or not after reseting..
+        assertEquals("There should be no selection", null,
+                getSelectedInPopupValue());
     }
 
     @Test
     public void testFilterNullSelectionAllowedWithoutNullSelectionItemId() {
-        comboBoxWithoutNullSelectionItemId.sendKeys("foo", Keys.TAB);
+        openTestURL();
 
-        assertThatSelectionIsEmpty(comboBoxWithoutNullSelectionItemId);
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.NULL_SELECTION_ALLOWED_WITHOUT_NULL_SELECTION_ITEM_ID);
+        clickResetButton();
+        printFilterAndRemoveIt(getComboBoxInput(comboBoxWebElement));
+
+        assertEquals("There should be empty value", "",
+                getComboBoxValue(comboBoxWebElement));
     }
 
     @Test
     public void testNullSelectionNotAllowed() {
-        comboBoxWithNullNotAllowed.openPopup();
+        openTestURL();
 
-        assertThatSelectionIsEmpty(comboBoxWithNullNotAllowed);
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class).id(
+                ComboBoxResetValue.NULL_SELECTION_NOT_ALLOWED);
+        clickResetButton();
+
+        openPopup(comboBoxWebElement);
+
+        assertEquals("There should be no selection", null,
+                getSelectedInPopupValue());
     }
 
     @Test
     public void testFilterNullSelectionNotAllowed() {
-        comboBoxWithNullNotAllowed.sendKeys("1", Keys.TAB);
-        comboBoxWithNullNotAllowed.sendKeys(Keys.BACK_SPACE, Keys.TAB);
+        openTestURL();
 
-        assertThat("Selection changed when it shouldn't have.",
-                comboBoxWithNullNotAllowed.getText(), is("1"));
+        ComboBoxElement comboBoxWebElement = $(ComboBoxElement.class).id(
+                ComboBoxResetValue.NULL_SELECTION_NOT_ALLOWED);
+        clickResetButton();
+        printFilterAndRemoveIt(getComboBoxInput(comboBoxWebElement));
+
+        assertEquals("There should be empty value", "",
+                getComboBoxValue(comboBoxWebElement));
     }
 
-    private void assertThatNullSelectionItemSelected(ComboBoxElement comboBox) {
-        assertThat("Null selection item not selected.", comboBox.getText(),
-                is(ComboBoxResetValue.EMPTY_VALUE));
+    private void openPopup(ComboBoxElement comboBox) {
+        if (!isElementPresent(By.vaadin("#popup"))) {
+            comboBox.openPopup();
+        }
     }
 
-    private void assertThatSelectionIsEmpty(ComboBoxElement comboBox) {
-        assertThat("Something selected when should be empty.",
-                comboBox.getText(), is(""));
+    private String getSelectedInPopupValue() {
+        try {
+            WebElement selectedSpan = driver.findElement(By
+                    .cssSelector(".gwt-MenuItem-selected span"));
+            return selectedSpan.getText();
+        } catch (NoSuchElementException e) {
+            return null;
+        } catch (WebDriverException e) {
+            if (e.getMessage() != null
+                    && e.getMessage().contains("Unable to find element")) {
+                return null;
+            }
+            throw e;
+        }
     }
 
     private void clickResetButton() {
         ButtonElement resetButton = $(ButtonElement.class).first();
-        resetButton.click();
+        // workaround because of IE10 that doesn't always respond to click
+        resetButton.focus();
+        resetButton.sendKeys(Keys.ENTER);
+    }
+
+    private void printFilterAndRemoveIt(WebElement target) {
+        Actions actions = new Actions(getDriver());
+        actions.click(target).perform();
+        actions.sendKeys(Keys.chord(Keys.CONTROL, "a")).perform(); // Select all
+        actions.sendKeys(FILTER_STRING);
+        actions.sendKeys(Keys.ENTER).sendKeys(Keys.ESCAPE).sendKeys(Keys.TAB); // hack
+        actions.perform();
+    }
+
+    private String getComboBoxValue(ComboBoxElement comboBox) {
+        return getComboBoxInput(comboBox).getAttribute("value");
+    }
+
+    private WebElement getComboBoxInput(ComboBoxElement comboBox) {
+        return comboBox.findElement(By.tagName("input"));
     }
 }

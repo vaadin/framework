@@ -12,8 +12,8 @@ import com.vaadin.ui.VerticalLayout;
 public class ComboBoxResetValue extends AbstractTestUI {
 
     protected static final String EMPTY_VALUE = "Empty value";
-    protected static final String WITH_SET_NULL_SELECTION_ITEM_ID = "nullSelectionAllowedWithSetNullSelectionItemId";
-    protected static final String WITHOUT_NULL_SELECTION_ITEM_ID = "nullSelectionAllowedWithoutNullSelectionItemId";
+    protected static final String NULL_SELECTION_ALLOWED_WITH_SET_NULL_SELECTION_ITEM_ID = "nullSelectionAllowedWithSetNullSelectionItemId";
+    protected static final String NULL_SELECTION_ALLOWED_WITHOUT_NULL_SELECTION_ITEM_ID = "nullSelectionAllowedWithoutNullSelectionItemId";
     protected static final String NULL_SELECTION_NOT_ALLOWED = "nullSelectionNotAllowed";
 
     @Override
@@ -40,7 +40,7 @@ public class ComboBoxResetValue extends AbstractTestUI {
 
     protected ComboBox getComboBoxWithNullSelectionAllowedWithSetNullSelectionItemId() {
         ComboBox cb = new ComboBox();
-        cb.setId(WITH_SET_NULL_SELECTION_ITEM_ID);
+        cb.setId(NULL_SELECTION_ALLOWED_WITH_SET_NULL_SELECTION_ITEM_ID);
         cb.setImmediate(true);
         cb.setNullSelectionAllowed(true);
 
@@ -54,7 +54,7 @@ public class ComboBoxResetValue extends AbstractTestUI {
 
     protected ComboBox getComboBoxWithNullSelectionAllowedWithoutNullSelectionItemId() {
         ComboBox cb = new ComboBox();
-        cb.setId(WITHOUT_NULL_SELECTION_ITEM_ID);
+        cb.setId(NULL_SELECTION_ALLOWED_WITHOUT_NULL_SELECTION_ITEM_ID);
         cb.setImmediate(true);
         cb.setNullSelectionAllowed(true);
 

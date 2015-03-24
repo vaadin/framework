@@ -24,12 +24,10 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
-import com.vaadin.tests.tb3.newelements.WindowElement;
 
 /**
- * Tests that a ComboBox at the bottom of a Window remains visible when clicked.
  * 
+ * @since
  * @author Vaadin Ltd
  */
 public class ComboboxScrollableWindowTest extends MultiBrowserTest {
@@ -38,16 +36,20 @@ public class ComboboxScrollableWindowTest extends MultiBrowserTest {
     public void testWindowScrollbars() throws Exception {
         openTestURL();
 
-        WindowElement window = $(WindowElement.class).id(WINDOW_ID);
+        WebElement window = driver.findElement(By.id(WINDOW_ID));
         WebElement scrollableElement = window.findElement(By
                 .className("v-scrollable"));
         TestBenchElementCommands scrollable = testBenchElement(scrollableElement);
         scrollable.scroll(1000);
-        ComboBoxElement comboBox = $(ComboBoxElement.class).id(COMBOBOX_ID);
-        comboBox.openPopup();
-        waitForElementPresent(By.className("v-filterselect-suggestpopup"));
+        WebElement comboBox = driver.findElement(By.id(COMBOBOX_ID));
+        WebElement selectButton = driver.findElement(By
+                .className("v-filterselect-button"));
+        selectButton.click();
 
-        compareScreen("combobox-open");
+        // Wait for the browser before taking a screenshot
+        Thread.sleep(1000);
+        compareScreen(getScreenshotBaseName());
+
     }
 
 }

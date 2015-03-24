@@ -813,7 +813,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             clearItems();
             final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
-            boolean isFirstIteration = true;
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
@@ -822,21 +821,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 WidgetUtil.sinkOnloadForImages(mi.getElement());
 
                 this.addItem(mi);
-
-                // By default, first item on the list is always highlighted,
-                // unless adding new items is allowed.
-                if (isFirstIteration && !allowNewItem) {
+                if (s == currentSuggestion) {
                     selectItem(mi);
                 }
-
-                // If the filter matches the current selection, highlight that
-                // instead of the first item.
-                if (tb.getText().equals(s.getReplacementString())
-                        && s == currentSuggestion) {
-                    selectItem(mi);
-                }
-
-                isFirstIteration = false;
             }
         }
 
@@ -1191,6 +1178,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean updateSelectionWhenReponseIsReceived = false;
 
+    private boolean tabPressedWhenPopupOpen = false;
+
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
@@ -1432,10 +1421,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return;
         }
         if (!filter.equals(lastFilter)) {
-            // when filtering, let the server decide the page unless we've
-            // set the filter to empty and explicitly said that we want to see
-            // the results starting from page 0.
-            if ("".equals(filter) && page != 0) {
+            // we are on subsequent page and text has changed -> reset page
+            if ("".equals(filter)) {
                 // let server decide
                 page = -1;
             } else {
@@ -1450,6 +1437,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         lastFilter = filter;
         currentPage = page;
+
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1780,12 +1768,16 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             selectPrevPage();
             event.stopPropagation();
             break;
+        case KeyCodes.KEY_TAB:
+            tabPressedWhenPopupOpen = true;
+            filterOptions(currentPage);
+            // onBlur() takes care of the rest
+            break;
         case KeyCodes.KEY_ESCAPE:
             reset();
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
-        case KeyCodes.KEY_TAB:
         case KeyCodes.KEY_ENTER:
             if (suggestionPopup.menu.getKeyboardSelectedItem() == null) {
                 /*
@@ -1793,8 +1785,17 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  * text (causes popup to open) and then pressing enter.
                  */
                 if (!allowNewItem) {
-                    onSuggestionSelected(currentSuggestions
-                            .get(suggestionPopup.menu.getSelectedIndex()));
+                    /*
+                     * New items are not allowed: If there is only one
+                     * suggestion, select that. If there is more than one
+                     * suggestion Enter key should work as Escape key. Otherwise
+                     * do nothing.
+                     */
+                    if (currentSuggestions.size() == 1) {
+                        onSuggestionSelected(currentSuggestions.get(0));
+                    } else if (currentSuggestions.size() > 1) {
+                        reset();
+                    }
                 } else {
                     // Handle addition of new items.
                     suggestionPopup.menu.doSelectedItemAction();
@@ -1862,9 +1863,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 break;
             default:
                 if (textInputEnabled) {
-                    // when filtering, we always want to see the results on the
-                    // first page first.
-                    filterOptions(0);
+                    filterOptions(currentPage);
                 }
                 break;
             }
@@ -2070,6 +2069,19 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         focused = false;
         if (!readonly) {
+            // much of the TAB handling takes place here
+            if (tabPressedWhenPopupOpen) {
+                tabPressedWhenPopupOpen = false;
+                waitingForFilteringResponse = false;
+                suggestionPopup.menu.doSelectedItemAction();
+                suggestionPopup.hide();
+            } else if ((!suggestionPopup.isAttached() && waitingForFilteringResponse)
+                    || suggestionPopup.isJustClosed()) {
+                // typing so fast the popup was never opened, or it's just
+                // closed
+                waitingForFilteringResponse = false;
+                suggestionPopup.menu.doSelectedItemAction();
+            }
             if (selectedOptionKey == null) {
                 setPromptingOn();
             } else if (currentSuggestion != null) {
