@@ -18,7 +18,6 @@ package com.vaadin.tests.design;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -58,10 +57,9 @@ public class DesignFormatterTest {
                 byte.class, short.class, int.class, long.class, float.class,
                 double.class, Boolean.class, Character.class, Byte.class,
                 Short.class, Integer.class, Long.class, Float.class,
-                Double.class, BigDecimal.class, String.class,
-                ShortcutAction.class, Date.class, FileResource.class,
-                ExternalResource.class, ThemeResource.class, Resource.class,
-                TimeZone.class }) {
+                Double.class, String.class, ShortcutAction.class, Date.class,
+                FileResource.class, ExternalResource.class,
+                ThemeResource.class, Resource.class, TimeZone.class }) {
             assertTrue("not supported " + type.getSimpleName(),
                     formatter.canConvert(type));
         }
@@ -144,14 +142,6 @@ public class DesignFormatterTest {
         assertEquals(d, formatter.parse("123456789.123456789", Double.class),
                 1e-9);
 
-    }
-
-    @Test
-    public void testBigDecimal() {
-        BigDecimal bd = new BigDecimal("123456789123456789.123456789123456789");
-        assertEquals("123456789123456789.123", formatter.format(bd));
-        assertEquals(bd, formatter.parse(
-                "123456789123456789.123456789123456789", BigDecimal.class));
     }
 
     @Test

@@ -29,7 +29,6 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
@@ -69,8 +68,8 @@ public class DesignFormatter implements Serializable {
      */
     protected void mapDefaultTypes() {
         // numbers use standard toString/valueOf approach
-        for (Class<?> c : new Class<?>[] { Byte.class, Short.class,
-                Integer.class, Long.class }) {
+        for (Class<?> c : new Class<?>[] { Integer.class, Byte.class,
+                Short.class, Long.class, BigDecimal.class }) {
             DesignToStringConverter<?> conv = new DesignToStringConverter(c);
             converterMap.put(c, conv);
             try {
@@ -134,16 +133,6 @@ public class DesignFormatter implements Serializable {
         };
         converterMap.put(Double.class, doubleConverter);
         converterMap.put(double.class, doubleConverter);
-
-        final DecimalFormat bigDecimalFmt = new DecimalFormat("0.###", symbols);
-        bigDecimalFmt.setGroupingUsed(false);
-        bigDecimalFmt.setParseBigDecimal(true);
-        converterMap.put(BigDecimal.class, new StringToBigDecimalConverter() {
-            @Override
-            protected NumberFormat getFormat(Locale locale) {
-                return bigDecimalFmt;
-            };
-        });
 
         // strings do nothing
         converterMap.put(String.class, new Converter<String, String>() {
