@@ -63,8 +63,10 @@
         <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
         <p>
-            Vaadin @version@ is a feature release that includes a
-            number of new features and bug fixes, as listed in the <a
+            Vaadin @version@ is a
+<!--            feature release that includes --> 
+            pre-release for evaluating
+            a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
         </p>
@@ -93,51 +95,24 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Grid is a new component for showing tabular data. It has been
-                designed from the ground up to eventually replace the Table
-                and TreeTable components.<br />
-                The most notable Grid features in @version-minor@ are:
-                <ul>
-                    <li>Support for multiple rows in the header and footer sections.</li>
-                    <li>Renderer concept for customizing how the data in a given column is represented in the browser.</li>
-                    <li>Support for frozen columns.</li>
-                    <li>Support for inline editing of one row at a time.</li>
-                    <li>Support for components in header and footer cells.</li>
-                    <li>Hardware accelerated, touch optimized scrolling.</li>
-                </ul></li>
-            <li>Declarative layout support for initializing a component hierarchy from an HTML file.</li>
-            <li>Uses GWT 2.7 for improved compilation times when using Super Dev Mode.</li>
-            <li>@Viewport annotation for declaratively defining a mobile viewport definition for a UI.</li>
-            <li>Component captions, TabSheet/Accordion tab captions and Calendar event captions can be configured to be displayed as HTML.</li>
-            <li>Selects use converters when presenting itemids.</li>
-            <li>Improved performance when server response contains no visual changes (e.g. empty polling responses).</li>
-            <li>Development time on-the-fly scss compilation cache may now be preserved when redeploying or restarting the server.</li>
-            <li>Unified JSON library for using the same API in both server-side and client-side code.</li>
-            <li>Range validators and converters for additional numerical types.</li>
-            <li>Support for fine grained add/remove item events in in-memory containers.</li>
+            <li>Column reordering using drag and drop in Grid</li>
+            <li>Column hiding in Grid</li>
+            <li>Row details support in Grid</li>
         </ul>
 
         <p>
-            For enhancements introduced in Vaadin 7.3, see the <a
-                href="http://vaadin.com/download/release/7.3/7.3.0/release-notes.html">Release
-                Notes for Vaadin 7.3.0</a>.
+            For enhancements introduced in Vaadin 7.4, see the <a
+                href="http://vaadin.com/download/release/7.4/7.4.0/release-notes.html">Release
+                Notes for Vaadin 7.4.0</a>.
         </p>
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>
-                <p>The org.json and com.google.gwt.json libraries have been replaced by elemental.json.</p>
-                <p>JavascriptFunction.call parameter type has been changed to elemental.json.JsonArray, affecting JavaScript.addFunction, AbstractJavaScriptComponent.addFunction and AbstractJavaScriptExtension.addFunction</p>
-                <p>Raw JSON values passed to AbstractJavaScriptComponent.callFunction and AbstractJavaScriptExtension.callFunction should be changed to use elemental.json types.</p>
-            </li>
-            <li>The semantics of empty and required for Field classes has been made more consistent. This mainly affects Checkbox which is now considered to be empty when it is not checked.</li>
-            <li>The previously inconsistent behavior in HTML vs plain text rendering of Calendar event captions has been made consistent.</li>
-            <li>Support for Opera 12 has been dropped. Newer versions based on the Blink rendering engine are still supported.</li>
-            <li>Window's accessibility shortcut was moved to server-side. Now setCloseShortcut overrides the default value, while addCloseShortcut can be used to add more than one shortcut key for closing the window.
-                The protected value closeShortcut in Window was removed.</li>
+
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
+            <li>The user interface for hiding and unhiding Grid columns is not yet finalized.</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
