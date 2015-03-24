@@ -3115,12 +3115,14 @@ public class Grid<T> extends ResizeComposite implements
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            bodyRenderer = renderer;
 
-            if (grid != null) {
-                grid.refreshBody();
+            if (renderer != bodyRenderer) {
+                bodyRenderer = renderer;
+
+                if (grid != null) {
+                    grid.refreshBody();
+                }
             }
-
             return this;
         }
 
