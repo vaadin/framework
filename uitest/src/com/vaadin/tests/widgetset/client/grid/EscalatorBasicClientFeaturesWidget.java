@@ -698,6 +698,14 @@ public class EscalatorBasicClientFeaturesWidget extends
                 escalator.scrollToSpacer(rowIndex, ScrollDestination.ANY, 0);
             }
         }, menupath);
+        addMenuCommand("Scroll here row+spacer below (ANY, 0)",
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        escalator.scrollToRowAndSpacer(rowIndex,
+                                ScrollDestination.ANY, 0);
+                    }
+                }, menupath);
     }
 
     private void insertRows(final RowContainer container, int offset, int number) {

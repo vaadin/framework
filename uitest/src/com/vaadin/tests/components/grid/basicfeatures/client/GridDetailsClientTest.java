@@ -28,12 +28,17 @@ import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.ElementQuery;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
+@RunLocally(Browser.PHANTOMJS)
 public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     private static final String[] SET_GENERATOR = new String[] { "Component",
@@ -42,10 +47,6 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
             "Component", "Row details", "Set faulty generator" };
     private static final String[] SET_EMPTY_GENERATOR = new String[] {
             "Component", "Row details", "Set empty generator" };
-    private static final String[] TOGGLE_DETAILS_FOR_ROW_1 = new String[] {
-            "Component", "Row details", "Toggle details for row 1" };
-    private static final String[] TOGGLE_DETAILS_FOR_ROW_100 = new String[] {
-            "Component", "Row details", "Toggle details for row 100" };
 
     @Before
     public void setUp() {
@@ -61,7 +62,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void nullRendererShowsDetailsPlaceholder() {
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
         TestBenchElement details = getGridElement().getDetails(1);
         assertNotNull("details for row 1 should not exist at the start",
                 details);
@@ -72,7 +73,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void applyRendererThenOpenDetails() {
         selectMenuPath(SET_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
 
         TestBenchElement details = getGridElement().getDetails(1);
         assertTrue("Unexpected details content",
@@ -81,7 +82,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void openDetailsThenAppyRenderer() {
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
         selectMenuPath(SET_GENERATOR);
 
         TestBenchElement details = getGridElement().getDetails(1);
@@ -99,7 +100,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         }
 
         selectMenuPath(SET_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_100);
+        toggleDetailsFor(100);
 
         // scroll a bit beyond so we see below.
         getGridElement().scrollToRow(101);
@@ -114,7 +115,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         assertFalse("No notifications should've been at the start",
                 $(NotificationElement.class).exists());
 
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
         selectMenuPath(SET_FAULTY_GENERATOR);
 
         ElementQuery<NotificationElement> notification = $(NotificationElement.class);
@@ -128,7 +129,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void updaterStillWorksAfterError() {
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
 
         selectMenuPath(SET_FAULTY_GENERATOR);
         $(NotificationElement.class).first().close();
@@ -142,7 +143,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void updaterRendersExpectedWidgets() {
         selectMenuPath(SET_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
 
         TestBenchElement detailsElement = getGridElement().getDetails(1);
         assertNotNull(detailsElement.findElement(By.className("gwt-Label")));
@@ -152,7 +153,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void widgetsInUpdaterWorkAsExpected() {
         selectMenuPath(SET_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
 
         TestBenchElement detailsElement = getGridElement().getDetails(1);
         WebElement button = detailsElement.findElement(By
@@ -167,7 +168,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void emptyGenerator() {
         selectMenuPath(SET_EMPTY_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
 
         assertEquals("empty generator did not produce an empty details row",
                 "", getGridElement().getDetails(1).getText());
@@ -176,9 +177,54 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test(expected = NoSuchElementException.class)
     public void removeDetailsRow() {
         selectMenuPath(SET_GENERATOR);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
-        selectMenuPath(TOGGLE_DETAILS_FOR_ROW_1);
+        toggleDetailsFor(1);
+        toggleDetailsFor(1);
 
         getGridElement().getDetails(1);
+    }
+
+    @Test
+    public void scrollDownToRowWithDetails() {
+        toggleDetailsFor(100);
+        scrollToRow(100, ScrollDestination.ANY);
+
+        Range validScrollRange = Range.between(1700, 1715);
+        assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
+    }
+
+    @Test
+    public void scrollUpToRowWithDetails() {
+        toggleDetailsFor(100);
+        scrollGridVerticallyTo(999999);
+        scrollToRow(100, ScrollDestination.ANY);
+
+        Range validScrollRange = Range.between(1990, 2010);
+        assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
+    }
+
+    @Test
+    public void cannotScrollBeforeTop() {
+        toggleDetailsFor(1);
+        scrollToRow(0, ScrollDestination.END);
+        assertEquals(0, getGridVerticalScrollPos());
+    }
+
+    @Test
+    public void cannotScrollAfterBottom() {
+        toggleDetailsFor(999);
+        scrollToRow(999, ScrollDestination.START);
+
+        Range expectedRange = Range.withLength(19680, 20);
+        assertTrue(expectedRange.contains(getGridVerticalScrollPos()));
+    }
+
+    private void scrollToRow(int rowIndex, ScrollDestination destination) {
+        selectMenuPath(new String[] { "Component", "State", "Scroll to...",
+                "Row " + rowIndex + "...", "Destination " + destination });
+    }
+
+    private void toggleDetailsFor(int rowIndex) {
+        selectMenuPath(new String[] { "Component", "Row details",
+                "Toggle details for...", "Row " + rowIndex });
     }
 }

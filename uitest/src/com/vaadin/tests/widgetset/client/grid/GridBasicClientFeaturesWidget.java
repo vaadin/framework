@@ -80,6 +80,7 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
@@ -767,6 +768,43 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setWidth("1000px");
             }
         }, "Component", "State", "Width");
+
+        createScrollToRowMenu();
+    }
+
+    private void createScrollToRowMenu() {
+        String[] menupath = new String[] { "Component", "State",
+                "Scroll to...", null };
+
+        for (int i = 0; i < ROWS; i += 100) {
+            menupath[3] = "Row " + i + "...";
+            for (final ScrollDestination scrollDestination : ScrollDestination
+                    .values()) {
+                final int row = i;
+                addMenuCommand("Destination " + scrollDestination,
+                        new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                grid.scrollToRow(row, scrollDestination);
+                            }
+                        }, menupath);
+            }
+        }
+
+        int i = ROWS - 1;
+        menupath[3] = "Row " + i + "...";
+        for (final ScrollDestination scrollDestination : ScrollDestination
+                .values()) {
+            final int row = i;
+            addMenuCommand("Destination " + scrollDestination,
+                    new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            grid.scrollToRow(row, scrollDestination);
+                        }
+                    }, menupath);
+        }
+
     }
 
     private void createColumnsMenu() {
@@ -1423,24 +1461,21 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, menupath);
 
-        addMenuCommand("Toggle details for row 1", new ScheduledCommand() {
-            boolean visible = false;
+        String[] togglemenupath = new String[] { menupath[0], menupath[1],
+                "Toggle details for..." };
+        for (int i : new int[] { 0, 1, 100, 200, 300, 400, 500, 600, 700, 800,
+                900, 999 }) {
+            final int rowIndex = i;
+            addMenuCommand("Row " + rowIndex, new ScheduledCommand() {
+                boolean visible = false;
 
-            @Override
-            public void execute() {
-                visible = !visible;
-                grid.setDetailsVisible(1, visible);
-            }
-        }, menupath);
+                @Override
+                public void execute() {
+                    visible = !visible;
+                    grid.setDetailsVisible(rowIndex, visible);
+                }
+            }, togglemenupath);
+        }
 
-        addMenuCommand("Toggle details for row 100", new ScheduledCommand() {
-            boolean visible = false;
-
-            @Override
-            public void execute() {
-                visible = !visible;
-                grid.setDetailsVisible(100, visible);
-            }
-        }, menupath);
     }
 }

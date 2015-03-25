@@ -5859,7 +5859,8 @@ public class Escalator extends Widget implements RequiresResize,
      *             column
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE}
-     *             and padding is nonzero, or if the indicated column is frozen
+     *             and padding is nonzero; or if the indicated column is frozen;
+     *             or if {@code destination == null}
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
@@ -5900,7 +5901,9 @@ public class Escalator extends Widget implements RequiresResize,
      *             if {@code rowIndex} is not a valid index for an existing row
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE}
-     *             and padding is nonzero
+     *             and padding is nonzero; or if {@code destination == null}
+     * @see #scrollToRowAndSpacer(int, ScrollDestination, int)
+     * @see #scrollToSpacer(int, ScrollDestination, int)
      */
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
@@ -5921,7 +5924,7 @@ public class Escalator extends Widget implements RequiresResize,
     /**
      * Scrolls the body vertically so that the spacer at the given row index is
      * visible and there is at least {@literal padding} pixesl to the given
-     * scroll destination
+     * scroll destination.
      * 
      * @since
      * @param spacerIndex
@@ -5932,9 +5935,11 @@ public class Escalator extends Widget implements RequiresResize,
      *            the number of pixels to place between the scrolled-to spacer
      *            and the viewport edge
      * @throws IllegalArgumentException
-     *             if {@code spacerIndex} is not an opened spacer if
+     *             if {@code spacerIndex} is not an opened spacer; or if
      *             {@code destination} is {@link ScrollDestination#MIDDLE} and
-     *             padding is nonzero
+     *             padding is nonzero; or if {@code destination == null}
+     * @see #scrollToRow(int, ScrollDestination, int)
+     * @see #scrollToRowAndSpacer(int, ScrollDestination, int)
      */
     public void scrollToSpacer(final int spacerIndex,
             ScrollDestination destination, final int padding)
@@ -5943,8 +5948,87 @@ public class Escalator extends Widget implements RequiresResize,
         body.scrollToSpacer(spacerIndex, destination, padding);
     }
 
+    /**
+     * Scrolls vertically to a row and the spacer below it.
+     * <p>
+     * If a spacer is not open at that index, this method behaves like
+     * {@link #scrollToRow(int, ScrollDestination, int)}
+     * 
+     * @since
+     * @param rowIndex
+     *            the index of the logical row to scroll to. -1 takes the
+     *            topmost spacer into account as well.
+     * @param destination
+     *            where the row should be aligned visually after scrolling
+     * @param padding
+     *            the number pixels to place between the scrolled-to row and the
+     *            viewport edge.
+     * @see #scrollToRow(int, ScrollDestination, int)
+     * @see #scrollToSpacer(int, ScrollDestination, int)
+     * @throws IllegalArgumentException
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE}
+     *             and {@code padding} is not zero; or if {@code rowIndex} is
+     *             not a valid row index, or -1; or if
+     *             {@code destination == null}; or if {@code rowIndex == -1} and
+     *             there is no spacer open at that index.
+     */
+    public void scrollToRowAndSpacer(int rowIndex,
+            ScrollDestination destination, int padding)
+            throws IllegalArgumentException {
+        validateScrollDestination(destination, padding);
+        if (rowIndex != -1) {
+            verifyValidRowIndex(rowIndex);
+        }
+
+        // row range
+        final Range rowRange;
+        if (rowIndex != -1) {
+            int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
+            int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
+            rowRange = Range.withLength(rowTop, rowHeight);
+        } else {
+            rowRange = Range.withLength(0, 0);
+        }
+
+        // get spacer
+        final SpacerContainer.SpacerImpl spacer = body.spacerContainer
+                .getSpacer(rowIndex);
+
+        if (rowIndex == -1 && spacer == null) {
+            throw new IllegalArgumentException("Cannot scroll to row index "
+                    + "-1, as there is no spacer open at that index.");
+        }
+
+        // make into target range
+        final Range targetRange;
+        if (spacer != null) {
+            final int spacerTop = (int) Math.floor(spacer.getTop());
+            final int spacerHeight = (int) Math.ceil(spacer.getHeight());
+            Range spacerRange = Range.withLength(spacerTop, spacerHeight);
+
+            targetRange = rowRange.combineWith(spacerRange);
+        } else {
+            targetRange = rowRange;
+        }
+
+        // get params
+        int targetStart = targetRange.getStart();
+        int targetEnd = targetRange.getEnd();
+        double viewportStart = getScrollTop();
+        double viewportEnd = viewportStart + body.getHeightOfSection();
+
+        double scrollPos = getScrollPos(destination, targetStart, targetEnd,
+                viewportStart, viewportEnd, padding);
+
+        setScrollTop(scrollPos);
+    }
+
     private static void validateScrollDestination(
             final ScrollDestination destination, final int padding) {
+        if (destination == null) {
+            throw new IllegalArgumentException("Destination cannot be null");
+        }
+
         if (destination == ScrollDestination.MIDDLE && padding != 0) {
             throw new IllegalArgumentException(
                     "You cannot have a padding with a MIDDLE destination");

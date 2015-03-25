@@ -332,8 +332,44 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         scrollVerticallyTo(1000);
         selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
 
-        // Browsers might vary with a few pixels.
         assertEquals(getScrollTop(), 1000);
+    }
+
+    @Test
+    public void scrollToRowAndSpacerFromAbove() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_50,
+                SCROLL_HERE_SPACERBELOW_ANY_0PADDING);
+
+        // Browsers might vary with a few pixels.
+        Range allowableScrollRange = Range.between(765, 780);
+        int scrollTop = (int) getScrollTop();
+        assertTrue("Scroll position was not " + allowableScrollRange + ", but "
+                + scrollTop, allowableScrollRange.contains(scrollTop));
+    }
+
+    @Test
+    public void scrollToRowAndSpacerFromBelow() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        scrollVerticallyTo(999999);
+        selectMenuPath(FEATURES, SPACERS, ROW_50,
+                SCROLL_HERE_SPACERBELOW_ANY_0PADDING);
+
+        // Browsers might vary with a few pixels.
+        Range allowableScrollRange = Range.between(995, 1005);
+        int scrollTop = (int) getScrollTop();
+        assertTrue("Scroll position was not " + allowableScrollRange + ", but "
+                + scrollTop, allowableScrollRange.contains(scrollTop));
+    }
+
+    @Test
+    public void scrollToRowAndSpacerAlreadyInViewport() throws Exception {
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        scrollVerticallyTo(950);
+        selectMenuPath(FEATURES, SPACERS, ROW_50,
+                SCROLL_HERE_SPACERBELOW_ANY_0PADDING);
+
+        assertEquals(getScrollTop(), 950);
     }
 
     private static double[] getElementDimensions(WebElement element) {

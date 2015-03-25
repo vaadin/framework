@@ -5887,6 +5887,9 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Scrolls to a certain row, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the details for that row are visible, those will be taken into account
+     * as well.
      * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
@@ -5901,6 +5904,9 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Scrolls to a certain row, using user-specified scroll destination.
+     * <p>
+     * If the details for that row are visible, those will be taken into account
+     * as well.
      * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
@@ -5920,6 +5926,9 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Scrolls to a certain row using only user-specified parameters.
+     * <p>
+     * If the details for that row are visible, those will be taken into account
+     * as well.
      * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
@@ -5949,7 +5958,7 @@ public class Grid<T> extends ResizeComposite implements
                     + ") is above maximum (" + maxsize + ")!");
         }
 
-        escalator.scrollToRow(rowIndex, destination, paddingPx);
+        escalator.scrollToRowAndSpacer(rowIndex, destination, paddingPx);
     }
 
     /**
@@ -7686,5 +7695,4 @@ public class Grid<T> extends ResizeComposite implements
     private Sidebar getSidebar() {
         return sidebar;
     }
-
 }

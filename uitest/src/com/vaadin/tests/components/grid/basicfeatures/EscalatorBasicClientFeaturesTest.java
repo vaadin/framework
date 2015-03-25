@@ -78,6 +78,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String SET_100PX = "Set 100px";
     protected static final String SPACERS = "Spacers";
     protected static final String SCROLL_HERE_ANY_0PADDING = "Scroll here (ANY, 0)";
+    protected static final String SCROLL_HERE_SPACERBELOW_ANY_0PADDING = "Scroll here row+spacer below (ANY, 0)";
     protected static final String REMOVE = "Remove";
 
     protected static final String ROW_MINUS1 = "Row -1";
