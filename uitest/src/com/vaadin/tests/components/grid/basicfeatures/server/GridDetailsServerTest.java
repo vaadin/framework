@@ -288,4 +288,19 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         assertFalse("Details should be not empty with details component",
                 getGridElement().getDetails(0).getText().isEmpty());
     }
+
+    @Test
+    public void noAssertErrorsOnEmptyDetailsAndScrollDown() {
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        scrollGridVerticallyTo(500);
+        assertFalse(logContainsText("AssertionError"));
+    }
+
+    @Test
+    public void noAssertErrorsOnPopulatedDetailsAndScrollDown() {
+        selectMenuPath(DETAILS_GENERATOR_WATCHING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        scrollGridVerticallyTo(500);
+        assertFalse(logContainsText("AssertionError"));
+    }
 }

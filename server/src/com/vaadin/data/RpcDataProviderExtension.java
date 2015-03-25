@@ -663,8 +663,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
             assert itemId != null : "itemId was null";
             Integer newRowIndex = Integer.valueOf(rowIndex);
 
-            assert !visibleDetailsComponents.containsKey(itemId) : "itemId "
-                    + "already has a component. Should be destroyed first.";
+            if (visibleDetailsComponents.containsKey(itemId)) {
+                // Don't overwrite existing components
+                return;
+            }
 
             RowReference rowReference = new RowReference(grid);
             rowReference.set(itemId);
@@ -695,14 +697,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         + "itemId is empty even though we just created a "
                         + "component for it (" + itemId + ")";
             } else {
-                assert !emptyDetails.containsKey(itemId) : "Bookkeeping has "
-                        + "already itemId marked as empty (itemId: " + itemId
-                        + ", old index: " + emptyDetails.get(itemId)
-                        + ", new index: " + newRowIndex + ")";
-                assert !emptyDetails.containsValue(newRowIndex) : "Bookkeeping"
-                        + " already had another itemId for this empty index "
-                        + "(index: " + newRowIndex + ", new itemId: " + itemId
-                        + ")";
+                assert assertItemIdHasNotMovedAndNothingIsOverwritten(itemId,
+                        newRowIndex);
                 emptyDetails.put(itemId, newRowIndex);
             }
 
@@ -710,6 +706,26 @@ public class RpcDataProviderExtension extends AbstractExtension {
              * Don't attach the components here. It's done by
              * GridServerRpc.sendDetailsComponents in a separate roundtrip.
              */
+        }
+
+        private boolean assertItemIdHasNotMovedAndNothingIsOverwritten(
+                Object itemId, Integer newRowIndex) {
+
+            Integer oldRowIndex = emptyDetails.get(itemId);
+            if (!SharedUtil.equals(oldRowIndex, newRowIndex)) {
+
+                assert !emptyDetails.containsKey(itemId) : "Unexpected "
+                        + "change of empty details row index for itemId "
+                        + itemId + " from " + oldRowIndex + " to "
+                        + newRowIndex;
+
+                assert !emptyDetails.containsValue(newRowIndex) : "Bookkeeping"
+                        + " already had another itemId for this empty index "
+                        + "(index: " + newRowIndex + ", new itemId: " + itemId
+                        + ")";
+            }
+
+            return true;
         }
 
         /**
