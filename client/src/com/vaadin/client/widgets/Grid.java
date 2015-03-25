@@ -78,7 +78,6 @@ import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
 import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.widget.escalator.Cell;
@@ -2921,7 +2920,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private final FlowPanel content;
 
-        private final VButton openCloseButton;
+        private final Button openCloseButton;
 
         private final Grid<?> grid;
 
@@ -2931,7 +2930,7 @@ public class Grid<T> extends ResizeComposite implements
             rootContainer = new FlowPanel();
             initWidget(rootContainer);
 
-            openCloseButton = new VButton();
+            openCloseButton = new Button();
             openCloseButton.addClickHandler(openCloseButtonHandler);
 
             rootContainer.add(openCloseButton);
