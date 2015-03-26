@@ -24,7 +24,7 @@ import com.vaadin.shared.Connector;
  * A description of an indexing modification for a connector. This is used by
  * Grid for internal bookkeeping updates.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public class DetailsConnectorChange implements Serializable {

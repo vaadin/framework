@@ -170,7 +170,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An event listener for column visibility change events in the Grid.
      * 
-     * @since
+     * @since 7.5.0
      */
     public interface ColumnVisibilityChangeListener extends Serializable {
         /**
@@ -184,7 +184,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An event that is fired when a column's visibility changes.
      * 
-     * @since
+     * @since 7.5.0
      */
     public static class ColumnVisibilityChangeEvent extends Component.Event {
 
@@ -248,7 +248,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * A callback interface for generating details for a particular row in Grid.
      * 
-     * @since
+     * @since 7.5.0
      * @author Vaadin Ltd
      */
     public interface DetailsGenerator extends Serializable {
@@ -452,7 +452,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An event listener for column reorder events in the Grid.
      * 
-     * @since
+     * @since 7.5.0
      */
     public interface ColumnReorderListener extends Serializable {
         /**
@@ -467,7 +467,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An event that is fired when the columns are reordered.
      * 
-     * @since
+     * @since 7.5.0
      */
     public static class ColumnReorderEvent extends Component.Event {
 
@@ -2834,7 +2834,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * Hides or shows the column. By default columns are visible before
          * explicitly hiding them.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
          *            to show
@@ -2850,7 +2850,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Is this column hidden. Default is {@code false}.
          * 
-         * @since
+         * @since 7.5.0
          * @return <code>true</code> if the column is currently hidden,
          *         <code>false</code> otherwise
          */
@@ -2865,7 +2865,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * <em>Note:</em> it is still possible to hide the column
          * programmatically using {@link #setHidden(boolean)}
          * 
-         * @since
+         * @since 7.5.0
          * @param hidable
          *            <code>true</code> iff the column may be hidable by the
          *            user via UI interaction
@@ -2882,7 +2882,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * <em>Note:</em> the column can be programmatically hidden using
          * {@link #setHidden(boolean)} regardless of the returned value.
          * 
-         * @since
+         * @since 7.5.0
          * @return <code>true</code> if the user can hide the column,
          *         <code>false</code> if not
          */
@@ -3803,7 +3803,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Returns whether column reordering is allowed. Default value is
      * <code>false</code>.
      * 
-     * @since
+     * @since 7.5.0
      * @return true if reordering is allowed
      */
     public boolean isColumnReorderingAllowed() {
@@ -3814,7 +3814,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Sets whether or not column reordering is allowed. Default value is
      * <code>false</code>.
      * 
-     * @since
+     * @since 7.5.0
      * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed
      */
@@ -4399,7 +4399,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Registers a new column reorder listener.
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            the listener to register
      */
@@ -4410,7 +4410,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes a previously registered column reorder listener.
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            the listener to remove
      */
@@ -5486,7 +5486,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Registers a new column visibility change listener
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            the listener to register
      */
@@ -5499,7 +5499,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes a previously registered column visibility change listener
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            the listener to remove
      */
@@ -5520,7 +5520,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * <p>
      * The currently opened row details will be re-rendered.
      * 
-     * @since
+     * @since 7.5.0
      * @param detailsGenerator
      *            the details generator to set
      * @throws IllegalArgumentException
@@ -5545,7 +5545,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Gets the current details generator for row details.
      * 
-     * @since
+     * @since 7.5.0
      * @return the detailsGenerator the current details generator
      */
     public DetailsGenerator getDetailsGenerator() {
@@ -5555,7 +5555,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Shows or hides the details for a specific item.
      * 
-     * @since
+     * @since 7.5.0
      * @param itemId
      *            the id of the item for which to set details visibility
      * @param visible
@@ -5569,7 +5569,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Checks whether details are visible for the given item.
      * 
-     * @since
+     * @since 7.5.0
      * @param itemId
      *            the id of the item for which to check details visibility
      * @return <code>true</code> iff the details are visible

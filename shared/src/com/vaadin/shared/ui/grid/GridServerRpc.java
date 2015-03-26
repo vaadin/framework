@@ -51,7 +51,7 @@ public interface GridServerRpc extends ServerRpc {
     /**
      * Informs the server that the columns of the Grid have been reordered.
      * 
-     * @since
+     * @since 7.5.0
      * @param newColumnOrder
      *            a list of column ids in the new order
      * @param oldColumnOrder
@@ -70,7 +70,7 @@ public interface GridServerRpc extends ServerRpc {
      * , and that is too late to change the hierarchy. So we need this
      * round-trip to work around that limitation.
      * 
-     * @since
+     * @since 7.5.0
      * @param fetchId
      *            an unique identifier for the request
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
@@ -80,7 +80,7 @@ public interface GridServerRpc extends ServerRpc {
     /**
      * Informs the server that the column's visibility has been changed.
      * 
-     * @since
+     * @since 7.5.0
      * @param id
      *            the id of the column
      * @param hidden

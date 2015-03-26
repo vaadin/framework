@@ -23,7 +23,7 @@ import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
  * The updater is responsible for making sure all elements are properly
  * constructed and cleaned up.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  * @see Spacer
  * @see BodyRowContainer

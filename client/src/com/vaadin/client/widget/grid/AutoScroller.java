@@ -34,7 +34,7 @@ import com.vaadin.client.widgets.Grid;
  * Grid when the cursor is close enough the edge of the body of the grid,
  * depending on the scroll direction chosen.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public class AutoScroller {

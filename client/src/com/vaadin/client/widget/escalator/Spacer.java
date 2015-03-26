@@ -21,7 +21,7 @@ import com.google.gwt.dom.client.Element;
  * A representation of a spacer element in a
  * {@link com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer}.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public interface Spacer {

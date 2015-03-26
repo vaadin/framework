@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * A callback interface for generating details for a particular row in Grid.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public interface DetailsGenerator {

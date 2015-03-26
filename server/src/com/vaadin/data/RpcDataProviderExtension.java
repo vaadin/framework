@@ -588,7 +588,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * A class that makes detail component related internal communication
      * possible between {@link RpcDataProviderExtension} and grid.
      * 
-     * @since
+     * @since 7.5.0
      * @author Vaadin Ltd
      */
     public static final class DetailComponentManager implements Serializable {
@@ -1357,7 +1357,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * If that row is currently in the client side's cache, this information
      * will be sent over to the client.
      * 
-     * @since
+     * @since 7.5.0
      * @param itemId
      *            the id of the item of which to change the details visibility
      * @param visible
@@ -1401,7 +1401,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Checks whether the details for a row is marked as visible.
      * 
-     * @since
+     * @since 7.5.0
      * @param itemId
      *            the id of the item of which to check the visibility
      * @return <code>true</code> iff the detials are visible for the item. This

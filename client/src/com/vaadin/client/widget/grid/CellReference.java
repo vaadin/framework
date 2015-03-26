@@ -105,7 +105,7 @@ public class CellReference<T> {
      * Gets the index of the cell in the DOM. The difference to
      * {@link #getColumnIndex()} is caused by hidden columns.
      * 
-     * @since
+     * @since 7.5.0
      * @return the index of the column in the DOM
      */
     public int getColumnIndexDOM() {

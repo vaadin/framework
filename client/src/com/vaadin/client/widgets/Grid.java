@@ -653,7 +653,7 @@ public class Grid<T> extends ResizeComposite implements
             /**
              * Returns <code>true</code> if this row contains spanned cells.
              * 
-             * @since
+             * @since 7.5.0
              * @return does this row contain spanned cells
              */
             public boolean hasSpannedCells() {
@@ -3121,7 +3121,7 @@ public class Grid<T> extends ResizeComposite implements
      * column hiding toggles and custom widgets become visible once the sidebar
      * has been opened.
      * 
-     * @since
+     * @since 7.5.0
      */
     private static class Sidebar extends Composite {
 
@@ -4262,7 +4262,7 @@ public class Grid<T> extends ResizeComposite implements
          * Hides or shows the column. By default columns are visible before
          * explicitly hiding them.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
          *            to show
@@ -4307,7 +4307,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Is this column hidden. Default is {@code false}.
          * 
-         * @since
+         * @since 7.5.0
          * @return <code>true</code> if the column is currently hidden,
          *         <code>false</code> otherwise
          */
@@ -4322,7 +4322,7 @@ public class Grid<T> extends ResizeComposite implements
          * <em>Note:</em> it is still possible to hide the column
          * programmatically using {@link #setHidden(boolean)}.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidable
          *            <code>true</code> if the user can hide this column,
          *            <code>false</code> if not
@@ -4341,7 +4341,7 @@ public class Grid<T> extends ResizeComposite implements
          * <em>Note:</em> the column can be programmatically hidden using
          * {@link #setHidden(boolean)} regardless of the returned value.
          * 
-         * @since
+         * @since 7.5.0
          * @return <code>true</code> if the user can hide the column,
          *         <code>false</code> if not
          */
@@ -5349,7 +5349,7 @@ public class Grid<T> extends ResizeComposite implements
      * <p>
      * No {@link Column#isHidden() hidden} columns included.
      * 
-     * @since
+     * @since 7.5.0
      * @return A unmodifiable list of the currently visible columns in the grid
      */
     public List<Column<?, T>> getVisibleColumns() {
@@ -5989,7 +5989,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Sets the horizontal scroll offset
      * 
-     * @since
+     * @since 7.5.0
      * @param px
      *            the number of pixels this grid should be scrolled right
      */
@@ -6009,7 +6009,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Returns the height of the scrollable area in pixels.
      * 
-     * @since
+     * @since 7.5.0
      * @return the height of the scrollable area in pixels
      */
     public double getScrollHeight() {
@@ -6019,7 +6019,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Returns the width of the scrollable area in pixels.
      * 
-     * @since
+     * @since 7.5.0
      * @return the width of the scrollable area in pixels.
      */
     public double getScrollWidth() {
@@ -7051,7 +7051,7 @@ public class Grid<T> extends ResizeComposite implements
      * Register a column reorder handler to this Grid. The event for this
      * handler is fired when the Grid's columns are reordered.
      * 
-     * @since
+     * @since 7.5.0
      * @param handler
      *            the handler for the event
      * @return the registration for the event
@@ -7065,7 +7065,7 @@ public class Grid<T> extends ResizeComposite implements
      * Register a column visibility change handler to this Grid. The event for
      * this handler is fired when the Grid's columns change visibility.
      * 
-     * @since
+     * @since 7.5.0
      * @param handler
      *            the handler for the event
      * @return the registration for the event
@@ -7129,7 +7129,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Returns whether columns can be reordered with drag and drop.
      * 
-     * @since
+     * @since 7.5.0
      * @return <code>true</code> if columns can be reordered, false otherwise
      */
     public boolean isColumnReorderingAllowed() {
@@ -7139,7 +7139,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Sets whether column reordering with drag and drop is allowed or not.
      * 
-     * @since
+     * @since 7.5.0
      * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed
      */
@@ -7572,7 +7572,7 @@ public class Grid<T> extends ResizeComposite implements
      * <p>
      * The currently opened row details will be re-rendered.
      * 
-     * @since
+     * @since 7.5.0
      * @param detailsGenerator
      *            the details generator to set
      * @throws IllegalArgumentException
@@ -7595,7 +7595,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Gets the current details generator for row details.
      * 
-     * @since
+     * @since 7.5.0
      * @return the detailsGenerator the current details generator
      */
     public DetailsGenerator getDetailsGenerator() {
@@ -7608,7 +7608,7 @@ public class Grid<T> extends ResizeComposite implements
      * This method does nothing if trying to set show already-visible details,
      * or hide already-hidden details.
      * 
-     * @since
+     * @since 7.5.0
      * @param rowIndex
      *            the index of the affected row
      * @param visible
@@ -7651,7 +7651,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Check whether the details for a row is visible or not.
      * 
-     * @since
+     * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
      * @return <code>true</code> iff the details for the given row is visible
@@ -7680,7 +7680,7 @@ public class Grid<T> extends ResizeComposite implements
      * The grid's sidebar shows the column hiding options for those columns that
      * have been set as {@link Column#setHidable(boolean) hidable}.
      * 
-     * @since
+     * @since 7.5.0
      * @return the sidebar widget for this grid
      */
     private Sidebar getSidebar() {

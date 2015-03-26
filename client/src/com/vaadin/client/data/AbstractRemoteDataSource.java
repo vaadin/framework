@@ -341,7 +341,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * A hook that can be overridden to do something whenever a row is dropped
      * from the cache.
      * 
-     * @since
+     * @since 7.5.0
      * @param rowIndex
      *            the index of the dropped row
      */

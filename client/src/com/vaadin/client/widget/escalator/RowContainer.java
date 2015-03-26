@@ -39,7 +39,7 @@ public interface RowContainer {
      * <p>
      * The body section can contain both rows and spacers.
      * 
-     * @since
+     * @since 7.5.0
      * @author Vaadin Ltd
      * @see com.vaadin.client.widgets.Escalator#getBody()
      */

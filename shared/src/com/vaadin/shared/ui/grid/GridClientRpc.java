@@ -61,7 +61,7 @@ public interface GridClientRpc extends ClientRpc {
      * Informs the GridConnector on how the indexing of details connectors has
      * changed.
      * 
-     * @since
+     * @since 7.5.0
      * @param connectorChanges
      *            the indexing changes of details connectors
      * @param fetchId

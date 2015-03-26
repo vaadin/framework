@@ -48,7 +48,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
      * A callback interface to let {@link GridConnector} know that detail
      * visibilities might have changed.
      * 
-     * @since
+     * @since 7.5.0
      * @author Vaadin Ltd
      */
     interface DetailsListener {

@@ -5824,7 +5824,7 @@ public class Escalator extends Widget implements RequiresResize,
      * Returns the scroll width for the escalator. Note that this is not
      * necessary the same as {@code Element.scrollWidth} in the DOM.
      * 
-     * @since
+     * @since 7.5.0
      * @return the scroll width in pixels
      */
     public double getScrollWidth() {
@@ -5835,7 +5835,7 @@ public class Escalator extends Widget implements RequiresResize,
      * Returns the scroll height for the escalator. Note that this is not
      * necessary the same as {@code Element.scrollHeight} in the DOM.
      * 
-     * @since
+     * @since 7.5.0
      * @return the scroll height in pixels
      */
     public double getScrollHeight() {
