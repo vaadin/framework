@@ -29,8 +29,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.accordion.AccordionState;
@@ -417,6 +417,9 @@ public class VAccordion extends VTabsheetBase {
     public void removeTab(int index) {
         StackItem item = getStackItem(index);
         remove(item);
+        if (selectedItemIndex == index) {
+            selectedItemIndex = -1;
+        }
         touchScrollHandler.removeElement(item.getContainerElement());
     }
 
