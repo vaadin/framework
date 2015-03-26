@@ -453,6 +453,8 @@ public class Grid<T> extends ResizeComposite implements
                 }
 
                 HashSet<Column<?, ?>> columnGroup = new HashSet<Column<?, ?>>();
+                // NOTE: this doesn't care about hidden columns, those are
+                // filtered in calculateColspans()
                 for (Column<?, ?> column : columns) {
                     if (!cells.containsKey(column)) {
                         throw new IllegalArgumentException(
@@ -516,39 +518,46 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             void calculateColspans() {
-
                 // Reset all cells
                 for (CELLTYPE cell : this.cells.values()) {
                     cell.setColspan(1);
                 }
-
-                List<Column<?, ?>> columnOrder = new ArrayList<Column<?, ?>>(
-                        section.grid.getColumns());
                 // Set colspan for grouped cells
                 for (Set<Column<?, ?>> group : cellGroups.keySet()) {
-                    if (!checkCellGroupAndOrder(columnOrder, group)) {
+                    if (!checkMergedCellIsContinuous(group)) {
+                        // on error simply break the merged cell
                         cellGroups.get(group).setColspan(1);
                     } else {
-                        int colSpan = group.size();
-                        cellGroups.get(group).setColspan(colSpan);
+                        int colSpan = 0;
+                        for (Column<?, ?> column : group) {
+                            if (!column.isHidden()) {
+                                colSpan++;
+                            }
+                        }
+                        // colspan can't be 0
+                        cellGroups.get(group).setColspan(Math.max(1, colSpan));
                     }
                 }
 
             }
 
-            private boolean checkCellGroupAndOrder(
-                    List<Column<?, ?>> columnOrder, Set<Column<?, ?>> cellGroup) {
-                if (!columnOrder.containsAll(cellGroup)) {
+            private boolean checkMergedCellIsContinuous(
+                    Set<Column<?, ?>> mergedCell) {
+                // no matter if hidden or not, just check for continuous order
+                final List<Column<?, ?>> columnOrder = new ArrayList<Column<?, ?>>(
+                        section.grid.getColumns());
+
+                if (!columnOrder.containsAll(mergedCell)) {
                     return false;
                 }
 
                 for (int i = 0; i < columnOrder.size(); ++i) {
-                    if (!cellGroup.contains(columnOrder.get(i))) {
+                    if (!mergedCell.contains(columnOrder.get(i))) {
                         continue;
                     }
 
-                    for (int j = 1; j < cellGroup.size(); ++j) {
-                        if (!cellGroup.contains(columnOrder.get(i + j))) {
+                    for (int j = 1; j < mergedCell.size(); ++j) {
+                        if (!mergedCell.contains(columnOrder.get(i + j))) {
                             return false;
                         }
                     }
@@ -790,6 +799,14 @@ public class Grid<T> extends ResizeComposite implements
         protected Grid<?> getGrid() {
             assert grid != null;
             return grid;
+        }
+
+        protected void updateColSpans() {
+            for (ROWTYPE row : rows) {
+                if (row.hasSpannedCells()) {
+                    row.calculateColspans();
+                }
+            }
         }
     }
 
@@ -4092,6 +4109,8 @@ public class Grid<T> extends ResizeComposite implements
                     }
                 }
                 grid.columnHider.updateToggleValue(this);
+                grid.header.updateColSpans();
+                grid.footer.updateColSpans();
                 scheduleColumnWidthRecalculator();
                 this.grid.fireEvent(new ColumnVisibilityChangeEvent<T>(this,
                         hidden, userOriginated));

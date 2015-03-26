@@ -31,11 +31,17 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 
 @TestCategory("grid")
 public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
+
+    private static final String CAPTION_0_1 = "Join column cells 0, 1";
+    private static final String CAPTION_1_2 = "Join columns 1, 2";
+    private static final String CAPTION_3_4_5 = "Join columns 3, 4, 5";
+    private static final String CAPTION_ALL = "Join all columns";
 
     @Before
     public void before() {
@@ -618,9 +624,256 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         verifyColumnIsNotFrozen(4);
     }
 
+    @Test
+    public void testSpannedCells_hidingColumnInBeginning_rendersSpannedCellCorrectly() {
+        loadSpannedCellsFixture();
+        verifySpannedCellsFixtureStart();
+
+        toggleHideColumnAPI(0);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 6);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 2, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 0, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 1);
+        verifyHeaderCellColspan(1, 2, 3);
+        verifyHeaderCellColspan(2, 1, 2);
+
+        toggleHideColumnAPI(0);
+
+        verifySpannedCellsFixtureStart();
+
+        toggleHideColumnAPI(1);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 7);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 2, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 1);
+        verifyHeaderCellColspan(1, 2, 3);
+        verifyHeaderCellColspan(2, 1, 1);
+
+        toggleHideColumnAPI(3);
+
+        verifyNumberOfCellsInHeader(0, 6);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 6);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 2, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 1);
+        verifyHeaderCellColspan(1, 2, 2);
+        verifyHeaderCellColspan(2, 1, 1);
+
+        toggleHideColumnAPI(1);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 6);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 2);
+        verifyHeaderCellColspan(1, 3, 2);
+        verifyHeaderCellColspan(2, 1, 2);
+
+        toggleHideColumnAPI(3);
+
+        verifySpannedCellsFixtureStart();
+    }
+
+    @Test
+    public void testSpannedCells_hidingColumnInMiddle_rendersSpannedCellCorrectly() {
+        loadSpannedCellsFixture();
+        verifySpannedCellsFixtureStart();
+
+        toggleHideColumnAPI(4);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 6);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 2);
+        verifyHeaderCellColspan(1, 3, 2);
+        verifyHeaderCellColspan(2, 1, 2);
+
+        toggleHideColumnAPI(4);
+
+        verifySpannedCellsFixtureStart();
+    }
+
+    @Test
+    public void testSpannedCells_hidingColumnInEnd_rendersSpannedCellCorrectly() {
+        loadSpannedCellsFixture();
+        verifySpannedCellsFixtureStart();
+
+        toggleHideColumnAPI(1);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 7);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 2, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 1, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 1);
+        verifyHeaderCellColspan(1, 2, 3);
+        verifyHeaderCellColspan(2, 1, 1);
+
+        toggleHideColumnAPI(1);
+
+        verifySpannedCellsFixtureStart();
+
+        toggleHideColumnAPI(2);
+
+        verifyNumberOfCellsInHeader(0, 7);
+        verifyNumberOfCellsInHeader(1, 4);
+        verifyNumberOfCellsInHeader(2, 7);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 2);
+        verifyHeaderCellColspan(1, 3, 3);
+        verifyHeaderCellColspan(2, 1, 1);
+
+        toggleHideColumnAPI(5);
+
+        verifyNumberOfCellsInHeader(0, 6);
+        verifyNumberOfCellsInHeader(1, 4);
+        verifyNumberOfCellsInHeader(2, 6);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 2);
+        verifyHeaderCellColspan(1, 3, 2);
+        verifyHeaderCellColspan(2, 1, 1);
+
+        toggleHideColumnAPI(5);
+        toggleHideColumnAPI(2);
+
+        verifySpannedCellsFixtureStart();
+    }
+
+    @Test
+    public void testSpannedCells_spanningCellOverHiddenColumn_rendersSpannedCellCorrectly() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        appendHeaderRow();
+        toggleHideColumnAPI(4);
+        toggleHideColumnAPI(8);
+        toggleHideColumnAPI(9);
+        toggleHideColumnAPI(10);
+        toggleHideColumnAPI(11);
+        assertColumnHeaderOrder(0, 1, 2, 3, 5, 6, 7);
+        verifyNumberOfCellsInHeader(1, 7);
+
+        mergeHeaderCellsTwoThreeFour(2);
+
+        verifyNumberOfCellsInHeader(1, 6);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellColspan(1, 3, 2);
+    }
+
+    @Test
+    public void testSpannedCells_spanningCellAllHiddenColumns_rendersSpannedCellCorrectly() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        appendHeaderRow();
+        toggleHideColumnAPI(3);
+        toggleHideColumnAPI(4);
+        toggleHideColumnAPI(5);
+        toggleHideColumnAPI(8);
+        toggleHideColumnAPI(9);
+        toggleHideColumnAPI(10);
+        toggleHideColumnAPI(11);
+        assertColumnHeaderOrder(0, 1, 2, 6, 7);
+        verifyNumberOfCellsInHeader(1, 5);
+
+        mergeHeaderCellsTwoThreeFour(2);
+
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyHeaderCellColspan(1, 0, 1);
+        verifyHeaderCellColspan(1, 1, 1);
+        verifyHeaderCellColspan(1, 2, 1);
+        verifyHeaderCellColspan(1, 3, 1);
+        verifyHeaderCellColspan(1, 4, 1);
+    }
+
+    private void loadSpannedCellsFixture() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        appendHeaderRow();
+        appendHeaderRow();
+        appendHeaderRow();
+        mergeHeaderCellsTwoThreeFour(2);
+        mergeHeaderCellsZeroOne(2);
+        mergeHeaderCellsOneTwo(3);
+        mergeHeaderCellsAll(4);
+        toggleHideColumnAPI(8);
+        toggleHideColumnAPI(9);
+        toggleHideColumnAPI(10);
+        toggleHideColumnAPI(11);
+    }
+
+    private void verifySpannedCellsFixtureStart() {
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5, 6, 7);
+        verifyNumberOfCellsInHeader(0, 8);
+        verifyNumberOfCellsInHeader(1, 5);
+        verifyNumberOfCellsInHeader(2, 7);
+        verifyNumberOfCellsInHeader(3, 1);
+        verifyHeaderCellContent(1, 0, CAPTION_0_1);
+        verifyHeaderCellContent(1, 3, CAPTION_3_4_5);
+        verifyHeaderCellContent(2, 1, CAPTION_1_2);
+        verifyHeaderCellContent(3, 0, CAPTION_ALL);
+        verifyHeaderCellColspan(1, 0, 2);
+        verifyHeaderCellColspan(1, 3, 3);
+        verifyHeaderCellColspan(2, 1, 2);
+    }
+
     private void toggleFrozenColumns(int count) {
         selectMenuPath("Component", "State", "Frozen column count", count
                 + " columns");
+    }
+
+    private void verifyHeaderCellColspan(int row, int column, int colspan) {
+        assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
+                .parseInt(getGridElement().getHeaderCell(row, column)
+                        .getAttribute("colspan"))));
+    }
+
+    private void verifyNumberOfCellsInHeader(int row, int numberOfCells) {
+        int size = 0;
+        for (TestBenchElement cell : getGridElement().getHeaderCells(row)) {
+            if (cell.isDisplayed()) {
+                size++;
+            }
+        }
+        assertEquals(numberOfCells, size);
+    }
+
+    private void verifyHeaderCellContent(int row, int column, String content) {
+        GridCellElement headerCell = getGridElement()
+                .getHeaderCell(row, column);
+        assertEquals(content.toLowerCase(), headerCell.getText().toLowerCase());
+        assertTrue(headerCell.isDisplayed());
     }
 
     private void verifyColumnIsFrozen(int index) {
@@ -714,4 +967,25 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Columns", "Column " + columnIndex,
                 "Hidden");
     }
+
+    private void appendHeaderRow() {
+        selectMenuPath("Component", "Header", "Append row");
+    }
+
+    private void mergeHeaderCellsZeroOne(int row) {
+        selectMenuPath("Component", "Header", "Row " + row, CAPTION_0_1);
+    }
+
+    private void mergeHeaderCellsOneTwo(int row) {
+        selectMenuPath("Component", "Header", "Row " + row, CAPTION_1_2);
+    }
+
+    private void mergeHeaderCellsTwoThreeFour(int row) {
+        selectMenuPath("Component", "Header", "Row " + row, CAPTION_3_4_5);
+    }
+
+    private void mergeHeaderCellsAll(int row) {
+        selectMenuPath("Component", "Header", "Row " + row, CAPTION_ALL);
+    }
+
 }
