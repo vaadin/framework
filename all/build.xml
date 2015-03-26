@@ -50,7 +50,7 @@
             </then>
             <else>
                 <!-- Unpack all source files to javadoc.temp.dir -->
-                <antcontrib:foreach list="${modules.to.publish.to.maven}"
+                <antcontrib:foreach list="${modules.producing.jar}"
                     target="unzip.to.javadoctemp" param="module" />
 
                 <property name="javadoc.dir" location="${result.dir}/javadoc" />
@@ -88,7 +88,7 @@
 
     <target name="copy-jars">
         <delete dir="${temp.dir}" />
-        <antcontrib:foreach list="${modules.to.publish.to.maven}"
+        <antcontrib:foreach list="${modules.producing.jar}"
             target="fetch.module.and.dependencies" param="module" />
         <!-- All jars are now in temp.dir. Still need to separate vaadin 
             and deps -->

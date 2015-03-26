@@ -9,7 +9,8 @@
     <property name="gwt.basedir" location="${vaadin.basedir}/../gwt" />
     <property file="${vaadin.basedir}/build.properties" />
 
-    <property name="modules.to.publish.to.maven" value="shared,server,client,client-compiler,client-compiled,themes,push,widgets,bom" />
+    <property name="modules.producing.jar" value="shared,server,client,client-compiler,client-compiled,themes,push,widgets" />
+    <property name="modules.to.publish.to.maven" value="${modules.producing.jar},bom" />
     <property name="modules.to.publish.to.download" value="${modules.to.publish.to.maven},all" />
 
     <ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
