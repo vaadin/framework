@@ -411,6 +411,11 @@ public class BrowserInfo {
         if (isIOS() && isWebkit() && getOperatingSystemMajorVersion() >= 6) {
             return false;
         }
+
+        if (isIE()) {
+            return false;
+        }
+
         return true;
     }
 
