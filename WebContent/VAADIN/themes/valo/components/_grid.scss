@@ -3,7 +3,8 @@
 $v-grid-row-background-color: valo-table-background-color() !default;
 $v-grid-row-stripe-background-color: scale-color($v-grid-row-background-color, $lightness: if(color-luminance($v-grid-row-background-color) < 10, 4%, -4%)) !default;
 
-$v-grid-border: flatten-list(valo-border($color: $v-grid-row-background-color, $strength: 0.8)) !default;
+$v-grid-border-color-source: $v-grid-row-background-color !default;
+$v-grid-border: flatten-list(valo-border($color: $v-grid-border-color-source, $strength: 0.8)) !default;
 $v-grid-cell-focused-border: max(2px, first-number($v-border)) solid $v-selection-color !default;
 
 $v-grid-row-height: $v-table-row-height !default;
@@ -16,6 +17,12 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
 
 $v-grid-animations-enabled: $v-animations-enabled !default;
 
+$v-grid-details-marker-width: first-number($v-grid-border) * 2 !default;
+$v-grid-details-marker-color: $v-selection-color !default;
+$v-grid-details-border-top: valo-border($color: $v-grid-border-color-source, $strength: 0.3) !default;
+$v-grid-details-border-top-stripe: valo-border($color: $v-grid-row-stripe-background-color, $strength: 0.3) !default;
+$v-grid-details-border-bottom: $v-grid-cell-horizontal-border !default;
+$v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
 
 @import "../../base/grid/grid";
 
@@ -175,6 +182,10 @@ $v-grid-animations-enabled: $v-animations-enabled !default;
     padding: round($v-layout-spacing-vertical / 2) round($v-layout-spacing-horizontal / 2);
     margin: 0;
     outline: none;
+  }
+
+  .#{$primary-stylename}-spacer {
+    margin-top: first-number($v-grid-border) * -1;
   }
 
   // Customize scrollbars

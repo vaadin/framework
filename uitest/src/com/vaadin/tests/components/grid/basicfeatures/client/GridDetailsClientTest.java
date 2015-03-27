@@ -23,6 +23,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -33,12 +35,9 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.ElementQuery;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
-@RunLocally(Browser.PHANTOMJS)
 public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     private static final String[] SET_GENERATOR = new String[] { "Component",
@@ -181,6 +180,19 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(1);
 
         getGridElement().getDetails(1);
+    }
+
+
+    @Test
+    public void rowElementClassNames() {
+        toggleDetailsFor(0);
+        toggleDetailsFor(1);
+
+        List<WebElement> elements = getGridElement().findElements(
+                By.className("v-grid-spacer"));
+        assertEquals("v-grid-spacer", elements.get(0).getAttribute("class"));
+        assertEquals("v-grid-spacer stripe",
+                elements.get(1).getAttribute("class"));
     }
 
     @Test

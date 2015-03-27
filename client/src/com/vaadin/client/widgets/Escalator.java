@@ -4597,7 +4597,6 @@ public class Escalator extends Widget implements RequiresResize,
                 getRootElement().getStyle().setWidth(getInnerWidth(), Unit.PX);
                 setHeight(height);
 
-                spacerElement.getStyle().setWidth(100, Unit.PCT);
                 spacerElement.setColSpan(getColumnConfiguration()
                         .getColumnCount());
 

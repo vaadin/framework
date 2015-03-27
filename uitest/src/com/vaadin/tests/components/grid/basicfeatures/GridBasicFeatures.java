@@ -1301,6 +1301,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createBooleanAction("Open firstItemId", "Details", false,
                 openOrCloseItemId, ds.firstItemId());
 
+        createBooleanAction("Open 1", "Details", false, openOrCloseItemId,
+                ds.getIdByIndex(1));
+
         createBooleanAction("Open 995", "Details", false, openOrCloseItemId,
                 ds.getIdByIndex(995));
     }

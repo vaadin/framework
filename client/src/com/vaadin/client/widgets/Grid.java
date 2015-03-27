@@ -2843,15 +2843,21 @@ public class Grid<T> extends ResizeComposite implements
 
     private class GridSpacerUpdater implements SpacerUpdater {
 
+        private static final String DECO_CLASSNAME = "deco";
+        private static final String CONTENT_CLASSNAME = "content";
+        private static final String STRIPE_CLASSNAME = "stripe";
+
         private final Map<Element, Widget> elementToWidgetMap = new HashMap<Element, Widget>();
 
         @Override
         public void init(Spacer spacer) {
+            initStructure(spacer);
+            Element root = getDetailsRoot(spacer);
 
-            assert spacer.getElement().getFirstChild() == null : "The spacer's"
+            assert root.getFirstChild() == null : "The spacer's"
                     + " element should be empty at this point. (row: "
-                    + spacer.getRow() + ", child: "
-                    + spacer.getElement().getFirstChild() + ")";
+                    + spacer.getRow() + ", child: " + root.getFirstChild()
+                    + ")";
 
             int rowIndex = spacer.getRow();
 
@@ -2865,43 +2871,45 @@ public class Grid<T> extends ResizeComposite implements
                                 + rowIndex, e);
             }
 
+            final double spacerHeight;
             if (detailsWidget == null) {
-                spacer.getElement().removeAllChildren();
-                escalator.getBody().setSpacer(rowIndex,
-                        DETAILS_ROW_INITIAL_HEIGHT);
-                return;
+                root.removeAllChildren();
+                spacerHeight = DETAILS_ROW_INITIAL_HEIGHT;
+            } else {
+                Element element = detailsWidget.getElement();
+                root.appendChild(element);
+                setParent(detailsWidget, Grid.this);
+                Widget previousWidget = elementToWidgetMap.put(element,
+                        detailsWidget);
+
+                assert previousWidget == null : "Overwrote a pre-existing widget on row "
+                        + rowIndex + " without proper removal first.";
+
+                /*
+                 * Once we have the content properly inside the DOM, we should
+                 * re-measure it to make sure that it's the correct height.
+                 */
+                double measuredHeight = WidgetUtil
+                        .getRequiredHeightBoundingClientRectDouble(root);
+                assert getElement().isOrHasChild(root) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
+                spacerHeight = measuredHeight;
             }
 
-            Element element = detailsWidget.getElement();
-            spacer.getElement().appendChild(element);
-            setParent(detailsWidget, Grid.this);
-            Widget previousWidget = elementToWidgetMap.put(element,
-                    detailsWidget);
-
-            assert previousWidget == null : "Overwrote a pre-existing widget on row "
-                    + rowIndex + " without proper removal first.";
-
-            /*
-             * Once we have the content properly inside the DOM, we should
-             * re-measure it to make sure that it's the correct height.
-             */
-            double measuredHeight = WidgetUtil
-                    .getRequiredHeightBoundingClientRectDouble(spacer
-                            .getElement());
-            assert getElement().isOrHasChild(spacer.getElement()) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
-            escalator.getBody().setSpacer(rowIndex, measuredHeight);
+            escalator.getBody().setSpacer(rowIndex, spacerHeight);
+            updateDecoratorGeometry(spacerHeight, spacer);
         }
 
         @Override
         public void destroy(Spacer spacer) {
+            Element root = getDetailsRoot(spacer);
 
-            assert getElement().isOrHasChild(spacer.getElement()) : "Trying "
+            assert getElement().isOrHasChild(root) : "Trying "
                     + "to destroy a spacer that is not connected to this "
                     + "Grid's DOM. (row: " + spacer.getRow() + ", element: "
-                    + spacer.getElement() + ")";
+                    + root + ")";
 
-            Widget detailsWidget = elementToWidgetMap.remove(spacer
-                    .getElement().getFirstChildElement());
+            Widget detailsWidget = elementToWidgetMap.remove(root
+                    .getFirstChildElement());
 
             if (detailsWidget != null) {
                 /*
@@ -2909,16 +2917,107 @@ public class Grid<T> extends ResizeComposite implements
                  * returned a null widget.
                  */
 
-                assert spacer.getElement().getFirstChild() != null : "The "
+                assert root.getFirstChild() != null : "The "
                         + "details row to destroy did not contain a widget - "
                         + "probably removed by something else without "
                         + "permission? (row: " + spacer.getRow()
-                        + ", element: " + spacer.getElement() + ")";
+                        + ", element: " + root + ")";
 
                 setParent(detailsWidget, null);
-                spacer.getElement().removeAllChildren();
+                root.removeAllChildren();
             }
         }
+
+        /**
+         * Initializes the spacer element into a details structure, containing a
+         * decorator and a slot for the details widget.
+         */
+        private void initStructure(Spacer spacer) {
+            Element spacerRoot = spacer.getElement();
+
+            if (spacerRoot.getChildCount() == 0) {
+                Element deco = DOM.createDiv();
+                deco.setClassName(DECO_CLASSNAME);
+
+                Element detailsContent = DOM.createDiv();
+                detailsContent.setClassName(CONTENT_CLASSNAME);
+
+                if (spacer.getRow() % 2 == 1) {
+                    spacerRoot.getParentElement()
+                            .addClassName(STRIPE_CLASSNAME);
+                }
+
+                spacerRoot.appendChild(deco);
+                spacerRoot.appendChild(detailsContent);
+            }
+
+            else {
+                if (spacer.getRow() % 2 == 1) {
+                    spacerRoot.getParentElement()
+                            .addClassName(STRIPE_CLASSNAME);
+                } else {
+                    spacerRoot.getParentElement().removeClassName(
+                            STRIPE_CLASSNAME);
+                }
+
+                /*
+                 * The only case when we get into this else branch is when the
+                 * previous generated details element was a null Widget. In
+                 * those situations, we don't call destroy on the content, but
+                 * simply reuse it as-is.
+                 */
+                assert getDetailsRoot(spacer).getChildCount() == 0 : "This "
+                        + "code should never be triggered unless the details "
+                        + "root already was empty";
+            }
+        }
+
+        /** Gets the decorator element from the DOM structure. */
+        private Element getDecorator(Spacer spacer) {
+            TableCellElement td = TableCellElement.as(spacer.getElement());
+            Element decorator = td.getFirstChildElement();
+            return decorator;
+        }
+
+        /** Gets the element for the details widget from the DOM structure. */
+        private Element getDetailsRoot(Spacer spacer) {
+            Element detailsRoot = getDecorator(spacer).getNextSiblingElement();
+            return detailsRoot;
+        }
+
+        /** Resizes and places the decorator. */
+        private void updateDecoratorGeometry(double detailsHeight, Spacer spacer) {
+            Element decorator = getDecorator(spacer);
+            Style style = decorator.getStyle();
+            double rowHeight = escalator.getBody().getDefaultRowHeight();
+            double borderHeight = getBorderHeight(spacer);
+
+            style.setTop(-(rowHeight - borderHeight), Unit.PX);
+            style.setHeight(detailsHeight + rowHeight, Unit.PX);
+        }
+
+        private native double getBorderHeight(Spacer spacer)
+        /*-{
+            var spacerCell = spacer.@com.vaadin.client.widget.escalator.Spacer::getElement()();
+            if (typeof $wnd.getComputedStyle === 'function') {
+                var computedStyle = $wnd.getComputedStyle(spacerCell);
+                var borderTopWidth = computedStyle['borderTopWidth'];
+                var width = parseFloat(borderTopWidth);
+                return width;
+            } else {
+                var spacerRow = spacerCell.offsetParent;
+                var cloneCell = spacerCell.cloneNode(false);
+                spacerRow.appendChild(cloneCell);
+                cloneCell.style.height = "10px"; // IE8 wants the height to be set to something...
+                var heightWithBorder = cloneCell.offsetHeight;
+                cloneCell.style.borderTopWidth = "0";
+                var heightWithoutBorder = cloneCell.offsetHeight;
+                spacerRow.removeChild(cloneCell);
+                
+                console.log(heightWithBorder+" - "+heightWithoutBorder);
+                return heightWithBorder - heightWithoutBorder;
+            }
+        }-*/;
     }
 
     /**
@@ -4829,6 +4928,8 @@ public class Grid<T> extends ResizeComposite implements
 
         setSelectionMode(SelectionMode.SINGLE);
 
+        escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
+
         escalator.addScrollHandler(new ScrollHandler() {
             @Override
             public void onScroll(ScrollEvent event) {
@@ -6053,10 +6154,12 @@ public class Grid<T> extends ResizeComposite implements
     private boolean isOrContainsInSpacer(Node node) {
         Node n = node;
         while (n != null && n != getElement()) {
-            if (Element.is(n)
-                    && Element.as(n).getClassName()
-                            .equals(getStylePrimaryName() + "-spacer")) {
-                return true;
+            boolean isElement = Element.is(n);
+            if (isElement) {
+                String className = Element.as(n).getClassName();
+                if (className.contains(getStylePrimaryName() + "-spacer")) {
+                    return true;
+                }
             }
             n = n.getParentNode();
         }
@@ -6318,10 +6421,19 @@ public class Grid<T> extends ResizeComposite implements
     @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
 
-        Element subPartElement = escalator.getSubPartElement(subPart
+        /*
+         * gandles details[] (translated to spacer[] for Escalator), cell[],
+         * header[] and footer[]
+         */
+        Element escalatorElement = escalator.getSubPartElement(subPart
                 .replaceFirst("^details\\[", "spacer["));
-        if (subPartElement != null) {
-            return DOM.asOld(subPartElement);
+
+        if (escalatorElement != null) {
+            if (subPart.startsWith("details[")) {
+                return DOM.asOld(parseDetails(escalatorElement));
+            } else {
+                return DOM.asOld(escalatorElement);
+            }
         }
 
         SubPartArguments args = Escalator.parseSubPartArguments(subPart);
@@ -6332,6 +6444,23 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         return null;
+    }
+
+    @SuppressWarnings("static-method")
+    private Element parseDetails(Element spacer) {
+        assert spacer.getChildCount() == 2 : "Unexpected structure for details ";
+
+        Element decorator = spacer.getFirstChildElement();
+        assert decorator != null : "unexpected spacer DOM structure";
+        assert decorator.getClassName()
+                .equals(GridSpacerUpdater.DECO_CLASSNAME) : "unexpected first details element";
+
+        Element spacerRoot = decorator.getNextSiblingElement();
+        assert spacerRoot != null : "unexpected spacer DOM structure";
+        assert spacerRoot.getClassName().equals(
+                GridSpacerUpdater.CONTENT_CLASSNAME) : "unexpected second details element";
+
+        return DOM.asOld(spacerRoot);
     }
 
     private Element getSubPartElementEditor(SubPartArguments args) {
