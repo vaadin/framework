@@ -136,6 +136,9 @@ public class TestWidgetRegistryGenerator extends Generator {
         } else if (!widgetType.getPackage().getName()
                 .startsWith(TestWidgetConnector.class.getPackage().getName())) {
             return false;
+        } else if (widgetType.getEnclosingType() != null
+                && !widgetType.isStatic()) {
+            return false;
         }
 
         return true;
