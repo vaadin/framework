@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
@@ -88,6 +90,10 @@ public class ServletPortletHelper implements Serializable {
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null) {
+            pathInfo = ((HttpServletRequest)request).getServletPath();
+        }
+
+        if (pathInfo == null) {
             return false;
         }
 
@@ -95,7 +101,7 @@ public class ServletPortletHelper implements Serializable {
             prefix = '/' + prefix;
         }
 
-        if (pathInfo.startsWith(prefix)) {
+        if (pathInfo.contains(prefix)) {
             return true;
         }
 
