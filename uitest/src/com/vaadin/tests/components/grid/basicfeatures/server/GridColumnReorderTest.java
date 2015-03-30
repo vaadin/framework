@@ -51,7 +51,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(1, 0, 2);
@@ -65,7 +65,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(1, 2, 0);
@@ -80,13 +80,13 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragAndDropDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(2, 0, 1, 3, 4);
 
         // when
-        dragAndDropDefaultColumnHeader(1, 3, 150);
+        dragAndDropDefaultColumnHeader(1, 3, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(2, 1, 3, 0);
@@ -99,7 +99,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(0, 1, 2);
@@ -113,7 +113,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
         assertColumnHeaderOrder(1, 0, 2);
         moveColumnManuallyLeftByOne(0);
 
@@ -131,7 +131,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         // when
         selectMenuPath(new String[] { "Component", "Internals",
                 "Update column order without updating client" });
-        dragAndDropDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(1, 0, 2);
@@ -145,7 +145,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // when
         toggleColumnReorderListener();
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
 
         // then
         assertColumnReorderEvent(true);
@@ -156,19 +156,19 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         // given
         openTestURL();
         toggleColumnReordering();
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
         assertNoColumnReorderEvent();
 
         // when
         toggleColumnReorderListener();
-        dragAndDropDefaultColumnHeader(0, 2, 110);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.RIGHT);
 
         // then
         assertColumnReorderEvent(true);
 
         // when
         toggleColumnReorderListener();
-        dragAndDropDefaultColumnHeader(0, 3, 10);
+        dragAndDropDefaultColumnHeader(0, 3, CellSide.LEFT);
 
         // then
         assertNoColumnReorderEvent();
@@ -195,7 +195,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(0, 1, 2, 3);
@@ -213,7 +213,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(0, 2, 1, 3);
@@ -232,7 +232,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
 
         // when
-        dragAndDropDefaultColumnHeader(2, 0, 2);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
@@ -256,7 +256,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
 
         // when
-        dragAndDropDefaultColumnHeader(3, 0, 2);
+        dragAndDropDefaultColumnHeader(3, 0, CellSide.LEFT);
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
@@ -280,7 +280,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
 
         // when
-        dragAndDropDefaultColumnHeader(2, 0, 2);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
@@ -299,7 +299,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropColumnHeader(0, 0, 2, 110);
+        dragAndDropColumnHeader(0, 0, 2, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3);
@@ -314,7 +314,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // when
-        dragAndDropColumnHeader(1, 0, 2, 110);
+        dragAndDropColumnHeader(1, 0, 2, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3);

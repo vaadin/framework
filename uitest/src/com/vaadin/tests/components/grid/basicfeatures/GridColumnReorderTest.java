@@ -130,7 +130,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         sortColumn(0);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
 
         // then
         assertColumnIsSorted(1);
@@ -157,7 +157,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusDefaultHeader(0);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 3, 10);
+        dragAndDropDefaultColumnHeader(0, 3, CellSide.LEFT);
 
         // then
         WebElement defaultColumnHeader = getDefaultColumnHeader(2);
@@ -172,7 +172,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(2, 2);
 
         // when
-        dragAndDropDefaultColumnHeader(2, 0, 10);
+        dragAndDropDefaultColumnHeader(2, 0, CellSide.LEFT);
 
         // then
         assertFocusedCell(2, 0);
@@ -187,13 +187,13 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertFocusedCell(2, 2);
 
         // when
-        dragAndDropDefaultColumnHeader(1, 0, 10);
+        dragAndDropDefaultColumnHeader(1, 0, CellSide.LEFT);
 
         // then
         assertFocusedCell(2, 2);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 2, 10);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
 
         // then
         assertFocusedCell(2, 2);
@@ -206,7 +206,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(1, 3);
 
         // when
-        dragAndDropDefaultColumnHeader(4, 1, 10);
+        dragAndDropDefaultColumnHeader(4, 1, CellSide.LEFT);
 
         // then
         assertFocusedCell(1, 4);
@@ -219,7 +219,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         focusCell(4, 2);
 
         // when
-        dragAndDropDefaultColumnHeader(0, 4, 10);
+        dragAndDropDefaultColumnHeader(0, 4, CellSide.LEFT);
 
         // then
         assertFocusedCell(4, 1);
@@ -234,7 +234,9 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(1, 3, 1, 80);
+        int horizontalOffset = (getGridElement().getHeaderCell(1, 1).getSize()
+                .getWidth() / 2) - 10;
+        dragAndDropColumnHeader(1, 3, 1, horizontalOffset);
 
         // then
         assertColumnHeaderOrder(0, 3, 1, 2, 4);
@@ -249,7 +251,9 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(0, 0, 2, 20);
+        int horizontalOffset = (getGridElement().getHeaderCell(1, 1).getSize()
+                .getWidth() / 2) + 10;
+        dragAndDropColumnHeader(0, 0, 2, horizontalOffset);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3, 4);
@@ -264,7 +268,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(0, 2, 0, 20);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(0, 2, 1, 3, 4);
@@ -278,11 +282,11 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
-        dragAndDropColumnHeader(0, 3, 0, 10);
+        dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
 
         // when
-        dragAndDropColumnHeader(0, 2, 0, 10);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
@@ -296,17 +300,17 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
-        dragAndDropColumnHeader(0, 3, 0, 10);
+        dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 3, 10);
+        dragAndDropColumnHeader(0, 1, 3, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
 
-        dragAndDropColumnHeader(1, 2, 1, 10);
+        dragAndDropColumnHeader(1, 2, 1, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
 
-        dragAndDropColumnHeader(2, 1, 3, -10);
+        dragAndDropColumnHeader(2, 1, 2, CellSide.RIGHT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
     }
 
@@ -318,33 +322,33 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 4, 120);
+        dragAndDropColumnHeader(0, 0, 4, CellSide.RIGHT);
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 4, 10);
+        dragAndDropColumnHeader(0, 1, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(0, 2, 4, 10);
+        dragAndDropColumnHeader(0, 2, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(0, 3, 4, 100);
+        dragAndDropColumnHeader(0, 3, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 5, 4);
 
-        dragAndDropColumnHeader(0, 4, 2, 100);
+        dragAndDropColumnHeader(0, 4, 2, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(2, 3, 4, 100);
+        dragAndDropColumnHeader(2, 3, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 5, 4);
 
-        dragAndDropColumnHeader(2, 4, 2, 100);
+        dragAndDropColumnHeader(2, 4, 2, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
     }
@@ -357,21 +361,21 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 4, 120);
+        dragAndDropColumnHeader(0, 0, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
-        dragAndDropColumnHeader(0, 1, 4, 100);
+        dragAndDropColumnHeader(0, 1, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 3, 80);
+        dragAndDropColumnHeader(0, 1, 3, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 4, 3, 5, 2);
 
-        dragAndDropColumnHeader(0, 2, 4, 10);
+        dragAndDropColumnHeader(0, 2, 4, CellSide.LEFT);
         assertColumnHeaderOrder(1, 4, 3, 5, 2);
 
-        dragAndDropColumnHeader(0, 2, 0, 10);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
     }
 
@@ -384,7 +388,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(0, 3, 1, 80);
+        dragAndDropColumnHeader(0, 3, 1, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(0, 3, 1, 2, 4);
@@ -399,7 +403,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(0, 2, 0, 20);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(0, 2, 1, 3, 4);
@@ -413,11 +417,11 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Footer", "Append row");
         selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
         selectMenuPath("Component", "Footer", "Row 2", "Join columns 1, 2");
-        dragAndDropColumnHeader(0, 3, 0, 10);
+        dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
 
         // when
-        dragAndDropColumnHeader(0, 2, 0, 10);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
@@ -431,21 +435,21 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Footer", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 5, 2);
+        dragAndDropColumnHeader(0, 0, 5, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
-        dragAndDropColumnHeader(0, 1, 5, 2);
+        dragAndDropColumnHeader(0, 1, 5, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Footer", "Row 1", "Join columns 1, 2");
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 3, 80);
+        dragAndDropColumnHeader(0, 1, 3, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 4, 3, 5, 2);
 
-        dragAndDropColumnHeader(0, 2, 4, 10);
+        dragAndDropColumnHeader(0, 2, 4, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 4, 3, 5, 2);
 
-        dragAndDropColumnHeader(0, 2, 0, 10);
+        dragAndDropColumnHeader(0, 2, 0, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 3, 4, 5, 2);
     }
 
@@ -458,7 +462,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(1, 1, 4, 10);
+        dragAndDropColumnHeader(1, 1, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
@@ -476,14 +480,14 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(1, 1, 4, 10);
+        dragAndDropColumnHeader(1, 1, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
         assertColumnHeaderOrder(0, 3, 1, 2, 4);
 
         // when
-        dragAndDropColumnHeader(2, 3, 0, 10);
+        dragAndDropColumnHeader(2, 3, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3, 4);
@@ -500,13 +504,13 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(1, 1, 4, 10);
+        dragAndDropColumnHeader(1, 1, 4, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(2, 0, 3, 100);
+        dragAndDropColumnHeader(2, 0, 3, CellSide.RIGHT);
 
         // then
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
@@ -519,14 +523,14 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(1, 3, 1, 10);
+        dragAndDropColumnHeader(1, 3, 1, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         assertColumnHeaderOrder(0, 3, 4, 5, 1);
 
         // when
-        dragAndDropColumnHeader(1, 1, 0, 10);
+        dragAndDropColumnHeader(1, 1, 0, CellSide.LEFT);
 
         // then
         assertColumnHeaderOrder(3, 4, 5, 0, 1);
@@ -539,21 +543,21 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(1, 3, 1, 10);
+        dragAndDropColumnHeader(1, 3, 1, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         assertColumnHeaderOrder(0, 3, 4, 5, 1);
 
         // when
-        dragAndDropColumnHeader(2, 1, 3, 100);
+        dragAndDropColumnHeader(2, 1, 3, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
 
         // then
         assertColumnHeaderOrder(0, 5, 3, 4, 1);
 
         // when
-        dragAndDropColumnHeader(2, 2, 0, 10);
+        dragAndDropColumnHeader(2, 2, 0, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
@@ -567,21 +571,21 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Width", "750px");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(1, 3, 1, 10);
+        dragAndDropColumnHeader(1, 3, 1, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         assertColumnHeaderOrder(0, 3, 4, 5, 1);
 
         // when
-        dragAndDropColumnHeader(2, 3, 0, 10);
+        dragAndDropColumnHeader(2, 3, 0, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
         assertColumnHeaderOrder(0, 5, 3, 4, 1);
 
         // when
-        dragAndDropColumnHeader(2, 1, 4, 10);
+        dragAndDropColumnHeader(2, 1, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
@@ -599,7 +603,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(1, 3, 2, -10);
+        dragAndDropColumnHeader(1, 3, 1, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
 
         // then
@@ -607,14 +611,14 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
 
         // when
         scrollGridHorizontallyTo(100);
-        dragAndDropColumnHeader(2, 4, 2, 10);
+        dragAndDropColumnHeader(2, 4, 2, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        dragAndDropColumnHeader(0, 0, 3, 10);
+        dragAndDropColumnHeader(0, 0, 3, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then

@@ -36,6 +36,10 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
 
+    public enum CellSide {
+        LEFT, RIGHT;
+    }
+
     @Override
     protected boolean requireWindowFocusForIE() {
         return true;
@@ -172,25 +176,52 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected void dragAndDropDefaultColumnHeader(int draggedColumnHeaderIndex,
-            int onTopOfColumnHeaderIndex, int xOffsetFromColumnTopLeftCorner) {
+            int onTopOfColumnHeaderIndex, CellSide cellSide) {
+        GridCellElement columnHeader = getDefaultColumnHeader(onTopOfColumnHeaderIndex);
         new Actions(getDriver())
                 .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
                 .moveToElement(
-                        getDefaultColumnHeader(onTopOfColumnHeaderIndex),
-                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+                        columnHeader,
+                        getHorizontalOffsetForDragAndDrop(columnHeader,
+                                cellSide), 0).release().perform();
+    }
+
+    private int getHorizontalOffsetForDragAndDrop(GridCellElement columnHeader,
+            CellSide cellSide) {
+        if (cellSide == CellSide.LEFT) {
+            return 5;
+        } else {
+            int half = columnHeader.getSize().getWidth() / 2;
+            return half + (half / 2);
+        }
     }
 
     protected void dragAndDropColumnHeader(int headerRow,
             int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
-            int xOffsetFromColumnTopLeftCorner) {
+            CellSide cellSide) {
+        GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
+                onTopOfColumnHeaderIndex);
         new Actions(getDriver())
                 .clickAndHold(
                         getGridElement().getHeaderCell(headerRow,
                                 draggedColumnHeaderIndex))
                 .moveToElement(
+                        headerCell,
+                        getHorizontalOffsetForDragAndDrop(headerCell, cellSide),
+                        0).release().perform();
+    }
+
+    protected void dragAndDropColumnHeader(int headerRow,
+            int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
+            int horizontalOffset) {
+        GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
+                onTopOfColumnHeaderIndex);
+        new Actions(getDriver())
+                .clickAndHold(
                         getGridElement().getHeaderCell(headerRow,
-                                onTopOfColumnHeaderIndex),
-                        xOffsetFromColumnTopLeftCorner, 0).release().perform();
+                                draggedColumnHeaderIndex))
+                .moveToElement(headerCell, horizontalOffset, 0).release()
+                .perform();
     }
 
     protected void assertColumnIsSorted(int index) {

@@ -390,16 +390,16 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         clickSidebarOpenButton();
 
         toggleColumnReorder();
-        dragAndDropColumnHeader(0, 3, 0, 5);
+        dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
 
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
         clickSidebarOpenButton();
         verifyColumnHidingTogglesOrder(3, 0, 1, 4);
 
         clickSidebarOpenButton();
-        dragAndDropColumnHeader(0, 1, 3, 100);
-        dragAndDropColumnHeader(0, 4, 0, 5);
-        dragAndDropColumnHeader(0, 3, 0, 5);
+        dragAndDropColumnHeader(0, 1, 3, CellSide.RIGHT);
+        dragAndDropColumnHeader(0, 4, 0, CellSide.LEFT);
+        dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
 
         assertColumnHeaderOrder(2, 4, 3, 1, 0);
         clickSidebarOpenButton();
@@ -413,7 +413,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(0);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
-        dragAndDropColumnHeader(0, 1, 0, 5);
+        dragAndDropColumnHeader(0, 1, 0, CellSide.LEFT);
         assertColumnHeaderOrder(2, 1, 3, 4, 5);
 
         toggleHideColumnAPI(0);
@@ -423,7 +423,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 2, 3, 4, 5);
 
         // right side of hidden column
-        dragAndDropColumnHeader(0, 0, 2, 5);
+        dragAndDropColumnHeader(0, 0, 2, CellSide.LEFT);
         assertColumnHeaderOrder(2, 0, 3, 4, 5);
 
         toggleHideColumnAPI(1);
@@ -433,7 +433,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(2, 1, 3, 4, 5);
 
         // left side of hidden column
-        dragAndDropColumnHeader(0, 0, 1, 100);
+        dragAndDropColumnHeader(0, 0, 1, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 2, 3, 4, 5);
 
         toggleHideColumnAPI(0);
@@ -448,7 +448,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(3);
         assertColumnHeaderOrder(0, 1, 4, 5, 6);
 
-        dragAndDropDefaultColumnHeader(0, 2, 5);
+        dragAndDropDefaultColumnHeader(0, 2, CellSide.LEFT);
         assertColumnHeaderOrder(1, 0, 4, 5, 6);
 
         toggleHideColumnAPI(3);
@@ -461,10 +461,10 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(4);
         assertColumnHeaderOrder(1, 2, 3, 5, 6);
 
-        dragAndDropDefaultColumnHeader(4, 3, 2);
+        dragAndDropDefaultColumnHeader(4, 3, CellSide.LEFT);
         assertColumnHeaderOrder(1, 2, 3, 6, 5);
 
-        dragAndDropDefaultColumnHeader(4, 2, 100);
+        dragAndDropDefaultColumnHeader(4, 2, CellSide.RIGHT);
         assertColumnHeaderOrder(1, 2, 3, 5, 6);
 
         toggleHideColumnAPI(0);
