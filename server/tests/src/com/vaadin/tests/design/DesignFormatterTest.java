@@ -227,6 +227,25 @@ public class DesignFormatterTest {
         assertEquals(zone, result);
     }
 
+    @Test
+    public void testExternalResource() {
+        String url = "://example.com/my%20icon.png?a=b";
+
+        for (String scheme : new String[] { "http", "https", "ftp", "ftps" }) {
+            Resource resource = formatter.parse(scheme + url, Resource.class);
+
+            assertTrue(scheme + " url should be parsed as ExternalResource",
+                    resource instanceof ExternalResource);
+            assertEquals("parsed ExternalResource", scheme + url,
+                    ((ExternalResource) resource).getURL());
+
+            String formatted = formatter.format(new ExternalResource(scheme
+                    + url));
+
+            assertEquals("formatted ExternalResource", scheme + url, formatted);
+        }
+    }
+
     /**
      * A static method to allow comparison two different actions.
      * 
