@@ -250,6 +250,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * 
      * @since 7.5.0
      * @author Vaadin Ltd
+     * @see DetailsGenerator#NULL
      */
     public interface DetailsGenerator extends Serializable {
 
@@ -3968,6 +3969,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
      * 
      * @param itemId
      *            id of item to scroll to.
@@ -3980,6 +3984,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
      * 
      * @param itemId
      *            id of item to scroll to.

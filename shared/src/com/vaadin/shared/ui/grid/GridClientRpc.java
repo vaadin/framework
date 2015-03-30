@@ -28,7 +28,8 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface GridClientRpc extends ClientRpc {
 
     /**
-     * Command client Grid to scroll to a specific data row.
+     * Command client Grid to scroll to a specific data row and its (optional)
+     * details.
      * 
      * @param row
      *            zero-based row index. If the row index is below zero or above

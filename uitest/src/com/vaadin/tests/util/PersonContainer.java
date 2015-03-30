@@ -32,10 +32,14 @@ public class PersonContainer extends BeanItemContainer<Person> implements
     }
 
     public static PersonContainer createWithTestData() {
+        return createWithTestData(100);
+    }
+
+    public static PersonContainer createWithTestData(int size) {
         PersonContainer c = null;
         Random r = new Random(0);
         c = new PersonContainer();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < size; i++) {
             Person p = new Person();
             p.setFirstName(TestDataGenerator.getFirstName(r));
             p.setLastName(TestDataGenerator.getLastName(r));

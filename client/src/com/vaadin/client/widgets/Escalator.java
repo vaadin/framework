@@ -2042,7 +2042,7 @@ public class Escalator extends Widget implements RequiresResize,
                 TableCellElement cellOriginal = rowElement.getCells().getItem(
                         colIndex);
 
-                if (cellIsPartOfSpan(cellOriginal)) {
+                if (cellOriginal == null || cellIsPartOfSpan(cellOriginal)) {
                     continue;
                 }
 

@@ -477,7 +477,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @SuppressWarnings("boxing")
-    private class DetailsConnectorFetcher implements DeferredWorker {
+    private static class DetailsConnectorFetcher implements DeferredWorker {
+
+        private static final int FETCH_TIMEOUT_MS = 5000;
+
+        public interface Listener {
+            void fetchHasBeenScheduled(int id);
+
+            void fetchHasReturned(int id);
+        }
 
         /** A flag making sure that we don't call scheduleFinally many times. */
         private boolean fetcherHasBeenCalled = false;
@@ -493,13 +501,25 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             public void execute() {
                 int currentFetchId = detailsFetchCounter++;
                 pendingFetches.add(currentFetchId);
-                getRpcProxy(GridServerRpc.class).sendDetailsComponents(
-                        currentFetchId);
+                rpc.sendDetailsComponents(currentFetchId);
                 fetcherHasBeenCalled = false;
+
+                if (listener != null) {
+                    listener.fetchHasBeenScheduled(currentFetchId);
+                }
 
                 assert assertRequestDoesNotTimeout(currentFetchId);
             }
         };
+
+        private DetailsConnectorFetcher.Listener listener = null;
+
+        private final GridServerRpc rpc;
+
+        public DetailsConnectorFetcher(GridServerRpc rpc) {
+            assert rpc != null : "RPC was null";
+            this.rpc = rpc;
+        }
 
         public void schedule() {
             if (!fetcherHasBeenCalled) {
@@ -509,10 +529,17 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         public void responseReceived(int fetchId) {
-            /* Ignore negative fetchIds (they're pushed, not fetched) */
-            if (fetchId >= 0) {
-                boolean success = pendingFetches.remove(fetchId);
-                assert success : "Received a response with an unidentified fetch id";
+
+            if (fetchId < 0) {
+                /* Ignore negative fetchIds (they're pushed, not fetched) */
+                return;
+            }
+
+            boolean success = pendingFetches.remove(fetchId);
+            assert success : "Received a response with an unidentified fetch id";
+
+            if (listener != null) {
+                listener.fetchHasReturned(fetchId);
             }
         }
 
@@ -534,8 +561,112 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     assert !pendingFetches.contains(fetchId) : "Fetch id "
                             + fetchId + " timed out.";
                 }
-            }.schedule(1000);
+            }.schedule(FETCH_TIMEOUT_MS);
             return true;
+        }
+
+        public void setListener(DetailsConnectorFetcher.Listener listener) {
+            // if more are needed, feel free to convert this into a collection.
+            this.listener = listener;
+        }
+    }
+
+    /**
+     * The functionality that makes sure that the scroll position is still kept
+     * up-to-date even if more details are being fetched lazily.
+     */
+    private class LazyDetailsScrollAdjuster implements DeferredWorker {
+
+        private static final int SCROLL_TO_END_ID = -2;
+        private static final int NO_SCROLL_SCHEDULED = -1;
+
+        private class ScrollStopChecker implements DeferredWorker {
+            private final ScheduledCommand checkCommand = new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    isScheduled = false;
+                    if (queuedFetches.isEmpty()) {
+                        currentRow = NO_SCROLL_SCHEDULED;
+                        destination = null;
+                    }
+                }
+            };
+
+            private boolean isScheduled = false;
+
+            public void schedule() {
+                if (isScheduled) {
+                    return;
+                }
+                Scheduler.get().scheduleDeferred(checkCommand);
+                isScheduled = true;
+            }
+
+            @Override
+            public boolean isWorkPending() {
+                return isScheduled;
+            }
+        }
+
+        private DetailsConnectorFetcher.Listener fetcherListener = new DetailsConnectorFetcher.Listener() {
+            @Override
+            @SuppressWarnings("boxing")
+            public void fetchHasBeenScheduled(int id) {
+                if (currentRow != NO_SCROLL_SCHEDULED) {
+                    queuedFetches.add(id);
+                }
+            }
+
+            @Override
+            @SuppressWarnings("boxing")
+            public void fetchHasReturned(int id) {
+                if (currentRow == NO_SCROLL_SCHEDULED
+                        || queuedFetches.isEmpty()) {
+                    return;
+                }
+
+                queuedFetches.remove(id);
+                if (currentRow == SCROLL_TO_END_ID) {
+                    getWidget().scrollToEnd();
+                } else {
+                    getWidget().scrollToRow(currentRow, destination);
+                }
+
+                /*
+                 * Schedule a deferred call whether we should stop adjusting for
+                 * scrolling.
+                 * 
+                 * This is done deferredly just because we can't be absolutely
+                 * certain whether this most recent scrolling won't cascade into
+                 * further lazy details loading (perhaps deferredly).
+                 */
+                scrollStopChecker.schedule();
+            }
+        };
+
+        private int currentRow = NO_SCROLL_SCHEDULED;
+        private final Set<Integer> queuedFetches = new HashSet<Integer>();
+        private final ScrollStopChecker scrollStopChecker = new ScrollStopChecker();
+        private ScrollDestination destination;
+
+        public LazyDetailsScrollAdjuster() {
+            detailsConnectorFetcher.setListener(fetcherListener);
+        }
+
+        public void adjustForEnd() {
+            currentRow = SCROLL_TO_END_ID;
+        }
+
+        public void adjustFor(int row, ScrollDestination destination) {
+            currentRow = row;
+            this.destination = destination;
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return currentRow != NO_SCROLL_SCHEDULED
+                    || !queuedFetches.isEmpty()
+                    || scrollStopChecker.isWorkPending();
         }
     }
 
@@ -597,7 +728,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
 
-    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher();
+    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher(
+            getRpcProxy(GridServerRpc.class));
 
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
@@ -618,6 +750,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
+    private final LazyDetailsScrollAdjuster lazyDetailsScrollAdjuster = new LazyDetailsScrollAdjuster();
+
     @Override
     @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
@@ -637,6 +771,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
             public void scrollToStart() {
+                /*
+                 * no need for lazyDetailsScrollAdjuster, because the start is
+                 * always 0, won't change a bit.
+                 */
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -647,6 +785,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
             @Override
             public void scrollToEnd() {
+                lazyDetailsScrollAdjuster.adjustForEnd();
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -658,6 +797,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void scrollToRow(final int row,
                     final ScrollDestination destination) {
+                lazyDetailsScrollAdjuster.adjustFor(row, destination);
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -1266,7 +1406,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     @Override
     public boolean isWorkPending() {
-        return detailsConnectorFetcher.isWorkPending();
+        return detailsConnectorFetcher.isWorkPending()
+                || lazyDetailsScrollAdjuster.isWorkPending();
     }
 
     public DetailsListener getDetailsListener() {
