@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.declarative;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.filters.StringInputStream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -87,7 +87,7 @@ public class DeclarativeEditor extends UI {
             return;
         }
 
-        dc = Design.read(new StringInputStream(string), null);
+        dc = Design.read(new ByteArrayInputStream(string.getBytes()), null);
         treeHolder.removeAllComponents();
         treeHolder.addComponent(dc.getRootComponent());
 
