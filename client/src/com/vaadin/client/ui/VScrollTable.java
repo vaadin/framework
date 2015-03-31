@@ -2774,7 +2774,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         private boolean sortable = false;
         private final String cid;
+
         private boolean dragging;
+        private Integer currentDragX = null; // is used to resolve #14796
 
         private int dragStartX;
         private int colIndex;
@@ -3146,6 +3148,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         event.stopPropagation();
                     }
                     dragging = true;
+                    currentDragX = WidgetUtil.getTouchOrMouseClientX(event);
                     moved = false;
                     colIndex = getColIndexByKey(cid);
                     DOM.setCapture(getElement());
@@ -3160,6 +3163,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (columnReordering
                         && WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
                     dragging = false;
+                    currentDragX = null;
                     DOM.releaseCapture(getElement());
 
                     if (WidgetUtil.isTouchEvent(event)) {
@@ -3227,47 +3231,57 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 break;
             case Event.ONTOUCHMOVE:
             case Event.ONMOUSEMOVE:
-                if (dragging && WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
-                    if (event.getTypeInt() == Event.ONTOUCHMOVE) {
-                        /*
-                         * prevent using this event in e.g. scrolling
-                         */
-                        event.stopPropagation();
-                    }
-                    if (!moved) {
-                        createFloatingCopy();
-                        moved = true;
-                    }
+                // only start the drag if the mouse / touch has moved a minimum
+                // distance in x-axis (the same idea as in #13381)
+                int currentX = WidgetUtil.getTouchOrMouseClientX(event);
 
-                    final int clientX = WidgetUtil
-                            .getTouchOrMouseClientX(event);
-                    final int x = clientX + tHead.hTableWrapper.getScrollLeft();
-                    int slotX = headerX;
-                    closestSlot = colIndex;
-                    int closestDistance = -1;
-                    int start = 0;
-                    if (showRowHeaders) {
-                        start++;
-                    }
-                    final int visibleCellCount = tHead.getVisibleCellCount();
-                    for (int i = start; i <= visibleCellCount; i++) {
-                        if (i > 0) {
-                            final String colKey = getColKeyByIndex(i - 1);
-                            // getColWidth only returns the internal width
-                            // without padding, not the offset width of the
-                            // whole td (#10890)
-                            slotX += getColWidth(colKey)
-                                    + scrollBody.getCellExtraWidth();
+                if (currentDragX == null
+                        || Math.abs(currentDragX - currentX) > VDragAndDropManager.MINIMUM_DISTANCE_TO_START_DRAG) {
+                    if (dragging
+                            && WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
+                        if (event.getTypeInt() == Event.ONTOUCHMOVE) {
+                            /*
+                             * prevent using this event in e.g. scrolling
+                             */
+                            event.stopPropagation();
                         }
-                        final int dist = Math.abs(x - slotX);
-                        if (closestDistance == -1 || dist < closestDistance) {
-                            closestDistance = dist;
-                            closestSlot = i;
+                        if (!moved) {
+                            createFloatingCopy();
+                            moved = true;
                         }
-                    }
-                    tHead.focusSlot(closestSlot);
 
-                    updateFloatingCopysPosition(clientX, -1);
+                        final int clientX = WidgetUtil
+                                .getTouchOrMouseClientX(event);
+                        final int x = clientX
+                                + tHead.hTableWrapper.getScrollLeft();
+                        int slotX = headerX;
+                        closestSlot = colIndex;
+                        int closestDistance = -1;
+                        int start = 0;
+                        if (showRowHeaders) {
+                            start++;
+                        }
+                        final int visibleCellCount = tHead
+                                .getVisibleCellCount();
+                        for (int i = start; i <= visibleCellCount; i++) {
+                            if (i > 0) {
+                                final String colKey = getColKeyByIndex(i - 1);
+                                // getColWidth only returns the internal width
+                                // without padding, not the offset width of the
+                                // whole td (#10890)
+                                slotX += getColWidth(colKey)
+                                        + scrollBody.getCellExtraWidth();
+                            }
+                            final int dist = Math.abs(x - slotX);
+                            if (closestDistance == -1 || dist < closestDistance) {
+                                closestDistance = dist;
+                                closestSlot = i;
+                            }
+                        }
+                        tHead.focusSlot(closestSlot);
+
+                        updateFloatingCopysPosition(clientX, -1);
+                    }
                 }
                 break;
             default:

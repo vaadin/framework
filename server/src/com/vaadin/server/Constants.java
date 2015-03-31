@@ -132,12 +132,11 @@ public interface Constants {
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_INTERVAL = "heartbeatInterval";
     static final String SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS = "closeIdleSessions";
+    static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
     static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
     static final String SERVLET_PARAMETER_SYNC_ID_CHECK = "syncIdCheck";
     static final String SERVLET_PARAMETER_SENDURLSASPARAMETERS = "sendUrlsAsParameters";
-    static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
-    static final String SERVLET_PARAMETER_PUSH_PATH = "pushPath";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

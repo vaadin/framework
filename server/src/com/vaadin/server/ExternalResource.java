@@ -124,5 +124,4 @@ public class ExternalResource implements Resource, Serializable {
     public void setMIMEType(String mimeType) {
         this.mimeType = mimeType;
     }
-
 }

@@ -39,7 +39,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
     public Resource convertToModel(String value,
             Class<? extends Resource> targetType, Locale locale)
             throws Converter.ConversionException {
-        if (value.startsWith("http://")) {
+        if (value.startsWith("http://") || value.startsWith("https://")
+                || value.startsWith("ftp://") || value.startsWith("ftps://")) {
             return new ExternalResource(value);
         } else if (value.startsWith("theme://")) {
             return new ThemeResource(value.substring(8));

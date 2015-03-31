@@ -77,22 +77,24 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
             // (even though both can never be given at the same time)
             templateContents = getConnection().getResource(
                     "layouts/" + templateName + ".html");
-            if (templateContents == null) {
-                // Template missing -> show debug notice and render components
-                // in order.
-                getWidget()
-                        .getElement()
-                        .setInnerHTML(
-                                "<em>Layout file layouts/"
-                                        + templateName
-                                        + ".html is missing. Components will be drawn for debug purposes.</em>");
-            }
         }
 
         if (templateContents != null) {
             // Template ok -> initialize.
             getWidget().initializeHTML(templateContents,
                     getConnection().getThemeUri());
+        } else {
+            // Template missing -> show debug notice and render components in
+            // order.
+            String warning = templateName != null ? "Layout file layouts/"
+                    + templateName + ".html is missing."
+                    : "Layout file not specified.";
+            getWidget()
+                    .getElement()
+                    .setInnerHTML(
+                            "<em>"
+                                    + warning
+                                    + " Components will be drawn for debug purposes.</em>");
         }
         templateUpdated = true;
     }

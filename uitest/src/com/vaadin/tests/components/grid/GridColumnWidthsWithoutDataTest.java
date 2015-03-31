@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -49,7 +50,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
     }
 
     @Test
-    public void restWidthsWhenInitiallyEmpty() {
+    public void testWidthsWhenInitiallyEmpty() {
         setDebug(true);
         openTestURL();
         $(ButtonElement.class).caption("Recreate without data").first().click();
@@ -72,6 +73,37 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
 
         Assert.assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
+    }
+
+    @Test
+    public void testMultiSelectWidths() {
+        setDebug(true);
+        openTestURL();
+        $(NativeSelectElement.class).caption("Selection mode").first()
+                .selectByText("Multi");
+
+        GridElement grid = $(GridElement.class).first();
+
+        int sum = sumUsedWidths(grid);
+
+        // 295 instead of 300 to avoid rounding issues
+        Assert.assertTrue("Only " + sum + " out of 300px was used", sum > 295);
+
+        $(ButtonElement.class).caption("Recreate without data").first().click();
+
+        grid = $(GridElement.class).first();
+        sum = sumUsedWidths(grid);
+
+        // 295 instead of 300 to avoid rounding issues
+        Assert.assertTrue("Only " + sum + " out of 300px was used", sum > 295);
+    }
+
+    private int sumUsedWidths(GridElement grid) {
+        int sum = 0;
+        for (int i : getColWidths(grid)) {
+            sum += i;
+        }
+        return sum;
     }
 
     private static void assertSameWidths(int[] expected, int[] actual) {

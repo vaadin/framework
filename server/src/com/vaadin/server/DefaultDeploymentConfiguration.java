@@ -61,13 +61,6 @@ public class DefaultDeploymentConfiguration extends
 
     public static final boolean DEFAULT_SEND_URLS_AS_PARAMETERS = true;
 
-    /**
-     * Default value for {@link #getPushPath()} = {@value} .
-     * 
-     * @since 7.4.1
-     */
-    public static final String DEFAULT_PUSH_PATH = "PUSH";
-
     private final Properties initParameters;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
@@ -289,18 +282,6 @@ public class DefaultDeploymentConfiguration extends
     @Override
     public Properties getInitParameters() {
         return initParameters;
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * The default path {@link DEFAULT_PUSH_PATH} can be changed by using init
-     * parameter {@link Constants.SERVLET_PARAMETER_PUSH_PATH}.
-     */
-    @Override
-    public String getPushPath() {
-        return getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_PUSH_PATH, DEFAULT_PUSH_PATH);
     }
 
     /**

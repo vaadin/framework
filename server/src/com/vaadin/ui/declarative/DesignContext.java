@@ -17,6 +17,8 @@ package com.vaadin.ui.declarative;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +30,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.annotations.DesignRoot;
-import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.declarative.Design.ComponentFactory;
+import com.vaadin.ui.declarative.Design.ComponentMapper;
 
 /**
  * This class contains contextual information that is collected when a component
@@ -79,7 +81,7 @@ public class DesignContext implements Serializable {
         defaultPrefixes.put("v", "com.vaadin.ui");
         for (String prefix : defaultPrefixes.keySet()) {
             String packageName = defaultPrefixes.get(prefix);
-            mapPrefixToPackage(prefix, packageName);
+            addPackagePrefix(prefix, packageName);
         }
     }
 
@@ -236,20 +238,65 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Creates a two-way mapping between a prefix and a package name. Return
-     * true if prefix was already mapped to some package name or packageName to
-     * some prefix.
+     * Creates a two-way mapping between a prefix and a package name.
      * 
      * @param prefix
      *            the prefix name without an ending dash (for instance, "v" is
-     *            always used for "com.vaadin.ui")
+     *            by default used for "com.vaadin.ui")
      * @param packageName
      *            the name of the package corresponding to prefix
-     * @return whether there was a mapping from prefix to some package name or
-     *         from packageName to some prefix.
+     * 
+     * @see #getPackagePrefixes()
+     * @see #getPackagePrefix(String)
+     * @see #getPackage(String)
+     * @since
      */
-    private boolean mapPrefixToPackage(String prefix, String packageName) {
-        return twoWayMap(prefix, packageName, prefixToPackage, packageToPrefix);
+    public void addPackagePrefix(String prefix, String packageName) {
+        twoWayMap(prefix, packageName, prefixToPackage, packageToPrefix);
+    }
+
+    /**
+     * Gets the prefix mapping for a given package, or <code>null</code> if
+     * there is no mapping for the package.
+     * 
+     * @see #addPackagePrefix(String, String)
+     * @see #getPackagePrefixes()
+     * 
+     * @since
+     * @param packageName
+     *            the package name to get a prefix for
+     * @return the prefix for the package, or <code>null</code> if no prefix is
+     *         registered
+     */
+    public String getPackagePrefix(String packageName) {
+        return packageToPrefix.get(packageName);
+    }
+
+    /**
+     * Gets all registered package prefixes.
+     * 
+     * 
+     * @since
+     * @see #getPackage(String)
+     * @return a collection of package prefixes
+     */
+    public Collection<String> getPackagePrefixes() {
+        return Collections.unmodifiableCollection(prefixToPackage.keySet());
+    }
+
+    /**
+     * Gets the package corresponding to the give prefix, or <code>null</code>
+     * no package has been registered for the prefix
+     * 
+     * @since
+     * @see #addPackagePrefix(String, String)
+     * @param prefix
+     *            the prefix to find a package for
+     * @return the package prefix, or <code>null</code> if no package is
+     *         registered for the provided prefix
+     */
+    public String getPackage(String prefix) {
+        return prefixToPackage.get(prefix);
     }
 
     /**
@@ -309,8 +356,7 @@ public class DesignContext implements Serializable {
                         }
                         String prefixName = parts[0];
                         String packageName = parts[1];
-                        twoWayMap(prefixName, packageName, prefixToPackage,
-                                packageToPrefix);
+                        addPackagePrefix(prefixName, packageName);
                     }
                 }
             }
@@ -328,14 +374,13 @@ public class DesignContext implements Serializable {
      */
     public void writePackageMappings(Document doc) {
         Element head = doc.head();
-        for (String prefix : prefixToPackage.keySet()) {
+        for (String prefix : getPackagePrefixes()) {
             // Only store the prefix-name mapping if it is not a default mapping
             // (such as "v" -> "com.vaadin.ui")
             if (defaultPrefixes.get(prefix) == null) {
                 Node newNode = doc.createElement("meta");
                 newNode.attr("name", "package-mapping");
-                String prefixToPackageName = prefix + ":"
-                        + prefixToPackage.get(prefix);
+                String prefixToPackageName = prefix + ":" + getPackage(prefix);
                 newNode.attr("content", prefixToPackageName);
                 head.appendChild(newNode);
             }
@@ -355,17 +400,11 @@ public class DesignContext implements Serializable {
      *         childComponent.
      */
     public Element createElement(Component childComponent) {
-        Class<?> componentClass = childComponent.getClass();
-        String packageName = componentClass.getPackage().getName();
-        String prefix = packageToPrefix.get(packageName);
-        if (prefix == null) {
-            prefix = packageName.replace('.', '_');
-            twoWayMap(prefix, packageName, prefixToPackage, packageToPrefix);
-        }
-        prefix = prefix + "-";
-        String className = classNameToElementName(componentClass
-                .getSimpleName());
-        Element newElement = doc.createElement(prefix + className);
+        ComponentMapper componentMapper = Design.getComponentMapper();
+
+        String tagName = componentMapper.componentToTag(childComponent, this);
+
+        Element newElement = doc.createElement(tagName);
         childComponent.writeDesign(newElement, this);
         // Handle the local id. Global id and caption should have been taken
         // care of by writeDesign.
@@ -374,32 +413,6 @@ public class DesignContext implements Serializable {
             newElement.attr(LOCAL_ID_ATTRIBUTE, localId);
         }
         return newElement;
-    }
-
-    /**
-     * Creates the name of the html tag corresponding to the given class name.
-     * The name is derived by converting each uppercase letter to lowercase and
-     * inserting a dash before the letter. No dash is inserted before the first
-     * letter of the class name.
-     * 
-     * @param className
-     *            the name of the class without a package name
-     * @return the html tag name corresponding to className
-     */
-    private String classNameToElementName(String className) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < className.length(); i++) {
-            Character c = className.charAt(i);
-            if (Character.isUpperCase(c)) {
-                if (i > 0) {
-                    result.append("-");
-                }
-                result.append(Character.toLowerCase(c));
-            } else {
-                result.append(c);
-            }
-        }
-        return result.toString();
     }
 
     /**
@@ -473,15 +486,22 @@ public class DesignContext implements Serializable {
      * @return a Component corresponding to node, with no attributes set.
      */
     private Component instantiateComponent(Node node) {
-        // Extract the package and class names.
-        String qualifiedClassName = tagNameToClassName(node);
+        String tag = node.nodeName();
 
-        return instantiateClass(qualifiedClassName);
+        ComponentMapper componentMapper = Design.getComponentMapper();
+        Component component = componentMapper.tagToComponent(tag,
+                Design.getComponentFactory(), this);
+
+        assert tag.equals(componentMapper.componentToTag(component, this));
+
+        return component;
     }
 
     /**
      * Instantiates given class via ComponentFactory.
-     * @param qualifiedClassName class name to instantiate
+     * 
+     * @param qualifiedClassName
+     *            class name to instantiate
      * @return instance of a given class
      */
     private Component instantiateClass(String qualifiedClassName) {
@@ -495,44 +515,6 @@ public class DesignContext implements Serializable {
         }
 
         return component;
-    }
-
-    /**
-     * Returns the qualified class name corresponding to the given html tree
-     * node. The class name is extracted from the tag name of node.
-     * 
-     * @param node
-     *            an html tree node
-     * @return The qualified class name corresponding to the given node.
-     */
-    private String tagNameToClassName(Node node) {
-        String tagName = node.nodeName();
-        if (tagName.equals("v-addon")) {
-            return node.attr("class");
-        }
-        // Otherwise, get the full class name using the prefix to package
-        // mapping. Example: "v-vertical-layout" ->
-        // "com.vaadin.ui.VerticalLayout"
-        String[] parts = tagName.split("-", 2);
-        if (parts.length < 2) {
-            throw new DesignException("The tagname '" + tagName
-                    + "' is invalid: missing prefix.");
-        }
-        String prefixName = parts[0];
-        String packageName = prefixToPackage.get(prefixName);
-        if (packageName == null) {
-            throw new DesignException("Unknown tag: " + tagName);
-        }
-        String[] classNameParts = parts[1].split("-");
-        String className = "";
-        for (String classNamePart : classNameParts) {
-            // Split will ignore trailing and multiple dashes but that should be
-            // ok
-            // <v-button--> will be resolved to <v-button>
-            // <v--button> will be resolved to <v-button>
-            className += SharedUtil.capitalize(classNamePart);
-        }
-        return packageName + "." + className;
     }
 
     /**

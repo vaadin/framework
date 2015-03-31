@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-bom</artifactId>
+    <version>@vaadin.version@</version>
+    <packaging>pom</packaging>
+    <name>Vaadin Framework (Bill of Materials)</name>
+    <description>Vaadin Framework (Bill of Materials)</description>
+    <organization>
+        <name>Vaadin Ltd</name>
+        <url>http://vaadin.com</url>
+    </organization>
+    <url>http://vaadin.com</url>
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <distribution>repo</distribution>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
+        <developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
+        <url>https://github.com/vaadin/vaadin</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>artur</id>
+            <name>Artur Signell</name>
+            <email>artur.signell@vaadin.com</email>
+            <url>http://vaadin.com/web/artur</url>
+            <organization>Vaadin Ltd</organization>
+            <organizationUrl>http://vaadin.com/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+                <role>team manager</role>
+            </roles>
+            <timezone>2</timezone>
+        </developer>
+        <developer>
+            <id>hesara</id>
+            <name>Henri Sara</name>
+            <email>hesara@vaadin.com</email>
+            <organization>Vaadin Ltd</organization>
+            <organizationUrl>http://vaadin.com/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>2</timezone>
+        </developer>
+    </developers>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-shared</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-server</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-push</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-widgets</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-client</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-client-compiler</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-client-compiled</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-themes</artifactId>
+                <version>@vaadin.version@</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

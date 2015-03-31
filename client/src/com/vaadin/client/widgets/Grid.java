@@ -1190,6 +1190,7 @@ public class Grid<T> extends ResizeComposite implements
                                     + "Grid editor");
                     grid.getEscalator().setScrollLocked(Direction.VERTICAL,
                             false);
+                    updateSelectionCheckboxesAsNeeded(true);
                 }
             }
         };
@@ -1289,6 +1290,16 @@ public class Grid<T> extends ResizeComposite implements
                     null);
             handler.cancel(request);
             state = State.INACTIVE;
+            updateSelectionCheckboxesAsNeeded(true);
+        }
+
+        private void updateSelectionCheckboxesAsNeeded(boolean isEnabled) {
+            if (grid.getSelectionModel() instanceof Multi) {
+                grid.refreshBody();
+                CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
+                        .getCell(grid.selectionColumn).getWidget();
+                checkBox.setEnabled(isEnabled);
+            }
         }
 
         /**
@@ -1315,6 +1326,7 @@ public class Grid<T> extends ResizeComposite implements
             EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
                     saveRequestCallback);
             handler.save(request);
+            updateSelectionCheckboxesAsNeeded(true);
         }
 
         /**
@@ -1379,6 +1391,7 @@ public class Grid<T> extends ResizeComposite implements
                         rowIndex, bindRequestCallback);
                 handler.bind(request);
                 grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
+                updateSelectionCheckboxesAsNeeded(false);
             }
         }
 
@@ -2577,7 +2590,7 @@ public class Grid<T> extends ResizeComposite implements
                 final double widthFixed = Math.max(widthAsIs,
                         column.getMinimumWidth());
                 defaultExpandRatios = defaultExpandRatios
-                        && column.getExpandRatio() == -1;
+                        && (column.getExpandRatio() == -1 || column == selectionColumn);
 
                 if (isFixedWidth) {
                     columnSizes.put(visibleColumns.indexOf(column), widthFixed);
@@ -2595,7 +2608,8 @@ public class Grid<T> extends ResizeComposite implements
                         .getExpandRatio());
                 final double newWidth = column.getWidthActual();
                 final double maxWidth = getMaxWidth(column);
-                boolean shouldExpand = newWidth < maxWidth && expandRatio > 0;
+                boolean shouldExpand = newWidth < maxWidth && expandRatio > 0
+                        && column != selectionColumn;
                 if (shouldExpand) {
                     totalRatios += expandRatio;
                     columnsToExpand.add(column);
@@ -3923,12 +3937,14 @@ public class Grid<T> extends ResizeComposite implements
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            bodyRenderer = renderer;
 
-            if (grid != null) {
-                grid.refreshBody();
+            if (renderer != bodyRenderer) {
+                bodyRenderer = renderer;
+
+                if (grid != null) {
+                    grid.refreshBody();
+                }
             }
-
             return this;
         }
 
@@ -5635,7 +5651,6 @@ public class Grid<T> extends ResizeComposite implements
 
         escalator.getColumnConfiguration()
                 .setFrozenColumnCount(numberOfColumns);
-
     }
 
     /**
@@ -6974,6 +6989,9 @@ public class Grid<T> extends ResizeComposite implements
 
         // Do ComplexRenderer.init and render new content
         conf.insertColumns(0, visibleColumns.size());
+
+        // Number of frozen columns should be kept same #16901
+        updateFrozenColumns();
 
         // Update column widths.
         for (Column<?, T> column : columns) {

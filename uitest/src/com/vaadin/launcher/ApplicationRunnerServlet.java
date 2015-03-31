@@ -402,12 +402,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                         try {
                             VaadinServletService service = (VaadinServletService) VaadinService
                                     .getCurrent();
-                            if (service != null) {
-                                session = service
-                                        .findVaadinSession(new VaadinServletRequest(
-                                                currentRequest, service));
-                            }
-
+                            session = service
+                                    .findVaadinSession(new VaadinServletRequest(
+                                            currentRequest, service));
                         } finally {
                             /*
                              * Clear some state set by findVaadinSession to

@@ -176,6 +176,18 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             this.id = id;
         }
 
+        /**
+         * Sets a new renderer for this column object
+         *
+         * @param rendererConnector
+         *            a renderer connector object
+         */
+        public void setRenderer(
+                AbstractRendererConnector<Object> rendererConnector) {
+            setRenderer(rendererConnector.getRenderer());
+            this.rendererConnector = rendererConnector;
+        }
+
         @Override
         public Object getValue(final JsonObject obj) {
             final JsonObject rowData = obj.getObject(GridState.JSONKEY_DATA);
@@ -187,16 +199,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
 
             return null;
-        }
-
-        /*
-         * Only used to check that the renderer connector will not change during
-         * the column lifetime.
-         * 
-         * TODO remove once support for changing renderers is implemented
-         */
-        private AbstractRendererConnector<Object> getRendererConnector() {
-            return rendererConnector;
         }
 
         private AbstractFieldConnector getEditorConnector() {
@@ -1137,11 +1139,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         columnsUpdatedFromState = true;
         updateColumnFromState(column, columnState);
         columnsUpdatedFromState = false;
-
-        if (columnState.rendererConnector != column.getRendererConnector()) {
-            throw new UnsupportedOperationException(
-                    "Changing column renderer after initialization is currently unsupported");
-        }
     }
 
     /**
@@ -1185,12 +1182,16 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * @param state
      *            The state to get the data from
      */
+    @SuppressWarnings("unchecked")
     private static void updateColumnFromState(CustomGridColumn column,
             GridColumnState state) {
         column.setWidth(state.width);
         column.setMinimumWidth(state.minWidth);
         column.setMaximumWidth(state.maxWidth);
         column.setExpandRatio(state.expandRatio);
+
+        assert state.rendererConnector instanceof AbstractRendererConnector : "GridColumnState.rendererConnector is invalid (not subclass of AbstractRendererConnector)";
+        column.setRenderer((AbstractRendererConnector<Object>) state.rendererConnector);
 
         column.setSortable(state.sortable);
 

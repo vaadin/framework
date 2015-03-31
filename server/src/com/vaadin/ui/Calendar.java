@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -36,6 +37,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -84,6 +88,8 @@ import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.components.calendar.handler.BasicForwardHandler;
 import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -334,6 +340,10 @@ public class Calendar extends AbstractComponent implements
      */
     public Date getStartDate() {
         if (startDate == null) {
+            currentCalendar.set(java.util.Calendar.MILLISECOND, 0);
+            currentCalendar.set(java.util.Calendar.SECOND, 0);
+            currentCalendar.set(java.util.Calendar.MINUTE, 0);
+            currentCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
             currentCalendar.set(java.util.Calendar.DAY_OF_WEEK,
                     currentCalendar.getFirstDayOfWeek());
             return currentCalendar.getTime();
@@ -363,6 +373,10 @@ public class Calendar extends AbstractComponent implements
      */
     public Date getEndDate() {
         if (endDate == null) {
+            currentCalendar.set(java.util.Calendar.MILLISECOND, 0);
+            currentCalendar.set(java.util.Calendar.SECOND, 59);
+            currentCalendar.set(java.util.Calendar.MINUTE, 59);
+            currentCalendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
             currentCalendar.set(java.util.Calendar.DAY_OF_WEEK,
                     currentCalendar.getFirstDayOfWeek() + 6);
             return currentCalendar.getTime();
@@ -655,8 +669,14 @@ public class Calendar extends AbstractComponent implements
      */
     public TimeFormat getTimeFormat() {
         if (currentTimeFormat == null) {
-            SimpleDateFormat f = (SimpleDateFormat) SimpleDateFormat
-                    .getTimeInstance(SimpleDateFormat.SHORT, getLocale());
+            SimpleDateFormat f;
+            if (getLocale() == null) {
+                f = (SimpleDateFormat) SimpleDateFormat
+                        .getTimeInstance(SimpleDateFormat.SHORT);
+            } else {
+                f = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
+                        SimpleDateFormat.SHORT, getLocale());
+            }
             String p = f.toPattern();
             if (p.indexOf("HH") != -1 || p.indexOf("H") != -1) {
                 return TimeFormat.Format24H;
@@ -1925,4 +1945,51 @@ public class Calendar extends AbstractComponent implements
         return getState(false).eventCaptionAsHtml;
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        Attributes attr = design.attributes();
+        if (design.hasAttr("time-format")) {
+            setTimeFormat(TimeFormat.valueOf("Format"
+                    + design.attr("time-format").toUpperCase()));
+        }
+
+        if (design.hasAttr("start-date")) {
+            setStartDate(DesignAttributeHandler.readAttribute("start-date",
+                    attr, Date.class));
+        }
+        if (design.hasAttr("end-date")) {
+            setEndDate(DesignAttributeHandler.readAttribute("end-date", attr,
+                    Date.class));
+        }
+    };
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        if (currentTimeFormat != null) {
+            design.attr("time-format",
+                    (currentTimeFormat == TimeFormat.Format12H ? "12h" : "24h"));
+        }
+        if (startDate != null) {
+            design.attr("start-date", df_date.format(getStartDate()));
+        }
+        if (endDate != null) {
+            design.attr("end-date", df_date.format(getEndDate()));
+        }
+        if (!getTimeZone().equals(TimeZone.getDefault())) {
+            design.attr("time-zone", getTimeZone().getID());
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("time-format");
+        customAttributes.add("start-date");
+        customAttributes.add("end-date");
+        return customAttributes;
+    }
 }

@@ -13,27 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.push;
+package com.vaadin.tests.components.accordion;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
-import com.vaadin.tests.tb3.WebsocketTest;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PushPathTest extends WebsocketTest {
-
-    private static final int TEN_SECONDS_IN_MS = 10 * 1000;
+/**
+ * Test for removing component from Accordion
+ * 
+ * @author Vaadin Ltd
+ */
+public class AccordionRemoveComponentTest extends MultiBrowserTest {
 
     @Test
-    public void testCustomPushPath() throws InterruptedException {
+    public void removeComponent_noClientSideException() {
+        setDebug(true);
         openTestURL();
-        sleep(TEN_SECONDS_IN_MS);
-        Assert.assertEquals(vaadinElementById(PushPath.PUSH_PATH_LABEL_ID)
-                .getText(), PushPath.PUSH_PATH_LABEL_TEXT);
-    }
 
-    @Override
-    protected String getDeploymentPath(Class<?> uiClass) {
-        return "/run-pushpath/" + uiClass.getCanonicalName();
+        $(ButtonElement.class).first().click();
+
+        Assert.assertFalse(
+                "Error notification with client side exception is shown",
+                isElementPresent(By.className("v-Notification-error")));
     }
 }

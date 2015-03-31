@@ -21,11 +21,13 @@
                 <exclude name="build/**" />
                 <exclude name="bin/**" />
                 <exclude name="buildhelpers/**" />
+                <exclude name="all/**" />
             </fileset>
         </ivy:buildlist>
         <path id="build-path">
             <path location="buildhelpers/build.xml" />
             <path refid="ivy.build.path" />
+            <path location="all/build.xml" />
         </path>
     </target>
     <target name="clean" depends="buildorder">

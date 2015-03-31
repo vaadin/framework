@@ -38,9 +38,9 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
@@ -240,6 +240,12 @@ public class VDragAndDropManager {
 
     }
 
+    /*
+     * #13381, #14796. The drag only actually starts when the mouse move or
+     * touch move event is more than 3 pixel away.
+     */
+    public static final int MINIMUM_DISTANCE_TO_START_DRAG = 3;
+
     private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;
     private VDragEvent currentDrag;
@@ -425,25 +431,16 @@ public class VDragAndDropManager {
                                 int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(event
                                                 .getNativeEvent());
-                                if (Math.abs(startX - currentX) > 3
-                                        || Math.abs(startY - currentY) > 3) {
-                                    if (deferredStartRegistration != null) {
-                                        deferredStartRegistration
-                                                .removeHandler();
-                                        deferredStartRegistration = null;
-                                    }
+                                if (Math.abs(startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                        || Math.abs(startY - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
+                                    ensureDeferredRegistrationCleanup();
                                     currentDrag.setCurrentGwtEvent(event
                                             .getNativeEvent());
                                     startDrag.execute();
                                 }
                                 break;
                             default:
-                                // on any other events, clean up the
-                                // deferred drag start
-                                if (deferredStartRegistration != null) {
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
-                                }
+                                ensureDeferredRegistrationCleanup();
                                 currentDrag = null;
                                 clearDragElement();
                                 break;
@@ -534,10 +531,10 @@ public class VDragAndDropManager {
     }
 
     private void endDrag(boolean doDrop) {
-        if (handlerRegistration != null) {
-            handlerRegistration.removeHandler();
-            handlerRegistration = null;
-        }
+
+        ensureDeferredRegistrationCleanup();
+        ensureHandlerRegistrationCleanup();
+
         boolean sendTransferableToServer = false;
         if (currentDropHandler != null) {
             if (doDrop) {
@@ -593,6 +590,20 @@ public class VDragAndDropManager {
         // release the capture (set to prevent text selection in IE)
         Event.releaseCapture(RootPanel.getBodyElement());
 
+    }
+
+    private void ensureHandlerRegistrationCleanup() {
+        if (handlerRegistration != null) {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
+        }
+    }
+
+    private void ensureDeferredRegistrationCleanup() {
+        if (deferredStartRegistration != null) {
+            deferredStartRegistration.removeHandler();
+            deferredStartRegistration = null;
+        }
     }
 
     private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {

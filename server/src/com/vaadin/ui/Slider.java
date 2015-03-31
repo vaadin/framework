@@ -16,9 +16,16 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A component for selecting a numerical value within a range.
@@ -352,5 +359,36 @@ public class Slider extends AbstractField<Double> {
     public boolean isEmpty() {
         // Slider is never really "empty"
         return false;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext context) {
+        super.readDesign(design, context);
+        Attributes attr = design.attributes();
+        if (attr.hasKey("vertical")) {
+            setOrientation(SliderOrientation.VERTICAL);
+        }
+        if (!attr.get("value").isEmpty()) {
+            setValue(DesignAttributeHandler.readAttribute("value", attr,
+                    Double.class));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext context) {
+        super.writeDesign(design, context);
+        if (getOrientation() == SliderOrientation.VERTICAL) {
+            design.attr("vertical", "");
+        }
+        Slider defaultSlider = context.getDefaultInstance(this);
+        DesignAttributeHandler.writeAttribute(this, "value",
+                design.attributes(), defaultSlider);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("orientation");
+        return result;
     }
 }

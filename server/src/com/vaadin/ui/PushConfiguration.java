@@ -105,26 +105,6 @@ public interface PushConfiguration extends Serializable {
     public void setFallbackTransport(Transport fallbackTransport);
 
     /**
-     * Sets the path that is used with push.
-     * 
-     * @since 7.4.1
-     * @param pushPath
-     *            The path to be used with push
-     * 
-     * @throws IllegalArgumentException
-     *             if the argument is null or empty.
-     */
-    public void setPushPath(String pushPath);
-
-    /**
-     * Returns the path used with push.
-     * 
-     * @since 7.4.1
-     * @return The path that is used with push
-     */
-    public String getPushPath();
-
-    /**
      * Returns the given parameter, if set.
      * <p>
      * This method provides low level access to push parameters and is typically
@@ -278,32 +258,6 @@ class PushConfigurationImpl implements PushConfiguration {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.PushConfiguration#setPushPath(java.lang.String)
-     */
-    @Override
-    public void setPushPath(String pushPath) {
-        if (pushPath != null && !pushPath.isEmpty()) {
-            getState().pushPath = pushPath;
-        } else {
-            throw new IllegalArgumentException(
-                    "Push path can't be empty or null");
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.PushConfiguration#getPushPath()
-     */
-    @Override
-    public String getPushPath() {
-        return getState(false).pushPath;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.ui.PushConfiguration#getParameter(java.lang.String)
      */
     @Override
@@ -336,4 +290,5 @@ class PushConfigurationImpl implements PushConfiguration {
         return Collections.unmodifiableCollection(getState(false).parameters
                 .keySet());
     }
+
 }
