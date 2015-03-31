@@ -27,11 +27,13 @@ import java.util.regex.Pattern;
 import org.junit.Before;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 @SuppressWarnings("boxing")
@@ -96,6 +98,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     @Before
     public void before() {
+        setDebug(true);
         openTestURL();
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, "Set 20px default height");
         populate();
@@ -370,6 +373,59 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
                 SCROLL_HERE_SPACERBELOW_ANY_0PADDING);
 
         assertEquals(getScrollTop(), 950);
+    }
+
+    @Test
+    public void domCanBeSortedWithFocusInSpacer() throws InterruptedException {
+
+        // Firefox behaves badly with focus-related tests - skip it.
+        if (BrowserUtil.isFirefox(super.getDesiredCapabilities())) {
+            return;
+        }
+
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+
+        WebElement inputElement = getEscalator().findElement(
+                By.tagName("input"));
+        inputElement.click();
+        scrollVerticallyTo(30);
+
+        // Sleep needed because of all the JS we're doing, and to let
+        // the DOM reordering to take place.
+        Thread.sleep(500);
+
+        assertFalse("Error message detected", $(NotificationElement.class)
+                .exists());
+    }
+
+    @Test
+    public void spacersAreInsertedInCorrectDomPosition() {
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+
+        WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
+        WebElement spacer = getChild(tbody, 2);
+        String cssClass = spacer.getAttribute("class");
+        assertTrue("element index 2 was not a spacer (class=\"" + cssClass
+                + "\")", cssClass.contains("-spacer"));
+    }
+
+    @Test
+    public void spacersAreInCorrectDomPositionAfterScroll() {
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+
+        scrollVerticallyTo(30); // roughly one row's worth
+
+        WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
+        WebElement spacer = getChild(tbody, 1);
+        String cssClass = spacer.getAttribute("class");
+        assertTrue("element index 1 was not a spacer (class=\"" + cssClass
+                + "\")", cssClass.contains("-spacer"));
+    }
+
+    private WebElement getChild(WebElement parent, int childIndex) {
+        return (WebElement) executeScript("return arguments[0].children["
+                + childIndex + "];", parent);
     }
 
     private static double[] getElementDimensions(WebElement element) {

@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -658,11 +659,28 @@ public class EscalatorBasicClientFeaturesWidget extends
             public void execute() {
                 BodyRowContainer body = escalator.getBody();
 
-                if (body.getSpacerUpdater().equals(SpacerUpdater.NULL)) {
+                if (SpacerUpdater.NULL.equals(body.getSpacerUpdater())) {
                     body.setSpacerUpdater(CUSTOM);
                 } else {
                     body.setSpacerUpdater(SpacerUpdater.NULL);
                 }
+            }
+        }, menupath);
+
+        addMenuCommand("Focusable Updater", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getBody().setSpacerUpdater(new SpacerUpdater() {
+                    @Override
+                    public void init(Spacer spacer) {
+                        spacer.getElement().appendChild(DOM.createInputText());
+                    }
+
+                    @Override
+                    public void destroy(Spacer spacer) {
+                        spacer.getElement().removeAllChildren();
+                    }
+                });
             }
         }, menupath);
 

@@ -3692,11 +3692,12 @@ public class Escalator extends Widget implements RequiresResize,
              * its parents are) removed from the document. Therefore, we sort
              * everything around that row instead.
              */
-            final TableRowElement focusedRow = getEscalatorRowWithFocus();
+            final TableRowElement focusedRow = getRowWithFocus();
 
             if (focusedRow != null) {
                 assert focusedRow.getParentElement() == root : "Trying to sort around a row that doesn't exist in body";
-                assert visualRowOrder.contains(focusedRow) : "Trying to sort around a row that doesn't exist in visualRowOrder.";
+                assert visualRowOrder.contains(focusedRow)
+                        || body.spacerContainer.isSpacer(focusedRow) : "Trying to sort around a row that doesn't exist in visualRowOrder or is not a spacer.";
             }
 
             /*
@@ -3717,6 +3718,21 @@ public class Escalator extends Widget implements RequiresResize,
              * the first child.
              */
 
+            List<TableRowElement> orderedBodyRows = new ArrayList<TableRowElement>(
+                    visualRowOrder);
+            for (int i = 0; i < visualRowOrder.size(); i++) {
+                SpacerContainer.SpacerImpl spacer = body.spacerContainer
+                        .getSpacer(getTopRowLogicalIndex() + i);
+
+                if (spacer != null) {
+                    orderedBodyRows.add(i + 1, spacer.getRootElement());
+                }
+            }
+            /*
+             * At this point, invisible spacers aren't reordered, so their
+             * position in the DOM is undefined.
+             */
+
             /*
              * If we have a focused row, start in the mode where we put
              * everything underneath that row. Otherwise, all rows are placed as
@@ -3724,8 +3740,8 @@ public class Escalator extends Widget implements RequiresResize,
              */
             boolean insertFirst = (focusedRow == null);
 
-            final ListIterator<TableRowElement> i = visualRowOrder
-                    .listIterator(visualRowOrder.size());
+            final ListIterator<TableRowElement> i = orderedBodyRows
+                    .listIterator(orderedBodyRows.size());
             while (i.hasPrevious()) {
                 TableRowElement tr = i.previous();
 
@@ -3742,12 +3758,13 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /**
-         * Get the escalator row that has focus.
+         * Get the {@literal <tbody>} row that contains (or has) focus.
          * 
-         * @return The escalator row that contains a focused DOM element, or
-         *         <code>null</code> if focus is outside of a body row.
+         * @return The {@literal <tbody>} row that contains a focused DOM
+         *         element, or <code>null</code> if focus is outside of a body
+         *         row.
          */
-        private TableRowElement getEscalatorRowWithFocus() {
+        private TableRowElement getRowWithFocus() {
             TableRowElement rowContainingFocus = null;
 
             final Element focusedElement = WidgetUtil.getFocusedElement();
@@ -4781,6 +4798,24 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        /** Checks if a given element is a spacer element */
+        public boolean isSpacer(TableRowElement focusedRow) {
+
+            /*
+             * If this needs optimization, we could do a more heuristic check
+             * based on stylenames and stuff, instead of iterating through the
+             * map.
+             */
+
+            for (SpacerImpl spacer : rowIndexToSpacer.values()) {
+                if (spacer.getRootElement().equals(focusedRow)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         @SuppressWarnings("boxing")
         void scrollToSpacer(int spacerIndex, ScrollDestination destination,
                 int padding) {
@@ -5140,6 +5175,8 @@ public class Escalator extends Widget implements RequiresResize,
             spacer.setupDom(height);
 
             initSpacerContent(spacer);
+
+            body.sortDomElements();
         }
 
         private void updateExistingSpacer(int rowIndex, double newHeight) {
