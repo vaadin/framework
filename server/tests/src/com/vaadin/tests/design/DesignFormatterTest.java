@@ -24,10 +24,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.TimeZone;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
@@ -203,16 +207,31 @@ public class DesignFormatterTest {
 
     @Test
     public void testShortcutActionNoCaption() {
-        ShortcutAction action = new ShortcutAction(null,
-                ShortcutAction.KeyCode.D, new int[] {
-                        ShortcutAction.ModifierKey.ALT,
-                        ShortcutAction.ModifierKey.CTRL });
+        ShortcutAction action = new ShortcutAction(null, KeyCode.D, new int[] {
+                ModifierKey.ALT, ModifierKey.CTRL });
         String formatted = formatter.format(action);
         assertEquals("alt-ctrl-d", formatted);
 
         ShortcutAction result = formatter
                 .parse(formatted, ShortcutAction.class);
         assertTrue(equals(action, result));
+    }
+
+    @Test
+    public void testInvalidShortcutAction() {
+        assertInvalidShortcut("-");
+        assertInvalidShortcut("foo");
+        assertInvalidShortcut("atl-ctrl");
+        assertInvalidShortcut("-a");
+    }
+
+    protected void assertInvalidShortcut(String shortcut) {
+        try {
+            formatter.parse(shortcut, ShortcutAction.class);
+            Assert.fail("Invalid shortcut '" + shortcut + "' should throw");
+        } catch (ConversionException e) {
+            // expected
+        }
     }
 
     @Test
