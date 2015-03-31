@@ -4680,7 +4680,6 @@ public class Grid<T> extends ResizeComposite implements
 
         escalator.getColumnConfiguration()
                 .setFrozenColumnCount(numberOfColumns);
-
     }
 
     /**
@@ -5959,6 +5958,9 @@ public class Grid<T> extends ResizeComposite implements
 
         // Do ComplexRenderer.init and render new content
         conf.insertColumns(0, columns.size());
+
+        // Number of frozen columns should be kept same #16901
+        updateFrozenColumns();
 
         // Update column widths.
         for (Column<?, T> column : columns) {

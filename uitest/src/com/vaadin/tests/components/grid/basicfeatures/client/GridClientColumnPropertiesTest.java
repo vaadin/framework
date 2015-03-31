@@ -94,6 +94,23 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
     }
 
     @Test
+    public void testFrozenColumns_columnsReordered_frozenColumnsKept() {
+        openTestURL();
+
+        selectMenuPath("Component", "State", "Frozen column count", "2 columns");
+
+        assertTrue(cellIsFrozen(1, 0));
+        assertTrue(cellIsFrozen(1, 1));
+        assertFalse(cellIsFrozen(1, 2));
+
+        selectMenuPath("Component", "State", "Reverse grid columns");
+
+        assertTrue(cellIsFrozen(1, 0));
+        assertTrue(cellIsFrozen(1, 1));
+        assertFalse(cellIsFrozen(1, 2));
+    }
+
+    @Test
     public void testBrokenRenderer() {
         setDebug(true);
         openTestURL();
