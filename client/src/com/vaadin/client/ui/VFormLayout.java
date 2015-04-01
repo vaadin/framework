@@ -361,7 +361,11 @@ public class VFormLayout extends SimplePanel {
 
         public ErrorFlag(ComponentConnector owner) {
             setStyleName(CLASSNAME);
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
+
+            if(!BrowserInfo.get().isTouchDevice()) {
+                sinkEvents(VTooltip.TOOLTIP_EVENTS);
+            }
+
             this.owner = owner;
         }
 

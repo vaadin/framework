@@ -41,6 +41,7 @@ public class VBrowserDetails implements Serializable {
     private boolean isFirefox = false;
     private boolean isOpera = false;
     private boolean isIE = false;
+    private boolean isPhantomJS = false;
 
     private boolean isWindowsPhone;
     private boolean isIPad;
@@ -86,6 +87,7 @@ public class VBrowserDetails implements Serializable {
 
         isSafari = !isChrome && !isIE && userAgent.indexOf("safari") != -1;
         isFirefox = userAgent.indexOf(" firefox/") != -1;
+        isPhantomJS = userAgent.indexOf("phantomjs/") != -1;
 
         // chromeframe
         isChromeFrameCapable = userAgent.indexOf("chromeframe") != -1;
@@ -368,6 +370,15 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isIE() {
         return isIE;
+    }
+
+    /**
+     * Tests if the browser is PhantomJS.
+     *
+     * @return true if it is PhantomJS, false otherwise
+     */
+    public boolean isPhantomJS() {
+        return isPhantomJS;
     }
 
     /**
