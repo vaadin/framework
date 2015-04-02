@@ -1008,8 +1008,9 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             if (node instanceof Element
                     && ((Element) node).tagName().equals("menu")) {
                 subMenus.add((Element) node);
+            } else {
+                caption += node.toString();
             }
-            caption += node.toString();
         }
         MenuItem menu = new MenuItem(caption.trim(), icon, null);
 
