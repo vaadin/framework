@@ -178,7 +178,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         /**
          * Sets a new renderer for this column object
-         *
+         * 
          * @param rendererConnector
          *            a renderer connector object
          */
@@ -736,14 +736,17 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
         public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
-            if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
-                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE)) {
+            if (hasDetailsOpen(row)) {
                 getWidget().setDetailsVisible(rowIndex, true);
+                detailsConnectorFetcher.schedule();
             } else {
                 getWidget().setDetailsVisible(rowIndex, false);
             }
+        }
 
-            detailsConnectorFetcher.schedule();
+        private boolean hasDetailsOpen(JsonObject row) {
+            return row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE);
         }
 
         @Override
