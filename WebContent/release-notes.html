@@ -125,16 +125,7 @@
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>
-                <p>The org.json and com.google.gwt.json libraries have been replaced by elemental.json.</p>
-                <p>JavascriptFunction.call parameter type has been changed to elemental.json.JsonArray, affecting JavaScript.addFunction, AbstractJavaScriptComponent.addFunction and AbstractJavaScriptExtension.addFunction</p>
-                <p>Raw JSON values passed to AbstractJavaScriptComponent.callFunction and AbstractJavaScriptExtension.callFunction should be changed to use elemental.json types.</p>
-            </li>
-            <li>The semantics of empty and required for Field classes has been made more consistent. This mainly affects Checkbox which is now considered to be empty when it is not checked.</li>
-            <li>The previously inconsistent behavior in HTML vs plain text rendering of Calendar event captions has been made consistent.</li>
-            <li>Support for Opera 12 has been dropped. Newer versions based on the Blink rendering engine are still supported.</li>
-            <li>Window's accessibility shortcut was moved to server-side. Now setCloseShortcut overrides the default value, while addCloseShortcut can be used to add more than one shortcut key for closing the window.
-                The protected value closeShortcut in Window was removed.</li>
+            <li>Push path has been changed from /PUSH/ to /PUSH to be compatible with JSR 356.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
