@@ -253,7 +253,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public boolean isEnabled();
 
     /**
-     * Enables or disables the component. The user can not interact disabled
+     * Enables or disables the component. The user can not interact with disabled
      * components, which are shown with a style that indicates the status,
      * usually shaded in light gray color. Components are enabled by default.
      * 
