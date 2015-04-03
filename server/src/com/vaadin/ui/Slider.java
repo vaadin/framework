@@ -104,9 +104,9 @@ public class Slider extends AbstractField<Double> {
      */
     public Slider(double min, double max, int resolution) {
         this();
-        setMin(min);
-        setMax(max);
         setResolution(resolution);
+        setMax(max);
+        setMin(min);
     }
 
     /**
@@ -167,14 +167,15 @@ public class Slider extends AbstractField<Double> {
      *            The new maximum slider value
      */
     public void setMax(double max) {
-        getState().maxValue = max;
+        double roundedMax = getRoundedValue(max);
+        getState().maxValue = roundedMax;
 
-        if (getMin() > max) {
-            getState().minValue = max;
+        if (getMin() > roundedMax) {
+            getState().minValue = roundedMax;
         }
 
-        if (getValue() > max) {
-            setValue(max);
+        if (getValue() > roundedMax) {
+            setValue(roundedMax);
         }
     }
 
@@ -195,14 +196,15 @@ public class Slider extends AbstractField<Double> {
      *            The new minimum slider value
      */
     public void setMin(double min) {
-        getState().minValue = min;
+        double roundedMin = getRoundedValue(min);
+        getState().minValue = roundedMin;
 
-        if (getMax() < min) {
-            getState().maxValue = min;
+        if (getMax() < roundedMin) {
+            getState().maxValue = roundedMin;
         }
 
-        if (getValue() < min) {
-            setValue(min);
+        if (getValue() < roundedMin) {
+            setValue(roundedMin);
         }
     }
 
@@ -268,26 +270,26 @@ public class Slider extends AbstractField<Double> {
      */
     @Override
     protected void setValue(Double value, boolean repaintIsNotNeeded) {
-        final double v = value.doubleValue();
-        final int resolution = getResolution();
-        double newValue;
+        double newValue = getRoundedValue(value);
 
-        if (resolution > 0) {
-            // Round up to resolution
-            newValue = Math.floor(v * Math.pow(10, resolution));
-            newValue = newValue / Math.pow(10, resolution);
-            if (getMin() > newValue || getMax() < newValue) {
-                throw new ValueOutOfBoundsException(newValue);
-            }
-        } else {
-            newValue = (int) v;
-            if (getMin() > newValue || getMax() < newValue) {
-                throw new ValueOutOfBoundsException(newValue);
-            }
+        if (getMin() > newValue || getMax() < newValue) {
+            throw new ValueOutOfBoundsException(newValue);
         }
 
         getState().value = newValue;
         super.setValue(newValue, repaintIsNotNeeded);
+    }
+
+    private double getRoundedValue(Double value) {
+        final double v = value.doubleValue();
+        final int resolution = getResolution();
+
+        double ratio = Math.pow(10, resolution);
+        if(v >= 0) {
+            return Math.floor(v * ratio) / ratio;
+        } else {
+            return Math.ceil(v * ratio) / ratio;
+        }
     }
 
     @Override

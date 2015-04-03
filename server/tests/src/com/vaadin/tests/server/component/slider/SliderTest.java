@@ -76,4 +76,60 @@ public class SliderTest {
 
         assertThat(slider.getValue(), is(99.01234567891234567890123456789));
     }
+
+    @Test
+    public void doublesCanBeUsedAsLimits() {
+        Slider slider = new Slider(1.5, 2.5, 1);
+
+        assertThat(slider.getMin(), is(1.5));
+        assertThat(slider.getValue(), is(1.5));
+        assertThat(slider.getMax(), is(2.5));
+    }
+
+    @Test
+    public void valuesGreaterThanIntMaxValueCanBeUsed() {
+        double minValue = (double)Integer.MAX_VALUE + 1;
+
+        Slider s = new Slider(minValue, minValue + 1, 0);
+
+        assertThat(s.getValue(), is(minValue));
+    }
+
+    @Test
+    public void negativeValuesCanBeUsed() {
+        Slider slider = new Slider(-0.7, 1.0, 0);
+
+        slider.setValue(-0.4);
+
+        assertThat(slider.getValue(), is(-0.0));
+    }
+
+    @Test
+    public void boundariesAreRounded() {
+        Slider slider = new Slider(1.5, 2.5, 0);
+
+        slider.setValue(1.0);
+
+        assertThat(slider.getValue(), is(1.0));
+        assertThat(slider.getMin(), is(1.0));
+        assertThat(slider.getMax(), is(2.0));
+    }
+
+    @Test
+    public void valueWithSmallerPrecisionCanBeUsed() {
+        Slider slider = new Slider(0, 100, 10);
+
+        slider.setValue(1.2);
+
+        assertThat(slider.getValue(), is(1.2));
+    }
+
+    @Test
+    public void valueWithLargerPrecisionCanBeUsed() {
+        Slider slider = new Slider(0, 100, 2);
+
+        slider.setValue(1.2345);
+
+        assertThat(slider.getValue(), is(1.23));
+    }
 }
