@@ -180,22 +180,40 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            RPC interface implementation. Also used to deduce the type.
      */
     protected <T extends ServerRpc> void registerRpc(T implementation) {
+        // Search upwards until an interface is found. It must be found as T
+        // extends ServerRpc
         Class<?> cls = implementation.getClass();
-        Class<?>[] interfaces = cls.getInterfaces();
-        while (interfaces.length == 0) {
-            // Search upwards until an interface is found. It must be found as T
-            // extends ServerRpc
+        Class<ServerRpc> serverRpcClass = getServerRpcInterface(cls);
+
+        while (cls != null && serverRpcClass == null) {
             cls = cls.getSuperclass();
-            interfaces = cls.getInterfaces();
+            serverRpcClass = getServerRpcInterface(cls);
         }
-        if (interfaces.length != 1
-                || !(ServerRpc.class.isAssignableFrom(interfaces[0]))) {
+
+        if (serverRpcClass == null) {
             throw new RuntimeException(
-                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+                    "No interface T extends ServerRpc found in the class hierarchy.");
         }
-        @SuppressWarnings("unchecked")
-        Class<T> type = (Class<T>) interfaces[0];
-        registerRpc(implementation, type);
+
+        registerRpc(implementation, serverRpcClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<ServerRpc> getServerRpcInterface(Class<?> implementationClass) {
+        Class<ServerRpc> serverRpcClass = null;
+        if (implementationClass != null) {
+            for (Class<?> candidateInterface : implementationClass
+                    .getInterfaces()) {
+                if (ServerRpc.class.isAssignableFrom(candidateInterface)) {
+                    if (serverRpcClass != null) {
+                        throw new RuntimeException(
+                                "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+                    }
+                    serverRpcClass = (Class<ServerRpc>) candidateInterface;
+                }
+            }
+        }
+        return serverRpcClass;
     }
 
     /**
