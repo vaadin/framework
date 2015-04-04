@@ -887,7 +887,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Sets columns width (in pixels). Theme may not necessary respect very
+     * Sets columns width (in pixels). Theme may not necessarily respect very
      * small or very big values. Setting width to -1 (default) means that theme
      * will make decision of width.
      * 
