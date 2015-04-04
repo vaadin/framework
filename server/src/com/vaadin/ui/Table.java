@@ -699,7 +699,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the headers of the columns.
      * 
      * <p>
-     * The headers match the property id:s given my the set visible column
+     * The headers match the property id:s given by the set visible column
      * headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
@@ -726,7 +726,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the headers of the columns.
      * 
      * <p>
-     * The headers match the property id:s given my the set visible column
+     * The headers match the property id:s given by the set visible column
      * headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
@@ -759,7 +759,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the icons of the columns.
      * 
      * <p>
-     * The icons in headers match the property id:s given my the set visible
+     * The icons in headers match the property id:s given by the set visible
      * column headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
@@ -786,7 +786,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the icons of the columns.
      * 
      * <p>
-     * The icons in headers match the property id:s given my the set visible
+     * The icons in headers match the property id:s given by the set visible
      * column headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
@@ -886,7 +886,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Sets columns width (in pixels). Theme may not necessary respect very
+     * Sets columns width (in pixels). Theme may not necessarily respect very
      * small or very big values. Setting width to -1 (default) means that theme
      * will make decision of width.
      * 
@@ -895,9 +895,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * is used. See @link {@link #setColumnExpandRatio(Object, float)}.
      * 
      * @param propertyId
-     *            colunmns property id
+     *            columns property id
      * @param width
-     *            width to be reserved for colunmns content
+     *            width to be reserved for columns content
      * @since 4.0.3
      */
     public void setColumnWidth(Object propertyId, int width) {
@@ -974,7 +974,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Gets the column expand ratio for a columnd. See
+     * Gets the column expand ratio for a column. See
      * {@link #setColumnExpandRatio(Object, float)}
      * 
      * @param propertyId
@@ -1090,7 +1090,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Object getCurrentPageFirstItemId() {
 
-        // Priorise index over id if indexes are supported
+        // Prioritise index over id if indexes are supported
         if (items instanceof Container.Indexed) {
             final int index = getCurrentPageFirstItemIndex();
             Object id = null;
@@ -1192,7 +1192,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the icon Resource for the specified column.
      * 
      * @param propertyId
-     *            the propertyId indentifying the column.
+     *            the propertyId identifying the column.
      * @return the icon for the specified column; null if the column has no icon
      *         set, or if the column is not visible.
      */
@@ -2591,7 +2591,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            types.
      * @param itemId
      *            the Id the new row. If null, a new id is automatically
-     *            assigned. If given, the table cant already have a item with
+     *            assigned. If given, the table cannot already have a item with
      *            given id.
      * @return Returns item id for the new row. Returns null if operation fails.
      */
@@ -4319,7 +4319,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Adds a new property to the table and show it as a visible column.
      * 
      * @param propertyId
-     *            the Id of the proprty.
+     *            the Id of the property.
      * @param type
      *            the class of the property.
      * @param defaultValue
@@ -4354,7 +4354,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Adds a new property to the table and show it as a visible column.
      * 
      * @param propertyId
-     *            the Id of the proprty
+     *            the Id of the property
      * @param type
      *            the class of the property
      * @param defaultValue
@@ -4564,7 +4564,7 @@ public class Table extends AbstractSelect implements Action.Container,
         disableContentRefreshing();
         super.containerPropertySetChange(event);
 
-        // sanitetize visibleColumns. note that we are not adding previously
+        // sanitize visibleColumns. note that we are not adding previously
         // non-existing properties as columns
         Collection<?> containerPropertyIds = getContainerDataSource()
                 .getContainerPropertyIds();
@@ -4750,11 +4750,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * If table is editable a editor of type Field is created for each table
      * cell. The assigned FieldFactory is used to create the instances.
      * 
-     * To provide custom editors for table cells create a class implementins the
+     * To provide custom editors for table cells create a class implementing the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
      * 
-     * @return true if table is editable, false oterwise.
+     * @return true if table is editable, false otherwise.
      * @see Field
      * @see FieldFactory
      * 
@@ -4769,7 +4769,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * If table is editable a editor of type Field is created for each table
      * cell. The assigned FieldFactory is used to create the instances.
      * 
-     * To provide custom editors for table cells create a class implementins the
+     * To provide custom editors for table cells create a class implementing the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
      * 
@@ -5339,7 +5339,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Gets the property id of the column which header was pressed
          * 
-         * @return The column propety id
+         * @return The column property id
          */
         public Object getPropertyId() {
             return columnPropertyId;
@@ -5389,7 +5389,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Gets the property id of the column which header was pressed
          * 
-         * @return The column propety id
+         * @return The column property id
          */
         public Object getPropertyId() {
             return columnPropertyId;
