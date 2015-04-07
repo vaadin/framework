@@ -15,6 +15,8 @@
  */
 package com.vaadin.client;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 
@@ -276,8 +278,9 @@ public class MeasuredSize {
     private void debugSizeChange(Element element, String sizeChangeType,
             String changedFrom, String changedTo) {
         if (debugSizeChanges) {
-            VConsole.log(sizeChangeType + " has changed from " + changedFrom
-                    + " to " + changedTo + " for " + element.toString());
+            getLogger()
+                    .info(sizeChangeType + " has changed from " + changedFrom
+                            + " to " + changedTo + " for " + element.toString());
         }
     }
 
@@ -287,6 +290,10 @@ public class MeasuredSize {
 
     private static boolean hasHeightChanged(int[] sizes1, int[] sizes2) {
         return sizes1[0] != sizes2[0] || sizes1[2] != sizes2[2];
+    }
+
+    public static Logger getLogger() {
+        return Logger.getLogger(MeasuredSize.class.getName());
     }
 
 }

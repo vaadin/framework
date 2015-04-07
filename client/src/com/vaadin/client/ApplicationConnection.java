@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.LiveValue;
@@ -93,6 +94,7 @@ import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.VaadinUriResolver;
@@ -518,7 +520,7 @@ public class ApplicationConnection implements HasHandlers {
             int currentTime = elapsedMillis();
             int stepDuration = currentTime - previousStep;
             if (stepDuration >= minDuration) {
-                VConsole.log(message + ": " + stepDuration + " ms");
+                getLogger().info(message + ": " + stepDuration + " ms");
             }
             previousStep = currentTime;
         }
@@ -540,16 +542,18 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
-        VConsole.log("Starting application " + cnf.getRootPanelId());
-        VConsole.log("Using theme: " + cnf.getThemeName());
+        getLogger().info("Starting application " + cnf.getRootPanelId());
+        getLogger().info("Using theme: " + cnf.getThemeName());
 
-        VConsole.log("Vaadin application servlet version: "
-                + cnf.getServletVersion());
+        getLogger().info(
+                "Vaadin application servlet version: "
+                        + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
-            VConsole.error("Warning: your widget set seems to be built with a different "
-                    + "version than the one used on server. Unexpected "
-                    + "behavior may occur.");
+            getLogger()
+                    .severe("Warning: your widget set seems to be built with a different "
+                            + "version than the one used on server. Unexpected "
+                            + "behavior may occur.");
         }
 
         this.widgetSet = widgetSet;
@@ -853,7 +857,8 @@ public class ApplicationConnection implements HasHandlers {
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
         payload.put(ApplicationConstants.SERVER_SYNC_ID, lastSeenServerSyncId);
 
-        VConsole.log("Making UIDL Request with params: " + payload.toJson());
+        getLogger()
+                .info("Making UIDL Request with params: " + payload.toJson());
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ApplicationConstants.UIDL_PATH + '/');
 
@@ -911,9 +916,10 @@ public class ApplicationConnection implements HasHandlers {
 
             @Override
             public void onResponseReceived(Request request, Response response) {
-                VConsole.log("Server visit took "
-                        + String.valueOf((new Date()).getTime()
-                                - requestStartTime.getTime()) + "ms");
+                getLogger().info(
+                        "Server visit took "
+                                + String.valueOf((new Date()).getTime()
+                                        - requestStartTime.getTime()) + "ms");
 
                 int statusCode = response.getStatusCode();
                 // Notify network observers about response status
@@ -937,7 +943,7 @@ public class ApplicationConnection implements HasHandlers {
                          * Status code 0 does indicate that there was no server
                          * side processing, so we can retry the request.
                          */
-                        VConsole.log("Status code 0, retrying");
+                        getLogger().warning("Status code 0, retrying");
                         (new Timer() {
                             @Override
                             public void run() {
@@ -968,7 +974,8 @@ public class ApplicationConnection implements HasHandlers {
                      */
                     String delay = response.getHeader("Retry-After");
                     if (delay != null) {
-                        VConsole.log("503, retrying in " + delay + "msec");
+                        getLogger().warning(
+                                "503, retrying in " + delay + "msec");
                         (new Timer() {
                             @Override
                             public void run() {
@@ -1026,7 +1033,7 @@ public class ApplicationConnection implements HasHandlers {
             try {
                 doAjaxRequest(uri, payload, requestCallback);
             } catch (RequestException e) {
-                VConsole.error(e);
+                getLogger().log(Level.SEVERE, "Error in server request", e);
                 endRequest();
                 fireEvent(new ConnectionStatusEvent(0));
             }
@@ -1052,8 +1059,9 @@ public class ApplicationConnection implements HasHandlers {
             return;
         }
 
-        VConsole.log("JSON parsing took "
-                + (new Date().getTime() - start.getTime()) + "ms");
+        getLogger().info(
+                "JSON parsing took " + (new Date().getTime() - start.getTime())
+                        + "ms");
         if (isApplicationRunning()) {
             handleReceivedJSONMessage(start, jsonText, json);
         } else {
@@ -1192,9 +1200,10 @@ public class ApplicationConnection implements HasHandlers {
 
             // Show this message just once
             if (cssWaits++ == 0) {
-                VConsole.log("Assuming CSS loading is not complete, "
-                        + "postponing render phase. "
-                        + "(.v-loading-indicator height == 0)");
+                getLogger().warning(
+                        "Assuming CSS loading is not complete, "
+                                + "postponing render phase. "
+                                + "(.v-loading-indicator height == 0)");
             }
         } else {
             cssLoaded = true;
@@ -1226,7 +1235,7 @@ public class ApplicationConnection implements HasHandlers {
      * 
      */
     protected void showCommunicationError(String details, int statusCode) {
-        VConsole.error("Communication error: " + details);
+        getLogger().severe("Communication error: " + details);
         showError(details, configuration.getCommunicationError());
     }
 
@@ -1237,7 +1246,7 @@ public class ApplicationConnection implements HasHandlers {
      *            Optional details for debugging.
      */
     protected void showAuthenticationError(String details) {
-        VConsole.error("Authentication error: " + details);
+        getLogger().severe("Authentication error: " + details);
         showError(details, configuration.getAuthorizationError());
     }
 
@@ -1248,7 +1257,7 @@ public class ApplicationConnection implements HasHandlers {
      *            Optional details for debugging.
      */
     public void showSessionExpiredError(String details) {
-        VConsole.error("Session expired: " + details);
+        getLogger().severe("Session expired: " + details);
         showError(details, configuration.getSessionExpiredError());
     }
 
@@ -1307,7 +1316,8 @@ public class ApplicationConnection implements HasHandlers {
 
     protected void startRequest() {
         if (hasActiveRequest) {
-            VConsole.error("Trying to start a new request while another is active");
+            getLogger().severe(
+                    "Trying to start a new request while another is active");
         }
         hasActiveRequest = true;
         requestStartTime = new Date();
@@ -1316,7 +1326,7 @@ public class ApplicationConnection implements HasHandlers {
 
     protected void endRequest() {
         if (!hasActiveRequest) {
-            VConsole.error("No active request");
+            getLogger().severe("No active request");
         }
         // After checkForPendingVariableBursts() there may be a new active
         // request, so we must set hasActiveRequest to false before, not after,
@@ -1385,7 +1395,8 @@ public class ApplicationConnection implements HasHandlers {
                     && !getConnectorMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
                 iterator.remove();
-                VConsole.log("Removed variable from removed component: " + id);
+                getLogger().info(
+                        "Removed variable from removed component: " + id);
             }
         }
     }
@@ -1504,7 +1515,7 @@ public class ApplicationConnection implements HasHandlers {
             // Some component is doing something that can't be interrupted
             // (e.g. animation that should be smooth). Enqueue the UIDL
             // message for later processing.
-            VConsole.log("Postponing UIDL handling due to lock...");
+            getLogger().info("Postponing UIDL handling due to lock...");
             pendingUIDLMessages.add(new PendingUIDLMessage(start, jsonText,
                     json));
             if (!forceHandleMessage.isRunning()) {
@@ -1521,7 +1532,7 @@ public class ApplicationConnection implements HasHandlers {
         final Object lock = new Object();
         suspendReponseHandling(lock);
 
-        VConsole.log("Handling message from server");
+        getLogger().info("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
         final int syncId;
@@ -1540,14 +1551,15 @@ public class ApplicationConnection implements HasHandlers {
             }
         } else {
             syncId = -1;
-            VConsole.error("Server response didn't contain a sync id. "
-                    + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
+            getLogger()
+                    .severe("Server response didn't contain a sync id. "
+                            + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
         }
 
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
-            VConsole.log("redirecting to " + url);
+            getLogger().info("redirecting to " + url);
             redirect(url);
             return;
         }
@@ -1559,7 +1571,7 @@ public class ApplicationConnection implements HasHandlers {
             csrfToken = json
                     .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         }
-        VConsole.log(" * Handling resources from server");
+        getLogger().info(" * Handling resources from server");
 
         if (json.containsKey("resources")) {
             ValueMap resources = json.getValueMap("resources");
@@ -1573,7 +1585,7 @@ public class ApplicationConnection implements HasHandlers {
         handleUIDLDuration.logDuration(
                 " * Handling resources from server completed", 10);
 
-        VConsole.log(" * Handling type inheritance map from server");
+        getLogger().info(" * Handling type inheritance map from server");
 
         if (json.containsKey("typeInheritanceMap")) {
             configuration.addComponentInheritanceInfo(json
@@ -1582,7 +1594,7 @@ public class ApplicationConnection implements HasHandlers {
         handleUIDLDuration.logDuration(
                 " * Handling type inheritance map from server completed", 10);
 
-        VConsole.log("Handling type mappings from server");
+        getLogger().info("Handling type mappings from server");
 
         if (json.containsKey("typeMappings")) {
             configuration.addComponentMappings(
@@ -1590,7 +1602,7 @@ public class ApplicationConnection implements HasHandlers {
 
         }
 
-        VConsole.log("Handling resource dependencies");
+        getLogger().info("Handling resource dependencies");
         if (json.containsKey("scriptDependencies")) {
             loadScriptDependencies(json.getJSStringArray("scriptDependencies"));
         }
@@ -1620,7 +1632,7 @@ public class ApplicationConnection implements HasHandlers {
                 Profiler.enter("Handling meta information");
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
-                    VConsole.log(" * Handling meta information");
+                    getLogger().info(" * Handling meta information");
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         prepareRepaintAll();
@@ -1663,7 +1675,7 @@ public class ApplicationConnection implements HasHandlers {
                  * connectors which get a state change event before the UI.
                  */
                 Profiler.enter("Handling locales");
-                VConsole.log(" * Handling locales");
+                getLogger().info(" * Handling locales");
                 // Store locale data
                 LocaleService
                         .addLocales(getUIConnector().getState().localeServiceState.localeData);
@@ -1697,9 +1709,10 @@ public class ApplicationConnection implements HasHandlers {
 
                 unregisterRemovedConnectors(connectorHierarchyUpdateResult.detachedConnectorIds);
 
-                VConsole.log("handleUIDLMessage: "
-                        + (Duration.currentTimeMillis() - processUidlStart)
-                        + " ms");
+                getLogger()
+                        .info("handleUIDLMessage: "
+                                + (Duration.currentTimeMillis() - processUidlStart)
+                                + " ms");
 
                 updatingState = false;
 
@@ -1710,14 +1723,15 @@ public class ApplicationConnection implements HasHandlers {
                         layoutManager.setEverythingNeedsMeasure();
                         layoutManager.layoutNow();
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error processing layouts", e);
                     }
                     Profiler.leave("Layout processing");
                 }
 
                 if (ApplicationConfiguration.isDebugMode()) {
                     Profiler.enter("Dumping state changes to the console");
-                    VConsole.log(" * Dumping state changes to the console");
+                    getLogger().info(" * Dumping state changes to the console");
                     VConsole.dirUIDL(json, ApplicationConnection.this);
                     Profiler.leave("Dumping state changes to the console");
                 }
@@ -1748,10 +1762,13 @@ public class ApplicationConnection implements HasHandlers {
                     }
                 }
 
-                VConsole.log(" Processing time was "
-                        + String.valueOf(lastProcessingTime) + "ms for "
-                        + jsonText.length() + " characters of JSON");
-                VConsole.log("Referenced paintables: " + connectorMap.size());
+                getLogger().info(
+                        " Processing time was "
+                                + String.valueOf(lastProcessingTime)
+                                + "ms for " + jsonText.length()
+                                + " characters of JSON");
+                getLogger().info(
+                        "Referenced paintables: " + connectorMap.size());
 
                 if (meta == null || !meta.containsKey("async")) {
                     // End the request if the received message was a response,
@@ -1854,7 +1871,7 @@ public class ApplicationConnection implements HasHandlers {
                     JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("@DelegateToWidget");
 
-                VConsole.log(" * Running @DelegateToWidget");
+                getLogger().info(" * Running @DelegateToWidget");
 
                 // Keep track of types that have no @DelegateToWidget in their
                 // state to optimize performance
@@ -1938,7 +1955,7 @@ public class ApplicationConnection implements HasHandlers {
             private void sendStateChangeEvents(
                     JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("sendStateChangeEvents");
-                VConsole.log(" * Sending state change events");
+                getLogger().info(" * Sending state change events");
 
                 int size = pendingStateChangeEvents.size();
                 for (int i = 0; i < size; i++) {
@@ -1946,7 +1963,8 @@ public class ApplicationConnection implements HasHandlers {
                     try {
                         sce.getConnector().fireEvent(sce);
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error sending state change events", e);
                     }
                 }
 
@@ -1963,11 +1981,12 @@ public class ApplicationConnection implements HasHandlers {
                     ServerConnector c = currentConnectors.get(i);
                     if (c.getParent() != null) {
                         if (!c.getParent().getChildren().contains(c)) {
-                            VConsole.error("ERROR: Connector "
-                                    + c.getConnectorId()
-                                    + " is connected to a parent but the parent ("
-                                    + c.getParent().getConnectorId()
-                                    + ") does not contain the connector");
+                            getLogger()
+                                    .severe("ERROR: Connector "
+                                            + c.getConnectorId()
+                                            + " is connected to a parent but the parent ("
+                                            + c.getParent().getConnectorId()
+                                            + ") does not contain the connector");
                         }
                     } else if (c == getUIConnector()) {
                         // UIConnector for this connection, ignore
@@ -1978,9 +1997,10 @@ public class ApplicationConnection implements HasHandlers {
                     } else {
                         // The connector has been detached from the
                         // hierarchy but was not unregistered.
-                        VConsole.error("ERROR: Connector "
-                                + c.getConnectorId()
-                                + " is not attached to a parent but has not been unregistered");
+                        getLogger()
+                                .severe("ERROR: Connector "
+                                        + c.getConnectorId()
+                                        + " is not attached to a parent but has not been unregistered");
                     }
 
                 }
@@ -2008,13 +2028,14 @@ public class ApplicationConnection implements HasHandlers {
                     verifyConnectorHierarchy();
                 }
 
-                VConsole.log("* Unregistered " + detachedArray.length()
-                        + " connectors");
+                getLogger().info(
+                        "* Unregistered " + detachedArray.length()
+                                + " connectors");
                 Profiler.leave("unregisterRemovedConnectors");
             }
 
             private JsArrayString createConnectorsIfNeeded(ValueMap json) {
-                VConsole.log(" * Creating connectors (if needed)");
+                getLogger().info(" * Creating connectors (if needed)");
 
                 JsArrayString createdConnectors = JavaScriptObject
                         .createArray().cast();
@@ -2065,7 +2086,8 @@ public class ApplicationConnection implements HasHandlers {
                             createdConnectors.push(connectorId);
                         }
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error handling type data", e);
                     }
                 }
 
@@ -2085,7 +2107,8 @@ public class ApplicationConnection implements HasHandlers {
                     onlyNoLayoutUpdates = false;
                 }
 
-                VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
+                getLogger()
+                        .info(" * Passing UIDL to Vaadin 6 style connectors");
                 // update paintables
                 for (int i = 0; i < length; i++) {
                     try {
@@ -2111,18 +2134,20 @@ public class ApplicationConnection implements HasHandlers {
                                 Profiler.leave(key);
                             }
                         } else if (legacyConnector == null) {
-                            VConsole.error("Received update for "
-                                    + uidl.getTag()
-                                    + ", but there is no such paintable ("
-                                    + connectorId + ") rendered.");
+                            getLogger()
+                                    .severe("Received update for "
+                                            + uidl.getTag()
+                                            + ", but there is no such paintable ("
+                                            + connectorId + ") rendered.");
                         } else {
-                            VConsole.error("Server sent Vaadin 6 style updates for "
-                                    + Util.getConnectorString(legacyConnector)
-                                    + " but this is not a Vaadin 6 Paintable");
+                            getLogger()
+                                    .severe("Server sent Vaadin 6 style updates for "
+                                            + Util.getConnectorString(legacyConnector)
+                                            + " but this is not a Vaadin 6 Paintable");
                         }
 
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE, "Error handling UIDL", e);
                     }
                 }
 
@@ -2137,14 +2162,15 @@ public class ApplicationConnection implements HasHandlers {
                 }
                 Profiler.enter("sendHierarchyChangeEvents");
 
-                VConsole.log(" * Sending hierarchy change events");
+                getLogger().info(" * Sending hierarchy change events");
                 for (int i = 0; i < eventCount; i++) {
                     ConnectorHierarchyChangeEvent event = events.get(i);
                     try {
                         logHierarchyChange(event);
                         event.getConnector().fireEvent(event);
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error sending hierarchy change events", e);
                     }
                 }
 
@@ -2157,13 +2183,14 @@ public class ApplicationConnection implements HasHandlers {
                     return;
                 }
 
-                VConsole.log("Hierarchy changed for "
-                        + Util.getConnectorString(event.getConnector()));
+                getLogger()
+                        .info("Hierarchy changed for "
+                                + Util.getConnectorString(event.getConnector()));
                 String oldChildren = "* Old children: ";
                 for (ComponentConnector child : event.getOldChildren()) {
                     oldChildren += Util.getConnectorString(child) + " ";
                 }
-                VConsole.log(oldChildren);
+                getLogger().info(oldChildren);
 
                 String newChildren = "* New children: ";
                 HasComponentsConnector parent = (HasComponentsConnector) event
@@ -2171,14 +2198,14 @@ public class ApplicationConnection implements HasHandlers {
                 for (ComponentConnector child : parent.getChildComponents()) {
                     newChildren += Util.getConnectorString(child) + " ";
                 }
-                VConsole.log(newChildren);
+                getLogger().info(newChildren);
             }
 
             private JsArrayObject<StateChangeEvent> updateConnectorState(
                     ValueMap json, JsArrayString createdConnectorIds) {
                 JsArrayObject<StateChangeEvent> events = JavaScriptObject
                         .createArray().cast();
-                VConsole.log(" * Updating connector states");
+                getLogger().info(" * Updating connector states");
                 if (!json.containsKey("state")) {
                     return events;
                 }
@@ -2256,7 +2283,8 @@ public class ApplicationConnection implements HasHandlers {
                             Profiler.leave("updateConnectorState inner loop");
                         }
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error updating connector states", e);
                     }
                 }
 
@@ -2298,7 +2326,7 @@ public class ApplicationConnection implements HasHandlers {
                     ValueMap json) {
                 ConnectorHierarchyUpdateResult result = new ConnectorHierarchyUpdateResult();
 
-                VConsole.log(" * Updating connector hierarchy");
+                getLogger().info(" * Updating connector hierarchy");
                 if (!json.containsKey("hierarchy")) {
                     return result;
                 }
@@ -2330,16 +2358,18 @@ public class ApplicationConnection implements HasHandlers {
                             ServerConnector childConnector = connectorMap
                                     .getConnector(childConnectorId);
                             if (childConnector == null) {
-                                VConsole.error("Hierarchy claims that "
-                                        + childConnectorId
-                                        + " is a child for "
-                                        + connectorId
-                                        + " ("
-                                        + parentConnector.getClass().getName()
-                                        + ") but no connector with id "
-                                        + childConnectorId
-                                        + " has been registered. "
-                                        + "More information might be available in the server-side log if assertions are enabled");
+                                getLogger()
+                                        .severe("Hierarchy claims that "
+                                                + childConnectorId
+                                                + " is a child for "
+                                                + connectorId
+                                                + " ("
+                                                + parentConnector.getClass()
+                                                        .getName()
+                                                + ") but no connector with id "
+                                                + childConnectorId
+                                                + " has been registered. "
+                                                + "More information might be available in the server-side log if assertions are enabled");
                                 continue;
                             }
                             newChildren.add(childConnector);
@@ -2392,9 +2422,10 @@ public class ApplicationConnection implements HasHandlers {
                                 result.events.add(event);
                             }
                         } else if (!newComponents.isEmpty()) {
-                            VConsole.error("Hierachy claims "
-                                    + Util.getConnectorString(parentConnector)
-                                    + " has component children even though it isn't a HasComponentsConnector");
+                            getLogger()
+                                    .severe("Hierachy claims "
+                                            + Util.getConnectorString(parentConnector)
+                                            + " has component children even though it isn't a HasComponentsConnector");
                         }
 
                         Profiler.leave("updateConnectorHierarchy handle HasComponentsConnector");
@@ -2428,7 +2459,8 @@ public class ApplicationConnection implements HasHandlers {
 
                         Profiler.leave("updateConnectorHierarchy find removed children");
                     } catch (final Throwable e) {
-                        VConsole.error(e);
+                        getLogger().log(Level.SEVERE,
+                                "Error updating connector hierarchy", e);
                     } finally {
                         Profiler.leave("updateConnectorHierarchy hierarchy entry");
                     }
@@ -2575,7 +2607,8 @@ public class ApplicationConnection implements HasHandlers {
                 if (json.containsKey("rpc")) {
                     Profiler.enter("handleRpcInvocations");
 
-                    VConsole.log(" * Performing server to client RPC calls");
+                    getLogger()
+                            .info(" * Performing server to client RPC calls");
 
                     JsonArray rpcCalls = Util.jso2json(json
                             .getJavaScriptObject("rpc"));
@@ -2595,7 +2628,10 @@ public class ApplicationConnection implements HasHandlers {
                             }
 
                         } catch (final Throwable e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error performing server to client RPC calls",
+                                            e);
                         }
                     }
 
@@ -2617,8 +2653,9 @@ public class ApplicationConnection implements HasHandlers {
 
             @Override
             public void onError(ResourceLoadEvent event) {
-                VConsole.error(event.getResourceUrl()
-                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
+                getLogger()
+                        .severe(event.getResourceUrl()
+                                + " could not be loaded, or the load detection failed because the stylesheet is empty.");
                 // The show must go on
                 onLoad(event);
             }
@@ -2652,7 +2689,8 @@ public class ApplicationConnection implements HasHandlers {
 
             @Override
             public void onError(ResourceLoadEvent event) {
-                VConsole.error(event.getResourceUrl() + " could not be loaded.");
+                getLogger().severe(
+                        event.getResourceUrl() + " could not be loaded.");
                 // The show must go on
                 onLoad(event);
             }
@@ -3143,7 +3181,7 @@ public class ApplicationConnection implements HasHandlers {
 
         layoutManager.forceLayout();
 
-        VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
+        getLogger().info("forceLayout in " + duration.elapsedMillis() + " ms");
     }
 
     /**
@@ -3419,8 +3457,9 @@ public class ApplicationConnection implements HasHandlers {
      */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        VConsole.log("unregisterPaintable (unnecessarily) called for "
-                + Util.getConnectorString(p));
+        getLogger().info(
+                "unregisterPaintable (unnecessarily) called for "
+                        + Util.getConnectorString(p));
     }
 
     /**
@@ -3454,8 +3493,10 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         if (!manageCaption) {
-            VConsole.error(Util.getConnectorString(connector)
-                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
+            getLogger()
+                    .warning(
+                            Util.getConnectorString(connector)
+                                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
         }
         return false;
     }
@@ -3517,7 +3558,9 @@ public class ApplicationConnection implements HasHandlers {
     Timer forceHandleMessage = new Timer() {
         @Override
         public void run() {
-            VConsole.log("WARNING: reponse handling was never resumed, forcibly removing locks...");
+            getLogger()
+                    .warning(
+                            "WARNING: reponse handling was never resumed, forcibly removing locks...");
             responseHandlingLocks.clear();
             handlePendingMessages();
         }
@@ -3545,7 +3588,8 @@ public class ApplicationConnection implements HasHandlers {
             forceHandleMessage.cancel();
 
             if (!pendingUIDLMessages.isEmpty()) {
-                VConsole.log("No more response handling locks, handling pending requests.");
+                getLogger()
+                        .info("No more response handling locks, handling pending requests.");
                 handlePendingMessages();
             }
         }

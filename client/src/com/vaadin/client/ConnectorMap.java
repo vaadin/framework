@@ -17,6 +17,7 @@ package com.vaadin.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -182,7 +183,7 @@ public class ConnectorMap {
      */
     public void unregisterConnector(ServerConnector connector) {
         if (connector == null) {
-            VConsole.error("Trying to unregister null connector");
+            getLogger().severe("Trying to unregister null connector");
             return;
         }
 
@@ -299,4 +300,7 @@ public class ConnectorMap {
         return getConnectorId(w.getElement()) != null;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(ConnectorMap.class.getName());
+    }
 }
