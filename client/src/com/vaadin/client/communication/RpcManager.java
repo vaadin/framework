@@ -17,11 +17,11 @@
 package com.vaadin.client.communication;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.metadata.Method;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
@@ -122,7 +122,7 @@ public class RpcManager {
             }
 
             parseMethodParameters(invocation, parametersJson, connection);
-            VConsole.log("Server to client RPC call: " + invocation);
+            getLogger().info("Server to client RPC call: " + invocation);
             applyInvocation(invocation, connector);
         }
 
@@ -142,4 +142,7 @@ public class RpcManager {
         methodInvocation.setParameters(parameters);
     }
 
+    public static Logger getLogger() {
+        return Logger.getLogger(RpcManager.class.getName());
+    }
 }

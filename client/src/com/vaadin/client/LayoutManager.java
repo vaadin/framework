@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
@@ -232,8 +233,9 @@ public class LayoutManager {
         }
         layoutCounts.put(layout.getConnectorId(), count);
         if (count.intValue() > 2) {
-            VConsole.error(Util.getConnectorString(layout)
-                    + " has been layouted " + count.intValue() + " times");
+            getLogger().severe(
+                    Util.getConnectorString(layout) + " has been layouted "
+                            + count.intValue() + " times");
         }
     }
 
@@ -281,7 +283,7 @@ public class LayoutManager {
     }
 
     private void doLayout() {
-        VConsole.log("Starting layout phase");
+        getLogger().info("Starting layout phase");
         Profiler.enter("LayoutManager phase init");
 
         FastStringMap<Integer> layoutCounts = FastStringMap.create();
@@ -335,7 +337,7 @@ public class LayoutManager {
 
             everythingNeedsMeasure = false;
             if (measuredConnectorCount == 0) {
-                VConsole.log("No more changes in pass " + passes);
+                getLogger().info("No more changes in pass " + passes);
                 Profiler.leave("Layout pass");
                 break;
             }
@@ -373,7 +375,8 @@ public class LayoutManager {
                                     Profiler.leave(key);
                                 }
                             } catch (RuntimeException e) {
-                                VConsole.error(e);
+                                getLogger().log(Level.SEVERE,
+                                        "Error in resize listener", e);
                             }
                         }
                         Profiler.leave("Layout fire resize events - listeners not null");
@@ -417,7 +420,8 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger().log(Level.SEVERE,
+                                    "Error in ManagedLayout handling", e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -440,7 +444,11 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in SimpleManagedLayout (horizontal) handling",
+                                            e);
+
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -473,7 +481,10 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in DirectionalManagedLayout handling",
+                                            e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -496,7 +507,10 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in SimpleManagedLayout (vertical) handling",
+                                            e);
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -531,18 +545,19 @@ public class LayoutManager {
                         b.append(connectorString);
                     }
                 }
-                VConsole.log(b.toString());
+                getLogger().info(b.toString());
             }
 
             Profiler.leave("Layout pass");
 
-            VConsole.log("Pass " + passes + " measured "
-                    + measuredConnectorCount + " elements, fired "
-                    + firedListeners + " listeners and did " + layoutCount
-                    + " layouts.");
+            getLogger()
+                    .info("Pass " + passes + " measured "
+                            + measuredConnectorCount + " elements, fired "
+                            + firedListeners + " listeners and did "
+                            + layoutCount + " layouts.");
 
             if (passes > 100) {
-                VConsole.log(LOOP_ABORT_MESSAGE);
+                getLogger().severe(LOOP_ABORT_MESSAGE);
                 if (ApplicationConfiguration.isDebugMode()) {
                     VNotification.createNotification(
                             VNotification.DELAY_FOREVER,
@@ -579,8 +594,9 @@ public class LayoutManager {
 
         cleanMeasuredSizes();
 
-        VConsole.log("Total layout phase time: "
-                + totalDuration.elapsedMillis() + "ms");
+        getLogger().info(
+                "Total layout phase time: " + totalDuration.elapsedMillis()
+                        + "ms");
     }
 
     private void logConnectorStatus(int connectorId) {
@@ -614,11 +630,12 @@ public class LayoutManager {
                 }
 
                 if (debugLogging) {
-                    VConsole.log("Doing overflow fix for "
-                            + Util.getConnectorString(componentConnector)
-                            + " in "
-                            + Util.getConnectorString(componentConnector
-                                    .getParent()));
+                    getLogger()
+                            .info("Doing overflow fix for "
+                                    + Util.getConnectorString(componentConnector)
+                                    + " in "
+                                    + Util.getConnectorString(componentConnector
+                                            .getParent()));
                 }
                 Profiler.enter("Overflow fix apply");
 
@@ -669,8 +686,8 @@ public class LayoutManager {
             Profiler.leave("Overflow fix restore");
 
             if (!pendingOverflowFixes.isEmpty()) {
-                VConsole.log("Did overflow fix for " + remainingCount
-                        + " elements");
+                getLogger().info(
+                        "Did overflow fix for " + remainingCount + " elements");
             }
             pendingOverflowFixes = delayedOverflowFixes;
         }
@@ -794,8 +811,9 @@ public class LayoutManager {
             measuredAndUpdate(element, getMeasuredSize(element, null));
         }
         Profiler.leave("LayoutManager.measureNonConenctors");
-        VConsole.log("Measured " + measuredNonConnectorElements.size()
-                + " non connector elements");
+        getLogger().info(
+                "Measured " + measuredNonConnectorElements.size()
+                        + " non connector elements");
     }
 
     private MeasureResult measuredAndUpdate(Element element,

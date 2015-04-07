@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -593,10 +595,11 @@ public class Util {
             ApplicationConnection c) {
         ServerConnector connector = ConnectorMap.get(c).getConnector(id);
         if (connector != null) {
-            VConsole.log("\t" + id + " (" + connector.getClass() + ") :");
+            getLogger().info("\t" + id + " (" + connector.getClass() + ") :");
         } else {
-            VConsole.log("\t" + id
-                    + ": Warning: no corresponding connector for id " + id);
+            getLogger().warning(
+                    "\t" + id + ": Warning: no corresponding connector for id "
+                            + id);
         }
         for (MethodInvocation invocation : invocations) {
             Object[] parameters = invocation.getParameters();
@@ -615,15 +618,17 @@ public class Util {
                 formattedParams = (null != parameters) ? Arrays
                         .toString(parameters) : null;
             }
-            VConsole.log("\t\t" + invocation.getInterfaceName() + "."
-                    + invocation.getMethodName() + "(" + formattedParams + ")");
+            getLogger().info(
+                    "\t\t" + invocation.getInterfaceName() + "."
+                            + invocation.getMethodName() + "("
+                            + formattedParams + ")");
         }
     }
 
     static void logVariableBurst(ApplicationConnection c,
             Collection<MethodInvocation> loggedBurst) {
         try {
-            VConsole.log("Variable burst to be sent to server:");
+            getLogger().info("Variable burst to be sent to server:");
             String curId = null;
             ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
             for (MethodInvocation methodInvocation : loggedBurst) {
@@ -642,7 +647,7 @@ public class Util {
                 printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error sending variable burst", e);
         }
     }
 
@@ -959,4 +964,7 @@ public class Util {
         return JSON.parse(jsonAsString);
     }-*/;
 
+    public static Logger getLogger() {
+        return Logger.getLogger(Util.class.getName());
+    }
 }

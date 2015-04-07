@@ -18,13 +18,14 @@ package com.vaadin.client.debug.internal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
@@ -84,7 +85,7 @@ public class ConnectorInfoPanel extends FlowPanel {
             }
         } catch (NoDataException e) {
             html += "<div>Could not read state, error has been logged to the console</div>";
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Could not read state", e);
         }
 
         clear();
@@ -104,5 +105,9 @@ public class ConnectorInfoPanel extends FlowPanel {
      */
     public void clearContents() {
         clear();
+    }
+
+    public static Logger getLogger() {
+        return Logger.getLogger(ConnectorInfoPanel.class.getName());
     }
 }

@@ -16,6 +16,8 @@
 
 package com.vaadin.client;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
@@ -445,7 +447,9 @@ public class VCaption extends HTML {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
-                VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                getLogger()
+                        .warning(
+                                "Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }
@@ -766,4 +770,7 @@ public class VCaption extends HTML {
 
     }
 
+    public static Logger getLogger() {
+        return Logger.getLogger(VCaption.class.getName());
+    }
 }
