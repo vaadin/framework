@@ -140,8 +140,10 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     }
 
-    public void testRead(String design, T expected) {
-        assertEquals(expected, read(design));
+    public T testRead(String design, T expected) {
+        T read = read(design);
+        assertEquals(expected, read);
+        return read;
     }
 
     public void testWrite(String design, T expected) {
