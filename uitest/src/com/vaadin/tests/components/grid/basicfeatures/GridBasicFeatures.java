@@ -759,7 +759,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     @SuppressWarnings("boxing")
     protected void createColumnActions() {
         createCategory("Columns", null);
-
         for (int c = 0; c < COLUMNS; c++) {
             final int index = c;
             createCategory(getColumnProperty(c), "Columns");
@@ -974,6 +973,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }, c);
         }
+        createBooleanAction("All columns hidable", "Columns", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        for (Column col : grid.getColumns()) {
+                            col.setHidable(value);
+                        }
+
+                    }
+                });
     }
 
     private static String getColumnProperty(int c) {

@@ -49,6 +49,8 @@ import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -66,8 +68,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
@@ -3049,6 +3052,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private final FlowPanel content;
 
+        private final MenuBar menuBar;
+
         private final Button openCloseButton;
 
         private final Grid<?> grid;
@@ -3076,6 +3081,63 @@ public class Grid<T> extends ResizeComposite implements
                     return removed;
                 }
             };
+
+            menuBar = new MenuBar(true) {
+
+                @Override
+                public MenuItem addItem(MenuItem item) {
+                    if (getParent() == null) {
+                        content.insert(this, 0);
+                        updateVisibility();
+                    }
+                    return super.addItem(item);
+                }
+
+                @Override
+                public void removeItem(MenuItem item) {
+                    super.removeItem(item);
+                    if (getItems().isEmpty()) {
+                        menuBar.removeFromParent();
+                    }
+                }
+
+                @Override
+                public void onBrowserEvent(Event event) {
+                    // selecting a item with enter will lose the focus and
+                    // selected item, which means that further keyboard
+                    // selection won't work unless we do this:
+                    if (event.getTypeInt() == Event.ONKEYDOWN
+                            && event.getKeyCode() == KeyCodes.KEY_ENTER) {
+                        final MenuItem item = getSelectedItem();
+                        super.onBrowserEvent(event);
+                        Scheduler.get().scheduleDeferred(
+                                new ScheduledCommand() {
+
+                                    @Override
+                                    public void execute() {
+                                        selectItem(item);
+                                        focus();
+                                    }
+                                });
+
+                    } else {
+                        super.onBrowserEvent(event);
+                    }
+                }
+
+            };
+            KeyDownHandler keyDownHandler = new KeyDownHandler() {
+
+                @Override
+                public void onKeyDown(KeyDownEvent event) {
+                    if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+                        close();
+                    }
+                }
+            };
+            openCloseButton.addDomHandler(keyDownHandler,
+                    KeyDownEvent.getType());
+            menuBar.addDomHandler(keyDownHandler, KeyDownEvent.getType());
         }
 
         /**
@@ -3085,6 +3147,7 @@ public class Grid<T> extends ResizeComposite implements
         public void open() {
             if (!isOpen() && isInDOM()) {
                 addStyleName("opened");
+                removeStyleName("closed");
                 rootContainer.add(content);
             }
         }
@@ -3095,6 +3158,7 @@ public class Grid<T> extends ResizeComposite implements
         public void close() {
             if (isOpen()) {
                 removeStyleName("opened");
+                addStyleName("closed");
                 content.removeFromParent();
             }
         }
@@ -3153,6 +3217,13 @@ public class Grid<T> extends ResizeComposite implements
             super.setStylePrimaryName(styleName);
             content.setStylePrimaryName(styleName + "-content");
             openCloseButton.setStylePrimaryName(styleName + "-button");
+            if (isOpen()) {
+                addStyleName("open");
+                removeStyleName("closed");
+            } else {
+                removeStyleName("open");
+                addStyleName("closed");
+            }
         }
 
         private void updateVisibility() {
@@ -3171,98 +3242,97 @@ public class Grid<T> extends ResizeComposite implements
         private boolean isInDOM() {
             return getParent() != null;
         }
-
     }
 
     /**
      * UI and functionality related to hiding columns with toggles in the
      * sidebar.
      */
-    private final class ColumnHider extends FlowPanel {
-
-        ColumnHider() {
-            setStyleName("column-hiding-panel");
-        }
+    private final class ColumnHider {
 
         /** Map from columns to their hiding toggles, component might change */
-        private HashMap<Column<?, T>, ToggleButton> columnToHidingToggleMap = new HashMap<Grid.Column<?, T>, ToggleButton>();
+        private HashMap<Column<?, T>, MenuItem> columnToHidingToggleMap = new HashMap<Grid.Column<?, T>, MenuItem>();
+
+        /**
+         * When column is being hidden with a toggle, do not refresh toggles for
+         * no reason. Also helps for keeping the keyboard navigation working.
+         */
+        private boolean hidingColumn;
 
         private void updateColumnHidable(final Column<?, T> column) {
             if (column.isHidable()) {
-                ToggleButton cb = columnToHidingToggleMap.get(column);
-                if (cb == null) {
-                    cb = createToggle(column);
+                MenuItem toggle = columnToHidingToggleMap.get(column);
+                if (toggle == null) {
+                    toggle = createToggle(column);
                 }
-                updateToggleValue(cb, column.isHidden());
-            } else if (columnToHidingToggleMap.containsValue(column)) {
-                ((Widget) columnToHidingToggleMap.remove(column))
-                        .removeFromParent();
+                toggle.setStyleName("hidden", column.isHidden());
+            } else if (columnToHidingToggleMap.containsKey(column)) {
+                sidebar.menuBar.removeItem((columnToHidingToggleMap
+                        .remove(column)));
             }
             updateTogglesOrder();
-            updatePanelVisibility();
         }
 
-        private ToggleButton createToggle(final Column<?, T> column) {
-            ToggleButton toggle = new ToggleButton();
-            toggle.addStyleName("column-hiding-toggle");
-            toggle.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+        private MenuItem createToggle(final Column<?, T> column) {
+            MenuItem toggle = new MenuItem(createHTML(column), true,
+                    new ScheduledCommand() {
 
-                @Override
-                public void onValueChange(ValueChangeEvent<Boolean> event) {
-                    column.setHidden(!event.getValue(), true);
-                }
-            });
-            updateHidingToggleCaption(column, toggle);
+                        @Override
+                        public void execute() {
+                            hidingColumn = true;
+                            column.setHidden(!column.isHidden(), true);
+                            hidingColumn = false;
+                        }
+                    });
+            toggle.addStyleName("column-hiding-toggle");
             columnToHidingToggleMap.put(column, toggle);
             return toggle;
         }
 
+        private String createHTML(Column<?, T> column) {
+            final StringBuffer buf = new StringBuffer();
+            buf.append("<span class=\"");
+            if (column.isHidden()) {
+                buf.append("v-off");
+            } else {
+                buf.append("v-on");
+            }
+            buf.append("\"><div>");
+            String caption = column.getHidingToggleCaption();
+            if (caption == null) {
+                caption = column.headerCaption;
+            }
+            buf.append(caption);
+            buf.append("</div></span>");
+
+            return buf.toString();
+        }
+
         private void updateTogglesOrder() {
-            clear();
-            for (Column<?, T> c : getColumns()) {
-                if (c.isHidable()) {
-                    add(columnToHidingToggleMap.get(c));
+            if (!hidingColumn) {
+                for (Column<?, T> column : getColumns()) {
+                    if (column.isHidable()) {
+                        final MenuItem menuItem = columnToHidingToggleMap
+                                .get(column);
+                        sidebar.menuBar.removeItem(menuItem);
+                        sidebar.menuBar.addItem(menuItem);
+                    }
                 }
             }
         }
 
-        private void updatePanelVisibility() {
-            final boolean columnHidable = getWidgetCount() > 0;
-            final boolean columnTogglesPanelIsVisible = getParent() != null;
-
-            if (columnHidable && !columnTogglesPanelIsVisible) {
-                sidebar.insert(this, 0);
-            } else if (!columnHidable && columnTogglesPanelIsVisible) {
-                sidebar.remove(this);
-            }
-        }
-
-        private void updateToggleValue(Column<?, T> column) {
+        private void updateHidingToggle(Column<?, T> column) {
             if (column.isHidable()) {
-                updateToggleValue(columnToHidingToggleMap.get(column),
-                        column.isHidden());
+                MenuItem toggle = columnToHidingToggleMap.get(column);
+                toggle.setHTML(createHTML(column));
+                toggle.setStyleName("hidden", column.isHidden());
             } // else we can just ignore
         }
 
-        private void updateToggleValue(ToggleButton hasValue, boolean hidden) {
-            hasValue.setValue(!hidden, false);
-            hasValue.setStyleName("hidden", hidden);
+        private void removeColumnHidingToggle(Column<?, T> column) {
+            sidebar.menuBar.removeItem(columnToHidingToggleMap.get(column));
         }
 
-        private void updateHidingToggleCaption(Column<?, T> column) {
-            updateHidingToggleCaption(column,
-                    columnToHidingToggleMap.get(column));
-        }
-
-        private void updateHidingToggleCaption(Column<?, T> column,
-                ToggleButton toggle) {
-            String caption = column.getHidingToggleCaption();
-            if (caption == null) {
-                caption = column.headerCaption;
-                // the caption might still be null, but that is the users fault
-            }
-            toggle.setText(caption);
-        }
     }
 
     /**
@@ -4007,7 +4077,7 @@ public class Grid<T> extends ResizeComposite implements
             if (row != null) {
                 row.getCell(this).setText(headerCaption);
                 if (isHidable()) {
-                    grid.columnHider.updateHidingToggleCaption(this);
+                    grid.columnHider.updateHidingToggle(this);
                 }
             }
         }
@@ -4207,7 +4277,7 @@ public class Grid<T> extends ResizeComposite implements
                                 .setFrozenColumnCount(++escalatorFrozenColumns);
                     }
                 }
-                grid.columnHider.updateToggleValue(this);
+                grid.columnHider.updateHidingToggle(this);
                 grid.header.updateColSpans();
                 grid.footer.updateColSpans();
                 scheduleColumnWidthRecalculator();
@@ -4276,7 +4346,7 @@ public class Grid<T> extends ResizeComposite implements
         public void setHidingToggleCaption(String hidingToggleCaption) {
             this.hidingToggleCaption = hidingToggleCaption;
             if (isHidable()) {
-                grid.columnHider.updateHidingToggleCaption(this);
+                grid.columnHider.updateHidingToggle(this);
             }
         }
 
@@ -5019,6 +5089,7 @@ public class Grid<T> extends ResizeComposite implements
         escalator.setStylePrimaryName(style);
         editor.setStylePrimaryName(style);
         sidebar.setStylePrimaryName(style + "-sidebar");
+        sidebar.addStyleName("v-contextmenu");
 
         String rowStyle = getStylePrimaryName() + "-row";
         rowHasDataStyleName = rowStyle + "-has-data";
@@ -5261,7 +5332,7 @@ public class Grid<T> extends ResizeComposite implements
         columns.remove(columnIndex);
 
         if (column.isHidable()) {
-            columnHider.updateColumnHidable(column);
+            columnHider.removeColumnHidingToggle(column);
         }
     }
 
