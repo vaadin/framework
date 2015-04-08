@@ -170,16 +170,16 @@ public class DesignContext implements Serializable {
      * component, the mapping from c to the string is removed. Similarly, if
      * component was mapped to some string s different from localId, the mapping
      * from s to component is removed.
-     * 
-     * @param localId
-     *            The new local id of the component.
      * @param component
      *            The component whose local id is to be set.
+     * @param localId
+     *            The new local id of the component.
+     * 
      * @return true, if there already was a local id mapping from the string to
      *         some component or from the component to some string. Otherwise
      *         returns false.
      */
-    private boolean mapLocalId(String localId, Component component) {
+    public boolean setComponentLocalId(Component component, String localId) {
         return twoWayMap(localId, component, localIdToComponent,
                 componentToLocalId);
     }
@@ -466,7 +466,7 @@ public class DesignContext implements Serializable {
         // from the attributes of componentDesign
         if (attributes.hasKey(LOCAL_ID_ATTRIBUTE)) {
             String localId = attributes.get(LOCAL_ID_ATTRIBUTE);
-            boolean mappingExists = mapLocalId(localId, component);
+            boolean mappingExists = setComponentLocalId(component, localId);
             if (mappingExists) {
                 throw new DesignException(
                         "the following local id is not unique: " + localId);
