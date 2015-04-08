@@ -3720,18 +3720,31 @@ public class Escalator extends Widget implements RequiresResize,
 
             List<TableRowElement> orderedBodyRows = new ArrayList<TableRowElement>(
                     visualRowOrder);
-            for (int i = 0; i < visualRowOrder.size(); i++) {
-                SpacerContainer.SpacerImpl spacer = body.spacerContainer
-                        .getSpacer(getTopRowLogicalIndex() + i);
+            Map<Integer, SpacerContainer.SpacerImpl> spacers = body.spacerContainer
+                    .getSpacers();
+
+            /*
+             * Start at -1 to include a spacer that is rendered above the
+             * viewport, but its parent row is still not shown
+             */
+            for (int i = -1; i < visualRowOrder.size(); i++) {
+                SpacerContainer.SpacerImpl spacer = spacers.remove(Integer
+                        .valueOf(getTopRowLogicalIndex() + i));
 
                 if (spacer != null) {
                     orderedBodyRows.add(i + 1, spacer.getRootElement());
+                    spacer.show();
                 }
             }
             /*
              * At this point, invisible spacers aren't reordered, so their
-             * position in the DOM is undefined.
+             * position in the DOM will remain undefined.
              */
+
+            // If a spacer was not reordered, it means that it's out of view.
+            for (SpacerContainer.SpacerImpl unmovedSpacer : spacers.values()) {
+                unmovedSpacer.hide();
+            }
 
             /*
              * If we have a focused row, start in the mode where we put
@@ -4755,6 +4768,33 @@ public class Escalator extends Widget implements RequiresResize,
                 root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
                 rowIndexToSpacer.put(this.rowIndex, this);
             }
+
+            /**
+             * Updates the spacer's visibility parameters, based on whether it
+             * is being currently visible or not.
+             */
+            public void updateVisibility() {
+                if (isInViewport()) {
+                    show();
+                } else {
+                    hide();
+                }
+            }
+
+            private boolean isInViewport() {
+                int top = (int) Math.ceil(getTop());
+                int height = (int) Math.floor(getHeight());
+                Range location = Range.withLength(top, height);
+                return getViewportPixels().intersects(location);
+            }
+
+            public void show() {
+                getRootElement().getStyle().clearDisplay();
+            }
+
+            public void hide() {
+                getRootElement().getStyle().setDisplay(Display.NONE);
+            }
         }
 
         private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
@@ -4885,6 +4925,10 @@ public class Escalator extends Widget implements RequiresResize,
                 spacerScrollerRegistration.removeHandler();
                 spacerScrollerRegistration = null;
             }
+        }
+
+        public Map<Integer, SpacerImpl> getSpacers() {
+            return new HashMap<Integer, SpacerImpl>(rowIndexToSpacer);
         }
 
         /**
@@ -5239,6 +5283,8 @@ public class Escalator extends Widget implements RequiresResize,
             spacerUpdater.init(spacer);
             assert getElement().isOrHasChild(spacer.getRootElement()) : "Spacer's root element somehow got detached from Escalator during attaching";
             assert getElement().isOrHasChild(spacer.getElement()) : "Spacer element somehow got detached from Escalator during attaching";
+
+            spacer.updateVisibility();
         }
 
         public String getSubPartName(Element subElement) {

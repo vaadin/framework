@@ -83,6 +83,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String REMOVE = "Remove";
 
     protected static final String ROW_MINUS1 = "Row -1";
+    protected static final String ROW_0 = "Row 0";
     protected static final String ROW_1 = "Row 1";
     protected static final String ROW_25 = "Row 25";
     protected static final String ROW_50 = "Row 50";

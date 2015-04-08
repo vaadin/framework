@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -28,6 +29,7 @@ import org.junit.Before;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
@@ -421,6 +423,73 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         String cssClass = spacer.getAttribute("class");
         assertTrue("element index 1 was not a spacer (class=\"" + cssClass
                 + "\")", cssClass.contains("-spacer"));
+    }
+
+    @Test
+    public void spacerScrolledIntoViewGetsFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+
+        tryToTabIntoFocusUpdaterElement();
+        assertEquals("input", getFocusedElement().getTagName());
+    }
+
+    @Test
+    public void spacerScrolledOutOfViewDoesNotGetFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+
+        tryToTabIntoFocusUpdaterElement();
+        assertNotEquals("input", getFocusedElement().getTagName());
+    }
+
+    @Test
+    public void spacerOpenedInViewGetsFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        tryToTabIntoFocusUpdaterElement();
+        assertEquals("input", getFocusedElement().getTagName());
+    }
+
+    @Test
+    public void spacerOpenedOutOfViewDoesNotGetFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+
+        tryToTabIntoFocusUpdaterElement();
+        assertNotEquals("input", getFocusedElement().getTagName());
+    }
+
+    @Test
+    public void spacerOpenedInViewAndScrolledOutAndBackAgainGetsFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_50);
+        selectMenuPath(FEATURES, SPACERS, ROW_1, SCROLL_HERE_ANY_0PADDING);
+
+        tryToTabIntoFocusUpdaterElement();
+        assertEquals("input", getFocusedElement().getTagName());
+    }
+
+    @Test
+    public void spacerOpenedOutOfViewAndScrolledInAndBackAgainDoesNotGetFocus() {
+        selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SET_100PX);
+        selectMenuPath(FEATURES, SPACERS, ROW_50, SCROLL_HERE_ANY_0PADDING);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_0);
+
+        tryToTabIntoFocusUpdaterElement();
+        assertNotEquals("input", getFocusedElement().getTagName());
+    }
+
+    private void tryToTabIntoFocusUpdaterElement() {
+        getEscalator().sendKeys( //
+                Keys.TAB, // v-ui v-scrollable
+                Keys.TAB, // menubar
+                Keys.TAB // <input>
+                );
     }
 
     private WebElement getChild(WebElement parent, int childIndex) {
