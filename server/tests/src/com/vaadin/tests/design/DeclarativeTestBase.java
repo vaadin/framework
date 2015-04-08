@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import com.vaadin.shared.Connector;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Flash;
 
@@ -57,6 +58,11 @@ public abstract class DeclarativeTestBase<T extends Component> extends
                     Method readMethod = pd.getReadMethod();
                     Method writeMethod = pd.getWriteMethod();
                     if (readMethod == null || writeMethod == null) {
+                        continue;
+                    }
+                    if (Connector.class.isAssignableFrom(c)
+                            && readMethod.getName().equals("getParent")) {
+                        // Hack to break cycles in the connector hierarchy
                         continue;
                     }
                     try {
@@ -99,7 +105,6 @@ public abstract class DeclarativeTestBase<T extends Component> extends
                 }
             }
         });
-
     }
 
     @Override
@@ -118,5 +123,4 @@ public abstract class DeclarativeTestBase<T extends Component> extends
         }
         return comp;
     }
-
 }

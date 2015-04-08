@@ -982,11 +982,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                             Integer.class));
         }
 
-        // handle responsive
-        if (attr.hasKey("responsive")) {
-            setResponsive(DesignAttributeHandler.getFormatter().parse(
-                    attr.get("responsive"), Boolean.class));
-        }
         // check for unsupported attributes
         Set<String> supported = new HashSet<String>();
         supported.addAll(getDefaultAttributes());
@@ -1032,11 +1027,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Toggles responsiveness of this component.
      * 
-     * @since 7.4
+     * @since
      * @param responsive
      *            boolean enables responsiveness, false disables
      */
-    private void setResponsive(boolean responsive) {
+    public void setResponsive(boolean responsive) {
         if (responsive) {
             // make responsive if necessary
             if (!isResponsive()) {
@@ -1057,10 +1052,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns true if the component is responsive
      * 
-     * @since 7.4
+     * @since
      * @return true if the component is responsive
      */
-    private boolean isResponsive() {
+    public boolean isResponsive() {
         for (Extension e : getExtensions()) {
             if (e instanceof Responsive) {
                 return true;
@@ -1233,8 +1228,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private static final String[] customAttributes = new String[] { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
-            "width-full", "height-full", "size-auto", "size-full",
-            "responsive", "immediate", "locale", "read-only", "_id" };
+            "width-full", "height-full", "size-auto", "size-full", "immediate",
+            "locale", "read-only", "_id" };
 
     /*
      * (non-Javadoc)
@@ -1280,10 +1275,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     ((Focusable) def).getTabIndex(), Integer.class);
         }
 
-        // handle responsive
-        if (isResponsive()) {
-            attr.put("responsive", "");
-        }
     }
 
     /*

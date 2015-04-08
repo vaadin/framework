@@ -32,6 +32,8 @@ import org.junit.Assert;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.Design;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.ShouldWriteDataDelegate;
 
 public abstract class DeclarativeTestBaseBase<T extends Component> {
     public interface EqualsAsserter<TT> {
@@ -47,10 +49,21 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
     }
 
-    protected String write(T object) {
+    protected String write(T object, boolean writeData) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Design.write(object, outputStream);
+
+            DesignContext dc = new DesignContext();
+            if (writeData) {
+                dc.setShouldWriteDataDelegate(new ShouldWriteDataDelegate() {
+                    @Override
+                    public boolean shouldWriteData(Component component) {
+                        return true;
+                    }
+                });
+            }
+            dc.setRootComponent(object);
+            Design.write(dc, outputStream);
             return outputStream.toString("UTF-8");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -71,10 +84,19 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
             return;
         }
 
-        if (o1 instanceof Collection && o2 instanceof Collection) {
-
-        } else {
+        if (!(o1 instanceof Collection && o2 instanceof Collection)) {
             Assert.assertEquals(o1.getClass(), o2.getClass());
+        }
+
+        if (o1 instanceof Object[]) {
+            Object[] a1 = ((Object[]) o1);
+            Object[] a2 = ((Object[]) o2);
+            Assert.assertEquals(message + ": array length", a1.length,
+                    a2.length);
+            for (int i = 0; i < a1.length; i++) {
+                assertEquals(message, a1[i], a2[i]);
+            }
+            return;
         }
 
         List<EqualsAsserter<Object>> comparators = getComparators(o1);
@@ -113,7 +135,9 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     protected abstract <TT> EqualsAsserter<TT> getComparator(Class<TT> c);
 
     private boolean isVaadin(Class<?> c) {
-        return c.getPackage().getName().startsWith("com.vaadin");
+        return c.getPackage() != null
+                && c.getPackage().getName().startsWith("com.vaadin");
+
     }
 
     public void testRead(String design, T expected) {
@@ -121,7 +145,11 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     public void testWrite(String design, T expected) {
-        String written = write(expected);
+        testWrite(design, expected, false);
+    }
+
+    public void testWrite(String design, T expected, boolean writeData) {
+        String written = write(expected, writeData);
 
         Element producedElem = Jsoup.parse(written).body().child(0);
         Element comparableElem = Jsoup.parse(design).body().child(0);
@@ -130,6 +158,10 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         String comparable = elementToHtml(comparableElem);
 
         Assert.assertEquals(comparable, produced);
+    }
+
+    protected Element createElement(Component c) {
+        return new DesignContext().createElement(c);
     }
 
     private String elementToHtml(Element producedElem) {

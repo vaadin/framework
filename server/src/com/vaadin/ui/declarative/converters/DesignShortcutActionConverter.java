@@ -126,32 +126,37 @@ public class DesignShortcutActionConverter implements
         if (value.length() == 0) {
             return null;
         }
-        String[] data = value.split(" ", 2);
 
+        String[] data = value.split(" ", 2);
         String[] parts = data[0].split("-");
-        // handle keycode
-        String keyCodePart = parts[parts.length - 1];
-        int keyCode = getKeycodeForString(keyCodePart);
-        if (keyCode < 0) {
-            throw new IllegalArgumentException("Invalid shortcut definition "
-                    + value);
-        }
-        // handle modifiers
-        int[] modifiers = null;
-        if (parts.length > 1) {
-            modifiers = new int[parts.length - 1];
-        }
-        for (int i = 0; i < parts.length - 1; i++) {
-            int modifier = getKeycodeForString(parts[i]);
-            if (modifier > 0) {
-                modifiers[i] = modifier;
-            } else {
-                throw new IllegalArgumentException(
-                        "Invalid shortcut definition " + value);
+
+        try {
+            // handle keycode
+            String keyCodePart = parts[parts.length - 1];
+            int keyCode = getKeycodeForString(keyCodePart);
+            if (keyCode < 0) {
+                throw new IllegalArgumentException("Invalid key '"
+                        + keyCodePart + "'");
             }
+            // handle modifiers
+            int[] modifiers = null;
+            if (parts.length > 1) {
+                modifiers = new int[parts.length - 1];
+            }
+            for (int i = 0; i < parts.length - 1; i++) {
+                int modifier = getKeycodeForString(parts[i]);
+                if (modifier > 0) {
+                    modifiers[i] = modifier;
+                } else {
+                    throw new IllegalArgumentException("Invalid modifier '"
+                            + parts[i] + "'");
+                }
+            }
+            return new ShortcutAction(data.length == 2 ? data[1] : null,
+                    keyCode, modifiers);
+        } catch (Exception e) {
+            throw new ConversionException("Invalid shortcut '" + value + "'", e);
         }
-        return new ShortcutAction(data.length == 2 ? data[1] : null, keyCode,
-                modifiers);
     }
 
     @Override

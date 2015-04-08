@@ -29,9 +29,9 @@
     <dependencies>
         <!-- API DEPENDENCIES -->
 
-        <!--Servlet API version 2.4 -->
-        <dependency org="javax.servlet" name="servlet-api"
-            rev="2.4" conf="build-provided,ide,test -> default" />
+	<!-- @WebListener is used for JSR356 websockets so we need to compile with servlet 3 API --> 
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided,ide,test -> default" />
 
         <!-- Atmosphere -->
         <dependency org="com.vaadin.external.atmosphere"

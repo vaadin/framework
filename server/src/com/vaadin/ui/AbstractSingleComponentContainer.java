@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.VaadinService;
@@ -288,17 +289,33 @@ public abstract class AbstractSingleComponentContainer extends
     public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
         super.readDesign(design, designContext);
-        // handle child element, checking that the design specifies at most one
-        // child
-        int childCount = design.children().size();
-        if (childCount > 1) {
+        readDesignChildren(design.children(), designContext);
+    }
+
+    /**
+     * Reads the content component from the list of child elements of a design.
+     * The list must be empty or contain a single element; if the design
+     * contains multiple child elements, a DesignException is thrown. This
+     * method should be overridden by subclasses whose design may contain
+     * non-content child elements.
+     *
+     * @param children
+     *            the child elements of the design that is being read
+     * @param context
+     *            the DesignContext instance used to parse the design
+     * 
+     * @throws DesignException
+     *             if there are multiple child elements
+     * @throws DesignException
+     *             if a child element could not be parsed as a Component
+     */
+    protected void readDesignChildren(Elements children, DesignContext context) {
+        if (children.size() > 1) {
             throw new DesignException("The container of type "
                     + getClass().toString()
                     + " can have only one child component.");
-        } else if (childCount == 1) {
-            Element childElement = design.children().get(0);
-            Component newChild = designContext.readDesign(childElement);
-            setContent(newChild);
+        } else if (children.size() == 1) {
+            setContent(context.readDesign(children.first()));
         }
     }
 

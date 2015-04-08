@@ -197,7 +197,7 @@ public class AtmospherePushConnection implements PushConnection {
     private void connect() {
         String baseUrl = connection
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.PUSH_PATH + '/');
+                        + ApplicationConstants.PUSH_PATH);
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
