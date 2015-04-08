@@ -87,18 +87,24 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   
   // Sidebar
   
-  .#{$primaryStyleName}-sidebar {
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    @include box-shadow(none);
     position: absolute;
-    top: 1px;
-    right : 1px;
+    top: 0;
+    right: 0;
 
     background-color: $v-grid-header-background-color;
-    border-left: $v-grid-header-border;
-    border-bottom: $v-grid-header-border;    
+    border: $v-grid-header-border;
+    padding: 0;
     z-index: 5;
 
     .#{$primaryStyleName}-sidebar-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
       height: $v-grid-header-row-height;
+      outline: none;
+      padding: 0 4px;
       text-align: right;
 
       &:after {
@@ -106,19 +112,34 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         font-family: FontAwesome, sans-serif;
         font-size: $v-grid-header-font-size;
         line-height: $v-grid-header-row-height;
-        padding: 0 $v-grid-cell-padding-horizontal;
+      }
+    }
+
+    &.closed {
+      border-radius: 0;
+    }
+    
+    &.opened {
+      .#{$primaryStyleName}-sidebar-button {
+        width: 100%;
+      
+        &:after {
+          content: "\00d7";
+          font-size: 16px;
+        }
       }
     }
 
     .#{$primaryStyleName}-sidebar-content {
-      
-      .column-hiding-panel {
-        display: block;
-        .column-hiding-toggle {
-          display: block;
-          padding: 3px 12px;
+      background: #fff;
+      border-top: $v-grid-border;
+      padding: 4px 0;
+
+      .gwt-MenuBar {
+        .gwt-MenuItem .column-hiding-toggle {
+          text-shadow: none;
         }
-      }      
+      }
     }
   }
 

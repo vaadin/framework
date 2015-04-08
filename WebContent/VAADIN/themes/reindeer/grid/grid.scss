@@ -34,6 +34,19 @@
       border-color: #b1cde4;
     }
   }
+  
+  // Sidebar
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    &.closed {
+      .#{$primaryStyleName}-sidebar-button:after {
+        line-height: 20px;
+      }
+    }
+    
+    .#{$primaryStyleName}-sidebar-content {
+      background-color: #f8f8f9;
+    }
+  }
 
   // Sort indicators
   .#{$primaryStyleName} th.sort-asc,
