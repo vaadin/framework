@@ -219,37 +219,6 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Reads the given attribute from a set of attributes.
-     * 
-     * @param attribute
-     *            the attribute key
-     * @param attributes
-     *            the set of attributes to read from
-     * @param outputType
-     *            the output type for the attribute
-     * @return the attribute value or the default value if the attribute is not
-     *         found
-     */
-    public static <T> T readAttribute(String attribute, Attributes attributes,
-            Class<T> outputType) {
-        if (!getFormatter().canConvert(outputType)) {
-            throw new IllegalArgumentException("output type: "
-                    + outputType.getName() + " not supported");
-        }
-        if (!attributes.hasKey(attribute)) {
-            return null;
-        } else {
-            try {
-                String value = attributes.get(attribute);
-                return getFormatter().parse(value, outputType);
-            } catch (Exception e) {
-                throw new DesignException("Failed to read attribute "
-                        + attribute, e);
-            }
-        }
-    }
-
-    /**
      * Writes the given attribute value to a set of attributes if it differs
      * from the default attribute value.
      * 
@@ -273,6 +242,60 @@ public class DesignAttributeHandler implements Serializable {
         if (!SharedUtil.equals(value, defaultValue)) {
             String attributeValue = toAttributeValue(inputType, value);
             attributes.put(attribute, attributeValue);
+        }
+    }
+
+    /**
+     * Reads the given attribute from a set of attributes. If attribute does not
+     * exist return a given default value.
+     * 
+     * @param attribute
+     *            the attribute key
+     * @param attributes
+     *            the set of attributes to read from
+     * @param defaultValue
+     *            the default value to return if attribute does not exist
+     * @param outputType
+     *            the output type for the attribute
+     * @return the attribute value or the default value if the attribute is not
+     *         found
+     */
+    public static <T> T readAttribute(String attribute, Attributes attributes,
+            T defaultValue, Class<T> outputType) {
+        T value = readAttribute(attribute, attributes, outputType);
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
+    }
+
+    /**
+     * Reads the given attribute from a set of attributes.
+     * 
+     * @param attribute
+     *            the attribute key
+     * @param attributes
+     *            the set of attributes to read from
+     * @param outputType
+     *            the output type for the attribute
+     * @return the attribute value or null
+     */
+    public static <T> T readAttribute(String attribute, Attributes attributes,
+            Class<T> outputType) {
+        if (!getFormatter().canConvert(outputType)) {
+            throw new IllegalArgumentException("output type: "
+                    + outputType.getName() + " not supported");
+        }
+        if (!attributes.hasKey(attribute)) {
+            return null;
+        } else {
+            try {
+                String value = attributes.get(attribute);
+                return getFormatter().parse(value, outputType);
+            } catch (Exception e) {
+                throw new DesignException("Failed to read attribute "
+                        + attribute, e);
+            }
         }
     }
 
@@ -426,5 +449,4 @@ public class DesignAttributeHandler implements Serializable {
             return (methods != null && methods.length > 1) ? methods[1] : null;
         }
     }
-
 }
