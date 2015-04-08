@@ -24,6 +24,7 @@ public class MarginInfo implements Serializable {
     private static final int RIGHT = 2;
     private static final int BOTTOM = 4;
     private static final int LEFT = 8;
+    private static final int ALL = TOP | RIGHT | BOTTOM | LEFT;
 
     private int bitMask;
 
@@ -49,6 +50,10 @@ public class MarginInfo implements Serializable {
 
     public void setMargins(MarginInfo marginInfo) {
         bitMask = marginInfo.bitMask;
+    }
+
+    public boolean hasAll() {
+        return (bitMask & ALL) == ALL;
     }
 
     public boolean hasLeft() {
