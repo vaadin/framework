@@ -60,6 +60,10 @@ public abstract class DeclarativeTestBase<T extends Component> extends
                     if (readMethod == null || writeMethod == null) {
                         continue;
                     }
+                    // Needed to access public properties inherited from a
+                    // nonpublic superclass, see #17425
+                    readMethod.setAccessible(true);
+                    writeMethod.setAccessible(true);
                     if (Connector.class.isAssignableFrom(c)
                             && readMethod.getName().equals("getParent")) {
                         // Hack to break cycles in the connector hierarchy
