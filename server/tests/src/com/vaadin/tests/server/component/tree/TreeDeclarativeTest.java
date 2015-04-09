@@ -17,7 +17,7 @@ package com.vaadin.tests.server.component.tree;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
@@ -31,34 +31,51 @@ import com.vaadin.ui.Tree.TreeDragMode;
 public class TreeDeclarativeTest extends DeclarativeTestBase<Tree> {
 
     @Test
-    public void testReadBasic() {
-        testRead(getBasicDesign(), getBasicExpected());
+    public void testDragMode() {
+        String design = "<v-tree drag-mode='node' />";
+
+        Tree tree = new Tree();
+        tree.setDragMode(TreeDragMode.NODE);
+
+        testRead(design, tree);
+        testWrite(design, tree);
     }
 
     @Test
-    public void testWriteBasic() {
-        testWrite(getBasicDesign(), getBasicExpected());
-    }
-
-    private String getBasicDesign() {
-        return "<v-tree selectable='false' drag-mode='node' multiselect-mode='simple' />";
-    }
-
-    private Tree getBasicExpected() {
-        Tree t = new Tree();
-        t.setSelectable(false);
-        t.setDragMode(TreeDragMode.NODE);
-        t.setMultiselectMode(MultiSelectMode.SIMPLE);
-        return t;
-    }
-
-    @Test
-    public void testReadEmpty() {
+    public void testEmpty() {
         testRead("<v-tree />", new Tree());
+        testWrite("<v-tree />", new Tree());
     }
 
     @Test
-    public void testWriteEmpty() {
-        testWrite("<v-tree />", new Tree());
+    public void testNodes() {
+        String design = "<v-tree>" //
+                + "  <node text='Node'/>" //
+                + "  <node text='Parent'>" //
+                + "    <node text='Child'>" //
+                + "      <node text='Grandchild'/>" //
+                + "    </node>" //
+                + "  </node>" //
+                + "  <node text='With icon' icon='http://example.com/icon.png'/>" //
+                + "</v-tree>";
+
+        Tree tree = new Tree();
+
+        tree.addItem("Node");
+
+        tree.addItem("Parent");
+
+        tree.addItem("Child");
+        tree.setParent("Child", "Parent");
+
+        tree.addItem("Grandchild");
+        tree.setParent("Grandchild", "Child");
+
+        tree.addItem("With icon");
+        tree.setItemIcon("With icon", new ExternalResource(
+                "http://example.com/icon.png"));
+
+        testRead(design, tree);
+        testWrite(design, tree, true);
     }
 }

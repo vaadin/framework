@@ -2188,28 +2188,13 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     @Override
-    public void readDesign(Element design, DesignContext designContext) {
+    public void readDesign(Element design, DesignContext context) {
         // handle default attributes
-        super.readDesign(design, designContext);
+        super.readDesign(design, context);
         // handle children specifying selectable items (<option>)
         Set<String> selected = new HashSet<String>();
         for (Element child : design.children()) {
-            if (!"option".equals(child.nodeName())) {
-                throw new DesignException(
-                        "Unsupported child element in a select: "
-                                + child.nodeName() + ".");
-            }
-            String itemId = child.html();
-            addItem(itemId);
-            if (child.hasAttr("icon")) {
-                setItemIcon(
-                        itemId,
-                        DesignAttributeHandler.readAttribute("icon",
-                                child.attributes(), Resource.class));
-            }
-            if (child.hasAttr("selected")) {
-                selected.add(itemId);
-            }
+            readItem(child, selected, context);
         }
         if (!selected.isEmpty()) {
             if (isMultiSelect()) {
@@ -2223,29 +2208,101 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
     }
 
+    /**
+     * Reads an Item from a design and inserts it into the data source.
+     * Hierarchical select components should override this method to recursively
+     * recursively read any child items as well.
+     * 
+     * @since
+     * @param child
+     *            a child element representing the item
+     * @param selected
+     *            A set accumulating selected items. If the item that is read is
+     *            marked as selected, its item id should be added to this set.
+     * @param context
+     *            the DesignContext instance used in parsing
+     * @return the item id of the new item
+     * 
+     * @throws DesignException
+     *             if the tag name of the {@code child} element is not
+     *             {@code option}.
+     */
+    protected String readItem(Element child, Set<String> selected,
+            DesignContext context) {
+        if (!"option".equals(child.tagName())) {
+            throw new DesignException("Unrecognized child element in "
+                    + getClass().getSimpleName() + ": " + child.tagName());
+        }
+        String itemId = child.html();
+        addItem(itemId);
+        if (child.hasAttr("icon")) {
+            setItemIcon(
+                    itemId,
+                    DesignAttributeHandler.readAttribute("icon",
+                            child.attributes(), Resource.class));
+        }
+        if (child.hasAttr("selected")) {
+            selected.add(itemId);
+        }
+        return itemId;
+    }
+
     @Override
-    public void writeDesign(Element design, DesignContext designContext) {
+    public void writeDesign(Element design, DesignContext context) {
         // Write default attributes
-        super.writeDesign(design, designContext);
+        super.writeDesign(design, context);
 
         // Write options if warranted
-        if (designContext.shouldWriteData(this)) {
-            for (Object itemId : getItemIds()) {
-                Element optionElement = design.appendElement("option");
-
-                optionElement.html(getItemCaption(itemId));
-
-                Resource icon = getItemIcon(itemId);
-                if (icon != null) {
-                    DesignAttributeHandler.writeAttribute("icon",
-                            optionElement.attributes(), icon, null,
-                            Resource.class);
-                }
-
-                if (isSelected(itemId)) {
-                    optionElement.attr("selected", "");
-                }
-            }
+        if (context.shouldWriteData(this)) {
+            writeItems(design, context);
         }
+    }
+
+    /**
+     * Writes the data source items to a design. Hierarchical select components
+     * should override this method to only write the root items.
+     * 
+     * @since
+     * @param design
+     *            the element into which to insert the items
+     * @param context
+     *            the DesignContext instance used in writing
+     */
+    protected void writeItems(Element design, DesignContext context) {
+        for (Object itemId : getItemIds()) {
+            writeItem(design, itemId, context);
+        }
+    }
+
+    /**
+     * Writes a data source Item to a design. Hierarchical select components
+     * should override this method to recursively write any child items as well.
+     * 
+     * @since
+     * @param design
+     *            the element into which to insert the item
+     * @param itemId
+     *            the id of the item to write
+     * @param context
+     *            the DesignContext instance used in writing
+     * @return
+     */
+    protected Element writeItem(Element design, Object itemId,
+            DesignContext context) {
+        Element element = design.appendElement("option");
+
+        element.html(itemId.toString());
+
+        Resource icon = getItemIcon(itemId);
+        if (icon != null) {
+            DesignAttributeHandler.writeAttribute("icon", element.attributes(),
+                    icon, null, Resource.class);
+        }
+
+        if (isSelected(itemId)) {
+            element.attr("selected", "");
+        }
+
+        return element;
     }
 }
