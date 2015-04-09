@@ -36,6 +36,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
@@ -91,6 +94,8 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -2946,7 +2951,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Grid initial setup
      */
     private void initGrid() {
-        setSelectionMode(SelectionMode.SINGLE);
+        setSelectionMode(getDefaultSelectionMode());
         addSelectionListener(new SelectionListener() {
             @Override
             public void select(SelectionEvent event) {
@@ -3587,7 +3592,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         if (numberOfColumns < -1 || numberOfColumns > columns.size()) {
             throw new IllegalArgumentException(
                     "count must be between -1 and the current number of columns ("
-                            + columns + ")");
+                            + columns.size() + "): " + numberOfColumns);
         }
 
         getState().frozenColumnCount = numberOfColumns;
@@ -5092,5 +5097,86 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
+    }
+
+    protected SelectionMode getDefaultSelectionMode() {
+        return SelectionMode.SINGLE;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext context) {
+        super.readDesign(design, context);
+
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("editable")) {
+            setEditorEnabled(DesignAttributeHandler.readAttribute("editable",
+                    attrs, boolean.class));
+        }
+        if (attrs.hasKey("frozen-columns")) {
+            setFrozenColumnCount(DesignAttributeHandler.readAttribute(
+                    "frozen-columns", attrs, int.class));
+        }
+        if (attrs.hasKey("rows")) {
+            setHeightByRows(DesignAttributeHandler.readAttribute("rows", attrs,
+                    double.class));
+            setHeightMode(HeightMode.ROW);
+        }
+        if (attrs.hasKey("selection-mode")) {
+            setSelectionMode(DesignAttributeHandler.readAttribute(
+                    "selection-mode", attrs, SelectionMode.class));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext context) {
+        super.writeDesign(design, context);
+
+        Attributes attrs = design.attributes();
+        Grid def = context.getDefaultInstance(this);
+
+        DesignAttributeHandler.writeAttribute("editable", attrs,
+                isEditorEnabled(), def.isEditorEnabled(), boolean.class);
+
+        DesignAttributeHandler.writeAttribute("frozen-columns", attrs,
+                getFrozenColumnCount(), def.getFrozenColumnCount(), int.class);
+
+        if (getHeightMode() == HeightMode.ROW) {
+            DesignAttributeHandler.writeAttribute("rows", attrs,
+                    getHeightByRows(), def.getHeightByRows(), double.class);
+        }
+
+        SelectionMode selectionMode = null;
+
+        if (selectionModel.getClass().equals(SingleSelectionModel.class)) {
+            selectionMode = SelectionMode.SINGLE;
+        } else if (selectionModel.getClass().equals(MultiSelectionModel.class)) {
+            selectionMode = SelectionMode.MULTI;
+        } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+            selectionMode = SelectionMode.NONE;
+        }
+
+        assert selectionMode != null : "Unexpected selection model "
+                + selectionModel.getClass().getName();
+
+        DesignAttributeHandler.writeAttribute("selection-mode", attrs,
+                selectionMode, getDefaultSelectionMode(), SelectionMode.class);
+
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("editor-enabled");
+        result.add("editable");
+        result.add("frozen-column-count");
+        result.add("frozen-columns");
+        result.add("height-by-rows");
+        result.add("rows");
+        result.add("selection-mode");
+        result.add("header-visible");
+        result.add("footer-visible");
+        result.add("editor-error-handler");
+        result.add("height-mode");
+        return result;
     }
 }
