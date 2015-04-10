@@ -29,6 +29,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <col sortable=false max-width='200' expand='2' property-id='Column2'>"
                 + "   <col sortable=true editable=false min-width='15' expand='1' property-id='Column3'>"
                 + "</colgroup>" //
+                + "<thead />" //
                 + "</table></v-grid>";
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class).setWidth(100);
@@ -36,6 +37,9 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 .setExpandRatio(2).setSortable(false);
         grid.addColumn("Column3", String.class).setMinimumWidth(15)
                 .setExpandRatio(1).setEditable(false);
+
+        // Remove the default header
+        grid.removeHeaderRow(grid.getDefaultHeaderRow());
 
         // Use the read grid component to do another pass on write.
         testRead(design, grid, true);

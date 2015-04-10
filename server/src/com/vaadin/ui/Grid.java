@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1286,7 +1287,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
-    protected static abstract class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
+    abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
             implements Serializable {
 
         /**
@@ -1458,6 +1459,86 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 getRowState().styleName = styleName;
             }
 
+            /**
+             * Writes the declarative design to the given table row element.
+             * 
+             * @since
+             * @param trElement
+             *            Element to write design to
+             * @param designContext
+             *            the design context
+             */
+            protected void writeDesign(Element trElement,
+                    DesignContext designContext) {
+                Set<CELLTYPE> visited = new HashSet<CELLTYPE>();
+                for (Grid.Column column : section.grid.getColumns()) {
+                    CELLTYPE cell = getCell(column.getPropertyId());
+                    if (visited.contains(cell)) {
+                        continue;
+                    }
+                    visited.add(cell);
+
+                    Element cellElement = trElement
+                            .appendElement(getCellTagName());
+                    cell.writeDesign(cellElement, designContext);
+
+                    for (Entry<Set<CELLTYPE>, CELLTYPE> entry : cellGroups
+                            .entrySet()) {
+                        if (entry.getValue() == cell) {
+                            cellElement.attr("colspan", ""
+                                    + entry.getKey().size());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Reads the declarative design from the given table row element.
+             * 
+             * @since
+             * @param trElement
+             *            Element to read design from
+             * @param designContext
+             *            the design context
+             * @throws DesignException
+             *             if the given table row contains unexpected children
+             */
+            protected void readDesign(Element trElement,
+                    DesignContext designContext) throws DesignException {
+                Elements cellElements = trElement.children();
+                int totalColSpans = 0;
+                for (int i = 0; i < cellElements.size(); ++i) {
+                    Element element = cellElements.get(i);
+                    if (!element.tagName().equals(getCellTagName())) {
+                        throw new DesignException(
+                                "Unexpected element in tr while expecting "
+                                        + getCellTagName() + ": "
+                                        + element.tagName());
+                    }
+
+                    int columnIndex = i + totalColSpans;
+
+                    int colspan = DesignAttributeHandler.readAttribute(
+                            "colspan", element.attributes(), 1, int.class);
+
+                    Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
+                    for (int c = 0; c < colspan; ++c) {
+                        cells.add(getCell(section.grid.getColumns()
+                                .get(columnIndex + c).getPropertyId()));
+                    }
+
+                    if (colspan > 1) {
+                        totalColSpans += colspan - 1;
+                        join(cells).readDesign(element, designContext);
+                    } else {
+                        cells.iterator().next()
+                                .readDesign(element, designContext);
+                    }
+                }
+            }
+
+            abstract protected String getCellTagName();
         }
 
         /**
@@ -1577,6 +1658,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             }
 
             /**
+             * Returns the type of content stored in this cell.
+             * 
+             * @return cell content type
+             */
+            public GridStaticCellType getCellType() {
+                return cellState.type;
+            }
+
+            /**
              * Returns the custom style name for this cell.
              * 
              * @return the style name or null if no style name has been set
@@ -1602,6 +1692,57 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 if (component != null) {
                     component.setParent(null);
                     cellState.connector = null;
+                }
+            }
+
+            /**
+             * Writes the declarative design to the given table cell element.
+             * 
+             * @since
+             * @param cellElement
+             *            Element to write design to
+             * @param designContext
+             *            the design context
+             */
+            protected void writeDesign(Element cellElement,
+                    DesignContext designContext) {
+                switch (cellState.type) {
+                case TEXT:
+                    DesignAttributeHandler.writeAttribute("plain-text",
+                            cellElement.attributes(), "", null, String.class);
+                    cellElement.appendText(getText());
+                    break;
+                case HTML:
+                    cellElement.append(getHtml());
+                    break;
+                case WIDGET:
+                    cellElement.appendChild(designContext
+                            .createElement(getComponent()));
+                    break;
+                }
+            }
+
+            /**
+             * Reads the declarative design from the given table cell element.
+             * 
+             * @since
+             * @param cellElement
+             *            Element to read design from
+             * @param designContext
+             *            the design context
+             */
+            protected void readDesign(Element cellElement,
+                    DesignContext designContext) {
+                if (!cellElement.hasAttr("plain-text")) {
+                    if (cellElement.children().size() > 0
+                            && cellElement.child(0).tagName().contains("-")) {
+                        setComponent(designContext.readDesign(cellElement
+                                .child(0)));
+                    } else {
+                        setHtml(cellElement.html());
+                    }
+                } else {
+                    setText(cellElement.html());
                 }
             }
         }
@@ -1833,6 +1974,50 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             }
             return false;
         }
+
+        /**
+         * Writes the declarative design to the given table section element.
+         * 
+         * @since
+         * @param tableSectionElement
+         *            Element to write design to
+         * @param designContext
+         *            the design context
+         */
+        protected void writeDesign(Element tableSectionElement,
+                DesignContext designContext) {
+            for (ROWTYPE row : rows) {
+                row.writeDesign(tableSectionElement.appendElement("tr"),
+                        designContext);
+            }
+        }
+
+        /**
+         * Writes the declarative design from the given table section element.
+         * 
+         * @since
+         * @param tableSectionElement
+         *            Element to read design from
+         * @param designContext
+         *            the design context
+         * @throws DesignException
+         *             if the table section contains unexpected children
+         */
+        protected void readDesign(Element tableSectionElement,
+                DesignContext designContext) throws DesignException {
+            while (rows.size() > 0) {
+                removeRow(0);
+            }
+
+            for (Element row : tableSectionElement.children()) {
+                if (!row.tagName().equals("tr")) {
+                    throw new DesignException("Unexpected element in "
+                            + tableSectionElement.tagName() + ": "
+                            + row.tagName());
+                }
+                appendRow().readDesign(row, designContext);
+            }
+        }
     }
 
     /**
@@ -1930,6 +2115,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 }
             }
         }
+
+        @Override
+        protected void readDesign(Element tableSectionElement,
+                DesignContext designContext) {
+            super.readDesign(tableSectionElement, designContext);
+
+            if (defaultRow == null && !rows.isEmpty()) {
+                grid.setDefaultHeaderRow(rows.get(0));
+            }
+        }
     }
 
     /**
@@ -1945,9 +2140,40 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             getRowState().defaultRow = value;
         }
 
+        private boolean isDefaultRow() {
+            return getRowState().defaultRow;
+        }
+
         @Override
         protected HeaderCell createCell() {
             return new HeaderCell(this);
+        }
+
+        @Override
+        protected String getCellTagName() {
+            return "th";
+        }
+
+        @Override
+        protected void writeDesign(Element trElement,
+                DesignContext designContext) {
+            super.writeDesign(trElement, designContext);
+
+            if (section.grid.getDefaultHeaderRow() == this) {
+                DesignAttributeHandler.writeAttribute("default",
+                        trElement.attributes(), true, null, boolean.class);
+            }
+        }
+
+        @Override
+        protected void readDesign(Element trElement, DesignContext designContext) {
+            super.readDesign(trElement, designContext);
+
+            boolean defaultRow = DesignAttributeHandler.readAttribute(
+                    "default", trElement.attributes(), false, boolean.class);
+            if (defaultRow) {
+                section.grid.setDefaultHeaderRow(this);
+            }
         }
     }
 
@@ -2003,6 +2229,11 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         @Override
         protected FooterCell createCell() {
             return new FooterCell(this);
+        }
+
+        @Override
+        protected String getCellTagName() {
+            return "td";
         }
 
     }
@@ -5232,6 +5463,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 addColumn(propertyId, String.class).readDesign(col, context);
                 ++i;
             }
+
+            for (Element child : table.children()) {
+                if (child.tagName().equals("thead")) {
+                    header.readDesign(child, context);
+                } else if (child.tagName().equals("tbody")) {
+                    // TODO: Inline data
+                } else if (child.tagName().equals("tfoot")) {
+                    footer.readDesign(child, context);
+                }
+            }
         }
     }
 
@@ -5285,6 +5526,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             column.writeDesign(colElement, context);
         }
 
+        // Always write thead. Reads correctly when there no header rows
+        header.writeDesign(tableElement.appendElement("thead"), context);
+
+        // TODO: Body
+
+        if (footer.getRowCount() > 0) {
+            footer.writeDesign(tableElement.appendElement("tfoot"), context);
+        }
     }
 
     @Override

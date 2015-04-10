@@ -22,6 +22,10 @@ import org.junit.Assert;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.FooterCell;
+import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
 
 public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
 
@@ -31,15 +35,88 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
     }
 
     public Grid testRead(String design, Grid expected, boolean retestWrite) {
-        Grid readGrid = super.testRead(design, expected);
+        Grid actual = super.testRead(design, expected);
 
-        compareGridColumns(expected, readGrid);
+        compareGridColumns(expected, actual);
+        compareHeaders(expected, actual);
+        compareFooters(expected, actual);
 
         if (retestWrite) {
-            testWrite(design, readGrid);
+            testWrite(design, actual);
         }
 
-        return readGrid;
+        return actual;
+    }
+
+    private void compareHeaders(Grid expected, Grid actual) {
+        Assert.assertEquals("Different header row count",
+                expected.getHeaderRowCount(), actual.getHeaderRowCount());
+        for (int i = 0; i < expected.getHeaderRowCount(); ++i) {
+            HeaderRow expectedRow = expected.getHeaderRow(i);
+            HeaderRow actualRow = actual.getHeaderRow(i);
+
+            if (expectedRow.equals(expected.getDefaultHeaderRow())) {
+                Assert.assertEquals("Different index for default header row",
+                        actual.getDefaultHeaderRow(), actualRow);
+            }
+
+            for (Column c : expected.getColumns()) {
+                String baseError = "Difference when comparing cell for "
+                        + c.toString() + " on header row " + i + ": ";
+                Object propertyId = c.getPropertyId();
+                HeaderCell expectedCell = expectedRow.getCell(propertyId);
+                HeaderCell actualCell = actualRow.getCell(propertyId);
+
+                switch (expectedCell.getCellType()) {
+                case TEXT:
+                    Assert.assertEquals(baseError + "Text content",
+                            expectedCell.getText(), actualCell.getText());
+                    break;
+                case HTML:
+                    Assert.assertEquals(baseError + "HTML content",
+                            expectedCell.getHtml(), actualCell.getHtml());
+                    break;
+                case WIDGET:
+                    assertEquals(baseError + "Component content",
+                            expectedCell.getComponent(),
+                            actualCell.getComponent());
+                    break;
+                }
+            }
+        }
+    }
+
+    private void compareFooters(Grid expected, Grid actual) {
+        Assert.assertEquals("Different footer row count",
+                expected.getFooterRowCount(), actual.getFooterRowCount());
+        for (int i = 0; i < expected.getFooterRowCount(); ++i) {
+            FooterRow expectedRow = expected.getFooterRow(i);
+            FooterRow actualRow = actual.getFooterRow(i);
+
+            for (Column c : expected.getColumns()) {
+                String baseError = "Difference when comparing cell for "
+                        + c.toString() + " on footer row " + i + ": ";
+                Object propertyId = c.getPropertyId();
+                FooterCell expectedCell = expectedRow.getCell(propertyId);
+                FooterCell actualCell = actualRow.getCell(propertyId);
+
+                switch (expectedCell.getCellType()) {
+                case TEXT:
+                    Assert.assertEquals(baseError + "Text content",
+                            expectedCell.getText(), actualCell.getText());
+                    break;
+                case HTML:
+                    Assert.assertEquals(baseError + "HTML content",
+                            expectedCell.getHtml(), actualCell.getHtml());
+                    break;
+                case WIDGET:
+                    assertEquals(baseError + "Component content",
+                            expectedCell.getComponent(),
+                            actualCell.getComponent());
+                    break;
+                }
+            }
+        }
     }
 
     private void compareGridColumns(Grid expected, Grid actual) {
