@@ -724,7 +724,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         for (Component child : this) {
             Element childElement = designContext.createElement(child);
             design.appendChild(childElement);
-            child.writeDesign(childElement, designContext);
+
             // handle position
             ComponentPosition position = getPosition(child);
             writePositionAttribute(childElement, ATTR_TOP, position
@@ -735,6 +735,7 @@ public class AbsoluteLayout extends AbstractLayout implements
                     .getBottomUnits().getSymbol(), position.getBottomValue());
             writePositionAttribute(childElement, ATTR_LEFT, position
                     .getLeftUnits().getSymbol(), position.getLeftValue());
+
             // handle z-index
             if (position.getZIndex() >= 0) {
                 childElement
