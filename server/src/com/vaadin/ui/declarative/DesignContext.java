@@ -170,6 +170,7 @@ public class DesignContext implements Serializable {
      * component, the mapping from c to the string is removed. Similarly, if
      * component was mapped to some string s different from localId, the mapping
      * from s to component is removed.
+     * 
      * @param component
      *            The component whose local id is to be set.
      * @param localId
@@ -182,6 +183,18 @@ public class DesignContext implements Serializable {
     public boolean setComponentLocalId(Component component, String localId) {
         return twoWayMap(localId, component, localIdToComponent,
                 componentToLocalId);
+    }
+
+    /**
+     * Returns the local id for a component
+     * 
+     * @param component
+     *            The component whose local id to get.
+     * @return the local id of the component, or null if the component has no
+     *         local id assigned
+     */
+    public String getComponentLocalId(Component component) {
+        return componentToLocalId.get(component);
     }
 
     /**

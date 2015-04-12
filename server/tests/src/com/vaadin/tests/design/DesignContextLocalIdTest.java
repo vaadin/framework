@@ -32,6 +32,7 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.TabSheet;
@@ -112,5 +113,14 @@ public class DesignContextLocalIdTest {
                     + ctr.getClass().getSimpleName(), "button-id", e
                     .getElementsByTag("v-button").first().attr("_id"));
         }
+    }
+
+    @Test
+    public void testGetLocalId() {
+        DesignContext ctx = new DesignContext();
+        Label label = new Label();
+        ctx.setComponentLocalId(label, "my-local-id");
+        ctx.setRootComponent(label);
+        assertEquals("my-local-id", ctx.getComponentLocalId(label));
     }
 }
