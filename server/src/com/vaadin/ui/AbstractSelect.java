@@ -2233,17 +2233,27 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             throw new DesignException("Unrecognized child element in "
                     + getClass().getSimpleName() + ": " + child.tagName());
         }
-        String itemId = child.html();
-        addItem(itemId);
+
+        String itemId;
+        if (child.hasAttr("item-id")) {
+            itemId = child.attr("item-id");
+            addItem(itemId);
+            setItemCaption(itemId, child.html());
+        } else {
+            addItem(itemId = child.html());
+        }
+
         if (child.hasAttr("icon")) {
             setItemIcon(
                     itemId,
                     DesignAttributeHandler.readAttribute("icon",
                             child.attributes(), Resource.class));
         }
+
         if (child.hasAttr("selected")) {
             selected.add(itemId);
         }
+
         return itemId;
     }
 
@@ -2291,7 +2301,13 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             DesignContext context) {
         Element element = design.appendElement("option");
 
-        element.html(itemId.toString());
+        String caption = getItemCaption(itemId);
+        if (caption != null && !caption.equals(itemId.toString())) {
+            element.html(caption);
+            element.attr("item-id", itemId.toString());
+        } else {
+            element.html(itemId.toString());
+        }
 
         Resource icon = getItemIcon(itemId);
         if (icon != null) {

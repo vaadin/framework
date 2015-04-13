@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Container;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -30,6 +32,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Configures select to be used as an option group.
@@ -251,5 +254,29 @@ public class OptionGroup extends AbstractSelect implements
      */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
+    }
+
+    @Override
+    protected String readItem(Element child, Set<String> selected,
+            DesignContext context) {
+        String itemId = super.readItem(child, selected, context);
+
+        if (child.hasAttr("disabled")) {
+            setItemEnabled(itemId, false);
+        }
+
+        return itemId;
+    }
+
+    @Override
+    protected Element writeItem(Element design, Object itemId,
+            DesignContext context) {
+        Element elem = super.writeItem(design, itemId, context);
+
+        if (!isItemEnabled(itemId)) {
+            elem.attr("disabled", "");
+        }
+
+        return elem;
     }
 }
