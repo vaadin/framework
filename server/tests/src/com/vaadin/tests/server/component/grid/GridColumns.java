@@ -302,4 +302,13 @@ public class GridColumns {
         }
         return null;
     }
+
+    @Test
+    public void testAddAndRemoveSortableColumn() {
+        boolean sortable = grid.getColumn("column1").isSortable();
+        grid.removeColumn("column1");
+        grid.addColumn("column1");
+        assertEquals("Column sortability changed when re-adding", sortable,
+                grid.getColumn("column1").isSortable());
+    }
 }

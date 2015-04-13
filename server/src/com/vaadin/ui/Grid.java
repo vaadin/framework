@@ -31,7 +31,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -2840,13 +2839,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 setFrozenColumnCount(columns.size());
             }
 
-            // Update sortable columns
-            if (event.getContainer() instanceof Sortable) {
-                Collection<?> sortableProperties = ((Sortable) event
-                        .getContainer()).getSortableContainerPropertyIds();
-                for (Entry<Object, Column> columnEntry : columns.entrySet()) {
-                    columnEntry.getValue().setSortable(
-                            sortableProperties.contains(columnEntry.getKey()));
+            // Unset sortable for non-sortable columns.
+            if (datasource instanceof Sortable) {
+                Collection<?> sortables = ((Sortable) datasource)
+                        .getSortableContainerPropertyIds();
+                for (Object propertyId : columns.keySet()) {
+                    Column column = columns.get(propertyId);
+                    if (!sortables.contains(propertyId) && column.isSortable()) {
+                        column.setSortable(false);
+                    }
                 }
             }
         }
@@ -3506,6 +3507,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         column.setHeaderCaption(SharedUtil.propertyIdToHumanFriendly(String
                 .valueOf(datasourcePropertyId)));
+
+        if (datasource instanceof Sortable
+                && ((Sortable) datasource).getSortableContainerPropertyIds()
+                        .contains(datasourcePropertyId)) {
+            column.setSortable(true);
+        }
 
         return column;
     }
