@@ -1,4 +1,5 @@
-$v-grid-border: 1px solid #ddd !default;
+$v-grid-border-size: 1px !default;
+$v-grid-border: $v-grid-border-size solid #ddd !default;
 $v-grid-cell-vertical-border: $v-grid-border !default;
 $v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
 $v-grid-cell-focused-border: 1px solid !default;
@@ -420,6 +421,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     margin-right: 4px;
   }
 
+  .#{$primaryStyleName}-spacer {
+    left: $v-grid-details-marker-width - $v-grid-border-size;
+  }
+  
   .#{$primaryStyleName}-spacer > td {
     display: block;
     padding: 0;
@@ -434,8 +439,14 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     border-top: $v-grid-details-border-top-stripe;
     border-bottom: $v-grid-details-border-bottom-stripe;
   }
+  
+  .#{$primaryStyleName}-spacer-deco-container {
+    position: relative;
+    top: $v-grid-border-size;
+    z-index: 5;
+  }
 
-  .#{$primaryStyleName}-spacer .deco {
+  .#{$primaryStyleName}-spacer-deco {
     top: 0; // this will be overridden by code, but it's a good default. 
     left: 0;
     width: $v-grid-details-marker-width;
@@ -454,10 +465,6 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     .ie10 &:before {
       content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
     }
-  }
-
-  .#{$primaryStyleName}-spacer .content {
-    padding-left: $v-grid-details-marker-width;
   }
 
   // Renderers

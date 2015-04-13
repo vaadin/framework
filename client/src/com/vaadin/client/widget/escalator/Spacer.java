@@ -34,6 +34,11 @@ public interface Spacer {
     Element getElement();
 
     /**
+     * Gets the decorative element for this spacer.
+     */
+    Element getDecoElement();
+
+    /**
      * Gets the row index.
      * 
      * @return the row index.
