@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
@@ -95,6 +96,7 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -2665,6 +2667,80 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Field<?> getEditorField() {
             return grid.getEditorField(getPropertyId());
         }
+
+        /**
+         * Writes the design attributes for this column into given element.
+         * 
+         * @since
+         * @param design
+         *            Element to write attributes into
+         * @param designContext
+         *            the design context
+         */
+        protected void writeDesign(Element design, DesignContext designContext) {
+            Attributes attributes = design.attributes();
+            GridColumnState def = new GridColumnState();
+            // Sortable is a special attribute that depends on the container.
+            DesignAttributeHandler.writeAttribute("sortable", attributes,
+                    isSortable(), null, boolean.class);
+            DesignAttributeHandler.writeAttribute("editable", attributes,
+                    isEditable(), def.editable, boolean.class);
+            DesignAttributeHandler.writeAttribute("width", attributes,
+                    getWidth(), def.width, Double.class);
+            DesignAttributeHandler.writeAttribute("min-width", attributes,
+                    getMinimumWidth(), def.minWidth, Double.class);
+            DesignAttributeHandler.writeAttribute("max-width", attributes,
+                    getMaximumWidth(), def.maxWidth, Double.class);
+            DesignAttributeHandler.writeAttribute("expand", attributes,
+                    getExpandRatio(), def.expandRatio, Integer.class);
+            DesignAttributeHandler.writeAttribute("property-id", attributes,
+                    getPropertyId(), null, Object.class);
+        }
+
+        /**
+         * Reads the design attributes for this column from given element.
+         * 
+         * @since
+         * @param design
+         *            Element to read attributes from
+         * @param designContext
+         *            the design context
+         */
+        protected void readDesign(Element design, DesignContext designContext) {
+            Attributes attributes = design.attributes();
+
+            if (design.hasAttr("sortable")) {
+                setSortable(DesignAttributeHandler.readAttribute("sortable",
+                        attributes, boolean.class));
+            }
+
+            if (design.hasAttr("editable")) {
+                setEditable(DesignAttributeHandler.readAttribute("editable",
+                        attributes, boolean.class));
+            }
+
+            // Read size info where necessary.
+            if (design.hasAttr("width")) {
+                setWidth(DesignAttributeHandler.readAttribute("width",
+                        attributes, Double.class));
+            }
+            if (design.hasAttr("min-width")) {
+                setMinimumWidth(DesignAttributeHandler.readAttribute(
+                        "min-width", attributes, Double.class));
+            }
+            if (design.hasAttr("max-width")) {
+                setMaximumWidth(DesignAttributeHandler.readAttribute(
+                        "max-width", attributes, Double.class));
+            }
+            if (design.hasAttr("expand")) {
+                if (design.attr("expand").isEmpty()) {
+                    setExpandRatio(1);
+                } else {
+                    setExpandRatio(DesignAttributeHandler.readAttribute(
+                            "expand", attributes, Integer.class));
+                }
+            }
+        }
     }
 
     /**
@@ -5132,6 +5208,31 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             setSelectionMode(DesignAttributeHandler.readAttribute(
                     "selection-mode", attrs, SelectionMode.class));
         }
+
+        if (design.children().size() > 0) {
+            if (design.children().size() > 1
+                    || !design.child(0).tagName().equals("table")) {
+                throw new DesignException(
+                        "Grid needs to have a table element as its only child");
+            }
+            Element table = design.child(0);
+
+            Elements colgroups = table.getElementsByTag("colgroup");
+            if (colgroups.size() != 1) {
+                throw new DesignException(
+                        "Table element in declarative Grid needs to have a"
+                                + " colgroup defining the columns used in Grid");
+            }
+
+            int i = 0;
+            for (Element col : colgroups.get(0).getElementsByTag("col")) {
+                String propertyId = DesignAttributeHandler.readAttribute(
+                        "property-id", col.attributes(), "property-" + i,
+                        String.class);
+                addColumn(propertyId, String.class).readDesign(col, context);
+                ++i;
+            }
+        }
     }
 
     @Override
@@ -5167,6 +5268,22 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         DesignAttributeHandler.writeAttribute("selection-mode", attrs,
                 selectionMode, getDefaultSelectionMode(), SelectionMode.class);
+
+        if (columns.isEmpty()) {
+            // Empty grid. Structure not needed.
+            return;
+        }
+
+        // Do structure.
+        Element tableElement = design.appendElement("table");
+        Element colGroup = tableElement.appendElement("colgroup");
+
+        List<Column> columnOrder = getColumns();
+        for (int i = 0; i < columnOrder.size(); ++i) {
+            Column column = columnOrder.get(i);
+            Element colElement = colGroup.appendElement("col");
+            column.writeDesign(colElement, context);
+        }
 
     }
 
