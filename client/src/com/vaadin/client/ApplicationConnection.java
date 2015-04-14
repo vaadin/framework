@@ -2783,66 +2783,75 @@ public class ApplicationConnection implements HasHandlers {
     private void sendInvocationsToServer() {
         boolean showLoadingIndicator = false;
         JsonArray reqJson = Json.createArray();
-        if (!pendingInvocations.isEmpty()) {
-            if (ApplicationConfiguration.isDebugMode()) {
-                Util.logMethodInvocations(this, pendingInvocations.values());
+        if (pendingInvocations.isEmpty()) {
+            return;
+        }
+
+        if (ApplicationConfiguration.isDebugMode()) {
+            Util.logMethodInvocations(this, pendingInvocations.values());
+        }
+
+        for (MethodInvocation invocation : pendingInvocations.values()) {
+            String connectorId = invocation.getConnectorId();
+            if (!getConnectorMap().connectorExists(connectorId)) {
+                getLogger().info(
+                        "Not sending RPC for removed connector: " + connectorId
+                                + ": "
+                                + Util.getInvocationDebugString(invocation));
+                continue;
             }
 
-            for (MethodInvocation invocation : pendingInvocations.values()) {
-                String connectorId = invocation.getConnectorId();
-                if (!getConnectorMap().connectorExists(connectorId)) {
-                    getLogger()
-                            .info("Not sending RPC for removed connector: "
-                                    + connectorId + ": "
-                                    + Util.getInvocationDebugString(invocation));
-                    continue;
+            JsonArray invocationJson = Json.createArray();
+            invocationJson.set(0, connectorId);
+            invocationJson.set(1, invocation.getInterfaceName());
+            invocationJson.set(2, invocation.getMethodName());
+            JsonArray paramJson = Json.createArray();
+
+            Type[] parameterTypes = null;
+            if (!isLegacyVariableChange(invocation)
+                    && !isJavascriptRpc(invocation)) {
+                try {
+                    Type type = new Type(invocation.getInterfaceName(), null);
+                    Method method = type.getMethod(invocation.getMethodName());
+                    parameterTypes = method.getParameterTypes();
+
+                    showLoadingIndicator |= !TypeDataStore
+                            .isNoLoadingIndicator(method);
+                } catch (NoDataException e) {
+                    throw new RuntimeException("No type data for "
+                            + invocation.toString(), e);
                 }
-
-                JsonArray invocationJson = Json.createArray();
-                invocationJson.set(0, connectorId);
-                invocationJson.set(1, invocation.getInterfaceName());
-                invocationJson.set(2, invocation.getMethodName());
-                JsonArray paramJson = Json.createArray();
-
-                Type[] parameterTypes = null;
-                if (!isLegacyVariableChange(invocation)
-                        && !isJavascriptRpc(invocation)) {
-                    try {
-                        Type type = new Type(invocation.getInterfaceName(),
-                                null);
-                        Method method = type.getMethod(invocation
-                                .getMethodName());
-                        parameterTypes = method.getParameterTypes();
-
-                        showLoadingIndicator |= !TypeDataStore
-                                .isNoLoadingIndicator(method);
-                    } catch (NoDataException e) {
-                        throw new RuntimeException("No type data for "
-                                + invocation.toString(), e);
-                    }
-                } else {
-                    // Always show loading indicator for legacy requests
-                    showLoadingIndicator = true;
-                }
-
-                for (int i = 0; i < invocation.getParameters().length; ++i) {
-                    // TODO non-static encoder?
-                    Type type = null;
-                    if (parameterTypes != null) {
-                        type = parameterTypes[i];
-                    }
-                    Object value = invocation.getParameters()[i];
-                    JsonValue jsonValue = JsonEncoder.encode(value, type, this);
-                    paramJson.set(i, jsonValue);
-                }
-                invocationJson.set(3, paramJson);
-                reqJson.set(reqJson.length(), invocationJson);
+            } else {
+                // Always show loading indicator for legacy requests
+                showLoadingIndicator = true;
             }
 
-            pendingInvocations.clear();
-            // Keep tag string short
-            lastInvocationTag = 0;
-            sendServerRpcWhenConnectionAvailable = false;
+            for (int i = 0; i < invocation.getParameters().length; ++i) {
+                // TODO non-static encoder?
+                Type type = null;
+                if (parameterTypes != null) {
+                    type = parameterTypes[i];
+                }
+                Object value = invocation.getParameters()[i];
+                JsonValue jsonValue = JsonEncoder.encode(value, type, this);
+                paramJson.set(i, jsonValue);
+            }
+            invocationJson.set(3, paramJson);
+            reqJson.set(reqJson.length(), invocationJson);
+        }
+
+        pendingInvocations.clear();
+        // Keep tag string short
+        lastInvocationTag = 0;
+        sendServerRpcWhenConnectionAvailable = false;
+
+        if (reqJson.length() == 0) {
+            // Nothing to send, all invocations were filtered out (for
+            // non-existing connectors)
+            getLogger()
+                    .warning(
+                            "All RPCs filtered out, not sending anything to the server");
+            return;
         }
 
         String extraParams = "";
