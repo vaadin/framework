@@ -336,11 +336,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        if (isStaticResourceRequest(request)) {
+        if (isStaticResourceRequest(vaadinRequest)) {
             // Define current servlet and service, but no request and response
             getService().setCurrentInstances(null, null);
             try {
-                serveStaticResources(request, response);
+                serveStaticResources(vaadinRequest, vaadinResponse);
                 return;
             } finally {
                 CurrentInstance.clearAll();
