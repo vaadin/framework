@@ -36,7 +36,7 @@ public abstract class SendMultibyteCharactersTest extends MultiBrowserTest {
 
         findElement(By.tagName("body")).click();
 
-        waitForDebugMessage("Variable burst to be sent to server:", 5);
+        waitForDebugMessage("RPC invocations to be sent to the server:", 5);
         waitForDebugMessage("Handling message from server", 10);
     }
 

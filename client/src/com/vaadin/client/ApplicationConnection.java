@@ -225,9 +225,6 @@ public class ApplicationConnection implements HasHandlers {
     /** Parameters for this application connection loaded from the web-page */
     private ApplicationConfiguration configuration;
 
-    /** List of pending variable change bursts that must be submitted in order */
-    private final ArrayList<LinkedHashMap<String, MethodInvocation>> pendingBursts = new ArrayList<LinkedHashMap<String, MethodInvocation>>();
-
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
 
@@ -1292,7 +1289,7 @@ public class ApplicationConnection implements HasHandlers {
         if (!hasActiveRequest) {
             getLogger().severe("No active request");
         }
-        // After checkForPendingVariableBursts() there may be a new active
+        // After sendInvocationsToServer() there may be a new active
         // request, so we must set hasActiveRequest to false before, not after,
         // the call. Active requests used to be tracked with an integer counter,
         // so setting it after used to work but not with the #8505 changes.
@@ -1301,7 +1298,9 @@ public class ApplicationConnection implements HasHandlers {
         webkitMaybeIgnoringRequests = false;
 
         if (isApplicationRunning()) {
-            checkForPendingVariableBursts();
+            if (sendServerRpcWhenConnectionAvailable) {
+                sendInvocationsToServer();
+            }
             runPostRequestHooks(configuration.getRootPanelId());
         }
 
@@ -1324,45 +1323,6 @@ public class ApplicationConnection implements HasHandlers {
             }
         });
         eventBus.fireEvent(new ResponseHandlingEndedEvent(this));
-    }
-
-    /**
-     * This method is called after applying uidl change set to application.
-     * 
-     * It will clean current and queued variable change sets. And send next
-     * change set if it exists.
-     */
-    private void checkForPendingVariableBursts() {
-        cleanVariableBurst(pendingInvocations);
-        if (pendingBursts.size() > 0) {
-            for (LinkedHashMap<String, MethodInvocation> pendingBurst : pendingBursts) {
-                cleanVariableBurst(pendingBurst);
-            }
-            LinkedHashMap<String, MethodInvocation> nextBurst = pendingBursts
-                    .remove(0);
-            buildAndSendVariableBurst(nextBurst);
-        }
-    }
-
-    /**
-     * Cleans given queue of variable changes of such changes that came from
-     * components that do not exist anymore.
-     * 
-     * @param variableBurst
-     */
-    private void cleanVariableBurst(
-            LinkedHashMap<String, MethodInvocation> variableBurst) {
-        Iterator<MethodInvocation> iterator = variableBurst.values().iterator();
-        while (iterator.hasNext()) {
-            String id = iterator.next().getConnectorId();
-            if (!getConnectorMap().hasConnector(id)
-                    && !getConnectorMap().isDragAndDropPaintable(id)) {
-                // variable owner does not exist anymore
-                iterator.remove();
-                getLogger().info(
-                        "Removed variable from removed component: " + id);
-            }
-        }
     }
 
     /**
@@ -2778,14 +2738,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * This method sends currently queued variable changes to server. It is
-     * called when immediate variable update must happen.
-     * 
-     * To ensure correct order for variable changes (due servers multithreading
-     * or network), we always wait for active request to be handler before
-     * sending a new one. If there is an active request, we will put varible
-     * "burst" to queue that will be purged after current request is handled.
-     * 
+     * Triggers a send of server RPC and legacy variable changes to the server.
      */
     public void sendPendingVariableChanges() {
         if (!deferredSendPending) {
@@ -2803,18 +2756,16 @@ public class ApplicationConnection implements HasHandlers {
     };
     private boolean deferredSendPending = false;
 
+    private boolean sendServerRpcWhenConnectionAvailable = false;
+
     private void doSendPendingVariableChanges() {
         if (isApplicationRunning()) {
             if (hasActiveRequest() || (push != null && !push.isActive())) {
-                // skip empty queues if there are pending bursts to be sent
-                if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
-                    pendingBursts.add(pendingInvocations);
-                    pendingInvocations = new LinkedHashMap<String, MethodInvocation>();
-                    // Keep tag string short
-                    lastInvocationTag = 0;
-                }
+                // There is an active request or push is enabled but not active
+                // -> send when current request completes or push becomes active
+                sendServerRpcWhenConnectionAvailable = true;
             } else {
-                buildAndSendVariableBurst(pendingInvocations);
+                sendInvocationsToServer();
             }
         } else {
             getLogger()
@@ -2825,27 +2776,30 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Build the variable burst and send it to server.
+     * Sends all pending method invocations (server RPC and legacy variable
+     * changes) to the server.
      * 
-     * When sync is forced, we also force sending of all pending variable-bursts
-     * at the same time. This is ok as we can assume that DOM will never be
-     * updated after this.
-     * 
-     * @param pendingInvocations
-     *            List of RPC method invocations to send
      */
-    private void buildAndSendVariableBurst(
-            LinkedHashMap<String, MethodInvocation> pendingInvocations) {
+    private void sendInvocationsToServer() {
         boolean showLoadingIndicator = false;
         JsonArray reqJson = Json.createArray();
         if (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
-                Util.logVariableBurst(this, pendingInvocations.values());
+                Util.logMethodInvocations(this, pendingInvocations.values());
             }
 
             for (MethodInvocation invocation : pendingInvocations.values()) {
+                String connectorId = invocation.getConnectorId();
+                if (!getConnectorMap().connectorExists(connectorId)) {
+                    getLogger()
+                            .info("Not sending RPC for removed connector: "
+                                    + connectorId + ": "
+                                    + Util.getInvocationDebugString(invocation));
+                    continue;
+                }
+
                 JsonArray invocationJson = Json.createArray();
-                invocationJson.set(0, invocation.getConnectorId());
+                invocationJson.set(0, connectorId);
                 invocationJson.set(1, invocation.getInterfaceName());
                 invocationJson.set(2, invocation.getMethodName());
                 JsonArray paramJson = Json.createArray();
@@ -2888,6 +2842,7 @@ public class ApplicationConnection implements HasHandlers {
             pendingInvocations.clear();
             // Keep tag string short
             lastInvocationTag = 0;
+            sendServerRpcWhenConnectionAvailable = false;
         }
 
         String extraParams = "";

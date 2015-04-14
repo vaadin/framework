@@ -747,36 +747,46 @@ public class Util {
                             + id);
         }
         for (MethodInvocation invocation : invocations) {
-            Object[] parameters = invocation.getParameters();
-            String formattedParams = null;
-            if (ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
-                    .getMethodName()) && parameters.length == 2) {
-                // name, value
-                Object value = parameters[1];
-                // TODO paintables inside lists/maps get rendered as
-                // components in the debug console
-                String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
-                        .getConnectorId() : String.valueOf(value);
-                formattedParams = parameters[0] + " : " + formattedValue;
-            }
-            if (null == formattedParams) {
-                formattedParams = (null != parameters) ? Arrays
-                        .toString(parameters) : null;
-            }
-            getLogger().info(
-                    "\t\t" + invocation.getInterfaceName() + "."
-                            + invocation.getMethodName() + "("
-                            + formattedParams + ")");
+            getLogger().info("\t\t" + getInvocationDebugString(invocation));
         }
     }
 
-    static void logVariableBurst(ApplicationConnection c,
-            Collection<MethodInvocation> loggedBurst) {
+    /**
+     * Produces a string representation of a method invocation, suitable for
+     * debug output
+     * 
+     * @since 7.5
+     * @param invocation
+     * @return
+     */
+    static String getInvocationDebugString(MethodInvocation invocation) {
+        Object[] parameters = invocation.getParameters();
+        String formattedParams = null;
+        if (ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
+                .getMethodName()) && parameters.length == 2) {
+            // name, value
+            Object value = parameters[1];
+            // TODO paintables inside lists/maps get rendered as
+            // components in the debug console
+            String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
+                    .getConnectorId() : String.valueOf(value);
+            formattedParams = parameters[0] + " : " + formattedValue;
+        }
+        if (null == formattedParams) {
+            formattedParams = (null != parameters) ? Arrays
+                    .toString(parameters) : null;
+        }
+        return invocation.getInterfaceName() + "." + invocation.getMethodName()
+                + "(" + formattedParams + ")";
+    }
+
+    static void logMethodInvocations(ApplicationConnection c,
+            Collection<MethodInvocation> methodInvocations) {
         try {
-            getLogger().info("Variable burst to be sent to server:");
+            getLogger().info("RPC invocations to be sent to the server:");
             String curId = null;
             ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
-            for (MethodInvocation methodInvocation : loggedBurst) {
+            for (MethodInvocation methodInvocation : methodInvocations) {
                 String id = methodInvocation.getConnectorId();
 
                 if (curId == null) {
@@ -792,7 +802,8 @@ public class Util {
                 printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Error sending variable burst", e);
+            getLogger()
+                    .log(Level.SEVERE, "Error logging method invocations", e);
         }
     }
 
