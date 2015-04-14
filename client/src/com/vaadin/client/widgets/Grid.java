@@ -3080,6 +3080,7 @@ public class Grid<T> extends ResizeComposite implements
                 removeStyleName("closed");
                 rootContainer.add(content);
             }
+            openCloseButton.setHeight("");
         }
 
         /**
@@ -3090,6 +3091,8 @@ public class Grid<T> extends ResizeComposite implements
                 removeStyleName("opened");
                 addStyleName("closed");
                 content.removeFromParent();
+                // adjust open button to header height when closed
+                setHeightToHeaderCellHeight();
             }
         }
 
@@ -3156,6 +3159,23 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
+        private void setHeightToHeaderCellHeight() {
+            try {
+                double height = WidgetUtil
+                        .getRequiredHeightBoundingClientRectDouble(grid.escalator
+                                .getHeader().getRowElement(0)
+                                .getFirstChildElement())
+                        - (WidgetUtil.measureVerticalBorder(getElement()) / 2);
+                openCloseButton.setHeight(height + "px");
+            } catch (NullPointerException npe) {
+                getLogger()
+                        .warning(
+                                "Got null header first row or first row cell when calculating sidebar button height");
+                openCloseButton.setHeight(grid.escalator.getHeader()
+                        .getDefaultRowHeight() + "px");
+            }
+        }
+
         private void updateVisibility() {
             final boolean hasWidgets = content.getWidgetCount() > 0;
             final boolean isVisible = isInDOM();
@@ -3166,6 +3186,8 @@ public class Grid<T> extends ResizeComposite implements
                 close();
                 grid.getElement().appendChild(getElement());
                 Grid.setParent(this, grid);
+                // border calculation won't work until attached
+                setHeightToHeaderCellHeight();
             }
         }
 

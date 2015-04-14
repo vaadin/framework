@@ -233,4 +233,31 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         assertTrue(getGridElement().getCell(row, column).getAttribute("class")
                 .contains("focused"));
     }
+
+    protected WebElement getSidebar() {
+        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    protected WebElement getSidebarOpenButton() {
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-button"));
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    /**
+     * Returns the toggle inside the sidebar for hiding the column at the given
+     * index, or null if not found.
+     */
+    protected WebElement getColumnHidingToggle(int columnIndex) {
+        WebElement sidebar = getSidebar();
+        List<WebElement> elements = sidebar.findElements(By
+                .className("column-hiding-toggle"));
+        for (WebElement e : elements) {
+            if ((e.getText().toLowerCase()).startsWith("column " + columnIndex)) {
+                return e;
+            }
+        }
+        return null;
+    }
 }

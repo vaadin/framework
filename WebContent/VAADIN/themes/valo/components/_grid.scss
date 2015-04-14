@@ -193,24 +193,19 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
     &.opened {
       .#{$primary-stylename}-sidebar-button:after {
         font-size: 20px;
-        line-height: 20px;
       }
-      
+
       .#{$primary-stylename}-sidebar-content {
         margin: 0 0 2px;
         padding: 4px 4px 2px;
       }
     }
-    
+
     &.closed {
       @include valo-gradient($v-grid-header-background-color);
-      
-      .#{$primary-stylename}-sidebar-button {
-        line-height: 36px;
-      }
     }
   }
-  
+
   // Customize scrollbars
   .#{$primary-stylename}-scroller {
     &::-webkit-scrollbar {

@@ -85,9 +85,9 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       }
     }
   }
-  
+
   // Sidebar
-  
+
   .#{$primaryStyleName}-sidebar.v-contextmenu {
     @include box-shadow(none);
     position: absolute;
@@ -103,32 +103,44 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       background: transparent;
       border: none;
       cursor: pointer;
-      height: $v-grid-header-row-height;
       outline: none;
       padding: 0 4px;
       text-align: right;
 
+      &::-moz-focus-inner {
+        border: 0;
+      }
+
       &:after {
         content: "\f0c9";
+        display: block;
         font-family: FontAwesome, sans-serif;
         font-size: $v-grid-header-font-size;
-        line-height: $v-grid-header-row-height;
       }
     }
 
     &.closed {
       border-radius: 0;
     }
-    
+
     &.opened {
       .#{$primaryStyleName}-sidebar-button {
         width: 100%;
-      
+ 
         &:after {
           content: "\00d7";
           font-size: 16px;
+          line-height: 1;
         }
       }
+    }      
+
+    .v-ie &.opened .#{$primaryStyleName}-sidebar-button {
+      vertical-align: middle;
+    }
+
+    .v-ie8 &.opened .#{$primaryStyleName}-sidebar-button:after {
+      display: inline;
     }
 
     .#{$primaryStyleName}-sidebar-content {
