@@ -35,6 +35,11 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
     }
 
     public Grid testRead(String design, Grid expected, boolean retestWrite) {
+        return testRead(design, expected, retestWrite, false);
+    }
+
+    public Grid testRead(String design, Grid expected, boolean retestWrite,
+            boolean writeData) {
         Grid actual = super.testRead(design, expected);
 
         compareGridColumns(expected, actual);
@@ -42,7 +47,7 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
         compareFooters(expected, actual);
 
         if (retestWrite) {
-            testWrite(design, actual);
+            testWrite(design, actual, writeData);
         }
 
         return actual;

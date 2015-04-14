@@ -98,6 +98,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -5468,7 +5469,19 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 if (child.tagName().equals("thead")) {
                     header.readDesign(child, context);
                 } else if (child.tagName().equals("tbody")) {
-                    // TODO: Inline data
+                    for (Element row : child.children()) {
+                        Elements cells = row.children();
+                        Object[] data = new String[cells.size()];
+                        for (int c = 0; c < cells.size(); ++c) {
+                            data[c] = cells.get(c).html();
+                        }
+                        addRow(data);
+                    }
+
+                    // Since inline data is used, set HTML renderer for columns
+                    for (Column c : getColumns()) {
+                        c.setRenderer(new HtmlRenderer());
+                    }
                 } else if (child.tagName().equals("tfoot")) {
                     footer.readDesign(child, context);
                 }
@@ -5529,7 +5542,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         // Always write thead. Reads correctly when there no header rows
         header.writeDesign(tableElement.appendElement("thead"), context);
 
-        // TODO: Body
+        if (context.shouldWriteData(this)) {
+            Element bodyElement = tableElement.appendElement("tbody");
+            for (Object itemId : datasource.getItemIds()) {
+                Element tableRow = bodyElement.appendElement("tr");
+                for (Column c : getColumns()) {
+                    Object value = datasource.getItem(itemId)
+                            .getItemProperty(c.getPropertyId()).getValue();
+                    tableRow.appendElement("td").append(
+                            (value != null ? value.toString() : ""));
+                }
+            }
+        }
 
         if (footer.getRowCount() > 0) {
             footer.writeDesign(tableElement.appendElement("tfoot"), context);
