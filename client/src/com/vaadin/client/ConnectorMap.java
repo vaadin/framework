@@ -101,10 +101,6 @@ public class ConnectorMap {
         return idToComponentDetail.containsKey(connectorId);
     }
 
-    boolean connectorExists(String connectorId) {
-        return hasConnector(connectorId) || isDragAndDropPaintable(connectorId);
-    }
-
     /**
      * Removes all registered connectors
      */

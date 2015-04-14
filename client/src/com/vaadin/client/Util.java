@@ -759,7 +759,7 @@ public class Util {
      * @param invocation
      * @return
      */
-    static String getInvocationDebugString(MethodInvocation invocation) {
+    private static String getInvocationDebugString(MethodInvocation invocation) {
         Object[] parameters = invocation.getParameters();
         String formattedParams = null;
         if (ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation

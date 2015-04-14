@@ -32,7 +32,6 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 
 @Connect(DateField.class)
 public class DateFieldConnector extends TextualDateConnector {
@@ -60,7 +59,7 @@ public class DateFieldConnector extends TextualDateConnector {
                  * communicated to the server.
                  */
                 if (getWidget().isImmediate()) {
-                    getConnection().sendPendingVariableChanges();
+                    getConnection().getServerRpcQueue().flush();
                 }
             }
         });

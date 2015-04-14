@@ -173,7 +173,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                         event.getWidth(), Window.getClientWidth(),
                         Window.getClientHeight());
                 if (getState().immediate || getPageState().hasResizeListeners) {
-                    getConnection().sendPendingVariableChanges();
+                    getConnection().getServerRpcQueue().flush();
                 }
             }
         });
@@ -775,13 +775,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     }
                     getRpcProxy(UIServerRpc.class).poll();
                     // Send changes even though poll is @Delayed
-                    getConnection().sendPendingVariableChanges();
+                    getConnection().getServerRpcQueue().flush();
                 }
             };
             pollTimer.scheduleRepeating(getState().pollInterval);
         } else {
             // Ensure no more polls are sent as polling has been disabled
-            getConnection().removePendingInvocations(
+            getConnection().getServerRpcQueue().removeMatching(
                     new MethodInvocation(getConnectorId(), UIServerRpc.class
                             .getName(), "poll"));
         }

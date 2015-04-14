@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,21 +66,18 @@ import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.communication.Heartbeat;
-import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.JsonDecoder;
-import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.client.communication.PushConnection;
 import com.vaadin.client.communication.RpcManager;
+import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
-import com.vaadin.client.metadata.Method;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.FontIcon;
@@ -109,7 +104,6 @@ import com.vaadin.shared.util.SharedUtil;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -187,19 +181,6 @@ public class ApplicationConnection implements HasHandlers {
     private String csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
-
-    /**
-     * The pending method invocations that will be send to the server by
-     * {@link #sendPendingCommand}. The key is defined differently based on
-     * whether the method invocation is enqueued with lastonly. With lastonly
-     * enabled, the method signature ( {@link MethodInvocation#getLastOnlyTag()}
-     * ) is used as the key to make enable removing a previously enqueued
-     * invocation. Without lastonly, an incremental id based on
-     * {@link #lastInvocationTag} is used to get unique values.
-     */
-    private LinkedHashMap<String, MethodInvocation> pendingInvocations = new LinkedHashMap<String, MethodInvocation>();
-
-    private int lastInvocationTag = 0;
 
     private WidgetSet widgetSet;
 
@@ -504,6 +485,8 @@ public class ApplicationConnection implements HasHandlers {
         tooltip = GWT.create(VTooltip.class);
         loadingIndicator = GWT.create(VLoadingIndicator.class);
         loadingIndicator.setConnection(this);
+        serverRpcQueue = GWT.create(ServerRpcQueue.class);
+        serverRpcQueue.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -1141,6 +1124,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     private int lastSeenServerSyncId = UNDEFINED_SYNC_ID;
 
+    protected ServerRpcQueue serverRpcQueue;
     /**
      * The value of an undefined sync id.
      * <p>
@@ -1260,7 +1244,7 @@ public class ApplicationConnection implements HasHandlers {
         webkitMaybeIgnoringRequests = false;
 
         if (isApplicationRunning()) {
-            if (sendServerRpcWhenConnectionAvailable) {
+            if (serverRpcQueue.isFlushPending()) {
                 sendInvocationsToServer();
             }
             runPostRequestHooks(configuration.getRootPanelId());
@@ -1271,7 +1255,8 @@ public class ApplicationConnection implements HasHandlers {
             @Override
             public void execute() {
                 if (!isApplicationRunning()
-                        || !(hasActiveRequest() || deferredSendPending)) {
+                        || !(hasActiveRequest() || serverRpcQueue
+                                .isFlushPending())) {
                     getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
@@ -2636,96 +2621,26 @@ public class ApplicationConnection implements HasHandlers {
             Object value, boolean immediate) {
         boolean lastOnly = !immediate;
         // note that type is now deduced from value
-        addMethodInvocationToQueue(new LegacyChangeVariablesInvocation(
-                connectorId, variableName, value), lastOnly, lastOnly);
-    }
-
-    /**
-     * Adds an explicit RPC method invocation to the send queue.
-     * 
-     * @since 7.0
-     * 
-     * @param invocation
-     *            RPC method invocation
-     * @param delayed
-     *            <code>false</code> to trigger sending within a short time
-     *            window (possibly combining subsequent calls to a single
-     *            request), <code>true</code> to let the framework delay sending
-     *            of RPC calls and variable changes until the next non-delayed
-     *            change
-     * @param lastOnly
-     *            <code>true</code> to remove all previously delayed invocations
-     *            of the same method that were also enqueued with lastonly set
-     *            to <code>true</code>. <code>false</code> to add invocation to
-     *            the end of the queue without touching previously enqueued
-     *            invocations.
-     */
-    public void addMethodInvocationToQueue(MethodInvocation invocation,
-            boolean delayed, boolean lastOnly) {
-        if (!isApplicationRunning()) {
-            getLogger()
-                    .warning(
-                            "Trying to invoke method on not yet started or stopped application");
-            return;
-        }
-        String tag;
-        if (lastOnly) {
-            tag = invocation.getLastOnlyTag();
-            assert !tag.matches("\\d+") : "getLastOnlyTag value must have at least one non-digit character";
-            pendingInvocations.remove(tag);
-        } else {
-            tag = Integer.toString(lastInvocationTag++);
-        }
-        pendingInvocations.put(tag, invocation);
-        if (!delayed) {
-            sendPendingVariableChanges();
+        serverRpcQueue.add(new LegacyChangeVariablesInvocation(connectorId,
+                variableName, value), lastOnly);
+        if (immediate) {
+            serverRpcQueue.flush();
         }
     }
 
     /**
-     * Removes any pending invocation of the given method from the queue
-     * 
-     * @param invocation
-     *            The invocation to remove
+     * @deprecated as of 7.6, use {@link ServerRpcQueue#flush()}
      */
-    public void removePendingInvocations(MethodInvocation invocation) {
-        Iterator<MethodInvocation> iter = pendingInvocations.values()
-                .iterator();
-        while (iter.hasNext()) {
-            MethodInvocation mi = iter.next();
-            if (mi.equals(invocation)) {
-                iter.remove();
-            }
-        }
-    }
-
-    /**
-     * Triggers a send of server RPC and legacy variable changes to the server.
-     */
+    @Deprecated
     public void sendPendingVariableChanges() {
-        if (!deferredSendPending) {
-            deferredSendPending = true;
-            Scheduler.get().scheduleFinally(sendPendingCommand);
-        }
+        serverRpcQueue.flush();
     }
 
-    private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            deferredSendPending = false;
-            doSendPendingVariableChanges();
-        }
-    };
-    private boolean deferredSendPending = false;
-
-    private boolean sendServerRpcWhenConnectionAvailable = false;
-
-    private void doSendPendingVariableChanges() {
+    public void doSendPendingVariableChanges() {
         if (isApplicationRunning()) {
             if (hasActiveRequest() || (push != null && !push.isActive())) {
                 // There is an active request or push is enabled but not active
                 // -> send when current request completes or push becomes active
-                sendServerRpcWhenConnectionAvailable = true;
             } else {
                 sendInvocationsToServer();
             }
@@ -2743,69 +2658,17 @@ public class ApplicationConnection implements HasHandlers {
      * 
      */
     private void sendInvocationsToServer() {
-        boolean showLoadingIndicator = false;
-        JsonArray reqJson = Json.createArray();
-        if (pendingInvocations.isEmpty()) {
+        if (serverRpcQueue.isEmpty()) {
             return;
         }
 
         if (ApplicationConfiguration.isDebugMode()) {
-            Util.logMethodInvocations(this, pendingInvocations.values());
+            Util.logMethodInvocations(this, serverRpcQueue.getAll());
         }
 
-        for (MethodInvocation invocation : pendingInvocations.values()) {
-            String connectorId = invocation.getConnectorId();
-            if (!getConnectorMap().connectorExists(connectorId)) {
-                getLogger().info(
-                        "Not sending RPC for removed connector: " + connectorId
-                                + ": "
-                                + Util.getInvocationDebugString(invocation));
-                continue;
-            }
-
-            JsonArray invocationJson = Json.createArray();
-            invocationJson.set(0, connectorId);
-            invocationJson.set(1, invocation.getInterfaceName());
-            invocationJson.set(2, invocation.getMethodName());
-            JsonArray paramJson = Json.createArray();
-
-            Type[] parameterTypes = null;
-            if (!isLegacyVariableChange(invocation)
-                    && !isJavascriptRpc(invocation)) {
-                try {
-                    Type type = new Type(invocation.getInterfaceName(), null);
-                    Method method = type.getMethod(invocation.getMethodName());
-                    parameterTypes = method.getParameterTypes();
-
-                    showLoadingIndicator |= !TypeDataStore
-                            .isNoLoadingIndicator(method);
-                } catch (NoDataException e) {
-                    throw new RuntimeException("No type data for "
-                            + invocation.toString(), e);
-                }
-            } else {
-                // Always show loading indicator for legacy requests
-                showLoadingIndicator = true;
-            }
-
-            for (int i = 0; i < invocation.getParameters().length; ++i) {
-                // TODO non-static encoder?
-                Type type = null;
-                if (parameterTypes != null) {
-                    type = parameterTypes[i];
-                }
-                Object value = invocation.getParameters()[i];
-                JsonValue jsonValue = JsonEncoder.encode(value, type, this);
-                paramJson.set(i, jsonValue);
-            }
-            invocationJson.set(3, paramJson);
-            reqJson.set(reqJson.length(), invocationJson);
-        }
-
-        pendingInvocations.clear();
-        // Keep tag string short
-        lastInvocationTag = 0;
-        sendServerRpcWhenConnectionAvailable = false;
+        boolean showLoadingIndicator = serverRpcQueue.showLoadingIndicator();
+        JsonArray reqJson = serverRpcQueue.toJson();
+        serverRpcQueue.clear();
 
         if (reqJson.length() == 0) {
             // Nothing to send, all invocations were filtered out (for
@@ -2830,17 +2693,6 @@ public class ApplicationConnection implements HasHandlers {
             getLoadingIndicator().trigger();
         }
         makeUidlRequest(reqJson, extraParams);
-    }
-
-    private boolean isJavascriptRpc(MethodInvocation invocation) {
-        return invocation instanceof JavaScriptMethodInvocation;
-    }
-
-    private boolean isLegacyVariableChange(MethodInvocation invocation) {
-        return ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
-                .getInterfaceName())
-                && ApplicationConstants.UPDATE_VARIABLE_METHOD
-                        .equals(invocation.getMethodName());
     }
 
     /**
@@ -3642,7 +3494,7 @@ public class ApplicationConnection implements HasHandlers {
                      * Send anything that was enqueued while we waited for the
                      * connection to close
                      */
-                    if (pendingInvocations.size() > 0) {
+                    if (serverRpcQueue.isFlushPending()) {
                         sendPendingVariableChanges();
                     }
                 }
@@ -3706,5 +3558,14 @@ public class ApplicationConnection implements HasHandlers {
      */
     public State getState() {
         return state;
+    }
+
+    /**
+     * Gets the server RPC queue for this application
+     * 
+     * @return the server RPC queue
+     */
+    public ServerRpcQueue getServerRpcQueue() {
+        return serverRpcQueue;
     }
 }

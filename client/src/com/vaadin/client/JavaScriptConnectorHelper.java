@@ -28,6 +28,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
+import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
@@ -357,9 +358,10 @@ public class JavaScriptConnectorHelper {
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = argumentsArray.get(i);
         }
-        connector.getConnection().addMethodInvocationToQueue(
-                new JavaScriptMethodInvocation(connector.getConnectorId(),
-                        iface, method, parameters), false, false);
+        ServerRpcQueue rpcQueue = ServerRpcQueue.get(connector.getConnection());
+        rpcQueue.add(new JavaScriptMethodInvocation(connector.getConnectorId(),
+                iface, method, parameters), false);
+        rpcQueue.flush();
     }
 
     private String findWildcardInterface(String method) {
@@ -390,8 +392,9 @@ public class JavaScriptConnectorHelper {
                 connector.getConnectorId(),
                 "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
                 new Object[] { name, arguments });
-        connector.getConnection().addMethodInvocationToQueue(invocation, false,
-                false);
+        ServerRpcQueue rpcQueue = ServerRpcQueue.get(connector.getConnection());
+        rpcQueue.add(invocation, false);
+        rpcQueue.flush();
     }
 
     public void setNativeState(JavaScriptObject state) {

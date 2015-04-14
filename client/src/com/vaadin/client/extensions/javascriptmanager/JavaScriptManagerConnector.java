@@ -24,6 +24,7 @@ import com.google.gwt.core.client.JsArray;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
+import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.extension.javascriptmanager.ExecuteJavaScriptRpc;
@@ -122,10 +123,11 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
          * Must invoke manually as the RPC interface can't be used in GWT
          * because of the JSONArray parameter
          */
-        getConnection().addMethodInvocationToQueue(
-                new JavaScriptMethodInvocation(getConnectorId(),
-                        "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc",
-                        "call", parameters), false, false);
+        ServerRpcQueue rpcQueue = ServerRpcQueue.get(getConnection());
+        rpcQueue.add(new JavaScriptMethodInvocation(getConnectorId(),
+                "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
+                parameters), false);
+        rpcQueue.flush();
     }
 
     @Override
