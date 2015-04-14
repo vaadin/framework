@@ -28,29 +28,20 @@ import com.vaadin.ui.CheckBox;
  */
 public class CheckboxDeclarativeTest extends DeclarativeTestBase<CheckBox> {
 
-    protected String getDesign() {
-        return "<v-check-box checked='true' />";
-    }
-
-    protected CheckBox getExpectedResult() {
-        CheckBox c = new CheckBox();
-        c.setValue(true);
-        return c;
-    };
-
     @Test
-    public void read() {
-        testRead(getDesign(), getExpectedResult());
+    public void testChecked() {
+        String design = "<v-check-box />";
+        CheckBox checkBox = new CheckBox();
+        testRead(design, checkBox);
+        testWrite(design, checkBox);
     }
 
     @Test
-    public void write() {
-        testWrite(getDesign(), getExpectedResult());
+    public void testUnchecked() {
+        String design = "<v-check-box checked='true' />";
+        CheckBox checkBox = new CheckBox();
+        checkBox.setValue(true);
+        testRead(design, checkBox);
+        testWrite(design, checkBox);
     }
-
-    @Test
-    public void testEmpty() {
-        testRead("<v-check-box>", new CheckBox());
-    }
-
 }

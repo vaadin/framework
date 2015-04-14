@@ -29,25 +29,13 @@ import com.vaadin.ui.TextArea;
 public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
 
     @Test
-    public void testRead() {
-        testRead(getDesign(), getExpected());
+    public void testTextArea() {
+        String design = "<v-text-area rows=6 wordwrap=false>Hello World!</v-text-area>";
+        TextArea ta = new TextArea();
+        ta.setRows(6);
+        ta.setWordwrap(false);
+        ta.setValue("Hello World!");
+        testRead(design, ta);
+        testWrite(design, ta);
     }
-
-    @Test
-    public void testWrite() {
-        testWrite(getDesign(), getExpected());
-    }
-
-    protected String getDesign() {
-        return "<v-text-area rows=6 wordwrap=false>Hello World!</v-text-area>";
-    }
-
-    protected TextArea getExpected() {
-        TextArea tf = new TextArea();
-        tf.setRows(6);
-        tf.setWordwrap(false);
-        tf.setValue("Hello World!");
-        return tf;
-    };
-
 }

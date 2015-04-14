@@ -29,22 +29,19 @@ import com.vaadin.ui.TextField;
 public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
 
     @Test
-    public void testPlainTextRead() {
-        testRead(getDesign(), getExpected());
+    public void testEmpty() {
+        String design = "<v-text-field/>";
+        TextField tf = new TextField();
+        testRead(design, tf);
+        testWrite(design, tf);
     }
 
     @Test
-    public void testPlainTextWrite() {
-        testWrite(getDesign(), getExpected());
-    }
-
-    protected String getDesign() {
-        return "<v-text-field/>";
-    }
-
-    protected TextField getExpected() {
+    public void testValue() {
+        String design = "<v-text-field value=\"test value\"/>";
         TextField tf = new TextField();
-        return tf;
-    };
-
+        tf.setValue("test value");
+        testRead(design, tf);
+        testWrite(design, tf);
+    }
 }

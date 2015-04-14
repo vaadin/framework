@@ -15,11 +15,18 @@
  */
 package com.vaadin.tests.server.component.abstractfield;
 
+import static org.junit.Assert.assertTrue;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.junit.Test;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link AbstractField}.
@@ -31,23 +38,12 @@ public class AbstractFieldDeclarativeTest extends
         DeclarativeTestBase<AbstractField<?>> {
 
     @Test
-    public void testPlainTextRead() {
-        testRead(getDesign(), getExpected());
-    }
-
-    @Test
-    public void testPlainTextWrite() {
-        testWrite(getDesign(), getExpected());
-    }
-
-    protected String getDesign() {
-        return "<v-text-field buffered='true' validation-visible='false' invalid-committed='true'"
+    public void testPlainText() {
+        String design = "<v-text-field buffered='true' validation-visible='false' invalid-committed='true'"
                 + " invalid-allowed='false' required='true' required-error='This is a required field'"
                 + " conversion-error='Input {0} cannot be parsed' tabindex=3 readonly='true'/>";
-    }
-
-    protected AbstractField getExpected() {
-        TextField tf = new TextField();
+        AbstractField tf = new TextField();
+        tf.setBuffered(true);
         tf.setBuffered(true);
         tf.setValidationVisible(false);
         tf.setInvalidCommitted(true);
@@ -57,7 +53,40 @@ public class AbstractFieldDeclarativeTest extends
         tf.setConversionError("Input {0} cannot be parsed");
         tf.setTabIndex(3);
         tf.setReadOnly(true);
-        return tf;
-    };
+        testRead(design, tf);
+        testWrite(design, tf);
 
+        // Test with readonly=false
+        design = design.replace("readonly='true'", "");
+        tf.setReadOnly(false);
+        testRead(design, tf);
+        testWrite(design, tf);
+    }
+
+    @Test
+    public void testWriteRemovesOldContent() {
+        Attributes attr = new Attributes();
+        attr.put("should_be_removed", "foo");
+        Element design = new Element(Tag.valueOf("v-text-field"), "", attr);
+        AbstractField component = new TextField();
+        component.setReadOnly(true);
+        component.writeDesign(design, new DesignContext());
+        // we only changed one of the attributes, others are at default values
+        assertEquals(1, design.attributes().size());
+        assertTrue("Design must contain readonly", design.hasAttr("readonly"));
+        assertTrue("Readonly must be true", design.attr("readonly").equals("")
+                || design.attr("readonly").equals("true"));
+    }
+
+    @Test
+    public void testModelReadOnly() {
+        // Test that read only value coming from property data source is not
+        // written to design.
+        String design = "<v-text-field value=test></v-text-field>";
+        AbstractField component = new TextField();
+        ObjectProperty<String> property = new ObjectProperty<String>("test");
+        property.setReadOnly(true);
+        component.setPropertyDataSource(property);
+        testWrite(design, component);
+    }
 }
