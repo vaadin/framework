@@ -2192,6 +2192,10 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // handle default attributes
         super.readDesign(design, context);
         // handle children specifying selectable items (<option>)
+        readItems(design, context);
+    }
+
+    protected void readItems(Element design, DesignContext context) {
         Set<String> selected = new HashSet<String>();
         for (Element child : design.children()) {
             readItem(child, selected, context);
