@@ -228,6 +228,8 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
     left: 0;
     right: 0;
     border: $v-grid-border;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
     margin-top: nth($v-grid-border, 1) * -1;
     @include box-shadow(0 0 9px rgba(0,0,0,.2));
   }
