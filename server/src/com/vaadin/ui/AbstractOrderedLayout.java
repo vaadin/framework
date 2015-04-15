@@ -477,11 +477,32 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
         super.readDesign(design, designContext);
-        // handle margin
+
+        // handle margins
         if (design.hasAttr("margin")) {
             setMargin(DesignAttributeHandler.readAttribute("margin",
                     design.attributes(), Boolean.class));
+        } else {
+            boolean marginLeft = DesignAttributeHandler.readAttribute(
+                    "margin-left", design.attributes(), getMargin().hasLeft(),
+                    Boolean.class);
+
+            boolean marginRight = DesignAttributeHandler.readAttribute(
+                    "margin-right", design.attributes(),
+                    getMargin().hasRight(), Boolean.class);
+
+            boolean marginTop = DesignAttributeHandler.readAttribute(
+                    "margin-top", design.attributes(), getMargin().hasTop(),
+                    Boolean.class);
+
+            boolean marginBottom = DesignAttributeHandler.readAttribute(
+                    "margin-bottom", design.attributes(), getMargin()
+                            .hasBottom(), Boolean.class);
+
+            setMargin(new MarginInfo(marginTop, marginBottom, marginLeft,
+                    marginRight));
         }
+
         // handle children
         for (Element childComponent : design.children()) {
             Attributes attr = childComponent.attributes();
@@ -532,12 +553,36 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void writeDesign(Element design, DesignContext designContext) {
         // write default attributes
         super.writeDesign(design, designContext);
-        // handle margin
+
         AbstractOrderedLayout def = (AbstractOrderedLayout) designContext
                 .getDefaultInstance(this);
-        if (getMargin().getBitMask() != def.getMargin().getBitMask()) {
-            design.attr("margin", "");
+
+        // handle margin
+        MarginInfo marginInfo = getMargin();
+
+        if (marginInfo.hasAll()) {
+            DesignAttributeHandler.writeAttribute("margin",
+                    design.attributes(), marginInfo.hasAll(), def.getMargin()
+                            .hasAll(), Boolean.class);
+        } else {
+
+            DesignAttributeHandler.writeAttribute("margin-left", design
+                    .attributes(), marginInfo.hasLeft(), def.getMargin()
+                    .hasLeft(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-right", design
+                    .attributes(), marginInfo.hasRight(), def.getMargin()
+                    .hasRight(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-top", design
+                    .attributes(), marginInfo.hasTop(), def.getMargin()
+                    .hasTop(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-bottom", design
+                    .attributes(), marginInfo.hasBottom(), def.getMargin()
+                    .hasBottom(), Boolean.class);
         }
+
         // handle children
         if (!designContext.shouldWriteChildren(this, def)) {
             return;
@@ -578,6 +623,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("margin");
+        customAttributes.add("margin-left");
+        customAttributes.add("margin-right");
+        customAttributes.add("margin-top");
+        customAttributes.add("margin-bottom");
         return customAttributes;
     }
 

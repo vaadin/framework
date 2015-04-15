@@ -31,38 +31,30 @@ public class AbsoluteLayoutDeclarativeTest extends
         DeclarativeTestBase<AbsoluteLayout> {
 
     @Test
-    public void testPlainTextRead() {
-        testRead(getDesign(), getExpected());
-    }
-
-    @Test
-    public void testPlainTextWrite() {
-        testWrite(getDesign(), getExpected());
-    }
-
-    protected String getDesign() {
-        return "<v-absolute-layout>"
+    public void testAbsoluteLayoutFeatures() {
+        String design = "<v-absolute-layout caption=\"test-layout\">"
                 + "<v-button :top='100px' :left='0px' :z-index=21>OK</v-button>"
                 + "<v-button :bottom='0px' :right='0px'>Cancel</v-button>"
                 + "</v-absolute-layout>";
-    }
-
-    protected AbsoluteLayout getExpected() {
-        AbsoluteLayout c = new AbsoluteLayout();
+        AbsoluteLayout layout = new AbsoluteLayout();
+        layout.setCaption("test-layout");
         Button b1 = new Button("OK");
         b1.setCaptionAsHtml(true);
         Button b2 = new Button("Cancel");
         b2.setCaptionAsHtml(true);
+        layout.addComponent(b1, "top: 100px; left: 0px; z-index: 21");
+        layout.addComponent(b2, "bottom: 0px; right: 0px;");
 
-        c.addComponent(b1, "top: 100px; left: 0px; z-index: 21");
-        c.addComponent(b2, "bottom: 0px; right: 0px;");
-        System.out.println(c.getComponentCount());
-        return c;
-    };
+        testWrite(design, layout);
+        testRead(design, layout);
+    }
 
     @Test
     public void testEmpty() {
-        testRead("<v-absolute-layout/>", new AbsoluteLayout());
+        String design = "<v-absolute-layout/>";
+        AbsoluteLayout layout = new AbsoluteLayout();
+        testRead(design, layout);
+        testWrite(design, layout);
     }
 
 }

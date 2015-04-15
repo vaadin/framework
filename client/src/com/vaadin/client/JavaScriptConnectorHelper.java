@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -158,18 +159,21 @@ public class JavaScriptConnectorHelper {
             String initFunctionName = serverSideClassName
                     .replaceAll("\\.", "_");
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
-                VConsole.log("JavaScript connector initialized using "
-                        + initFunctionName);
+                getLogger().info(
+                        "JavaScript connector initialized using "
+                                + initFunctionName);
                 this.initFunctionName = initFunctionName;
                 return true;
             } else {
-                VConsole.log("No JavaScript function " + initFunctionName
-                        + " found");
+                getLogger()
+                        .warning(
+                                "No JavaScript function " + initFunctionName
+                                        + " found");
                 attemptedNames.add(initFunctionName);
                 tag = conf.getParentTag(tag.intValue());
             }
         }
-        VConsole.log("No JavaScript init for connector not found");
+        getLogger().info("No JavaScript init for connector found");
         showInitProblem(attemptedNames);
         return false;
     }
@@ -496,5 +500,9 @@ public class JavaScriptConnectorHelper {
 
     public String getInitFunctionName() {
         return initFunctionName;
+    }
+
+    public static Logger getLogger() {
+        return Logger.getLogger(JavaScriptConnectorHelper.class.getName());
     }
 }

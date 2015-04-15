@@ -25,9 +25,11 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.annotations.BrowserFactory;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.annotations.RunOnHub;
 import com.vaadin.testbench.parallel.Browser;
 
@@ -45,8 +47,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
      * 
      */
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
-    private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
+    private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
+    private static final String ALLOW_RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.allowRunLocally";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
     private static final String DEPLOYMENT_PROPERTY = "com.vaadin.testbench.deployment.url";
     private static final String HUB_URL = "com.vaadin.testbench.hub.url";
@@ -75,6 +78,18 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void setup() throws Exception {
+        String allowRunLocally = getProperty(ALLOW_RUN_LOCALLY_PROPERTY);
+        if ((allowRunLocally == null || !allowRunLocally.equals("" + true))
+                && getClass().getAnnotation(RunLocally.class) != null) {
+            Assert.fail("@RunLocally annotation is not allowed by default in framework tests. "
+                    + "See file uitest/eclipse-run-selected-test.properties for more information.");
+        }
+
+        super.setup();
     }
 
     private static DesiredCapabilities getRunLocallyCapabilities() {

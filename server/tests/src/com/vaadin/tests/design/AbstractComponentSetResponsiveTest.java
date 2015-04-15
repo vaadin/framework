@@ -17,21 +17,22 @@ package com.vaadin.tests.design;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Label;
 
 public class AbstractComponentSetResponsiveTest extends
-        DeclarativeTestBase<GridLayout> {
+        DeclarativeTestBase<Label> {
 
     @Test
     public void testResponsiveFlag() {
-        GridLayout gl = new GridLayout();
-        gl.setResponsive(true);
+        Label label = new Label();
+        label.setContentMode(ContentMode.HTML);
+        label.setResponsive(true);
 
-        String design = "<v-grid-layout responsive='true' />";
+        String design = "<v-label responsive='true' />";
 
-        testWrite(design, gl);
-        testRead(design, gl);
+        testWrite(design, label);
+        testRead(design, label);
     }
 
 }

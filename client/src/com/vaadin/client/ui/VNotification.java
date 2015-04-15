@@ -257,10 +257,17 @@ public class VNotification extends VOverlay {
         /**
          * Android 4 fails to render notifications correctly without a little
          * nudge (#8551)
+         * Chrome 41 now requires this too (#17252)
          */
-        if (BrowserInfo.get().isAndroid()) {
+        if (BrowserInfo.get().isAndroid()
+                || isChrome41OrHigher()) {
             WidgetUtil.setStyleTemporarily(getElement(), "display", "none");
         }
+    }
+
+    private boolean isChrome41OrHigher() {
+        return BrowserInfo.get().isChrome()
+                && BrowserInfo.get().getBrowserMajorVersion() >= 41;
     }
 
     protected void hideAfterDelay() {

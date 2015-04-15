@@ -340,7 +340,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     @After
     public void checkCompareFailures() throws IOException {
-        if (!screenshotFailures.isEmpty()) {
+        if (screenshotFailures != null && !screenshotFailures.isEmpty()) {
             throw new IOException(
                     "The following screenshots did not match the reference: "
                             + screenshotFailures.toString());

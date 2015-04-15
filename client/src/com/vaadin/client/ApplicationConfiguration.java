@@ -638,7 +638,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
                         @Override
                         public void failed(Throwable reason) {
-                            VConsole.error(reason);
+                            getLogger().log(Level.SEVERE,
+                                    "Error loading deferred bundle", reason);
                         }
                     });
         }

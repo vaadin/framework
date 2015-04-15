@@ -64,16 +64,4 @@ public class ColorPicker extends AbstractColorPicker {
         addStyleName(STYLENAME_DEFAULT);
     }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-
-        if (isDefaultCaptionEnabled()
-                && ((getState().caption == null || ""
-                        .equals(getState().caption)))
-                && "".equals(getState().width)) {
-            getState().width = "100px";
-        }
-    }
-
 }

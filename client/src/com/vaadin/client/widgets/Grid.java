@@ -2246,14 +2246,33 @@ public class Grid<T> extends ResizeComposite implements
     public final class SelectionColumn extends Column<Boolean, T> {
 
         private boolean initDone = false;
+        private boolean selected = false;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
         }
 
         void initDone() {
+            addSelectAllToDefaultHeader();
+
+            setWidth(-1);
+
+            setEditable(false);
+
+            initDone = true;
+        }
+
+        protected void addSelectAllToDefaultHeader() {
             if (getSelectionModel() instanceof SelectionModel.Multi
                     && header.getDefaultRow() != null) {
+                // If selection cell already contains a widget do not
+                // create a new CheckBox
+                HeaderCell selectionCell = header.getDefaultRow().getCell(this);
+                if (selectionCell.getType()
+                        .equals(GridStaticCellType.WIDGET)
+                        && selectionCell.getWidget() instanceof CheckBox) {
+                    return;
+                }
                 /*
                  * TODO: Currently the select all check box is shown when multi
                  * selection is in use. This might result in malfunctions if no
@@ -2270,19 +2289,18 @@ public class Grid<T> extends ResizeComposite implements
                     public void onValueChange(ValueChangeEvent<Boolean> event) {
                         if (event.getValue()) {
                             fireEvent(new SelectAllEvent<T>(model));
+                            selected = true;
                         } else {
                             model.deselectAll();
+                            selected = false;
                         }
                     }
                 });
-                header.getDefaultRow().getCell(this).setWidget(checkBox);
+                checkBox.setValue(selected);
+
+                selectionCell.setWidget(checkBox);
+
             }
-
-            setWidth(-1);
-
-            setEditable(false);
-
-            initDone = true;
         }
 
         @Override
@@ -4834,27 +4852,34 @@ public class Grid<T> extends ResizeComposite implements
                 final StaticSection.StaticCell metadata = staticRow
                         .getCell(columns.get(cell.getColumn()));
 
+                boolean updateCellData = true;
                 // Decorate default row with sorting indicators
                 if (staticRow instanceof HeaderRow) {
                     addSortingIndicatorsToHeaderRow((HeaderRow) staticRow, cell);
+
+                    if (isHeaderSelectionColumn(row, cell)) {
+                        updateCellData = false;
+                    }
                 }
 
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
 
                 TableCellElement element = cell.getElement();
-                switch (metadata.getType()) {
-                case TEXT:
-                    element.setInnerText(metadata.getText());
-                    break;
-                case HTML:
-                    element.setInnerHTML(metadata.getHtml());
-                    break;
-                case WIDGET:
-                    preDetach(row, Arrays.asList(cell));
-                    element.setInnerHTML("");
-                    postAttach(row, Arrays.asList(cell));
-                    break;
+                if (updateCellData) {
+                    switch (metadata.getType()) {
+                    case TEXT:
+                        element.setInnerText(metadata.getText());
+                        break;
+                    case HTML:
+                        element.setInnerHTML(metadata.getHtml());
+                        break;
+                    case WIDGET:
+                        preDetach(row, Arrays.asList(cell));
+                        element.setInnerHTML("");
+                        postAttach(row, Arrays.asList(cell));
+                        break;
+                    }
                 }
                 setCustomStyleName(element, metadata.getStyleName());
 
@@ -4914,6 +4939,27 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+            // Add select all checkbox if needed on rebuild.
+            for (FlyweightCell cell : cellsToAttach) {
+                if (isHeaderSelectionColumn(row, cell)) {
+                    selectionColumn.addSelectAllToDefaultHeader();
+                }
+            }
+        }
+
+        /**
+         * Check if selectionColumn in the default header row
+         */
+        private boolean isHeaderSelectionColumn(Row row, FlyweightCell cell) {
+            return selectionColumn != null && isDefaultHeaderRow(row)
+                    && getColumn(cell.getColumn()).equals(selectionColumn);
+        }
+
+        /**
+         * Row is the default header row.
+         */
+        private boolean isDefaultHeaderRow(Row row) {
+            return section.getRow(row.getRow()).equals(header.getDefaultRow());
         }
 
         @Override

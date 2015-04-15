@@ -702,7 +702,7 @@ public class FieldGroup implements Serializable {
 
         /**
          * Called after changes are committed to the fields and the item is
-         * updated..
+         * updated.
          * <p>
          * Throw a {@link CommitException} to abort the commit.
          * 
