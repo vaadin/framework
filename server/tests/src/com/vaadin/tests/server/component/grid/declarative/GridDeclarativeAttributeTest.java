@@ -53,6 +53,20 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
     }
 
     @Test
+    public void testFrozenColumnsAttributes() {
+        String design = "<v-grid frozen-columns='2'><table>" //
+                + "<colgroup><col><col><col></colgroup></table></v-grid>";
+
+        Grid grid = new Grid();
+        grid.addColumn("property-0", String.class);
+        grid.addColumn("property-1", String.class);
+        grid.addColumn("property-2", String.class);
+        grid.setFrozenColumnCount(2);
+
+        testRead(design, grid);
+    }
+
+    @Test
     public void testSelectionMode() {
         String design = "<v-grid selection-mode='none'>";
         assertSame(NoSelectionModel.class, read(design).getSelectionModel()
