@@ -15,11 +15,18 @@
  */
 package com.vaadin.tests.server.component.label;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link Label}.
@@ -30,66 +37,85 @@ import com.vaadin.ui.Label;
 public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
-    public void testDefaultRead() {
-        testRead(getDefaultDesign(), getDefaultExpected());
+    public void testEmpty() {
+        String design = "<v-label />";
+        Label l = new Label();
+        l.setContentMode(ContentMode.HTML);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
     @Test
-    public void testDefaultWrite() {
-        testWrite(getDefaultDesign(), getDefaultExpected());
-    }
-
-    protected String getDefaultDesign() {
-        return "<v-label>Hello world!</v-label>";
-    }
-
-    protected Label getDefaultExpected() {
-        Label tf = new Label();
-        tf.setContentMode(ContentMode.HTML);
-        tf.setValue("Hello world!");
-        return tf;
-    };
-
-    @Test
-    public void testRichRead() {
-        testRead(getRichDesign(), getRichExpected());
+    public void testDefault() {
+        String design = "<v-label>Hello world!</v-label>";
+        Label l = createLabel("Hello world!", null, true);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
     @Test
-    public void testRichWrite() {
-        testWrite(getRichDesign(), getRichExpected());
-    }
-
-    protected String getRichDesign() {
-        return "<v-label>This is <b><u>Rich</u></b> content!</v-label>";
-    }
-
-    protected Label getRichExpected() {
-        Label tf = new Label();
-        tf.setContentMode(ContentMode.HTML);
-        tf.setValue("This is \n<b><u>Rich</u></b> content!");
-        return tf;
-    };
-
-    @Test
-    public void testPlainTextRead() {
-        testRead(getPlainTextDesign(), getPlainTextExpected());
+    public void testRich() {
+        String design = "<v-label>This is <b><u>Rich</u></b> content!</v-label>";
+        Label l = createLabel("This is \n<b><u>Rich</u></b> content!", null,
+                true);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
     @Test
-    public void testPlainTextWrite() {
-        testWrite(getPlainTextDesign(), getPlainTextExpected());
+    public void testPlainText() {
+        String design = "<v-label plain-text>This is only <b>text</b>"
+                + " and will contain visible tags</v-label>";
+        Label l = createLabel(
+                "This is only \n<b>text</b> and will contain visible tags",
+                null, false);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
-    protected String getPlainTextDesign() {
-        return "<v-label plain-text>This is only <b>text</b> and will contain visible tags</v-label>";
+    @Test
+    public void testContentAndCaption() {
+        String design = "<v-label caption='This is a label'>This is <b><u>Rich</u></b> "
+                + "content!</v-label>";
+        Label l = createLabel("This is \n<b><u>Rich</u></b> content!",
+                "This is a label", true);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
-    protected Label getPlainTextExpected() {
-        Label tf = new Label();
-        tf.setContentMode(ContentMode.TEXT);
-        tf.setValue("This is only \n<b>text</b> and will contain visible tags");
-        return tf;
-    };
+    @Test
+    public void testCaption() {
+        String design = "<v-label caption='This is a label' />";
+        Label l = createLabel(null, "This is a label", true);
+        testRead(design, l);
+        testWrite(design, l);
+    }
 
+    @Test
+    public void testWriteContentMode() {
+        // test that the plain-text attribute is overwritten by writeDesign
+        DesignContext ctx = new DesignContext();
+        Label l = new Label("label");
+        l.setContentMode(ContentMode.TEXT);
+        Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
+        l.writeDesign(e, ctx);
+        assertTrue("Label should be marked as plain text",
+                e.hasAttr("plain-text"));
+        l.setContentMode(ContentMode.HTML);
+        l.writeDesign(e, ctx);
+        assertFalse("Label should not be marked as plain text",
+                e.hasAttr("plain-text"));
+    }
+
+    private Label createLabel(String content, String caption, boolean html) {
+        Label label = new Label();
+        label.setContentMode(html ? ContentMode.HTML : ContentMode.TEXT);
+        if (content != null) {
+            label.setValue(content);
+        }
+        if (caption != null) {
+            label.setCaption(caption);
+        }
+        return label;
+    }
 }
