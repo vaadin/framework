@@ -3204,6 +3204,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     isHidable(), def.hidable, boolean.class);
             DesignAttributeHandler.writeAttribute("hidden", attributes,
                     isHidden(), def.hidden, boolean.class);
+            DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
+                    attributes, getHidingToggleCaption(),
+                    SharedUtil.propertyIdToHumanFriendly(getPropertyId()),
+                    String.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -3236,6 +3240,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             if (design.hasAttr("hidden")) {
                 setHidden(DesignAttributeHandler.readAttribute("hidden",
                         attributes, boolean.class));
+            }
+            if (design.hasAttr("hiding-toggle-caption")) {
+                setHidingToggleCaption(DesignAttributeHandler.readAttribute(
+                        "hiding-toggle-caption", attributes, String.class));
             }
             // Read size info where necessary.
             if (design.hasAttr("width")) {
