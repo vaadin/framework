@@ -12,17 +12,15 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
-import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.VerticalLayout;
 
-public class TableQueryWithNonUniqueFirstPrimaryKey extends LegacyApplication {
+public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractTestUI {
+
     @Override
-    public void init() {
-        LegacyWindow mainWindow = new LegacyWindow("Test Application");
-        setMainWindow(mainWindow);
+    public void setup(VaadinRequest request) {
 
         try {
             JDBCConnectionPool connectionPool = new SimpleJDBCConnectionPool(
@@ -40,9 +38,6 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends LegacyApplication {
             // myContainer.addOrderBy(new OrderBy("NUMERO", true));
             myContainer.removeAllContainerFilters();
             myContainer.addContainerFilter(new Equal("PFX", "C"));
-
-            VerticalLayout layout = new VerticalLayout();
-            mainWindow.setContent(layout);
 
             final ComboBox myCombo = new ComboBox("MyCaption");
             myCombo.setDescription("Description");
@@ -64,7 +59,7 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends LegacyApplication {
                     }
                 }
             });
-            layout.addComponent(myCombo);
+            addComponent(myCombo);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -121,5 +116,15 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends LegacyApplication {
         } finally {
             connectionPool.releaseConnection(conn);
         }
+    }
+
+    @Override
+    protected String getTestDescription() {
+        return "Ensure unique ordering when using TableQuery with multiple primary key columns.";
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 10878;
     }
 }

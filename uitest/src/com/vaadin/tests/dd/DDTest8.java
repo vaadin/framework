@@ -10,8 +10,9 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Or;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
@@ -20,36 +21,48 @@ import com.vaadin.ui.Tree.TreeTargetDetails;
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
  */
-public class DDTest8 extends TestBase {
+public class DDTest8 extends AbstractTestUI {
 
     @Override
-    protected void setup() {
-        final Tree t = new Tree(
+    protected void setup(VaadinRequest request) {
+        final Tree tree = new Tree(
                 "Tree with criteria from AbstractSelect (OverItem, ContainsItem). Foo can be dragged anywhere, anything can be dropped on Foo or Bar. Bar5 subtree is also valid drop target.");
 
-        final HierarchicalContainer idx = new HierarchicalContainer();
-        t.setContainerDataSource(idx);
-        t.addItem("Foo");
-        t.addItem("Bar");
-        t.addItem("Bar1");
-        t.addItem("Bar2");
-        t.addItem("Bar3");
-        t.addItem("Bar4");
-        t.addItem("Bar5");
-        t.addItem("Child");
-        t.setParent("Child", "Foo");
-        t.setSizeFull();
-        t.setDragMode(TreeDragMode.NODE);
+        final HierarchicalContainer container = new HierarchicalContainer();
+        tree.setContainerDataSource(container);
+        tree.addItem("Foo");
+        tree.addItem("Bar");
+        tree.addItem("Bar1");
+        tree.addItem("Bar2");
+        tree.addItem("Bar3");
+        tree.addItem("Bar4");
+        tree.addItem("Bar5");
+        tree.addItem("Child");
+        tree.setParent("Child", "Foo");
+        tree.setSizeFull();
+        tree.setDragMode(TreeDragMode.NODE);
+        tree.setDropHandler(getDropHandler(tree, container));
 
-        /*
-         * Moves items in tree (and could work in Table too). Also supports
-         * "building" tree.
-         * 
-         * TODO fix algorithm, broken in some cases.
-         */
-        DropHandler itemSorter = new DropHandler() {
+        getLayout().setSizeFull();
+        getLayout().getParent().setSizeFull();
+        addComponent(tree);
+    }
 
-            @SuppressWarnings("unused")
+    /**
+     * Moves items in tree (and could work in Table too). Also supports
+     * "building" tree.
+     * 
+     * TODO fix algorithm, broken in some cases.
+     * 
+     * @param tree
+     * @param container
+     * @return drop handler
+     */
+    private DropHandler getDropHandler(final Tree tree,
+            final HierarchicalContainer container) {
+        return new DropHandler() {
+
+            @SuppressWarnings({ "unused", "unchecked" })
             private void populateSubTree(HierarchicalContainer idx,
                     HierarchicalContainer subtree, Object itemId) {
                 Collection<?> children = subtree.getChildren(itemId);
@@ -91,6 +104,7 @@ public class DDTest8 extends TestBase {
                 return hierarchicalContainer;
             }
 
+            @SuppressWarnings("unchecked")
             private void copyChildren(HierarchicalContainer source,
                     HierarchicalContainer target, Object itemId) {
                 Collection<?> children = source.getChildren(itemId);
@@ -135,16 +149,16 @@ public class DDTest8 extends TestBase {
                     Object itemIdAfter = details.getItemIdAfter();
 
                     if (itemIdOver.equals(itemIdInto)) { // directly on a node
-                        t.setParent(itemId, itemIdOver);
+                        container.setParent(itemId, itemIdOver);
                         return;
                     }
 
-                    idx.setParent(itemId, itemIdInto);
+                    container.setParent(itemId, itemIdInto);
 
                     if (dropLocation == null) {
                         System.err.println("No detail of drop place available");
                     }
-                    idx.moveAfterSibling(itemId, itemIdAfter);
+                    container.moveAfterSibling(itemId, itemIdAfter);
                 }
 
                 return;
@@ -152,23 +166,17 @@ public class DDTest8 extends TestBase {
 
             @Override
             public AcceptCriterion getAcceptCriterion() {
-                return new Or(new AbstractSelect.TargetItemIs(t, "Foo", "Bar"),
-                        new AbstractSelect.AcceptItem(t, "Foo"),
-                        t.new TargetInSubtree("Bar5") //
+                return new Or(new AbstractSelect.TargetItemIs(tree, "Foo",
+                        "Bar"), new AbstractSelect.AcceptItem(tree, "Foo"),
+                        tree.new TargetInSubtree("Bar5") //
                 );
             }
 
         };
-
-        t.setDropHandler(itemSorter);
-
-        getLayout().setSizeFull();
-        addComponent(t);
-
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Random DD tests";
     }
 

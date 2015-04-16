@@ -22,7 +22,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
-public class PollListenerTest extends AbstractTestUI {
+public class PollListening extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

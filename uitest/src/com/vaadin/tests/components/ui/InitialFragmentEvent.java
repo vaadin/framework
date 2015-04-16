@@ -3,15 +3,13 @@ package com.vaadin.tests.components.ui;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.util.Log;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class InitialFragmentEvent extends AbstractTestUI {
+public class InitialFragmentEvent extends AbstractTestUIWithLog {
 
     private String lastKnownFragment = "\"no event received\"";
-    private Log log = new Log(5);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -22,28 +20,25 @@ public class InitialFragmentEvent extends AbstractTestUI {
                     public void uriFragmentChanged(
                             UriFragmentChangedEvent source) {
                         String newFragment = source.getUriFragment();
-                        log.log("Fragment changed from " + lastKnownFragment
+                        log("Fragment changed from " + lastKnownFragment
                                 + " to " + newFragment);
                         lastKnownFragment = newFragment;
                     }
                 });
-        addComponent(log);
-        addComponent(new Button("Set fragment to 'foo'",
-                new Button.ClickListener() {
+        addButton("Set fragment to 'foo'", new Button.ClickListener() {
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        setFragment("foo");
-                    }
-                }));
-        addComponent(new Button("Set fragment to 'bar'",
-                new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                setFragment("foo");
+            }
+        });
+        addButton("Set fragment to 'bar'", new Button.ClickListener() {
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        setFragment("bar");
-                    }
-                }));
+            @Override
+            public void buttonClick(ClickEvent event) {
+                setFragment("bar");
+            }
+        });
     }
 
     protected void setFragment(String fragment) {
@@ -52,14 +47,12 @@ public class InitialFragmentEvent extends AbstractTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return 9558;
     }
 
     @Override
     protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "URI fragment handling should fire for initial fragment change";
     }
 
 }

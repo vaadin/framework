@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.util.Log;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,14 +29,13 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.TwinColSelect;
 
-public class TabIndexes extends AbstractTestUI {
+@SuppressWarnings("rawtypes")
+public class TabIndexes extends AbstractTestUIWithLog {
 
     private List<AbstractField> fields;
-    private Log log = new Log(5);
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(log);
         HorizontalLayout buttonLayout = new HorizontalLayout();
         addComponent(buttonLayout);
         Button clearTabIndexes = new Button("Set all tab indexes to 0");
@@ -45,7 +43,7 @@ public class TabIndexes extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                log.log("Setting tab indexes to 0");
+                log("Setting tab indexes to 0");
                 for (AbstractField f : fields) {
                     f.setTabIndex(0);
                 }
@@ -57,7 +55,7 @@ public class TabIndexes extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                log.log("Setting tab indexes to 1");
+                log("Setting tab indexes to 1");
                 for (AbstractField f : fields) {
                     f.setTabIndex(1);
                 }
@@ -70,7 +68,7 @@ public class TabIndexes extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 int tabIndex = 1;
-                log.log("Setting tab indexes to 1..N");
+                log("Setting tab indexes to 1..N");
                 for (AbstractField f : fields) {
                     f.setTabIndex(tabIndex++);
                 }
@@ -84,7 +82,7 @@ public class TabIndexes extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 int tabIndex = fields.size();
-                log.log("Setting tab indexes to N..1");
+                log("Setting tab indexes to N..1");
                 for (AbstractField f : fields) {
                     f.setTabIndex(tabIndex--);
                 }
@@ -153,8 +151,7 @@ public class TabIndexes extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Tab index should be propagated into html";
     }
 
 }
