@@ -5977,10 +5977,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             setEditorEnabled(DesignAttributeHandler.readAttribute("editable",
                     attrs, boolean.class));
         }
-        if (attrs.hasKey("frozen-columns")) {
-            setFrozenColumnCount(DesignAttributeHandler.readAttribute(
-                    "frozen-columns", attrs, int.class));
-        }
         if (attrs.hasKey("rows")) {
             setHeightByRows(DesignAttributeHandler.readAttribute("rows", attrs,
                     double.class));
@@ -6036,6 +6032,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     footer.readDesign(child, context);
                 }
             }
+        }
+
+        // Read frozen columns after columns are read.
+        if (attrs.hasKey("frozen-columns")) {
+            setFrozenColumnCount(DesignAttributeHandler.readAttribute(
+                    "frozen-columns", attrs, int.class));
         }
     }
 
