@@ -50,8 +50,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -61,9 +59,10 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
+import com.vaadin.client.communication.CommunicationProblemEvent;
+import com.vaadin.client.communication.CommunicationProblemHandler;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.JsonDecoder;
@@ -176,6 +175,9 @@ public class ApplicationConnection implements HasHandlers {
      * </pre>
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
+
+    private final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
+    private final String JSON_COMMUNICATION_SUFFIX = "]";
 
     // will hold the CSRF token once received
     private String csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
@@ -487,6 +489,9 @@ public class ApplicationConnection implements HasHandlers {
         loadingIndicator.setConnection(this);
         serverRpcQueue = GWT.create(ServerRpcQueue.class);
         serverRpcQueue.setConnection(this);
+        communicationProblemHandler = GWT
+                .create(CommunicationProblemHandler.class);
+        communicationProblemHandler.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -820,21 +825,8 @@ public class ApplicationConnection implements HasHandlers {
         uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
                 + "=" + configuration.getUIId());
 
-        doUidlRequest(uri, payload);
-
-    }
-
-    /**
-     * Sends an asynchronous or synchronous UIDL request to the server using the
-     * given URI.
-     * 
-     * @param uri
-     *            The URI to use for the request. May includes GET parameters
-     * @param payload
-     *            The contents of the request to send
-     */
-    protected void doUidlRequest(final String uri, final JsonObject payload) {
         doUidlRequest(uri, payload, true);
+
     }
 
     /**
@@ -849,21 +841,16 @@ public class ApplicationConnection implements HasHandlers {
      *            true when a status code 0 should be retried
      * @since 7.3.7
      */
-    protected void doUidlRequest(final String uri, final JsonObject payload,
+    public void doUidlRequest(final String uri, final JsonObject payload,
             final boolean retry) {
         RequestCallback requestCallback = new RequestCallback() {
+
             @Override
             public void onError(Request request, Throwable exception) {
-                handleError(exception.getMessage(), -1);
-            }
-
-            private void handleError(String details, int statusCode) {
-                handleCommunicationError(details, statusCode);
-                endRequest();
-
-                // Consider application not running any more and prevent all
-                // future requests
-                setApplicationRunning(false);
+                getCommunicationProblemHandler().xhrException(
+                        payload,
+                        new CommunicationProblemEvent(request, uri, payload,
+                                exception));
             }
 
             @Override
@@ -875,105 +862,40 @@ public class ApplicationConnection implements HasHandlers {
 
                 int statusCode = response.getStatusCode();
 
-                switch (statusCode) {
-                case 0:
-                    if (retry) {
-                        /*
-                         * There are 2 situations where the error can pop up:
-                         * 
-                         * 1) Request was most likely canceled because the
-                         * browser is maybe navigating away from the page. Just
-                         * send the request again without displaying any error
-                         * in case the navigation isn't carried through.
-                         * 
-                         * 2) The browser failed to establish a network
-                         * connection. This was observed with keep-alive
-                         * requests, and under wi-fi roaming conditions.
-                         * 
-                         * Status code 0 does indicate that there was no server
-                         * side processing, so we can retry the request.
-                         */
-                        getLogger().warning("Status code 0, retrying");
-                        (new Timer() {
-                            @Override
-                            public void run() {
-                                doUidlRequest(uri, payload, false);
-                            }
-                        }).schedule(100);
-                    } else {
-                        handleError("Invalid status code 0 (server down?)",
-                                statusCode);
-                    }
-                    return;
+                if (statusCode != 200) {
+                    // There was a problem
+                    CommunicationProblemEvent problemEvent = new CommunicationProblemEvent(
+                            request, uri, payload, response);
 
-                case 401:
-                    /*
-                     * Authorization has failed. Could be that the session has
-                     * timed out and the container is redirecting to a login
-                     * page.
-                     */
-                    showAuthenticationError("");
-                    endRequest();
-                    return;
-
-                case 503:
-                    /*
-                     * We'll assume msec instead of the usual seconds. If
-                     * there's no Retry-After header, handle the error like a
-                     * 500, as per RFC 2616 section 10.5.4.
-                     */
-                    String delay = response.getHeader("Retry-After");
-                    if (delay != null) {
-                        getLogger().warning(
-                                "503, retrying in " + delay + "msec");
-                        (new Timer() {
-                            @Override
-                            public void run() {
-                                doUidlRequest(uri, payload);
-                            }
-                        }).schedule(Integer.parseInt(delay));
-                        return;
-                    }
-                }
-
-                if ((statusCode / 100) == 4) {
-                    // Handle all 4xx errors the same way as (they are
-                    // all permanent errors)
-                    showCommunicationError(
-                            "UIDL could not be read from server. Check servlets mappings. Error code: "
-                                    + statusCode, statusCode);
-                    endRequest();
-                    return;
-                } else if ((statusCode / 100) == 5) {
-                    // Something's wrong on the server, there's nothing the
-                    // client can do except maybe try again.
-                    handleError("Server error. Error code: " + statusCode,
-                            statusCode);
+                    getCommunicationProblemHandler().xhrInvalidStatusCode(
+                            problemEvent, retry);
                     return;
                 }
 
                 String contentType = response.getHeader("Content-Type");
                 if (contentType == null
                         || !contentType.startsWith("application/json")) {
-                    /*
-                     * A servlet filter or equivalent may have intercepted the
-                     * request and served non-UIDL content (for instance, a
-                     * login page if the session has expired.) If the response
-                     * contains a magic substring, do a synchronous refresh. See
-                     * #8241.
-                     */
-                    MatchResult refreshToken = RegExp.compile(
-                            UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)").exec(
-                            response.getText());
-                    if (refreshToken != null) {
-                        redirect(refreshToken.getGroup(2));
-                        return;
-                    }
+                    getCommunicationProblemHandler().xhrInvalidContent(
+                            new CommunicationProblemEvent(request, uri,
+                                    payload, response));
+                    return;
                 }
 
-                // for(;;);[realjson]
-                final String jsonText = response.getText().substring(9,
-                        response.getText().length() - 1);
+                // for(;;);["+ realJson +"]"
+                String responseText = response.getText();
+
+                if (!responseText.startsWith(JSON_COMMUNICATION_PREFIX)) {
+                    getCommunicationProblemHandler().xhrInvalidContent(
+                            new CommunicationProblemEvent(request, uri,
+                                    payload, response));
+                    return;
+                }
+
+                final String jsonText = responseText.substring(
+                        JSON_COMMUNICATION_PREFIX.length(),
+                        responseText.length()
+                                - JSON_COMMUNICATION_SUFFIX.length());
+
                 handleJSONText(jsonText, statusCode);
             }
         };
@@ -983,8 +905,8 @@ public class ApplicationConnection implements HasHandlers {
             try {
                 doAjaxRequest(uri, payload, requestCallback);
             } catch (RequestException e) {
-                getLogger().log(Level.SEVERE, "Error in server request", e);
-                endRequest();
+                getCommunicationProblemHandler().xhrException(payload,
+                        new CommunicationProblemEvent(null, uri, payload, e));
             }
         }
     }
@@ -1125,6 +1047,8 @@ public class ApplicationConnection implements HasHandlers {
     private int lastSeenServerSyncId = UNDEFINED_SYNC_ID;
 
     protected ServerRpcQueue serverRpcQueue;
+    protected CommunicationProblemHandler communicationProblemHandler;
+
     /**
      * The value of an undefined sync id.
      * <p>
@@ -1192,7 +1116,7 @@ public class ApplicationConnection implements HasHandlers {
      * @param details
      *            Optional details.
      */
-    protected void showAuthenticationError(String details) {
+    public void showAuthenticationError(String details) {
         getLogger().severe("Authentication error: " + details);
         showError(details, configuration.getAuthorizationError());
     }
@@ -1231,7 +1155,7 @@ public class ApplicationConnection implements HasHandlers {
         eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
-    protected void endRequest() {
+    public void endRequest() {
         if (!hasActiveRequest) {
             getLogger().severe("No active request");
         }
@@ -1345,11 +1269,11 @@ public class ApplicationConnection implements HasHandlers {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-    	try {
-    		return JSON.parse(jsonText);
-    	} catch (ignored) {
-    		return eval('(' + jsonText + ')');
-    	}
+       try {
+               return JSON.parse(jsonText);
+       } catch (ignored) {
+               return eval('(' + jsonText + ')');
+       }
     }-*/;
 
     private void handleReceivedJSONMessage(Date start, String jsonText,
@@ -1448,7 +1372,7 @@ public class ApplicationConnection implements HasHandlers {
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
             getLogger().info("redirecting to " + url);
-            redirect(url);
+            WidgetUtil.redirect(url);
             return;
         }
 
@@ -1534,7 +1458,8 @@ public class ApplicationConnection implements HasHandlers {
                         redirectTimer = new Timer() {
                             @Override
                             public void run() {
-                                redirect(timedRedirect.getString("url"));
+                                WidgetUtil.redirect(timedRedirect
+                                        .getString("url"));
                             }
                         };
                         sessionExpirationInterval = timedRedirect
@@ -2607,16 +2532,6 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    // Redirect browser, null reloads current page
-    public static native void redirect(String url)
-    /*-{
-    	if (url) {
-    		$wnd.location = url;
-    	} else {
-    		$wnd.location.reload(false);
-    	}
-    }-*/;
-
     private void addVariableToQueue(String connectorId, String variableName,
             Object value, boolean immediate) {
         boolean lastOnly = !immediate;
@@ -2637,18 +2552,18 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     public void doSendPendingVariableChanges() {
-        if (isApplicationRunning()) {
-            if (hasActiveRequest() || (push != null && !push.isActive())) {
-                // There is an active request or push is enabled but not active
-                // -> send when current request completes or push becomes active
-            } else {
-                sendInvocationsToServer();
-            }
-        } else {
+        if (!isApplicationRunning()) {
             getLogger()
                     .warning(
-                            "Trying to send variable changes from not yet started or stopped application");
+                            "Trying to send RPC from not yet started or stopped application");
             return;
+        }
+
+        if (hasActiveRequest() || (push != null && !push.isActive())) {
+            // There is an active request or push is enabled but not active
+            // -> send when current request completes or push becomes active
+        } else {
+            sendInvocationsToServer();
         }
     }
 
@@ -3357,7 +3272,7 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    private void handleCommunicationError(String details, int statusCode) {
+    public void handleCommunicationError(String details, int statusCode) {
         boolean handled = false;
         if (communicationErrorDelegate != null) {
             handled = communicationErrorDelegate.onError(details, statusCode);
@@ -3567,5 +3482,14 @@ public class ApplicationConnection implements HasHandlers {
      */
     public ServerRpcQueue getServerRpcQueue() {
         return serverRpcQueue;
+    }
+
+    /**
+     * Gets the communication error handler for this application
+     * 
+     * @return the server RPC queue
+     */
+    public CommunicationProblemHandler getCommunicationProblemHandler() {
+        return communicationProblemHandler;
     }
 }

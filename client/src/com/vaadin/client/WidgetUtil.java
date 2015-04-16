@@ -65,6 +65,23 @@ public class WidgetUtil {
     }-*/;
 
     /**
+     * Redirects the browser to the given url or refreshes the page if url is
+     * null
+     * 
+     * @since
+     * @param url
+     *            The url to redirect to or null to refresh
+     */
+    public static native void redirect(String url)
+    /*-{
+        if (url) {
+                $wnd.location = url;
+        } else {
+                $wnd.location.reload(false);
+        }
+    }-*/;
+
+    /**
      * Helper method for a bug fix #14041. For mozilla getKeyCode return 0 for
      * space bar (because space is considered as char). If return 0 use
      * getCharCode.

@@ -72,11 +72,11 @@ public class MockApplicationConnection extends ApplicationConnection {
     }
 
     @Override
-    protected void doUidlRequest(String uri, JsonObject payload) {
+    public void doUidlRequest(String uri, JsonObject payload, boolean retry) {
         JsonValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
         lastCsrfTokenSent = jsonValue != null ? jsonValue.toJson() : null;
 
-        super.doUidlRequest(uri, payload);
+        super.doUidlRequest(uri, payload, retry);
     }
 
 }
