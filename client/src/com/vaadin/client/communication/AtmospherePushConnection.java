@@ -339,7 +339,7 @@ public class AtmospherePushConnection implements PushConnection {
             getLogger().info("Received push message: " + message);
             // "for(;;);[{json}]" -> "{json}"
             message = message.substring(9, message.length() - 1);
-            connection.handlePushMessage(message);
+            connection.getServerMessageHandler().handleJSONText(message, 200);
         }
     }
 

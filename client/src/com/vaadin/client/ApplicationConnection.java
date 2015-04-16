@@ -36,29 +36,20 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
-import com.vaadin.client.communication.CommunicationProblemEvent;
 import com.vaadin.client.communication.CommunicationProblemHandler;
 import com.vaadin.client.communication.Heartbeat;
-import com.vaadin.client.communication.PushConnection;
 import com.vaadin.client.communication.RpcManager;
+import com.vaadin.client.communication.ServerCommunicationHandler;
 import com.vaadin.client.communication.ServerMessageHandler;
 import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.componentlocator.ComponentLocator;
@@ -73,17 +64,12 @@ import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
-import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.shared.util.SharedUtil;
 
 import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -137,9 +123,6 @@ public class ApplicationConnection implements HasHandlers {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
-    private final String JSON_COMMUNICATION_SUFFIX = "]";
-
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
     private WidgetSet widgetSet;
@@ -148,29 +131,14 @@ public class ApplicationConnection implements HasHandlers {
 
     private final UIConnector uIConnector;
 
-    private boolean hasActiveRequest = false;
-
-    /**
-     * Webkit will ignore outgoing requests while waiting for a response to a
-     * navigation event (indicated by a beforeunload event). When this happens,
-     * we should keep trying to send the request every now and then until there
-     * is a response or until it throws an exception saying that it is already
-     * being sent.
-     */
-    private boolean webkitMaybeIgnoringRequests = false;
-
     protected boolean cssLoaded = false;
 
     /** Parameters for this application connection loaded from the web-page */
     private ApplicationConfiguration configuration;
 
-    private Date requestStartTime;
-
     private final LayoutManager layoutManager;
 
     private final RpcManager rpcManager;
-
-    private PushConnection push;
 
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
@@ -405,6 +373,9 @@ public class ApplicationConnection implements HasHandlers {
         communicationProblemHandler.setConnection(this);
         serverMessageHandler = GWT.create(ServerMessageHandler.class);
         serverMessageHandler.setConnection(this);
+        serverCommunicationHandler = GWT
+                .create(ServerCommunicationHandler.class);
+        serverCommunicationHandler.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -443,13 +414,6 @@ public class ApplicationConnection implements HasHandlers {
 
         heartbeat.init(this);
 
-        Window.addWindowClosingHandler(new ClosingHandler() {
-            @Override
-            public void onWindowClosing(ClosingEvent event) {
-                webkitMaybeIgnoringRequests = true;
-            }
-        });
-
         // Ensure the overlay container is added to the dom and set as a live
         // area for assistive devices
         Element overlayContainer = VOverlay.getOverlayContainer(this);
@@ -476,9 +440,10 @@ public class ApplicationConnection implements HasHandlers {
             repaintAll();
         } else {
             // initial UIDL provided in DOM, continue as if returned by request
+
             // Hack to avoid logging an error in endRequest()
-            startRequest();
-            handleJSONText(jsonText, -1);
+            getServerCommunicationHandler().startRequest();
+            getServerMessageHandler().handleJSONText(jsonText, -1);
         }
 
         // Tooltip can't be created earlier because the
@@ -502,7 +467,8 @@ public class ApplicationConnection implements HasHandlers {
      */
     private boolean isActive() {
         return !getServerMessageHandler().isInitialUidlHandled()
-                || isWorkPending() || hasActiveRequest()
+                || isWorkPending()
+                || getServerCommunicationHandler().hasActiveRequest()
                 || isExecutingDeferredCommands();
     }
 
@@ -613,7 +579,7 @@ public class ApplicationConnection implements HasHandlers {
      * 
      * @param appId
      */
-    private static native void runPostRequestHooks(String appId)
+    public static native void runPostRequestHooks(String appId)
     /*-{
     	if ($wnd.vaadin.postRequestHooks) {
     		for ( var hook in $wnd.vaadin.postRequestHooks) {
@@ -635,7 +601,7 @@ public class ApplicationConnection implements HasHandlers {
      * session even though the server side considers the session to be active.
      * See ticket #8305 for more information.
      */
-    protected native void extendLiferaySession()
+    public static native void extendLiferaySession()
     /*-{
     if ($wnd.Liferay && $wnd.Liferay.Session) {
         $wnd.Liferay.Session.extend();
@@ -646,24 +612,15 @@ public class ApplicationConnection implements HasHandlers {
     }
     }-*/;
 
-    /**
-     * Indicates whether or not there are currently active UIDL requests. Used
-     * internally to sequence requests properly, seldom needed in Widgets.
-     * 
-     * @return true if there are active requests
-     */
-    public boolean hasActiveRequest() {
-        return hasActiveRequest;
-    }
-
-    private String getRepaintAllParameters() {
+    public String getRepaintAllParameters() {
         String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
                 + "=1";
         return parameters;
     }
 
     public void repaintAll() {
-        makeUidlRequest(Json.createArray(), getRepaintAllParameters());
+        getServerCommunicationHandler().makeUidlRequest(Json.createArray(),
+                getRepaintAllParameters());
     }
 
     /**
@@ -691,231 +648,16 @@ public class ApplicationConnection implements HasHandlers {
         getUIConnector().showServerDebugInfo(serverConnector);
     }
 
-    /**
-     * Makes an UIDL request to the server.
-     * 
-     * @param reqInvocations
-     *            Data containing RPC invocations and all related information.
-     * @param extraParams
-     *            Parameters that are added as GET parameters to the url.
-     *            Contains key=value pairs joined by & characters or is empty if
-     *            no parameters should be added. Should not start with any
-     *            special character.
-     */
-    protected void makeUidlRequest(final JsonArray reqInvocations,
-            final String extraParams) {
-        startRequest();
-
-        JsonObject payload = Json.createObject();
-        String csrfToken = getServerMessageHandler().getCsrfToken();
-        if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
-            payload.put(ApplicationConstants.CSRF_TOKEN, csrfToken);
-        }
-        payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
-        payload.put(ApplicationConstants.SERVER_SYNC_ID,
-                getServerMessageHandler().getLastSeenServerSyncId());
-
-        getLogger()
-                .info("Making UIDL Request with params: " + payload.toJson());
-        String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                + ApplicationConstants.UIDL_PATH + '/');
-
-        if (extraParams != null && extraParams.length() > 0) {
-            if (extraParams.equals(getRepaintAllParameters())) {
-                payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
-            } else {
-                uri = SharedUtil.addGetParameters(uri, extraParams);
-            }
-        }
-        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
-                + "=" + configuration.getUIId());
-
-        doUidlRequest(uri, payload, true);
-
-    }
-
-    /**
-     * Sends an asynchronous or synchronous UIDL request to the server using the
-     * given URI.
-     * 
-     * @param uri
-     *            The URI to use for the request. May includes GET parameters
-     * @param payload
-     *            The contents of the request to send
-     * @param retry
-     *            true when a status code 0 should be retried
-     * @since 7.3.7
-     */
-    public void doUidlRequest(final String uri, final JsonObject payload,
-            final boolean retry) {
-        RequestCallback requestCallback = new RequestCallback() {
-
-            @Override
-            public void onError(Request request, Throwable exception) {
-                getCommunicationProblemHandler().xhrException(
-                        payload,
-                        new CommunicationProblemEvent(request, uri, payload,
-                                exception));
-            }
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                getLogger().info(
-                        "Server visit took "
-                                + String.valueOf((new Date()).getTime()
-                                        - requestStartTime.getTime()) + "ms");
-
-                int statusCode = response.getStatusCode();
-
-                if (statusCode != 200) {
-                    // There was a problem
-                    CommunicationProblemEvent problemEvent = new CommunicationProblemEvent(
-                            request, uri, payload, response);
-
-                    getCommunicationProblemHandler().xhrInvalidStatusCode(
-                            problemEvent, retry);
-                    return;
-                }
-
-                String contentType = response.getHeader("Content-Type");
-                if (contentType == null
-                        || !contentType.startsWith("application/json")) {
-                    getCommunicationProblemHandler().xhrInvalidContent(
-                            new CommunicationProblemEvent(request, uri,
-                                    payload, response));
-                    return;
-                }
-
-                // for(;;);["+ realJson +"]"
-                String responseText = response.getText();
-
-                if (!responseText.startsWith(JSON_COMMUNICATION_PREFIX)) {
-                    getCommunicationProblemHandler().xhrInvalidContent(
-                            new CommunicationProblemEvent(request, uri,
-                                    payload, response));
-                    return;
-                }
-
-                final String jsonText = responseText.substring(
-                        JSON_COMMUNICATION_PREFIX.length(),
-                        responseText.length()
-                                - JSON_COMMUNICATION_SUFFIX.length());
-
-                handleJSONText(jsonText, statusCode);
-            }
-        };
-        if (push != null) {
-            push.push(payload);
-        } else {
-            try {
-                doAjaxRequest(uri, payload, requestCallback);
-            } catch (RequestException e) {
-                getCommunicationProblemHandler().xhrException(payload,
-                        new CommunicationProblemEvent(null, uri, payload, e));
-            }
-        }
-    }
-
-    /**
-     * Handles received UIDL JSON text, parsing it, and passing it on to the
-     * appropriate handlers, while logging timing information.
-     * 
-     * @param jsonText
-     * @param statusCode
-     */
-    private void handleJSONText(String jsonText, int statusCode) {
-        final Date start = new Date();
-        final ValueMap json;
-        try {
-            json = parseJSONResponse(jsonText);
-        } catch (final Exception e) {
-            endRequest();
-            showCommunicationError(e.getMessage() + " - Original JSON-text:"
-                    + jsonText, statusCode);
-            return;
-        }
-
-        getLogger().info(
-                "JSON parsing took " + (new Date().getTime() - start.getTime())
-                        + "ms");
-        if (getState() == State.RUNNING) {
-            getServerMessageHandler().handleUIDLMessage(start, jsonText, json);
-        } else if (getState() == State.INITIALIZING) {
-            // Application is starting up for the first time
-            setApplicationRunning(true);
-            handleWhenCSSLoaded(jsonText, json);
-        } else {
-            getLogger()
-                    .warning(
-                            "Ignored received message because application has already been stopped");
-            return;
-        }
-    }
-
-    /**
-     * Sends an asynchronous UIDL request to the server using the given URI.
-     * 
-     * @param uri
-     *            The URI to use for the request. May includes GET parameters
-     * @param payload
-     *            The contents of the request to send
-     * @param requestCallback
-     *            The handler for the response
-     * @throws RequestException
-     *             if the request could not be sent
-     */
-    protected void doAjaxRequest(String uri, JsonObject payload,
-            RequestCallback requestCallback) throws RequestException {
-        RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
-        // TODO enable timeout
-        // rb.setTimeoutMillis(timeoutMillis);
-        // TODO this should be configurable
-        rb.setHeader("Content-Type", JsonConstants.JSON_CONTENT_TYPE);
-        rb.setRequestData(payload.toJson());
-        rb.setCallback(requestCallback);
-
-        final Request request = rb.send();
-        if (webkitMaybeIgnoringRequests && BrowserInfo.get().isWebkit()) {
-            final int retryTimeout = 250;
-            new Timer() {
-                @Override
-                public void run() {
-                    // Use native js to access private field in Request
-                    if (resendRequest(request) && webkitMaybeIgnoringRequests) {
-                        // Schedule retry if still needed
-                        schedule(retryTimeout);
-                    }
-                }
-            }.schedule(retryTimeout);
-        }
-    }
-
-    private static native boolean resendRequest(Request request)
-    /*-{
-        var xhr = request.@com.google.gwt.http.client.Request::xmlHttpRequest
-        if (xhr.readyState != 1) {
-            // Progressed to some other readyState -> no longer blocked
-            return false;
-        }
-        try {
-            xhr.send();
-            return true;
-        } catch (e) {
-            // send throws exception if it is running for real
-            return false;
-        }
-    }-*/;
-
     int cssWaits = 0;
 
     protected ServerRpcQueue serverRpcQueue;
     protected CommunicationProblemHandler communicationProblemHandler;
     protected ServerMessageHandler serverMessageHandler;
+    protected ServerCommunicationHandler serverCommunicationHandler;
 
     static final int MAX_CSS_WAITS = 100;
 
-    protected void handleWhenCSSLoaded(final String jsonText,
-            final ValueMap json) {
+    public void handleWhenCSSLoaded(final String jsonText, final ValueMap json) {
         if (!isCSSLoaded() && cssWaits < MAX_CSS_WAITS) {
             (new Timer() {
                 @Override
@@ -962,7 +704,7 @@ public class ApplicationConnection implements HasHandlers {
      *            The status code returned for the request
      * 
      */
-    protected void showCommunicationError(String details, int statusCode) {
+    public void showCommunicationError(String details, int statusCode) {
         getLogger().severe("Communication error: " + details);
         showError(details, configuration.getCommunicationError());
     }
@@ -1000,57 +742,6 @@ public class ApplicationConnection implements HasHandlers {
     protected void showError(String details, ErrorMessage message) {
         VNotification.showError(this, message.getCaption(),
                 message.getMessage(), details, message.getUrl());
-    }
-
-    protected void startRequest() {
-        if (hasActiveRequest) {
-            getLogger().severe(
-                    "Trying to start a new request while another is active");
-        }
-        hasActiveRequest = true;
-        requestStartTime = new Date();
-        eventBus.fireEvent(new RequestStartingEvent(this));
-    }
-
-    public void endRequest() {
-        if (!hasActiveRequest) {
-            getLogger().severe("No active request");
-        }
-        // After sendInvocationsToServer() there may be a new active
-        // request, so we must set hasActiveRequest to false before, not after,
-        // the call. Active requests used to be tracked with an integer counter,
-        // so setting it after used to work but not with the #8505 changes.
-        hasActiveRequest = false;
-
-        webkitMaybeIgnoringRequests = false;
-
-        if (isApplicationRunning()) {
-            if (serverRpcQueue.isFlushPending()) {
-                sendInvocationsToServer();
-            }
-            runPostRequestHooks(configuration.getRootPanelId());
-        }
-
-        // deferring to avoid flickering
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (!isApplicationRunning()
-                        || !(hasActiveRequest() || serverRpcQueue
-                                .isFlushPending())) {
-                    getLoadingIndicator().hide();
-
-                    // If on Liferay and session expiration management is in
-                    // use, extend session duration on each request.
-                    // Doing it here rather than before the request to improve
-                    // responsiveness.
-                    // Postponed until the end of the next request if other
-                    // requests still pending.
-                    extendLiferaySession();
-                }
-            }
-        });
-        eventBus.fireEvent(new ResponseHandlingEndedEvent(this));
     }
 
     /**
@@ -1123,15 +814,6 @@ public class ApplicationConnection implements HasHandlers {
     public boolean isLoadingIndicatorVisible() {
         return getLoadingIndicator().isVisible();
     }
-
-    private static native ValueMap parseJSONResponse(String jsonText)
-    /*-{
-       try {
-               return JSON.parse(jsonText);
-       } catch (ignored) {
-               return eval('(' + jsonText + ')');
-       }
-    }-*/;
 
     public void loadStyleDependencies(JsArrayString dependencies) {
         // Assuming no reason to interpret in a defined order
@@ -1224,65 +906,6 @@ public class ApplicationConnection implements HasHandlers {
     @Deprecated
     public void sendPendingVariableChanges() {
         serverRpcQueue.flush();
-    }
-
-    public void doSendPendingVariableChanges() {
-        if (!isApplicationRunning()) {
-            getLogger()
-                    .warning(
-                            "Trying to send RPC from not yet started or stopped application");
-            return;
-        }
-
-        if (hasActiveRequest() || (push != null && !push.isActive())) {
-            // There is an active request or push is enabled but not active
-            // -> send when current request completes or push becomes active
-        } else {
-            sendInvocationsToServer();
-        }
-    }
-
-    /**
-     * Sends all pending method invocations (server RPC and legacy variable
-     * changes) to the server.
-     * 
-     */
-    private void sendInvocationsToServer() {
-        if (serverRpcQueue.isEmpty()) {
-            return;
-        }
-
-        if (ApplicationConfiguration.isDebugMode()) {
-            Util.logMethodInvocations(this, serverRpcQueue.getAll());
-        }
-
-        boolean showLoadingIndicator = serverRpcQueue.showLoadingIndicator();
-        JsonArray reqJson = serverRpcQueue.toJson();
-        serverRpcQueue.clear();
-
-        if (reqJson.length() == 0) {
-            // Nothing to send, all invocations were filtered out (for
-            // non-existing connectors)
-            getLogger()
-                    .warning(
-                            "All RPCs filtered out, not sending anything to the server");
-            return;
-        }
-
-        String extraParams = "";
-        if (!getConfiguration().isWidgetsetVersionSent()) {
-            if (!extraParams.isEmpty()) {
-                extraParams += "&";
-            }
-            String widgetsetVersion = Version.getFullVersion();
-            extraParams += "v-wsver=" + widgetsetVersion;
-
-            getConfiguration().setWidgetsetVersionSent();
-        }
-        if (showLoadingIndicator) {
-            getLoadingIndicator().trigger();
-        }
-        makeUidlRequest(reqJson, extraParams);
     }
 
     /**
@@ -1982,70 +1605,6 @@ public class ApplicationConnection implements HasHandlers {
                 focusedElement);
     }
 
-    /**
-     * Sets the status for the push connection.
-     * 
-     * @param enabled
-     *            <code>true</code> to enable the push connection;
-     *            <code>false</code> to disable the push connection.
-     */
-    public void setPushEnabled(boolean enabled) {
-        final PushConfigurationState pushState = uIConnector.getState().pushConfiguration;
-
-        if (enabled && push == null) {
-            push = GWT.create(PushConnection.class);
-            push.init(this, pushState, new CommunicationErrorHandler() {
-                @Override
-                public boolean onError(String details, int statusCode) {
-                    handleCommunicationError(details, statusCode);
-                    return true;
-                }
-            });
-        } else if (!enabled && push != null && push.isActive()) {
-            push.disconnect(new Command() {
-                @Override
-                public void execute() {
-                    push = null;
-                    /*
-                     * If push has been enabled again while we were waiting for
-                     * the old connection to disconnect, now is the right time
-                     * to open a new connection
-                     */
-                    if (pushState.mode.isEnabled()) {
-                        setPushEnabled(true);
-                    }
-
-                    /*
-                     * Send anything that was enqueued while we waited for the
-                     * connection to close
-                     */
-                    if (serverRpcQueue.isFlushPending()) {
-                        sendPendingVariableChanges();
-                    }
-                }
-            });
-        }
-    }
-
-    public void handlePushMessage(String message) {
-        handleJSONText(message, 200);
-    }
-
-    /**
-     * Returns a human readable string representation of the method used to
-     * communicate with the server.
-     * 
-     * @since 7.1
-     * @return A string representation of the current transport type
-     */
-    public String getCommunicationMethodName() {
-        if (push != null) {
-            return "Push (" + push.getTransportType() + ")";
-        } else {
-            return "XHR";
-        }
-    }
-
     private static Logger getLogger() {
         return Logger.getLogger(ApplicationConnection.class.getName());
     }
@@ -2107,17 +1666,23 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
+     * Gets the server communication handler for this application
+     * 
+     * @return the server communication handler
+     */
+    public ServerCommunicationHandler getServerCommunicationHandler() {
+        return serverCommunicationHandler;
+    }
+
+    /**
      * @return the widget set
      */
     public WidgetSet getWidgetSet() {
         return widgetSet;
     }
 
-    /**
-     * @since
-     * @return
-     */
     public int getLastSeenServerSyncId() {
         return getServerMessageHandler().getLastSeenServerSyncId();
     }
+
 }

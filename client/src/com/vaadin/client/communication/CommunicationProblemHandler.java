@@ -108,8 +108,8 @@ public class CommunicationProblemHandler {
                 public void run() {
                     // doUidlRequest does not call startRequest so we do
                     // not call endRequest before it
-                    connection.doUidlRequest(event.getUri(),
-                            event.getPayload(), true);
+                    getServerCommunicationHandler().doUidlRequest(
+                            event.getUri(), event.getPayload(), true);
                 }
             }).schedule(Integer.parseInt(delay));
             return;
@@ -138,7 +138,7 @@ public class CommunicationProblemHandler {
      * @since
      */
     private void endRequestAndStopApplication() {
-        connection.endRequest();
+        getServerCommunicationHandler().endRequest();
 
         // Consider application not running any more and prevent all
         // future requests
@@ -174,8 +174,8 @@ public class CommunicationProblemHandler {
                 public void run() {
                     // doUidlRequest does not call startRequest so we do
                     // not call endRequest before it
-                    connection.doUidlRequest(event.getUri(),
-                            event.getPayload(), false);
+                    getServerCommunicationHandler().doUidlRequest(
+                            event.getUri(), event.getPayload(), false);
                 }
             }).schedule(100);
         } else {
@@ -219,5 +219,9 @@ public class CommunicationProblemHandler {
                     "Invalid JSON response from server: " + responseText, event);
         }
 
+    }
+
+    private ServerCommunicationHandler getServerCommunicationHandler() {
+        return connection.getServerCommunicationHandler();
     }
 }

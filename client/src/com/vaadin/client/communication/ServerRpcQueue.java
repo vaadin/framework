@@ -201,7 +201,8 @@ public class ServerRpcQueue {
                 // Somebody else cleared the queue before we had the chance
                 return;
             }
-            connection.doSendPendingVariableChanges();
+            connection.getServerCommunicationHandler()
+                    .doSendPendingVariableChanges();
         }
     };
 

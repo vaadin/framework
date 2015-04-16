@@ -780,7 +780,7 @@ public class Util {
                 + "(" + formattedParams + ")";
     }
 
-    static void logMethodInvocations(ApplicationConnection c,
+    public static void logMethodInvocations(ApplicationConnection c,
             Collection<MethodInvocation> methodInvocations) {
         try {
             getLogger().info("RPC invocations to be sent to the server:");

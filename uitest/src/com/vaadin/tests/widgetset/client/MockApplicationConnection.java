@@ -16,11 +16,7 @@
 package com.vaadin.tests.widgetset.client;
 
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.widgetset.server.csrf.ui.CsrfTokenDisabled;
-
-import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * Mock ApplicationConnection for several issues where we need to hack it.
@@ -34,14 +30,19 @@ public class MockApplicationConnection extends ApplicationConnection {
         super();
         serverMessageHandler = new MockServerMessageHandler();
         serverMessageHandler.setConnection(this);
+        serverCommunicationHandler = new MockServerCommunicationHandler();
+        serverCommunicationHandler.setConnection(this);
     }
-
-    // The last token sent to the server.
-    private String lastCsrfTokenSent;
 
     @Override
     public MockServerMessageHandler getServerMessageHandler() {
         return (MockServerMessageHandler) super.getServerMessageHandler();
+    }
+
+    @Override
+    public MockServerCommunicationHandler getServerCommunicationHandler() {
+        return (MockServerCommunicationHandler) super
+                .getServerCommunicationHandler();
     }
 
     /**
@@ -61,15 +62,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenSent() {
-        return lastCsrfTokenSent;
-    }
-
-    @Override
-    public void doUidlRequest(String uri, JsonObject payload, boolean retry) {
-        JsonValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
-        lastCsrfTokenSent = jsonValue != null ? jsonValue.toJson() : null;
-
-        super.doUidlRequest(uri, payload, retry);
+        return getServerCommunicationHandler().lastCsrfTokenSent;
     }
 
 }

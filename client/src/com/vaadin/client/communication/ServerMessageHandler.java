@@ -38,6 +38,7 @@ import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.MultiStepDuration;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingStartedEvent;
+import com.vaadin.client.ApplicationConnection.State;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
@@ -225,6 +226,52 @@ public class ServerMessageHandler {
         return Logger.getLogger(ServerMessageHandler.class.getName());
     }
 
+    /**
+     * Handles received UIDL JSON text, parsing it, and passing it on to the
+     * appropriate handlers, while logging timing information.
+     * 
+     * @param jsonText
+     * @param statusCode
+     */
+    public void handleJSONText(String jsonText, int statusCode) {
+        final Date start = new Date();
+        final ValueMap json;
+        try {
+            json = parseJSONResponse(jsonText);
+        } catch (final Exception e) {
+            // FIXME
+            getServerCommunicationHandler().endRequest();
+            connection.showCommunicationError(e.getMessage()
+                    + " - Original JSON-text:" + jsonText, statusCode);
+            return;
+        }
+
+        getLogger().info(
+                "JSON parsing took " + (new Date().getTime() - start.getTime())
+                        + "ms");
+        if (connection.getState() == State.RUNNING) {
+            handleUIDLMessage(start, jsonText, json);
+        } else if (connection.getState() == State.INITIALIZING) {
+            // Application is starting up for the first time
+            connection.setApplicationRunning(true);
+            connection.handleWhenCSSLoaded(jsonText, json);
+        } else {
+            getLogger()
+                    .warning(
+                            "Ignored received message because application has already been stopped");
+            return;
+        }
+    }
+
+    private static native ValueMap parseJSONResponse(String jsonText)
+    /*-{
+       try {
+               return JSON.parse(jsonText);
+       } catch (ignored) {
+               return eval('(' + jsonText + ')');
+       }
+    }-*/;
+
     public void handleUIDLMessage(final Date start, final String jsonText,
             final ValueMap json) {
         if (!responseHandlingLocks.isEmpty()) {
@@ -274,7 +321,7 @@ public class ServerMessageHandler {
                     if (meta == null || !meta.containsKey("async")) {
                         // End the request if the received message was a
                         // response, not sent asynchronously
-                        connection.endRequest();
+                        getServerCommunicationHandler().endRequest();
                     }
 
                     resumeResponseHandling(lock);
@@ -513,7 +560,7 @@ public class ServerMessageHandler {
                     // End the request if the received message was a response,
                     // not sent asynchronously
                     // FIXME
-                    connection.endRequest();
+                    getServerCommunicationHandler().endRequest();
                 }
 
                 resumeResponseHandling(lock);
@@ -1537,6 +1584,10 @@ public class ServerMessageHandler {
 
     private RpcManager getRpcManager() {
         return connection.getRpcManager();
+    }
+
+    private ServerCommunicationHandler getServerCommunicationHandler() {
+        return connection.getServerCommunicationHandler();
     }
 
 }
