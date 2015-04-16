@@ -3117,13 +3117,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
          *            to show
+         * @return this column
          */
-        public void setHidden(boolean hidden) {
+        public Column setHidden(boolean hidden) {
             if (hidden != getState().hidden) {
                 getState().hidden = hidden;
                 grid.markAsDirty();
                 grid.fireColumnVisibilityChangeEvent(this, hidden, false);
             }
+            return this;
         }
 
         /**
@@ -3148,10 +3150,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * @param hidable
          *            <code>true</code> iff the column may be hidable by the
          *            user via UI interaction
+         * @return this column
          */
-        public void setHidable(boolean hidable) {
-            getState().hidable = hidable;
-            grid.markAsDirty();
+        public Column setHidable(boolean hidable) {
+            if (hidable != getState().hidable) {
+                getState().hidable = hidable;
+                grid.markAsDirty();
+            }
+            return this;
         }
 
         /**
