@@ -3,7 +3,7 @@
 <!-- Keep the version number in sync with build.xml -->
     <!ENTITY atmosphere.runtime.version "2.2.4.vaadin5">
 
-    <!ENTITY atmosphere.js.version "2.2.6.vaadin3">
+    <!ENTITY atmosphere.js.version "2.2.6.vaadin4">
 ]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
