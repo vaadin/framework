@@ -921,12 +921,14 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull(sidebar);
     }
 
-    private WebElement getSidebar() {
+    @Override
+    protected WebElement getSidebar() {
         List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
-    private WebElement getSidebarOpenButton() {
+    @Override
+    protected WebElement getSidebarOpenButton() {
         List<WebElement> elements = findElements(By
                 .className("v-grid-sidebar-button"));
         return elements.isEmpty() ? null : elements.get(0);
@@ -936,7 +938,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
      * Returns the toggle inside the sidebar for hiding the column at the given
      * index, or null if not found.
      */
-    private WebElement getColumnHidingToggle(int columnIndex) {
+    @Override
+    protected WebElement getColumnHidingToggle(int columnIndex) {
         WebElement sidebar = getSidebar();
         List<WebElement> elements = sidebar.findElements(By
                 .className("column-hiding-toggle"));

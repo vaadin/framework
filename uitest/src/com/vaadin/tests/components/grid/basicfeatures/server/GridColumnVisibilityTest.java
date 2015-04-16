@@ -21,12 +21,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
@@ -280,32 +276,5 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
     private void addRemoveColumn(int index) {
         selectMenuPath("Component", "Columns", "Column " + index,
                 "Add / Remove");
-    }
-
-    private WebElement getSidebar() {
-        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
-        return elements.isEmpty() ? null : elements.get(0);
-    }
-
-    private WebElement getSidebarOpenButton() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-button"));
-        return elements.isEmpty() ? null : elements.get(0);
-    }
-
-    /**
-     * Returns the toggle inside the sidebar for hiding the column at the given
-     * index, or null if not found.
-     */
-    private WebElement getColumnHidingToggle(int columnIndex) {
-        WebElement sidebar = getSidebar();
-        List<WebElement> elements = sidebar.findElements(By
-                .className("column-hiding-toggle"));
-        for (WebElement e : elements) {
-            if ((e.getText().toLowerCase()).startsWith("column " + columnIndex)) {
-                return e;
-            }
-        }
-        return null;
     }
 }
