@@ -226,7 +226,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     /**
      * The id of the previous response for which state changes have been
      * processed. If this is the same as the
-     * {@link ApplicationConnection#getLastResponseId()}, it means that we can
+     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that we can
      * skip some quite expensive calculations because we know that the state
      * hasn't changed since the last time the values were calculated.
      */
@@ -422,7 +422,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      */
     private void updateInternalState() {
         // Avoid updating again for the same data
-        int lastResponseId = getConnection().getLastResponseId();
+        int lastResponseId = getConnection().getLastSeenServerSyncId();
         if (processedResponseId == lastResponseId) {
             return;
         }

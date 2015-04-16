@@ -70,8 +70,8 @@ public class CsrfButtonConnector extends AbstractComponentConnector {
     }
 
     private String csrfTokenInfo() {
-        return getMockConnection().getCsrfToken() + ", "
-                + getMockConnection().getLastCsrfTokenReceiver() + ", "
+        return getMockConnection().getServerMessageHandler().getCsrfToken()
+                + ", " + getMockConnection().getLastCsrfTokenReceiver() + ", "
                 + getMockConnection().getLastCsrfTokenSent();
     }
 

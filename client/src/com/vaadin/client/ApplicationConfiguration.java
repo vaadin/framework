@@ -606,7 +606,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @param c
      */
-    static void runWhenDependenciesLoaded(Command c) {
+    public static void runWhenDependenciesLoaded(Command c) {
         if (dependenciesLoading == 0) {
             c.execute();
         } else {

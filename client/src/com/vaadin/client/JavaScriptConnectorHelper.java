@@ -64,7 +64,7 @@ public class JavaScriptConnectorHelper {
     /**
      * The id of the previous response for which state changes have been
      * processed. If this is the same as the
-     * {@link ApplicationConnection#getLastResponseId()}, it means that the
+     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that the
      * state change has already been handled and should not be done again.
      */
     private int processedResponseId = -1;
@@ -93,7 +93,7 @@ public class JavaScriptConnectorHelper {
     }
 
     private void processStateChanges() {
-        int lastResponseId = connector.getConnection().getLastResponseId();
+        int lastResponseId = connector.getConnection().getLastSeenServerSyncId();
         if (processedResponseId == lastResponseId) {
             return;
         }

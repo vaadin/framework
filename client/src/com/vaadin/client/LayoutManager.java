@@ -252,7 +252,7 @@ public class LayoutManager {
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
 
-        if (connection.isUpdatingState()) {
+        if (connection.getServerMessageHandler().isUpdatingState()) {
             // If assertions are enabled, throw an exception
             assert false : STATE_CHANGE_MESSAGE;
 
@@ -1793,7 +1793,7 @@ public class LayoutManager {
     /**
      * Clean measured sizes which are no longer needed. Only for IE8.
      */
-    protected void cleanMeasuredSizes() {
+    public void cleanMeasuredSizes() {
     }
 
     private static Logger getLogger() {

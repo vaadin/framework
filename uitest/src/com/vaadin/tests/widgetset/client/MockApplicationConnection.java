@@ -15,11 +15,7 @@
  */
 package com.vaadin.tests.widgetset.client;
 
-import java.util.Date;
-import java.util.logging.Logger;
-
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.widgetset.server.csrf.ui.CsrfTokenDisabled;
 
@@ -34,14 +30,19 @@ import elemental.json.JsonValue;
  */
 public class MockApplicationConnection extends ApplicationConnection {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(MockApplicationConnection.class.getName());
-
-    // The last token received from the server.
-    private String lastCsrfTokenReceiver;
+    public MockApplicationConnection() {
+        super();
+        serverMessageHandler = new MockServerMessageHandler();
+        serverMessageHandler.setConnection(this);
+    }
 
     // The last token sent to the server.
     private String lastCsrfTokenSent;
+
+    @Override
+    public MockServerMessageHandler getServerMessageHandler() {
+        return (MockServerMessageHandler) super.getServerMessageHandler();
+    }
 
     /**
      * Provide the last token received from the server. <br/>
@@ -50,7 +51,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenReceiver() {
-        return lastCsrfTokenReceiver;
+        return getServerMessageHandler().lastCsrfTokenReceiver;
     }
 
     /**
@@ -61,14 +62,6 @@ public class MockApplicationConnection extends ApplicationConnection {
      */
     public String getLastCsrfTokenSent() {
         return lastCsrfTokenSent;
-    }
-
-    @Override
-    protected void handleUIDLMessage(Date start, String jsonText, ValueMap json) {
-        lastCsrfTokenReceiver = json
-                .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
-
-        super.handleUIDLMessage(start, jsonText, json);
     }
 
     @Override
