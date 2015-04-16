@@ -3200,6 +3200,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     getMaximumWidth(), def.maxWidth, Double.class);
             DesignAttributeHandler.writeAttribute("expand", attributes,
                     getExpandRatio(), def.expandRatio, Integer.class);
+            DesignAttributeHandler.writeAttribute("hidable", attributes,
+                    isHidable(), def.hidable, boolean.class);
+            DesignAttributeHandler.writeAttribute("hidden", attributes,
+                    isHidden(), def.hidden, boolean.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -3225,7 +3229,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 setEditable(DesignAttributeHandler.readAttribute("editable",
                         attributes, boolean.class));
             }
-
+            if (design.hasAttr("hidable")) {
+                setHidable(DesignAttributeHandler.readAttribute("hidable",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("hidden")) {
+                setHidden(DesignAttributeHandler.readAttribute("hidden",
+                        attributes, boolean.class));
+            }
             // Read size info where necessary.
             if (design.hasAttr("width")) {
                 setWidth(DesignAttributeHandler.readAttribute("width",
