@@ -181,8 +181,13 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      */
     protected boolean isVaadinServlet(ServletRegistration servletRegistration) {
         try {
-            Class<?> servletClass = Class.forName(servletRegistration
-                    .getClassName());
+            String servletClassName = servletRegistration.getClassName();
+            if (servletClassName.equals("com.ibm.ws.wsoc.WsocServlet")) {
+                // Websphere servlet which implements websocket endpoints,
+                // dynamically added
+                return false;
+            }
+            Class<?> servletClass = Class.forName(servletClassName);
             return VaadinServlet.class.isAssignableFrom(servletClass);
         } catch (Exception e) {
             // This will fail in OSGi environments, assume everything is a
