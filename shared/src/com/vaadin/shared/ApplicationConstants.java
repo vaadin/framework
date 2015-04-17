@@ -133,6 +133,12 @@ public class ApplicationConstants implements Serializable {
     public static final String SERVER_SYNC_ID = "syncId";
 
     /**
+     * The name of the parameter used to transmit the id of the client to server
+     * messages.
+     */
+    public static final String CLIENT_TO_SERVER_ID = "clientId";
+
+    /**
      * Default value to use in case the security protection is disabled.
      */
     public static final String CSRF_TOKEN_DEFAULT_VALUE = "init";

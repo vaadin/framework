@@ -325,7 +325,7 @@ public class ServerMessageHandler {
                     }
 
                     resumeResponseHandling(lock);
-                    connection.repaintAll();
+                    getServerCommunicationHandler().resynchronize();
                     return;
                 }
             }
@@ -334,6 +334,13 @@ public class ServerMessageHandler {
             getLogger()
                     .severe("Server response didn't contain a sync id. "
                             + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
+        }
+
+        if (json.containsKey(ApplicationConstants.CLIENT_TO_SERVER_ID)) {
+            int serverNextExpected = json
+                    .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
+            getServerCommunicationHandler().setClientToServerMessageId(
+                    serverNextExpected);
         }
 
         // Handle redirect

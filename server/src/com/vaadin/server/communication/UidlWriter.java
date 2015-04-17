@@ -130,7 +130,10 @@ public class UidlWriter implements Serializable {
                     .getCurrentSyncId() : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
                     + syncId + ", ");
-
+            int nextClientToServerMessageId = ui
+                    .getLastProcessedClientToServerId() + 1;
+            writer.write("\"" + ApplicationConstants.CLIENT_TO_SERVER_ID
+                    + "\": " + nextClientToServerMessageId + ", ");
             writer.write("\"changes\" : ");
 
             JsonPaintTarget paintTarget = new JsonPaintTarget(manager, writer,

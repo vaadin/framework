@@ -66,6 +66,9 @@ public class ServerCommunicationHandler {
     private final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
     private final String JSON_COMMUNICATION_SUFFIX = "]";
 
+    private static final String REPAINT_ALL_PARAMETER = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
+            + "=1";
+
     private ApplicationConnection connection;
     private PushConnection push;
     private boolean hasActiveRequest = false;
@@ -79,6 +82,11 @@ public class ServerCommunicationHandler {
      * being sent.
      */
     private boolean webkitMaybeIgnoringRequests = false;
+
+    /**
+     * Counter for the messages send to the server. First sent message has id 0.
+     */
+    private int clientToServerMessageId = 0;
 
     public ServerCommunicationHandler() {
         Window.addWindowClosingHandler(new ClosingHandler() {
@@ -191,6 +199,8 @@ public class ServerCommunicationHandler {
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
         payload.put(ApplicationConstants.SERVER_SYNC_ID,
                 getServerMessageHandler().getLastSeenServerSyncId());
+        payload.put(ApplicationConstants.CLIENT_TO_SERVER_ID,
+                clientToServerMessageId++);
 
         getLogger()
                 .info("Making UIDL Request with params: " + payload.toJson());
@@ -198,7 +208,7 @@ public class ServerCommunicationHandler {
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.UIDL_PATH + '/');
 
-        if (extraParams.equals(connection.getRepaintAllParameters())) {
+        if (extraParams.equals(REPAINT_ALL_PARAMETER)) {
             payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
         } else {
             uri = SharedUtil.addGetParameters(uri, extraParams);
@@ -479,4 +489,45 @@ public class ServerCommunicationHandler {
         return connection.getLoadingIndicator();
     }
 
+    /**
+     * Resynchronize the client side, i.e. reload all component hierarchy and
+     * state from the server
+     */
+    public void resynchronize() {
+        makeUidlRequest(Json.createArray(), REPAINT_ALL_PARAMETER);
+    }
+
+    /**
+     * Used internally to update what the server expects
+     * 
+     * @param clientToServerMessageId
+     *            the new client id to set
+     */
+    public void setClientToServerMessageId(int nextExpectedId) {
+        if (nextExpectedId == clientToServerMessageId) {
+            // No op as everything matches they way it should
+            return;
+        }
+
+        if (nextExpectedId > clientToServerMessageId) {
+            if (clientToServerMessageId == 0) {
+                // We have never sent a message to the server, so likely the
+                // server knows better (typical case is that we refreshed a
+                // @PreserveOnRefresh UI)
+                getLogger().info(
+                        "Updating client-to-server id to " + nextExpectedId
+                                + " based on server");
+            } else {
+                getLogger().warning(
+                        "Server expects next client-to-server id to be "
+                                + nextExpectedId + " but we were going to use "
+                                + clientToServerMessageId + ". Will use "
+                                + nextExpectedId + ".");
+            }
+            clientToServerMessageId = nextExpectedId;
+        } else {
+            // Server has not yet seen all our messages
+            // Do nothing as they will arrive eventually
+        }
+    }
 }

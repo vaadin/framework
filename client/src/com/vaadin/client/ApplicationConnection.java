@@ -63,13 +63,10 @@ import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.util.SharedUtil;
-
-import elemental.json.Json;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -436,8 +433,8 @@ public class ApplicationConnection implements HasHandlers {
     public void start() {
         String jsonText = configuration.getUIDL();
         if (jsonText == null) {
-            // inital UIDL not in DOM, request later
-            repaintAll();
+            // initial UIDL not in DOM, request from server
+            getServerCommunicationHandler().resynchronize();
         } else {
             // initial UIDL provided in DOM, continue as if returned by request
 
@@ -611,17 +608,6 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
     }-*/;
-
-    public String getRepaintAllParameters() {
-        String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
-                + "=1";
-        return parameters;
-    }
-
-    public void repaintAll() {
-        getServerCommunicationHandler().makeUidlRequest(Json.createArray(),
-                getRepaintAllParameters());
-    }
 
     /**
      * Requests an analyze of layouts, to find inconsistencies. Exclusively used

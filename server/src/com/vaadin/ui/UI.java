@@ -260,6 +260,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             this);
 
     /**
+     * Tracks which message from the client should come next. First message from
+     * the client has id 0.
+     */
+    private int lastProcessedClientToServerId = -1;
+
+    /**
      * Creates a new empty UI without a caption. The content of the UI must be
      * set by calling {@link #setContent(Component)} before using the UI.
      */
@@ -1690,5 +1696,30 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public String getEmbedId() {
         return embedId;
+    }
+
+    /**
+     * Gets the last processed server message id.
+     * 
+     * Used internally for communication tracking.
+     * 
+     * @return lastProcessedServerMessageId the id of the last processed server
+     *         message
+     */
+    public int getLastProcessedClientToServerId() {
+        return lastProcessedClientToServerId;
+    }
+
+    /**
+     * Sets the last processed server message id.
+     * 
+     * Used internally for communication tracking.
+     * 
+     * @param lastProcessedServerMessageId
+     *            the id of the last processed server message
+     */
+    public void setLastProcessedClientToServerId(
+            int lastProcessedClientToServerId) {
+        this.lastProcessedClientToServerId = lastProcessedClientToServerId;
     }
 }
