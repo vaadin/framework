@@ -76,13 +76,14 @@ public class ServerRpcHandler implements Serializable {
         private final JsonArray invocations;
         private final int syncId;
         private final JsonObject json;
+        private final boolean resynchronize;
 
         public RpcRequest(String jsonString, VaadinRequest request) {
             json = JsonUtil.parse(jsonString);
 
             JsonValue token = json.get(ApplicationConstants.CSRF_TOKEN);
             if (token == null) {
-                this.csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
+                csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
             } else {
                 String csrfToken = token.asString();
                 if (csrfToken.equals("")) {
@@ -98,6 +99,14 @@ public class ServerRpcHandler implements Serializable {
             } else {
                 syncId = -1;
             }
+
+            if (json.hasKey(ApplicationConstants.RESYNCHRONIZE_ID)) {
+                resynchronize = json
+                        .getBoolean(ApplicationConstants.RESYNCHRONIZE_ID);
+            } else {
+                resynchronize = false;
+            }
+
             invocations = json.getArray(ApplicationConstants.RPC_INVOCATIONS);
         }
 
@@ -128,6 +137,15 @@ public class ServerRpcHandler implements Serializable {
          */
         public int getSyncId() {
             return syncId;
+        }
+
+        /**
+         * Checks if this is a request to resynchronize the client side
+         * 
+         * @return true if this is a resynchronization request, false otherwise
+         */
+        public boolean isResynchronize() {
+            return resynchronize;
         }
 
         /**
@@ -186,6 +204,10 @@ public class ServerRpcHandler implements Serializable {
 
         ui.getConnectorTracker().cleanConcurrentlyRemovedConnectorIds(
                 rpcRequest.getSyncId());
+
+        if (rpcRequest.isResynchronize()) {
+            ui.getSession().getCommunicationManager().repaintAll(ui);
+        }
     }
 
     /**

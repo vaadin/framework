@@ -863,7 +863,11 @@ public class ApplicationConnection implements HasHandlers {
                 + ApplicationConstants.UIDL_PATH + '/');
 
         if (extraParams != null && extraParams.length() > 0) {
-            uri = SharedUtil.addGetParameters(uri, extraParams);
+            if (extraParams.equals(getRepaintAllParameters())) {
+                payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
+            } else {
+                uri = SharedUtil.addGetParameters(uri, extraParams);
+            }
         }
         uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
                 + "=" + configuration.getUIId());
@@ -1550,10 +1554,27 @@ public class ApplicationConnection implements HasHandlers {
              * e.g. critical server-side notifications
              */
             if (syncId != -1) {
-                assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
-                        + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+                if (lastSeenServerSyncId == UNDEFINED_SYNC_ID
+                        || syncId == (lastSeenServerSyncId + 1)) {
+                    lastSeenServerSyncId = syncId;
+                } else {
+                    getLogger().warning(
+                            "Expected sync id: " + (lastSeenServerSyncId + 1)
+                                    + ", received: " + syncId
+                                    + ". Resynchronizing from server.");
+                    lastSeenServerSyncId = syncId;
 
-                lastSeenServerSyncId = syncId;
+                    // Copied from below...
+                    ValueMap meta = json.getValueMap("meta");
+                    if (meta == null || !meta.containsKey("async")) {
+                        // End the request if the received message was a
+                        // response, not sent asynchronously
+                        endRequest();
+                    }
+                    resumeResponseHandling(lock);
+                    repaintAll();
+                    return;
+                }
             }
         } else {
             syncId = -1;

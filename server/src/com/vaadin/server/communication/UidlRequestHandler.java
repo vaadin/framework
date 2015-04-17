@@ -80,10 +80,12 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
 
-        // TODO PUSH repaintAll, analyzeLayouts should be
+        // TODO PUSH analyzeLayouts should be
         // part of the message payload to make the functionality transport
         // agnostic
 
+        // Resynchronize is sent in the payload but will still support the
+        // parameter also for compatibility reasons
         repaintAll = (request
                 .getParameter(ApplicationConstants.URL_PARAMETER_REPAINT_ALL) != null);
 
