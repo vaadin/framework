@@ -15,11 +15,6 @@
  */
 package com.vaadin.tests.server.component.button;
 
-import static org.junit.Assert.assertTrue;
-
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -27,7 +22,6 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link Button} and
@@ -111,18 +105,5 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
         b.setClickShortcut(KeyCode.O, ModifierKey.CTRL, ModifierKey.SHIFT);
         testRead(design, b);
         testWrite(design, b);
-    }
-
-    @Test
-    public void testWriteUpdatesContentMode() {
-        DesignContext ctx = new DesignContext();
-        Button button = new Button("OK");
-        Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
-        button.writeDesign(e, ctx);
-        assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
-
-        button.setHtmlContentAllowed(true);
-        button.writeDesign(e, ctx);
-        assertTrue("Button is updated to HTML", !e.hasAttr("plain-text"));
     }
 }

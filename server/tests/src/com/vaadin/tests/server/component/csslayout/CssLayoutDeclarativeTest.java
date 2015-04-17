@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.server.component.csslayout;
 
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -25,7 +22,6 @@ import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for CssLayout.
@@ -63,34 +59,5 @@ public class CssLayoutDeclarativeTest extends DeclarativeTestBase<CssLayout> {
         layout.addComponent(b);
         testRead(design, layout);
         testWrite(design, layout);
-    }
-
-    @Test
-    public void testWriteWithOldContents() {
-        // Test that any old contents of an element are removed when
-        // writing a design.
-        Element design = createDesign();
-        CssLayout layout = new CssLayout();
-        layout.addComponent(new Label("test-label"));
-        layout.getComponent(0).setCaption("test-caption");
-        layout.addComponent(new Label("test-label-2"));
-        layout.writeDesign(design, new DesignContext());
-        assertEquals(2, design.childNodes().size());
-        assertEquals("v-label", ((Element) design.childNode(0)).tagName());
-        assertEquals("test-caption", design.childNode(0).attr("caption"));
-    }
-
-    private Element createDesign() {
-        // create an element with some contents
-        Attributes rootAttributes = new Attributes();
-        rootAttributes.put("caption", "test-layout");
-        Element node = new Element(Tag.valueOf("v-vertical-layout"), "",
-                rootAttributes);
-        Attributes childAttributes = new Attributes();
-        childAttributes.put("caption", "test-label");
-        Element child = new Element(Tag.valueOf("v-label"), "", childAttributes);
-        node.appendChild(child);
-
-        return node;
     }
 }

@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.server.component.abstractsplitpanel;
 
-import static junit.framework.TestCase.assertTrue;
-
-import org.jsoup.nodes.Element;
 import org.junit.Test;
 
 import com.vaadin.server.Sizeable.Unit;
@@ -25,11 +22,9 @@ import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for AbstractSplitPanel.
@@ -87,24 +82,5 @@ public class AbstractSplitPanelDeclarativeTest extends
         AbstractSplitPanel sp = new HorizontalSplitPanel();
         testRead(design, sp);
         testWrite(design, sp);
-    }
-
-    @Test
-    public void testReSynchronize() {
-        // Test that old children and attributes are removed when an element is
-        // synchronized to a new component.
-        DesignContext ctx = new DesignContext();
-        VerticalSplitPanel sp = new VerticalSplitPanel();
-        sp.setMinSplitPosition(5.5f, Unit.PERCENTAGE);
-        sp.setMaxSplitPosition(95, Unit.PERCENTAGE);
-        sp.setFirstComponent(new Button("First slot"));
-        sp.setSecondComponent(new Label("Second slot"));
-        Element e = ctx.createElement(sp);
-        sp = new VerticalSplitPanel();
-        sp.writeDesign(e, ctx);
-        assertTrue("There should be no attributes in the node.", e.attributes()
-                .size() == 0);
-        assertTrue("There should be no child elements.",
-                e.children().size() == 0);
     }
 }

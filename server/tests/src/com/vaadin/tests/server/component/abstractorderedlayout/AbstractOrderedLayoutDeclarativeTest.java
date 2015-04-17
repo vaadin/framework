@@ -15,14 +15,9 @@
  */
 package com.vaadin.tests.server.component.abstractorderedlayout;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.List;
 
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -32,7 +27,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for AbstractOrderedLayout.
@@ -84,45 +78,6 @@ public class AbstractOrderedLayoutDeclarativeTest extends
         layout = getLayout(0, false, Alignment.BOTTOM_RIGHT);
         testRead(design, layout);
         testWrite(design, layout);
-    }
-
-    @Test
-    public void testWriteRemovesOldElementContent() {
-        // Create an element with some content
-        Attributes rootAttributes = new Attributes();
-        rootAttributes.put("caption", "test-layout");
-        Element design = new Element(Tag.valueOf("v-vertical-layout"), "",
-                rootAttributes);
-        Attributes firstChildAttributes = new Attributes();
-        firstChildAttributes.put("caption", "test-label");
-        Element firstChild = new Element(Tag.valueOf("v-label"), "",
-                firstChildAttributes);
-        design.appendChild(firstChild);
-
-        Attributes secondChildAttributes = new Attributes();
-        secondChildAttributes.put("caption", "test-button");
-        Element secondChild = new Element(Tag.valueOf("v-button"), "",
-                secondChildAttributes);
-        design.appendChild(secondChild);
-        Attributes thirdChildAttributes = new Attributes();
-        thirdChildAttributes.put("caption", "test-button-2");
-        Element thirdChild = new Element(Tag.valueOf("v-button"), "",
-                thirdChildAttributes);
-        design.appendChild(thirdChild);
-        // Create and write a layout and check the new contents of the element
-        // node
-        VerticalLayout layout = new VerticalLayout();
-        layout.addComponent(new Label("test-label"));
-        layout.getComponent(0).setCaption("test-caption");
-        layout.setExpandRatio(layout.getComponent(0), 1.0f);
-        layout.addComponent(new Label("test-label-2"));
-        layout.writeDesign(design, new DesignContext());
-        assertEquals(2, design.childNodes().size());
-        assertEquals("v-label", ((Element) design.childNode(0)).tagName());
-        assertEquals("test-caption", design.childNode(0).attr("caption"));
-        assertTrue(design.childNode(0).hasAttr(":expand"));
-        assertEquals("", design.childNode(0).attr(":expand"));
-
     }
 
     private String getDesign(float expandRatio, boolean margin,

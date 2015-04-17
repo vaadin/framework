@@ -15,18 +15,11 @@
  */
 package com.vaadin.tests.server.component.label;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link Label}.
@@ -89,22 +82,6 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
         Label l = createLabel(null, "This is a label", true);
         testRead(design, l);
         testWrite(design, l);
-    }
-
-    @Test
-    public void testWriteContentMode() {
-        // test that the plain-text attribute is overwritten by writeDesign
-        DesignContext ctx = new DesignContext();
-        Label l = new Label("label");
-        l.setContentMode(ContentMode.TEXT);
-        Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
-        l.writeDesign(e, ctx);
-        assertTrue("Label should be marked as plain text",
-                e.hasAttr("plain-text"));
-        l.setContentMode(ContentMode.HTML);
-        l.writeDesign(e, ctx);
-        assertFalse("Label should not be marked as plain text",
-                e.hasAttr("plain-text"));
     }
 
     private Label createLabel(String content, String caption, boolean html) {
