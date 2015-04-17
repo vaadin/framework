@@ -15,13 +15,23 @@
  */
 package com.vaadin.tests.server.component.button;
 
+import static org.junit.Assert.assertTrue;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.junit.Test;
 
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Tests declarative support for implementations of {@link Button}.
+ * Tests declarative support for implementations of {@link Button} and
+ * {@link NativeButton}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -29,44 +39,90 @@ import com.vaadin.ui.Button;
 public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
 
     @Test
-    public void testPlainTextRead() {
-        testRead(getDesignPlainText(), getExpectedPlainText());
+    public void testEmptyPlainText() {
+        String design = "<v-button plain-text=''></v-button>";
+        testButtonAndNativeButton(design, false, "");
     }
 
     @Test
-    public void testPlainTextWrite() {
-        testWrite(getDesignPlainText(), getExpectedPlainText());
-    }
-
-    protected String getDesignPlainText() {
-        return "<v-button plain-text=''></v-button>";
-    }
-
-    protected Button getExpectedPlainText() {
-        Button c = new Button();
-        c.setCaption("");
-        return c;
-    };
-
-    @Test
-    public void testHtmlRead() {
-        testRead(getDesignHtml(), getExpectedHtml());
+    public void testPlainTextCaption() {
+        String design = "<v-button plain-text=''>Click</v-button>";
+        testButtonAndNativeButton(design, false, "Click");
     }
 
     @Test
-    public void testHtmlWrite() {
-        testWrite(getDesignHtml(), getExpectedHtml());
+    public void testEmptyHtml() {
+        String design = "<v-button />";
+        testButtonAndNativeButton(design, true, "");
     }
 
-    protected String getDesignHtml() {
-        return "<v-button />";
+    @Test
+    public void testHtmlCaption() {
+        String design = "<v-button><b>Click</b></v-button>";
+        testButtonAndNativeButton(design, true, "<b>Click</b>");
     }
 
-    protected Button getExpectedHtml() {
-        Button c = new Button();
-        c.setCaption("");
-        c.setCaptionAsHtml(true);
-        return c;
-    };
+    @Test
+    public void testWithCaptionAttribute() {
+        // The caption attribute should be ignored
+        String design = "<v-button caption=Caption>Click</v-button>";
+        String expectedWritten = "<v-button>Click</v-button>";
+        testButtonAndNativeButton(design, true, "Click", expectedWritten);
+    }
 
+    @Test
+    public void testWithOnlyCaptionAttribute() {
+        String design = "<v-button caption=Click/>";
+        String expectedWritten = "<v-button/>";
+        testButtonAndNativeButton(design, true, "", expectedWritten);
+    }
+
+    public void testButtonAndNativeButton(String design, boolean html,
+            String caption) {
+        testButtonAndNativeButton(design, html, caption, design);
+    }
+
+    public void testButtonAndNativeButton(String design, boolean html,
+            String caption, String expectedWritten) {
+        // Test Button
+        Button b = new Button();
+        b.setCaptionAsHtml(html);
+        b.setCaption(caption);
+        testRead(expectedWritten, b);
+        testWrite(expectedWritten, b);
+        // Test NativeButton
+        design = design.replace("v-button", "v-native-button");
+        expectedWritten = expectedWritten
+                .replace("v-button", "v-native-button");
+        NativeButton nb = new NativeButton();
+        nb.setCaptionAsHtml(html);
+        nb.setCaption(caption);
+        testRead(expectedWritten, nb);
+        testWrite(expectedWritten, nb);
+    }
+
+    @Test
+    public void testAttributes() {
+        String design = "<v-button tabindex=3 plain-text='' icon-alt=OK "
+                + "click-shortcut=ctrl-shift-o></v-button>";
+        Button b = new Button("");
+        b.setTabIndex(3);
+        b.setIconAlternateText("OK");
+        b.setClickShortcut(KeyCode.O, ModifierKey.CTRL, ModifierKey.SHIFT);
+        testRead(design, b);
+        testWrite(design, b);
+    }
+
+    @Test
+    public void testWriteUpdatesContentMode() {
+        DesignContext ctx = new DesignContext();
+        Button button = new Button("OK");
+        Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
+        button.writeDesign(e, ctx);
+        assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
+
+        button.setHtmlContentAllowed(true);
+        button.writeDesign(e, ctx);
+        assertTrue("Button is updated to HTML", !e.hasAttr("plain-text"));
+    }
 }

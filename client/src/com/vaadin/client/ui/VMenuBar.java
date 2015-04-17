@@ -912,10 +912,22 @@ public class VMenuBar extends SimpleFocusablePanel implements
                         SUBMENU_CLASSNAME_PREFIX, "");
             }
 
+            String currentStyles = super.getStyleName();
+            List<String> customStyles = new ArrayList<String>();
+            for(String style : currentStyles.split(" ")) {
+                if(!style.isEmpty() && !style.startsWith(primaryStyleName)) {
+                    customStyles.add(style);
+                }
+            }
+
             if (isSeparator) {
                 super.setStyleName(primaryStyleName + "-separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
+            }
+
+            for (String customStyle : customStyles) {
+                super.addStyleName(customStyle);
             }
 
             if (styleName != null) {

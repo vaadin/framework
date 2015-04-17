@@ -28,7 +28,7 @@ public class RepaintWindowContents extends AbstractTestUI {
 
         window.setContent(layout1);
 
-        button1.addListener(new ClickListener() {
+        button1.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -36,7 +36,7 @@ public class RepaintWindowContents extends AbstractTestUI {
             }
         });
 
-        button2.addListener(new ClickListener() {
+        button2.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

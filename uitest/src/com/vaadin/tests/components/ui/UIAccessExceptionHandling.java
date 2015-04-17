@@ -128,11 +128,20 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog implements
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                log("Exception catched on get: " + e.getClass().getName());
+                log("Exception caught on get: " + e.getClass().getName());
             } finally {
                 future = null;
             }
         }
+    }
+
+    @Override
+    public void error(com.vaadin.server.ErrorEvent event) {
+        log("Exception caught on execution with "
+                + event.getClass().getSimpleName() + " : "
+                + event.getThrowable().getClass().getName());
+
+        DefaultErrorHandler.doDefault(event);
     }
 
     @Override
@@ -143,15 +152,6 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog implements
     @Override
     protected Integer getTicketNumber() {
         return Integer.valueOf(12703);
-    }
-
-    @Override
-    public void error(com.vaadin.server.ErrorEvent event) {
-        log("Exception catched on execution with "
-                + event.getClass().getSimpleName() + " : "
-                + event.getThrowable().getClass().getName());
-
-        DefaultErrorHandler.doDefault(event);
     }
 
 }

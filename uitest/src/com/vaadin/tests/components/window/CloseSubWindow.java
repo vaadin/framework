@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.Log;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -10,23 +10,20 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
-public class CloseSubWindow extends TestBase {
-
-    private Log log = new Log(5);
+public class CloseSubWindow extends AbstractTestUIWithLog {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Button openWindowButton = new Button("Open sub-window");
         openWindowButton.setId("opensub");
-        openWindowButton.addListener(new ClickListener() {
+        openWindowButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 Window sub = createClosableSubWindow("Sub-window");
-                getMainWindow().addWindow(sub);
+                getUI().addWindow(sub);
             }
         });
 
-        addComponent(log);
         addComponent(openWindowButton);
     }
 
@@ -39,7 +36,7 @@ public class CloseSubWindow extends TestBase {
         window.setClosable(true);
 
         Button closeButton = new Button("Close");
-        closeButton.addListener(new ClickListener() {
+        closeButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton().findAncestor(Window.class).close();
@@ -47,19 +44,19 @@ public class CloseSubWindow extends TestBase {
         });
         layout.addComponent(closeButton);
 
-        Button removeButton = new Button("Remove from parent");
-        removeButton.addListener(new ClickListener() {
+        Button removeButton = new Button("Remove from UI");
+        removeButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                window.close();
+                getUI().removeWindow(window);
             }
         });
-        layout.addComponent(closeButton);
+        layout.addComponent(removeButton);
 
-        window.addListener(new CloseListener() {
+        window.addCloseListener(new CloseListener() {
             @Override
             public void windowClose(CloseEvent e) {
-                log.log("Window '" + title + "' closed");
+                log("Window '" + title + "' closed");
             }
         });
 
@@ -67,7 +64,7 @@ public class CloseSubWindow extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Close sub-windows both from code and with the close button in the window title bar, and check for close events. Contains an ugly workaround for the Opera bug (Opera does not send close events)";
     }
 

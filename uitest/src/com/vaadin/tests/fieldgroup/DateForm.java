@@ -8,9 +8,9 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.DateField;
@@ -19,9 +19,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 
-public class DateForm extends TestBase {
+public class DateForm extends AbstractTestUIWithLog {
 
-    private Log log = new Log(5);
     @PropertyId("date1")
     private DateField dateField;
     @PropertyId("date2")
@@ -77,8 +76,8 @@ public class DateForm extends TestBase {
     }
 
     @Override
-    protected void setup() {
-        getMainWindow().setLocale(Locale.US);
+    protected void setup(VaadinRequest request) {
+        setLocale(Locale.US);
         addComponent(log);
         final FieldGroup fieldGroup = new BeanFieldGroup<DateObject>(
                 DateObject.class);
@@ -102,7 +101,7 @@ public class DateForm extends TestBase {
                     msg = "Commit failed: " + e.getMessage();
                 }
                 Notification.show(msg);
-                log.log(msg);
+                log(msg);
 
             }
         });
@@ -112,8 +111,7 @@ public class DateForm extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         fieldGroup.discard();
-                        log.log("Discarded changes");
-
+                        log("Discarded changes");
                     }
                 });
         Button showBean = new Button("Show bean values",
@@ -121,7 +119,7 @@ public class DateForm extends TestBase {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        log.log(getPerson(fieldGroup).toString());
+                        log(getPerson(fieldGroup).toString());
 
                     }
                 });
@@ -135,12 +133,13 @@ public class DateForm extends TestBase {
         fieldGroup.setItemDataSource(new BeanItem<DateObject>(d));
     }
 
+    @SuppressWarnings("unchecked")
     public static Person getPerson(FieldGroup binder) {
         return ((BeanItem<Person>) binder.getItemDataSource()).getBean();
     }
 
     @Override
-    protected String getDescription() {
+    public String getDescription() {
         return "Ensure FieldGroupFieldFactory supports Dates";
     }
 

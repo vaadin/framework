@@ -1526,10 +1526,8 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             // Do not render over the vertical scrollbar
-            int nativeScrollbarSize = WidgetUtil.getNativeScrollbarSize();
-            if (nativeScrollbarSize > 0) {
-                editorOverlay.getStyle().setRight(nativeScrollbarSize, Unit.PX);
-            }
+            editorOverlay.getStyle().setWidth(grid.escalator.getInnerWidth(),
+                    Unit.PX);
         }
 
         private boolean buttonsShouldBeRenderedBelow(TableRowElement tr) {
@@ -2268,8 +2266,7 @@ public class Grid<T> extends ResizeComposite implements
                 // If selection cell already contains a widget do not
                 // create a new CheckBox
                 HeaderCell selectionCell = header.getDefaultRow().getCell(this);
-                if (selectionCell.getType()
-                        .equals(GridStaticCellType.WIDGET)
+                if (selectionCell.getType().equals(GridStaticCellType.WIDGET)
                         && selectionCell.getWidget() instanceof CheckBox) {
                     return;
                 }

@@ -137,6 +137,9 @@ $v-table-background-color: null !default;
     position: relative;
     background: $v-background-color;
     color: valo-font-color($v-background-color);
+
+    // Hide row focus outline
+    overflow: hidden;
   }
 
   .#{$primary-stylename}-header table,
@@ -381,7 +384,7 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-focus-slot-right {
     border-right: $v-table-border-width + 2px solid $v-focus-color;
     right: -$v-table-border-width - 1px;
-    margin-left: -$v-table-resizer-width - $v-table-border-width - 2px;
+    margin-left: -$v-table-resizer-width - $v-table-border-width - 2px !important;
   }
 
   .#{$primary-stylename}-focus-slot-left {
@@ -394,33 +397,34 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-column-selector {
-    @include valo-button-style;
+    @include valo-button-style($shadow: null);
     position: absolute;
     z-index: 2;
-    top: round($v-unit-size/-4);
-    right: round($v-unit-size/-4);
+    top: 0;
+    right: 0;
+    width: round($v-unit-size/2);
     height: round($v-unit-size/2);
     line-height: round($v-unit-size/2);
-    width: round($v-unit-size/2);
     padding: 0;
-    border-radius: 50%;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-radius: 0 0 0 $v-border-radius;
     cursor: pointer;
     text-align: center;
 
     @include opacity(0);
     @if $v-animations-enabled {
-      @include transition(opacity 200ms 1s);
+      @include transition(opacity 200ms 2s);
     }
 
     &:after {
       content: "";
       position: absolute;
-      $v-button-border-width: first-number($v-border);
-      top: -$v-button-border-width;
-      right: -$v-button-border-width;
-      bottom: -$v-button-border-width;
-      left: -$v-button-border-width;
-      border-radius: inherit;
+      border: none;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
     }
     &:active:after {
       @include valo-button-active-style;
@@ -430,22 +434,9 @@ $v-table-background-color: null !default;
     }
   }
 
-  .v-scrollable > .#{$primary-stylename} .#{$primary-stylename}-column-selector {
-    right: 0;
-    top: 0;
-    border-top: none;
-    border-right: none;
-    border-radius: 0 0 0 50%;
-
-    &:after {
-      top: 0;
-      right: 0;
-    }
-  }
-
   .#{$primary-stylename}-header-wrap:hover .#{$primary-stylename}-column-selector {
     @include opacity(1);
-    @include transition-delay(100ms);
+    @include transition-delay(200ms);
   }
 
   .v-on,
@@ -504,6 +495,11 @@ $v-table-background-color: null !default;
 
 
   // Drag'n'drop styles
+
+  .#{$primary-stylename}-drag {
+    // Show drag focus outline
+    overflow: visible;
+  }
 
   .#{$primary-stylename}-drag .#{$primary-stylename}-body {
     @include box-shadow(0 0 0 2px rgba($v-focus-color, .5));
