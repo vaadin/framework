@@ -219,13 +219,13 @@ public class Grid<T> extends ResizeComposite implements
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
-    protected abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>> {
+    public abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>> {
 
         /**
          * A header or footer cell. Has a simple textual caption.
          * 
          */
-        static class StaticCell {
+        public static class StaticCell {
 
             private Object content = null;
 
@@ -398,7 +398,7 @@ public class Grid<T> extends ResizeComposite implements
          * @param <CELLTYPE>
          *            the type of the cells in the row
          */
-        abstract static class StaticRow<CELLTYPE extends StaticCell> {
+        public abstract static class StaticRow<CELLTYPE extends StaticCell> {
 
             private Map<Column<?, ?>, CELLTYPE> cells = new HashMap<Column<?, ?>, CELLTYPE>();
 
