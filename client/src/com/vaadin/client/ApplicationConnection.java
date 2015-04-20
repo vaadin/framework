@@ -16,7 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -440,7 +439,7 @@ public class ApplicationConnection implements HasHandlers {
 
             // Hack to avoid logging an error in endRequest()
             getServerCommunicationHandler().startRequest();
-            getServerMessageHandler().handleJSONText(jsonText, -1);
+            getServerMessageHandler().handleMessage(jsonText);
         }
 
         // Tooltip can't be created earlier because the
@@ -643,12 +642,12 @@ public class ApplicationConnection implements HasHandlers {
 
     static final int MAX_CSS_WAITS = 100;
 
-    public void handleWhenCSSLoaded(final String jsonText, final ValueMap json) {
+    public void executeWhenCSSLoaded(final Command c) {
         if (!isCSSLoaded() && cssWaits < MAX_CSS_WAITS) {
             (new Timer() {
                 @Override
                 public void run() {
-                    handleWhenCSSLoaded(jsonText, json);
+                    executeWhenCSSLoaded(c);
                 }
             }).schedule(50);
 
@@ -665,8 +664,7 @@ public class ApplicationConnection implements HasHandlers {
                 getLogger().severe("CSS files may have not loaded properly.");
             }
 
-            getServerMessageHandler().handleUIDLMessage(new Date(), jsonText,
-                    json);
+            c.execute();
         }
     }
 

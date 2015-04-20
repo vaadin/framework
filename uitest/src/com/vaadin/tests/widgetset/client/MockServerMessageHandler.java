@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.widgetset.client;
 
-import java.util.Date;
-
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.communication.ServerMessageHandler;
 import com.vaadin.shared.ApplicationConstants;
@@ -27,11 +25,11 @@ public class MockServerMessageHandler extends ServerMessageHandler {
     protected String lastCsrfTokenReceiver;
 
     @Override
-    public void handleUIDLMessage(Date start, String jsonText, ValueMap json) {
+    public void handleJSON(ValueMap json) {
         lastCsrfTokenReceiver = json
                 .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
 
-        super.handleUIDLMessage(start, jsonText, json);
+        super.handleJSON(json);
     }
 
 }

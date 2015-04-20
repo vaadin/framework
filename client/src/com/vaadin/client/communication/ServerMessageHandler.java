@@ -189,22 +189,10 @@ public class ServerMessageHandler {
      * Data structure holding information about pending UIDL messages.
      */
     private static class PendingUIDLMessage {
-        private Date start;
-        private String jsonText;
         private ValueMap json;
 
-        public PendingUIDLMessage(Date start, String jsonText, ValueMap json) {
-            this.start = start;
-            this.jsonText = jsonText;
+        public PendingUIDLMessage(ValueMap json) {
             this.json = json;
-        }
-
-        public Date getStart() {
-            return start;
-        }
-
-        public String getJsonText() {
-            return jsonText;
         }
 
         public ValueMap getJson() {
@@ -227,13 +215,13 @@ public class ServerMessageHandler {
     }
 
     /**
-     * Handles received UIDL JSON text, parsing it, and passing it on to the
+     * Handles a received UIDL JSON text, parsing it, and passing it on to the
      * appropriate handlers, while logging timing information.
      * 
      * @param jsonText
-     * @param statusCode
+     *            The JSON to handle
      */
-    public void handleJSONText(String jsonText, int statusCode) {
+    public void handleMessage(String jsonText) {
         final Date start = new Date();
         final ValueMap json;
         try {
@@ -242,7 +230,7 @@ public class ServerMessageHandler {
             // FIXME
             getServerCommunicationHandler().endRequest();
             connection.showCommunicationError(e.getMessage()
-                    + " - Original JSON-text:" + jsonText, statusCode);
+                    + " - Original JSON-text:" + jsonText, 200);
             return;
         }
 
@@ -250,11 +238,16 @@ public class ServerMessageHandler {
                 "JSON parsing took " + (new Date().getTime() - start.getTime())
                         + "ms");
         if (connection.getState() == State.RUNNING) {
-            handleUIDLMessage(start, jsonText, json);
+            handleJSON(json);
         } else if (connection.getState() == State.INITIALIZING) {
             // Application is starting up for the first time
             connection.setApplicationRunning(true);
-            connection.handleWhenCSSLoaded(jsonText, json);
+            connection.executeWhenCSSLoaded(new Command() {
+                @Override
+                public void execute() {
+                    handleJSON(json);
+                }
+            });
         } else {
             getLogger()
                     .warning(
@@ -265,28 +258,23 @@ public class ServerMessageHandler {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-       try {
-               return JSON.parse(jsonText);
-       } catch (ignored) {
-               return eval('(' + jsonText + ')');
-       }
+       return JSON.parse(jsonText);
     }-*/;
 
-    public void handleUIDLMessage(final Date start, final String jsonText,
-            final ValueMap json) {
+    protected void handleJSON(final ValueMap json) {
         if (!responseHandlingLocks.isEmpty()) {
             // Some component is doing something that can't be interrupted
             // (e.g. animation that should be smooth). Enqueue the UIDL
             // message for later processing.
             getLogger().info("Postponing UIDL handling due to lock...");
-            pendingUIDLMessages.add(new PendingUIDLMessage(start, jsonText,
-                    json));
+            pendingUIDLMessages.add(new PendingUIDLMessage(json));
             if (!forceHandleMessage.isRunning()) {
                 forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
             }
             return;
         }
 
+        final Date start = new Date();
         /*
          * Lock response handling to avoid a situation where something pushed
          * from the server gets processed while waiting for e.g. lazily loaded
@@ -557,9 +545,7 @@ public class ServerMessageHandler {
 
                 getLogger().info(
                         " Processing time was "
-                                + String.valueOf(lastProcessingTime)
-                                + "ms for " + jsonText.length()
-                                + " characters of JSON");
+                                + String.valueOf(lastProcessingTime) + "ms");
                 getLogger().info(
                         "Referenced paintables: " + getConnectorMap().size());
 
@@ -1518,8 +1504,7 @@ public class ServerMessageHandler {
             pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
 
             for (PendingUIDLMessage pending : pendingMessages) {
-                handleUIDLMessage(pending.getStart(), pending.getJsonText(),
-                        pending.getJson());
+                handleJSON(pending.getJson());
             }
         }
     }

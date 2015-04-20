@@ -202,7 +202,7 @@ public class ServerRpcQueue {
                 return;
             }
             connection.getServerCommunicationHandler()
-                    .doSendPendingVariableChanges();
+                    .sendInvocationsToServer();
         }
     };
 

@@ -111,7 +111,7 @@ public class ServerCommunicationHandler {
         return Logger.getLogger(ServerCommunicationHandler.class.getName());
     }
 
-    public void doSendPendingVariableChanges() {
+    public void sendInvocationsToServer() {
         if (!connection.isApplicationRunning()) {
             getLogger()
                     .warning(
@@ -123,7 +123,7 @@ public class ServerCommunicationHandler {
             // There is an active request or push is enabled but not active
             // -> send when current request completes or push becomes active
         } else {
-            sendInvocationsToServer();
+            doSendInvocationsToServer();
         }
     }
 
@@ -132,7 +132,7 @@ public class ServerCommunicationHandler {
      * changes) to the server.
      * 
      */
-    public void sendInvocationsToServer() {
+    private void doSendInvocationsToServer() {
         ServerRpcQueue serverRpcQueue = getServerRpcQueue();
         if (serverRpcQueue.isEmpty()) {
             return;
@@ -287,7 +287,7 @@ public class ServerCommunicationHandler {
                         responseText.length()
                                 - JSON_COMMUNICATION_SUFFIX.length());
 
-                getServerMessageHandler().handleJSONText(jsonText, statusCode);
+                getServerMessageHandler().handleMessage(jsonText);
             }
         };
         if (push != null) {
