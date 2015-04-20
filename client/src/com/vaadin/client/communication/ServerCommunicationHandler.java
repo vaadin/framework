@@ -32,7 +32,6 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingEndedEvent;
 import com.vaadin.client.BrowserInfo;
@@ -252,7 +251,9 @@ public class ServerCommunicationHandler {
 
                 int statusCode = response.getStatusCode();
 
-                if (statusCode != 200) {
+                if (statusCode == 200) {
+                    getCommunicationProblemHandler().xhrOk();
+                } else {
                     // There was a problem
                     CommunicationProblemEvent problemEvent = new CommunicationProblemEvent(
                             request, uri, payload, response);
@@ -368,13 +369,7 @@ public class ServerCommunicationHandler {
 
         if (enabled && push == null) {
             push = GWT.create(PushConnection.class);
-            push.init(connection, pushState, new CommunicationErrorHandler() {
-                @Override
-                public boolean onError(String details, int statusCode) {
-                    connection.handleCommunicationError(details, statusCode);
-                    return true;
-                }
-            });
+            push.init(connection, pushState);
         } else if (!enabled && push != null && push.isActive()) {
             push.disconnect(new Command() {
                 @Override

@@ -97,7 +97,7 @@ public class Heartbeat {
 
                 boolean reschedule = true;
                 if (status == Response.SC_OK) {
-                    getLogger().fine("Heartbeat response OK");
+                    connection.getCommunicationProblemHandler().heartbeatOk();
                 } else {
                     reschedule = connection.getCommunicationProblemHandler()
                             .heartbeatInvalidStatusCode(request, response);

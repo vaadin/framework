@@ -27,7 +27,6 @@ import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
-import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -127,8 +126,6 @@ public class AtmospherePushConnection implements PushConnection {
 
     private String transport;
 
-    private CommunicationErrorHandler errorHandler;
-
     /**
      * Keeps track of the disconnect confirmation command for cases where
      * pending messages should be pushed before actually disconnecting.
@@ -147,10 +144,8 @@ public class AtmospherePushConnection implements PushConnection {
      */
     @Override
     public void init(final ApplicationConnection connection,
-            final PushConfigurationState pushConfiguration,
-            CommunicationErrorHandler errorHandler) {
+            final PushConfigurationState pushConfiguration) {
         this.connection = connection;
-        this.errorHandler = errorHandler;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
                 new ApplicationStoppedHandler() {
@@ -279,8 +274,9 @@ public class AtmospherePushConnection implements PushConnection {
      * @since 7.2
      */
     protected void onConnect(AtmosphereResponse response) {
-        transport = response.getTransport();
 
+        transport = response.getTransport();
+        getCommunicationProblemHandler().pushOk(this);
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
@@ -361,32 +357,27 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        errorHandler.onError("Push connection using "
-                + getConfig().getTransport() + " failed!",
-                response.getStatusCode());
+        getCommunicationProblemHandler().pushError(this);
     }
 
     protected void onClose(AtmosphereResponse response) {
         getLogger().info("Push connection closed");
         state = State.CONNECT_PENDING;
+        getCommunicationProblemHandler().pushClosed(this);
     }
 
     protected void onClientTimeout(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        errorHandler
-                .onError(
-                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
-                        -1);
+        getCommunicationProblemHandler().pushClientTimeout(this);
     }
 
     protected void onReconnect(JavaScriptObject request,
             final AtmosphereResponse response) {
         if (state == State.CONNECTED) {
-            getLogger()
-                    .fine("No onClose was received before reconnect. Forcing state to closed.");
             state = State.CONNECT_PENDING;
         }
         getLogger().info("Reopening push connection");
+        getCommunicationProblemHandler().pushReconnectPending(this);
     }
 
     public static abstract class AbstractJSO extends JavaScriptObject {
@@ -557,10 +548,8 @@ public class AtmospherePushConnection implements PushConnection {
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            errorHandler.onError(
-                                    event.getResourceUrl()
-                                            + " could not be loaded. Push will not work.",
-                                    0);
+                            getCommunicationProblemHandler()
+                                    .pushScriptLoadError(event.getResourceUrl());
                         }
                     });
         }
@@ -591,4 +580,9 @@ public class AtmospherePushConnection implements PushConnection {
     private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
+
+    private CommunicationProblemHandler getCommunicationProblemHandler() {
+        return connection.getCommunicationProblemHandler();
+    }
+
 }

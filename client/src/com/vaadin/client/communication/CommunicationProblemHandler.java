@@ -277,4 +277,88 @@ public class CommunicationProblemHandler {
                 "Exception sending heartbeat: " + exception.getMessage());
         return true;
     }
+
+    /**
+     * @since
+     * @param response
+     */
+    public void pushError(PushConnection pushConnection) {
+        /*
+         * Push error indicates a fatal error we cannot (or should not) recover
+         * from by reconnecting or similar.
+         * 
+         * Atmosphere calls onError
+         * 
+         * 1. if maxReconnectAttemps is reached
+         * 
+         * 2. if neither the transport nor the fallback transport can be used
+         * 
+         * (also for server response codes != 200 if reconnectOnServerError is
+         * set to false but we do not set that to false)
+         */
+        connection.handleCommunicationError("Push connection using "
+                + pushConnection.getTransportType() + " failed!", -1);
+    }
+
+    /**
+     * @since
+     * @param response
+     */
+    public void pushClientTimeout(PushConnection pushConnection) {
+        connection
+                .handleCommunicationError(
+                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
+                        -1);
+
+    }
+
+    /**
+     * @since
+     * @param resourceUrl
+     */
+    public void pushScriptLoadError(String resourceUrl) {
+        connection.handleCommunicationError(resourceUrl
+                + " could not be loaded. Push will not work.", 0);
+
+    }
+
+    /**
+     * @since
+     */
+    public void heartbeatOk() {
+        getLogger().fine("Heartbeat response OK");
+    }
+
+    /**
+     * @since
+     */
+    public void xhrOk() {
+
+    }
+
+    /**
+     * @since
+     * @param response
+     */
+    public void pushClosed(PushConnection pushConnection) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @since
+     * @param response
+     */
+    public void pushReconnectPending(PushConnection pushConnection) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @since
+     */
+    public void pushOk(PushConnection pushConnection) {
+        // TODO Auto-generated method stub
+
+    }
 }
