@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.server.component.table;
 
-import java.io.UnsupportedEncodingException;
-
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -38,28 +36,31 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
     @Test
     public void testBasicAttributes() {
 
-        String design = "<v-table page-length=30 cache-rate=3 selectable editable sortable=false "
-                + "drag-mode=row multi-select-mode=simple column-header-mode=id "
-                + "column-reordering-allowed column-collapsing-allowed sort-ascending=false "
-                + "row-header-mode=id sort-container-property-id=foo />";
+        String design = "<v-table page-length=30 cache-rate=3 selectable=true editable=true "
+                + "sortable=false sort-ascending=false sort-container-property-id=foo "
+                + "drag-mode=row multi-select-mode=simple column-header-mode=id row-header-mode=id "
+                + "column-reordering-allowed=true column-collapsing-allowed=true />";
 
         Table table = new Table();
         table.setPageLength(30);
         table.setCacheRate(3);
         table.setSelectable(true);
         table.setEditable(true);
+
         table.setSortEnabled(false);
+        table.setSortAscending(false);
+        table.setSortContainerPropertyId("foo");
+
         table.setDragMode(TableDragMode.ROW);
         table.setMultiSelectMode(MultiSelectMode.SIMPLE);
         table.setColumnHeaderMode(ColumnHeaderMode.ID);
         table.setRowHeaderMode(RowHeaderMode.ID);
+
         table.setColumnReorderingAllowed(true);
         table.setColumnCollapsingAllowed(true);
-        table.setSortAscending(false);
-        table.setSortContainerPropertyId("foo");
 
         testRead(design, table);
-        // testWrite(design, table);
+        testWrite(design, table);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
         String design = "<v-table column-collapsing-allowed=true>" //
                 + "  <table>" //
                 + "    <colgroup>"
-                + "      <col property-id='foo'>"
+                + "      <col property-id='foo' width=300>"
                 + "      <col property-id='bar' center expand=1 collapsible=false>"
                 + "      <col property-id='baz' right expand=2 collapsed=true>"
                 + "    </colgroup>" //
@@ -79,7 +80,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
         table.addContainerProperty("foo", String.class, null);
         table.setColumnAlignment("foo", Align.LEFT);
-        table.setColumnExpandRatio("foo", 0);
+        table.setColumnWidth("foo", 300);
 
         table.addContainerProperty("bar", String.class, null);
         table.setColumnAlignment("bar", Align.CENTER);
@@ -92,7 +93,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
         table.setColumnCollapsed("baz", true);
 
         testRead(design, table);
-        // testWrite(design, table);
+        testWrite(design, table);
     }
 
     @Test
@@ -123,15 +124,15 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
         table.setColumnFooter("bar", "bar");
 
         testRead(design, table);
-        // testWrite(design, table);
+        testWrite(design, table);
     }
 
     @Test
-    public void testInlineData() throws UnsupportedEncodingException {
-        String design = "<v-table footer-visible=true> "//
+    public void testInlineData() {
+        String design = "<v-table> "//
                 + "  <table>" //
                 + "    <colgroup>"
-                + "      <col property-id='foo' width=150 />"
+                + "      <col property-id='foo' />"
                 + "      <col property-id='bar' />"
                 + "      <col property-id='baz' />" //
                 + "    </colgroup>"
@@ -147,6 +148,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
                 + "    </tfoot>" //
                 + "  </table>" //
                 + "</v-table>";
+
         Table table = new Table();
         table.addContainerProperty("foo", String.class, null);
         table.addContainerProperty("bar", String.class, null);
@@ -158,8 +160,8 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
         table.addItem(new Object[] { "r1c1", "r1c2", "r1c3" }, null);
         table.addItem(new Object[] { "r2c1", "r2c2", "r2c3" }, null);
         table.setFooterVisible(true);
-        testRead(design, table);
-        // testWrite(design, table);
 
+        testRead(design, table);
+        testWrite(design, table, true);
     }
 }

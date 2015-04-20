@@ -25,7 +25,7 @@ public class TableDeclarativeTestBase extends DeclarativeTestBase<Table> {
     @Override
     public Table testRead(String design, Table expected) {
         Table read = super.testRead(design, expected);
-        compareFooter(read, expected);
+        compareColumns(read, expected);
         compareBody(read, expected);
         return read;
     }
@@ -43,9 +43,20 @@ public class TableDeclarativeTestBase extends DeclarativeTestBase<Table> {
         }
     }
 
-    private void compareFooter(Table read, Table expected) {
+    private void compareColumns(Table read, Table expected) {
         for (Object pid : expected.getVisibleColumns()) {
-            assertEquals(expected.getColumnFooter(pid),
+            String col = "column '" + pid + "'";
+            assertEquals(col + " width", expected.getColumnWidth(pid),
+                    read.getColumnWidth(pid));
+            assertEquals(col + " expand ratio",
+                    expected.getColumnExpandRatio(pid),
+                    read.getColumnExpandRatio(pid));
+            assertEquals(col + " collapsible",
+                    expected.isColumnCollapsible(pid),
+                    read.isColumnCollapsible(pid));
+            assertEquals(col + " collapsed", expected.isColumnCollapsed(pid),
+                    read.isColumnCollapsed(pid));
+            assertEquals(col + " footer", expected.getColumnFooter(pid),
                     read.getColumnFooter(pid));
         }
     }

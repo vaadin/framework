@@ -6175,12 +6175,115 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     @Override
+    public void writeDesign(Element design, DesignContext context) {
+        Table def = context.getDefaultInstance(this);
+
+        DesignAttributeHandler.writeAttribute("sortable", design.attributes(),
+                isSortEnabled(), def.isSortEnabled(), boolean.class);
+
+        Element table = null;
+        boolean hasColumns = getVisibleColumns().length != 0;
+        if (hasColumns) {
+            table = design.appendElement("table");
+            writeColumns(table, def);
+            writeHeader(table, def);
+        }
+        super.writeDesign(design, context);
+        if (hasColumns) {
+            writeFooter(table);
+        }
+    }
+
+    private void writeColumns(Element table, Table def) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0) {
+            return;
+        }
+
+        Element colgroup = table.appendElement("colgroup");
+        for (Object id : columns) {
+            Element col = colgroup.appendElement("col");
+
+            col.attr("property-id", id.toString());
+
+            if (getColumnAlignment(id) == Align.CENTER) {
+                col.attr("center", "");
+            } else if (getColumnAlignment(id) == Align.RIGHT) {
+                col.attr("right", "");
+            }
+
+            DesignAttributeHandler.writeAttribute("width", col.attributes(),
+                    getColumnWidth(id), def.getColumnWidth(null), int.class);
+
+            DesignAttributeHandler.writeAttribute("expand", col.attributes(),
+                    getColumnExpandRatio(id), def.getColumnExpandRatio(null),
+                    float.class);
+
+            DesignAttributeHandler.writeAttribute("collapsible",
+                    col.attributes(), isColumnCollapsible(id),
+                    def.isColumnCollapsible(null), boolean.class);
+
+            DesignAttributeHandler.writeAttribute("collapsed",
+                    col.attributes(), isColumnCollapsed(id),
+                    def.isColumnCollapsed(null), boolean.class);
+        }
+    }
+
+    private void writeHeader(Element table, Table def) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0
+                || (columnIcons.isEmpty() && columnHeaders.isEmpty())) {
+            return;
+        }
+
+        Element header = table.appendElement("thead").appendElement("tr");
+        for (Object id : columns) {
+            Element th = header.appendElement("th");
+            th.html(getColumnHeader(id));
+            DesignAttributeHandler.writeAttribute("icon", th.attributes(),
+                    getColumnIcon(id), def.getColumnIcon(null), Resource.class);
+        }
+
+    }
+
+    private void writeFooter(Element table) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0 || columnFooters.isEmpty()) {
+            return;
+        }
+
+        Element footer = table.appendElement("tfoot").appendElement("tr");
+        for (Object id : columns) {
+            footer.appendElement("td").text(getColumnFooter(id));
+        }
+    }
+
+    @Override
+    protected void writeItems(Element design, DesignContext context) {
+        Element tbody = design.child(0).appendElement("tbody");
+        super.writeItems(tbody, context);
+    }
+
+    @Override
+    protected Element writeItem(Element tbody, Object itemId,
+            DesignContext context) {
+        Element tr = tbody.appendElement("tr");
+        Item item = getItem(itemId);
+        for (Object id : getVisibleColumns()) {
+            Element td = tr.appendElement("td");
+            td.html(item.getItemProperty(id).getValue().toString());
+        }
+        return tr;
+    }
+
+    @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
         result.add("sortable");
         result.add("sort-enabled");
         result.add("sort-disabled");
         result.add("footer-visible");
+        result.add("item-caption-mode");
         result.add("current-page-first-item-id");
         result.add("current-page-first-item-index");
         return result;
