@@ -17,6 +17,7 @@ package com.vaadin.client.communication;
 
 import java.util.logging.Logger;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -223,5 +224,57 @@ public class CommunicationProblemHandler {
 
     private ServerCommunicationHandler getServerCommunicationHandler() {
         return connection.getServerCommunicationHandler();
+    }
+
+    /**
+     * Called when a heartbeat request returns a status code other than 200
+     * 
+     * @param request
+     *            The heartbeat request
+     * @param response
+     *            The heartbeat response
+     * @return true if a new heartbeat should be sent, false if no further
+     *         heartbeats should be sent
+     */
+    public boolean heartbeatInvalidStatusCode(Request request, Response response) {
+        int status = response.getStatusCode();
+        int interval = connection.getHeartbeat().getInterval();
+        if (status == 0) {
+            getLogger().warning(
+                    "Failed sending heartbeat, server is unreachable, retrying in "
+                            + interval + "secs.");
+        } else if (status == Response.SC_GONE) {
+            // FIXME Stop application?
+            connection.showSessionExpiredError(null);
+            // If session is expired break the loop
+            return false;
+        } else if (status >= 500) {
+            getLogger().warning(
+                    "Failed sending heartbeat, see server logs, retrying in "
+                            + interval + "secs.");
+        } else {
+            getLogger()
+                    .warning(
+                            "Failed sending heartbeat to server. Error code: "
+                                    + status);
+        }
+
+        return true;
+    }
+
+    /**
+     * Called when an exception occurs during a heartbeat request
+     * 
+     * @param request
+     *            The heartbeat request
+     * @param exception
+     *            The exception which occurred
+     * @return true if a new heartbeat should be sent, false if no further
+     *         heartbeats should be sent
+     */
+    public boolean heartbeatException(Request request, Throwable exception) {
+        getLogger().severe(
+                "Exception sending heartbeat: " + exception.getMessage());
+        return true;
     }
 }

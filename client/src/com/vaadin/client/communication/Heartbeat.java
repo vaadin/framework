@@ -95,37 +95,28 @@ public class Heartbeat {
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
 
+                boolean reschedule = true;
                 if (status == Response.SC_OK) {
                     getLogger().fine("Heartbeat response OK");
-                } else if (status == 0) {
-                    getLogger().warning(
-                            "Failed sending heartbeat, server is unreachable, retrying in "
-                                    + interval + "secs.");
-                } else if (status >= 500) {
-                    getLogger().warning(
-                            "Failed sending heartbeat, see server logs, retrying in "
-                                    + interval + "secs.");
-                } else if (status == Response.SC_GONE) {
-                    connection.showSessionExpiredError(null);
-                    // If session is expired break the loop
-                    return;
                 } else {
-                    getLogger().warning(
-                            "Failed sending heartbeat to server. Error code: "
-                                    + status);
+                    reschedule = connection.getCommunicationProblemHandler()
+                            .heartbeatInvalidStatusCode(request, response);
                 }
 
-                // Don't break the loop
-                schedule();
+                if (reschedule) {
+                    schedule();
+                }
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                getLogger().severe(
-                        "Exception sending heartbeat: "
-                                + exception.getMessage());
-                // Don't break the loop
-                schedule();
+                boolean reschedule = connection
+                        .getCommunicationProblemHandler().heartbeatException(
+                                request, exception);
+
+                if (reschedule) {
+                    schedule();
+                }
             }
         };
 
