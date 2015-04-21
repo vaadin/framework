@@ -36,6 +36,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
@@ -409,6 +411,7 @@ public class GridBasicClientFeaturesWidget extends
         createInternalsMenu();
         createDataSourceMenu();
         createDetailsMenu();
+        createSidebarMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -1477,5 +1480,89 @@ public class GridBasicClientFeaturesWidget extends
             }, togglemenupath);
         }
 
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(GridBasicClientFeaturesWidget.class.getName());
+    }
+
+    private void createSidebarMenu() {
+        String[] menupath = new String[] { "Component", "Sidebar" };
+
+        final List<MenuItem> customMenuItems = new ArrayList<MenuItem>();
+        final List<MenuItemSeparator> separators = new ArrayList<MenuItemSeparator>();
+
+        addMenuCommand("Add item to end", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItem item = createSidebarMenuItem(customMenuItems.size());
+                customMenuItems.add(item);
+                grid.getSidebarMenu().addItem(item);
+            }
+        }, menupath);
+
+        addMenuCommand("Add item before index 1", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItem item = createSidebarMenuItem(customMenuItems.size());
+                customMenuItems.add(item);
+                grid.getSidebarMenu().insertItem(item, 1);
+            }
+        }, menupath);
+
+        addMenuCommand("Remove last added item", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getSidebarMenu().removeItem(
+                        customMenuItems.remove(customMenuItems.size() - 1));
+            }
+        }, menupath);
+
+        addMenuCommand("Add separator to end", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItemSeparator separator = new MenuItemSeparator();
+                separators.add(separator);
+                grid.getSidebarMenu().addSeparator(separator);
+            }
+        }, menupath);
+
+        addMenuCommand("Add separator before index 1", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItemSeparator separator = new MenuItemSeparator();
+                separators.add(separator);
+                grid.getSidebarMenu().insertSeparator(separator, 1);
+            }
+        }, menupath);
+
+        addMenuCommand("Remove last added separator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getSidebarMenu().removeSeparator(
+                        separators.remove(separators.size() - 1));
+            }
+        }, menupath);
+
+        addMenuCommand("Toggle sidebar visibility", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setSidebarOpen(!grid.isSidebarOpen());
+            }
+        }, menupath);
+    }
+
+    private MenuItem createSidebarMenuItem(final int index) {
+        final MenuItem menuItem = new MenuItem("Custom menu item " + index,
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (index % 2 == 0) {
+                            grid.setSidebarOpen(false);
+                        }
+                        getLogger().info("Menu item " + index + " selected");
+                    }
+                });
+        return menuItem;
     }
 }
