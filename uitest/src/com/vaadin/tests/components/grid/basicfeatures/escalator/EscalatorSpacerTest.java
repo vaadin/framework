@@ -34,6 +34,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
@@ -450,7 +451,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
         tryToTabIntoFocusUpdaterElement();
-        assertEquals("input", getFocusedElement().getTagName());
+        WebElement focusedElement = getFocusedElement();
+        assertEquals("input", focusedElement.getTagName());
     }
 
     @Test
@@ -485,11 +487,9 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     }
 
     private void tryToTabIntoFocusUpdaterElement() {
-        getEscalator().sendKeys( //
-                Keys.TAB, // v-ui v-scrollable
-                Keys.TAB, // menubar
-                Keys.TAB // <input>
-                );
+        ((TestBenchElement) findElement(By.className("gwt-MenuBar"))).focus();
+        WebElement focusedElement = getFocusedElement();
+        focusedElement.sendKeys(Keys.TAB);
     }
 
     private WebElement getChild(WebElement parent, int childIndex) {

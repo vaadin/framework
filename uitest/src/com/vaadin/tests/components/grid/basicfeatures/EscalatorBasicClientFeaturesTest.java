@@ -31,7 +31,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@TestCategory("escalator")
+@TestCategory("grid")
 public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest {
 
     private static final String LOGICAL_ROW_ATTRIBUTE_NAME = "vLogicalRow";

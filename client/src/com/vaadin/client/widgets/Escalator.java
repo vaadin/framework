@@ -4871,7 +4871,7 @@ public class Escalator extends Widget implements RequiresResize,
                             .toString();
                     deco.getStyle().setProperty("clip", clip);
                 } else {
-                    deco.getStyle().clearProperty("clip");
+                    deco.getStyle().setProperty("clip", "auto");
                 }
             }
         }
