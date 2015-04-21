@@ -148,4 +148,10 @@ public class ApplicationConstants implements Serializable {
      */
     public static final String RESYNCHRONIZE_ID = "resynchronize";
 
+    /**
+     * The name of the parameter used for sending the widget set version to the
+     * server
+     */
+    public static final String WIDGETSET_VERSION_ID = "wsver";
+
 }

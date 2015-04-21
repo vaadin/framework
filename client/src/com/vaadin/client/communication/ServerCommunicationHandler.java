@@ -65,9 +65,6 @@ public class ServerCommunicationHandler {
     private final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
     private final String JSON_COMMUNICATION_SUFFIX = "]";
 
-    private static final String REPAINT_ALL_PARAMETER = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
-            + "=1";
-
     private ApplicationConnection connection;
     private PushConnection push;
     private boolean hasActiveRequest = false;
@@ -155,20 +152,16 @@ public class ServerCommunicationHandler {
             return;
         }
 
-        String extraParams = "";
+        JsonObject extraJson = Json.createObject();
         if (!connection.getConfiguration().isWidgetsetVersionSent()) {
-            if (!extraParams.isEmpty()) {
-                extraParams += "&";
-            }
-            String widgetsetVersion = Version.getFullVersion();
-            extraParams += "v-wsver=" + widgetsetVersion;
-
+            extraJson.put(ApplicationConstants.WIDGETSET_VERSION_ID,
+                    Version.getFullVersion());
             connection.getConfiguration().setWidgetsetVersionSent();
         }
         if (showLoadingIndicator) {
             connection.getLoadingIndicator().trigger();
         }
-        makeUidlRequest(reqJson, extraParams);
+        send(reqJson, extraJson);
     }
 
     private ServerRpcQueue getServerRpcQueue() {
@@ -181,13 +174,10 @@ public class ServerCommunicationHandler {
      * @param reqInvocations
      *            Data containing RPC invocations and all related information.
      * @param extraParams
-     *            Parameters that are added as GET parameters to the url.
-     *            Contains key=value pairs joined by & characters or is empty if
-     *            no parameters should be added. Should not start with any
-     *            special character.
+     *            Parameters that are added to the payload
      */
-    public void makeUidlRequest(final JsonArray reqInvocations,
-            final String extraParams) {
+    protected void send(final JsonArray reqInvocations,
+            final JsonObject extraJson) {
         startRequest();
 
         JsonObject payload = Json.createObject();
@@ -203,15 +193,17 @@ public class ServerCommunicationHandler {
 
         getLogger()
                 .info("Making UIDL Request with params: " + payload.toJson());
+        if (extraJson != null) {
+            for (String key : extraJson.keys()) {
+                payload.put(key, extraJson.get(key));
+            }
+        }
+
+        // FIXME XHR specific
         String uri = connection
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.UIDL_PATH + '/');
 
-        if (extraParams.equals(REPAINT_ALL_PARAMETER)) {
-            payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
-        } else {
-            uri = SharedUtil.addGetParameters(uri, extraParams);
-        }
         uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
                 + "=" + connection.getConfiguration().getUIId());
 
@@ -489,7 +481,10 @@ public class ServerCommunicationHandler {
      * state from the server
      */
     public void resynchronize() {
-        makeUidlRequest(Json.createArray(), REPAINT_ALL_PARAMETER);
+        getLogger().info("Resynchronizing from server");
+        JsonObject resyncParam = Json.createObject();
+        resyncParam.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
+        send(Json.createArray(), resyncParam);
     }
 
     /**

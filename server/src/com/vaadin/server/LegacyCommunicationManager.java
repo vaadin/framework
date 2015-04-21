@@ -353,6 +353,10 @@ public class LegacyCommunicationManager implements Serializable {
             res.clear();
         }
 
+        public boolean isEmpty() {
+            return res.isEmpty();
+        }
+
     }
 
     /**

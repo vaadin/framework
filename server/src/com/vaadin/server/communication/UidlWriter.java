@@ -63,8 +63,6 @@ public class UidlWriter implements Serializable {
      *            The {@link UI} whose changes to write
      * @param writer
      *            The writer to use
-     * @param repaintAll
-     *            Whether the client should re-render the whole UI.
      * @param analyzeLayouts
      *            Whether detected layout problems should be logged.
      * @param async
@@ -74,8 +72,7 @@ public class UidlWriter implements Serializable {
      * @throws IOException
      *             If the writing fails.
      */
-    public void write(UI ui, Writer writer, boolean repaintAll, boolean async)
-            throws IOException {
+    public void write(UI ui, Writer writer, boolean async) throws IOException {
         VaadinSession session = ui.getSession();
         VaadinService service = session.getService();
 
@@ -86,6 +83,8 @@ public class UidlWriter implements Serializable {
         Set<ClientConnector> processedConnectors = new HashSet<ClientConnector>();
 
         LegacyCommunicationManager manager = session.getCommunicationManager();
+        ClientCache clientCache = manager.getClientCache(ui);
+        boolean repaintAll = clientCache.isEmpty();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
@@ -205,7 +204,6 @@ public class UidlWriter implements Serializable {
             Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
                     .getUsedClientConnectors();
             boolean typeMappingsOpen = false;
-            ClientCache clientCache = manager.getClientCache(ui);
 
             List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
 
