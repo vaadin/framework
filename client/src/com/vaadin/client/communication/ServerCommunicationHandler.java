@@ -15,34 +15,20 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingEndedEvent;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VLoadingIndicator;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
-import com.vaadin.shared.util.SharedUtil;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -62,36 +48,21 @@ import elemental.json.JsonObject;
  */
 public class ServerCommunicationHandler {
 
-    private final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
-    private final String JSON_COMMUNICATION_SUFFIX = "]";
+    public static final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
+    public static final String JSON_COMMUNICATION_SUFFIX = "]";
 
     private ApplicationConnection connection;
-    private PushConnection push;
     private boolean hasActiveRequest = false;
-    private Date requestStartTime;
-
-    /**
-     * Webkit will ignore outgoing requests while waiting for a response to a
-     * navigation event (indicated by a beforeunload event). When this happens,
-     * we should keep trying to send the request every now and then until there
-     * is a response or until it throws an exception saying that it is already
-     * being sent.
-     */
-    private boolean webkitMaybeIgnoringRequests = false;
 
     /**
      * Counter for the messages send to the server. First sent message has id 0.
      */
     private int clientToServerMessageId = 0;
+    private XhrConnection xhrConnection;
+    private PushConnection push;
 
     public ServerCommunicationHandler() {
-        Window.addWindowClosingHandler(new ClosingHandler() {
-            @Override
-            public void onWindowClosing(ClosingEvent event) {
-                webkitMaybeIgnoringRequests = true;
-            }
-        });
-
+        xhrConnection = GWT.create(XhrConnection.class);
     }
 
     /**
@@ -102,6 +73,7 @@ public class ServerCommunicationHandler {
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
+        xhrConnection.setConnection(connection);
     }
 
     public static Logger getLogger() {
@@ -199,15 +171,7 @@ public class ServerCommunicationHandler {
             }
         }
 
-        // FIXME XHR specific
-        String uri = connection
-                .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.UIDL_PATH + '/');
-
-        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
-                + "=" + connection.getConfiguration().getUIId());
-
-        doUidlRequest(uri, payload, true);
+        send(payload);
 
     }
 
@@ -219,134 +183,14 @@ public class ServerCommunicationHandler {
      *            The URI to use for the request. May includes GET parameters
      * @param payload
      *            The contents of the request to send
-     * @param retry
-     *            true when a status code 0 should be retried
      */
-    public void doUidlRequest(final String uri, final JsonObject payload,
-            final boolean retry) {
-        RequestCallback requestCallback = new RequestCallback() {
-
-            @Override
-            public void onError(Request request, Throwable exception) {
-                getCommunicationProblemHandler().xhrException(
-                        payload,
-                        new CommunicationProblemEvent(request, uri, payload,
-                                exception));
-            }
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                getLogger().info(
-                        "Server visit took "
-                                + String.valueOf((new Date()).getTime()
-                                        - requestStartTime.getTime()) + "ms");
-
-                int statusCode = response.getStatusCode();
-
-                if (statusCode == 200) {
-                    getCommunicationProblemHandler().xhrOk();
-                } else {
-                    // There was a problem
-                    CommunicationProblemEvent problemEvent = new CommunicationProblemEvent(
-                            request, uri, payload, response);
-
-                    getCommunicationProblemHandler().xhrInvalidStatusCode(
-                            problemEvent, retry);
-                    return;
-                }
-
-                String contentType = response.getHeader("Content-Type");
-                if (contentType == null
-                        || !contentType.startsWith("application/json")) {
-                    getCommunicationProblemHandler().xhrInvalidContent(
-                            new CommunicationProblemEvent(request, uri,
-                                    payload, response));
-                    return;
-                }
-
-                // for(;;);["+ realJson +"]"
-                String responseText = response.getText();
-
-                if (!responseText.startsWith(JSON_COMMUNICATION_PREFIX)) {
-                    getCommunicationProblemHandler().xhrInvalidContent(
-                            new CommunicationProblemEvent(request, uri,
-                                    payload, response));
-                    return;
-                }
-
-                final String jsonText = responseText.substring(
-                        JSON_COMMUNICATION_PREFIX.length(),
-                        responseText.length()
-                                - JSON_COMMUNICATION_SUFFIX.length());
-
-                getServerMessageHandler().handleMessage(jsonText);
-            }
-        };
+    public void send(final JsonObject payload) {
         if (push != null) {
             push.push(payload);
         } else {
-            try {
-                doAjaxRequest(uri, payload, requestCallback);
-            } catch (RequestException e) {
-                getCommunicationProblemHandler().xhrException(payload,
-                        new CommunicationProblemEvent(null, uri, payload, e));
-            }
+            xhrConnection.send(payload);
         }
     }
-
-    /**
-     * Sends an asynchronous UIDL request to the server using the given URI.
-     * 
-     * @param uri
-     *            The URI to use for the request. May includes GET parameters
-     * @param payload
-     *            The contents of the request to send
-     * @param requestCallback
-     *            The handler for the response
-     * @throws RequestException
-     *             if the request could not be sent
-     */
-    protected void doAjaxRequest(String uri, JsonObject payload,
-            RequestCallback requestCallback) throws RequestException {
-        RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
-        // TODO enable timeout
-        // rb.setTimeoutMillis(timeoutMillis);
-        // TODO this should be configurable
-        rb.setHeader("Content-Type", JsonConstants.JSON_CONTENT_TYPE);
-        rb.setRequestData(payload.toJson());
-        rb.setCallback(requestCallback);
-
-        final Request request = rb.send();
-        if (webkitMaybeIgnoringRequests && BrowserInfo.get().isWebkit()) {
-            final int retryTimeout = 250;
-            new Timer() {
-                @Override
-                public void run() {
-                    // Use native js to access private field in Request
-                    if (resendRequest(request) && webkitMaybeIgnoringRequests) {
-                        // Schedule retry if still needed
-                        schedule(retryTimeout);
-                    }
-                }
-            }.schedule(retryTimeout);
-        }
-    }
-
-    private static native boolean resendRequest(Request request)
-    /*-{
-        var xhr = request.@com.google.gwt.http.client.Request::xmlHttpRequest
-        if (xhr.readyState != 1) {
-            // Progressed to some other readyState -> no longer blocked
-            return false;
-        }
-        try {
-            xhr.send();
-            return true;
-        } catch (e) {
-            // send throws exception if it is running for real
-            return false;
-        }
-    }-*/;
 
     /**
      * Sets the status for the push connection.
@@ -394,7 +238,6 @@ public class ServerCommunicationHandler {
                     "Trying to start a new request while another is active");
         }
         hasActiveRequest = true;
-        requestStartTime = new Date();
         connection.fireEvent(new RequestStartingEvent(connection));
     }
 
@@ -407,8 +250,6 @@ public class ServerCommunicationHandler {
         // the call. Active requests used to be tracked with an integer counter,
         // so setting it after used to work but not with the #8505 changes.
         hasActiveRequest = false;
-
-        webkitMaybeIgnoringRequests = false;
 
         if (connection.isApplicationRunning()) {
             if (getServerRpcQueue().isFlushPending()) {

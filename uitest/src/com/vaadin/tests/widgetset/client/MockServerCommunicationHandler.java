@@ -27,10 +27,10 @@ public class MockServerCommunicationHandler extends ServerCommunicationHandler {
     String lastCsrfTokenSent;
 
     @Override
-    public void doUidlRequest(String uri, JsonObject payload, boolean retry) {
+    public void send(JsonObject payload) {
         JsonValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
         lastCsrfTokenSent = jsonValue != null ? jsonValue.toJson() : null;
 
-        super.doUidlRequest(uri, payload, retry);
+        super.send(payload);
     }
 }

@@ -25,8 +25,6 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
 
-import elemental.json.JsonObject;
-
 /**
  * TODO
  * 
@@ -55,7 +53,7 @@ public class CommunicationProblemHandler {
      * @param payload
      * @param communicationProblemEvent
      */
-    public void xhrException(JsonObject payload, CommunicationProblemEvent event) {
+    public void xhrException(CommunicationProblemEvent event) {
         handleUnrecoverableCommunicationError(
                 event.getException().getMessage(), event);
 
@@ -65,12 +63,11 @@ public class CommunicationProblemHandler {
      * @param event
      * @param retry
      */
-    public void xhrInvalidStatusCode(final CommunicationProblemEvent event,
-            boolean retry) {
+    public void xhrInvalidStatusCode(final CommunicationProblemEvent event) {
         Response response = event.getResponse();
         int statusCode = response.getStatusCode();
         if (statusCode == 0) {
-            handleNoConnection(event, retry);
+            handleNoConnection(event);
         } else if (statusCode == 401) {
             handleAuthorizationFailed(event);
         } else if (statusCode == 503) {
@@ -107,10 +104,9 @@ public class CommunicationProblemHandler {
             (new Timer() {
                 @Override
                 public void run() {
-                    // doUidlRequest does not call startRequest so we do
+                    // send does not call startRequest so we do
                     // not call endRequest before it
-                    getServerCommunicationHandler().doUidlRequest(
-                            event.getUri(), event.getPayload(), true);
+                    getServerCommunicationHandler().send(event.getPayload());
                 }
             }).schedule(Integer.parseInt(delay));
             return;
@@ -151,39 +147,9 @@ public class CommunicationProblemHandler {
      * @param event
      * @param retry
      */
-    private void handleNoConnection(final CommunicationProblemEvent event,
-            boolean retry) {
-        if (retry) {
-            /*
-             * There are 2 situations where the error can pop up:
-             * 
-             * 1) Request was most likely canceled because the browser is maybe
-             * navigating away from the page. Just send the request again
-             * without displaying any error in case the navigation isn't carried
-             * through.
-             * 
-             * 2) The browser failed to establish a network connection. This was
-             * observed with keep-alive requests, and under wi-fi roaming
-             * conditions.
-             * 
-             * Status code 0 does indicate that there was no server side
-             * processing, so we can retry the request.
-             */
-            getLogger().warning("Status code 0, retrying");
-            (new Timer() {
-                @Override
-                public void run() {
-                    // doUidlRequest does not call startRequest so we do
-                    // not call endRequest before it
-                    getServerCommunicationHandler().doUidlRequest(
-                            event.getUri(), event.getPayload(), false);
-                }
-            }).schedule(100);
-        } else {
-            handleUnrecoverableCommunicationError(
-                    "Invalid status code 0 (server down?)", event);
-        }
-
+    private void handleNoConnection(final CommunicationProblemEvent event) {
+        handleUnrecoverableCommunicationError(
+                "Invalid status code 0 (server down?)", event);
     }
 
     private void handleUnrecoverableCommunicationError(String details,

@@ -30,28 +30,27 @@ public class CommunicationProblemEvent {
     private Throwable exception;
     private Request request;
     private Response response;
-    private String uri;
     private JsonObject payload;
 
     /**
      * @param exception
      */
-    public CommunicationProblemEvent(Request request, String uri,
-            JsonObject payload, Throwable exception) {
+    public CommunicationProblemEvent(Request request, JsonObject payload,
+            Throwable exception) {
         this.request = request;
         this.exception = exception;
-        this.uri = uri;
+        this.payload = payload;
     }
 
     /**
      * @param request
      * @param statusCode
      */
-    public CommunicationProblemEvent(Request request, String uri,
-            JsonObject payload, Response response) {
+    public CommunicationProblemEvent(Request request, JsonObject payload,
+            Response response) {
         this.request = request;
         this.response = response;
-        this.uri = uri;
+        this.payload = payload;
     }
 
     /**
@@ -73,13 +72,6 @@ public class CommunicationProblemEvent {
      */
     public Response getResponse() {
         return response;
-    }
-
-    /**
-     * @return the uri
-     */
-    public String getUri() {
-        return uri;
     }
 
     /**
