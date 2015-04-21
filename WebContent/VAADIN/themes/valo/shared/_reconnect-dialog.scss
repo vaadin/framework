@@ -1,0 +1,18 @@
+@mixin valo-reconnect-dialog {
+  .v-reconnect-dialog {
+    color: white;
+    @include valo-notification-bar-style;
+    @include valo-notification-system-style;
+    text-align: center;
+    .spinner {
+      @include valo-spinner;
+      display: inline-block;
+      margin-top: 10px;
+      visibility: hidden;
+    }
+
+    &.active .spinner {
+      visibility: visible;
+    }
+  }
+}

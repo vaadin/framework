@@ -2,6 +2,7 @@
 @import "contextmenu";
 @import "overlay";
 @import "tooltip";
+@import "reconnect-dialog";
 
 
 /*
@@ -374,6 +375,7 @@ $valo-shared-pathPrefix: null;
 
   @include valo-contextmenu;
 
+  @include valo-reconnect-dialog;
 }
 
 

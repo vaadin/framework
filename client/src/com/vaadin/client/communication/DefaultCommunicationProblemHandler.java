@@ -44,6 +44,10 @@ public class DefaultCommunicationProblemHandler implements
         this.connection = connection;
     }
 
+    protected ApplicationConnection getConnection() {
+        return connection;
+    }
+
     public static Logger getLogger() {
         return Logger.getLogger(DefaultCommunicationProblemHandler.class
                 .getName());
