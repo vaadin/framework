@@ -96,6 +96,19 @@
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
+    <servlet>
+        <servlet-name>CommErrorEmulator</servlet-name>
+        <servlet-class>com.vaadin.tests.application.CommErrorEmulatorServlet</servlet-class>
+        <init-param>
+            <param-name>heartbeatInterval</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ui</param-name>
+            <param-value>com.vaadin.tests.application.CommErrorEmulatorUI</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
 
     <servlet>
         <!-- This servlet is a separate instance for the sole purpose of 
@@ -167,6 +180,11 @@
     <servlet-mapping>
         <servlet-name>IntegrationTest</servlet-name>
         <url-pattern>/integration/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CommErrorEmulator</servlet-name>
+        <url-pattern>/commerror/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
