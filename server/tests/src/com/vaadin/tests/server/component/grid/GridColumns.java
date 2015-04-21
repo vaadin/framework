@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -310,5 +311,31 @@ public class GridColumns {
         grid.addColumn("column1");
         assertEquals("Column sortability changed when re-adding", sortable,
                 grid.getColumn("column1").isSortable());
+    }
+
+    @Test
+    public void testSetColumns() {
+        grid.setColumns("column7", "column0", "column9");
+        Iterator<Column> it = grid.getColumns().iterator();
+        assertEquals(it.next().getPropertyId(), "column7");
+        assertEquals(it.next().getPropertyId(), "column0");
+        assertEquals(it.next().getPropertyId(), "column9");
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testAddingColumnsWithSetColumns() {
+        Grid g = new Grid();
+        g.setColumns("c1", "c2", "c3");
+        Iterator<Column> it = g.getColumns().iterator();
+        assertEquals(it.next().getPropertyId(), "c1");
+        assertEquals(it.next().getPropertyId(), "c2");
+        assertEquals(it.next().getPropertyId(), "c3");
+        assertFalse(it.hasNext());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAddingColumnsWithSetColumnsNonDefaultContainer() {
+        grid.setColumns("column1", "column2", "column50");
     }
 }
