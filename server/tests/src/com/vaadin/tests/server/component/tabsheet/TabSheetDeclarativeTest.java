@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.server.component.tabsheet;
 
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -25,7 +22,6 @@ import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for TabSheet.
@@ -68,31 +64,5 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
         ts.setSelectedTab(tf);
         testRead(design, ts);
         testWrite(design, ts);
-    }
-
-    @Test
-    public void testWriteRemovesOldContent() {
-        // create old content that should be removed when writing
-        Element design = new Element(Tag.valueOf("v-tab-sheet"), "",
-                new Attributes());
-        design.appendChild(new Element(Tag.valueOf("tab"), "", new Attributes()));
-        design.appendChild(new Element(Tag.valueOf("tab"), "", new Attributes()));
-        design.appendChild(new Element(Tag.valueOf("tab"), "", new Attributes()));
-        // create a new TabSheet with one tab
-        TabSheet ts = new TabSheet();
-        ts.setTabIndex(5);
-        ts.addTab(new TextField());
-        Tab tab = ts.getTab(0);
-        tab.setVisible(false);
-        tab.setClosable(true);
-        tab.setEnabled(false);
-        // write the design and check written contents
-        ts.writeDesign(design, new DesignContext());
-        assertEquals("There should be only one child", 1, design.children()
-                .size());
-        assertEquals("v-text-field", design.child(0).child(0).tagName());
-        assertEquals("5", design.attr("tabindex"));
-        Element tabDesign = design.child(0);
-        assertEquals("false", tabDesign.attr("visible"));
     }
 }

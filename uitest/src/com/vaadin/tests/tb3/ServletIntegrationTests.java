@@ -66,6 +66,11 @@ public class ServletIntegrationTests {
         notWebsocketCompatible.add("tomcat6");
         notWebsocketCompatible.add("tomcat7apacheproxy");
         notWebsocketCompatible.add("weblogic10");
+
+        // Requires an update to 8.5.5 and a fix for
+        // https://dev.vaadin.com/ticket/16354
+        // https://developer.ibm.com/answers/questions/186066/websocket-paths-using-uri-templates-do-not-work-pr/
+        notWebsocketCompatible.add("websphere8");
     }
 
     public static class ServletIntegrationTestSuite extends TB3TestSuite {

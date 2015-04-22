@@ -94,7 +94,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
             Assert.assertEquals(message + ": array length", a1.length,
                     a2.length);
             for (int i = 0; i < a1.length; i++) {
-                assertEquals(message, a1[i], a2[i]);
+                assertEquals(message + ": element " + i, a1[i], a2[i]);
             }
             return;
         }

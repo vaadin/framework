@@ -2032,8 +2032,9 @@ public class Escalator extends Widget implements RequiresResize,
             return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
 
-        void createAutoSizeElements(int colIndex,
-                Collection<TableCellElement> elements) {
+        double getMaxCellWidth(int colIndex) throws IllegalArgumentException {
+            double maxCellWidth = -1;
+
             assert isAttached() : "Can't measure max width of cell, since Escalator is not attached to the DOM.";
 
             NodeList<TableRowElement> rows = root.getRows();
@@ -2062,9 +2063,24 @@ public class Escalator extends Widget implements RequiresResize,
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
+                double requiredWidth = WidgetUtil
+                        .getRequiredWidthBoundingClientRectDouble(cellClone);
 
-                elements.add(cellClone);
+                if (BrowserInfo.get().isIE()) {
+                    /*
+                     * IE browsers have some issues with subpixels. Occasionally
+                     * content is overflown even if not necessary. Increase the
+                     * counted required size by 0.01 just to be on the safe
+                     * side.
+                     */
+                    requiredWidth += 0.01;
+                }
+
+                maxCellWidth = Math.max(requiredWidth, maxCellWidth);
+                cellClone.removeFromParent();
             }
+
+            return maxCellWidth;
         }
 
         private boolean cellIsPartOfSpan(TableCellElement cell) {
@@ -3926,8 +3942,7 @@ public class Escalator extends Widget implements RequiresResize,
 
                 if (px < 0) {
                     if (isAttached()) {
-                        autosizeColumns(Collections.singletonList(columns
-                                .indexOf(this)));
+                        calculateWidth();
                     } else {
                         /*
                          * the column's width is calculated at Escalator.onLoad
@@ -3980,6 +3995,10 @@ public class Escalator extends Widget implements RequiresResize,
                     return true;
                 }
                 return false;
+            }
+
+            private void calculateWidth() {
+                calculatedWidth = getMaxCellWidth(columns.indexOf(this));
             }
         }
 
@@ -4285,7 +4304,6 @@ public class Escalator extends Widget implements RequiresResize,
                 return;
             }
 
-            List<Integer> autosizeColumns = new ArrayList<Integer>();
             for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
                 int index = entry.getKey().intValue();
                 double width = entry.getValue().doubleValue();
@@ -4295,14 +4313,9 @@ public class Escalator extends Widget implements RequiresResize,
                 }
 
                 checkValidColumnIndex(index);
-                if (width >= 0) {
-                    columns.get(index).setWidth(width);
-                } else {
-                    autosizeColumns.add(index);
-                }
-            }
+                columns.get(index).setWidth(width);
 
-            autosizeColumns(autosizeColumns);
+            }
 
             widthsArray = null;
             header.reapplyColumnWidths();
@@ -4312,64 +4325,6 @@ public class Escalator extends Widget implements RequiresResize,
             subpixelBrowserBugDetector.checkAndFix();
 
             recalculateElementSizes();
-        }
-
-        private void autosizeColumns(List<Integer> columns) {
-            if (columns.isEmpty()) {
-                return;
-            }
-
-            // Must process columns in index order
-            Collections.sort(columns);
-
-            Map<Integer, List<TableCellElement>> autoSizeElements = new HashMap<Integer, List<TableCellElement>>();
-            try {
-                // Set up the entire DOM at once
-                for (int i = columns.size() - 1; i >= 0; i--) {
-                    // Iterate backwards to not mess with the indexing
-                    Integer colIndex = columns.get(i);
-
-                    ArrayList<TableCellElement> elements = new ArrayList<TableCellElement>();
-                    autoSizeElements.put(colIndex, elements);
-
-                    header.createAutoSizeElements(colIndex, elements);
-                    body.createAutoSizeElements(colIndex, elements);
-                    footer.createAutoSizeElements(colIndex, elements);
-                }
-
-                // Extract all measurements & update values
-                for (Integer colIndex : columns) {
-                    double maxWidth = Double.NEGATIVE_INFINITY;
-                    List<TableCellElement> elements = autoSizeElements
-                            .get(colIndex);
-                    for (TableCellElement element : elements) {
-
-                        double cellWidth = WidgetUtil
-                                .getRequiredWidthBoundingClientRectDouble(element);
-
-                        maxWidth = Math.max(maxWidth, cellWidth);
-                    }
-                    assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
-
-                    if (BrowserInfo.get().isIE()) {
-                        /*
-                         * IE browsers have some issues with subpixels.
-                         * Occasionally content is overflown even if not
-                         * necessary. Increase the counted required size by 0.01
-                         * just to be on the safe side.
-                         */
-                        maxWidth += 0.01;
-                    }
-
-                    this.columns.get(colIndex).calculatedWidth = maxWidth;
-                }
-            } finally {
-                for (List<TableCellElement> list : autoSizeElements.values()) {
-                    for (TableCellElement element : list) {
-                        element.removeFromParent();
-                    }
-                }
-            }
         }
 
         private void checkValidColumnIndex(int index)
@@ -4389,6 +4344,18 @@ public class Escalator extends Widget implements RequiresResize,
         @Override
         public double getColumnWidthActual(int index) {
             return columns.get(index).getCalculatedWidth();
+        }
+
+        private double getMaxCellWidth(int colIndex)
+                throws IllegalArgumentException {
+            double headerWidth = header.getMaxCellWidth(colIndex);
+            double bodyWidth = body.getMaxCellWidth(colIndex);
+            double footerWidth = footer.getMaxCellWidth(colIndex);
+
+            double maxWidth = Math.max(headerWidth,
+                    Math.max(bodyWidth, footerWidth));
+            assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
+            return maxWidth;
         }
 
         /**

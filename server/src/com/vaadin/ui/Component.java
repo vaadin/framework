@@ -747,7 +747,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @since 7.4
      * @param design
-     *            The design as HTML to obtain the state from
+     *            The element to obtain the state from
      * @param designContext
      *            The DesignContext instance used for parsing the design
      */
@@ -763,8 +763,11 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @since 7.4
      * @param design
-     *            The design as HTML to update with the current state
+     *            The element to write the component state to. Any previous
+     *            attributes or child nodes are <i>not</i> cleared.
      * @param designContext
+     *            The DesignContext instance used for writing the design
+     * 
      */
     public void writeDesign(Element design, DesignContext designContext);
 

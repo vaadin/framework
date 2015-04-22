@@ -34,6 +34,9 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -63,6 +66,9 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 
 /**
  * <p>
@@ -3863,7 +3869,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks whether row headers are visible.
-     *
+     * 
      * @return {@code false} if row headers are hidden, {@code true} otherwise
      * @since 7.3.9
      */
@@ -6023,6 +6029,264 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public Iterator<Component> getComponentIterator() {
         return iterator();
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext context) {
+        super.readDesign(design, context);
+
+        if (design.hasAttr("sortable")) {
+            setSortEnabled(DesignAttributeHandler.readAttribute("sortable",
+                    design.attributes(), boolean.class));
+        }
+
+        readColumns(design);
+        readHeader(design);
+        readBody(design);
+        readFooter(design);
+    }
+
+    private void readColumns(Element design) {
+        Element colgroup = design.select("> table > colgroup").first();
+
+        if (colgroup != null) {
+            int i = 0;
+            List<Object> pIds = new ArrayList<Object>();
+            for (Element col : colgroup.children()) {
+                if (!col.tagName().equals("col")) {
+                    throw new DesignException("invalid column");
+                }
+
+                String id = DesignAttributeHandler.readAttribute("property-id",
+                        col.attributes(), "property-" + i++, String.class);
+                pIds.add(id);
+
+                addContainerProperty(id, String.class, null);
+
+                if (col.hasAttr("width")) {
+                    setColumnWidth(
+                            id,
+                            DesignAttributeHandler.readAttribute("width",
+                                    col.attributes(), Integer.class));
+                }
+                if (col.hasAttr("center")) {
+                    setColumnAlignment(id, Align.CENTER);
+                } else if (col.hasAttr("right")) {
+                    setColumnAlignment(id, Align.RIGHT);
+                }
+                if (col.hasAttr("expand")) {
+                    if (col.attr("expand").isEmpty()) {
+                        setColumnExpandRatio(id, 1);
+                    } else {
+                        setColumnExpandRatio(id,
+                                DesignAttributeHandler.readAttribute("expand",
+                                        col.attributes(), float.class));
+                    }
+                }
+                if (col.hasAttr("collapsible")) {
+                    setColumnCollapsible(id,
+                            DesignAttributeHandler.readAttribute("collapsible",
+                                    col.attributes(), boolean.class));
+                }
+                if (col.hasAttr("collapsed")) {
+                    setColumnCollapsed(id,
+                            DesignAttributeHandler.readAttribute("collapsed",
+                                    col.attributes(), boolean.class));
+                }
+            }
+            setVisibleColumns(pIds.toArray());
+        }
+    }
+
+    private void readFooter(Element design) {
+        readHeaderOrFooter(design, false);
+    }
+
+    private void readHeader(Element design) {
+        readHeaderOrFooter(design, true);
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        // Do nothing - header/footer and inline data must be handled after
+        // colgroup.
+    }
+
+    private void readHeaderOrFooter(Element design, boolean header) {
+        String selector = header ? "> table > thead" : "> table > tfoot";
+        Element elem = design.select(selector).first();
+        if (elem != null) {
+            if (!header) {
+                setFooterVisible(true);
+            }
+            if (elem.children().size() != 1) {
+                throw new DesignException(
+                        "Table header and footer should contain exactly one <tr> element");
+            }
+            Element tr = elem.child(0);
+            Elements elems = tr.children();
+            Collection<?> propertyIds = visibleColumns;
+            if (elems.size() != propertyIds.size()) {
+                throw new DesignException(
+                        "Table header and footer should contain as many items as there"
+                                + " are columns in the Table.");
+            }
+            Iterator<?> propertyIt = propertyIds.iterator();
+            for (Element e : elems) {
+                String columnValue = e.html();
+                Object propertyId = propertyIt.next();
+                if (header) {
+                    setColumnHeader(propertyId, columnValue);
+                    if (e.hasAttr("icon")) {
+                        setColumnIcon(
+                                propertyId,
+                                DesignAttributeHandler.readAttribute("icon",
+                                        e.attributes(), Resource.class));
+                    }
+                } else {
+                    setColumnFooter(propertyId, columnValue);
+                }
+            }
+        }
+    }
+
+    private void readBody(Element design) {
+        Element tbody = design.select("> table > tbody").first();
+        if (tbody != null) {
+            for (Element row : tbody.children()) {
+                Elements cells = row.children();
+                if (visibleColumns.size() != cells.size()) {
+                    throw new DesignException(
+                            "Wrong number of columns in a row of a Table. Expected "
+                                    + visibleColumns.size() + ", was "
+                                    + cells.size() + ".");
+                }
+                Object[] data = new String[cells.size()];
+                for (int c = 0; c < cells.size(); ++c) {
+                    data[c] = cells.get(c).html();
+                }
+                Object itemId = addItem(data, null);
+                if (itemId == null) {
+                    throw new DesignException(
+                            "A row of a Table could not be read");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext context) {
+        Table def = context.getDefaultInstance(this);
+
+        DesignAttributeHandler.writeAttribute("sortable", design.attributes(),
+                isSortEnabled(), def.isSortEnabled(), boolean.class);
+
+        Element table = null;
+        boolean hasColumns = getVisibleColumns().length != 0;
+        if (hasColumns) {
+            table = design.appendElement("table");
+            writeColumns(table, def);
+            writeHeader(table, def);
+        }
+        super.writeDesign(design, context);
+        if (hasColumns) {
+            writeFooter(table);
+        }
+    }
+
+    private void writeColumns(Element table, Table def) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0) {
+            return;
+        }
+
+        Element colgroup = table.appendElement("colgroup");
+        for (Object id : columns) {
+            Element col = colgroup.appendElement("col");
+
+            col.attr("property-id", id.toString());
+
+            if (getColumnAlignment(id) == Align.CENTER) {
+                col.attr("center", "");
+            } else if (getColumnAlignment(id) == Align.RIGHT) {
+                col.attr("right", "");
+            }
+
+            DesignAttributeHandler.writeAttribute("width", col.attributes(),
+                    getColumnWidth(id), def.getColumnWidth(null), int.class);
+
+            DesignAttributeHandler.writeAttribute("expand", col.attributes(),
+                    getColumnExpandRatio(id), def.getColumnExpandRatio(null),
+                    float.class);
+
+            DesignAttributeHandler.writeAttribute("collapsible",
+                    col.attributes(), isColumnCollapsible(id),
+                    def.isColumnCollapsible(null), boolean.class);
+
+            DesignAttributeHandler.writeAttribute("collapsed",
+                    col.attributes(), isColumnCollapsed(id),
+                    def.isColumnCollapsed(null), boolean.class);
+        }
+    }
+
+    private void writeHeader(Element table, Table def) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0
+                || (columnIcons.isEmpty() && columnHeaders.isEmpty())) {
+            return;
+        }
+
+        Element header = table.appendElement("thead").appendElement("tr");
+        for (Object id : columns) {
+            Element th = header.appendElement("th");
+            th.html(getColumnHeader(id));
+            DesignAttributeHandler.writeAttribute("icon", th.attributes(),
+                    getColumnIcon(id), def.getColumnIcon(null), Resource.class);
+        }
+
+    }
+
+    private void writeFooter(Element table) {
+        Object[] columns = getVisibleColumns();
+        if (columns.length == 0 || columnFooters.isEmpty()) {
+            return;
+        }
+
+        Element footer = table.appendElement("tfoot").appendElement("tr");
+        for (Object id : columns) {
+            footer.appendElement("td").text(getColumnFooter(id));
+        }
+    }
+
+    @Override
+    protected void writeItems(Element design, DesignContext context) {
+        Element tbody = design.child(0).appendElement("tbody");
+        super.writeItems(tbody, context);
+    }
+
+    @Override
+    protected Element writeItem(Element tbody, Object itemId,
+            DesignContext context) {
+        Element tr = tbody.appendElement("tr");
+        Item item = getItem(itemId);
+        for (Object id : getVisibleColumns()) {
+            Element td = tr.appendElement("td");
+            td.html(item.getItemProperty(id).getValue().toString());
+        }
+        return tr;
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("sortable");
+        result.add("sort-enabled");
+        result.add("sort-disabled");
+        result.add("footer-visible");
+        result.add("item-caption-mode");
+        result.add("current-page-first-item-id");
+        result.add("current-page-first-item-index");
+        return result;
     }
 
     private final Logger getLogger() {
