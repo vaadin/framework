@@ -26,10 +26,10 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 public class FetchReleaseNotesTickets {
-    private static final String queryURL = "http://dev.vaadin.com/query?status=pending-release&amp;status=released&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
+    private static final String queryURL = "https://dev.vaadin.com/query?status=pending-release&amp;status=released&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
     private static final String ticketTemplate = "<tr>"
             + "@badge@" //
-            + "<td class=\"ticket\"><a href=\"http://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
+            + "<td class=\"ticket\"><a href=\"https://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
             + "<td>@description@</td>" //
             + "</tr>"; //
 
