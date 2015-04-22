@@ -166,7 +166,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         @Override
         public void updateRow() {
             int index = indexOf(row);
-            if (index >= 0) {
+            if (index >= 0 && dataChangeHandler != null) {
                 dataChangeHandler.dataUpdated(index, 1);
             }
         }
@@ -301,7 +301,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                         .partitionWith(cached);
                 handleMissingRows(missingCachePartition[0]);
                 handleMissingRows(missingCachePartition[2]);
-            } else {
+            } else if (dataChangeHandler != null) {
                 dataChangeHandler.dataAvailable(cached.getStart(),
                         cached.length());
             }
@@ -414,7 +414,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      *            a list of rows, starting from <code>firstRowIndex</code>
      */
     protected void setRowData(int firstRowIndex, List<T> rowData) {
-
         assert firstRowIndex + rowData.size() <= size();
 
         Profiler.enter("AbstractRemoteDataSource.setRowData");
@@ -464,7 +463,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached = newUsefulData;
                 }
             }
-            dataChangeHandler.dataAvailable(cached.getStart(), cached.length());
+            if (dataChangeHandler != null) {
+                dataChangeHandler.dataAvailable(cached.getStart(),
+                        cached.length());
+            }
 
             updatePinnedRows(rowData);
         }
@@ -531,8 +533,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = cached.offsetBy(-removedRange.length());
         }
 
-        assertDataChangeHandlerIsInjected();
-        dataChangeHandler.dataRemoved(firstRowIndex, count);
+        if (dataChangeHandler != null) {
+            dataChangeHandler.dataRemoved(firstRowIndex, count);
+        }
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.removeRowData");
@@ -577,8 +580,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 keyToIndexMap.remove(getRowKey(row));
             }
         }
-        assertDataChangeHandlerIsInjected();
-        dataChangeHandler.dataAdded(firstRowIndex, count);
+        if (dataChangeHandler != null) {
+            dataChangeHandler.dataAdded(firstRowIndex, count);
+        }
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
@@ -724,15 +728,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         size = newSize;
         dropFromCache(getCachedRange());
         cached = Range.withLength(0, 0);
-        assertDataChangeHandlerIsInjected();
-        dataChangeHandler.resetDataAndSize(newSize);
-    }
-
-    private void assertDataChangeHandlerIsInjected() {
-        assert dataChangeHandler != null : "The dataChangeHandler was "
-                + "called before it was injected. Maybe you tried "
-                + "to manipulate the data in the DataSource's "
-                + "constructor instead of in overriding onAttach() "
-                + "and doing it there?";
+        if (dataChangeHandler != null) {
+            dataChangeHandler.resetDataAndSize(newSize);
+        }
     }
 }
