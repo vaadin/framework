@@ -6042,7 +6042,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         readColumns(design);
         readHeader(design);
-        readBody(design);
+        readBody(design, context);
         readFooter(design);
     }
 
@@ -6150,28 +6150,41 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    private void readBody(Element design) {
+    protected void readBody(Element design, DesignContext context) {
         Element tbody = design.select("> table > tbody").first();
-        if (tbody != null) {
-            for (Element row : tbody.children()) {
-                Elements cells = row.children();
-                if (visibleColumns.size() != cells.size()) {
-                    throw new DesignException(
-                            "Wrong number of columns in a row of a Table. Expected "
-                                    + visibleColumns.size() + ", was "
-                                    + cells.size() + ".");
-                }
-                Object[] data = new String[cells.size()];
-                for (int c = 0; c < cells.size(); ++c) {
-                    data[c] = cells.get(c).html();
-                }
-                Object itemId = addItem(data, null);
-                if (itemId == null) {
-                    throw new DesignException(
-                            "A row of a Table could not be read");
-                }
-            }
+        if (tbody == null) {
+            return;
         }
+
+        Set<String> selected = new HashSet<String>();
+        for (Element tr : tbody.children()) {
+            readItem(tr, selected, context);
+        }
+    }
+
+    @Override
+    protected Object readItem(Element tr, Set<String> selected,
+            DesignContext context) {
+        Elements cells = tr.children();
+        if (visibleColumns.size() != cells.size()) {
+            throw new DesignException(
+                    "Wrong number of columns in a Table row. Expected "
+                            + visibleColumns.size() + ", was " + cells.size()
+                            + ".");
+        }
+        Object[] data = new String[cells.size()];
+        for (int c = 0; c < cells.size(); ++c) {
+            data[c] = cells.get(c).html();
+        }
+
+        Object itemId = addItem(data,
+                tr.hasAttr("item-id") ? tr.attr("item-id") : null);
+
+        if (itemId == null) {
+            throw new DesignException("Failed to add a Table row: " + data);
+        }
+
+        return itemId;
     }
 
     @Override
@@ -6260,6 +6273,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     protected void writeItems(Element design, DesignContext context) {
+        if (getVisibleColumns().length == 0) {
+            return;
+        }
         Element tbody = design.child(0).appendElement("tbody");
         super.writeItems(tbody, context);
     }
@@ -6268,10 +6284,12 @@ public class Table extends AbstractSelect implements Action.Container,
     protected Element writeItem(Element tbody, Object itemId,
             DesignContext context) {
         Element tr = tbody.appendElement("tr");
+        tr.attr("item-id", String.valueOf(itemId));
         Item item = getItem(itemId);
         for (Object id : getVisibleColumns()) {
             Element td = tr.appendElement("td");
-            td.html(item.getItemProperty(id).getValue().toString());
+            Object value = item.getItemProperty(id).getValue();
+            td.html(value != null ? value.toString() : "");
         }
         return tr;
     }

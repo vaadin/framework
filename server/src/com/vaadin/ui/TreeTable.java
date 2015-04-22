@@ -23,8 +23,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Collapsible;
 import com.vaadin.data.Container;
@@ -41,6 +45,9 @@ import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a
@@ -887,5 +894,82 @@ public class TreeTable extends Table implements Hierarchical {
             itemIds.add(getIdByIndex(i));
         }
         return itemIds;
+    }
+
+    @Override
+    protected void readBody(Element design, DesignContext context) {
+        Element tbody = design.select("> table > tbody").first();
+        if (tbody == null) {
+            return;
+        }
+
+        Set<String> selected = new HashSet<String>();
+        Stack<Object> parents = new Stack<Object>();
+        int lastDepth = -1;
+
+        for (Element tr : tbody.children()) {
+            int depth = DesignAttributeHandler.readAttribute("depth",
+                    tr.attributes(), 0, int.class);
+
+            if (depth < 0 || depth > lastDepth + 1) {
+                throw new DesignException(
+                        "Malformed TreeTable item hierarchy at " + tr
+                                + ": last depth was " + lastDepth);
+            } else if (depth <= lastDepth) {
+                for (int d = depth; d <= lastDepth; d++) {
+                    parents.pop();
+                }
+            }
+
+            Object itemId = readItem(tr, selected, context);
+            setParent(itemId, !parents.isEmpty() ? parents.peek() : null);
+            parents.push(itemId);
+            lastDepth = depth;
+        }
+    }
+
+    @Override
+    protected Object readItem(Element tr, Set<String> selected,
+            DesignContext context) {
+        Object itemId = super.readItem(tr, selected, context);
+
+        if (tr.hasAttr("collapsed")) {
+            boolean collapsed = DesignAttributeHandler.readAttribute(
+                    "collapsed", tr.attributes(), boolean.class);
+            setCollapsed(itemId, collapsed);
+        }
+
+        return itemId;
+    }
+
+    @Override
+    protected void writeItems(Element design, DesignContext context) {
+        if (getVisibleColumns().length == 0) {
+            return;
+        }
+        Element tbody = design.child(0).appendElement("tbody");
+        writeItems(tbody, rootItemIds(), 0, context);
+    }
+
+    protected void writeItems(Element tbody, Collection<?> itemIds, int depth,
+            DesignContext context) {
+        for (Object itemId : itemIds) {
+            Element tr = writeItem(tbody, itemId, context);
+            DesignAttributeHandler.writeAttribute("depth", tr.attributes(),
+                    depth, 0, int.class);
+
+            if (getChildren(itemId) != null) {
+                writeItems(tbody, getChildren(itemId), depth + 1, context);
+            }
+        }
+    }
+
+    @Override
+    protected Element writeItem(Element tbody, Object itemId,
+            DesignContext context) {
+        Element tr = super.writeItem(tbody, itemId, context);
+        DesignAttributeHandler.writeAttribute("collapsed", tr.attributes(),
+                isCollapsed(itemId), true, boolean.class);
+        return tr;
     }
 }

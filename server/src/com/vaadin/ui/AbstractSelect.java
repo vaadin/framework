@@ -2231,7 +2231,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *             if the tag name of the {@code child} element is not
      *             {@code option}.
      */
-    protected String readItem(Element child, Set<String> selected,
+    protected Object readItem(Element child, Set<String> selected,
             DesignContext context) {
         if (!"option".equals(child.tagName())) {
             throw new DesignException("Unrecognized child element in "

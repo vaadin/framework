@@ -20,7 +20,8 @@ import static org.junit.Assert.assertTrue;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Table;
 
-public class TableDeclarativeTestBase extends DeclarativeTestBase<Table> {
+public abstract class TableDeclarativeTestBase extends
+        DeclarativeTestBase<Table> {
 
     @Override
     public Table testRead(String design, Table expected) {
@@ -30,20 +31,30 @@ public class TableDeclarativeTestBase extends DeclarativeTestBase<Table> {
         return read;
     }
 
-    private void compareBody(Table read, Table expected) {
-        assertEquals(expected.getItemIds().size(), read.getItemIds().size());
+    protected Table getTable() {
+        return new Table();
+    }
+
+    protected String getTag() {
+        return "v-table";
+    }
+
+    protected void compareBody(Table read, Table expected) {
+        assertEquals("number of items", expected.getItemIds().size(), read
+                .getItemIds().size());
         for (Object rowId : expected.getItemIds()) {
             assertTrue(read.containsId(rowId));
             for (Object propertyId : read.getVisibleColumns()) {
                 Object expectedItem = expected.getContainerProperty(rowId,
                         propertyId);
                 Object readItem = read.getContainerProperty(rowId, propertyId);
-                assertEquals(expectedItem, readItem);
+                assertEquals("property '" + propertyId + "'", expectedItem,
+                        readItem);
             }
         }
     }
 
-    private void compareColumns(Table read, Table expected) {
+    protected void compareColumns(Table read, Table expected) {
         for (Object pid : expected.getVisibleColumns()) {
             String col = "column '" + pid + "'";
             assertEquals(col + " width", expected.getColumnWidth(pid),
