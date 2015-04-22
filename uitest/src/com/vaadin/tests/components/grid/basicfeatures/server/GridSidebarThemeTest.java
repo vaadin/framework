@@ -19,13 +19,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridSidebarFeatures;
 
 public class GridSidebarThemeTest extends GridBasicFeaturesTest {
 
@@ -34,18 +32,18 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
         runTestSequence("valo");
     }
 
+    @Test
+    public void testValoDark() throws Exception {
+        runTestSequence("tests-valo-dark");
+    }
+
+    @Override
+    protected Class<?> getUIClass() {
+        return GridSidebarFeatures.class;
+    }
+
     private void runTestSequence(String theme) throws IOException {
         openTestURL("theme=" + theme);
-        if (getDesiredCapabilities().getBrowserName().equals(
-                Browser.CHROME.getDesiredCapabilities().getBrowserName())) {
-            waitUntil(ExpectedConditions.elementToBeClickable(By.id("menu")), 2);
-            getDriver().findElement(By.id("menu")).click();
-            selectMenu("Columns");
-            selectMenu("All columns hidable");
-            waitUntilLoadingIndicatorNotVisible();
-        } else {
-            selectMenuPath("Component", "Columns", "All columns hidable");
-        }
 
         compareScreen(theme + "|SidebarClosed");
         getSidebarOpenButton().click();

@@ -90,6 +90,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
 
   .#{$primaryStyleName}-sidebar.v-contextmenu {
     @include box-shadow(none);
+    border-radius: 0;
     position: absolute;
     top: 0;
     right: 0;
@@ -102,6 +103,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     .#{$primaryStyleName}-sidebar-button {
       background: transparent;
       border: none;
+      color: inherit;
       cursor: pointer;
       outline: none;
       padding: 0 4px;
@@ -133,7 +135,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
           line-height: 1;
         }
       }
-    }      
+    }
 
     .v-ie &.opened .#{$primaryStyleName}-sidebar-button {
       vertical-align: middle;
@@ -144,7 +146,6 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     }
 
     .#{$primaryStyleName}-sidebar-content {
-      background: #fff;
       border-top: $v-grid-border;
       padding: 4px 0;
 

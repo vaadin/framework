@@ -3191,6 +3191,20 @@ public class Grid<T> extends ResizeComposite implements
         private boolean isInDOM() {
             return getParent() != null;
         }
+
+        @Override
+        protected void onAttach() {
+            super.onAttach();
+            // make sure the button will get correct height if the button should
+            // be visible when the grid is rendered the first time.
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    setHeightToHeaderCellHeight();
+                }
+            });
+        }
     }
 
     /**
