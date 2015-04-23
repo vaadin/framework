@@ -35,32 +35,19 @@ public class ServletIntegrationTests {
     public static Set<String> notJSR356Compatible = new HashSet<String>();
     public static Set<String> notWebsocketCompatible = new HashSet<String>();
     static {
-        notJSR356Compatible.add("jboss4");
-        notJSR356Compatible.add("jboss5");
-        notJSR356Compatible.add("jboss6");
-        notJSR356Compatible.add("jboss7");
 
         notJSR356Compatible.add("jetty7");
         notJSR356Compatible.add("jetty8");
-
-        notJSR356Compatible.add("glassfish3");
-
-        notJSR356Compatible.add("tomcat6");
         notJSR356Compatible.add("tomcat7");
         notJSR356Compatible.add("tomcat7apacheproxy");
-        notJSR356Compatible.add("weblogic10");
         notJSR356Compatible.add("osgi"); // Karaf 3, Jetty 8
 
-        notWebsocketCompatible.add("glassfish2");
         // In theory GF3 could work but in reality broken
         notWebsocketCompatible.add("glassfish3");
         notWebsocketCompatible.add("jboss4");
         notWebsocketCompatible.add("jboss5");
         notWebsocketCompatible.add("jboss6");
         notWebsocketCompatible.add("jboss7");
-        notWebsocketCompatible.add("jetty5");
-        notWebsocketCompatible.add("jetty6");
-        notWebsocketCompatible.add("tomcat5");
         notWebsocketCompatible.add("tomcat6");
         notWebsocketCompatible.add("tomcat7apacheproxy");
         notWebsocketCompatible.add("weblogic10");
@@ -69,6 +56,10 @@ public class ServletIntegrationTests {
         // https://dev.vaadin.com/ticket/16354
         // https://developer.ibm.com/answers/questions/186066/websocket-paths-using-uri-templates-do-not-work-pr/
         notWebsocketCompatible.add("websphere8");
+
+        // If a server does not support any kind of websockets it does not
+        // support JSR-356 either..
+        notJSR356Compatible.addAll(notWebsocketCompatible);
     }
 
     public static class ServletIntegrationTestSuite extends TB3TestSuite {
