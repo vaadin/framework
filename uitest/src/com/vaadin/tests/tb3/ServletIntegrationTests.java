@@ -38,7 +38,6 @@ public class ServletIntegrationTests {
         notJSR356Compatible.add("jboss4");
         notJSR356Compatible.add("jboss5");
         notJSR356Compatible.add("jboss6");
-        notJSR356Compatible.add("jbosseap6");
         notJSR356Compatible.add("jboss7");
 
         notJSR356Compatible.add("jetty7");
@@ -59,7 +58,6 @@ public class ServletIntegrationTests {
         notWebsocketCompatible.add("jboss5");
         notWebsocketCompatible.add("jboss6");
         notWebsocketCompatible.add("jboss7");
-        notWebsocketCompatible.add("jbosseap6");
         notWebsocketCompatible.add("jetty5");
         notWebsocketCompatible.add("jetty6");
         notWebsocketCompatible.add("tomcat5");

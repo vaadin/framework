@@ -1,0 +1,7 @@
+<jboss-web version="7.2" xmlns="http://www.jboss.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee
+         schema/jboss-web_7_2.xsd">
+    <!-- Enable websockets on JBoss EAP 6.4 -->
+    <enable-websockets>true</enable-websockets>
+</jboss-web>
