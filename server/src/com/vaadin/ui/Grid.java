@@ -4285,6 +4285,29 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
+     * Sets the columns and their order for the grid. Current columns whose
+     * property id is not in propertyIds are removed. Similarly, a column is
+     * added for any property id in propertyIds that has no corresponding column
+     * in this Grid.
+     * 
+     * @param propertyIds
+     *            properties in the desired column order
+     */
+    public void setColumns(Object... propertyIds) {
+        Set<?> removePids = new HashSet<Object>(columns.keySet());
+        removePids.removeAll(Arrays.asList(propertyIds));
+        for (Object removePid : removePids) {
+            removeColumn(removePid);
+        }
+        Set<?> addPids = new HashSet<Object>(Arrays.asList(propertyIds));
+        addPids.removeAll(columns.keySet());
+        for (Object propertyId : addPids) {
+            addColumn(propertyId);
+        }
+        setColumnOrder(propertyIds);
+    }
+
+    /**
      * Sets a new column order for the grid. All columns which are not ordered
      * here will remain in the order they were before as the last columns of
      * grid.

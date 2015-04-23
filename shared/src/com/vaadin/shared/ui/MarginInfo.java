@@ -18,6 +18,12 @@ package com.vaadin.shared.ui;
 
 import java.io.Serializable;
 
+/**
+ * Describes the margin settings for each edge of a Component.
+ * 
+ * @since
+ * @author Vaadin Ltd
+ */
 public class MarginInfo implements Serializable {
 
     private static final int TOP = 1;
@@ -28,18 +34,67 @@ public class MarginInfo implements Serializable {
 
     private int bitMask;
 
+    /**
+     * Creates a MarginInfo object with all edges set to either enabled or
+     * disabled.
+     * 
+     * @param enabled
+     *            the value to set for all edges
+     */
     public MarginInfo(boolean enabled) {
-        this(enabled, enabled, enabled, enabled);
+        setMargins(enabled);
     }
 
+    /**
+     * Creates a MarginInfo object from a bit mask.
+     * 
+     * @param bitMask
+     *            bits to set
+     */
     public MarginInfo(int bitMask) {
         this.bitMask = bitMask;
     }
 
+    /**
+     * Creates a MarginInfo object by having each edge specified in clockwise
+     * order (analogous to CSS).
+     * 
+     * @param top
+     *            enable or disable top margin
+     * @param right
+     *            enable or disable right margin
+     * @param bottom
+     *            enable or disable bottom margin
+     * @param left
+     *            enable or disable left margin
+     */
     public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
         setMargins(top, right, bottom, left);
     }
 
+    /**
+     * Enables or disables margins on all edges simultaneously.
+     * 
+     * @param enabled
+     *            if true, enables margins on all edges. If false, disables
+     *            margins on all edges.
+     */
+    public void setMargins(boolean enabled) {
+        bitMask = enabled ? ALL : 0;
+    }
+
+    /**
+     * Sets margins on all edges individually.
+     * 
+     * @param top
+     *            enable or disable top margin
+     * @param right
+     *            enable or disable right margin
+     * @param bottom
+     *            enable or disable bottom margin
+     * @param left
+     *            enable or disable left margin
+     */
     public void setMargins(boolean top, boolean right, boolean bottom,
             boolean left) {
         bitMask = top ? TOP : 0;
@@ -48,40 +103,68 @@ public class MarginInfo implements Serializable {
         bitMask += left ? LEFT : 0;
     }
 
+    /**
+     * Copies margin values from another MarginInfo object.
+     * 
+     * @param marginInfo
+     *            another marginInfo object
+     */
     public void setMargins(MarginInfo marginInfo) {
         bitMask = marginInfo.bitMask;
     }
 
+    /**
+     * Checks if this MarginInfo object has margins on all edges enabled.
+     * 
+     * @return true if all edges have margins enabled
+     */
     public boolean hasAll() {
         return (bitMask & ALL) == ALL;
     }
 
+    /**
+     * Checks if this MarginInfo object has the left edge margin enabled.
+     * 
+     * @return true if left edge margin is enabled
+     */
     public boolean hasLeft() {
         return (bitMask & LEFT) == LEFT;
     }
 
+    /**
+     * Checks if this MarginInfo object has the right edge margin enabled.
+     * 
+     * @return true if right edge margin is enabled
+     */
     public boolean hasRight() {
         return (bitMask & RIGHT) == RIGHT;
     }
 
+    /**
+     * Checks if this MarginInfo object has the top edge margin enabled.
+     * 
+     * @return true if top edge margin is enabled
+     */
     public boolean hasTop() {
         return (bitMask & TOP) == TOP;
     }
 
+    /**
+     * Checks if this MarginInfo object has the bottom edge margin enabled.
+     * 
+     * @return true if bottom edge margin is enabled
+     */
     public boolean hasBottom() {
         return (bitMask & BOTTOM) == BOTTOM;
     }
 
+    /**
+     * Returns the current bit mask that make up the margin settings.
+     * 
+     * @return an integer bit mask
+     */
     public int getBitMask() {
         return bitMask;
-    }
-
-    public void setMargins(boolean enabled) {
-        if (enabled) {
-            bitMask = TOP + RIGHT + BOTTOM + LEFT;
-        } else {
-            bitMask = 0;
-        }
     }
 
     @Override
