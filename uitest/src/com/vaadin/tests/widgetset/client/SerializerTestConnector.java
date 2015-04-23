@@ -71,10 +71,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             }
 
             @Override
-            public void sendString(String value) {
+            public void sendString(String value, String[] array) {
                 char[] chars = value.toCharArray();
                 Arrays.sort(chars);
-                rpc.sendString(new String(chars));
+                rpc.sendString(new String(chars), new String[] { array[1],
+                        array[0] });
             }
 
             @Override
@@ -338,6 +339,9 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
         rpc.log("state.doubleValue: " + getState().doubleValue);
         rpc.log("state.doubleObjectValue: " + getState().doubleObjectValue);
         rpc.log("state.doubleArray: " + Arrays.toString(getState().doubleArray));
+
+        rpc.log("state.string: " + getState().string);
+        rpc.log("state.stringArray: " + Arrays.toString(getState().stringArray));
 
         rpc.log("state.jsonNull: " + getState().jsonNull.getType().name());
         rpc.log("state.jsonString: "
