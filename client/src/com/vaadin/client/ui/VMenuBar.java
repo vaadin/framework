@@ -1509,13 +1509,23 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 // selection there
                 openMenuAndFocusFirstIfPossible(getSelected());
             } else {
-                Command command = getSelected().getCommand();
-                if (command != null) {
-                    command.execute();
-                }
+                final Command command = getSelected().getCommand();
 
                 setSelected(null);
                 hideParents(true);
+
+                // #17076 keyboard selected menuitem without children: do
+                // not leave menu to visible ("hover open") mode
+                menuVisible = false;
+
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (command != null) {
+                            command.execute();
+                        }
+                    }
+                });
             }
         }
 
