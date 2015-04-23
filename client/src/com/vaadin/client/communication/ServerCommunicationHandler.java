@@ -331,10 +331,18 @@ public class ServerCommunicationHandler {
      * 
      * @param clientToServerMessageId
      *            the new client id to set
+     * @param force
+     *            true if the id must be updated, false otherwise
      */
-    public void setClientToServerMessageId(int nextExpectedId) {
+    public void setClientToServerMessageId(int nextExpectedId, boolean force) {
         if (nextExpectedId == clientToServerMessageId) {
             // No op as everything matches they way it should
+            return;
+        }
+        if (force) {
+            getLogger().info(
+                    "Forced update of clientId to " + clientToServerMessageId);
+            clientToServerMessageId = nextExpectedId;
             return;
         }
 

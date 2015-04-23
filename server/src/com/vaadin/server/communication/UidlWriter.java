@@ -129,6 +129,10 @@ public class UidlWriter implements Serializable {
                     .getCurrentSyncId() : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
                     + syncId + ", ");
+            if (repaintAll) {
+                writer.write("\"" + ApplicationConstants.RESYNCHRONIZE_ID
+                        + "\": true, ");
+            }
             int nextClientToServerMessageId = ui
                     .getLastProcessedClientToServerId() + 1;
             writer.write("\"" + ApplicationConstants.CLIENT_TO_SERVER_ID
