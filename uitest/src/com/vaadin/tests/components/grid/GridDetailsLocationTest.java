@@ -15,39 +15,46 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
+@TestCategory("grid")
+public class GridDetailsLocationTest extends MultiBrowserTest {
+
+    private static final int decoratorDefaultHeight = 50;
+    private static final int decoratorDefinedHeight = 30;
 
     private static class Param {
         private final int rowIndex;
         private final boolean useGenerator;
         private final boolean scrollFirstToBottom;
-        private final int scrollTarget;
 
         public Param(int rowIndex, boolean useGenerator,
-                boolean scrollFirstToBottom, int scrollTarget) {
+                boolean scrollFirstToBottom) {
             this.rowIndex = rowIndex;
             this.useGenerator = useGenerator;
             this.scrollFirstToBottom = scrollFirstToBottom;
-            this.scrollTarget = Math.max(0, scrollTarget);
         }
 
         public int getRowIndex() {
@@ -62,45 +69,33 @@ public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
             return scrollFirstToBottom;
         }
 
-        public int getScrollTarget() {
-            return scrollTarget;
-        }
-
         @Override
         public String toString() {
             return "Param [rowIndex=" + getRowIndex() + ", useGenerator="
                     + useGenerator() + ", scrollFirstToBottom="
-                    + scrollFirstToBottom() + ", scrollTarget="
-                    + getScrollTarget() + "]";
+                    + scrollFirstToBottom() + "]";
         }
+
     }
 
     public static Collection<Param> parameters() {
         List<Param> data = new ArrayList<Param>();
 
         int[][] params = new int[][] {// @formatter:off
-            // row, top+noGen, top+gen, bot+noGen, bot+gen
-            { 0, 0, 0, 0, 0 }, 
-            { 500, 18741, 18723, 19000, 19000 },
-            { 999, 37703, 37685, 37703, 37685 },
+            // row, top+noGen, top+gen
+            { 0, decoratorDefaultHeight, decoratorDefinedHeight }, 
+            { 500, decoratorDefaultHeight, decoratorDefinedHeight },
+            { 999, decoratorDefaultHeight, decoratorDefinedHeight},
         };
         // @formatter:on
 
         for (int i[] : params) {
             int rowIndex = i[0];
-            int targetTopScrollWithoutGenerator = i[1];
-            int targetTopScrollWithGenerator = i[2];
-            int targetBottomScrollWithoutGenerator = i[3];
-            int targetBottomScrollWithGenerator = i[4];
 
-            data.add(new Param(rowIndex, false, false,
-                    targetTopScrollWithoutGenerator));
-            data.add(new Param(rowIndex, true, false,
-                    targetTopScrollWithGenerator));
-            data.add(new Param(rowIndex, false, true,
-                    targetBottomScrollWithoutGenerator));
-            data.add(new Param(rowIndex, true, true,
-                    targetBottomScrollWithGenerator));
+            data.add(new Param(rowIndex, false, false));
+            data.add(new Param(rowIndex, true, false));
+            data.add(new Param(rowIndex, false, true));
+            data.add(new Param(rowIndex, true, true));
         }
 
         return data;
@@ -122,11 +117,7 @@ public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
                 // the tested method
                 toggleAndScroll(param.getRowIndex());
 
-                Range allowedRange = Range.withLength(
-                        param.getScrollTarget() - 5, 10);
-                assertTrue(
-                        allowedRange + " does not contain " + getScrollTop(),
-                        allowedRange.contains(getScrollTop()));
+                verifyLocation(param);
             } catch (Throwable t) {
                 throw new Throwable("" + param, t);
             }
@@ -144,15 +135,96 @@ public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
                 // the tested method
                 scrollAndToggle(param.getRowIndex());
 
-                Range allowedRange = Range.withLength(
-                        param.getScrollTarget() - 5, 10);
-                assertTrue(
-                        allowedRange + " does not contain " + getScrollTop(),
-                        allowedRange.contains(getScrollTop()));
+                verifyLocation(param);
+
             } catch (Throwable t) {
                 throw new Throwable("" + param, t);
             }
         }
+    }
+
+    @Test
+    public void testDecoratorHeightWithNoGenerator() {
+        openTestURL();
+        toggleAndScroll(5);
+
+        verifyDetailsRowHeight(5, decoratorDefaultHeight);
+    }
+
+    @Test
+    public void testDecoratorHeightWithGenerator() {
+        openTestURL();
+        useGenerator(true);
+        toggleAndScroll(5);
+
+        verifyDetailsRowHeight(5, decoratorDefinedHeight);
+    }
+
+    private void verifyDetailsRowHeight(int rowIndex, int expectedHeight) {
+        waitForDetailsVisible();
+        WebElement details = getDetailsElement();
+        Assert.assertEquals("Wrong details row height", expectedHeight, details
+                .getSize().getHeight());
+    }
+
+    private void verifyLocation(Param param) {
+        Assert.assertFalse("Notification was present",
+                isElementPresent(By.className("v-Notification")));
+
+        TestBenchElement headerRow = getGrid().getHeaderRow(0);
+        final int topBoundary = headerRow.getLocation().getX()
+                + headerRow.getSize().height;
+        final int bottomBoundary = getGrid().getLocation().getX()
+                + getGrid().getSize().getHeight()
+                - getHorizontalScrollbar().getSize().height;
+
+        GridRowElement row = getGrid().getRow(param.getRowIndex());
+        final int rowTop = row.getLocation().getX();
+
+        waitForDetailsVisible();
+        WebElement details = getDetailsElement();
+        final int detailsBottom = details.getLocation().getX()
+                + details.getSize().getHeight();
+
+        assertGreaterOrEqual("Row top should be inside grid, gridTop:"
+                + topBoundary + " rowTop" + rowTop, topBoundary, rowTop);
+        assertLessThanOrEqual(
+                "Decorator bottom should be inside grid, gridBottom:"
+                        + bottomBoundary + " decoratorBotton:" + detailsBottom,
+                detailsBottom, bottomBoundary);
+
+        Assert.assertFalse("Notification was present",
+                isElementPresent(By.className("v-Notification")));
+    }
+
+    private final By locator = By.className("v-grid-spacer");
+
+    private WebElement getDetailsElement() {
+        return findElement(locator);
+    }
+
+    private void waitForDetailsVisible() {
+        waitUntil(new ExpectedCondition<WebElement>() {
+
+            @Override
+            public WebElement apply(WebDriver driver) {
+                try {
+                    WebElement detailsElement = getDetailsElement();
+                    return detailsElement.isDisplayed()
+                            && detailsElement.getSize().getHeight() > 3 ? detailsElement
+                            : null;
+                } catch (StaleElementReferenceException e) {
+                    return null;
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "visibility of element located by " + locator;
+            }
+
+        }, 5);
+        waitForElementVisible(By.className("v-grid-spacer"));
     }
 
     private void scrollToBottom(boolean scrollFirstToBottom) {
@@ -204,16 +276,13 @@ public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
     }
 
     private void setRow(int row) {
-        $(TextFieldElement.class).first().setValue(String.valueOf(row));
+        $(TextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().sendKeys(String.valueOf(row),
+                Keys.ENTER, Keys.TAB);
     }
 
     private CustomGridElement getGrid() {
         return $(CustomGridElement.class).first();
-    }
-
-    private int getScrollTop() {
-        return ((Long) executeScript("return arguments[0].scrollTop;",
-                getVerticalScrollbar())).intValue();
     }
 
     private WebElement getVerticalScrollbar() {
@@ -221,4 +290,11 @@ public class GridScrollToRowWithDetailsTest extends MultiBrowserTest {
                 By.className("v-grid-scroller-vertical"));
         return scrollBar;
     }
+
+    private WebElement getHorizontalScrollbar() {
+        WebElement scrollBar = getGrid().findElement(
+                By.className("v-grid-scroller-horizontal"));
+        return scrollBar;
+    }
+
 }

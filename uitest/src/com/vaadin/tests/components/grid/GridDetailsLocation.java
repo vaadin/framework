@@ -37,7 +37,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @Theme(ValoTheme.THEME_NAME)
-public class GridScrollToRowWithDetails extends UI {
+public class GridDetailsLocation extends UI {
 
     private final DetailsGenerator detailsGenerator = new DetailsGenerator() {
         @Override
@@ -45,6 +45,8 @@ public class GridScrollToRowWithDetails extends UI {
             Person person = (Person) rowReference.getItemId();
             Label label = new Label(person.getFirstName() + " "
                     + person.getLastName());
+            // currently the decorator row doesn't change its height when the
+            // content height is different.
             label.setHeight("30px");
             return label;
         }
@@ -77,22 +79,8 @@ public class GridScrollToRowWithDetails extends UI {
         layout.addComponent(checkbox);
 
         numberTextField = new TextField("Row");
-        numberTextField.setImmediate(false);
+        numberTextField.setImmediate(true);
         layout.addComponent(numberTextField);
-
-        layout.addComponent(new Button("Toggle", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                toggle();
-            }
-        }));
-
-        layout.addComponent(new Button("Scroll to", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                scrollTo();
-            }
-        }));
 
         layout.addComponent(new Button("Toggle and scroll",
                 new Button.ClickListener() {
