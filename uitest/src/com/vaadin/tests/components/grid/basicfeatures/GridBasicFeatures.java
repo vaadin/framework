@@ -291,7 +291,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         // Set varying column widths
         for (int col = 0; col < COLUMNS; col++) {
-            grid.getColumn(getColumnProperty(col)).setWidth(100 + col * 50);
+            Column column = grid.getColumn(getColumnProperty(col));
+            column.setWidth(100 + col * 50);
+            column.setHidable(isColumnHidableByDefault(col));
         }
 
         grid.addSortListener(new SortListener() {
@@ -332,6 +334,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         this.grid = grid;
         return grid;
+    }
+
+    protected boolean isColumnHidableByDefault(int col) {
+        return false;
+    }
+
+    protected boolean isColumnHiddenByDefault(int col) {
+        return false;
     }
 
     private void addInternalActions() {
@@ -828,8 +838,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, c);
 
-            createBooleanAction("Hidable", getColumnProperty(c), false,
-                    new Command<Grid, Boolean>() {
+            createBooleanAction("Hidable", getColumnProperty(c),
+                    isColumnHidableByDefault(c), new Command<Grid, Boolean>() {
                         @Override
                         public void execute(Grid c, Boolean hidable,
                                 Object propertyId) {
@@ -837,8 +847,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, getColumnProperty(c));
 
-            createBooleanAction("Hidden", getColumnProperty(c), false,
-                    new Command<Grid, Boolean>() {
+            createBooleanAction("Hidden", getColumnProperty(c),
+                    isColumnHiddenByDefault(c), new Command<Grid, Boolean>() {
                         @Override
                         public void execute(Grid c, Boolean hidden,
                                 Object propertyId) {
