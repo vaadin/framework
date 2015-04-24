@@ -3527,11 +3527,12 @@ public class ApplicationConnection implements HasHandlers {
         communicationErrorDelegate = delegate;
     }
 
-    public void setApplicationRunning(boolean running) {
-        if (applicationRunning && !running) {
+    public void setApplicationRunning(boolean applicationRunning) {
+        boolean stopped = (this.applicationRunning && !applicationRunning);
+        this.applicationRunning = applicationRunning;
+        if (stopped) {
             eventBus.fireEvent(new ApplicationStoppedEvent());
         }
-        applicationRunning = running;
     }
 
     public boolean isApplicationRunning() {
