@@ -16,14 +16,20 @@
 package com.vaadin.ui.declarative.converters;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.FontIcon;
+import com.vaadin.server.GenericFontIcon;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -33,21 +39,28 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@SuppressWarnings("serial")
 public class DesignResourceConverter implements Converter<String, Resource> {
 
     @Override
     public Resource convertToModel(String value,
             Class<? extends Resource> targetType, Locale locale)
             throws Converter.ConversionException {
-        if (value.startsWith("http://") || value.startsWith("https://")
-                || value.startsWith("ftp://") || value.startsWith("ftps://")) {
-            return new ExternalResource(value);
-        } else if (value.startsWith("theme://")) {
-            return new ThemeResource(value.substring(8));
-        } else if (value.startsWith("font://")) {
-            return FontAwesome.valueOf(value.substring(7));
-        } else {
-            return new FileResource(new File(value));
+        if (!value.contains("://")) {
+            // assume it'is "file://" protocol, one that is used to access a
+            // file on a given path on the server, this will later be striped
+            // out anyway
+            value = "file://" + value;
+        }
+
+        String protocol = value.split("://")[0];
+        try {
+            ResourceConverterByProtocol converter = ResourceConverterByProtocol
+                    .valueOf(protocol.toUpperCase(Locale.ENGLISH));
+            return converter.parse(value);
+        } catch (IllegalArgumentException iae) {
+            throw new ConversionException("Unrecognized protocol: " + protocol,
+                    iae);
         }
     }
 
@@ -55,20 +68,10 @@ public class DesignResourceConverter implements Converter<String, Resource> {
     public String convertToPresentation(Resource value,
             Class<? extends String> targetType, Locale locale)
             throws Converter.ConversionException {
-        if (value instanceof ExternalResource) {
-            return ((ExternalResource) value).getURL();
-        } else if (value instanceof ThemeResource) {
-            return "theme://" + ((ThemeResource) value).getResourceId();
-        } else if (value instanceof FontAwesome) {
-            return "font://" + ((FontAwesome) value).name();
-        } else if (value instanceof FileResource) {
-            String path = ((FileResource) value).getSourceFile().getPath();
-            if (File.separatorChar != '/') {
-                // make sure we use '/' as file separator in templates
-                return path.replace(File.separatorChar, '/');
-            } else {
-                return path;
-            }
+        ResourceConverterByProtocol byType = ResourceConverterByProtocol
+                .byType(value.getClass());
+        if (byType != null) {
+            return byType.format(value);
         } else {
             throw new Converter.ConversionException("unknown Resource type - "
                     + value.getClass().getName());
@@ -83,6 +86,142 @@ public class DesignResourceConverter implements Converter<String, Resource> {
     @Override
     public Class<String> getPresentationType() {
         return String.class;
+    }
+
+    private static interface ProtocolResourceConverter extends Serializable {
+        public String format(Resource value);
+
+        public Resource parse(String value);
+    }
+
+    private static enum ResourceConverterByProtocol implements
+            ProtocolResourceConverter {
+
+        HTTP, HTTPS, FTP, FTPS, THEME {
+
+            @Override
+            public Resource parse(String value) {
+                // strip "theme://" from the url, use the rest as the resource
+                // id
+                return new ThemeResource(value.substring(8));
+            }
+
+            @Override
+            public String format(Resource value)
+                    throws Converter.ConversionException {
+                return ApplicationConstants.THEME_PROTOCOL_PREFIX
+                        + ((ThemeResource) value).getResourceId();
+            }
+        },
+        FONTICON {
+            @Override
+            public Resource parse(String value) {
+                final String address = (value.split("://", 2))[1];
+                final String[] familyAndCode = address.split("/", 2);
+                final int codepoint = Integer.valueOf(
+                        familyAndCode[1].substring(2), 16);
+
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
+                    try {
+                        return FontAwesome.fromCodepoint(codepoint);
+                    } catch (IllegalArgumentException iae) {
+                        throw new ConversionException(
+                                "Unknown codepoint in FontAwesome: "
+                                        + codepoint, iae);
+                    }
+                }
+
+                FontIcon generic = new GenericFontIcon(familyAndCode[0],
+                        codepoint);
+                return generic;
+
+            }
+
+            @Override
+            public String format(Resource value)
+                    throws Converter.ConversionException {
+                FontIcon icon = (FontIcon) value;
+                return ApplicationConstants.FONTICON_PROTOCOL_PREFIX
+                        + icon.getFontFamily() + "/0x"
+                        + Integer.toHexString(icon.getCodepoint());
+            }
+        },
+        @Deprecated
+        FONT {
+            @Override
+            public Resource parse(String value) {
+                // Deprecated, 7.4 syntax is
+                // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
+                final String iconName = (value.split("://", 2))[1];
+
+                try {
+                    return FontAwesome.valueOf(iconName);
+                } catch (IllegalArgumentException iae) {
+                    throw new ConversionException("Unknown FontIcon constant: "
+                            + iconName, iae);
+                }
+            }
+
+            @Override
+            public String format(Resource value)
+                    throws Converter.ConversionException {
+                throw new UnsupportedOperationException("Use "
+                        + ResourceConverterByProtocol.FONTICON.toString()
+                        + " instead");
+            }
+        },
+        FILE {
+            @Override
+            public Resource parse(String value) {
+                return new FileResource(new File(value.split("://")[1]));
+            }
+
+            @Override
+            public String format(Resource value)
+                    throws Converter.ConversionException {
+                String path = ((FileResource) value).getSourceFile().getPath();
+                if (File.separatorChar != '/') {
+                    // make sure we use '/' as file separator in templates
+                    return path.replace(File.separatorChar, '/');
+                } else {
+                    return path;
+                }
+            }
+
+        };
+
+        @Override
+        public Resource parse(String value) {
+            // default behavior for HTTP, HTTPS, FTP and FTPS
+            return new ExternalResource(value);
+        }
+
+        @Override
+        public String format(Resource value)
+                throws Converter.ConversionException {
+            // default behavior for HTTP, HTTPS, FTP and FTPS
+            return ((ExternalResource) value).getURL();
+        }
+
+        private static Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<Class<? extends Resource>, ResourceConverterByProtocol>();
+        static {
+            typeToConverter.put(ExternalResource.class, HTTP);
+            // ^ any of non-specialized would actually work
+            typeToConverter.put(ThemeResource.class, THEME);
+            typeToConverter.put(FontIcon.class, FONTICON);
+            typeToConverter.put(FileResource.class, FILE);
+
+        }
+
+        public static ResourceConverterByProtocol byType(
+                Class<? extends Resource> resourceType) {
+            for (Class<?> type : typeToConverter.keySet()) {
+                if (type.isAssignableFrom(resourceType)) {
+                    return typeToConverter.get(type);
+                }
+            }
+            return null;
+        }
     }
 
 }

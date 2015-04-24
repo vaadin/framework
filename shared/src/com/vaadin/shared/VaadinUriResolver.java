@@ -58,7 +58,7 @@ public abstract class VaadinUriResolver implements Serializable {
         if (vaadinUri == null) {
             return null;
         }
-        if (vaadinUri.startsWith("theme://")) {
+        if (vaadinUri.startsWith(ApplicationConstants.THEME_PROTOCOL_PREFIX)) {
             final String themeUri = getThemeUri();
             vaadinUri = themeUri + vaadinUri.substring(7);
         }

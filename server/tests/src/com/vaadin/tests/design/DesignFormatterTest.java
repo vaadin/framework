@@ -18,6 +18,7 @@ package com.vaadin.tests.design;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,8 +35,12 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.FontIcon;
+import com.vaadin.server.GenericFontIcon;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignFormatter;
 
@@ -265,6 +270,78 @@ public class DesignFormatterTest {
         }
     }
 
+    @Test
+    public void testResourceFormat() {
+        String httpUrl = "http://example.com/icon.png";
+        String httpsUrl = "https://example.com/icon.png";
+        String themePath = "icons/icon.png";
+        String fontAwesomeUrl = "fonticon://FontAwesome/0xf0f9";
+        String someOtherFontUrl = "fonticon://SomeOther/0xF0F9";
+        String fileSystemPath = "c:\\app\\resources\\icon.png";
+
+        assertEquals(httpUrl, formatter.format(new ExternalResource(httpUrl)));
+        assertEquals(httpsUrl, formatter.format(new ExternalResource(httpsUrl)));
+        assertEquals(ApplicationConstants.THEME_PROTOCOL_PREFIX + themePath,
+                formatter.format(new ThemeResource(themePath)));
+
+        assertEquals(fontAwesomeUrl, formatter.format(FontAwesome.AMBULANCE));
+        assertEquals(someOtherFontUrl.toLowerCase(),
+                formatter.format(new GenericFontIcon("SomeOther", 0xf0f9))
+                        .toLowerCase());
+
+        assertEquals(fileSystemPath,
+                formatter.format(new FileResource(new File(fileSystemPath))));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testResourceParseException() {
+        String someRandomResourceUrl = "random://url";
+        formatter.parse(someRandomResourceUrl, Resource.class);
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testResourceFormatException() {
+        formatter.format(new Resource() { // must use unknown resource type
+                    @Override
+                    public String getMIMEType() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                });
+    }
+
+    @Test
+    public void testResourceParse() {
+        String httpUrl = "http://example.com/icon.png";
+        String httpsUrl = "https://example.com/icon.png";
+        String themePath = "icons/icon.png";
+        String fontAwesomeUrl = "fonticon://FontAwesome/0xf0f9";
+        String someOtherFont = "fonticon://SomeOther/0xF0F9";
+        String fontAwesomeUrlOld = "font://AMBULANCE";
+        String fileSystemPath = "c:\\app\\resources\\icon.png";
+
+        assertEquals(new ExternalResource(httpUrl).getURL(),
+                formatter.parse(httpUrl, ExternalResource.class).getURL());
+        assertEquals(new ExternalResource(httpsUrl).getURL(),
+                formatter.parse(httpsUrl, ExternalResource.class).getURL());
+        assertEquals(
+                new ThemeResource(themePath),
+                formatter.parse(ApplicationConstants.THEME_PROTOCOL_PREFIX
+                        + themePath, ThemeResource.class));
+        assertEquals(FontAwesome.AMBULANCE,
+                formatter.parse(fontAwesomeUrlOld, FontAwesome.class));
+        assertEquals(FontAwesome.AMBULANCE,
+                formatter.parse(fontAwesomeUrl, FontAwesome.class));
+        assertEquals(new GenericFontIcon("SomeOther", 0xF0F9),
+                formatter.parse(someOtherFont, FontIcon.class));
+
+        assertEquals(
+                new FileResource(new File(fileSystemPath)).getSourceFile(),
+                formatter.parse(fileSystemPath, FileResource.class)
+                        .getSourceFile());
+
+    }
+
     /**
      * A static method to allow comparison two different actions.
      * 
@@ -294,5 +371,4 @@ public class DesignFormatterTest {
         }
         return false;
     }
-
 }

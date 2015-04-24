@@ -325,9 +325,8 @@ public class DesignFormatter implements Serializable {
             // component.
             return (Converter<String, T>) stringObjectConverter;
         }
-        if (sourceType.isEnum()) {
-            return (Converter<String, T>) stringEnumConverter;
-        } else if (converterMap.containsKey(sourceType)) {
+
+        if (converterMap.containsKey(sourceType)) {
             return ((Converter<String, T>) converterMap.get(sourceType));
         } else if (!strict) {
             for (Class<?> supported : converterMap.keySet()) {
@@ -335,6 +334,10 @@ public class DesignFormatter implements Serializable {
                     return ((Converter<String, T>) converterMap.get(supported));
                 }
             }
+        }
+
+        if (sourceType.isEnum()) {
+            return (Converter<String, T>) stringEnumConverter;
         }
         return null;
     }
