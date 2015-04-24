@@ -25,7 +25,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ConnectionStatusEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
@@ -96,9 +95,6 @@ public class Heartbeat {
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
 
-                // Notify network observers about response status
-                connection.fireEvent(new ConnectionStatusEvent(status));
-
                 if (status == Response.SC_OK) {
                     getLogger().fine("Heartbeat response OK");
                 } else if (status == 0) {
@@ -128,8 +124,6 @@ public class Heartbeat {
                 getLogger().severe(
                         "Exception sending heartbeat: "
                                 + exception.getMessage());
-                // Notify network observers about response status
-                connection.fireEvent(new ConnectionStatusEvent(0));
                 // Don't break the loop
                 schedule();
             }

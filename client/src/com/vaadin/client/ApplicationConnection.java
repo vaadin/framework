@@ -348,42 +348,6 @@ public class ApplicationConnection implements HasHandlers {
 
     }
 
-    /**
-     * Event triggered when a XHR request has finished with the status code of
-     * the response.
-     * 
-     * Useful for handlers observing network failures like online/off-line
-     * monitors.
-     */
-    public static class ConnectionStatusEvent extends
-            GwtEvent<ConnectionStatusEvent.ConnectionStatusHandler> {
-        private int status;
-
-        public static interface ConnectionStatusHandler extends EventHandler {
-            public void onConnectionStatusChange(ConnectionStatusEvent event);
-        }
-
-        public ConnectionStatusEvent(int status) {
-            this.status = status;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public final static Type<ConnectionStatusHandler> TYPE = new Type<ConnectionStatusHandler>();
-
-        @Override
-        public Type<ConnectionStatusHandler> getAssociatedType() {
-            return TYPE;
-        }
-
-        @Override
-        protected void dispatch(ConnectionStatusHandler handler) {
-            handler.onConnectionStatusChange(this);
-        }
-    }
-
     public static class ResponseHandlingStartedEvent extends
             ApplicationConnectionEvent {
 
@@ -923,8 +887,6 @@ public class ApplicationConnection implements HasHandlers {
                                         - requestStartTime.getTime()) + "ms");
 
                 int statusCode = response.getStatusCode();
-                // Notify network observers about response status
-                fireEvent(new ConnectionStatusEvent(statusCode));
 
                 switch (statusCode) {
                 case 0:
@@ -1036,7 +998,6 @@ public class ApplicationConnection implements HasHandlers {
             } catch (RequestException e) {
                 getLogger().log(Level.SEVERE, "Error in server request", e);
                 endRequest();
-                fireEvent(new ConnectionStatusEvent(0));
             }
         }
     }
