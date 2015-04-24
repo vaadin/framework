@@ -260,10 +260,9 @@ public class CurrentInstance implements Serializable {
                  * unless it respects null values, will just leave the wrong UI
                  * instance registered.
                  */
-                set(c, null, ci.inheritable);
-            } else {
-                set(c, v, ci.inheritable);
+                v = null;
             }
+            set(c, v, ci.inheritable);
         }
 
         if (removeStale) {
