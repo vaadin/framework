@@ -172,12 +172,6 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         // close the popup by clicking the button again
         dateField.findElement(By.tagName("button")).click();
 
-        // TODO: remove this once #14405 has been fixed
-        if (!getBrowsersExcludingIE().contains(getDesiredCapabilities())) {
-            // click something else outside the popup to close it
-            dateField.findElement(By.tagName("input")).click();
-        }
-
         assertFalse("popup found when there should be none",
                 isElementPresent(By.className("v-datefield-popup")));
     }
