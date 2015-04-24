@@ -3012,12 +3012,13 @@ public class Grid<T> extends ResizeComposite implements
             menuBar = new MenuBar(true) {
 
                 @Override
-                public MenuItem addItem(MenuItem item) {
+                public MenuItem insertItem(MenuItem item, int beforeIndex)
+                        throws IndexOutOfBoundsException {
                     if (getParent() == null) {
                         content.insert(this, 0);
                         updateVisibility();
                     }
-                    return super.addItem(item);
+                    return super.insertItem(item, beforeIndex);
                 }
 
                 @Override
@@ -3273,12 +3274,13 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updateTogglesOrder() {
             if (!hidingColumn) {
+                int lastIndex = 0;
                 for (Column<?, T> column : getColumns()) {
                     if (column.isHidable()) {
                         final MenuItem menuItem = columnToHidingToggleMap
                                 .get(column);
                         sidebar.menuBar.removeItem(menuItem);
-                        sidebar.menuBar.addItem(menuItem);
+                        sidebar.menuBar.insertItem(menuItem, lastIndex++);
                     }
                 }
             }
@@ -7709,5 +7711,51 @@ public class Grid<T> extends ResizeComposite implements
      */
     private Sidebar getSidebar() {
         return sidebar;
+    }
+
+    /**
+     * Gets the customizable menu bar that is by default used for toggling
+     * column hidability. The application developer is allowed to add their
+     * custom items to the end of the menu, but should try to avoid modifying
+     * the items in the beginning of the menu that control the column hiding if
+     * any columns are marked as hidable. A toggle for opening the menu will be
+     * displayed whenever the menu contains at least one item.
+     * 
+     * @since 7.5.0
+     * @return the menu bar
+     */
+    public MenuBar getSidebarMenu() {
+        return sidebar.menuBar;
+    }
+
+    /**
+     * Tests whether the sidebar menu is currently open.
+     * 
+     * @since 7.5.0
+     * @see #getSidebarMenu()
+     * @return <code>true</code> if the sidebar is open; <code>false</code> if
+     *         it is closed
+     */
+    public boolean isSidebarOpen() {
+        return sidebar.isOpen();
+    }
+
+    /**
+     * Sets whether the sidebar menu is open.
+     * 
+     * 
+     * @since 7.5.0
+     * @see #getSidebarMenu()
+     * @see #isSidebarOpen()
+     * @param sidebarOpen
+     *            <code>true</code> to open the sidebar; <code>false</code> to
+     *            close it
+     */
+    public void setSidebarOpen(boolean sidebarOpen) {
+        if (sidebarOpen) {
+            sidebar.open();
+        } else {
+            sidebar.close();
+        }
     }
 }
