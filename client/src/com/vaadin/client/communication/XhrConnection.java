@@ -136,11 +136,6 @@ public class XhrConnection {
 
         @Override
         public void onResponseReceived(Request request, Response response) {
-            getLogger().info(
-                    "Server visit took "
-                            + String.valueOf((new Date()).getTime()
-                                    - requestStartTime.getTime()) + "ms");
-
             int statusCode = response.getStatusCode();
 
             if (statusCode != 200) {
@@ -152,6 +147,11 @@ public class XhrConnection {
                         problemEvent);
                 return;
             }
+
+            getLogger().info(
+                    "Server visit took "
+                            + String.valueOf((new Date()).getTime()
+                                    - requestStartTime.getTime()) + "ms");
 
             String contentType = response.getHeader("Content-Type");
             if (contentType == null
@@ -165,23 +165,18 @@ public class XhrConnection {
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
 
-            if (!responseText
-                    .startsWith(ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX)) {
+            final String jsonText = ServerCommunicationHandler
+                    .stripJSONWrapping(responseText);
+            if (jsonText == null) {
+                // Invalid string (not wrapped as expected)
                 getCommunicationProblemHandler().xhrInvalidContent(
                         new CommunicationProblemEvent(request, payload,
                                 response));
                 return;
             }
 
-            final String jsonText = responseText
-                    .substring(
-                            ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX
-                                    .length(),
-                            responseText.length()
-                                    - ServerCommunicationHandler.JSON_COMMUNICATION_SUFFIX
-                                            .length());
-
             getCommunicationProblemHandler().xhrOk();
+            getLogger().info("Received xhr message: " + jsonText);
             getServerMessageHandler().handleMessage(jsonText);
         }
 
@@ -219,7 +214,7 @@ public class XhrConnection {
 
         rb.setCallback(responseHandler);
 
-        getLogger().info("Sending request to server");
+        getLogger().info("Sending xhr message to server: " + payload.toJson());
         try {
             final Request request = rb.send();
 

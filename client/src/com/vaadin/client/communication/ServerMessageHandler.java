@@ -233,7 +233,6 @@ public class ServerMessageHandler {
                     + " - Original JSON-text:" + jsonText, 200);
             return;
         }
-
         getLogger().info(
                 "JSON parsing took " + (new Date().getTime() - start.getTime())
                         + "ms");
@@ -286,6 +285,15 @@ public class ServerMessageHandler {
         getLogger().info("Handling message from server");
         connection.fireEvent(new ResponseHandlingStartedEvent(connection));
 
+        // Client id must be updated before server id, as server id update can
+        // cause a resync (which must use the updated id)
+        if (json.containsKey(ApplicationConstants.CLIENT_TO_SERVER_ID)) {
+            int serverNextExpected = json
+                    .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
+            getServerCommunicationHandler().setClientToServerMessageId(
+                    serverNextExpected);
+        }
+
         final int syncId;
         if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
             syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
@@ -322,13 +330,6 @@ public class ServerMessageHandler {
             getLogger()
                     .severe("Server response didn't contain a sync id. "
                             + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
-        }
-
-        if (json.containsKey(ApplicationConstants.CLIENT_TO_SERVER_ID)) {
-            int serverNextExpected = json
-                    .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
-            getServerCommunicationHandler().setClientToServerMessageId(
-                    serverNextExpected);
         }
 
         // Handle redirect

@@ -25,6 +25,8 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
 
+import elemental.json.JsonObject;
+
 /**
  * Default implementation of the communication problem handler.
  * 
@@ -168,6 +170,11 @@ public class DefaultCommunicationProblemHandler implements
 
     }
 
+    @Override
+    public void pushInvalidContent(PushConnection pushConnection, String message) {
+        // Do nothing for now. Should likely do the same as xhrInvalidContent
+    }
+
     private ServerCommunicationHandler getServerCommunicationHandler() {
         return connection.getServerCommunicationHandler();
     }
@@ -248,5 +255,9 @@ public class DefaultCommunicationProblemHandler implements
 
     @Override
     public void pushOk(PushConnection pushConnection) {
+    }
+
+    @Override
+    public void pushNotConnected(JsonObject payload) {
     }
 }

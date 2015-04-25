@@ -376,9 +376,10 @@ public class GridSortingTest extends GridBasicFeaturesTest {
     }
 
     private void assertLastSortIsUserOriginated(boolean isUserOriginated) {
+        // Find a message in the log
         List<WebElement> userOriginatedMessages = getDriver()
                 .findElements(
-                        By.xpath("//*[contains(text(),'SortOrderChangeEvent: isUserOriginated')]"));
+                        By.xpath("//div[@id='Log']//*[contains(text(),'SortOrderChangeEvent: isUserOriginated')]"));
 
         Collections.sort(userOriginatedMessages, new Comparator<WebElement>() {
             @Override

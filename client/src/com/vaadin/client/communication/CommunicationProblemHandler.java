@@ -19,6 +19,8 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.vaadin.client.ApplicationConnection;
 
+import elemental.json.JsonObject;
+
 /**
  * Interface for handling problems which occur during communications with the
  * server.
@@ -167,5 +169,24 @@ public interface CommunicationProblemHandler {
      * Called whenever a XmlHttpRequest to the server completes successfully
      */
     void xhrOk();
+
+    /**
+     * Called when a message is to be sent to the server through the push
+     * channel but the push channel is not connected
+     * 
+     * @param payload
+     *            The payload to send to the server
+     */
+    void pushNotConnected(JsonObject payload);
+
+    /**
+     * Called when invalid content (not JSON) was pushed from the server through
+     * the push connection
+     * 
+     * @param communicationProblemEvent
+     *            An event containing what was being sent to the server and what
+     *            was returned
+     */
+    void pushInvalidContent(PushConnection pushConnection, String message);
 
 }

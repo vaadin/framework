@@ -28,16 +28,17 @@ public class ReconnectingCommunicationProblemHandler extends
         DefaultCommunicationProblemHandler {
 
     private enum Type {
-        HEARTBEAT, XHR;
+        HEARTBEAT, MESSAGE
     }
 
     ReconnectDialog reconnectDialog = GWT.create(ReconnectDialog.class);
     int reconnectAttempt = 0;
-    private Type reconnectionCause = null;;
+    private Type reconnectionCause = null;
 
     @Override
     public void xhrException(CommunicationProblemEvent event) {
-        handleTemporaryError(Type.XHR, event.getPayload());
+        getLogger().warning("xhrException");
+        handleTemporaryError(Type.MESSAGE, event.getPayload());
     }
 
     @Override
@@ -64,6 +65,8 @@ public class ReconnectingCommunicationProblemHandler extends
     }
 
     private void handleTemporaryError(Type type, final JsonObject payload) {
+        getLogger().warning("handleTemporaryError(" + type + ")");
+
         reconnectAttempt++;
         reconnectionCause = type;
         if (!reconnectDialog.isAttached()) {
@@ -143,27 +146,36 @@ public class ReconnectingCommunicationProblemHandler extends
 
     @Override
     public void xhrInvalidContent(CommunicationProblemEvent event) {
+        getLogger().warning("xhrInvalidContent");
         super.xhrInvalidContent(event);
     };
 
     @Override
     public void xhrInvalidStatusCode(CommunicationProblemEvent event) {
-        handleTemporaryError(Type.XHR, event.getPayload());
+        getLogger().info(
+                "Server returned " + event.getResponse().getStatusCode()
+                        + " for xhr request");
+        getLogger().warning("xhrInvalidStatusCode");
+        handleTemporaryError(Type.MESSAGE, event.getPayload());
     }
 
     @Override
     public void xhrOk() {
-        resolveTemporaryError(Type.XHR, true);
+        getLogger().warning("xhrOk");
+        resolveTemporaryError(Type.MESSAGE, true);
     }
 
-    private void resolveTemporaryError(Type cause, boolean success) {
+    private void resolveTemporaryError(Type type, boolean success) {
+        getLogger().warning("resolveTemporaryError(" + type + ")");
+
         if (reconnectionCause == null) {
             // Not trying to reconnect
             return;
         }
-        if (reconnectionCause != cause) {
+        if (reconnectionCause == Type.MESSAGE && type == Type.HEARTBEAT) {
             // If a heartbeat goes through while we are trying to re-send an
-            // XHR, we wait for the XHR to go through
+            // XHR, we wait for the XHR to go through to avoid removing the
+            // reconnect dialog and then possible showing it again
             return;
         }
 
@@ -177,5 +189,17 @@ public class ReconnectingCommunicationProblemHandler extends
             reconnectAttempt = 0;
         }
 
+    }
+
+    @Override
+    public void pushOk(PushConnection pushConnection) {
+        super.pushOk(pushConnection);
+        resolveTemporaryError(Type.MESSAGE, true);
+    }
+
+    @Override
+    public void pushNotConnected(JsonObject payload) {
+        super.pushNotConnected(payload);
+        handleTemporaryError(Type.MESSAGE, payload);
     }
 }

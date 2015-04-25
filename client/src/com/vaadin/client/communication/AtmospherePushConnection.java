@@ -16,7 +16,6 @@
 
 package com.vaadin.client.communication;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -115,8 +114,6 @@ public class AtmospherePushConnection implements PushConnection {
     private ApplicationConnection connection;
 
     private JavaScriptObject socket;
-
-    private ArrayList<JsonObject> messageQueue = new ArrayList<JsonObject>();
 
     private State state = State.CONNECT_PENDING;
 
@@ -221,16 +218,35 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     @Override
+    public boolean isBidirectional() {
+        if (transport == null) {
+            return false;
+        }
+
+        if (!transport.equals("websocket")) {
+            // If we are not using websockets, we want to send XHRs
+            return false;
+        }
+        if (state == State.CONNECT_PENDING) {
+            // Not sure yet, let's go for using websockets still as still will
+            // delay the message until a connection is established. When the
+            // connection is established, bi-directionality will be checked
+            // again to be sure
+        }
+        return true;
+
+    };
+
+    @Override
     public void push(JsonObject message) {
-        switch (state) {
-        case CONNECT_PENDING:
-            assert isActive();
-            getLogger().info("Queuing push message: " + message.toJson());
-            messageQueue.add(message);
-            break;
-        case CONNECTED:
-            assert isActive();
-            getLogger().info("Sending push message: " + message.toJson());
+        if (!isBidirectional()) {
+            throw new IllegalStateException(
+                    "This server to client push connection should not be used to send client to server messages");
+        }
+        if (state == State.CONNECTED) {
+            getLogger().info(
+                    "Sending push (" + transport + ") message to server: "
+                            + message.toJson());
 
             if (transport.equals("websocket")) {
                 FragmentedMessage fragmented = new FragmentedMessage(
@@ -241,11 +257,15 @@ public class AtmospherePushConnection implements PushConnection {
             } else {
                 doPush(socket, message.toJson());
             }
-            break;
-        case DISCONNECT_PENDING:
-        case DISCONNECTED:
-            throw new IllegalStateException("Can not push after disconnecting");
+            return;
         }
+
+        if (state == State.CONNECT_PENDING) {
+            getCommunicationProblemHandler().pushNotConnected(message);
+            return;
+        }
+
+        throw new IllegalStateException("Can not push after disconnecting");
     }
 
     protected AtmosphereConfiguration getConfig() {
@@ -274,16 +294,11 @@ public class AtmospherePushConnection implements PushConnection {
      * @since 7.2
      */
     protected void onConnect(AtmosphereResponse response) {
-
         transport = response.getTransport();
-        getCommunicationProblemHandler().pushOk(this);
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
-            for (JsonObject message : messageQueue) {
-                push(message);
-            }
-            messageQueue.clear();
+            getCommunicationProblemHandler().pushOk(this);
             break;
         case DISCONNECT_PENDING:
             // Set state to connected to make disconnect close the connection
@@ -331,11 +346,16 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected void onMessage(AtmosphereResponse response) {
         String message = response.getResponseBody();
-        if (message.startsWith("for(;;);")) {
-            getLogger().info("Received push message: " + message);
-            // "for(;;);[{json}]" -> "{json}"
-            message = message.substring(9, message.length() - 1);
-            connection.getServerMessageHandler().handleMessage(message);
+        String json = ServerCommunicationHandler.stripJSONWrapping(message);
+        if (json == null) {
+            // Invalid string (not wrapped as expected)
+            getCommunicationProblemHandler().pushInvalidContent(this, message);
+            return;
+        } else {
+            getLogger().info(
+                    "Received push (" + getTransportType() + ") message: "
+                            + json);
+            connection.getServerMessageHandler().handleMessage(json);
         }
     }
 
@@ -361,7 +381,6 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onClose(AtmosphereResponse response) {
-        getLogger().info("Push connection closed");
         state = State.CONNECT_PENDING;
         getCommunicationProblemHandler().pushClosed(this);
     }
@@ -376,7 +395,6 @@ public class AtmospherePushConnection implements PushConnection {
         if (state == State.CONNECTED) {
             state = State.CONNECT_PENDING;
         }
-        getLogger().info("Reopening push connection");
         getCommunicationProblemHandler().pushReconnectPending(this);
     }
 
@@ -567,11 +585,6 @@ public class AtmospherePushConnection implements PushConnection {
         return pushJs;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.communication.PushConnection#getTransportType()
-     */
     @Override
     public String getTransportType() {
         return transport;

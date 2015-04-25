@@ -47,11 +47,13 @@ public interface PushConnection {
      * Pushes a message to the server. Will throw an exception if the connection
      * is not active (see {@link #isActive()}).
      * <p>
-     * Implementation detail: The implementation is responsible for queuing
-     * messages that are pushed after {@link #init(ApplicationConnection)} has
-     * been called but before the connection has internally been set up and then
-     * replay those messages in the original order when the connection has been
-     * established.
+     * Implementation detail: If the push connection is not connected and the
+     * message can thus not be sent, the implementation must call
+     * {@link CommunicationProblemHandler#pushNotConnected(JsonObject)}, which
+     * will retry the send later.
+     * <p>
+     * This method must not be called if the push connection is not
+     * bidirectional (if {@link #isBidirectional()} returns false)
      * 
      * @param payload
      *            the payload to push
@@ -100,5 +102,20 @@ public interface PushConnection {
      * @return A human readable string representation of the transport type
      */
     public String getTransportType();
+
+    /**
+     * Checks whether this push connection should be used for communication in
+     * both directions or if a normal XHR should be used for client to server
+     * communication.
+     * 
+     * A bidirectional push connection must be able to reliably tell when it is
+     * connected and when it is not.
+     * 
+     * @since 7.6
+     * @return true if the push connection should be used for messages in both
+     *         directions, false if it should only be used for server to client
+     *         messages
+     */
+    public boolean isBidirectional();
 
 }

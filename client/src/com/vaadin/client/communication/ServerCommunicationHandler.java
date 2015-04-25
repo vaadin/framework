@@ -163,8 +163,6 @@ public class ServerCommunicationHandler {
         payload.put(ApplicationConstants.CLIENT_TO_SERVER_ID,
                 clientToServerMessageId++);
 
-        getLogger()
-                .info("Making UIDL Request with params: " + payload.toJson());
         if (extraJson != null) {
             for (String key : extraJson.keys()) {
                 payload.put(key, extraJson.get(key));
@@ -185,7 +183,7 @@ public class ServerCommunicationHandler {
      *            The contents of the request to send
      */
     public void send(final JsonObject payload) {
-        if (push != null) {
+        if (push != null && push.isBidirectional()) {
             push.push(payload);
         } else {
             xhrConnection.send(payload);
@@ -360,5 +358,30 @@ public class ServerCommunicationHandler {
             // Server has not yet seen all our messages
             // Do nothing as they will arrive eventually
         }
+    }
+
+    /**
+     * Strips the JSON wrapping from the given json string with wrapping.
+     * 
+     * If the given string is not wrapped as expected, returns null
+     * 
+     * @since
+     * @param jsonWithWrapping
+     *            the JSON received from the server
+     * @return an unwrapped JSON string or null if the given string was not
+     *         wrapped
+     */
+    public static String stripJSONWrapping(String jsonWithWrapping) {
+        if (!jsonWithWrapping
+                .startsWith(ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX)
+                || !jsonWithWrapping
+                        .endsWith(ServerCommunicationHandler.JSON_COMMUNICATION_SUFFIX)) {
+            return null;
+        }
+        return jsonWithWrapping.substring(
+                ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX.length(),
+                jsonWithWrapping.length()
+                        - ServerCommunicationHandler.JSON_COMMUNICATION_SUFFIX
+                                .length());
     }
 }
