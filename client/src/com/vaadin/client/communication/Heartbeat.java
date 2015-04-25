@@ -95,28 +95,25 @@ public class Heartbeat {
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
 
-                boolean reschedule = true;
                 if (status == Response.SC_OK) {
                     connection.getCommunicationProblemHandler().heartbeatOk();
                 } else {
-                    reschedule = connection.getCommunicationProblemHandler()
+                    // Handler should stop the application if heartbeat should
+                    // no longer be sent
+                    connection.getCommunicationProblemHandler()
                             .heartbeatInvalidStatusCode(request, response);
                 }
 
-                if (reschedule) {
-                    schedule();
-                }
+                schedule();
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                boolean reschedule = connection
-                        .getCommunicationProblemHandler().heartbeatException(
-                                request, exception);
-
-                if (reschedule) {
-                    schedule();
-                }
+                // Handler should stop the application if heartbeat should no
+                // longer be sent
+                connection.getCommunicationProblemHandler().heartbeatException(
+                        request, exception);
+                schedule();
             }
         };
 

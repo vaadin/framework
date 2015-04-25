@@ -15,69 +15,107 @@
  */
 package com.vaadin.client.communication;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.WidgetUtil;
 
 import elemental.json.JsonObject;
 
-//FIXME This is just a test and should be merged with DCPH
-public class ReconnectingCommunicationProblemHandler extends
-        DefaultCommunicationProblemHandler {
+/**
+ * Default implementation of the communication problem handler.
+ * <p>
+ * Handles temporary errors by showing a reconnect dialog to the user while
+ * trying to re-establish the connection to the server and re-send the pending
+ * message.
+ * <p>
+ * Handles permanent errors by showing a critical system notification to the
+ * user
+ * 
+ * @since 7.6
+ * @author Vaadin Ltd
+ */
+public class ReconnectingCommunicationProblemHandler implements
+        CommunicationProblemHandler {
+    private ApplicationConnection connection;
+    private ReconnectDialog reconnectDialog = GWT.create(ReconnectDialog.class);
+    private int reconnectAttempt = 0;
+    private Type reconnectionCause = null;
 
     private enum Type {
         HEARTBEAT, MESSAGE
     }
 
-    ReconnectDialog reconnectDialog = GWT.create(ReconnectDialog.class);
-    int reconnectAttempt = 0;
-    private Type reconnectionCause = null;
+    @Override
+    public void setConnection(ApplicationConnection connection) {
+        this.connection = connection;
+    };
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ReconnectingCommunicationProblemHandler.class
+                .getName());
+    }
+
+    /**
+     * Returns the connection this handler is connected to
+     * 
+     * @return the connection for this handler
+     */
+    protected ApplicationConnection getConnection() {
+        return connection;
+    }
 
     @Override
     public void xhrException(CommunicationProblemEvent event) {
         getLogger().warning("xhrException");
-        handleTemporaryError(Type.MESSAGE, event.getPayload());
+        handleRecoverableError(Type.MESSAGE, event.getPayload());
     }
 
     @Override
-    public boolean heartbeatException(Request request, Throwable exception) {
-        handleTemporaryError(Type.HEARTBEAT, null);
-        return true;
+    public void heartbeatException(Request request, Throwable exception) {
+        getLogger().severe("Heartbeat exception: " + exception.getMessage());
+        handleRecoverableError(Type.HEARTBEAT, null);
     }
 
     @Override
-    public boolean heartbeatInvalidStatusCode(Request request, Response response) {
+    public void heartbeatInvalidStatusCode(Request request, Response response) {
+        int statusCode = response.getStatusCode();
+        getLogger().warning("Heartbeat request returned " + statusCode);
+
         if (response.getStatusCode() == Response.SC_GONE) {
             // Session expired
-            resolveTemporaryError(Type.HEARTBEAT, false);
-            return super.heartbeatInvalidStatusCode(request, response);
+            getConnection().showSessionExpiredError(null);
+            stopApplication();
+        } else {
+            handleRecoverableError(Type.HEARTBEAT, null);
         }
-
-        handleTemporaryError(Type.HEARTBEAT, null);
-        return true;
     }
 
     @Override
     public void heartbeatOk() {
+        getLogger().warning("heartbeatOk");
         resolveTemporaryError(Type.HEARTBEAT, true);
     }
 
-    private void handleTemporaryError(Type type, final JsonObject payload) {
+    protected void handleRecoverableError(Type type, final JsonObject payload) {
         getLogger().warning("handleTemporaryError(" + type + ")");
 
         reconnectAttempt++;
         reconnectionCause = type;
         if (!reconnectDialog.isAttached()) {
-            // FIXME
             reconnectDialog.setStyleName("active", true);
             reconnectDialog.setOwner(getConnection().getUIConnector()
                     .getWidget());
             reconnectDialog.setPopupPositionAndShow(new PositionCallback() {
                 @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {
-                    // FIXME
                     reconnectDialog.setPopupPosition(0, 0);
                 }
             });
@@ -87,10 +125,8 @@ public class ReconnectingCommunicationProblemHandler extends
         }
 
         if (reconnectAttempt >= getMaxReconnectAttempts()) {
-            // FIXME Remove
             reconnectDialog.setText("Server connection lost. Gave up after "
                     + reconnectAttempt + " attempts.");
-            // FIXME
             reconnectDialog.setStyleName("active", false);
 
             getConnection().setApplicationRunning(false);
@@ -102,7 +138,6 @@ public class ReconnectingCommunicationProblemHandler extends
 
             // Here and not in timer to avoid TB for getting in between
             if (payload != null) {
-                // FIXME: Not like this
                 getConnection().getServerCommunicationHandler().startRequest();
             }
 
@@ -147,16 +182,86 @@ public class ReconnectingCommunicationProblemHandler extends
     @Override
     public void xhrInvalidContent(CommunicationProblemEvent event) {
         getLogger().warning("xhrInvalidContent");
-        super.xhrInvalidContent(event);
-    };
+        String responseText = event.getResponse().getText();
+        /*
+         * A servlet filter or equivalent may have intercepted the request and
+         * served non-UIDL content (for instance, a login page if the session
+         * has expired.) If the response contains a magic substring, do a
+         * synchronous refresh. See #8241.
+         */
+        MatchResult refreshToken = RegExp.compile(
+                ApplicationConnection.UIDL_REFRESH_TOKEN
+                        + "(:\\s*(.*?))?(\\s|$)").exec(responseText);
+        if (refreshToken != null) {
+            WidgetUtil.redirect(refreshToken.getGroup(2));
+        } else {
+            handleUnrecoverableCommunicationError(
+                    "Invalid JSON response from server: " + responseText, event);
+        }
+
+    }
+
+    @Override
+    public void pushInvalidContent(PushConnection pushConnection, String message) {
+        // Do nothing for now. Should likely do the same as xhrInvalidContent
+    }
 
     @Override
     public void xhrInvalidStatusCode(CommunicationProblemEvent event) {
-        getLogger().info(
-                "Server returned " + event.getResponse().getStatusCode()
-                        + " for xhr request");
         getLogger().warning("xhrInvalidStatusCode");
-        handleTemporaryError(Type.MESSAGE, event.getPayload());
+        Response response = event.getResponse();
+        int statusCode = response.getStatusCode();
+        getLogger().warning("Server returned " + statusCode + " for xhr");
+
+        if (statusCode == 401) {
+            // Authentication/authorization failed, no need to re-try
+            handleUnauthorized(event);
+            return;
+        } else {
+            // 404, 408 and other 4xx codes CAN be temporary when you have a
+            // proxy between the client and the server and e.g. restart the
+            // server
+            // 5xx codes may or may not be temporary
+            handleRecoverableError(Type.MESSAGE, event.getPayload());
+        }
+    }
+
+    protected void handleUnauthorized(CommunicationProblemEvent event) {
+        /*
+         * Authorization has failed (401). Could be that the session has timed
+         * out.
+         */
+        connection.showAuthenticationError("");
+        endRequestAndStopApplication();
+    }
+
+    private void endRequestAndStopApplication() {
+        connection.getServerCommunicationHandler().endRequest();
+
+        stopApplication();
+    }
+
+    private void stopApplication() {
+        // Consider application not running any more and prevent all
+        // future requests
+        connection.setApplicationRunning(false);
+    }
+
+    /**
+     * @since
+     * @param event
+     */
+    private void handleUnrecoverableCommunicationError(String details,
+            CommunicationProblemEvent event) {
+        Response response = event.getResponse();
+        int statusCode = -1;
+        if (response != null) {
+            statusCode = response.getStatusCode();
+        }
+        connection.handleCommunicationError(details, statusCode);
+
+        endRequestAndStopApplication();
+
     }
 
     @Override
@@ -193,13 +298,52 @@ public class ReconnectingCommunicationProblemHandler extends
 
     @Override
     public void pushOk(PushConnection pushConnection) {
-        super.pushOk(pushConnection);
+        getLogger().warning("pushOk()");
         resolveTemporaryError(Type.MESSAGE, true);
     }
 
     @Override
-    public void pushNotConnected(JsonObject payload) {
-        super.pushNotConnected(payload);
-        handleTemporaryError(Type.MESSAGE, payload);
+    public void pushScriptLoadError(String resourceUrl) {
+        connection.handleCommunicationError(resourceUrl
+                + " could not be loaded. Push will not work.", 0);
     }
+
+    @Override
+    public void pushNotConnected(JsonObject payload) {
+        getLogger().warning("pushNotConnected()");
+        handleRecoverableError(Type.MESSAGE, payload);
+    }
+
+    @Override
+    public void pushReconnectPending(PushConnection pushConnection) {
+        getLogger().warning(
+                "pushReconnectPending(" + pushConnection.getTransportType()
+                        + ")");
+        getLogger().info("Reopening push connection");
+    }
+
+    @Override
+    public void pushError(PushConnection pushConnection) {
+        getLogger().warning("pushError()");
+        connection.handleCommunicationError("Push connection using "
+                + pushConnection.getTransportType() + " failed!", -1);
+    }
+
+    @Override
+    public void pushClientTimeout(PushConnection pushConnection) {
+        getLogger().warning("pushClientTimeout()");
+        // TODO Reconnect, allowing client timeout to be set
+        // https://dev.vaadin.com/ticket/18429
+        connection
+                .handleCommunicationError(
+                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
+                        -1);
+    }
+
+    @Override
+    public void pushClosed(PushConnection pushConnection) {
+        getLogger().warning("pushClosed()");
+        getLogger().info("Push connection closed");
+    }
+
 }

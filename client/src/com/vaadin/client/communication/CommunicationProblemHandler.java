@@ -51,10 +51,8 @@ public interface CommunicationProblemHandler {
      *            The heartbeat request
      * @param exception
      *            The exception which occurred
-     * @return true if a new heartbeat should be sent, false if no further
-     *         heartbeats should be sent
      */
-    boolean heartbeatException(Request request, Throwable exception);
+    void heartbeatException(Request request, Throwable exception);
 
     /**
      * Called when a heartbeat request returns a status code other than OK (200)
@@ -63,10 +61,8 @@ public interface CommunicationProblemHandler {
      *            The heartbeat request
      * @param response
      *            The heartbeat response
-     * @return true if a new heartbeat should be sent, false if no further
-     *         heartbeats should be sent
      */
-    boolean heartbeatInvalidStatusCode(Request request, Response response);
+    void heartbeatInvalidStatusCode(Request request, Response response);
 
     /**
      * Called when a {@link Heartbeat} request succeeds
