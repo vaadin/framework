@@ -15,221 +15,35 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.WidgetUtil;
 
 /**
- * TODO
+ * Interface for handling problems which occur during communications with the
+ * server.
  * 
- * @since
+ * The handler is responsible for handling any problem in XHR, heartbeat and
+ * push connections in a way it sees fit. The default implementation used is
+ * {@link DefaultCommunicationProblemHandler}, which considers all problems
+ * terminal
+ * 
+ * @since 7.6
  * @author Vaadin Ltd
  */
-public class CommunicationProblemHandler {
-
-    private ApplicationConnection connection;
+public interface CommunicationProblemHandler {
 
     /**
-     * Sets the application connection this queue is connected to
+     * Sets the application connection this handler is connected to. Called
+     * internally by the framework.
      *
      * @param connection
-     *            the application connection this queue is connected to
+     *            the application connection this handler is connected to
      */
-    public void setConnection(ApplicationConnection connection) {
-        this.connection = connection;
-    }
-
-    public static Logger getLogger() {
-        return Logger.getLogger(CommunicationProblemHandler.class.getName());
-    }
+    void setConnection(ApplicationConnection connection);
 
     /**
-     * @param payload
-     * @param communicationProblemEvent
-     */
-    public void xhrException(CommunicationProblemEvent event) {
-        handleUnrecoverableCommunicationError(
-                event.getException().getMessage(), event);
-
-    }
-
-    /**
-     * @param event
-     * @param retry
-     */
-    public void xhrInvalidStatusCode(final CommunicationProblemEvent event) {
-        Response response = event.getResponse();
-        int statusCode = response.getStatusCode();
-        if (statusCode == 0) {
-            handleNoConnection(event);
-        } else if (statusCode == 401) {
-            handleAuthorizationFailed(event);
-        } else if (statusCode == 503) {
-            handleServiceUnavailable(event);
-        } else if ((statusCode / 100) == 4) {
-            // Handle all 4xx errors the same way as (they are
-            // all permanent errors)
-            String msg = "UIDL could not be read from server."
-                    + " Check servlets mappings. Error code: " + statusCode;
-            handleUnrecoverableCommunicationError(msg, event);
-        } else if ((statusCode / 100) == 5) {
-            // Something's wrong on the server, there's nothing the
-            // client can do except maybe try again.
-            String msg = "Server error. Error code: " + statusCode;
-            handleUnrecoverableCommunicationError(msg, event);
-            return;
-        }
-
-    }
-
-    /**
-     * @since
-     * @param event
-     */
-    private void handleServiceUnavailable(final CommunicationProblemEvent event) {
-        /*
-         * We'll assume msec instead of the usual seconds. If there's no
-         * Retry-After header, handle the error like a 500, as per RFC 2616
-         * section 10.5.4.
-         */
-        String delay = event.getResponse().getHeader("Retry-After");
-        if (delay != null) {
-            getLogger().warning("503, retrying in " + delay + "msec");
-            (new Timer() {
-                @Override
-                public void run() {
-                    // send does not call startRequest so we do
-                    // not call endRequest before it
-                    getServerCommunicationHandler().send(event.getPayload());
-                }
-            }).schedule(Integer.parseInt(delay));
-            return;
-        } else {
-            String msg = "Server error. Error code: "
-                    + event.getResponse().getStatusCode();
-            handleUnrecoverableCommunicationError(msg, event);
-        }
-
-    }
-
-    /**
-     * @since
-     * @param event
-     */
-    private void handleAuthorizationFailed(CommunicationProblemEvent event) {
-        /*
-         * Authorization has failed (401). Could be that the session has timed
-         * out and the container is redirecting to a login page.
-         */
-        connection.showAuthenticationError("");
-        endRequestAndStopApplication();
-    }
-
-    /**
-     * @since
-     */
-    private void endRequestAndStopApplication() {
-        getServerCommunicationHandler().endRequest();
-
-        // Consider application not running any more and prevent all
-        // future requests
-        connection.setApplicationRunning(false);
-    }
-
-    /**
-     * @since
-     * @param event
-     * @param retry
-     */
-    private void handleNoConnection(final CommunicationProblemEvent event) {
-        handleUnrecoverableCommunicationError(
-                "Invalid status code 0 (server down?)", event);
-    }
-
-    private void handleUnrecoverableCommunicationError(String details,
-            CommunicationProblemEvent event) {
-        Response response = event.getResponse();
-        int statusCode = -1;
-        if (response != null) {
-            statusCode = response.getStatusCode();
-        }
-        connection.handleCommunicationError(details, statusCode);
-
-        endRequestAndStopApplication();
-    }
-
-    /**
-     * @since
-     * @param event
-     */
-    public void xhrInvalidContent(CommunicationProblemEvent event) {
-        String responseText = event.getResponse().getText();
-        /*
-         * A servlet filter or equivalent may have intercepted the request and
-         * served non-UIDL content (for instance, a login page if the session
-         * has expired.) If the response contains a magic substring, do a
-         * synchronous refresh. See #8241.
-         */
-        MatchResult refreshToken = RegExp.compile(
-                ApplicationConnection.UIDL_REFRESH_TOKEN
-                        + "(:\\s*(.*?))?(\\s|$)").exec(responseText);
-        if (refreshToken != null) {
-            WidgetUtil.redirect(refreshToken.getGroup(2));
-        } else {
-            handleUnrecoverableCommunicationError(
-                    "Invalid JSON response from server: " + responseText, event);
-        }
-
-    }
-
-    private ServerCommunicationHandler getServerCommunicationHandler() {
-        return connection.getServerCommunicationHandler();
-    }
-
-    /**
-     * Called when a heartbeat request returns a status code other than 200
-     * 
-     * @param request
-     *            The heartbeat request
-     * @param response
-     *            The heartbeat response
-     * @return true if a new heartbeat should be sent, false if no further
-     *         heartbeats should be sent
-     */
-    public boolean heartbeatInvalidStatusCode(Request request, Response response) {
-        int status = response.getStatusCode();
-        int interval = connection.getHeartbeat().getInterval();
-        if (status == 0) {
-            getLogger().warning(
-                    "Failed sending heartbeat, server is unreachable, retrying in "
-                            + interval + "secs.");
-        } else if (status == Response.SC_GONE) {
-            // FIXME Stop application?
-            connection.showSessionExpiredError(null);
-            // If session is expired break the loop
-            return false;
-        } else if (status >= 500) {
-            getLogger().warning(
-                    "Failed sending heartbeat, see server logs, retrying in "
-                            + interval + "secs.");
-        } else {
-            getLogger()
-                    .warning(
-                            "Failed sending heartbeat to server. Error code: "
-                                    + status);
-        }
-
-        return true;
-    }
-
-    /**
-     * Called when an exception occurs during a heartbeat request
+     * Called when an exception occurs during a {@link Heartbeat} request
      * 
      * @param request
      *            The heartbeat request
@@ -238,93 +52,120 @@ public class CommunicationProblemHandler {
      * @return true if a new heartbeat should be sent, false if no further
      *         heartbeats should be sent
      */
-    public boolean heartbeatException(Request request, Throwable exception) {
-        getLogger().severe(
-                "Exception sending heartbeat: " + exception.getMessage());
-        return true;
-    }
+    boolean heartbeatException(Request request, Throwable exception);
 
     /**
-     * @since
+     * Called when a heartbeat request returns a status code other than OK (200)
+     * 
+     * @param request
+     *            The heartbeat request
      * @param response
+     *            The heartbeat response
+     * @return true if a new heartbeat should be sent, false if no further
+     *         heartbeats should be sent
      */
-    public void pushError(PushConnection pushConnection) {
-        /*
-         * Push error indicates a fatal error we cannot (or should not) recover
-         * from by reconnecting or similar.
-         * 
-         * Atmosphere calls onError
-         * 
-         * 1. if maxReconnectAttemps is reached
-         * 
-         * 2. if neither the transport nor the fallback transport can be used
-         * 
-         * (also for server response codes != 200 if reconnectOnServerError is
-         * set to false but we do not set that to false)
-         */
-        connection.handleCommunicationError("Push connection using "
-                + pushConnection.getTransportType() + " failed!", -1);
-    }
+    boolean heartbeatInvalidStatusCode(Request request, Response response);
 
     /**
-     * @since
-     * @param response
+     * Called when a {@link Heartbeat} request succeeds
      */
-    public void pushClientTimeout(PushConnection pushConnection) {
-        connection
-                .handleCommunicationError(
-                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
-                        -1);
-
-    }
+    void heartbeatOk();
 
     /**
-     * @since
+     * Called when the push connection to the server is closed. This might
+     * result in the push connection trying a fallback connection method, trying
+     * to reconnect to the server or might just be an indication that the
+     * connection was intentionally closed ("unsubscribe"),
+     * 
+     * @param pushConnection
+     *            The push connection which was closed
+     */
+    void pushClosed(PushConnection pushConnection);
+
+    /**
+     * Called when a client side timeout occurs before a push connection to the
+     * server completes.
+     * 
+     * The client side timeout causes a disconnection of the push connection and
+     * no reconnect will be attempted after this method is called,
+     * 
+     * @param pushConnection
+     *            The push connection which timed out
+     */
+    void pushClientTimeout(PushConnection pushConnection);
+
+    /**
+     * Called when a fatal error fatal error occurs in the push connection.
+     * 
+     * The push connection will not try to recover from this situation itself
+     * and typically the problem handler should not try to do automatic recovery
+     * either. The cause can be e.g. maximum number of reconnection attempts
+     * have been reached, neither the selected transport nor the fallback
+     * transport can be used or similar.
+     * 
+     * @param pushConnection
+     *            The push connection where the error occurred
+     */
+    void pushError(PushConnection pushConnection);
+
+    /**
+     * Called when the push connection has lost the connection to the server and
+     * will proceed to try to re-establish the connection
+     * 
+     * @param pushConnection
+     *            The push connection which will be reconnected
+     */
+    void pushReconnectPending(PushConnection pushConnection);
+
+    /**
+     * Called when the push connection to the server has been established.
+     * 
+     * @param pushConnection
+     *            The push connection which was established
+     */
+    void pushOk(PushConnection pushConnection);
+
+    /**
+     * Called when the required push script could not be loaded
+     * 
      * @param resourceUrl
+     *            The URL which was used for loading the script
      */
-    public void pushScriptLoadError(String resourceUrl) {
-        connection.handleCommunicationError(resourceUrl
-                + " could not be loaded. Push will not work.", 0);
-
-    }
+    void pushScriptLoadError(String resourceUrl);
 
     /**
-     * @since
+     * Called when an exception occurs during an XmlHttpRequest request to the
+     * server.
+     * 
+     * @param communicationProblemEvent
+     *            An event containing what was being sent to the server and what
+     *            exception occurred
      */
-    public void heartbeatOk() {
-        getLogger().fine("Heartbeat response OK");
-    }
+    void xhrException(CommunicationProblemEvent communicationProblemEvent);
 
     /**
-     * @since
+     * Called when invalid content (not JSON) was returned from the server as
+     * the result of an XmlHttpRequest request
+     * 
+     * @param communicationProblemEvent
+     *            An event containing what was being sent to the server and what
+     *            was returned
      */
-    public void xhrOk() {
-
-    }
+    void xhrInvalidContent(CommunicationProblemEvent communicationProblemEvent);
 
     /**
-     * @since
-     * @param response
+     * Called when invalid status code (not 200) was returned by the server as
+     * the result of an XmlHttpRequest.
+     * 
+     * @param communicationProblemEvent
+     *            An event containing what was being sent to the server and what
+     *            was returned
      */
-    public void pushClosed(PushConnection pushConnection) {
-        // TODO Auto-generated method stub
-
-    }
+    void xhrInvalidStatusCode(CommunicationProblemEvent problemEvent);
 
     /**
-     * @since
-     * @param response
+     * Called whenever a XmlHttpRequest to the server completes successfully
      */
-    public void pushReconnectPending(PushConnection pushConnection) {
-        // TODO Auto-generated method stub
+    void xhrOk();
 
-    }
-
-    /**
-     * @since
-     */
-    public void pushOk(PushConnection pushConnection) {
-        // TODO Auto-generated method stub
-
-    }
 }

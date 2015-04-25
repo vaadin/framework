@@ -46,6 +46,7 @@ import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.CommunicationProblemHandler;
+import com.vaadin.client.communication.DefaultCommunicationProblemHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.RpcManager;
 import com.vaadin.client.communication.ServerCommunicationHandler;
@@ -365,7 +366,7 @@ public class ApplicationConnection implements HasHandlers {
         serverRpcQueue = GWT.create(ServerRpcQueue.class);
         serverRpcQueue.setConnection(this);
         communicationProblemHandler = GWT
-                .create(CommunicationProblemHandler.class);
+                .create(DefaultCommunicationProblemHandler.class);
         communicationProblemHandler.setConnection(this);
         serverMessageHandler = GWT.create(ServerMessageHandler.class);
         serverMessageHandler.setConnection(this);
