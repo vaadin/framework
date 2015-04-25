@@ -23,9 +23,9 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
 
 import elemental.json.JsonObject;
 
@@ -44,6 +44,8 @@ import elemental.json.JsonObject;
  */
 public class ReconnectingCommunicationProblemHandler implements
         CommunicationProblemHandler {
+
+    private static final String STYLE_RECONNECTING = "active";
     private ApplicationConnection connection;
     private ReconnectDialog reconnectDialog = GWT.create(ReconnectDialog.class);
     private int reconnectAttempt = 0;
@@ -110,31 +112,24 @@ public class ReconnectingCommunicationProblemHandler implements
         reconnectAttempt++;
         reconnectionCause = type;
         if (!reconnectDialog.isAttached()) {
-            reconnectDialog.setStyleName("active", true);
+            reconnectDialog.setStyleName(STYLE_RECONNECTING, true);
             reconnectDialog.setOwner(getConnection().getUIConnector()
                     .getWidget());
-            reconnectDialog.setPopupPositionAndShow(new PositionCallback() {
-                @Override
-                public void setPosition(int offsetWidth, int offsetHeight) {
-                    reconnectDialog.setPopupPosition(0, 0);
-                }
-            });
+            reconnectDialog.show();
         }
         if (payload != null) {
             getConnection().getServerCommunicationHandler().endRequest();
         }
 
-        if (reconnectAttempt >= getMaxReconnectAttempts()) {
-            reconnectDialog.setText("Server connection lost. Gave up after "
-                    + reconnectAttempt + " attempts.");
-            reconnectDialog.setStyleName("active", false);
+        if (reconnectAttempt >= getConfiguration().reconnectAttempts) {
+            // Max attempts reached
+            reconnectDialog.setText(getDialogTextGaveUp(reconnectAttempt));
+            reconnectDialog.setStyleName(STYLE_RECONNECTING, false);
 
             getConnection().setApplicationRunning(false);
 
         } else {
-            reconnectDialog
-                    .setText("Server connection lost, trying to reconnect... Attempt "
-                            + reconnectAttempt);
+            reconnectDialog.setText(getDialogText(reconnectAttempt));
 
             // Here and not in timer to avoid TB for getting in between
             if (payload != null) {
@@ -157,26 +152,37 @@ public class ReconnectingCommunicationProblemHandler implements
                         getConnection().getHeartbeat().send();
                     }
                 }
-            }.schedule(getReconnectInterval());
+            }.schedule(getConfiguration().reconnectInterval);
         }
     }
 
     /**
-     * @since
-     * @return
+     * Gets the text to show in the reconnect dialog after giving up (reconnect
+     * limit reached)
+     * 
+     * @param reconnectAttempt
+     *            The number of the current reconnection attempt
+     * @return The text to show in the reconnect dialog after giving up
      */
-    private int getMaxReconnectAttempts() {
-        // FIXME Parameter
-        return 15;
+    protected String getDialogTextGaveUp(int reconnectAttempt) {
+        return getConfiguration().dialogTextGaveUp.replace("{0}",
+                reconnectAttempt + "");
     }
 
     /**
-     * @since
-     * @return
+     * Gets the text to show in the reconnect dialog
+     * 
+     * @param reconnectAttempt
+     *            The number of the current reconnection attempt
+     * @return The text to show in the reconnect dialog
      */
-    private int getReconnectInterval() {
-        // FIXME Parameter
-        return 5000;
+    protected String getDialogText(int reconnectAttempt) {
+        return getConfiguration().dialogText.replace("{0}", reconnectAttempt
+                + "");
+    }
+
+    private ReconnectDialogConfigurationState getConfiguration() {
+        return connection.getUIConnector().getState().reconnectDialog;
     }
 
     @Override

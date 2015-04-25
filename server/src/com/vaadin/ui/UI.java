@@ -255,6 +255,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             this);
     private PushConfiguration pushConfiguration = new PushConfigurationImpl(
             this);
+    private ReconnectDialogConfiguration reconnectDialogConfiguration = new ReconnectDialogConfigurationImpl(
+            this);
 
     private NotificationConfiguration notificationConfiguration = new NotificationConfigurationImpl(
             this);
@@ -1643,6 +1645,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public PushConfiguration getPushConfiguration() {
         return pushConfiguration;
+    }
+
+    /**
+     * Retrieves the object used for configuring the reconnect dialog.
+     * 
+     * @since 7.6
+     * @return The instance used for reconnect dialog configuration
+     */
+    public ReconnectDialogConfiguration getReconnectDialogConfiguration() {
+        return reconnectDialogConfiguration;
     }
 
     /**

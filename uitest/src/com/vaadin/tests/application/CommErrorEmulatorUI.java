@@ -30,7 +30,9 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -76,24 +78,10 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         } else {
             log("Using XHR");
         }
+        getLayout().setSpacing(true);
+        addComponent(createConfigPanel());
+        addComponent(createServerConfigPanel());
 
-        addComponent(createTemporaryResponseCodeSetters("UIDL", uidlResponse));
-        addComponent(createTemporaryResponseCodeSetters("Heartbeat",
-                heartbeatResponse));
-        addComponent(new Button("Do it", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (uidlResponse.code != null && uidlResponse.code != 200) {
-                    getServlet().setUIDLResponseCode(uidlResponse.code,
-                            uidlResponse.time);
-                }
-                if (heartbeatResponse.code != null
-                        && heartbeatResponse.code != 200) {
-                    getServlet().setHeartbeatResponseCode(
-                            heartbeatResponse.code, heartbeatResponse.time);
-                }
-            }
-        }));
         addComponent(new Button("Say hello", new ClickListener() {
 
             @Override
@@ -101,6 +89,110 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                 log("Hello");
             }
         }));
+    }
+
+    /**
+     * @since
+     * @return
+     */
+    private Component createServerConfigPanel() {
+        Panel p = new Panel("Server config (NOTE: affects all users)");
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSpacing(true);
+        vl.setMargin(true);
+        p.setContent(vl);
+        vl.addComponent(createTemporaryResponseCodeSetters("UIDL", uidlResponse));
+        vl.addComponent(createTemporaryResponseCodeSetters("Heartbeat",
+                heartbeatResponse));
+        vl.addComponent(new Button("Activate", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (uidlResponse.code != null && uidlResponse.code != 200) {
+                    getServlet().setUIDLResponseCode(uidlResponse.code,
+                            uidlResponse.time);
+                    log("Responding with " + uidlResponse.code
+                            + " to UIDL requests for " + uidlResponse.time
+                            + "s");
+                }
+                if (heartbeatResponse.code != null
+                        && heartbeatResponse.code != 200) {
+                    getServlet().setHeartbeatResponseCode(
+                            heartbeatResponse.code, heartbeatResponse.time);
+                    log("Responding with " + heartbeatResponse.code
+                            + " to heartbeat requests for "
+                            + heartbeatResponse.time + "s");
+                }
+            }
+        }));
+
+        return p;
+    }
+
+    private Component createConfigPanel() {
+        Panel p = new Panel("Reconnect dialog configuration");
+        p.setSizeUndefined();
+        final TextField reconnectDialogMessage = new TextField(
+                "Reconnect message");
+        reconnectDialogMessage.setWidth("50em");
+        reconnectDialogMessage.setValue(getState().reconnectDialog.dialogText);
+        reconnectDialogMessage
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        getState().reconnectDialog.dialogText = reconnectDialogMessage
+                                .getValue();
+                    }
+                });
+
+        final TextField reconnectDialogGaveUpMessage = new TextField(
+                "Reconnect gave up message");
+        reconnectDialogGaveUpMessage.setWidth("50em");
+
+        reconnectDialogGaveUpMessage
+                .setValue(getState().reconnectDialog.dialogTextGaveUp);
+        reconnectDialogGaveUpMessage
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        getState().reconnectDialog.dialogTextGaveUp = reconnectDialogGaveUpMessage
+                                .getValue();
+                    }
+                });
+        final TextField reconnectDialogReconnectAttempts = new TextField(
+                "Reconnect attempts");
+        reconnectDialogReconnectAttempts.setConverter(Integer.class);
+        reconnectDialogReconnectAttempts
+                .setConvertedValue(getState().reconnectDialog.reconnectAttempts);
+        reconnectDialogReconnectAttempts
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        getState().reconnectDialog.reconnectAttempts = (Integer) reconnectDialogReconnectAttempts
+                                .getConvertedValue();
+                    }
+                });
+        final TextField reconnectDialogReconnectInterval = new TextField(
+                "Reconnect interval (ms)");
+        reconnectDialogReconnectInterval.setConverter(Integer.class);
+        reconnectDialogReconnectInterval
+                .setConvertedValue(getState().reconnectDialog.reconnectInterval);
+        reconnectDialogReconnectInterval
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        getState().reconnectDialog.reconnectInterval = (Integer) reconnectDialogReconnectInterval
+                                .getConvertedValue();
+                    }
+                });
+
+        VerticalLayout vl = new VerticalLayout();
+        vl.setMargin(true);
+        vl.setSpacing(true);
+        p.setContent(vl);
+        vl.addComponents(reconnectDialogMessage, reconnectDialogGaveUpMessage,
+                reconnectDialogReconnectAttempts,
+                reconnectDialogReconnectInterval);
+        return p;
     }
 
     private Component createTemporaryResponseCodeSetters(String type,

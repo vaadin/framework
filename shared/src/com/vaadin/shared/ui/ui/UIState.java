@@ -72,6 +72,7 @@ public class UIState extends TabIndexState {
      * @since 7.3
      */
     public String theme;
+    public ReconnectDialogConfigurationState reconnectDialog = new ReconnectDialogConfigurationState();
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons
@@ -121,6 +122,14 @@ public class UIState extends TabIndexState {
             parameters.put(FALLBACK_TRANSPORT_PARAM,
                     Transport.LONG_POLLING.getIdentifier());
         }
+    }
+
+    public static class ReconnectDialogConfigurationState implements
+            Serializable {
+        public String dialogText = "Server connection lost, trying to reconnect...";
+        public String dialogTextGaveUp = "Server connection lost.";
+        public int reconnectAttempts = 10000;
+        public int reconnectInterval = 5000;
     }
 
     public static class LocaleServiceState implements Serializable {
