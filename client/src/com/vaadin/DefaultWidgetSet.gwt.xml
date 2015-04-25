@@ -26,6 +26,10 @@
             class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
 
+    <replace-with
+        class="com.vaadin.client.communication.DefaultReconnectDialog">
+        <when-type-is class="com.vaadin.client.communication.ReconnectDialog" />
+    </replace-with>
 
     <!-- Since 7.2. Compile all permutations (browser support) into one Javascript 
         file. Speeds up compilation and does not make the Javascript significantly 

@@ -15,35 +15,51 @@
  */
 package com.vaadin.client.communication;
 
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.ApplicationConnection;
 
 /**
- * 
+ * Interface which must be implemented by the reconnect dialog
  * 
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class ReconnectDialog extends VOverlay {
-    interface MyUiBinder extends UiBinder<HTMLPanel, ReconnectDialog> {
-    }
+public interface ReconnectDialog {
 
-    private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+    /**
+     * Sets the main text shown in the dialog
+     * 
+     * @param text
+     *            the text to show
+     */
+    void setText(String text);
 
-    @UiField
-    public Label label;
+    /**
+     * Sets the reconnecting state, which is true if we are trying to
+     * re-establish a connection with the server.
+     * 
+     * @param reconnecting
+     *            true if we are trying to re-establish the server connection,
+     *            false if we have given up
+     */
+    void setReconnecting(boolean reconnecting);
 
-    public ReconnectDialog() {
-        super(false, true);
-        addStyleName("v-reconnect-dialog");
-        setWidget(uiBinder.createAndBindUi(this));
-    }
+    /**
+     * Checks if the reconnect dialog is visible to the user
+     * 
+     * @return true if the user can see the dialog, false otherwise
+     */
+    boolean isVisible();
 
-    public void setText(String text) {
-        label.setText(text);
-    }
+    /**
+     * Shows the dialog to the user
+     * 
+     * @param connection
+     *            the application connection this is related to
+     */
+    void show(ApplicationConnection connection);
+
+    /**
+     * Hides the dialog from the user
+     */
+    void hide();
 }

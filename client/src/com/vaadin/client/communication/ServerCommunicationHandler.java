@@ -245,8 +245,7 @@ public class ServerCommunicationHandler {
         }
         // After sendInvocationsToServer() there may be a new active
         // request, so we must set hasActiveRequest to false before, not after,
-        // the call. Active requests used to be tracked with an integer counter,
-        // so setting it after used to work but not with the #8505 changes.
+        // the call.
         hasActiveRequest = false;
 
         if (connection.isApplicationRunning()) {

@@ -185,12 +185,26 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                     }
                 });
 
+        final TextField reconnectDialogGracePeriod = new TextField(
+                "Reconnect dialog grace period (ms)");
+        reconnectDialogGracePeriod.setConverter(Integer.class);
+        reconnectDialogGracePeriod
+                .setConvertedValue(getState().reconnectDialog.dialogGracePeriod);
+        reconnectDialogGracePeriod
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        getState().reconnectDialog.dialogGracePeriod = (Integer) reconnectDialogGracePeriod
+                                .getConvertedValue();
+                    }
+                });
+
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSpacing(true);
         p.setContent(vl);
         vl.addComponents(reconnectDialogMessage, reconnectDialogGaveUpMessage,
-                reconnectDialogReconnectAttempts,
+                reconnectDialogGracePeriod, reconnectDialogReconnectAttempts,
                 reconnectDialogReconnectInterval);
         return p;
     }
