@@ -31,6 +31,7 @@ import com.vaadin.client.ui.dd.VDragAndDropManager.DDManagerMediator;
  * The strategy could be overridden via GWT Deferred Binding mechanism.
  * 
  * @author Vaadin Ltd
+ * @since 7.4.4
  */
 public class DDEventHandleStrategy {
 
