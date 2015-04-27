@@ -502,7 +502,7 @@ public class JavaScriptConnectorHelper {
         return initFunctionName;
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(JavaScriptConnectorHelper.class.getName());
     }
 }

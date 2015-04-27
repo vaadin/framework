@@ -265,7 +265,7 @@ public class SuperDevMode {
         n.show(message, VNotification.CENTERED_TOP, VNotification.STYLE_SYSTEM);
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(SuperDevMode.class.getName());
     }
 }
