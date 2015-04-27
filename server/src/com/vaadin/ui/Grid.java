@@ -3069,8 +3069,21 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     Object propertyId = getPropertyIdByColumnId(columnIds[i]);
                     order.add(new SortOrder(propertyId, directions[i]));
                 }
-
                 setSortOrder(order, userOriginated);
+                if (!order.equals(getSortOrder())) {
+                    /*
+                     * Actual sort order is not what the client expects. Make
+                     * sure the client gets a state change event by clearing the
+                     * diffstate and marking as dirty
+                     */
+                    ConnectorTracker connectorTracker = getUI()
+                            .getConnectorTracker();
+                    JsonObject diffState = connectorTracker
+                            .getDiffState(Grid.this);
+                    diffState.remove("sortColumns");
+                    diffState.remove("sortDirs");
+                    markAsDirty();
+                }
             }
 
             @Override
@@ -4221,9 +4234,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             cs.sort(propertyIds, directions);
 
-            fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
-                    userOriginated));
-
             if (columns.keySet().containsAll(Arrays.asList(propertyIds))) {
                 String[] columnKeys = new String[items];
                 for (int i = 0; i < items; ++i) {
@@ -4236,6 +4246,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 getState().sortColumns = new String[] {};
                 getState(false).sortDirs = new SortDirection[] {};
             }
+            fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
+                    userOriginated));
         } else {
             throw new IllegalStateException(
                     "Container is not sortable (does not implement Container.Sortable)");
