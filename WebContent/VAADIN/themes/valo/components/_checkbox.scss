@@ -144,4 +144,24 @@
     }
   }
 
+  &.v-readonly {
+    > label,
+    > .v-icon {
+      cursor: default;
+    }
+
+    > label > .v-icon {
+      cursor: default;
+    }
+
+    :root & > input:active ~ label:after {
+      background: transparent;
+    }
+
+    :root & > input ~ label:after {
+      @include opacity($v-disabled-opacity);
+    }
+  }
+
+
 }

@@ -84,6 +84,11 @@ public class CheckBoxes extends VerticalLayout implements View {
         check.setIcon(testIcon.get());
         row.addComponent(check);
 
+        check = new CheckBox("Readonly", true);
+        check.setReadOnly(true);
+        check.setIcon(testIcon.get());
+        row.addComponent(check);
+
         h1 = new Label("Option Groups");
         h1.addStyleName("h1");
         addComponent(h1);
