@@ -292,7 +292,7 @@ public class MeasuredSize {
         return sizes1[0] != sizes2[0] || sizes1[2] != sizes2[2];
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(MeasuredSize.class.getName());
     }
 

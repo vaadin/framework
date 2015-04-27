@@ -142,7 +142,7 @@ public class RpcManager {
         methodInvocation.setParameters(parameters);
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(RpcManager.class.getName());
     }
 }

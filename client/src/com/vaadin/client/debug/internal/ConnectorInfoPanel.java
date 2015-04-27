@@ -107,7 +107,7 @@ public class ConnectorInfoPanel extends FlowPanel {
         clear();
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ConnectorInfoPanel.class.getName());
     }
 }

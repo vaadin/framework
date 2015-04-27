@@ -498,7 +498,7 @@ public class DateTimeService {
 
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(DateTimeService.class.getName());
     }
 }
