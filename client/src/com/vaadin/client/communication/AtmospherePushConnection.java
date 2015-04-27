@@ -227,6 +227,10 @@ public class AtmospherePushConnection implements PushConnection {
             // If we are not using websockets, we want to send XHRs
             return false;
         }
+        if (getPushConfigurationState().alwaysUseXhrForServerRequests) {
+            // If user has forced us to use XHR, let's abide
+            return false;
+        }
         if (state == State.CONNECT_PENDING) {
             // Not sure yet, let's go for using websockets still as still will
             // delay the message until a connection is established. When the
@@ -236,6 +240,10 @@ public class AtmospherePushConnection implements PushConnection {
         return true;
 
     };
+
+    private PushConfigurationState getPushConfigurationState() {
+        return connection.getUIConnector().getState().pushConfiguration;
+    }
 
     @Override
     public void push(JsonObject message) {

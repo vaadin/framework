@@ -114,6 +114,7 @@ public class UIState extends TabIndexState {
         public static final String TRANSPORT_PARAM = "transport";
         public static final String FALLBACK_TRANSPORT_PARAM = "fallbackTransport";
 
+        public boolean alwaysUseXhrForServerRequests = false;
         public PushMode mode = PushMode.DISABLED;
         public Map<String, String> parameters = new HashMap<String, String>();
         {
