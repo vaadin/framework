@@ -770,7 +770,7 @@ public class VCaption extends HTML {
 
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(VCaption.class.getName());
     }
 }

@@ -143,7 +143,7 @@ public class WidgetSet {
         }
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(WidgetSet.class.getName());
     }
 }

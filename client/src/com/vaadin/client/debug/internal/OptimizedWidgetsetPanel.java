@@ -137,7 +137,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         return s;
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(OptimizedWidgetsetPanel.class.getName());
     }
 }

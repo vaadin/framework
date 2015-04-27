@@ -43,7 +43,7 @@ import elemental.json.JsonObject;
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
  * handling the communication channel.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -273,9 +273,9 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called whenever a server push connection is established (or
      * re-established).
-     *
+     * 
      * @param response
-     *
+     * 
      * @since 7.2
      */
     protected void onConnect(AtmosphereResponse response) {
@@ -357,7 +357,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called if the push connection fails. Atmosphere will automatically retry
      * the connection until successful.
-     *
+     * 
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
@@ -588,7 +588,7 @@ public class AtmospherePushConnection implements PushConnection {
         return transport;
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
 }
