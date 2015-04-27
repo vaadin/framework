@@ -730,6 +730,16 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
+        /**
+         * This method became obsolete in fix for
+         * http://dev.vaadin.com/ticket/16981
+         * 
+         * @deprecated as of 7.4.4
+         */
+        @Deprecated
+        public void setKeyboardSelectedItem(MenuItem menuItem) {
+            // NO-OP
+        }
     }
 
     /**
