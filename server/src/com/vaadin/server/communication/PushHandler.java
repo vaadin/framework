@@ -108,12 +108,18 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             resource.getResponse().setContentType("text/plain; charset=UTF-8");
 
             VaadinSession session = ui.getSession();
-            if (resource.transport() == TRANSPORT.STREAMING) {
-                // Must ensure that the streaming response contains
+            if (resource.transport() == TRANSPORT.STREAMING
+                    || resource.transport() == TRANSPORT.LONG_POLLING) {
+                // Must ensure that the streaming/long-polling response contains
                 // "Connection: close", otherwise iOS 6 will wait for the
                 // response to this request before sending another request to
                 // the same server (as it will apparently try to reuse the same
-                // connection)
+                // connection).
+
+                // Other browsers might also try to re-use the same
+                // connection for fetching static files after refreshing, which
+                // will cause a failure in loading vaadinPush.js or
+                // vaadinBootstrap.js
                 resource.getResponse().addHeader("Connection", "close");
             }
 
