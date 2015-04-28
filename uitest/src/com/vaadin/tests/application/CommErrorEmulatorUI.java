@@ -108,8 +108,8 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
             @Override
             public void buttonClick(ClickEvent event) {
                 if (uidlResponse.code != null && uidlResponse.code != 200) {
-                    getServlet().setUIDLResponseCode(uidlResponse.code,
-                            uidlResponse.time);
+                    getServlet().setUIDLResponseCode(CommErrorEmulatorUI.this,
+                            uidlResponse.code, uidlResponse.time);
                     log("Responding with " + uidlResponse.code
                             + " to UIDL requests for " + uidlResponse.time
                             + "s");
@@ -117,7 +117,8 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                 if (heartbeatResponse.code != null
                         && heartbeatResponse.code != 200) {
                     getServlet().setHeartbeatResponseCode(
-                            heartbeatResponse.code, heartbeatResponse.time);
+                            CommErrorEmulatorUI.this, heartbeatResponse.code,
+                            heartbeatResponse.time);
                     log("Responding with " + heartbeatResponse.code
                             + " to heartbeat requests for "
                             + heartbeatResponse.time + "s");

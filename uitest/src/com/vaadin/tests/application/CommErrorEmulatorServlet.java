@@ -16,32 +16,101 @@
 package com.vaadin.tests.application;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.vaadin.server.ServletPortletHelper;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServiceException;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinServletService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.server.communication.HeartbeatHandler;
+import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.ui.UI;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class CommErrorEmulatorServlet extends VaadinServlet {
 
-    private volatile Integer uidlResponseCode;
-    private volatile Integer heartbeatResponseCode;
+    private Map<UI, Integer> uidlResponseCode = Collections
+            .synchronizedMap(new HashMap<UI, Integer>());
+    private Map<UI, Integer> heartbeatResponseCode = Collections
+            .synchronizedMap(new HashMap<UI, Integer>());
 
-    public void setUIDLResponseCode(int responseCode, final int delay) {
-        uidlResponseCode = responseCode;
-        System.out.println("Responding with " + uidlResponseCode
-                + " to UIDL requests for " + delay + "s");
+    private final CommErrorUIDLRequestHandler uidlHandler = new CommErrorUIDLRequestHandler();
+    private final CommErrorHeartbeatHandler heartbeatHandler = new CommErrorHeartbeatHandler();
+
+    public class CommErrorUIDLRequestHandler extends UidlRequestHandler {
+        @Override
+        public boolean synchronizedHandleRequest(VaadinSession session,
+                VaadinRequest request, VaadinResponse response)
+                throws IOException {
+            UI ui = session.getService().findUI(request);
+            if (ui != null && uidlResponseCode.containsKey(ui)) {
+                response.sendError(uidlResponseCode.get(ui), "Error set in UI");
+                return true;
+            }
+
+            return super.synchronizedHandleRequest(session, request, response);
+        }
+    }
+
+    public class CommErrorHeartbeatHandler extends HeartbeatHandler {
+        @Override
+        public boolean synchronizedHandleRequest(VaadinSession session,
+                VaadinRequest request, VaadinResponse response)
+                throws IOException {
+            UI ui = session.getService().findUI(request);
+            if (ui != null && heartbeatResponseCode.containsKey(ui)) {
+                response.sendError(heartbeatResponseCode.get(ui),
+                        "Error set in UI");
+                return true;
+            }
+
+            return super.synchronizedHandleRequest(session, request, response);
+        }
+
+    }
+
+    public class CommErrorEmulatorService extends VaadinServletService {
+
+        public CommErrorEmulatorService(VaadinServlet servlet,
+                DeploymentConfiguration deploymentConfiguration)
+                throws ServiceException {
+            super(servlet, deploymentConfiguration);
+        }
+
+        @Override
+        protected List<RequestHandler> createRequestHandlers()
+                throws ServiceException {
+            List<RequestHandler> handlers = super.createRequestHandlers();
+            handlers.add(uidlHandler);
+            handlers.add(heartbeatHandler);
+            return handlers;
+        }
+    }
+
+    @Override
+    protected VaadinServletService createServletService(
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        CommErrorEmulatorService s = new CommErrorEmulatorService(this,
+                deploymentConfiguration);
+        s.init();
+        return s;
+    }
+
+    public void setUIDLResponseCode(final UI ui, int responseCode,
+            final int delay) {
+        uidlResponseCode.put(ui, responseCode);
+        System.out.println("Responding with " + responseCode
+                + " to UIDL requests for " + ui + " for the next " + delay
+                + "s");
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try {
@@ -51,16 +120,18 @@ public class CommErrorEmulatorServlet extends VaadinServlet {
                 }
                 System.out.println("Handing UIDL requests normally again");
 
-                uidlResponseCode = null;
+                uidlResponseCode.remove(ui);
             }
         }).start();
     }
 
-    public void setHeartbeatResponseCode(int responseCode, final int delay) {
-        heartbeatResponseCode = responseCode;
+    public void setHeartbeatResponseCode(final UI ui, int responseCode,
+            final int delay) {
+        heartbeatResponseCode.put(ui, responseCode);
 
         System.out.println("Responding with " + responseCode
-                + " to heartbeat requests for " + delay + "s");
+                + " to heartbeat requests for " + ui + " for the next " + delay
+                + "s");
 
         new Thread(new Runnable() {
 
@@ -72,35 +143,9 @@ public class CommErrorEmulatorServlet extends VaadinServlet {
                     e.printStackTrace();
                 }
                 System.out.println("Handing heartbeat requests normally again");
-                heartbeatResponseCode = null;
+                heartbeatResponseCode.remove(ui);
             }
         }).start();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.server.VaadinServlet#service(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void service(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        VaadinServletRequest vaadinRequest = createVaadinRequest(request);
-        if (ServletPortletHelper.isUIDLRequest(vaadinRequest)) {
-            if (uidlResponseCode != null) {
-                response.sendError(uidlResponseCode, "Error set in UI");
-                return;
-            }
-        }
-        if (ServletPortletHelper.isHeartbeatRequest(vaadinRequest)) {
-            if (heartbeatResponseCode != null) {
-                response.sendError(heartbeatResponseCode, "Error set in UI");
-                return;
-            }
-        }
-        super.service(request, response);
     }
 
 }
