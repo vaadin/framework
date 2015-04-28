@@ -2901,7 +2901,7 @@ public class Grid<T> extends ResizeComposite implements
                  * re-measure it to make sure that it's the correct height.
                  */
                 double measuredHeight = WidgetUtil
-                        .getRequiredHeightBoundingClientRectDouble(spacerElement);
+                        .getRequiredHeightBoundingClientRectDouble(element);
                 assert getElement().isOrHasChild(spacerElement) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
                 spacerHeight = measuredHeight;
             }
