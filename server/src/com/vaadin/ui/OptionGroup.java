@@ -257,9 +257,9 @@ public class OptionGroup extends AbstractSelect implements
     }
 
     @Override
-    protected String readItem(Element child, Set<String> selected,
+    protected Object readItem(Element child, Set<String> selected,
             DesignContext context) {
-        String itemId = super.readItem(child, selected, context);
+        Object itemId = super.readItem(child, selected, context);
 
         if (child.hasAttr("disabled")) {
             setItemEnabled(itemId, false);
