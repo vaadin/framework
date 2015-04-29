@@ -93,16 +93,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     }
 
     private static DesiredCapabilities getRunLocallyCapabilities() {
-        Browser localBrowser;
+        VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
-            localBrowser = Browser.valueOf(properties.getProperty(
-                    RUN_LOCALLY_PROPERTY).toUpperCase());
+            return factory.create(Browser.valueOf(properties.getProperty(
+                    RUN_LOCALLY_PROPERTY).toUpperCase()));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
-            localBrowser = Browser.FIREFOX;
         }
-        return localBrowser.getDesiredCapabilities();
+        return factory.create(Browser.FIREFOX);
     }
 
     protected static String getProperty(String name) {
@@ -112,16 +111,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return property;
-    }
-
-    private static String getSource(String propertyName) {
-        if (properties.containsKey(propertyName)) {
-            return propertiesFile.getAbsolutePath();
-        } else if (System.getProperty(propertyName) != null) {
-            return "System.getProperty()";
-        } else {
-            return null;
-        }
     }
 
     @Override
