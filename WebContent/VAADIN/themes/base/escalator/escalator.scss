@@ -136,20 +136,14 @@
   .#{$primaryStyleName}-spacer {
     position: absolute;
     display: block;
-    
+
     background-color: $background-color;
-    
+
     > td {
       width: 100%;
       height: 100%;
+      @include box-sizing(border-box);
     }
     
-    .v-ie8 &, .v-ie9 & {
-      // The inline style of margin-top from the <tbody> to offset the
-      // header's dimension is, for some strange reason, inherited into each
-      // contained <tr>. We need to cancel it:
-
-      margin-top: 0;
-    }
   }
 }

@@ -417,7 +417,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacersAreInCorrectDomPositionAfterScroll() {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
-        scrollVerticallyTo(30); // roughly one row's worth
+        scrollVerticallyTo(32); // roughly one row's worth
 
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
         WebElement spacer = getChild(tbody, 1);

@@ -182,7 +182,6 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         getGridElement().getDetails(1);
     }
 
-
     @Test
     public void rowElementClassNames() {
         toggleDetailsFor(0);
