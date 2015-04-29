@@ -63,6 +63,8 @@ public class VDragAndDropManager {
      * Implementation if this interface is provided as a parameter to
      * DDEventHandleStrategy methods. The mediator instance allows to manage
      * DnD.
+     * 
+     * @since 7.4.4
      */
     public interface DDManagerMediator {
         /**
