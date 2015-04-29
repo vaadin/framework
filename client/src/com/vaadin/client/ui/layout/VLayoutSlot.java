@@ -126,7 +126,6 @@ public abstract class VLayoutSlot {
         }
 
         style.setLeft(Math.round(currentLocation), Unit.PX);
-        double padding = 0;
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isLeft()) {
             double usedWidth;
@@ -135,21 +134,17 @@ public abstract class VLayoutSlot {
             } else {
                 usedWidth = getWidgetWidth();
             }
+
+            double padding = (allocatedSpace - usedWidth);
             if (alignment.isHorizontalCenter()) {
-                padding = (allocatedSpace - usedWidth) / 2d;
-                if (captionAboveCompnent) {
-                    captionStyle.setLeft(
-                            Math.round(usedWidth - captionWidth) / 2, Unit.PX);
-                }
-            } else {
-                padding = (allocatedSpace - usedWidth);
-                if (captionAboveCompnent) {
-                    captionStyle.setLeft(Math.round(usedWidth - captionWidth),
-                            Unit.PX);
-                }
+                padding = padding / 2;
             }
-            widget.getElement().getStyle()
-                    .setLeft(Math.round(padding), Unit.PX);
+
+            long roundedPadding = Math.round(padding);
+            if (captionAboveCompnent) {
+                captionStyle.setLeft(roundedPadding, Unit.PX);
+            }
+            widget.getElement().getStyle().setLeft(roundedPadding, Unit.PX);
         } else {
             if (captionAboveCompnent) {
                 captionStyle.setLeft(0, Unit.PX);
