@@ -305,6 +305,10 @@ public class VCustomLayout extends ComplexPanel {
     /** Update caption for given widget */
     public void updateCaption(ComponentConnector paintable) {
         Widget widget = paintable.getWidget();
+        if (widget.getParent() != this) {
+            // Widget has not been added because the location was not found
+            return;
+        }
         VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
         if (VCaption.isNeeded(paintable.getState())) {
             if (wrapper == null) {

@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.customlayout;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -109,6 +111,9 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
                 getWidget().setWidget(child.getWidget(), location);
             } catch (final IllegalArgumentException e) {
                 // If no location is found, this component is not visible
+                getLogger().warning(
+                        "Child not rendered as no slot with id '" + location
+                                + "' has been defined");
             }
         }
         for (ComponentConnector oldChild : event.getOldChildren()) {
@@ -144,5 +149,9 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Not interested in anything from the UIDL - just implementing the
         // interface to avoid some warning (#8688)
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CustomLayoutConnector.class.getName());
     }
 }

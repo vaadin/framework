@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -821,6 +823,22 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     private WebElement getDebugLogButton() {
         return findElement(By.xpath("//button[@title='Debug message log']"));
+    }
+
+    protected void assertNoDebugMessage(Level level) {
+        // class="v-debugwindow-row Level.getName()"
+        List<WebElement> logElements = driver
+                .findElements(By.xpath(String
+                        .format("//div[@class='v-debugwindow-row %s']/span[@class='v-debugwindow-message']",
+                                level.getName())));
+        if (!logElements.isEmpty()) {
+            String logRows = "";
+            for (WebElement e : logElements) {
+                logRows += "\n" + e.getText();
+            }
+            Assert.fail("Found debug messages with level " + level.getName()
+                    + ": " + logRows);
+        }
     }
 
     /**
