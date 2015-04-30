@@ -28,6 +28,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
@@ -35,6 +36,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -42,8 +44,9 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridDetailsLocationTest extends MultiBrowserTest {
 
-    private static final int decoratorDefaultHeight = 50;
-    private static final int decoratorDefinedHeight = 30;
+    private static final int detailsDefaultHeight = 51;
+    private static final int detailsDefinedHeight = 33;
+    private static final int detailsDefinedHeightIE8 = 31;
 
     private static class Param {
         private final int rowIndex;
@@ -81,16 +84,9 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     public static Collection<Param> parameters() {
         List<Param> data = new ArrayList<Param>();
 
-        int[][] params = new int[][] {// @formatter:off
-            // row, top+noGen, top+gen
-            { 0, decoratorDefaultHeight, decoratorDefinedHeight }, 
-            { 500, decoratorDefaultHeight, decoratorDefinedHeight },
-            { 999, decoratorDefaultHeight, decoratorDefinedHeight},
-        };
-        // @formatter:on
+        int[] params = new int[] { 0, 500, 999 };
 
-        for (int i[] : params) {
-            int rowIndex = i[0];
+        for (int rowIndex : params) {
 
             data.add(new Param(rowIndex, false, false));
             data.add(new Param(rowIndex, true, false));
@@ -144,27 +140,70 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testDecoratorHeightWithNoGenerator() {
+    public void testDetailsHeightWithNoGenerator() {
         openTestURL();
         toggleAndScroll(5);
 
-        verifyDetailsRowHeight(5, decoratorDefaultHeight);
+        verifyDetailsRowHeight(5, detailsDefaultHeight, 0);
+        verifyDetailsDecoratorLocation(5, 0, 0);
+
+        toggleAndScroll(0);
+
+        verifyDetailsRowHeight(0, detailsDefaultHeight, 0);
+        verifyDetailsDecoratorLocation(0, 0, 1);
+
+        verifyDetailsRowHeight(5, detailsDefaultHeight, 1);
+        verifyDetailsDecoratorLocation(5, 1, 0);
     }
 
     @Test
-    public void testDecoratorHeightWithGenerator() {
+    public void testDetailsHeightWithGenerator() {
         openTestURL();
         useGenerator(true);
         toggleAndScroll(5);
 
-        verifyDetailsRowHeight(5, decoratorDefinedHeight);
+        verifyDetailsRowHeight(5, getDefinedHeight(), 0);
+        verifyDetailsDecoratorLocation(5, 0, 0);
+
+        toggleAndScroll(0);
+
+        verifyDetailsRowHeight(0, getDefinedHeight(), 0);
+        // decorator elements are in DOM in the order they have been added
+        verifyDetailsDecoratorLocation(0, 0, 1);
+
+        verifyDetailsRowHeight(5, getDefinedHeight(), 1);
+        verifyDetailsDecoratorLocation(5, 1, 0);
     }
 
-    private void verifyDetailsRowHeight(int rowIndex, int expectedHeight) {
+    private int getDefinedHeight() {
+        boolean ie8 = isIE8();
+        return ie8 ? detailsDefinedHeightIE8 : detailsDefinedHeight;
+    }
+
+    private void verifyDetailsRowHeight(int rowIndex, int expectedHeight,
+            int visibleIndexOfSpacer) {
         waitForDetailsVisible();
-        WebElement details = getDetailsElement();
+        WebElement details = getDetailsElement(visibleIndexOfSpacer);
         Assert.assertEquals("Wrong details row height", expectedHeight, details
                 .getSize().getHeight());
+    }
+
+    private void verifyDetailsDecoratorLocation(int row,
+            int visibleIndexOfSpacer, int visibleIndexOfDeco) {
+        WebElement detailsElement = getDetailsElement(visibleIndexOfSpacer);
+        WebElement detailsDecoElement = getDetailsDecoElement(visibleIndexOfDeco);
+        GridRowElement rowElement = getGrid().getRow(row);
+
+        Assert.assertEquals(
+                "Details deco top position does not match row top pos",
+                rowElement.getLocation().getY(), detailsDecoElement
+                        .getLocation().getY());
+        Assert.assertEquals(
+                "Details deco bottom position does not match details bottom pos",
+                detailsElement.getLocation().getY()
+                        + detailsElement.getSize().getHeight(),
+                detailsDecoElement.getLocation().getY()
+                        + detailsDecoElement.getSize().getHeight());
     }
 
     private void verifyLocation(Param param) {
@@ -193,6 +232,11 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                         + bottomBoundary + " decoratorBotton:" + detailsBottom,
                 detailsBottom, bottomBoundary);
 
+        verifyDetailsRowHeight(param.getRowIndex(),
+                param.useGenerator() ? getDefinedHeight()
+                        : detailsDefaultHeight, 0);
+        verifyDetailsDecoratorLocation(param.getRowIndex(), 0, 0);
+
         Assert.assertFalse("Notification was present",
                 isElementPresent(By.className("v-Notification")));
     }
@@ -200,7 +244,15 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     private final By locator = By.className("v-grid-spacer");
 
     private WebElement getDetailsElement() {
-        return findElement(locator);
+        return getDetailsElement(0);
+    }
+
+    private WebElement getDetailsElement(int index) {
+        return findElements(locator).get(index);
+    }
+
+    private WebElement getDetailsDecoElement(int index) {
+        return findElements(By.className("v-grid-spacer-deco")).get(index);
     }
 
     private void waitForDetailsVisible() {
@@ -240,6 +292,16 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
         if (use != isChecked) {
             clickValo(checkBox);
         }
+    }
+
+    private boolean isIE8() {
+        DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
+        DesiredCapabilities ie8Capabilities = Browser.IE8
+                .getDesiredCapabilities();
+        return desiredCapabilities.getBrowserName().equals(
+                ie8Capabilities.getBrowserName())
+                && desiredCapabilities.getVersion().equals(
+                        ie8Capabilities.getVersion());
     }
 
     @SuppressWarnings("boxing")
@@ -296,5 +358,4 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 By.className("v-grid-scroller-horizontal"));
         return scrollBar;
     }
-
 }

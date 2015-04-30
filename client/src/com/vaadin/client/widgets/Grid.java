@@ -2899,9 +2899,17 @@ public class Grid<T> extends ResizeComposite implements
                 /*
                  * Once we have the content properly inside the DOM, we should
                  * re-measure it to make sure that it's the correct height.
+                 * 
+                 * This is rather tricky, since the row (tr) will get the
+                 * height, but the spacer cell (td) has the borders, which
+                 * should go on top of the previous row and next row.
                  */
-                double measuredHeight = WidgetUtil
+                double requiredHeightBoundingClientRectDouble = WidgetUtil
                         .getRequiredHeightBoundingClientRectDouble(element);
+                double borderTopAndBottomHeight = WidgetUtil
+                        .getBorderTopAndBottomThickness(spacerElement);
+                double measuredHeight = requiredHeightBoundingClientRectDouble
+                        + borderTopAndBottomHeight;
                 assert getElement().isOrHasChild(spacerElement) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
                 spacerHeight = measuredHeight;
             }

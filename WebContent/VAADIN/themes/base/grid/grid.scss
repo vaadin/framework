@@ -456,8 +456,9 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   }
   
   .#{$primaryStyleName}-spacer-deco-container {
+    border-top: $v-grid-border-size solid transparent; // same size as table wrapper border 
     position: relative;
-    top: $v-grid-border-size;
+    top: 0; // escalator will override top for scrolling and margin-top for header offset.
     z-index: 5;
   }
 

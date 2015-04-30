@@ -4580,6 +4580,7 @@ public class Escalator extends Widget implements RequiresResize,
             private double height = -1;
             private boolean domHasBeenSetup = false;
             private double decoHeight;
+            private double defaultCellBorderBottomSize = -1;
 
             public SpacerImpl(int rowIndex) {
                 this.rowIndex = rowIndex;
@@ -4620,7 +4621,12 @@ public class Escalator extends Widget implements RequiresResize,
 
             public void setPosition(double x, double y) {
                 positions.set(getRootElement(), x, y);
-                positions.set(getDecoElement(), 0, y);
+                positions
+                        .set(getDecoElement(), 0, y - getSpacerDecoTopOffset());
+            }
+
+            private double getSpacerDecoTopOffset() {
+                return getBody().getDefaultRowHeight();
             }
 
             public void setStylePrimaryName(String style) {
@@ -4637,7 +4643,18 @@ public class Escalator extends Widget implements RequiresResize,
                 final double oldHeight = this.height;
 
                 this.height = height;
-                root.getStyle().setHeight(height, Unit.PX);
+
+                // since the spacer might be rendered on top of the previous
+                // rows border (done with css), need to increase height the
+                // amount of the border thickness
+                if (defaultCellBorderBottomSize < 0) {
+                    defaultCellBorderBottomSize = WidgetUtil
+                            .getBorderBottomThickness(body.getRowElement(
+                                    getVisibleRowRange().getStart())
+                                    .getFirstChildElement());
+                }
+                root.getStyle().setHeight(height + defaultCellBorderBottomSize,
+                        Unit.PX);
 
                 // move the visible spacers getRow row onwards.
                 shiftSpacerPositionsAfterRow(getRow(), heightDiff);
@@ -4722,33 +4739,8 @@ public class Escalator extends Widget implements RequiresResize,
             private void updateDecoratorGeometry(double detailsHeight) {
                 Style style = deco.getStyle();
                 decoHeight = detailsHeight + getBody().getDefaultRowHeight();
-
-                style.setTop(
-                        -(getBody().getDefaultRowHeight() - getBorderTopHeight(getElement())),
-                        Unit.PX);
                 style.setHeight(decoHeight, Unit.PX);
             }
-
-            private native double getBorderTopHeight(Element spacerCell)
-            /*-{
-                if (typeof $wnd.getComputedStyle === 'function') {
-                    var computedStyle = $wnd.getComputedStyle(spacerCell);
-                    var borderTopWidth = computedStyle['borderTopWidth'];
-                    var width = parseFloat(borderTopWidth);
-                    return width;
-                } else {
-                    var spacerRow = spacerCell.offsetParent;
-                    var cloneCell = spacerCell.cloneNode(false);
-                    spacerRow.appendChild(cloneCell);
-                    cloneCell.style.height = "10px"; // IE8 wants the height to be set to something...
-                    var heightWithBorder = cloneCell.offsetHeight;
-                    cloneCell.style.borderTopWidth = "0";
-                    var heightWithoutBorder = cloneCell.offsetHeight;
-                    spacerRow.removeChild(cloneCell);
-                    
-                    return heightWithBorder - heightWithoutBorder;
-                }
-            }-*/;
 
             @Override
             public Element getElement() {
@@ -4807,10 +4799,12 @@ public class Escalator extends Widget implements RequiresResize,
 
             public void show() {
                 getRootElement().getStyle().clearDisplay();
+                getDecoElement().getStyle().clearDisplay();
             }
 
             public void hide() {
                 getRootElement().getStyle().setDisplay(Display.NONE);
+                getDecoElement().getStyle().setDisplay(Display.NONE);
             }
 
             /**
@@ -4832,9 +4826,10 @@ public class Escalator extends Widget implements RequiresResize,
                     final double topClip = Math.max(0.0D, bodyTop - top);
                     final double bottomClip = decoHeight
                             - Math.max(0.0D, bottom - bodyBottom);
+                    // TODO [optimize] not sure how GWT compiles this
                     final String clip = new StringBuilder("rect(")
                             .append(topClip).append("px,").append(decoWidth)
-                            .append("px,").append(bottomClip).append("px,0")
+                            .append("px,").append(bottomClip).append("px,0)")
                             .toString();
                     deco.getStyle().setProperty("clip", clip);
                 } else {
@@ -5258,16 +5253,21 @@ public class Escalator extends Widget implements RequiresResize,
                 spacerScrollerRegistration = addScrollHandler(spacerScroller);
             }
 
-            SpacerImpl spacer = new SpacerImpl(rowIndex);
+            final SpacerImpl spacer = new SpacerImpl(rowIndex);
 
             rowIndexToSpacer.put(rowIndex, spacer);
-            spacer.setPosition(getScrollLeft(), calculateSpacerTop(rowIndex));
+            // set the position before adding it to DOM
+            positions.set(spacer.getRootElement(), getScrollLeft(),
+                    calculateSpacerTop(rowIndex));
 
             TableRowElement spacerRoot = spacer.getRootElement();
             spacerRoot.getStyle().setWidth(
                     columnConfiguration.calculateRowWidth(), Unit.PX);
             body.getElement().appendChild(spacerRoot);
             spacer.setupDom(height);
+            // set the deco position, requires that spacer is in the DOM
+            positions.set(spacer.getDecoElement(), 0,
+                    spacer.getTop() - spacer.getSpacerDecoTopOffset());
 
             spacerDecoContainer.appendChild(spacer.getDecoElement());
             if (spacerDecoContainer.getParentElement() == null) {
