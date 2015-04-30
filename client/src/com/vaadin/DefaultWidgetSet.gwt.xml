@@ -10,6 +10,8 @@
 
     <!-- Elemental is used for handling Json only -->
     <inherits name="elemental.Json" />
+    
+    <inherits name="com.google.gwt.precompress.Precompress"/>
 
     <entry-point class="com.vaadin.client.ApplicationConfiguration" />
 

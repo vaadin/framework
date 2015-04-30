@@ -864,8 +864,34 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected void writeStaticResourceResponse(HttpServletRequest request,
             HttpServletResponse response, URL resourceUrl) throws IOException {
-        // Write the resource to the client.
-        URLConnection connection = resourceUrl.openConnection();
+
+        URLConnection connection = null;
+        InputStream is = null;
+        String urlStr = resourceUrl.toExternalForm();
+
+        if (allowServePrecompressedResource(request, urlStr)) {
+            // try to serve a precompressed version if available
+            URL url = new URL(urlStr + ".gz");
+            connection = url.openConnection();
+            try {
+                is = connection.getInputStream();
+                // set gzip headers
+                response.setHeader("Content-Encoding", "gzip");
+            } catch (FileNotFoundException e) {
+                // NOP: will be still tried with non gzipped version
+            }
+        }
+        if (is == null) {
+            // precompressed resource not available, get non compressed
+            connection = resourceUrl.openConnection();
+            try {
+                is = connection.getInputStream();
+            } catch (FileNotFoundException e) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        }
+
         try {
             int length = connection.getContentLength();
             if (length >= 0) {
@@ -878,21 +904,50 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // prevent it from hanging, but that is done below.
         }
 
-        InputStream is = null;
         try {
-            is = connection.getInputStream();
-            final OutputStream os = response.getOutputStream();
-            final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-            int bytes;
-            while ((bytes = is.read(buffer)) >= 0) {
-                os.write(buffer, 0, bytes);
-            }
-        } catch (FileNotFoundException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            streamContent(response, is);
         } finally {
-            if (is != null) {
-                is.close();
-            }
+            is.close();
+        }
+    }
+
+    /**
+     * Returns whether this servlet should attempt to serve a precompressed
+     * version of the given static resource. If this method returns true, the
+     * suffix {@code .gz} is appended to the URL and the corresponding resource
+     * is served if it exists. It is assumed that the compression method used is
+     * gzip. If this method returns false or a compressed version is not found,
+     * the original URL is used.
+     * 
+     * The base implementation of this method returns true if and only if the
+     * request indicates that the client accepts gzip compressed responses and
+     * the filename extension of the requested resource is .js, .css, or .html.
+     * 
+     * @since
+     * 
+     * @param request
+     *            the request for the resource
+     * @param url
+     *            the URL of the requested resource
+     * @return true if the servlet should attempt to serve a precompressed
+     *         version of the resource, false otherwise
+     */
+    protected boolean allowServePrecompressedResource(
+            HttpServletRequest request, String url) {
+        String accept = request.getHeader("Accept-Encoding");
+        return accept != null
+                && accept.contains("gzip")
+                && (url.endsWith(".js") || url.endsWith(".css") || url
+                        .endsWith(".html"));
+    }
+
+    private void streamContent(HttpServletResponse response, InputStream is)
+            throws IOException {
+        final OutputStream os = response.getOutputStream();
+        final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
+        int bytes;
+        while ((bytes = is.read(buffer)) >= 0) {
+            os.write(buffer, 0, bytes);
         }
     }
 
