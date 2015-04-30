@@ -47,4 +47,48 @@ public interface GridServerRpc extends ServerRpc {
      *            mouse event details
      */
     void itemClick(String rowKey, String columnId, MouseEventDetails details);
+
+    /**
+     * Informs the server that the columns of the Grid have been reordered.
+     * 
+     * @since 7.5.0
+     * @param newColumnOrder
+     *            a list of column ids in the new order
+     * @param oldColumnOrder
+     *            a list of column ids in order before the change
+     */
+    void columnsReordered(List<String> newColumnOrder,
+            List<String> oldColumnOrder);
+
+    /**
+     * This is a trigger for Grid to send whatever has changed regarding the
+     * details components.
+     * <p>
+     * The components can't be sent eagerly, since they are generated as a side
+     * effect in
+     * {@link com.vaadin.data.RpcDataProviderExtension#beforeClientResponse(boolean)}
+     * , and that is too late to change the hierarchy. So we need this
+     * round-trip to work around that limitation.
+     * 
+     * @since 7.5.0
+     * @param fetchId
+     *            an unique identifier for the request
+     * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
+     */
+    void sendDetailsComponents(int fetchId);
+
+    /**
+     * Informs the server that the column's visibility has been changed.
+     * 
+     * @since 7.5.0
+     * @param id
+     *            the id of the column
+     * @param hidden
+     *            <code>true</code> if hidden, <code>false</code> if unhidden
+     * @param userOriginated
+     *            <code>true</code> if triggered by user, <code>false</code> if
+     *            by code
+     */
+    void columnVisibilityChanged(String id, boolean hidden,
+            boolean userOriginated);
 }

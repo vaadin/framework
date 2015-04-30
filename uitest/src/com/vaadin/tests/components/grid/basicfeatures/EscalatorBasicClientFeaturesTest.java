@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -29,15 +31,21 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@TestCategory("escalator")
+@TestCategory("grid")
 public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest {
+
+    private static final String LOGICAL_ROW_ATTRIBUTE_NAME = "vLogicalRow";
+    private static final String SPACER_CSS_CLASS = "v-escalator-spacer";
+
     protected static final String COLUMNS_AND_ROWS = "Columns and Rows";
 
     protected static final String COLUMNS = "Columns";
     protected static final String ADD_ONE_COLUMN_TO_BEGINNING = "Add one column to beginning";
     protected static final String ADD_ONE_ROW_TO_BEGINNING = "Add one row to beginning";
+    protected static final String ADD_ONE_ROW_TO_END = "Add one row to end";
     protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
     protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
+    protected static final String REMOVE_ALL_ROWS = "Remove all rows";
     protected static final String REMOVE_50_ROWS_FROM_BOTTOM = "Remove 50 rows from bottom";
     protected static final String REMOVE_50_ROWS_FROM_ALMOST_BOTTOM = "Remove 50 rows from almost bottom";
     protected static final String ADD_ONE_OF_EACH_ROW = "Add one of each row";
@@ -47,6 +55,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String HEADER_ROWS = "Header Rows";
     protected static final String BODY_ROWS = "Body Rows";
     protected static final String FOOTER_ROWS = "Footer Rows";
+
+    protected static final String SCROLL_TO = "Scroll to...";
 
     protected static final String REMOVE_ALL_INSERT_SCROLL = "Remove all, insert 30 and scroll 40px";
 
@@ -65,6 +75,20 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLUMN_SPANNING = "Column spanning";
     protected static final String COLSPAN_NORMAL = "Apply normal colspan";
     protected static final String COLSPAN_NONE = "Apply no colspan";
+    protected static final String SET_100PX = "Set 100px";
+    protected static final String SPACERS = "Spacers";
+    protected static final String FOCUSABLE_UPDATER = "Focusable Updater";
+    protected static final String SCROLL_HERE_ANY_0PADDING = "Scroll here (ANY, 0)";
+    protected static final String SCROLL_HERE_SPACERBELOW_ANY_0PADDING = "Scroll here row+spacer below (ANY, 0)";
+    protected static final String REMOVE = "Remove";
+
+    protected static final String ROW_MINUS1 = "Row -1";
+    protected static final String ROW_0 = "Row 0";
+    protected static final String ROW_1 = "Row 1";
+    protected static final String ROW_25 = "Row 25";
+    protected static final String ROW_50 = "Row 50";
+    protected static final String ROW_75 = "Row 75";
+    protected static final String ROW_99 = "Row 99";
 
     @Override
     protected Class<?> getUIClass() {
@@ -163,15 +187,16 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     private TestBenchElement getRow(String sectionTag, int row) {
         TestBenchElement escalator = getEscalator();
         WebElement tableSection = escalator.findElement(By.tagName(sectionTag));
-        By xpath;
 
+        String xpathExpression = "tr[not(@class='" + SPACER_CSS_CLASS + "')]";
         if (row >= 0) {
             int fromFirst = row + 1;
-            xpath = By.xpath("tr[" + fromFirst + "]");
+            xpathExpression += "[" + fromFirst + "]";
         } else {
             int fromLast = Math.abs(row + 1);
-            xpath = By.xpath("tr[last() - " + fromLast + "]");
+            xpathExpression += "[last() - " + fromLast + "]";
         }
+        By xpath = By.xpath(xpathExpression);
         if (tableSection != null
                 && ((TestBenchElement) tableSection).isElementPresent(xpath)) {
             return (TestBenchElement) tableSection.findElement(xpath);
@@ -235,17 +260,26 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected void scrollVerticallyTo(int px) {
-        executeScript("arguments[0].scrollTop = " + px, getVerticalScrollbar());
+        getVerticalScrollbar().scroll(px);
     }
 
-    protected TestBenchElement getVerticalScrollbar() {
+    protected long getScrollTop() {
+        return ((Long) executeScript("return arguments[0].scrollTop;",
+                getVerticalScrollbar())).longValue();
+    }
+
+    private TestBenchElement getVerticalScrollbar() {
         return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
     }
 
     protected void scrollHorizontallyTo(int px) {
-        executeScript("arguments[0].scrollLeft = " + px,
-                getHorizontalScrollbar());
+        getHorizontalScrollbar().scrollLeft(px);
+    }
+
+    protected long getScrollLeft() {
+        return ((Long) executeScript("return arguments[0].scrollLeft;",
+                getHorizontalScrollbar())).longValue();
     }
 
     protected TestBenchElement getHorizontalScrollbar() {
@@ -259,5 +293,30 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected void populate() {
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+    }
+
+    private List<WebElement> getSpacers() {
+        return getEscalator().findElements(By.className(SPACER_CSS_CLASS));
+    }
+
+    protected boolean spacersAreFoundInDom() {
+        List<WebElement> spacers = getSpacers();
+        return spacers != null && !spacers.isEmpty();
+    }
+
+    @SuppressWarnings("boxing")
+    protected WebElement getSpacer(int logicalRowIndex) {
+        List<WebElement> spacers = getSpacers();
+        System.out.println("size: " + spacers.size());
+        for (WebElement spacer : spacers) {
+            System.out.println(spacer + ", " + logicalRowIndex);
+            Boolean isInDom = (Boolean) executeScript("return arguments[0]['"
+                    + LOGICAL_ROW_ATTRIBUTE_NAME + "'] === arguments[1]",
+                    spacer, logicalRowIndex);
+            if (isInDom) {
+                return spacer;
+            }
+        }
+        return null;
     }
 }

@@ -332,7 +332,21 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
             T removed = indexToRowMap.remove(Integer.valueOf(i));
             keyToIndexMap.remove(getRowKey(removed));
+
+            onDropFromCache(i);
         }
+    }
+
+    /**
+     * A hook that can be overridden to do something whenever a row is dropped
+     * from the cache.
+     * 
+     * @since 7.5.0
+     * @param rowIndex
+     *            the index of the dropped row
+     */
+    protected void onDropFromCache(int rowIndex) {
+        // noop
     }
 
     private void handleMissingRows(Range range) {
@@ -574,6 +588,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }
 
+    @SuppressWarnings("boxing")
     private void moveRowFromIndexToIndex(int oldIndex, int newIndex) {
         T row = indexToRowMap.remove(oldIndex);
         if (indexToRowMap.containsKey(newIndex)) {

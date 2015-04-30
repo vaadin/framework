@@ -33,9 +33,13 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.DateRenderer;
@@ -46,6 +50,7 @@ import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
@@ -55,6 +60,10 @@ import com.vaadin.client.widget.grid.datasources.ListSorter;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
@@ -73,6 +82,7 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
@@ -400,6 +410,8 @@ public class GridBasicClientFeaturesWidget extends
         createEditorMenu();
         createInternalsMenu();
         createDataSourceMenu();
+        createDetailsMenu();
+        createSidebarMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -444,6 +456,71 @@ public class GridBasicClientFeaturesWidget extends
                 });
             }
         }, listenersPath);
+        addMenuCommand("Add ColumnReorder listener", new ScheduledCommand() {
+            private HandlerRegistration columnReorderHandler = null;
+
+            @Override
+            public void execute() {
+                if (columnReorderHandler != null) {
+                    return;
+                }
+                final Label columnOrderLabel = new Label();
+                columnOrderLabel.getElement().setId("columnreorder");
+                addLineEnd(columnOrderLabel, 300);
+                columnReorderHandler = grid
+                        .addColumnReorderHandler(new ColumnReorderHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onColumnReorder(
+                                    ColumnReorderEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columns", "" + (++eventIndex));
+                            }
+                        });
+            }
+        }, listenersPath);
+        addMenuCommand("Add Column Visibility Change listener",
+                new ScheduledCommand() {
+                    private HandlerRegistration columnVisibilityHandler = null;
+
+                    @Override
+                    public void execute() {
+                        if (columnVisibilityHandler != null) {
+                            return;
+                        }
+                        final Label columnOrderLabel = new Label();
+                        columnOrderLabel.getElement().setId("columnvisibility");
+                        addLineEnd(columnOrderLabel, 250);
+                        ColumnVisibilityChangeHandler handler = new ColumnVisibilityChangeHandler<List<Data>>() {
+
+                            private int eventIndex = 0;
+
+                            @Override
+                            public void onVisibilityChange(
+                                    ColumnVisibilityChangeEvent<List<Data>> event) {
+                                columnOrderLabel.getElement().setAttribute(
+                                        "counter", "" + (++eventIndex));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "useroriginated",
+                                        (Boolean.toString(event
+                                                .isUserOriginated())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "ishidden",
+                                        (Boolean.toString(event.isHidden())));
+                                columnOrderLabel.getElement().setAttribute(
+                                        "columnindex",
+                                        ""
+                                                + grid.getColumns().indexOf(
+                                                        event.getColumn()));
+                            }
+                        };
+
+                        columnVisibilityHandler = grid
+                                .addColumnVisibilityChangeHandler(handler);
+                    }
+                }, listenersPath);
     }
 
     private void createStateMenu() {
@@ -658,6 +735,79 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setColumnOrder(columns.toArray(new Column[columns.size()]));
             }
         }, "Component", "State");
+        addMenuCommand("Column Reordering", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setColumnReorderingAllowed(!grid
+                        .isColumnReorderingAllowed());
+            }
+        }, "Component", "State");
+        addMenuCommand("250px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("250px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("500px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("500px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("750px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("750px");
+            }
+        }, "Component", "State", "Width");
+        addMenuCommand("1000px", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setWidth("1000px");
+            }
+        }, "Component", "State", "Width");
+
+        createScrollToRowMenu();
+    }
+
+    private void createScrollToRowMenu() {
+        String[] menupath = new String[] { "Component", "State",
+                "Scroll to...", null };
+
+        for (int i = 0; i < ROWS; i += 100) {
+            menupath[3] = "Row " + i + "...";
+            for (final ScrollDestination scrollDestination : ScrollDestination
+                    .values()) {
+                final int row = i;
+                addMenuCommand("Destination " + scrollDestination,
+                        new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                grid.scrollToRow(row, scrollDestination);
+                            }
+                        }, menupath);
+            }
+        }
+
+        int i = ROWS - 1;
+        menupath[3] = "Row " + i + "...";
+        for (final ScrollDestination scrollDestination : ScrollDestination
+                .values()) {
+            final int row = i;
+            addMenuCommand("Destination " + scrollDestination,
+                    new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            grid.scrollToRow(row, scrollDestination);
+                        }
+                    }, menupath);
+        }
+
     }
 
     private void createColumnsMenu() {
@@ -671,7 +821,18 @@ public class GridBasicClientFeaturesWidget extends
                     column.setSortable(!column.isSortable());
                 }
             }, "Component", "Columns", "Column " + i);
-
+            addMenuCommand("Hidden", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    column.setHidden(!column.isHidden());
+                }
+            }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Hidable", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    column.setHidable(!column.isHidable());
+                }
+            }, "Component", "Columns", "Column " + i);
             addMenuCommand("auto", new ScheduledCommand() {
                 @Override
                 public void execute() {
@@ -766,6 +927,25 @@ public class GridBasicClientFeaturesWidget extends
                             originalRenderer.render(cell, data);
                         }
                     });
+                }
+            }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Move column left", new ScheduledCommand() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void execute() {
+                    List<Column<?, List<Data>>> cols = grid.getColumns();
+                    ArrayList<Column> reordered = new ArrayList<Column>(cols);
+                    final int index = cols.indexOf(column);
+                    if (index == 0) {
+                        Column<?, List<Data>> col = reordered.remove(0);
+                        reordered.add(col);
+                    } else {
+                        Column<?, List<Data>> col = reordered.remove(index);
+                        reordered.add(index - 1, col);
+                    }
+                    grid.setColumnOrder(reordered.toArray(new Column[reordered
+                            .size()]));
                 }
             }, "Component", "Columns", "Column " + i);
         }
@@ -1222,5 +1402,167 @@ public class GridBasicClientFeaturesWidget extends
     private void updateLabel(VLabel label, String output, int object, int column) {
         String coords = "(" + object + ", " + column + ")";
         label.setText(coords + " " + output);
+    }
+
+    private void createDetailsMenu() {
+        String[] menupath = new String[] { "Component", "Row details" };
+        addMenuCommand("Set generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        FlowPanel panel = new FlowPanel();
+
+                        final Label label = new Label("Row: " + rowIndex + ".");
+                        Button button = new Button("Button",
+                                new ClickHandler() {
+                                    @Override
+                                    public void onClick(ClickEvent event) {
+                                        label.setText("clicked");
+                                    }
+                                });
+
+                        panel.add(label);
+                        panel.add(button);
+                        return panel;
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Set faulty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        throw new RuntimeException("This is by design.");
+                    }
+                });
+            }
+        }, menupath);
+
+        addMenuCommand("Set empty generator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setDetailsGenerator(new DetailsGenerator() {
+                    /*
+                     * While this is functionally equivalent to the NULL
+                     * generator, it's good to be explicit, since the behavior
+                     * isn't strictly tied between them. NULL generator might be
+                     * changed to render something different by default, and an
+                     * empty generator might behave differently also in the
+                     * future.
+                     */
+
+                    @Override
+                    public Widget getDetails(int rowIndex) {
+                        return null;
+                    }
+                });
+            }
+        }, menupath);
+
+        String[] togglemenupath = new String[] { menupath[0], menupath[1],
+                "Toggle details for..." };
+        for (int i : new int[] { 0, 1, 100, 200, 300, 400, 500, 600, 700, 800,
+                900, 999 }) {
+            final int rowIndex = i;
+            addMenuCommand("Row " + rowIndex, new ScheduledCommand() {
+                boolean visible = false;
+
+                @Override
+                public void execute() {
+                    visible = !visible;
+                    grid.setDetailsVisible(rowIndex, visible);
+                }
+            }, togglemenupath);
+        }
+
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(GridBasicClientFeaturesWidget.class.getName());
+    }
+
+    private void createSidebarMenu() {
+        String[] menupath = new String[] { "Component", "Sidebar" };
+
+        final List<MenuItem> customMenuItems = new ArrayList<MenuItem>();
+        final List<MenuItemSeparator> separators = new ArrayList<MenuItemSeparator>();
+
+        addMenuCommand("Add item to end", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItem item = createSidebarMenuItem(customMenuItems.size());
+                customMenuItems.add(item);
+                grid.getSidebarMenu().addItem(item);
+            }
+        }, menupath);
+
+        addMenuCommand("Add item before index 1", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItem item = createSidebarMenuItem(customMenuItems.size());
+                customMenuItems.add(item);
+                grid.getSidebarMenu().insertItem(item, 1);
+            }
+        }, menupath);
+
+        addMenuCommand("Remove last added item", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getSidebarMenu().removeItem(
+                        customMenuItems.remove(customMenuItems.size() - 1));
+            }
+        }, menupath);
+
+        addMenuCommand("Add separator to end", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItemSeparator separator = new MenuItemSeparator();
+                separators.add(separator);
+                grid.getSidebarMenu().addSeparator(separator);
+            }
+        }, menupath);
+
+        addMenuCommand("Add separator before index 1", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                MenuItemSeparator separator = new MenuItemSeparator();
+                separators.add(separator);
+                grid.getSidebarMenu().insertSeparator(separator, 1);
+            }
+        }, menupath);
+
+        addMenuCommand("Remove last added separator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getSidebarMenu().removeSeparator(
+                        separators.remove(separators.size() - 1));
+            }
+        }, menupath);
+
+        addMenuCommand("Toggle sidebar visibility", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setSidebarOpen(!grid.isSidebarOpen());
+            }
+        }, menupath);
+    }
+
+    private MenuItem createSidebarMenuItem(final int index) {
+        final MenuItem menuItem = new MenuItem("Custom menu item " + index,
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (index % 2 == 0) {
+                            grid.setSidebarOpen(false);
+                        }
+                        getLogger().info("Menu item " + index + " selected");
+                    }
+                });
+        return menuItem;
     }
 }

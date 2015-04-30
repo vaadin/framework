@@ -49,12 +49,16 @@ public class RendererCellReference extends CellReference<Object> {
      * 
      * @param cell
      *            the flyweight cell to reference
+     * @param columnIndex
+     *            the index of the column in the grid, including hidden cells
      * @param column
      *            the column to reference
      */
-    public void set(FlyweightCell cell, Grid.Column<?, ?> column) {
+    public void set(FlyweightCell cell, int columnIndex,
+            Grid.Column<?, ?> column) {
         this.cell = cell;
-        super.set(cell.getColumn(), (Grid.Column<?, Object>) column);
+        super.set(cell.getColumn(), columnIndex,
+                (Grid.Column<?, Object>) column);
     }
 
     /**

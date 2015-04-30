@@ -19,6 +19,7 @@ package com.vaadin.client.connectors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,12 +32,15 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
@@ -45,11 +49,16 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
+import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
+import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
+import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
@@ -70,8 +79,10 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -101,7 +112,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, DeferredWorker {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -167,7 +178,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         /**
          * Sets a new renderer for this column object
-         *
+         * 
          * @param rendererConnector
          *            a renderer connector object
          */
@@ -362,6 +373,305 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
+    private ColumnReorderHandler<JsonObject> columnReorderHandler = new ColumnReorderHandler<JsonObject>() {
+
+        @Override
+        public void onColumnReorder(ColumnReorderEvent<JsonObject> event) {
+            if (!columnsUpdatedFromState) {
+                List<Column<?, JsonObject>> columns = getWidget().getColumns();
+                final List<String> newColumnOrder = new ArrayList<String>();
+                for (Column<?, JsonObject> column : columns) {
+                    if (column instanceof CustomGridColumn) {
+                        newColumnOrder.add(((CustomGridColumn) column).id);
+                    } // the other case would be the multi selection column
+                }
+                getRpcProxy(GridServerRpc.class).columnsReordered(
+                        newColumnOrder, columnOrder);
+                columnOrder = newColumnOrder;
+                getState().columnOrder = newColumnOrder;
+            }
+        }
+    };
+
+    private ColumnVisibilityChangeHandler<JsonObject> columnVisibilityChangeHandler = new ColumnVisibilityChangeHandler<JsonObject>() {
+
+        @Override
+        public void onVisibilityChange(
+                ColumnVisibilityChangeEvent<JsonObject> event) {
+            if (!columnsUpdatedFromState) {
+                Column<?, JsonObject> column = event.getColumn();
+                if (column instanceof CustomGridColumn) {
+                    getRpcProxy(GridServerRpc.class).columnVisibilityChanged(
+                            ((CustomGridColumn) column).id, column.isHidden(),
+                            event.isUserOriginated());
+                    for (GridColumnState state : getState().columns) {
+                        if (state.id.equals(((CustomGridColumn) column).id)) {
+                            state.hidden = event.isHidden();
+                            break;
+                        }
+                    }
+                } else {
+                    getLogger().warning(
+                            "Visibility changed for a unknown column type in Grid: "
+                                    + column.toString() + ", type "
+                                    + column.getClass());
+                }
+            }
+        }
+    };
+
+    private static class CustomDetailsGenerator implements DetailsGenerator {
+
+        private final Map<Integer, ComponentConnector> indexToDetailsMap = new HashMap<Integer, ComponentConnector>();
+
+        @Override
+        @SuppressWarnings("boxing")
+        public Widget getDetails(int rowIndex) {
+            ComponentConnector componentConnector = indexToDetailsMap
+                    .get(rowIndex);
+            if (componentConnector != null) {
+                return componentConnector.getWidget();
+            } else {
+                return null;
+            }
+        }
+
+        public void setDetailsConnectorChanges(
+                Set<DetailsConnectorChange> changes) {
+            /*
+             * To avoid overwriting connectors while moving them about, we'll
+             * take all the affected connectors, first all remove those that are
+             * removed or moved, then we add back those that are moved or added.
+             */
+
+            /* Remove moved/removed connectors from bookkeeping */
+            for (DetailsConnectorChange change : changes) {
+                Integer oldIndex = change.getOldIndex();
+                Connector removedConnector = indexToDetailsMap.remove(oldIndex);
+
+                Connector connector = change.getConnector();
+                assert removedConnector == null || connector == null
+                        || removedConnector.equals(connector) : "Index "
+                        + oldIndex + " points to " + removedConnector
+                        + " while " + connector + " was expected";
+            }
+
+            /* Add moved/added connectors to bookkeeping */
+            for (DetailsConnectorChange change : changes) {
+                Integer newIndex = change.getNewIndex();
+                ComponentConnector connector = (ComponentConnector) change
+                        .getConnector();
+
+                if (connector != null) {
+                    assert newIndex != null : "An existing connector has a missing new index.";
+
+                    ComponentConnector prevConnector = indexToDetailsMap.put(
+                            newIndex, connector);
+
+                    assert prevConnector == null : "Connector collision at index "
+                            + newIndex
+                            + " between old "
+                            + prevConnector
+                            + " and new " + connector;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("boxing")
+    private static class DetailsConnectorFetcher implements DeferredWorker {
+
+        private static final int FETCH_TIMEOUT_MS = 5000;
+
+        public interface Listener {
+            void fetchHasBeenScheduled(int id);
+
+            void fetchHasReturned(int id);
+        }
+
+        /** A flag making sure that we don't call scheduleFinally many times. */
+        private boolean fetcherHasBeenCalled = false;
+
+        /** A rolling counter for unique values. */
+        private int detailsFetchCounter = 0;
+
+        /** A collection that tracks the amount of requests currently underway. */
+        private Set<Integer> pendingFetches = new HashSet<Integer>(5);
+
+        private final ScheduledCommand lazyDetailsFetcher = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                int currentFetchId = detailsFetchCounter++;
+                pendingFetches.add(currentFetchId);
+                rpc.sendDetailsComponents(currentFetchId);
+                fetcherHasBeenCalled = false;
+
+                if (listener != null) {
+                    listener.fetchHasBeenScheduled(currentFetchId);
+                }
+
+                assert assertRequestDoesNotTimeout(currentFetchId);
+            }
+        };
+
+        private DetailsConnectorFetcher.Listener listener = null;
+
+        private final GridServerRpc rpc;
+
+        public DetailsConnectorFetcher(GridServerRpc rpc) {
+            assert rpc != null : "RPC was null";
+            this.rpc = rpc;
+        }
+
+        public void schedule() {
+            if (!fetcherHasBeenCalled) {
+                Scheduler.get().scheduleFinally(lazyDetailsFetcher);
+                fetcherHasBeenCalled = true;
+            }
+        }
+
+        public void responseReceived(int fetchId) {
+
+            if (fetchId < 0) {
+                /* Ignore negative fetchIds (they're pushed, not fetched) */
+                return;
+            }
+
+            boolean success = pendingFetches.remove(fetchId);
+            assert success : "Received a response with an unidentified fetch id";
+
+            if (listener != null) {
+                listener.fetchHasReturned(fetchId);
+            }
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return fetcherHasBeenCalled || !pendingFetches.isEmpty();
+        }
+
+        private boolean assertRequestDoesNotTimeout(final int fetchId) {
+            /*
+             * This method will not be compiled without asserts enabled. This
+             * only makes sure that any request does not time out.
+             * 
+             * TODO Should this be an explicit check? Is it worth the overhead?
+             */
+            new Timer() {
+                @Override
+                public void run() {
+                    assert !pendingFetches.contains(fetchId) : "Fetch id "
+                            + fetchId + " timed out.";
+                }
+            }.schedule(FETCH_TIMEOUT_MS);
+            return true;
+        }
+
+        public void setListener(DetailsConnectorFetcher.Listener listener) {
+            // if more are needed, feel free to convert this into a collection.
+            this.listener = listener;
+        }
+    }
+
+    /**
+     * The functionality that makes sure that the scroll position is still kept
+     * up-to-date even if more details are being fetched lazily.
+     */
+    private class LazyDetailsScrollAdjuster implements DeferredWorker {
+
+        private static final int SCROLL_TO_END_ID = -2;
+        private static final int NO_SCROLL_SCHEDULED = -1;
+
+        private class ScrollStopChecker implements DeferredWorker {
+            private final ScheduledCommand checkCommand = new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    isScheduled = false;
+                    if (queuedFetches.isEmpty()) {
+                        currentRow = NO_SCROLL_SCHEDULED;
+                        destination = null;
+                    }
+                }
+            };
+
+            private boolean isScheduled = false;
+
+            public void schedule() {
+                if (isScheduled) {
+                    return;
+                }
+                Scheduler.get().scheduleDeferred(checkCommand);
+                isScheduled = true;
+            }
+
+            @Override
+            public boolean isWorkPending() {
+                return isScheduled;
+            }
+        }
+
+        private DetailsConnectorFetcher.Listener fetcherListener = new DetailsConnectorFetcher.Listener() {
+            @Override
+            @SuppressWarnings("boxing")
+            public void fetchHasBeenScheduled(int id) {
+                if (currentRow != NO_SCROLL_SCHEDULED) {
+                    queuedFetches.add(id);
+                }
+            }
+
+            @Override
+            @SuppressWarnings("boxing")
+            public void fetchHasReturned(int id) {
+                if (currentRow == NO_SCROLL_SCHEDULED
+                        || queuedFetches.isEmpty()) {
+                    return;
+                }
+
+                queuedFetches.remove(id);
+                if (currentRow == SCROLL_TO_END_ID) {
+                    getWidget().scrollToEnd();
+                } else {
+                    getWidget().scrollToRow(currentRow, destination);
+                }
+
+                /*
+                 * Schedule a deferred call whether we should stop adjusting for
+                 * scrolling.
+                 * 
+                 * This is done deferredly just because we can't be absolutely
+                 * certain whether this most recent scrolling won't cascade into
+                 * further lazy details loading (perhaps deferredly).
+                 */
+                scrollStopChecker.schedule();
+            }
+        };
+
+        private int currentRow = NO_SCROLL_SCHEDULED;
+        private final Set<Integer> queuedFetches = new HashSet<Integer>();
+        private final ScrollStopChecker scrollStopChecker = new ScrollStopChecker();
+        private ScrollDestination destination;
+
+        public LazyDetailsScrollAdjuster() {
+            detailsConnectorFetcher.setListener(fetcherListener);
+        }
+
+        public void adjustForEnd() {
+            currentRow = SCROLL_TO_END_ID;
+        }
+
+        public void adjustFor(int row, ScrollDestination destination) {
+            currentRow = row;
+            this.destination = destination;
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return currentRow != NO_SCROLL_SCHEDULED
+                    || !queuedFetches.isEmpty()
+                    || scrollStopChecker.isWorkPending();
+        }
+    }
+
     /**
      * Maps a generated column id to a grid column instance
      */
@@ -372,13 +682,22 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private List<String> columnOrder = new ArrayList<String>();
 
     /**
-     * updateFromState is set to true when {@link #updateSelectionFromState()}
-     * makes changes to selection. This flag tells the
-     * {@code internalSelectionChangeHandler} to not send same data straight
-     * back to server. Said listener sets it back to false when handling that
-     * event.
+     * {@link #selectionUpdatedFromState} is set to true when
+     * {@link #updateSelectionFromState()} makes changes to selection. This flag
+     * tells the {@code internalSelectionChangeHandler} to not send same data
+     * straight back to server. Said listener sets it back to false when
+     * handling that event.
      */
-    private boolean updatedFromState = false;
+    private boolean selectionUpdatedFromState;
+
+    /**
+     * {@link #columnsUpdatedFromState} is set to true when
+     * {@link #updateColumnOrderFromState(List)} is updating the column order
+     * for the widget. This flag tells the {@link #columnReorderHandler} to not
+     * send same data straight back to server. After updates, listener sets the
+     * value back to false.
+     */
+    private boolean columnsUpdatedFromState;
 
     private RpcDataSource dataSource;
 
@@ -388,7 +707,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             if (event.isBatchedSelection()) {
                 return;
             }
-            if (!updatedFromState) {
+            if (!selectionUpdatedFromState) {
                 for (JsonObject row : event.getRemoved()) {
                     selectedKeys.remove(dataSource.getRowKey(row));
                 }
@@ -400,7 +719,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 getRpcProxy(GridServerRpc.class).select(
                         new ArrayList<String>(selectedKeys));
             } else {
-                updatedFromState = false;
+                selectionUpdatedFromState = false;
             }
         }
     };
@@ -408,6 +727,35 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     private String lastKnownTheme = null;
+
+    private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
+
+    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher(
+            getRpcProxy(GridServerRpc.class));
+
+    private final DetailsListener detailsListener = new DetailsListener() {
+        @Override
+        public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
+            if (hasDetailsOpen(row)) {
+                getWidget().setDetailsVisible(rowIndex, true);
+                detailsConnectorFetcher.schedule();
+            } else {
+                getWidget().setDetailsVisible(rowIndex, false);
+            }
+        }
+
+        private boolean hasDetailsOpen(JsonObject row) {
+            return row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE);
+        }
+
+        @Override
+        public void closeDetails(int rowIndex) {
+            getWidget().setDetailsVisible(rowIndex, false);
+        }
+    };
+
+    private final LazyDetailsScrollAdjuster lazyDetailsScrollAdjuster = new LazyDetailsScrollAdjuster();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -428,6 +776,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
             public void scrollToStart() {
+                /*
+                 * no need for lazyDetailsScrollAdjuster, because the start is
+                 * always 0, won't change a bit.
+                 */
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -438,6 +790,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
             @Override
             public void scrollToEnd() {
+                lazyDetailsScrollAdjuster.adjustForEnd();
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -449,6 +802,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void scrollToRow(final int row,
                     final ScrollDestination destination) {
+                lazyDetailsScrollAdjuster.adjustFor(row, destination);
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -460,6 +814,51 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
+            }
+
+            @Override
+            @SuppressWarnings("boxing")
+            public void setDetailsConnectorChanges(
+                    Set<DetailsConnectorChange> connectorChanges, int fetchId) {
+                customDetailsGenerator
+                        .setDetailsConnectorChanges(connectorChanges);
+
+                List<DetailsConnectorChange> removedFirst = new ArrayList<DetailsConnectorChange>(
+                        connectorChanges);
+                Collections.sort(removedFirst,
+                        DetailsConnectorChange.REMOVED_FIRST_COMPARATOR);
+
+                // refresh moved/added details rows
+                for (DetailsConnectorChange change : removedFirst) {
+                    Integer oldIndex = change.getOldIndex();
+                    Integer newIndex = change.getNewIndex();
+
+                    assert oldIndex == null || oldIndex >= 0 : "Got an "
+                            + "invalid old index: " + oldIndex
+                            + " (connector: " + change.getConnector() + ")";
+                    assert newIndex == null || newIndex >= 0 : "Got an "
+                            + "invalid new index: " + newIndex
+                            + " (connector: " + change.getConnector() + ")";
+
+                    if (oldIndex != null) {
+                        /* Close the old/removed index */
+                        getWidget().setDetailsVisible(oldIndex, false);
+
+                        if (change.isShouldStillBeVisible()) {
+                            getWidget().setDetailsVisible(oldIndex, true);
+                        }
+                    }
+
+                    if (newIndex != null) {
+                        /*
+                         * Since the component was lazy loaded, we need to
+                         * refresh the details by toggling it.
+                         */
+                        getWidget().setDetailsVisible(newIndex, false);
+                        getWidget().setDetailsVisible(newIndex, true);
+                    }
+                }
+                detailsConnectorFetcher.responseReceived(fetchId);
             }
         });
 
@@ -503,7 +902,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         });
 
         getWidget().setEditorHandler(new CustomEditorHandler());
+        getWidget().addColumnReorderHandler(columnReorderHandler);
+        getWidget().addColumnVisibilityChangeHandler(
+                columnVisibilityChangeHandler);
+        getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
+
         layout();
     }
 
@@ -522,7 +926,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 if (!columnIdToColumn.containsKey(state.id)) {
                     addColumnFromStateChangeEvent(state);
                 }
-                updateColumnFromState(columnIdToColumn.get(state.id), state);
+                updateColumnFromStateChangeEvent(state);
             }
         }
 
@@ -596,7 +1000,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             columns[i] = columnIdToColumn.get(id);
             i++;
         }
+        columnsUpdatedFromState = true;
         getWidget().setColumnOrder(columns);
+        columnsUpdatedFromState = false;
         columnOrder = stateColumnOrder;
     }
 
@@ -732,7 +1138,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private void updateColumnFromStateChangeEvent(GridColumnState columnState) {
         CustomGridColumn column = columnIdToColumn.get(columnState.id);
+
+        columnsUpdatedFromState = true;
         updateColumnFromState(column, columnState);
+        columnsUpdatedFromState = false;
     }
 
     /**
@@ -788,6 +1197,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setRenderer((AbstractRendererConnector<Object>) state.rendererConnector);
 
         column.setSortable(state.sortable);
+
+        column.setHidden(state.hidden);
+        column.setHidable(state.hidable);
+        column.setHidingToggleCaption(state.hidingToggleCaption);
+
         column.setEditable(state.editable);
         column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
     }
@@ -891,7 +1305,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         if (changed) {
             // At least for now there's no way to send the selected and/or
             // deselected row data. Some data is only stored as keys
-            updatedFromState = true;
+            selectionUpdatedFromState = true;
             getWidget().fireEvent(
                     new SelectionEvent<JsonObject>(getWidget(),
                             (List<JsonObject>) null, null, false));
@@ -993,5 +1407,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void layout() {
         getWidget().onResize();
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return detailsConnectorFetcher.isWorkPending()
+                || lazyDetailsScrollAdjuster.isWorkPending();
+    }
+
+    public DetailsListener getDetailsListener() {
+        return detailsListener;
     }
 }

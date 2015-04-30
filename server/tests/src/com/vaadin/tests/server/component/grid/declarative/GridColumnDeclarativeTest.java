@@ -28,6 +28,8 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <col sortable=true width='100' property-id='Column1'>"
                 + "   <col sortable=false max-width='200' expand='2' property-id='Column2'>"
                 + "   <col sortable=true editable=false min-width='15' expand='1' property-id='Column3'>"
+                + "   <col sortable=true hidable=true hiding-toggle-caption='col 4' property-id='Column4'>"
+                + "   <col sortable=true hidden=true property-id='Column5'>"
                 + "</colgroup>" //
                 + "<thead />" //
                 + "</table></v-grid>";
@@ -37,6 +39,9 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 .setExpandRatio(2).setSortable(false);
         grid.addColumn("Column3", String.class).setMinimumWidth(15)
                 .setExpandRatio(1).setEditable(false);
+        grid.addColumn("Column4", String.class).setHidable(true)
+                .setHidingToggleCaption("col 4");
+        grid.addColumn("Column5", String.class).setHidden(true);
 
         // Remove the default header
         grid.removeHeaderRow(grid.getDefaultHeaderRow());
@@ -53,6 +58,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <col sortable=true width='100' property-id='Column1'>"
                 + "   <col sortable=true max-width='200' expand='2'>" // property-id="property-1"
                 + "   <col sortable=true min-width='15' expand='1' property-id='Column3'>"
+                + "   <col sortable=true hidden=true hidable=true hiding-toggle-caption='col 4'>" // property-id="property-3"
                 + "</colgroup>" //
                 + "</table></v-grid>";
         Grid grid = new Grid();
@@ -61,6 +67,8 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 .setExpandRatio(2);
         grid.addColumn("Column3", String.class).setMinimumWidth(15)
                 .setExpandRatio(1);
+        grid.addColumn("property-3", String.class).setHidable(true)
+                .setHidden(true).setHidingToggleCaption("col 4");
 
         testRead(design, grid);
     }
