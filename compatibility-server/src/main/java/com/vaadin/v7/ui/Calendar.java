@@ -223,6 +223,18 @@ public class Calendar extends AbstractLegacyComponent
      */
     private CalendarServerRpcImpl rpc = new CalendarServerRpcImpl();
 
+    /**
+     * The cached minimum minute shown when using
+     * {@link #autoScaleVisibleHoursOfDay()}.
+     */
+    private Integer minTimeInMinutes;
+
+    /**
+     * The cached maximum minute shown when using
+     * {@link #autoScaleVisibleHoursOfDay()}.
+     */
+    private Integer maxTimeInMinutes;
+
     private Integer customFirstDayOfWeek;
 
     /**
@@ -452,6 +464,7 @@ public class Calendar extends AbstractLegacyComponent
 
         currentCalendar.setTime(firstDateToShow);
         events = getEventProvider().getEvents(firstDateToShow, lastDateToShow);
+        cacheMinMaxTimeOfDay(events);
 
         List<CalendarState.Event> calendarStateEvents = new ArrayList<>();
         if (events != null) {
@@ -473,6 +486,76 @@ public class Calendar extends AbstractLegacyComponent
             }
         }
         getState().events = calendarStateEvents;
+    }
+
+    /**
+     * Stores the minimum and maximum time-of-day in minutes for the events.
+     *
+     * @param events
+     *            A list of calendar events. Can be <code>null</code>.
+     */
+    private void cacheMinMaxTimeOfDay(List<CalendarEvent> events) {
+        minTimeInMinutes = null;
+        maxTimeInMinutes = null;
+        if (events != null) {
+            for (CalendarEvent event : events) {
+                int minuteOfDayStart = getMinuteOfDay(event.getStart());
+                int minuteOfDayEnd = getMinuteOfDay(event.getEnd());
+                if (minTimeInMinutes == null) {
+                    minTimeInMinutes = minuteOfDayStart;
+                    maxTimeInMinutes = minuteOfDayEnd;
+                } else {
+                    if (minuteOfDayStart < minTimeInMinutes) {
+                        minTimeInMinutes = minuteOfDayStart;
+                    }
+                    if (minuteOfDayEnd > maxTimeInMinutes) {
+                        maxTimeInMinutes = minuteOfDayEnd;
+                    }
+                }
+            }
+        }
+    }
+
+    private static int getMinuteOfDay(Date date) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60
+                + calendar.get(java.util.Calendar.MINUTE);
+    }
+
+    /**
+     * Sets the displayed start and end time to fit all current events that were
+     * retrieved from the last call to getEvents().
+     * <p>
+     * If no events exist, nothing happens.
+     * <p>
+     * <b>NOTE: triggering this method only does this once for the current
+     * events - events that are not in the current visible range, are
+     * ignored!</b>
+     *
+     * @see #setFirstVisibleHourOfDay(int)
+     * @see #setLastVisibleHourOfDay(int)
+     */
+    public void autoScaleVisibleHoursOfDay() {
+        if (minTimeInMinutes != null) {
+            setFirstVisibleHourOfDay(minTimeInMinutes / 60);
+            // Do not show the final hour if last minute ends on it
+            setLastVisibleHourOfDay((maxTimeInMinutes - 1) / 60);
+        }
+    }
+
+    /**
+     * Resets the {@link #setFirstVisibleHourOfDay(int)} and
+     * {@link #setLastVisibleHourOfDay(int)} to the default values, 0 and 23
+     * respectively.
+     *
+     * @see #autoScaleVisibleHoursOfDay()
+     * @see #setFirstVisibleHourOfDay(int)
+     * @see #setLastVisibleHourOfDay(int)
+     */
+    public void resetVisibleHoursOfDay() {
+        setFirstVisibleHourOfDay(0);
+        setLastVisibleHourOfDay(23);
     }
 
     private void setupDaysAndActions() {
@@ -832,9 +915,12 @@ public class Calendar extends AbstractLegacyComponent
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
+     * You can use {@link #autoScaleVisibleHoursOfDay()} for automatic scaling
+     * of the visible hours based on current events.
      *
      * @param firstHour
      *            the first hour of the day to show, between 0 and 23
+     * @see #autoScaleVisibleHoursOfDay()
      */
     public void setFirstVisibleHourOfDay(int firstHour) {
         if (this.firstHour != firstHour && firstHour >= 0 && firstHour <= 23
@@ -864,9 +950,12 @@ public class Calendar extends AbstractLegacyComponent
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
+     * You can use {@link #autoScaleVisibleHoursOfDay()} for automatic scaling
+     * of the visible hours based on current events.
      *
      * @param lastHour
      *            the first hour of the day to show, between 0 and 23
+     * @see #autoScaleVisibleHoursOfDay()
      */
     public void setLastVisibleHourOfDay(int lastHour) {
         if (this.lastHour != lastHour && lastHour >= 0 && lastHour <= 23
@@ -1612,7 +1701,10 @@ public class Calendar extends AbstractLegacyComponent
      */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
-        return getEventProvider().getEvents(startDate, endDate);
+        List<CalendarEvent> events = getEventProvider().getEvents(startDate,
+                endDate);
+        cacheMinMaxTimeOfDay(events);
+        return events;
     }
 
     /*
