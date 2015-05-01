@@ -20,7 +20,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -361,6 +364,57 @@ public class ContainerDataSourceTest {
         }
     }
 
+    @Test
+    public void testAutomaticScaleVisibleHoursOfDay() {
+        BeanItemContainer<CalendarEvent> container = new BeanItemContainer<CalendarEvent>(
+                CalendarEvent.class);
+        java.util.Calendar start = java.util.Calendar.getInstance();
+        java.util.Calendar end = java.util.Calendar.getInstance();
+
+        start.set(java.util.Calendar.HOUR_OF_DAY, 8);
+        start.set(java.util.Calendar.MINUTE, 10);
+        // same start and end time
+        container.addBean(
+                new BasicEvent("8:00", "Description 1", start.getTime()));
+
+        start.set(java.util.Calendar.HOUR_OF_DAY, 16);
+        end.set(java.util.Calendar.HOUR_OF_DAY, 18);
+        end.set(java.util.Calendar.MINUTE, 10);
+
+        container.addBean(new BasicEvent("16-18", "Description 2",
+                start.getTime(), end.getTime())); // 16-18
+
+        calendar.setContainerDataSource(container);
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.setLocale(Locale.getDefault());
+        calendar.beforeClientResponse(true); // simulate adding to UI
+
+        Assert.assertEquals(0, calendar.getFirstVisibleHourOfDay());
+        Assert.assertEquals(23, calendar.getLastVisibleHourOfDay());
+
+        calendar.autoScaleVisibleHoursOfDay();
+        Assert.assertEquals(8, calendar.getFirstVisibleHourOfDay());
+        Assert.assertEquals(18, calendar.getLastVisibleHourOfDay());
+
+        // reset visible timing to something else, so that the added event is
+        // not filtered out
+        calendar.resetVisibleHoursOfDay();
+        calendar.beforeClientResponse(false); // simulate being attached
+
+        Assert.assertEquals(0, calendar.getFirstVisibleHourOfDay());
+        Assert.assertEquals(23, calendar.getLastVisibleHourOfDay());
+
+        start.set(java.util.Calendar.HOUR_OF_DAY, 5);
+        end.set(java.util.Calendar.HOUR_OF_DAY, 21);
+        container.addBean(new BasicEvent("05-21", "Description 3",
+                start.getTime(), end.getTime())); // 05-21
+
+        calendar.beforeClientResponse(false); // simulate being attached
+        calendar.autoScaleVisibleHoursOfDay();
+        Assert.assertEquals(5, calendar.getFirstVisibleHourOfDay());
+        Assert.assertEquals(21, calendar.getLastVisibleHourOfDay());
+    }
+    
     private static Indexed createTestBeanItemContainer() {
         BeanItemContainer<CalendarEvent> eventContainer = new BeanItemContainer<CalendarEvent>(
                 CalendarEvent.class);

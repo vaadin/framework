@@ -220,6 +220,18 @@ public class Calendar extends AbstractComponent
      */
     private CalendarServerRpcImpl rpc = new CalendarServerRpcImpl();
 
+    /**
+     * The cached minimum minute shown when using
+     * {@link #autoScaleVisibleHoursOfDay()}.
+     */
+    private Integer minTimeInMinutes;
+
+    /**
+     * The cached maximum minute shown when using
+     * {@link #autoScaleVisibleHoursOfDay()}.
+     */
+    private Integer maxTimeInMinutes;
+
     private Integer customFirstDayOfWeek;
 
     /**
@@ -436,7 +448,7 @@ public class Calendar extends AbstractComponent
     }
 
     private void setupCalendarEvents() {
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+        int durationInDays = (int) ((endDate.getTime() - startDate.getTime())
                 / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
@@ -449,6 +461,7 @@ public class Calendar extends AbstractComponent
 
         currentCalendar.setTime(firstDateToShow);
         events = getEventProvider().getEvents(firstDateToShow, lastDateToShow);
+        cacheMinMaxTimeOfDay(events);
 
         List<CalendarState.Event> calendarStateEvents = new ArrayList<CalendarState.Event>();
         if (events != null) {
@@ -470,6 +483,76 @@ public class Calendar extends AbstractComponent
             }
         }
         getState().events = calendarStateEvents;
+    }
+
+    /**
+     * Stores the minimum and maximum time-of-day in minutes for the events.
+     *
+     * @param events
+     *            A list of calendar events. Can be <code>null</code>.
+     */
+    private void cacheMinMaxTimeOfDay(List<CalendarEvent> events) {
+        minTimeInMinutes = null;
+        maxTimeInMinutes = null;
+        if (events != null) {
+            for (CalendarEvent event : events) {
+                int minuteOfDayStart = getMinuteOfDay(event.getStart());
+                int minuteOfDayEnd = getMinuteOfDay(event.getEnd());
+                if (minTimeInMinutes == null) {
+                    minTimeInMinutes = minuteOfDayStart;
+                    maxTimeInMinutes = minuteOfDayEnd;
+                } else {
+                    if (minuteOfDayStart < minTimeInMinutes) {
+                        minTimeInMinutes = minuteOfDayStart;
+                    }
+                    if (minuteOfDayEnd > maxTimeInMinutes) {
+                        maxTimeInMinutes = minuteOfDayEnd;
+                    }
+                }
+            }
+        }
+    }
+
+    private static int getMinuteOfDay(Date date) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60
+                + calendar.get(java.util.Calendar.MINUTE);
+    }
+
+    /**
+     * Sets the displayed start and end time to fit all current events that were
+     * retrieved from the last call to getEvents().
+     * <p>
+     * If no events exist, nothing happens.
+     * <p>
+     * <b>NOTE: triggering this method only does this once for the current
+     * events - events that are not in the current visible range, are
+     * ignored!</b>
+     *
+     * @see #setFirstVisibleHourOfDay(int)
+     * @see #setLastVisibleHourOfDay(int)
+     */
+    public void autoScaleVisibleHoursOfDay() {
+        if (minTimeInMinutes != null) {
+            setFirstVisibleHourOfDay(minTimeInMinutes / 60);
+            // Do not show the final hour if last minute ends on it
+            setLastVisibleHourOfDay((maxTimeInMinutes - 1) / 60);
+        }
+    }
+
+    /**
+     * Resets the {@link #setFirstVisibleHourOfDay(int)} and
+     * {@link #setLastVisibleHourOfDay(int)} to the default values, 0 and 23
+     * respectively.
+     *
+     * @see #autoScaleVisibleHoursOfDay()
+     * @see #setFirstVisibleHourOfDay(int)
+     * @see #setLastVisibleHourOfDay(int)
+     */
+    public void resetVisibleHoursOfDay() {
+        setFirstVisibleHourOfDay(0);
+        setLastVisibleHourOfDay(23);
     }
 
     private void setupDaysAndActions() {
@@ -499,7 +582,7 @@ public class Calendar extends AbstractComponent
             endDate = getEndDate();
         }
 
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+        int durationInDays = (int) ((endDate.getTime() - startDate.getTime())
                 / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
@@ -520,7 +603,7 @@ public class Calendar extends AbstractComponent
         df_date.setTimeZone(currentCalendar.getTimeZone());
         df_time.setTimeZone(currentCalendar.getTimeZone());
 
-        state.now = (df_date.format(now) + " " + df_time.format(now));
+        state.now = df_date.format(now) + " " + df_time.format(now);
 
         Date firstDateToShow = expandStartDate(startDate, durationInDays > 7);
         Date lastDateToShow = expandEndDate(endDate, durationInDays > 7);
@@ -566,7 +649,7 @@ public class Calendar extends AbstractComponent
                     cal.add(java.util.Calendar.SECOND, -1);
                     Date end = cal.getTime();
 
-                    boolean monthView = (durationInDays > 7);
+                    boolean monthView = durationInDays > 7;
 
                     /**
                      * If in day or week view add actions for each half-an-hour.
@@ -632,8 +715,7 @@ public class Calendar extends AbstractComponent
                 getTimeZone());
         Action[] actions = actionHandler.getActions(range, this);
         if (actions != null) {
-            Set<Action> actionSet = new LinkedHashSet<Action>(
-                    Arrays.asList(actions));
+            Set<Action> actionSet = new LinkedHashSet<Action>(Arrays.asList(actions));
             actionMap.put(range, actionSet);
         }
     }
@@ -820,19 +902,19 @@ public class Calendar extends AbstractComponent
     }
 
     /**
-     * <p>
      * This method restricts the hours that are shown per day. This affects the
      * weekly view. The general contract is that <b>firstHour < lastHour</b>.
-     * </p>
-     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
-     * </p>
+     * <p>
+     * You can use {@link #autoScaleVisibleHoursOfDay()} for automatic scaling
+     * of the visible hours based on current events.
      *
      * @param firstHour
      *            the first hour of the day to show, between 0 and 23
+     * @see #autoScaleVisibleHoursOfDay()
      */
     public void setFirstVisibleHourOfDay(int firstHour) {
         if (this.firstHour != firstHour && firstHour >= 0 && firstHour <= 23
@@ -852,19 +934,19 @@ public class Calendar extends AbstractComponent
     }
 
     /**
-     * <p>
      * This method restricts the hours that are shown per day. This affects the
      * weekly view. The general contract is that <b>firstHour < lastHour</b>.
-     * </p>
-     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
-     * </p>
+     * <p>
+     * You can use {@link #autoScaleVisibleHoursOfDay()} for automatic scaling
+     * of the visible hours based on current events.
      *
      * @param lastHour
      *            the first hour of the day to show, between 0 and 23
+     * @see #autoScaleVisibleHoursOfDay()
      */
     public void setLastVisibleHourOfDay(int lastHour) {
         if (this.lastHour != lastHour && lastHour >= 0 && lastHour <= 23
@@ -900,9 +982,9 @@ public class Calendar extends AbstractComponent
      *            The date caption pattern.
      */
     public void setWeeklyCaptionFormat(String dateFormatPattern) {
-        if ((weeklyCaptionFormat == null && dateFormatPattern != null)
-                || (weeklyCaptionFormat != null
-                        && !weeklyCaptionFormat.equals(dateFormatPattern))) {
+        if (weeklyCaptionFormat == null && dateFormatPattern != null
+                || weeklyCaptionFormat != null
+                        && !weeklyCaptionFormat.equals(dateFormatPattern)) {
             weeklyCaptionFormat = dateFormatPattern;
             markAsDirty();
         }
@@ -929,7 +1011,7 @@ public class Calendar extends AbstractComponent
 
         // monday first
         if (calendar.getFirstDayOfWeek() == java.util.Calendar.MONDAY) {
-            fow = (fow == java.util.Calendar.SUNDAY) ? 7 : fow - 1;
+            fow = fow == java.util.Calendar.SUNDAY ? 7 : fow - 1;
         }
 
         return fow;
@@ -1610,7 +1692,10 @@ public class Calendar extends AbstractComponent
      */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
-        return getEventProvider().getEvents(startDate, endDate);
+        List<CalendarEvent> events = getEventProvider().getEvents(startDate,
+                endDate);
+        cacheMinMaxTimeOfDay(events);
+        return events;
     }
 
     /*
@@ -1687,7 +1772,7 @@ public class Calendar extends AbstractComponent
     public void addActionHandler(Handler actionHandler) {
         if (actionHandler != null) {
             if (actionHandlers == null) {
-                actionHandlers = new LinkedList<Action.Handler>();
+                actionHandlers = new LinkedList<Handler>();
                 actionMapper = new KeyMapper<Action>();
             }
             if (!actionHandlers.contains(actionHandler)) {
@@ -1982,8 +2067,7 @@ public class Calendar extends AbstractComponent
 
         if (currentTimeFormat != null) {
             design.attr("time-format",
-                    (currentTimeFormat == TimeFormat.Format12H ? "12h"
-                            : "24h"));
+                    currentTimeFormat == TimeFormat.Format12H ? "12h" : "24h");
         }
         if (startDate != null) {
             design.attr("start-date", df_date.format(getStartDate()));
