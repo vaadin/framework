@@ -405,6 +405,26 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
+    /**
+     * Returns the explicitly set immediate value.
+     * 
+     * @return the explicitly set immediate value or null if
+     *         {@link #setImmediate(boolean)} has not been explicitly invoked
+     */
+    protected Boolean getExplicitImmediateValue() {
+        return explicitImmediateValue;
+    }
+
+    /**
+     * Returns the immediate mode of the component.
+     * <p>
+     * Certain operations such as adding a value change listener will set the
+     * component into immediate mode if {@link #setImmediate(boolean)} has not
+     * been explicitly called with false.
+     * 
+     * @return true if the component is in immediate mode (explicitly or
+     *         implicitly set), false if the component if not in immediate mode
+     */
     public boolean isImmediate() {
         if (explicitImmediateValue != null) {
             return explicitImmediateValue;
