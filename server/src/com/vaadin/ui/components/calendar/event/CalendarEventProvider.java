@@ -37,7 +37,7 @@ public interface CalendarEventProvider extends Serializable {
      * 
      * <p>
      * For example, if you set the date range to be monday 22.2.2010 - wednesday
-     * 24.2.2000, the used Event Provider will be queried for events between
+     * 24.2.2010, the used Event Provider will be queried for events between
      * monday 22.2.2010 00:00 and sunday 28.2.2010 23:59. Generally you can
      * expect the date range to be expanded to whole days and whole weeks.
      * </p>
