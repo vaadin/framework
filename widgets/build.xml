@@ -55,6 +55,7 @@
                 <include name="com/vaadin/client/renderers/*.java" />
                 <include name="com/vaadin/client/ui/SubPartAware.java" />
                 <include name="com/vaadin/client/ui/VProgressBar.java" />
+                <include name="com/vaadin/client/ui/dd/DragAndDropHandler.java" />
                 <include name="com/vaadin/client/VSchedulerImpl.java" />
 
                 <include name="com/vaadin/shared/ui/grid/*.java" />

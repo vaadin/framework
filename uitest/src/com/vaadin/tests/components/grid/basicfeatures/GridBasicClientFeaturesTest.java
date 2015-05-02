@@ -15,13 +15,15 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import java.util.List;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 
 /**
  * GridBasicClientFeatures.
@@ -79,13 +81,27 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
     }
 
     @Override
-    protected GridElement getGridElement() {
+    protected CustomGridElement getGridElement() {
         if (composite) {
             // Composite requires the basic client features widget for subparts
             return ((TestBenchElement) findElement(By
-                    .vaadin("//TestWidgetComponent"))).wrap(GridElement.class);
+                    .vaadin("//TestWidgetComponent")))
+                    .wrap(CustomGridElement.class);
         } else {
             return super.getGridElement();
         }
     }
+
+    @Override
+    protected void assertColumnHeaderOrder(int... indices) {
+        List<TestBenchElement> headers = getGridHeaderRowCells();
+        for (int i = 0; i < indices.length; i++) {
+            assertColumnHeader("HEADER (0," + indices[i] + ")", headers.get(i));
+        }
+    }
+
+    protected void toggleColumnReorder() {
+        selectMenuPath("Component", "State", "Column Reordering");
+    }
+
 }

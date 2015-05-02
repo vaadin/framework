@@ -103,6 +103,16 @@ public class GridState extends AbstractComponentState {
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
+     * The key that tells whether details are visible for the row
+     * 
+     * @see com.vaadin.ui.Grid#setDetailsGenerator(com.vaadin.ui.Grid.DetailsGenerator)
+     * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
+     * */
+    public static final String JSONKEY_DETAILS_VISIBLE = "dv";
+
+    /**
      * Columns in grid.
      */
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
@@ -156,4 +166,8 @@ public class GridState extends AbstractComponentState {
     /** The caption for the cancel button in the editor */
     @DelegateToWidget
     public String editorCancelCaption = GridConstants.DEFAULT_CANCEL_CAPTION;
+
+    /** Whether the columns can be reordered */
+    @DelegateToWidget
+    public boolean columnReorderingAllowed;
 }

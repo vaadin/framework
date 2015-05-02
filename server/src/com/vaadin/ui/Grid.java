@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,10 +53,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
+import com.vaadin.data.RpcDataProviderExtension.DetailComponentManager;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -74,6 +75,7 @@ import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.EncodeResult;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
@@ -172,6 +174,120 @@ import elemental.json.JsonValue;
  */
 public class Grid extends AbstractComponent implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
+
+    /**
+     * An event listener for column visibility change events in the Grid.
+     * 
+     * @since 7.5.0
+     */
+    public interface ColumnVisibilityChangeListener extends Serializable {
+        /**
+         * Called when a column has become hidden or unhidden.
+         * 
+         * @param event
+         */
+        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
+    }
+
+    /**
+     * An event that is fired when a column's visibility changes.
+     * 
+     * @since 7.5.0
+     */
+    public static class ColumnVisibilityChangeEvent extends Component.Event {
+
+        private final Column column;
+        private final boolean userOriginated;
+        private final boolean hidden;
+
+        /**
+         * Constructor for a column visibility change event.
+         * 
+         * @param source
+         *            the grid from which this event originates
+         * @param column
+         *            the column that changed its visibility
+         * @param hidden
+         *            <code>true</code> if the column was hidden,
+         *            <code>false</code> if it became visible
+         * @param isUserOriginated
+         *            <code>true</code> iff the event was triggered by an UI
+         *            interaction
+         */
+        public ColumnVisibilityChangeEvent(Grid source, Column column,
+                boolean hidden, boolean isUserOriginated) {
+            super(source);
+            this.column = column;
+            this.hidden = hidden;
+            userOriginated = isUserOriginated;
+        }
+
+        /**
+         * Gets the column that became hidden or visible.
+         * 
+         * @return the column that became hidden or visible.
+         * @see Column#isHidden()
+         */
+        public Column getColumn() {
+            return column;
+        }
+
+        /**
+         * Was the column set hidden or visible.
+         * 
+         * @return <code>true</code> if the column was hidden <code>false</code>
+         *         if it was set visible
+         */
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+    }
+
+    /**
+     * A callback interface for generating details for a particular row in Grid.
+     * 
+     * @since 7.5.0
+     * @author Vaadin Ltd
+     * @see DetailsGenerator#NULL
+     */
+    public interface DetailsGenerator extends Serializable {
+
+        /** A details generator that provides no details */
+        public DetailsGenerator NULL = new DetailsGenerator() {
+            @Override
+            public Component getDetails(RowReference rowReference) {
+                return null;
+            }
+        };
+
+        /**
+         * This method is called for whenever a new details row needs to be
+         * generated.
+         * <p>
+         * <em>Note:</em> If a component gets generated, it may not be manually
+         * attached anywhere, nor may it be a reused instance &ndash; each
+         * invocation of this method should produce a unique and isolated
+         * component instance. Essentially, this should mostly be a
+         * self-contained fire-and-forget method, as external references to the
+         * generated component might cause unexpected behavior.
+         * 
+         * @param rowReference
+         *            the reference for the row for which to generate details
+         * @return the details for the given row, or <code>null</code> to leave
+         *         the details empty.
+         */
+        Component getDetails(RowReference rowReference);
+    }
 
     /**
      * Custom field group that allows finding property types before an item has
@@ -338,6 +454,58 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          */
         public void setUserErrorMessage(String userErrorMessage) {
             this.userErrorMessage = userErrorMessage;
+        }
+
+    }
+
+    /**
+     * An event listener for column reorder events in the Grid.
+     * 
+     * @since 7.5.0
+     */
+    public interface ColumnReorderListener extends Serializable {
+        /**
+         * Called when the columns of the grid have been reordered.
+         * 
+         * @param event
+         *            An event providing more information
+         */
+        void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * An event that is fired when the columns are reordered.
+     * 
+     * @since 7.5.0
+     */
+    public static class ColumnReorderEvent extends Component.Event {
+
+        /**
+         * Is the column reorder related to this event initiated by the user
+         */
+        private final boolean userOriginated;
+
+        /**
+         * 
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+            super(source);
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
 
     }
@@ -2356,6 +2524,46 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
+         * Gets the caption of the hiding toggle for this column.
+         * 
+         * @since
+         * @see #setHidingToggleCaption(String)
+         * @return the caption for the hiding toggle for this column
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public String getHidingToggleCaption() throws IllegalStateException {
+            checkColumnIsAttached();
+            return state.hidingToggleCaption;
+        }
+
+        /**
+         * Sets the caption of the hiding toggle for this column. Shown in the
+         * toggle for this column in the grid's sidebar when the column is
+         * {@link #isHidable() hidable}.
+         * <p>
+         * By default, before triggering this setter, a user friendly version of
+         * the column's {@link #getPropertyId() property id} is used.
+         * <p>
+         * <em>NOTE:</em> setting this to <code>null</code> or empty string
+         * might cause the hiding toggle to not render correctly.
+         * 
+         * @since
+         * @param hidingToggleCaption
+         *            the text to show in the column hiding toggle
+         * @return the column itself
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column setHidingToggleCaption(String hidingToggleCaption)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+            state.hidingToggleCaption = hidingToggleCaption;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
          * Returns the width (in pixels). By default a column is 100px wide.
          * 
          * @return the width in pixels of the column
@@ -2885,7 +3093,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * Getting a field before the editor has been opened depends on special
          * support from the {@link FieldGroup} in use. Using this method with a
          * user-provided <code>FieldGroup</code> might cause
-         * {@link BindException} to be thrown.
+         * {@link com.vaadin.data.fieldgroup.FieldGroup.BindException
+         * BindException} to be thrown.
          * 
          * @return the bound field; or <code>null</code> if the respective
          *         column is not editable
@@ -2901,13 +3110,79 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
+         * Hides or shows the column. By default columns are visible before
+         * explicitly hiding them.
+         * 
+         * @since 7.5.0
+         * @param hidden
+         *            <code>true</code> to hide the column, <code>false</code>
+         *            to show
+         * @return this column
+         */
+        public Column setHidden(boolean hidden) {
+            if (hidden != getState().hidden) {
+                getState().hidden = hidden;
+                grid.markAsDirty();
+                grid.fireColumnVisibilityChangeEvent(this, hidden, false);
+            }
+            return this;
+        }
+
+        /**
+         * Is this column hidden. Default is {@code false}.
+         * 
+         * @since 7.5.0
+         * @return <code>true</code> if the column is currently hidden,
+         *         <code>false</code> otherwise
+         */
+        public boolean isHidden() {
+            return getState().hidden;
+        }
+
+        /**
+         * Set whether it is possible for the user to hide this column or not.
+         * Default is {@code false}.
+         * <p>
+         * <em>Note:</em> it is still possible to hide the column
+         * programmatically using {@link #setHidden(boolean)}
+         * 
+         * @since 7.5.0
+         * @param hidable
+         *            <code>true</code> iff the column may be hidable by the
+         *            user via UI interaction
+         * @return this column
+         */
+        public Column setHidable(boolean hidable) {
+            if (hidable != getState().hidable) {
+                getState().hidable = hidable;
+                grid.markAsDirty();
+            }
+            return this;
+        }
+
+        /**
+         * Is it possible for the the user to hide this column. Default is
+         * {@code false}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically hidden using
+         * {@link #setHidden(boolean)} regardless of the returned value.
+         * 
+         * @since 7.5.0
+         * @return <code>true</code> if the user can hide the column,
+         *         <code>false</code> if not
+         */
+        public boolean isHidable() {
+            return getState().hidable;
+        }
+
+        /*
          * Writes the design attributes for this column into given element.
          * 
          * @since
-         * @param design
-         *            Element to write attributes into
-         * @param designContext
-         *            the design context
+         * 
+         * @param design Element to write attributes into
+         * 
+         * @param designContext the design context
          */
         protected void writeDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
@@ -2925,6 +3200,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     getMaximumWidth(), def.maxWidth, Double.class);
             DesignAttributeHandler.writeAttribute("expand", attributes,
                     getExpandRatio(), def.expandRatio, Integer.class);
+            DesignAttributeHandler.writeAttribute("hidable", attributes,
+                    isHidable(), def.hidable, boolean.class);
+            DesignAttributeHandler.writeAttribute("hidden", attributes,
+                    isHidden(), def.hidden, boolean.class);
+            DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
+                    attributes, getHidingToggleCaption(),
+                    SharedUtil.propertyIdToHumanFriendly(getPropertyId()),
+                    String.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -2950,7 +3233,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 setEditable(DesignAttributeHandler.readAttribute("editable",
                         attributes, boolean.class));
             }
-
+            if (design.hasAttr("hidable")) {
+                setHidable(DesignAttributeHandler.readAttribute("hidable",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("hidden")) {
+                setHidden(DesignAttributeHandler.readAttribute("hidden",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("hiding-toggle-caption")) {
+                setHidingToggleCaption(DesignAttributeHandler.readAttribute(
+                        "hiding-toggle-caption", attributes, String.class));
+            }
             // Read size info where necessary.
             if (design.hasAttr("width")) {
                 setWidth(DesignAttributeHandler.readAttribute("width",
@@ -3202,11 +3496,29 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     private EditorErrorHandler editorErrorHandler = new DefaultEditorErrorHandler();
 
+    /**
+     * The user-defined details generator.
+     * 
+     * @see #setDetailsGenerator(DetailsGenerator)
+     */
+    private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
+
+    private DetailComponentManager detailComponentManager = null;
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionListener.class, "select", SelectionEvent.class);
 
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
             .findMethod(SortListener.class, "sort", SortEvent.class);
+
+    private static final Method COLUMN_REORDER_METHOD = ReflectTools
+            .findMethod(ColumnReorderListener.class, "columnReorder",
+                    ColumnReorderEvent.class);
+
+    private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
+            .findMethod(ColumnVisibilityChangeListener.class,
+                    "columnVisibilityChanged",
+                    ColumnVisibilityChangeEvent.class);
 
     /**
      * Creates a new Grid with a new {@link IndexedContainer} as the data
@@ -3402,6 +3714,87 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 fireEvent(new ItemClickEvent(Grid.this, item, itemId,
                         propertyId, details));
             }
+
+            @Override
+            public void columnsReordered(List<String> newColumnOrder,
+                    List<String> oldColumnOrder) {
+                final String diffStateKey = "columnOrder";
+                ConnectorTracker connectorTracker = getUI()
+                        .getConnectorTracker();
+                JsonObject diffState = connectorTracker.getDiffState(Grid.this);
+                // discard the change if the columns have been reordered from
+                // the server side, as the server side is always right
+                if (getState(false).columnOrder.equals(oldColumnOrder)) {
+                    // Don't mark as dirty since client has the state already
+                    getState(false).columnOrder = newColumnOrder;
+                    // write changes to diffState so that possible reverting the
+                    // column order is sent to client
+                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    Type type = null;
+                    try {
+                        type = (getState(false).getClass().getDeclaredField(
+                                diffStateKey).getGenericType());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                    EncodeResult encodeResult = JsonCodec.encode(
+                            getState(false).columnOrder, diffState, type,
+                            connectorTracker);
+
+                    diffState.put(diffStateKey, encodeResult.getEncodedValue());
+                    fireColumnReorderEvent(true);
+                } else {
+                    // make sure the client is reverted to the order that the
+                    // server thinks it is
+                    diffState.remove(diffStateKey);
+                    markAsDirty();
+                }
+            }
+
+            @Override
+            public void columnVisibilityChanged(String id, boolean hidden,
+                    boolean userOriginated) {
+                final Column column = getColumnByColumnId(id);
+                final GridColumnState columnState = column.getState();
+
+                if (columnState.hidden != hidden) {
+                    columnState.hidden = hidden;
+
+                    final String diffStateKey = "columns";
+                    ConnectorTracker connectorTracker = getUI()
+                            .getConnectorTracker();
+                    JsonObject diffState = connectorTracker
+                            .getDiffState(Grid.this);
+
+                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    Type type = null;
+                    try {
+                        type = (getState(false).getClass().getDeclaredField(
+                                diffStateKey).getGenericType());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                    EncodeResult encodeResult = JsonCodec.encode(
+                            getState(false).columns, diffState, type,
+                            connectorTracker);
+
+                    diffState.put(diffStateKey, encodeResult.getEncodedValue());
+
+                    fireColumnVisibilityChangeEvent(column, hidden,
+                            userOriginated);
+                }
+            }
+
+            @Override
+            public void sendDetailsComponents(int fetchId) {
+                getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
+                        detailComponentManager.getAndResetConnectorChanges(),
+                        fetchId);
+            }
         });
 
         registerRpc(new EditorServerRpc() {
@@ -3564,6 +3957,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this, columnKeys);
+
+        detailComponentManager = datasourceExtension
+                .getDetailComponentManager();
 
         /*
          * selectionModel == null when the invocation comes from the
@@ -3783,6 +4179,31 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return columnKeys.get(columnId);
     }
 
+    /**
+     * Returns whether column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since 7.5.0
+     * @return true if reordering is allowed
+     */
+    public boolean isColumnReorderingAllowed() {
+        return getState(false).columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether or not column reordering is allowed. Default value is
+     * <code>false</code>.
+     * 
+     * @since 7.5.0
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        if (isColumnReorderingAllowed() != columnReorderingAllowed) {
+            getState().columnReorderingAllowed = columnReorderingAllowed;
+        }
+    }
+
     @Override
     protected GridState getState() {
         return (GridState) super.getState();
@@ -3818,8 +4239,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         header.addColumn(datasourcePropertyId);
         footer.addColumn(datasourcePropertyId);
 
-        column.setHeaderCaption(SharedUtil.propertyIdToHumanFriendly(String
-                .valueOf(datasourcePropertyId)));
+        String humanFriendlyPropertyId = SharedUtil
+                .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
+        column.setHeaderCaption(humanFriendlyPropertyId);
+        column.setHidingToggleCaption(humanFriendlyPropertyId);
 
         if (datasource instanceof Sortable
                 && ((Sortable) datasource).getSortableContainerPropertyIds()
@@ -3910,6 +4333,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             columnOrder.addAll(stateColumnOrder);
         }
         getState().columnOrder = columnOrder;
+        fireColumnReorderEvent(false);
     }
 
     /**
@@ -3941,6 +4365,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * columns will be frozen, but the built-in selection checkbox column will
      * still be frozen if it's in use. -1 means that not even the selection
      * column is frozen.
+     * <p>
+     * <em>NOTE:</em> this count includes {@link Column#isHidden() hidden
+     * columns} in the count.
      * 
      * @see #setFrozenColumnCount(int)
      * 
@@ -3952,6 +4379,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
      * 
      * @param itemId
      *            id of item to scroll to.
@@ -3964,6 +4394,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
      * 
      * @param itemId
      *            id of item to scroll to.
@@ -4374,6 +4807,33 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     @Override
     public void removeSelectionListener(SelectionListener listener) {
         removeListener(SelectionEvent.class, listener, SELECTION_CHANGE_METHOD);
+    }
+
+    private void fireColumnReorderEvent(boolean userOriginated) {
+        fireEvent(new ColumnReorderEvent(this, userOriginated));
+    }
+
+    /**
+     * Registers a new column reorder listener.
+     * 
+     * @since 7.5.0
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnReorderListener(ColumnReorderListener listener) {
+        addListener(ColumnReorderEvent.class, listener, COLUMN_REORDER_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column reorder listener.
+     * 
+     * @since 7.5.0
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnReorderListener(ColumnReorderListener listener) {
+        removeListener(ColumnReorderEvent.class, listener,
+                COLUMN_REORDER_METHOD);
     }
 
     /**
@@ -4920,6 +5380,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         componentList.addAll(getEditorFields());
+
+        componentList.addAll(detailComponentManager.getComponents());
+
         return componentList.iterator();
     }
 
@@ -5435,6 +5898,101 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
+    }
+
+    /**
+     * Registers a new column visibility change listener
+     * 
+     * @since 7.5.0
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnVisibilityChangeListener(
+            ColumnVisibilityChangeListener listener) {
+        addListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column visibility change listener
+     * 
+     * @since 7.5.0
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnVisibilityChangeListener(
+            ColumnVisibilityChangeListener listener) {
+        removeListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
+    }
+
+    private void fireColumnVisibilityChangeEvent(Column column, boolean hidden,
+            boolean isUserOriginated) {
+        fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
+                isUserOriginated));
+    }
+
+    /**
+     * Sets a new details generator for row details.
+     * <p>
+     * The currently opened row details will be re-rendered.
+     * 
+     * @since 7.5.0
+     * @param detailsGenerator
+     *            the details generator to set
+     * @throws IllegalArgumentException
+     *             if detailsGenerator is <code>null</code>;
+     */
+    public void setDetailsGenerator(DetailsGenerator detailsGenerator)
+            throws IllegalArgumentException {
+        if (detailsGenerator == null) {
+            throw new IllegalArgumentException(
+                    "Details generator may not be null");
+        } else if (detailsGenerator == this.detailsGenerator) {
+            return;
+        }
+
+        this.detailsGenerator = detailsGenerator;
+
+        datasourceExtension.refreshDetails();
+        getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
+                detailComponentManager.getAndResetConnectorChanges(), -1);
+    }
+
+    /**
+     * Gets the current details generator for row details.
+     * 
+     * @since 7.5.0
+     * @return the detailsGenerator the current details generator
+     */
+    public DetailsGenerator getDetailsGenerator() {
+        return detailsGenerator;
+    }
+
+    /**
+     * Shows or hides the details for a specific item.
+     * 
+     * @since 7.5.0
+     * @param itemId
+     *            the id of the item for which to set details visibility
+     * @param visible
+     *            <code>true</code> to show the details, or <code>false</code>
+     *            to hide them
+     */
+    public void setDetailsVisible(Object itemId, boolean visible) {
+        datasourceExtension.setDetailsVisible(itemId, visible);
+    }
+
+    /**
+     * Checks whether details are visible for the given item.
+     * 
+     * @since 7.5.0
+     * @param itemId
+     *            the id of the item for which to check details visibility
+     * @return <code>true</code> iff the details are visible
+     */
+    public boolean isDetailsVisible(Object itemId) {
+        return datasourceExtension.isDetailsVisible(itemId);
     }
 
     protected SelectionMode getDefaultSelectionMode() {

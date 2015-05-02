@@ -35,6 +35,13 @@
     }
   }
 
+  // Sidebar
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    .#{$primaryStyleName}-sidebar-content {
+      background-color: #f8f8f9;
+    }
+  }
+
   // Sort indicators
   .#{$primaryStyleName} th.sort-asc,
   .#{$primaryStyleName} th.sort-desc {

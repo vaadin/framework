@@ -1459,4 +1459,124 @@ public class WidgetUtil {
         return Logger.getLogger(WidgetUtil.class.getName());
     }
 
+    /**
+     * Returns the thickness of the given element's top border.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the top border thickness
+     */
+    public static double getBorderTopThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderTopWidth" });
+    }
+
+    /**
+     * Returns the thickness of the given element's bottom border.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the bottom border thickness
+     */
+    public static double getBorderBottomThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderBottomWidth" });
+    }
+
+    /**
+     * Returns the combined thickness of the given element's top and bottom
+     * borders.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the top and bottom border thickness
+     */
+    public static double getBorderTopAndBottomThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderTopWidth",
+                "borderBottomWidth" });
+    }
+
+    /**
+     * Returns the thickness of the given element's left border.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the left border thickness
+     */
+    public static double getBorderLeftThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderLeftWidth" });
+    }
+
+    /**
+     * Returns the thickness of the given element's right border.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the right border thickness
+     */
+    public static double getBorderRightThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderRightWidth" });
+    }
+
+    /**
+     * Returns the thickness of the given element's left and right borders.
+     * <p>
+     * The value is determined using computed style when available and
+     * calculated otherwise.
+     * 
+     * @since
+     * @param element
+     *            the element to measure
+     * @return the top border thickness
+     */
+    public static double getBorderLeftAndRightThickness(Element element) {
+        return getBorderThickness(element, new String[] { "borderLeftWidth",
+                "borderRightWidth" });
+    }
+
+    private static native double getBorderThickness(
+            com.google.gwt.dom.client.Element element, String[] borderNames)
+    /*-{
+        if (typeof $wnd.getComputedStyle === 'function') {
+            var computedStyle = $wnd.getComputedStyle(element);
+            var width = 0;
+            for (i=0; i< borderNames.length; i++) {
+                var borderWidth = computedStyle[borderNames[i]];
+                width += parseFloat(borderWidth);
+            }
+            return width;
+        } else {
+            var parentElement = element.offsetParent;
+            var cloneElement = element.cloneNode(false);
+            cloneElement.style.boxSizing ="content-box";
+            parentElement.appendChild(cloneElement);
+            cloneElement.style.height = "10px"; // IE8 wants the height to be set to something...
+            var heightWithBorder = cloneElement.offsetHeight;
+            for (i=0; i< borderNames.length; i++) {
+                cloneElement.style[borderNames[i]] = "0";
+            }
+            var heightWithoutBorder = cloneElement.offsetHeight;
+            parentElement.removeChild(cloneElement);
+            
+            return heightWithBorder - heightWithoutBorder;
+        }
+    }-*/;
 }

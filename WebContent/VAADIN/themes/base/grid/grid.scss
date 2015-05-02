@@ -1,4 +1,5 @@
-$v-grid-border: 1px solid #ddd !default;
+$v-grid-border-size: 1px !default;
+$v-grid-border: $v-grid-border-size solid #ddd !default;
 $v-grid-cell-vertical-border: $v-grid-border !default;
 $v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
 $v-grid-cell-focused-border: 1px solid !default;
@@ -14,6 +15,7 @@ $v-grid-row-focused-background-color: null !default;
 $v-grid-header-row-height: null !default;
 $v-grid-header-font-size: $v-font-size !default;
 $v-grid-header-background-color: $v-grid-row-background-color !default;
+$v-grid-header-drag-marked-color: $v-grid-row-selected-background-color !default;
 
 $v-grid-footer-row-height: $v-grid-header-row-height !default;
 $v-grid-footer-font-size: $v-grid-header-font-size !default;
@@ -23,6 +25,12 @@ $v-grid-cell-padding-horizontal: 5px !default;
 
 $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
+$v-grid-details-marker-width: 2px !default;
+$v-grid-details-marker-color: $v-grid-row-selected-background-color !default;
+$v-grid-details-border-top: $v-grid-cell-horizontal-border !default;
+$v-grid-details-border-top-stripe: $v-grid-cell-horizontal-border !default;
+$v-grid-details-border-bottom: 1px solid darken($v-grid-row-stripe-background-color, 10%) !default;
+$v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-color, 10%) !default;
 
 @import "../escalator/escalator";
 
@@ -50,6 +58,103 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName}-tablewrapper {
     border: $v-grid-border;
+  }
+  
+  // Column drag and drop elements
+
+  .#{$primaryStyleName} .header-drag-table {
+    border-spacing: 0;
+    position: relative;
+    table-layout: fixed;
+    width: inherit; // a decent default fallback
+
+    .#{$primaryStyleName}-header {
+      position: absolute;
+      > .#{$primaryStyleName}-cell {
+        border: $v-grid-border;
+        margin-top: -10px;
+        opacity: 0.9;
+        filter: alpha(opacity=90); // IE8
+        z-index: 30000;
+      }
+
+      > .#{$primaryStyleName}-drop-marker {
+        background-color: $v-grid-header-drag-marked-color;
+        position: absolute;
+        width: 3px;
+      }
+    }
+  }
+
+  // Sidebar
+
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    @include box-shadow(none);
+    border-radius: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background-color: $v-grid-header-background-color;
+    border: $v-grid-header-border;
+    padding: 0;
+    z-index: 5;
+
+    .#{$primaryStyleName}-sidebar-button {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      outline: none;
+      padding: 0 4px;
+      text-align: right;
+
+      &::-moz-focus-inner {
+        border: 0;
+      }
+
+      &:after {
+        content: "\f0c9";
+        display: block;
+        font-family: FontAwesome, sans-serif;
+        font-size: $v-grid-header-font-size;
+      }
+    }
+
+    &.closed {
+      border-radius: 0;
+    }
+
+    &.opened {
+      .#{$primaryStyleName}-sidebar-button {
+        width: 100%;
+ 
+        &:after {
+          content: "\00d7";
+          font-size: 16px;
+          line-height: 1;
+        }
+      }
+    }
+
+    .v-ie &.opened .#{$primaryStyleName}-sidebar-button {
+      vertical-align: middle;
+    }
+
+    .v-ie8 &.opened .#{$primaryStyleName}-sidebar-button:after {
+      display: inline;
+    }
+
+    .#{$primaryStyleName}-sidebar-content {
+      border-top: $v-grid-border;
+      padding: 4px 0;
+
+      .gwt-MenuBar {
+        .gwt-MenuItem .column-hiding-toggle {
+          text-shadow: none;
+        }
+      }
+    }
   }
 
   // Common cell styles
@@ -329,6 +434,53 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName}-editor-save {
     margin-right: 4px;
+  }
+
+  .#{$primaryStyleName}-spacer {
+    left: $v-grid-details-marker-width - $v-grid-border-size;
+  }
+  
+  .#{$primaryStyleName}-spacer > td {
+    display: block;
+    padding: 0;
+
+    background-color: $v-grid-row-background-color;
+    border-top: $v-grid-details-border-top;
+    border-bottom: $v-grid-details-border-bottom;
+  }
+
+  .#{$primaryStyleName}-spacer.stripe > td {
+    background-color: $v-grid-row-stripe-background-color;
+    border-top: $v-grid-details-border-top-stripe;
+    border-bottom: $v-grid-details-border-bottom-stripe;
+  }
+  
+  .#{$primaryStyleName}-spacer-deco-container {
+    border-top: $v-grid-border-size solid transparent; // same size as table wrapper border 
+    position: relative;
+    top: 0; // escalator will override top for scrolling and margin-top for header offset.
+    z-index: 5;
+  }
+
+  .#{$primaryStyleName}-spacer-deco {
+    top: 0; // this will be overridden by code, but it's a good default. 
+    left: 0;
+    width: $v-grid-details-marker-width;
+    background-color: $v-grid-details-marker-color;
+    position: absolute;
+    height: 100%; // this will be overridden by code, but it's a good default.
+    pointer-events: none;
+
+    // IE 8-10 apply "pointer-events" only to SVG elements. 
+    // Using an empty SVG instead of an empty text node makes IE
+    // obey the "pointer-events: none" and forwards click events 
+    // to the underlying element. The data decodes to:
+    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
+    .ie8 &:before,
+    .ie9 &:before,
+    .ie10 &:before {
+      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+    }
   }
 
   // Renderers
