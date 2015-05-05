@@ -473,7 +473,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Wait until page is loaded completely.
         int count = 0;
-        while (!isElementPresent(GridElement.class)) {
+        while (!$(GridElement.class).exists()) {
             if (count == 100) {
                 fail("Reloading page failed");
             }
