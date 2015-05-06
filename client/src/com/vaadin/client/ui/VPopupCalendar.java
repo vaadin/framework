@@ -269,24 +269,29 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
         this.textFieldEnabled = textFieldEnabled;
+        updateTextFieldEnabled();
+    }
+
+    protected void updateTextFieldEnabled() {
+        boolean reallyEnabled = isEnabled() && isTextFieldEnabled();
         // IE has a non input disabled themeing that can not be overridden so we
         // must fake the functionality using readonly and unselectable
         if (BrowserInfo.get().isIE()) {
-            if (!textFieldEnabled) {
+            if (!reallyEnabled) {
                 text.getElement().setAttribute("unselectable", "on");
                 text.getElement().setAttribute("readonly", "");
                 text.setTabIndex(-2);
-            } else if (textFieldEnabled
+            } else if (reallyEnabled
                     && text.getElement().hasAttribute("unselectable")) {
                 text.getElement().removeAttribute("unselectable");
                 text.getElement().removeAttribute("readonly");
                 text.setTabIndex(0);
             }
         } else {
-            text.setEnabled(textFieldEnabled);
+            text.setEnabled(reallyEnabled);
         }
 
-        if (textFieldEnabled) {
+        if (reallyEnabled) {
             calendarToggle.setTabIndex(-1);
             Roles.getButtonRole().setAriaHiddenState(
                     calendarToggle.getElement(), true);
@@ -466,7 +471,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-
+        updateTextFieldEnabled();
         calendarToggle.setEnabled(enabled);
         Roles.getButtonRole().setAriaDisabledState(calendarToggle.getElement(),
                 !enabled);
@@ -500,9 +505,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
         if (!parsable) {
             setText(previousValue);
         }
-
-        // superclass sets the text field independently when building date
-        setTextFieldEnabled(isEnabled() && isTextFieldEnabled());
+        updateTextFieldEnabled();
     }
 
     /**

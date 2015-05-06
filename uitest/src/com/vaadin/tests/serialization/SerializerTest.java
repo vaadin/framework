@@ -51,7 +51,7 @@ import elemental.json.JsonValue;
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class SerializerTest extends AbstractTestUI {
 
-    private Log log = new Log(50);
+    private Log log = new Log(80);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -63,7 +63,7 @@ public class SerializerTest extends AbstractTestUI {
         log.setNumberLogRows(false);
         addComponent(log);
 
-        SerializerTestRpc rpc = testExtension
+        final SerializerTestRpc rpc = testExtension
                 .getRpcProxy(SerializerTestRpc.class);
         SerializerTestState state = testExtension.getState();
 
@@ -263,12 +263,15 @@ public class SerializerTest extends AbstractTestUI {
 
         rpc.sendDate(new Date(1));
         rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
+        rpc.sendDateArray(new Date[] { new Date(2013 - 1900, 1, 1),
+                new Date(2012 - 1900, 1, 1) });
 
         state.jsonNull = Json.createNull();
         state.jsonString = Json.create("a string");
         state.jsonBoolean = Json.create(false);
         rpc.sendJson(Json.create(true), Json.createNull(), Json.create("JSON"));
 
+        state.dateArray = new Date[] { new Date(1), new Date(2) };
         state.date1 = new Date(1);
         state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
 
@@ -466,6 +469,20 @@ public class SerializerTest extends AbstractTestUI {
                         new Locale("en", "fi"));
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
                 log.log("sendDate: " + format.format(date));
+            }
+
+            @Override
+            public void sendDateArray(Date[] dateArray) {
+                DateFormat format = DateFormat.getDateTimeInstance(
+                        DateFormat.LONG, DateFormat.FULL,
+                        new Locale("en", "fi"));
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                String dates = "";
+
+                for (Date date : dateArray) {
+                    dates += " " + format.format(date);
+                }
+                log.log("sendDateArray: " + dates);
             }
 
             @Override

@@ -139,6 +139,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .v-align-middle > .v-widget,
+.v-align-right > .v-widget,
+.v-align-center > .v-widget,
 .v-align-bottom > .v-widget {
 	display: inline-block;
 }

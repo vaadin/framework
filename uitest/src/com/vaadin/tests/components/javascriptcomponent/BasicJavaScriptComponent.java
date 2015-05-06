@@ -36,7 +36,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.JavaScriptFunction;
+
 import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 public class BasicJavaScriptComponent extends AbstractTestUI {
 
@@ -103,6 +106,31 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                 }
             });
 
+            addFunction("sendDifferentTypeOfData", new JavaScriptFunction() {
+                @Override
+                public void call(JsonArray arguments) {
+                    for (int i = 0; i < arguments.length(); i++) {
+                        JsonValue arg = arguments.get(i);
+                        if (arg instanceof JsonObject) {
+                            JsonObject o = (JsonObject) arg;
+                            log.log("Argument[" + i + "] type: "
+                                    + arg.getClass().getName());
+                            for (String key : o.keys()) {
+                                JsonValue v = o.get(key);
+                                log.log("Argument[" + i + "][" + key
+                                        + "] type: " + v.getClass().getName()
+                                        + ", value: " + v.asString());
+
+                            }
+                        } else {
+                            log.log("Argument[" + i + "] type: "
+                                    + arg.getClass().getName() + ", value: "
+                                    + arg.asString());
+                        }
+                    }
+                }
+            });
+
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
             callFunction("messageToClient", "Callback message");
 
@@ -136,7 +164,7 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
         }
     }
 
-    private final Log log = new Log(5);
+    private final Log log = new Log(15);
 
     @Override
     protected void setup(VaadinRequest request) {

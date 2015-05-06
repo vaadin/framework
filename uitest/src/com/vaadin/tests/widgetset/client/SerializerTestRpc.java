@@ -85,7 +85,10 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendDate(Date date);
 
+    public void sendDateArray(Date[] dates);
+
     public void sendJson(JsonValue value1, JsonValue value2, JsonString string);
 
     public void log(String string);
+
 }
