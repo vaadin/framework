@@ -35,30 +35,31 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxMouseSelectEnterTest extends MultiBrowserTest {
 
-    private ComboBoxElement comboBoxElement;
-
-    @Override
-    public void setup() throws Exception {
-
-        super.setup();
-        openTestURL();
-        waitForElementPresent(By.className("v-filterselect"));
-        comboBoxElement = $(ComboBoxElement.class).first();
-    }
-
     @Test
     public void enterSetsValueSelectedByMouseOver() {
-        comboBoxElement.openPopup();
-        comboBoxElement.sendKeys(Keys.DOWN, Keys.DOWN);
+        openTestURL();
+        WebElement textBoxElement = $(ComboBoxElement.class).first()
+                .findElement(By.vaadin("#textbox"));
+        textBoxElement.click();
+
+        /* Open popup */
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+        /* Move focus */
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
+        /* Move to wanted item */
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
+
         String selectedItemText = findElement(
                 By.className("gwt-MenuItem-selected")).getText();
         assertThat("Item selected by arrows should be a1", selectedItemText,
                 is("a1"));
         new Actions(driver).moveToElement(getWebElementForItem("a5")).build()
                 .perform();
-        comboBoxElement.sendKeys(getReturn());
+        new Actions(getDriver()).sendKeys(getReturn()).perform();
         assertThat("Item selected by mouse should be a5",
-                comboBoxElement.getText(), is("a5"));
+                textBoxElement.getAttribute("value"), is("a5"));
         checkLabelValue("a5");
     }
 
