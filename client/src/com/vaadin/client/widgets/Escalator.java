@@ -1345,6 +1345,20 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /**
+         * This method calculates the current row count directly from the DOM.
+         * <p>
+         * While Escalator is stable, this value should equal to
+         * {@link #getRowCount()}, but while row counts are being updated, these
+         * two values might differ for a short while.
+         * <p>
+         * Any extra content, such as spacers for the body, should not be
+         * included in this count.
+         * 
+         * @return the actual DOM count of rows
+         */
+        public abstract int getDomRowCount();
+
+        /**
          * {@inheritDoc}
          * <p>
          * <em>Implementation detail:</em> This method does no DOM modifications
@@ -1603,7 +1617,7 @@ public class Escalator extends Widget implements RequiresResize,
 
         protected void paintRemoveColumns(final int offset,
                 final int numberOfColumns) {
-            for (int i = 0; i < root.getChildCount(); i++) {
+            for (int i = 0; i < getDomRowCount(); i++) {
                 TableRowElement row = getTrByVisualIndex(i);
                 flyweightRow.setup(row, i,
                         columnConfiguration.getCalculatedColumnWidths());
@@ -1627,7 +1641,7 @@ public class Escalator extends Widget implements RequiresResize,
         protected void paintInsertColumns(final int offset,
                 final int numberOfColumns, boolean frozen) {
 
-            for (int row = 0; row < root.getChildCount(); row++) {
+            for (int row = 0; row < getDomRowCount(); row++) {
                 final TableRowElement tr = getTrByVisualIndex(row);
                 paintInsertCells(tr, row, offset, numberOfColumns);
             }
@@ -2117,6 +2131,11 @@ public class Escalator extends Widget implements RequiresResize,
 
         public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
+        }
+
+        @Override
+        public int getDomRowCount() {
+            return root.getChildCount();
         }
 
         @Override
@@ -2697,7 +2716,7 @@ public class Escalator extends Widget implements RequiresResize,
                 if (rowsStillNeeded > 0) {
                     final Range unupdatedVisual = convertToVisual(Range
                             .withLength(unupdatedLogicalStart, rowsStillNeeded));
-                    final int end = getEscalatorRowCount();
+                    final int end = getDomRowCount();
                     final int start = end - unupdatedVisual.length();
                     final int visualTargetIndex = unupdatedLogicalStart
                             - visualOffset;
@@ -2755,11 +2774,10 @@ public class Escalator extends Widget implements RequiresResize,
             assert visualTargetIndex >= 0 : "Visual target must be 0 or greater (was "
                     + visualTargetIndex + ")";
 
-            assert visualTargetIndex <= getEscalatorRowCount() : "Visual target "
+            assert visualTargetIndex <= getDomRowCount() : "Visual target "
                     + "must not be greater than the number of escalator rows (was "
-                    + visualTargetIndex
-                    + ", escalator rows "
-                    + getEscalatorRowCount() + ")";
+                    + visualTargetIndex + ", escalator rows "
+                    + getDomRowCount() + ")";
 
             assert logicalTargetIndex + visualSourceRange.length() <= getRowCount() : "Logical "
                     + "target leads to rows outside of the data range ("
@@ -2910,7 +2928,7 @@ public class Escalator extends Widget implements RequiresResize,
                 final int index, final int numberOfRows) {
 
             final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
-                    - getEscalatorRowCount();
+                    - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
 
@@ -3036,7 +3054,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             // ranges evaluated, let's do things.
             if (!removedVisualInside.isEmpty()) {
-                int escalatorRowCount = body.getEscalatorRowCount();
+                int escalatorRowCount = body.getDomRowCount();
 
                 /*
                  * remember: the rows have already been subtracted from the row
@@ -3899,17 +3917,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
-        /**
-         * This method calculates the current escalator row count directly from
-         * the DOM.
-         * <p>
-         * While Escalator is stable, this value should equal to
-         * {@link #visualRowOrder}.size(), but while row counts are being
-         * updated, these two values might differ for a short while.
-         * 
-         * @return the actual DOM count of escalator rows
-         */
-        public int getEscalatorRowCount() {
+        @Override
+        public int getDomRowCount() {
             return root.getChildCount()
                     - spacerContainer.getSpacersInDom().size();
         }
@@ -5814,7 +5823,7 @@ public class Escalator extends Widget implements RequiresResize,
          * updated correctly. Since it isn't, we'll simply and brutally rip out
          * the DOM elements (in an elegant way, of course).
          */
-        int rowsToRemove = body.getEscalatorRowCount();
+        int rowsToRemove = body.getDomRowCount();
         for (int i = 0; i < rowsToRemove; i++) {
             int index = rowsToRemove - i - 1;
             TableRowElement tr = bodyElem.getRows().getItem(index);

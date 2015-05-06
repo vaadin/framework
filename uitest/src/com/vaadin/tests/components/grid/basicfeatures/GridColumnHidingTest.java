@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -818,6 +819,27 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         verifyHeaderCellColspan(1, 4, 1);
     }
 
+    @Test
+    public void testColumnHiding_detailsRowIsOpen_renderedCorrectly() {
+        selectMenuPath("Component", "Row details", "Toggle details for...",
+                "Row 1");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+        Assert.assertNotNull("Details not found", getGridElement()
+                .getDetails(1));
+
+        toggleHideColumnAPI(0);
+
+        assertColumnHeaderOrder(1, 2, 3, 4);
+        Assert.assertNotNull("Details not found", getGridElement()
+                .getDetails(1));
+
+        toggleHideColumnAPI(0);
+
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+        Assert.assertNotNull("Details not found", getGridElement()
+                .getDetails(1));
+    }
+
     private void loadSpannedCellsFixture() {
         selectMenuPath("Component", "State", "Width", "1000px");
         appendHeaderRow();
@@ -854,9 +876,16 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     }
 
     private void verifyHeaderCellColspan(int row, int column, int colspan) {
-        assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
-                .parseInt(getGridElement().getHeaderCell(row, column)
-                        .getAttribute("colspan"))));
+        try {
+            assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
+                    .parseInt(getGridElement().getHeaderCell(row, column)
+                            .getAttribute("colspan"))));
+        } catch (NumberFormatException nfe) {
+            // IE8 has colSpan
+            assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
+                    .parseInt(getGridElement().getHeaderCell(row, column)
+                            .getAttribute("colSpan"))));
+        }
     }
 
     private void verifyNumberOfCellsInHeader(int row, int numberOfCells) {
