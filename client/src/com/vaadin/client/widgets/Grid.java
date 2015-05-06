@@ -3541,24 +3541,26 @@ public class Grid<T> extends ResizeComposite implements
 
         private void resolveDragElementHorizontalPosition(final int clientX) {
             double left = clientX - table.getAbsoluteLeft();
-            final double frozenColumnsWidth = getFrozenColumnsWidth();
-            if (left < frozenColumnsWidth) {
-                left = (int) frozenColumnsWidth;
-            }
 
-            // do not show the drag element beyond a spanned header cell
+            // Do not show the drag element beyond a spanned header cell
             // limitation
             final Double leftBound = possibleDropPositions.firstKey();
             final Double rightBound = possibleDropPositions.lastKey();
-            double scrollLeft = getScrollLeft();
+            final double scrollLeft = getScrollLeft();
             if (left + scrollLeft < leftBound) {
                 left = leftBound - scrollLeft + autoScrollX;
             } else if (left + scrollLeft > rightBound) {
                 left = rightBound - scrollLeft + autoScrollX;
             }
 
-            // do not show the drag element beyond the grid
-            left = Math.max(0, Math.min(left, table.getClientWidth()));
+            // Do not show the drag element beyond the grid
+            final int bodyOffsetWidth = getEscalator().getBody().getElement()
+                    .getOffsetWidth();
+            // Do not show on left of the frozen columns (even if scrolled)
+            final int frozenColumnsWidth = (int) getFrozenColumnsWidth();
+
+            left = Math
+                    .max(frozenColumnsWidth, Math.min(left, bodyOffsetWidth));
 
             left -= dragElement.getClientWidth() / 2;
             dragElement.getStyle().setLeft(left, Unit.PX);
