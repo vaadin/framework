@@ -564,6 +564,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         for (int i = -1; i <= COLUMNS; i++) {
             frozenOptions.put(String.valueOf(i), Integer.valueOf(i));
         }
+        /*
+         * This line below is a workaround for a FF24 bug regarding submenu
+         * handling - it makes the sub menu wider.
+         */
+        frozenOptions.put("-1 for unfreezing selection column", -1);
         createSelectAction("Frozen column count", "State", frozenOptions, "0",
                 new Command<Grid, Integer>() {
                     @Override
