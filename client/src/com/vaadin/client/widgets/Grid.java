@@ -3541,6 +3541,9 @@ public class Grid<T> extends ResizeComposite implements
         /** Captures the value of the focused column before reordering */
         private int focusedColumnIndex;
 
+        /** Offset caused by the drag and drop marker width */
+        private double dropMarkerWidthOffset;
+
         private void initHeaderDragElementDOM() {
             if (table == null) {
                 tableHeader = DOM.createTHead();
@@ -3563,6 +3566,9 @@ public class Grid<T> extends ResizeComposite implements
             tableHeader.getStyle().setTop(topOffset, Unit.PX);
 
             getElement().appendChild(table);
+
+            dropMarkerWidthOffset = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(dropMarker) / 2;
         }
 
         @Override
@@ -3601,9 +3607,25 @@ public class Grid<T> extends ResizeComposite implements
             dropMarkerLeft += autoScrollX;
 
             final double frozenColumnsWidth = getFrozenColumnsWidth();
-            if (dropMarkerLeft < frozenColumnsWidth
-                    || dropMarkerLeft > escalator.getHeader().getElement()
-                            .getOffsetWidth() || dropMarkerLeft < 0) {
+            final double rightBoundaryForDrag = getSidebarBoundaryComparedTo(dropMarkerLeft);
+            final int visibleColumns = getVisibleColumns().size();
+
+            // First check if the drop marker should move left because of the
+            // sidebar opening button. this only the case if the grid is
+            // scrolled to the right
+            if (latestColumnDropIndex == visibleColumns
+                    && rightBoundaryForDrag < dropMarkerLeft
+                    && dropMarkerLeft <= escalator.getHeader().getElement()
+                            .getOffsetWidth()) {
+                dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
+            }
+
+            // Check if the drop marker shouldn't be shown at all
+            else if (dropMarkerLeft < frozenColumnsWidth
+                    || dropMarkerLeft > Math
+                            .min(rightBoundaryForDrag, escalator.getHeader()
+                                    .getElement().getOffsetWidth())
+                    || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
             dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
@@ -3624,16 +3646,42 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             // Do not show the drag element beyond the grid
-            final int bodyOffsetWidth = getEscalator().getBody().getElement()
+            final double sidebarBoundary = getSidebarBoundaryComparedTo(left);
+            final int gridBoundary = escalator.getHeader().getElement()
                     .getOffsetWidth();
+            final double rightBoundary = Math
+                    .min(sidebarBoundary, gridBoundary);
+
             // Do not show on left of the frozen columns (even if scrolled)
             final int frozenColumnsWidth = (int) getFrozenColumnsWidth();
 
-            left = Math
-                    .max(frozenColumnsWidth, Math.min(left, bodyOffsetWidth));
+            left = Math.max(frozenColumnsWidth, Math.min(left, rightBoundary));
 
             left -= dragElement.getClientWidth() / 2;
             dragElement.getStyle().setLeft(left, Unit.PX);
+        }
+
+        private boolean isSidebarOnDraggedRow() {
+            return eventCell.getRowIndex() == 0 && getSidebar().isInDOM()
+                    && !getSidebar().isOpen();
+        }
+
+        /**
+         * Returns the sidebar left coordinate, in relation to the grid. Or
+         * Double.MAX_VALUE if it doesn't cause a boundary.
+         */
+        private double getSidebarBoundaryComparedTo(double left) {
+            if (isSidebarOnDraggedRow()) {
+                double absoluteLeft = left + getElement().getAbsoluteLeft();
+                double sidebarLeft = getSidebar().getElement()
+                        .getAbsoluteLeft();
+                double diff = absoluteLeft - sidebarLeft;
+
+                if (diff > 0) {
+                    return left - diff;
+                }
+            }
+            return Double.MAX_VALUE;
         }
 
         @Override
