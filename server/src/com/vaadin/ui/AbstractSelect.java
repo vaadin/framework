@@ -1246,7 +1246,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * Sets tqhe icon for an item.
+     * Sets the icon for an item.
      * 
      * @param itemId
      *            the id of the item to be assigned an icon.
