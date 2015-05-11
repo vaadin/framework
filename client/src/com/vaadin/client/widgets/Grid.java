@@ -3179,6 +3179,13 @@ public class Grid<T> extends ResizeComposite implements
                                 "Got null header first row or first row cell when calculating sidebar button height");
                 openCloseButton.setHeight(grid.escalator.getHeader()
                         .getDefaultRowHeight() + "px");
+            } catch (IndexOutOfBoundsException ioobe) {
+                // happens when escalator doesn't have any headers rendered yet.
+                getLogger()
+                        .warning(
+                                "No header cell available when calculating sidebar button height");
+                openCloseButton.setHeight(grid.escalator.getHeader()
+                        .getDefaultRowHeight() + "px");
             }
         }
 
