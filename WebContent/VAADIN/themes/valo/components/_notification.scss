@@ -78,38 +78,38 @@ $v-notification-title-color: $v-focus-color !default;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    .#{$primary-stylename}-caption {
-      margin: 0;
-      display: inline-block;
-      text-align: left;
-      font-weight: inherit;
-      line-height: inherit;
-      white-space: nowrap;
-      letter-spacing: 0;
-    }
-
-    .#{$primary-stylename}-description {
-      margin: 0;
-      display: inline-block;
-      vertical-align: middle;
-      max-width: 30em;
-      text-align: left;
-      max-height: 20em;
-      overflow: auto;
-    }
-
-    .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description {
-      margin-left: round($v-font-size * 1.5);
-    }
-
-    .v-icon + .#{$primary-stylename}-caption {
-      margin-left: round($v-font-size);
-    }
-
     @include valo-notification-style;
 
   }
 
+  .#{$primary-stylename}-caption {
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+    font-weight: inherit;
+    line-height: inherit;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  .#{$primary-stylename}-description {
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 30em;
+    text-align: left;
+    max-height: 20em;
+    overflow: auto;
+  }
+
+  .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description {
+    margin-left: round($v-font-size * 1.5);
+  }
+
+  .v-icon + .#{$primary-stylename}-caption {
+    margin-left: round($v-font-size);
+  }
+  
   .#{$primary-stylename}-system {
     @include valo-notification-bar-style;
     @include valo-notification-system-style;

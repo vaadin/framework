@@ -15,12 +15,8 @@
 	-moz-box-shadow: 0 3px 10px rgba(0,0,0,.3);
 	margin: 10px;
 }
-.#{$primaryStyleName} .#{$primaryStyleName}-caption,
-.#{$primaryStyleName} .#{$primaryStyleName}-description,
-.#{$primaryStyleName}-error .#{$primaryStyleName}-caption,
-.#{$primaryStyleName}-error .#{$primaryStyleName}-description,
-.#{$primaryStyleName}-warning .#{$primaryStyleName}-caption,
-.#{$primaryStyleName}-warning .#{$primaryStyleName}-description  {
+.#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-description {
 	display: inline;
 	font-weight: normal;
 	line-height: normal;
