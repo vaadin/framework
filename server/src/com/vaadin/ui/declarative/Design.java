@@ -94,7 +94,7 @@ public class Design implements Serializable {
      * Use {@link Design#setComponentMapper(ComponentMapper)} to configure
      * Vaadin to use a custom component mapper.
      * 
-     * @since
+     * @since 7.5.0
      * @author Vaadin Ltd
      */
     public interface ComponentMapper extends Serializable {
@@ -182,7 +182,7 @@ public class Design implements Serializable {
     /**
      * Default implementation of {@link ComponentMapper},
      * 
-     * @since
+     * @since 7.5.0
      */
     public static class DefaultComponentMapper implements ComponentMapper {
 
@@ -317,7 +317,7 @@ public class Design implements Serializable {
      * @param componentMapper
      *            the component mapper to set; not <code>null</code>
      * 
-     * @since
+     * @since 7.5.0
      */
     public static void setComponentMapper(ComponentMapper componentMapper) {
         if (componentMapper == null) {
@@ -334,7 +334,7 @@ public class Design implements Serializable {
      * 
      * @return the component mapper
      * 
-     * @since
+     * @since 7.5.0
      */
     public static ComponentMapper getComponentMapper() {
         return componentMapper;

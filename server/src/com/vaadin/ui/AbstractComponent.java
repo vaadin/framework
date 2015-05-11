@@ -1027,7 +1027,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Toggles responsiveness of this component.
      * 
-     * @since
+     * @since 7.5.0
      * @param responsive
      *            boolean enables responsiveness, false disables
      */
@@ -1052,7 +1052,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns true if the component is responsive
      * 
-     * @since
+     * @since 7.5.0
      * @return true if the component is responsive
      */
     public boolean isResponsive() {

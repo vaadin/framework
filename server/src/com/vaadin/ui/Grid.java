@@ -1631,7 +1631,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Writes the declarative design to the given table row element.
              * 
-             * @since
+             * @since 7.5.0
              * @param trElement
              *            Element to write design to
              * @param designContext
@@ -1665,7 +1665,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Reads the declarative design from the given table row element.
              * 
-             * @since
+             * @since 7.5.0
              * @param trElement
              *            Element to read design from
              * @param designContext
@@ -1867,7 +1867,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Writes the declarative design to the given table cell element.
              * 
-             * @since
+             * @since 7.5.0
              * @param cellElement
              *            Element to write design to
              * @param designContext
@@ -1894,7 +1894,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Reads the declarative design from the given table cell element.
              * 
-             * @since
+             * @since 7.5.0
              * @param cellElement
              *            Element to read design from
              * @param designContext
@@ -2147,7 +2147,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Writes the declarative design to the given table section element.
          * 
-         * @since
+         * @since 7.5.0
          * @param tableSectionElement
          *            Element to write design to
          * @param designContext
@@ -2164,7 +2164,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Writes the declarative design from the given table section element.
          * 
-         * @since
+         * @since 7.5.0
          * @param tableSectionElement
          *            Element to read design from
          * @param designContext
@@ -2526,7 +2526,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Gets the caption of the hiding toggle for this column.
          * 
-         * @since
+         * @since 7.5.0
          * @see #setHidingToggleCaption(String)
          * @return the caption for the hiding toggle for this column
          * @throws IllegalStateException
@@ -2548,7 +2548,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * <em>NOTE:</em> setting this to <code>null</code> or empty string
          * might cause the hiding toggle to not render correctly.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidingToggleCaption
          *            the text to show in the column hiding toggle
          * @return the column itself
@@ -3178,7 +3178,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /*
          * Writes the design attributes for this column into given element.
          * 
-         * @since
+         * @since 7.5.0
          * 
          * @param design Element to write attributes into
          * 
@@ -3215,7 +3215,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Reads the design attributes for this column from given element.
          * 
-         * @since
+         * @since 7.5.0
          * @param design
          *            Element to read attributes from
          * @param designContext

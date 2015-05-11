@@ -21,7 +21,6 @@ import java.io.Serializable;
 /**
  * Describes the margin settings for each edge of a Component.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class MarginInfo implements Serializable {

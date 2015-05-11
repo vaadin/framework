@@ -6130,7 +6130,7 @@ public class Escalator extends Widget implements RequiresResize,
      * visible and there is at least {@literal padding} pixesl to the given
      * scroll destination.
      * 
-     * @since
+     * @since 7.5.0
      * @param spacerIndex
      *            the row index of the spacer to scroll to
      * @param destination
@@ -6158,7 +6158,7 @@ public class Escalator extends Widget implements RequiresResize,
      * If a spacer is not open at that index, this method behaves like
      * {@link #scrollToRow(int, ScrollDestination, int)}
      * 
-     * @since
+     * @since 7.5.0
      * @param rowIndex
      *            the index of the logical row to scroll to. -1 takes the
      *            topmost spacer into account as well.

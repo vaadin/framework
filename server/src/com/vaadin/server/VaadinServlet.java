@@ -923,7 +923,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * request indicates that the client accepts gzip compressed responses and
      * the filename extension of the requested resource is .js, .css, or .html.
      * 
-     * @since
+     * @since 7.5.0
      * 
      * @param request
      *            the request for the resource

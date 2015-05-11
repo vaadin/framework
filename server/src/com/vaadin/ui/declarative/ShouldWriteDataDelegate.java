@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
  * 
  * @see DesignContext#shouldWriteData(Component)
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public interface ShouldWriteDataDelegate extends Serializable {

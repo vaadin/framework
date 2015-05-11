@@ -1465,7 +1465,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top border thickness
@@ -1480,7 +1480,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the bottom border thickness
@@ -1496,7 +1496,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top and bottom border thickness
@@ -1512,7 +1512,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the left border thickness
@@ -1527,7 +1527,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the right border thickness
@@ -1542,7 +1542,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top border thickness

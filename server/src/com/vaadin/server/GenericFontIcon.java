@@ -18,7 +18,7 @@ package com.vaadin.server;
 /**
  * A generic implementation of {@link FontIcon} interface
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")

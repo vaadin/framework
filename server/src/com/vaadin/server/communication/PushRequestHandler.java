@@ -138,7 +138,7 @@ public class PushRequestHandler implements RequestHandler,
     /**
      * Initializes Atmosphere for the given ServletConfiguration
      * 
-     * @since
+     * @since 7.5.0
      * @param vaadinServletConfig
      *            The servlet configuration for the servlet which should have
      *            Atmosphere support

@@ -4319,7 +4319,7 @@ public class Grid<T> extends ResizeComposite implements
          * Defaults to <code>null</code>, when will use whatever is set with
          * {@link #setHeaderCaption(String)}.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidingToggleCaption
          *            the caption for the hiding toggle for this column
          */
@@ -4333,7 +4333,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Gets the hiding toggle caption for this column.
          * 
-         * @since
+         * @since 7.5.0
          * @see #setHidingToggleCaption(String)
          * @return the hiding toggle's caption for this column
          */

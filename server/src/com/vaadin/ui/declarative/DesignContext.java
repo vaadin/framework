@@ -264,7 +264,7 @@ public class DesignContext implements Serializable {
      * @see #getPackagePrefixes()
      * @see #getPackagePrefix(String)
      * @see #getPackage(String)
-     * @since
+     * @since 7.5.0
      */
     public void addPackagePrefix(String prefix, String packageName) {
         twoWayMap(prefix, packageName, prefixToPackage, packageToPrefix);
@@ -277,7 +277,7 @@ public class DesignContext implements Serializable {
      * @see #addPackagePrefix(String, String)
      * @see #getPackagePrefixes()
      * 
-     * @since
+     * @since 7.5.0
      * @param packageName
      *            the package name to get a prefix for
      * @return the prefix for the package, or <code>null</code> if no prefix is
@@ -291,7 +291,7 @@ public class DesignContext implements Serializable {
      * Gets all registered package prefixes.
      * 
      * 
-     * @since
+     * @since 7.5.0
      * @see #getPackage(String)
      * @return a collection of package prefixes
      */
@@ -303,7 +303,7 @@ public class DesignContext implements Serializable {
      * Gets the package corresponding to the give prefix, or <code>null</code>
      * no package has been registered for the prefix
      * 
-     * @since
+     * @since 7.5.0
      * @see #addPackagePrefix(String, String)
      * @param prefix
      *            the prefix to find a package for
@@ -684,7 +684,7 @@ public class DesignContext implements Serializable {
      * connected to a back end system and that the data should thus not be
      * written.
      * 
-     * @since
+     * @since 7.5.0
      * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
      * @param component
      *            the component to check
@@ -699,7 +699,7 @@ public class DesignContext implements Serializable {
      * Sets the delegate that determines whether the container data of a
      * component should be written out.
      * 
-     * @since
+     * @since 7.5.0
      * @see #shouldWriteChildren(Component, Component)
      * @see #getShouldWriteDataDelegate()
      * @param shouldWriteDataDelegate
@@ -719,7 +719,7 @@ public class DesignContext implements Serializable {
      * Gets the delegate that determines whether the container data of a
      * component should be written out.
      * 
-     * @since
+     * @since 7.5.0
      * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
      * @see #shouldWriteChildren(Component, Component)
      * @return the shouldWriteDataDelegate the currently use delegate
