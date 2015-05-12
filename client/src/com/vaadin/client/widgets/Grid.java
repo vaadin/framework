@@ -74,12 +74,14 @@ import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
+import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
+import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
 import com.vaadin.client.widget.escalator.Cell;
@@ -203,8 +205,8 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
-        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets,
-        HasEnabled {
+        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, Focusable,
+        com.google.gwt.user.client.ui.Focusable, HasWidgets, HasEnabled {
 
     /**
      * Enum describing different sections of Grid.
@@ -6158,6 +6160,14 @@ public class Grid<T> extends ResizeComposite implements
             return;
         }
 
+        String eventType = event.getType();
+
+        if (eventType.equals(BrowserEvents.FOCUS)
+                || eventType.equals(BrowserEvents.BLUR)) {
+            super.onBrowserEvent(event);
+            return;
+        }
+
         EventTarget target = event.getEventTarget();
 
         if (!Element.is(target) || isOrContainsInSpacer(Element.as(target))) {
@@ -6168,7 +6178,6 @@ public class Grid<T> extends ResizeComposite implements
         RowContainer container = escalator.findRowContainer(e);
         Cell cell;
 
-        String eventType = event.getType();
         if (container == null) {
             if (eventType.equals(BrowserEvents.KEYDOWN)
                     || eventType.equals(BrowserEvents.KEYUP)
@@ -7772,5 +7781,30 @@ public class Grid<T> extends ResizeComposite implements
         } else {
             sidebar.close();
         }
+    }
+
+    @Override
+    public int getTabIndex() {
+        return FocusUtil.getTabIndex(this);
+    }
+
+    @Override
+    public void setAccessKey(char key) {
+        FocusUtil.setAccessKey(this, key);
+    }
+
+    @Override
+    public void setFocus(boolean focused) {
+        FocusUtil.setFocus(this, focused);
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        FocusUtil.setTabIndex(this, index);
+    }
+
+    @Override
+    public void focus() {
+        setFocus(true);
     }
 }

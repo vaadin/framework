@@ -627,7 +627,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 });
-
         createBooleanAction("Single select allow deselect", "State",
                 singleSelectAllowDeselect, new Command<Grid, Boolean>() {
                     @Override

@@ -172,7 +172,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractComponent implements SelectionNotifier,
+public class Grid extends AbstractFocusable implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
