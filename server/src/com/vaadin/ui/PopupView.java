@@ -20,8 +20,13 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Tag;
+
 import com.vaadin.shared.ui.popupview.PopupViewServerRpc;
 import com.vaadin.shared.ui.popupview.PopupViewState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * 
@@ -61,9 +66,17 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /* Constructors */
 
-    private PopupView() {
+    /**
+     * This is an internal constructor. Use
+     * {@link PopupView#PopupView(String, Component)} instead.
+     * 
+     * @since 7.5.0
+     */
+    @Deprecated
+    public PopupView() {
         registerRpc(rpc);
         setHideOnMouseOut(true);
+        setContent(createContent("", new Label("")));
     }
 
     /**
@@ -77,18 +90,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      *            the full, Component-type representation
      */
     public PopupView(final java.lang.String small, final Component large) {
-        this(new PopupView.Content() {
-            @Override
-            public java.lang.String getMinimizedValueAsHTML() {
-                return small;
-            }
-
-            @Override
-            public Component getPopupComponent() {
-                return large;
-            }
-        });
-
+        this(createContent(small, large));
     }
 
     /**
@@ -101,6 +103,32 @@ public class PopupView extends AbstractComponent implements HasComponents {
     public PopupView(PopupView.Content content) {
         this();
         setContent(content);
+    }
+
+    /**
+     * Creates a Content from given text representation and popup content.
+     * 
+     * @since 7.5.0
+     * 
+     * @param minimizedValue
+     *            text representation when popup is hidden
+     * @param popupContent
+     *            popup content
+     * @return content with given data
+     */
+    protected static Content createContent(final String minimizedValue,
+            final Component popupContent) {
+        return new Content() {
+            @Override
+            public String getMinimizedValueAsHTML() {
+                return minimizedValue;
+            }
+
+            @Override
+            public Component getPopupComponent() {
+                return popupContent;
+            }
+        };
     }
 
     /**
@@ -152,7 +180,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
                 }
                 visibleComponent.setParent(this);
             } else {
-                if (visibleComponent.getParent() == this) {
+                if (equals(visibleComponent.getParent())) {
                     visibleComponent.setParent(null);
                 }
                 visibleComponent = null;
@@ -230,6 +258,44 @@ public class PopupView extends AbstractComponent implements HasComponents {
      */
     public int getComponentCount() {
         return (visibleComponent != null ? 1 : 0);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+
+        // Read content first to avoid NPE when setting popup visible
+        Component popupContent = null;
+        String minimizedValue = "";
+        for (Node childNode : design.childNodes()) {
+            if (childNode instanceof Element) {
+                Element child = (Element) childNode;
+                if (child.tagName().equals("popup-content")) {
+                    popupContent = designContext.readDesign(child.child(0));
+                } else {
+                    minimizedValue += child.toString();
+                }
+            } else {
+                minimizedValue += childNode.toString();
+            }
+        }
+        setContent(createContent(minimizedValue.trim(), popupContent));
+
+        super.readDesign(design, designContext);
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        Element popupContent = new Element(Tag.valueOf("popup-content"), "");
+        popupContent.appendChild(designContext.createElement(content
+                .getPopupComponent()));
+
+        String minimizedHTML = content.getMinimizedValueAsHTML();
+        if (minimizedHTML != null && !minimizedHTML.isEmpty()) {
+            design.append(minimizedHTML);
+        }
+        design.appendChild(popupContent);
     }
 
     @Override

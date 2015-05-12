@@ -29,23 +29,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class JavaScriptPreloadingTest extends MultiBrowserTest {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.MultiBrowserTest#getBrowsersToTest()
-     */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
+        return getBrowsersExcludingPhantomJS();
     }
 
     @Test

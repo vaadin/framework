@@ -28,7 +28,7 @@ import elemental.json.JsonValue;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class DateSerializer implements JsonSerializer<Date> {
+public class DateSerializer implements JSONSerializer<Date> {
 
     @Override
     public Date deserialize(Type type, JsonValue jsonValue,

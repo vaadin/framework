@@ -32,6 +32,7 @@ package com.vaadin.navigator;
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,9 +59,8 @@ import com.vaadin.ui.UI;
  * Views can be explicitly registered or dynamically generated and listening to
  * view changes is possible.
  * <p>
- * Note that {@link Navigator} is not a component itself but comes with
- * {@link SimpleViewDisplay} which is a component that displays the selected
- * view as its contents.
+ * Note that {@link Navigator} is not a component itself but uses a
+ * {@link ViewDisplay} to update contents based on the state.
  * 
  * @author Vaadin Ltd
  * @since 7.0
@@ -371,6 +371,7 @@ public class Navigator implements Serializable {
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
+    private String currentNavigationState = null;
     private ViewProvider errorProvider;
 
     /**
@@ -551,6 +552,11 @@ public class Navigator implements Serializable {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
         if (!fireBeforeViewChange(event)) {
+            // #10901. Revert URL to previous state if back-button navigation
+            // was canceled
+            if (currentNavigationState != null) {
+                getStateManager().setState(currentNavigationState);
+            }
             return;
         }
 
@@ -561,6 +567,7 @@ public class Navigator implements Serializable {
             }
             if (!navigationState.equals(getStateManager().getState())) {
                 getStateManager().setState(navigationState);
+                currentNavigationState = navigationState;
             }
         }
 
@@ -591,7 +598,10 @@ public class Navigator implements Serializable {
      *         block the navigation operation
      */
     protected boolean fireBeforeViewChange(ViewChangeEvent event) {
-        for (ViewChangeListener l : listeners) {
+        // a copy of the listener list is needed to avoid
+        // ConcurrentModificationException as a listener can add/remove
+        // listeners
+        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(listeners)) {
             if (!l.beforeViewChange(event)) {
                 return false;
             }
@@ -620,11 +630,9 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Return the ViewDisplay used by the navigator. Unless another display is
-     * specified, a {@link SimpleViewDisplay} (which is a {@link Component}) is
-     * used by default.
+     * Return the {@link ViewDisplay} used by the navigator.
      * 
-     * @return current ViewDisplay
+     * @return the ViewDisplay used for displaying views
      */
     public ViewDisplay getDisplay() {
         return display;
@@ -643,7 +651,10 @@ public class Navigator implements Serializable {
      *            view change event (not null)
      */
     protected void fireAfterViewChange(ViewChangeEvent event) {
-        for (ViewChangeListener l : listeners) {
+        // a copy of the listener list is needed to avoid
+        // ConcurrentModificationException as a listener can add/remove
+        // listeners
+        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(listeners)) {
             l.afterViewChange(event);
         }
     }

@@ -1,14 +1,60 @@
+/**
+ * The background color for text fields.
+ * @group textfield
+ */
 $v-textfield-background-color: if(is-dark-color($v-app-background-color), darken($v-app-background-color, 4%), lighten($v-app-background-color, 8%)) !default;
+
+/**
+ * The background color for read-only text fields.
+ * @group textfield
+ */
 $v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%));
-$v-textfield-bevel: inset 0 1px 0 v-shade !default;
+
+/**
+ * The bevel style for text fields. See the documentation for $v-bevel.
+ * @group textfield
+ */
+$v-textfield-bevel: if($v-bevel and ($v-bevel != none), inset 0 1px 0 v-shade, $v-bevel) !default;
+
+/**
+ * The shadow style for text fields. See the documentation for $v-shadow.
+ * @group textfield
+ */
 $v-textfield-shadow: 0 1px 0 (v-tint 2) !default;
+
+/**
+ * The font-weight for text fields.
+ * @group textfield
+ */
 $v-textfield-font-weight: 400 !default;
+
+/**
+ * The border style for text fields. See the documentation for $v-border.
+ * @group textfield
+ */
 $v-textfield-border: $v-border !default;
+
+/**
+ * The border-radius for text fields. See the documentation for $v-border-radius;
+ * @group textfield
+ */
 $v-textfield-border-radius: $v-border-radius !default;
+
+/**
+ * The opacity for disabled text fields.
+ * @group textfield
+ */
 $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
-
+/**
+ * Outputs the selectors and properties for the TextField component.
+ *
+ * @param {string} $primary-stylename (v-textfield) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group textfield
+ */
 @mixin valo-textfield ($primary-stylename: v-textfield, $include-additional-styles: contains($v-included-additional-styles, textfield)) {
 
   .#{$primary-stylename} {
@@ -73,14 +119,30 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-
+/**
+ * Outputs the styles for a text field variant.
+ *
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the text field, which corresponds its height
+ * @param {size | list} $padding (null) - The padding of the text field. Computed from other parameters by default.
+ * @param {color} $font-color (null) - The font color of the text field. Computed from the $background-color by default.
+ * @param {number} $font-weight (max(400, $v-font-weight)) - The font weight of the text field
+ * @param {size} $font-size (null) - The font size of the text field. Inherited from the parent by default.
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the text field
+ * @param {list} $border ($v-textfield-border) - The border of the text field
+ * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the text field
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
+ * @param {list} $states (normal focus disabled) - The text field states for which to output corresponding styles
+ *
+ * @group textfield
+ */
 @mixin valo-textfield-style (
     $unit-size        : $v-unit-size,
-    $padding          : null, // Computed by default
+    $padding          : null,
 
-    $font-color       : null, // Computed by default
+    $font-color       : null,
     $font-weight      : max(400, $v-font-weight),
-    $font-size        : null, // Inherited by default
+    $font-size        : null,
 
     $background-color : $v-textfield-background-color,
     $border           : $v-textfield-border,
@@ -163,6 +225,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
+/**
+ * Outputs the styles for a text field input prompt.
+ * 
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the text field
+ * 
+ * @group textfield
+ */
 @mixin valo-textfield-prompt-style ($background-color: $v-textfield-background-color) {
   @if $background-color ==  transparent {
     color: inherit;
@@ -179,6 +248,16 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
+/**
+ * Outputs the styles for a text field focus state.
+ * 
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the text field
+ * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient.
+ * 
+ * @group textfield
+ */
 @mixin valo-textfield-focus-style ($bevel: $v-textfield-bevel, $shadow: $v-textfield-shadow, $background-color: $v-textfield-background-color, $gradient: null) {
   outline: none;
   @if $v-animations-enabled {
@@ -197,6 +276,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
+/**
+ * Outputs the styles for a read-only text field.
+ * 
+ * @group textfield
+ */
 @mixin valo-textfield-readonly-style {
   background: $v-textfield-background-color--readonly;
   color: valo-font-color($v-textfield-background-color--readonly);
@@ -208,7 +292,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-
+/**
+ * Outputs the styles for a borderless style text field.
+ * 
+ * @param {color} $background-color (transparent) - The background color of the text field
+ * 
+ * @group textfield
+ */
 @mixin valo-textfield-borderless-style ($background-color: transparent) {
   border: none;
   border-radius: 0;
@@ -231,8 +321,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-
-
+/**
+ * Outputs the styles for a text field error state.
+ * 
+ * @group textfield
+ */
 @mixin valo-textfield-error-style {
   border-color: $v-error-indicator-color !important;
   $bg: scale-color($v-error-indicator-color, $lightness: 98%);
@@ -241,11 +334,18 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-
-
-
-
-
+/**
+ * Outputs the selectors and styles for an inline-icon style for a text field. Included indipendently (i.e. not enclosed with a parent text field selector). 
+ * 
+ * @param {string} $primary-stylename (v-textfield) - The primary style name for the selectors
+ * @param {string | list} $stylenames (inline-icon) - The additional style names which will define the inline-icon style
+ * @param {string} $input-selector (null) - Additional selector for a nested input element which should be targeted
+ * @param {size} $unit-size ($v-unit-size) - The unit size which the resulting style will support
+ * @param {size} $font-size ($v-font-size) - The font size which the resulting style will support (needed for font icons)
+ * @param {size} $image-icon-size (16px) - The image icon height which the resulting style will support (needed to center the icon vertically inside the text field)
+ * 
+ * @group text field
+ */
 @mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylenames: inline-icon, $input-selector: null, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
   $slot-selector: "";
   $caption-selector: "";

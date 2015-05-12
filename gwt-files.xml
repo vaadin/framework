@@ -7,44 +7,37 @@
     <ivy:cachepath pathid="gwt-dev.classpath" conf="gwt-dev" />
     <ivy:cachepath pathid="gwt-user.classpath" conf="gwt-user" />
     <ivy:cachepath pathid="gwt-elemental.classpath" conf="gwt-elemental" />
-    <ivy:cachepath pathid="gwt-codeserver.classpath" conf="gwt-codeserver" />
 
     <property name="gwt.eclipse.basedir" location="${gwt.basedir}/eclipse" />
 
     <property name="gwt.user.jar" refid="gwt-user.classpath" />
     <property name="gwt.dev.jar" refid="gwt-dev.classpath" />
     <property name="gwt.elemental.jar" refid="gwt-elemental.classpath" />
-    <property name="gwt.codeserver.jar" refid="gwt-codeserver.classpath" />
 
     <available file="${gwt.dev.jar}" property="gwt.dev.jar.found" />
     <available file="${gwt.user.jar}" property="gwt.user.jar.found" />
     <available file="${gwt.elemental.jar}" property="gwt.elemental.jar.found" />
-    <available file="${gwt.codeserver.jar}" property="gwt.codeserver.jar.found" />
 
     <property name="gwt.unpack.dir" location="${vaadin.basedir}/build/gwt" />
 
     <property name="gwt.user.jar.files" location="${gwt.unpack.dir}/gwt-user.jar" />
     <property name="gwt.dev.jar.files" location="${gwt.unpack.dir}/gwt-dev.jar" />
     <property name="gwt.elemental.jar.files" location="${gwt.unpack.dir}/gwt-elemental.jar" />
-    <property name="gwt.codeserver.jar.files" location="${gwt.unpack.dir}/gwt-codeserver.jar" />
 
     <target name="unpack.gwt">
         <fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar at ${gwt.dev.jar}" />
         <fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar at ${gwt.user.jar}" />
         <fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
-        <fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar at ${gwt.codeserver.jar}" />
 
         <delete dir="${gwt.unpack.dir}" />
 
         <mkdir dir="${gwt.user.jar.files}" />
         <mkdir dir="${gwt.dev.jar.files}" />
         <mkdir dir="${gwt.elemental.jar.files}" />
-        <mkdir dir="${gwt.codeserver.jar.files}" />
 
         <unzip dest="${gwt.user.jar.files}" src="${gwt.user.jar}" />
         <unzip dest="${gwt.dev.jar.files}" src="${gwt.dev.jar}" />
         <unzip dest="${gwt.elemental.jar.files}" src="${gwt.elemental.jar}" />
-        <unzip dest="${gwt.codeserver.jar.files}" src="${gwt.codeserver.jar}" />
     </target>
 
     <union id="client-compiler.gwt.includes">
@@ -124,10 +117,6 @@
 
         </fileset>
 
-        <!-- GWT SuperDevMode -->
-        <fileset dir="${gwt.codeserver.jar.files}">
-            <exclude name="META-INF/**" />
-        </fileset>
     </union>
 
     <union id="client-compiled-cache.gwt.includes">
@@ -195,11 +184,6 @@
         <fileset dir="${gwt.user.jar.files}">
             <!-- Server files from gwt-user -->
             <include name="com/google/gwt/*/server/**" />
-        </fileset>
-        <!-- GWT Elemental -->
-        <fileset dir="${gwt.elemental.jar.files}">
-            <exclude name="META-INF/**" />
-            <exclude name="super/**" />
         </fileset>
     </union>
 </project>

@@ -185,7 +185,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {
                 caption = new VCaption(childConnector, getConnection());
-
                 Widget widget = childConnector.getWidget();
 
                 layout.setCaption(widget, caption);

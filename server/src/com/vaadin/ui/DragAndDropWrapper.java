@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragSource;
@@ -38,6 +40,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
+import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
@@ -132,15 +135,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         /**
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
-        }
-
-        /**
          * @return a detail about the drags vertical position over the wrapper.
          */
         public VerticalDropLocation getVerticalDropLocation() {
@@ -194,7 +188,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     private Set<String> sentIds = new HashSet<String>();
 
-    private DragAndDropWrapper() {
+    /**
+     * This is an internal constructor. Use
+     * {@link DragAndDropWrapper#DragAndDropWrapper(Component)} instead.
+     * 
+     * @since 7.5.0
+     */
+    @Deprecated
+    public DragAndDropWrapper() {
         super();
     }
 
@@ -467,4 +468,31 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        for (Element child : design.children()) {
+            Component component = designContext.readDesign(child);
+            if (getDragStartMode() == DragStartMode.COMPONENT_OTHER
+                    && child.hasAttr(":drag-image")) {
+                setDragImageComponent(component);
+            } else if (getCompositionRoot() == null) {
+                setCompositionRoot(component);
+            }
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        design.appendChild(designContext.createElement(getCompositionRoot()));
+        if (getDragStartMode() == DragStartMode.COMPONENT_OTHER) {
+            Element child = designContext
+                    .createElement(getDragImageComponent());
+            child.attr(":drag-image", "");
+            design.appendChild(child);
+        }
+    }
 }

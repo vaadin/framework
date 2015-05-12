@@ -33,6 +33,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -674,7 +675,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                 }
             }
         }
-        Util.forceIE8Redraw(getElement());
+        WidgetUtil.forceIE8Redraw(getElement());
     }
 
     /**

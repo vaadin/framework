@@ -67,7 +67,7 @@ public interface Constants {
 
     // Keep the version number in sync with push/build.xml and other locations
     // listed in that file
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.1.2.vaadin4";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.2.4.vaadin8";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
@@ -115,6 +115,15 @@ public interface Constants {
             + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
             + ". Supported values are 'false','warning','true'";
 
+    static final String CANNOT_ACQUIRE_CLASSLOADER_SEVERE = "\n"
+            + "=================================================================\n"
+            + "Vaadin was unable to acquire class loader from servlet container\n"
+            + "to load your application classes. Setup appropriate security\n"
+            + "policy to allow invoking Thread.getContextClassLoader() from\n"
+            + "VaadinService if you're not using custom class loader.\n"
+            + "NullPointerExceptions will be thrown later."
+            + "=================================================================";
+
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
@@ -127,6 +136,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
     static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
     static final String SERVLET_PARAMETER_SYNC_ID_CHECK = "syncIdCheck";
+    static final String SERVLET_PARAMETER_SENDURLSASPARAMETERS = "sendUrlsAsParameters";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";
@@ -162,4 +172,7 @@ public interface Constants {
     static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
     static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
     static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
+
+    static final String PORTLET_CONTEXT = "PORTLET_CONTEXT";
+
 }

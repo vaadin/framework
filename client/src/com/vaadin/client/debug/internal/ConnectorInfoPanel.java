@@ -18,14 +18,15 @@ package com.vaadin.client.debug.internal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
@@ -51,7 +52,7 @@ public class ConnectorInfoPanel extends FlowPanel {
         ignoreProperties.add("id");
 
         String html = getRowHTML("Id", connector.getConnectorId());
-        html += getRowHTML("Connector", Util.getSimpleName(connector));
+        html += getRowHTML("Connector", connector.getClass().getSimpleName());
 
         if (connector instanceof ComponentConnector) {
             ComponentConnector component = (ComponentConnector) connector;
@@ -61,8 +62,8 @@ public class ConnectorInfoPanel extends FlowPanel {
 
             AbstractComponentState componentState = component.getState();
 
-            html += getRowHTML("Widget",
-                    Util.getSimpleName(component.getWidget()));
+            html += getRowHTML("Widget", component.getWidget().getClass()
+                    .getSimpleName());
             html += getRowHTML("Caption", componentState.caption);
             html += getRowHTML("Description", componentState.description);
             html += getRowHTML("Width", componentState.width + " (actual: "
@@ -84,7 +85,7 @@ public class ConnectorInfoPanel extends FlowPanel {
             }
         } catch (NoDataException e) {
             html += "<div>Could not read state, error has been logged to the console</div>";
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Could not read state", e);
         }
 
         clear();
@@ -95,7 +96,8 @@ public class ConnectorInfoPanel extends FlowPanel {
         return "<div class=\"" + VDebugWindow.STYLENAME
                 + "-row\"><span class=\"caption\">" + caption
                 + "</span><span class=\"value\">"
-                + Util.escapeHTML(String.valueOf(value)) + "</span></div>";
+                + WidgetUtil.escapeHTML(String.valueOf(value))
+                + "</span></div>";
     }
 
     /**
@@ -103,5 +105,9 @@ public class ConnectorInfoPanel extends FlowPanel {
      */
     public void clearContents() {
         clear();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ConnectorInfoPanel.class.getName());
     }
 }

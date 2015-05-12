@@ -1,6 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
     <groupId>com.vaadin</groupId>
     <artifactId>${module.name}</artifactId>
     <version>${vaadin.maven.version}</version>
@@ -62,22 +67,10 @@
             <timezone>2</timezone>
         </developer>
     </developers>
-    <distributionManagement>
-        <repository>
-            <id>vaadin-releases</id>
-            <name>Vaadin release repository</name>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>vaadin-snapshots</id>
-            <name>Vaadin snapshot repository</name>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     <repositories>
         <repository>
             <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -87,7 +80,7 @@
         </repository>
         <repository>
             <id>vaadin-releases</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-releases/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

@@ -6,8 +6,8 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 		parentIds.push(connectorId);
 		connectorId = this.getParentId(connectorId);
 	}
+	this.sendDifferentTypeOfData(new Date(123), "a string", 556, true ,{"aString": "value1","anInt":556,"aBoolean":false,"aDate":new Date(111)});
 	this.reportParentIds(parentIds);
-	
 	this.onStateChange = function() {
 		var e = this.getElement();
 		

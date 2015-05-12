@@ -126,6 +126,63 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     /**
+     * Sets the provided URL {@code url} for this instance. The {@code url} will
+     * be opened in a new browser window/tab when the extended component is
+     * clicked.
+     * 
+     * @since 7.4
+     * 
+     * @param url
+     *            URL to open
+     */
+    public void setUrl(String url) {
+        setResource(new ExternalResource(url));
+    }
+
+    /**
+     * Sets the provided {@code resource} for this instance. The
+     * {@code resource} will be opened in a new browser window/tab when the
+     * extended component is clicked.
+     * 
+     * @since 7.4
+     * 
+     * @param resource
+     *            resource to open
+     */
+    public void setResource(Resource resource) {
+        setResource(BrowserWindowOpenerState.locationResource, resource);
+    }
+
+    /**
+     * Returns the resource for this instance.
+     * 
+     * @since 7.4
+     * 
+     * @return resource to open browser window
+     */
+    public Resource getResource() {
+        return getResource(BrowserWindowOpenerState.locationResource);
+    }
+
+    /**
+     * Returns the URL for this BrowserWindowOpener instance. Returns
+     * {@code null} if this instance is not URL resource based (a non URL based
+     * resource has been set for it).
+     * 
+     * @since 7.4
+     * 
+     * @return URL to open in the new browser window/tab when the extended
+     *         component is clicked
+     */
+    public String getUrl() {
+        Resource resource = getResource();
+        if (resource instanceof ExternalResource) {
+            return ((ExternalResource) resource).getURL();
+        }
+        return null;
+    }
+
+    /**
      * Sets the target window name that will be used. If a window has already
      * been opened with the same name, the contents of that window will be
      * replaced instead of opening a new window. If the name is

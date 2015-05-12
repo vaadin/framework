@@ -23,7 +23,7 @@ import org.junit.After;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 
 @TestCategory("push")
 public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {

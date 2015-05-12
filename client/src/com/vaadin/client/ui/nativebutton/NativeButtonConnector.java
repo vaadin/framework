@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
@@ -64,11 +65,7 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
                 blurHandlerRegistration);
 
         // Set text
-        if (getState().htmlContentAllowed) {
-            getWidget().setHTML(getState().caption);
-        } else {
-            getWidget().setText(getState().caption);
-        }
+        VCaption.setCaptionText(getWidget(), getState());
 
         // handle error
         if (null != getState().errorMessage) {

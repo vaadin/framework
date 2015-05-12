@@ -26,6 +26,9 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.label.ContentMode;
 
+import elemental.json.JsonString;
+import elemental.json.JsonValue;
+
 @SuppressWarnings("javadoc")
 public interface SerializerTestRpc extends ServerRpc, ClientRpc {
     public void sendBoolean(boolean value, Boolean boxedValue, boolean[] array);
@@ -42,7 +45,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendDouble(double value, Double boxedValue, double[] array);
 
-    public void sendString(String value);
+    public void sendString(String value, String[] array);
 
     public void sendConnector(Connector connector);
 
@@ -82,5 +85,10 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendDate(Date date);
 
+    public void sendDateArray(Date[] dates);
+
+    public void sendJson(JsonValue value1, JsonValue value2, JsonString string);
+
     public void log(String string);
+
 }

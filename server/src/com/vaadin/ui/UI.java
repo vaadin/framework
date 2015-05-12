@@ -319,9 +319,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         if (pendingFocus != null) {
             // ensure focused component is still attached to this main window
-            if (pendingFocus.getUI() == this
-                    || (pendingFocus.getUI() != null && pendingFocus.getUI()
-                            .getParent() == this)) {
+            if (equals(pendingFocus.getUI())
+                    || (pendingFocus.getUI() != null && equals(pendingFocus
+                            .getUI().getParent()))) {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
@@ -425,7 +425,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                             + ".");
         } else {
             if (session == null) {
-                detach();
+                try {
+                    detach();
+                } catch (Exception e) {
+                    getLogger().log(Level.WARNING,
+                            "Error while detaching UI from session", e);
+                }
                 // Disable push when the UI is detached. Otherwise the
                 // push connection and possibly VaadinSession will live on.
                 getPushConfiguration().setPushMode(PushMode.DISABLED);
@@ -499,6 +504,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private void attachWindow(Window w) {
         windows.add(w);
         w.setParent(this);
+        fireComponentAttachEvent(w);
         markAsDirty();
     }
 
@@ -523,6 +529,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         window.setParent(null);
         markAsDirty();
         window.fireClose();
+        fireComponentDetachEvent(window);
 
         return true;
     }
@@ -631,7 +638,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         this.embedId = embedId;
 
         // Actual theme - used for finding CustomLayout templates
-        getState().theme = request.getParameter("theme");
+        setTheme(request.getParameter("theme"));
 
         getPage().init(request);
 
@@ -719,9 +726,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * The application developer can also use this method to define the current
      * UI outside the normal request handling, e.g. when initiating custom
      * background threads.
-     * </p>
+     * <p>
+     * The UI is stored using a weak reference to avoid leaking memory in case
+     * it is not explicitly cleared.
      * 
-     * @param uI
+     * @param ui
      *            the UI to register as the current UI
      * 
      * @see #getCurrent()
@@ -735,6 +744,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Gets the currently used UI. The current UI is automatically defined when
      * processing requests to the server. In other cases, (e.g. from background
      * threads), the current UI is not automatically defined.
+     * <p>
+     * The UI is stored using a weak reference to avoid leaking memory in case
+     * it is not explicitly cleared.
      * 
      * @return the current UI instance if available, otherwise <code>null</code>
      * 
@@ -1157,7 +1169,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            The new theme name
      */
     public void setTheme(String theme) {
-        getState().theme = theme;
+        if (theme == null) {
+            getState().theme = null;
+        } else {
+            getState().theme = VaadinServlet.stripSpecialChars(theme);
+        }
     }
 
     /**

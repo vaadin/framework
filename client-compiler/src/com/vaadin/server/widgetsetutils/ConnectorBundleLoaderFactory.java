@@ -47,6 +47,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.ConnectorBundleLoader.CValUiInfo;
 import com.vaadin.client.metadata.InvokationHandler;
@@ -54,6 +55,7 @@ import com.vaadin.client.metadata.OnStateChangeMethod;
 import com.vaadin.client.metadata.ProxyHandler;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
+import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
@@ -61,12 +63,13 @@ import com.vaadin.server.widgetsetutils.metadata.ConnectorInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.GeneratedSerializer;
 import com.vaadin.server.widgetsetutils.metadata.OnStateChangeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.Property;
+import com.vaadin.server.widgetsetutils.metadata.RendererVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.TypeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.WidgetInitVisitor;
-import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -453,6 +456,10 @@ public class ConnectorBundleLoaderFactory extends Generator {
             writer.println("var data = {");
             writer.indent();
 
+            if (property.getAnnotation(NoLayout.class) != null) {
+                writer.println("noLayout: 1, ");
+            }
+
             writer.println("setter: function(bean, value) {");
             writer.indent();
             property.writeSetterBody(logger, writer, "bean", "value");
@@ -495,7 +502,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeInvokers(logger, w, bundle);
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
-        writeDelayedInfo(w, bundle);
+        writeMethodAttributes(logger, w, bundle);
 
         w.println("%s(store);", loadNativeJsMethodName);
 
@@ -503,6 +510,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         // this after the JS property data has been initialized
         writePropertyTypes(logger, w, bundle);
         writeSerializers(logger, w, bundle);
+        writePresentationTypes(w, bundle);
         writeDelegateToWidget(logger, w, bundle);
         writeOnStateChangeHandlers(logger, w, bundle);
     }
@@ -684,6 +692,21 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
+    private void writePresentationTypes(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        Map<JClassType, JType> presentationTypes = bundle
+                .getPresentationTypes();
+        for (Entry<JClassType, JType> entry : presentationTypes.entrySet()) {
+
+            w.print("store.setPresentationType(");
+            writeClassLiteral(w, entry.getKey());
+            w.print(", ");
+            writeClassLiteral(w, entry.getValue());
+            w.println(");");
+            w.splitIfNeeded();
+        }
+    }
+
     private void writePropertyTypes(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) {
         Set<Property> properties = bundle.getNeedsProperty();
@@ -700,32 +723,20 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeDelayedInfo(SplittingSourceWriter w,
-            ConnectorBundle bundle) {
-        Map<JClassType, Set<JMethod>> needsDelayedInfo = bundle
-                .getNeedsDelayedInfo();
-        Set<Entry<JClassType, Set<JMethod>>> entrySet = needsDelayedInfo
-                .entrySet();
-        for (Entry<JClassType, Set<JMethod>> entry : entrySet) {
-            JClassType type = entry.getKey();
-            Set<JMethod> methods = entry.getValue();
-            for (JMethod method : methods) {
-                Delayed annotation = method.getAnnotation(Delayed.class);
-                if (annotation != null) {
-                    w.print("store.setDelayed(");
-                    writeClassLiteral(w, type);
-                    w.print(", \"");
-                    w.print(escape(method.getName()));
-                    w.println("\");");
-
-                    if (annotation.lastOnly()) {
-                        w.print("store.setLastOnly(");
-                        writeClassLiteral(w, type);
-                        w.print(", \"");
-                        w.print(escape(method.getName()));
-                        w.println("\");");
-                    }
-
+    private void writeMethodAttributes(TreeLogger logger,
+            SplittingSourceWriter w, ConnectorBundle bundle) {
+        for (Entry<JClassType, Map<JMethod, Set<MethodAttribute>>> typeEntry : bundle
+                .getMethodAttributes().entrySet()) {
+            JClassType type = typeEntry.getKey();
+            for (Entry<JMethod, Set<MethodAttribute>> methodEntry : typeEntry
+                    .getValue().entrySet()) {
+                JMethod method = methodEntry.getKey();
+                Set<MethodAttribute> attributes = methodEntry.getValue();
+                for (MethodAttribute attribute : attributes) {
+                    w.println("store.setMethodAttribute(%s, \"%s\", %s.%s);",
+                            getClassLiteralString(type), method.getName(),
+                            MethodAttribute.class.getCanonicalName(),
+                            attribute.name());
                     w.splitIfNeeded();
                 }
             }
@@ -972,7 +983,16 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print(", ");
             }
             String parameterTypeName = getBoxedTypeName(parameterType);
-            w.print("(" + parameterTypeName + ") params[" + i + "]");
+
+            if (parameterTypeName.startsWith("elemental.json.Json")) {
+                // Need to pass through native method to allow casting Object to
+                // JSO if the value is a string
+                w.print("%s.<%s>obj2jso(params[%d])",
+                        JsonDecoder.class.getCanonicalName(),
+                        parameterTypeName, i);
+            } else {
+                w.print("(" + parameterTypeName + ") params[" + i + "]");
+            }
         }
         w.println(");");
 
@@ -1240,8 +1260,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
             throws NotFoundException {
         List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
                 new ConnectorInitVisitor(), new StateInitVisitor(),
-                new WidgetInitVisitor(), new ClientRpcVisitor(),
-                new ServerRpcVisitor(), new OnStateChangeVisitor());
+                new WidgetInitVisitor(), new RendererVisitor(),
+                new ClientRpcVisitor(), new ServerRpcVisitor(),
+                new OnStateChangeVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }

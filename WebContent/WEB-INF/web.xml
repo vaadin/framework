@@ -24,10 +24,6 @@
             <param-name>application</param-name>
             <param-value>com.vaadin.tests.components.button.Buttons</param-value>
         </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
         <async-supported>true</async-supported>
     </servlet>
     <servlet>
@@ -36,10 +32,6 @@
         <init-param>
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.components.label.MarginsInLabels</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
@@ -59,10 +51,6 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.VerifyAssertionsEnabled</param-value>
         </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
         <async-supported>true</async-supported>
     </servlet>
 
@@ -77,10 +65,6 @@
         <!-- Non-default values for testing purposes -->
         <init-param>
             <param-name>legacyPropertyToString</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
             <param-value>false</param-value>
         </init-param>
         <init-param>
@@ -103,15 +87,22 @@
     </servlet>
 
     <servlet>
+        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
+        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+        <!-- Force web sockets to use JSR 356 standard -->
+        <init-param>
+            <param-name>org.atmosphere.cpr.asyncSupport</param-name>
+            <param-value>org.atmosphere.container.JSR356AsyncSupport</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet>
         <!-- This servlet is a separate instance for the sole purpose of 
             testing #12446 (com.vaadin.tests.components.ui.TimeoutRedirectResetsOnActivity) 
             because it modifies the VaadinService timeout parameters -->
         <servlet-name>VaadinApplicationRunnerWithTimeoutRedirect</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>
 
     <servlet>
@@ -120,10 +111,6 @@
         <init-param>
             <param-name>pushmode</param-name>
             <param-value>automatic</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
@@ -135,10 +122,6 @@
         <init-param>
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
-            <param-value>false</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
@@ -174,6 +157,11 @@
     <servlet-mapping>
         <servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
         <url-pattern>/run-push/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
+        <url-pattern>/run-jsr356/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

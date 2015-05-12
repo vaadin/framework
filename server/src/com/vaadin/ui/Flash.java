@@ -15,10 +15,15 @@
  */
 package com.vaadin.ui;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.flash.FlashState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A component for displaying Adobe® Flash® content.
@@ -89,6 +94,17 @@ public class Flash extends AbstractEmbedded {
     }
 
     /**
+     * Returns the codebase.
+     * 
+     * @see #setCodebase(String)
+     * @since 7.4.1
+     * @return Current codebase.
+     */
+    public String getCodebase() {
+        return getState(false).codebase;
+    }
+
+    /**
      * This attribute specifies the content type of data expected when
      * downloading the object specified by classid. This attribute is optional
      * but recommended when classid is specified since it allows the user agent
@@ -104,6 +120,17 @@ public class Flash extends AbstractEmbedded {
             getState().codetype = codetype;
             requestRepaint();
         }
+    }
+
+    /**
+     * Returns the current codetype.
+     * 
+     * @see #setCodetype(String)
+     * @since 7.4.1
+     * @return Current codetype.
+     */
+    public String getCodetype() {
+        return getState(false).codetype;
     }
 
     /**
@@ -126,12 +153,39 @@ public class Flash extends AbstractEmbedded {
         }
     }
 
+    /**
+     * Returns current archive.
+     * 
+     * @see #setArchive(String)
+     * @since 7.4.1
+     * @return Current archive.
+     */
+    public String getArchive() {
+        return getState(false).archive;
+    }
+
+    /**
+     * Sets standby.
+     * 
+     * @param standby
+     *            Standby string.
+     */
     public void setStandby(String standby) {
         if (standby != getState().standby
                 || (standby != null && !standby.equals(getState().standby))) {
             getState().standby = standby;
             requestRepaint();
         }
+    }
+
+    /**
+     * Returns standby.
+     * 
+     * @since 7.4.1
+     * @return Standby string.
+     */
+    public String getStandby() {
+        return getState(false).standby;
     }
 
     /**
@@ -177,6 +231,40 @@ public class Flash extends AbstractEmbedded {
         }
         getState().embedParams.remove(name);
         requestRepaint();
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        for (String param : getParameterNames()) {
+            design.appendElement("parameter").attr("name", param)
+                    .attr("value", getParameter(param));
+        }
+    }
+
+    /**
+     * Returns an iterable with declared parameter names.
+     * 
+     * @see #setParameter(String, String)
+     * @see #getParameter(String)
+     * @since 7.4.1
+     * @return An iterable with declared parameter names.
+     */
+    public Iterable<String> getParameterNames() {
+        Map<String, String> map = getState(false).embedParams;
+        if (map == null) {
+            return Collections.emptySet();
+        } else {
+            return Collections.unmodifiableSet(map.keySet());
+        }
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        for (Element paramElement : design.getElementsByTag("parameter")) {
+            setParameter(paramElement.attr("name"), paramElement.attr("value"));
+        }
     }
 
 }

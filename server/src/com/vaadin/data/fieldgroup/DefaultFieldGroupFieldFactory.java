@@ -36,9 +36,32 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
+/**
+ * This class contains a basic implementation for {@link FieldGroupFieldFactory}
+ * .The class is singleton, use {@link #get()} method to get reference to the
+ * instance.
+ * 
+ * @author Vaadin Ltd
+ */
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
+    private static final DefaultFieldGroupFieldFactory INSTANCE = new DefaultFieldGroupFieldFactory();
+
     public static final Object CAPTION_PROPERTY_ID = "Caption";
+
+    protected DefaultFieldGroupFieldFactory() {
+    }
+
+    /**
+     * Gets the singleton instance.
+     * 
+     * @since 7.4
+     * 
+     * @return the singleton instance
+     */
+    public static DefaultFieldGroupFieldFactory get() {
+        return INSTANCE;
+    }
 
     @Override
     public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
@@ -68,10 +91,20 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
     private <T extends Field> T createEnumField(Class<?> type,
             Class<T> fieldType) {
+        // Determine first if we should (or can) create a select for the enum
+        Class<AbstractSelect> selectClass = null;
         if (AbstractSelect.class.isAssignableFrom(fieldType)) {
-            AbstractSelect s = createCompatibleSelect((Class<? extends AbstractSelect>) fieldType);
+            selectClass = (Class<AbstractSelect>) fieldType;
+        } else if (anySelect(fieldType)) {
+            selectClass = AbstractSelect.class;
+        }
+
+        if (selectClass != null) {
+            AbstractSelect s = createCompatibleSelect(selectClass);
             populateWithEnumData(s, (Class<? extends Enum>) type);
             return (T) s;
+        } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
+            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
@@ -83,8 +116,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
             field = new InlineDateField();
-        } else if (DateField.class.isAssignableFrom(fieldType)
-                || fieldType == Field.class) {
+        } else if (anyField(fieldType)
+                || DateField.class.isAssignableFrom(fieldType)) {
             field = new PopupDateField();
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
             field = createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
@@ -118,6 +151,26 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         select.setNullSelectionAllowed(false);
 
         return select;
+    }
+
+    /**
+     * @since 7.4
+     * @param fieldType
+     *            the type of the field
+     * @return true if any AbstractField can be assigned to the field
+     */
+    protected boolean anyField(Class<?> fieldType) {
+        return fieldType == Field.class || fieldType == AbstractField.class;
+    }
+
+    /**
+     * @since 7.4
+     * @param fieldType
+     *            the type of the field
+     * @return true if any AbstractSelect can be assigned to the field
+     */
+    protected boolean anySelect(Class<? extends Field> fieldType) {
+        return anyField(fieldType) || fieldType == AbstractSelect.class;
     }
 
     protected <T extends Field> T createBooleanField(Class<T> fieldType) {

@@ -19,7 +19,7 @@ package com.vaadin.client.ui.textarea;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.vaadin.client.Util.CssSize;
+import com.vaadin.client.WidgetUtil.CssSize;
 import com.vaadin.client.ui.VTextArea;
 import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.ui.Connect;

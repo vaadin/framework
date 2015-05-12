@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-all" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+<project name="vaadin-all" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
     <description>
         Compiles a zip containing all jars + dependencies
     </description>
@@ -10,11 +11,13 @@
     <!-- global properties -->
     <property name="module.name" value="vaadin-all" />
     <property name="result.dir" value="result" />
-    <property name="javadoc.jar" location="${result.dir}/lib/vaadin-all-${vaadin.version}-javadoc.jar" />
+    <property name="javadoc.jar"
+        location="${result.dir}/lib/vaadin-all-${vaadin.version}-javadoc.jar" />
     <property name="temp.dir" location="${result.dir}/temp" />
     <property name="temp.deps.dir" value="${temp.dir}/lib" />
     <property name="javadoc.temp.dir" location="${result.dir}/javadoc-temp" />
-    <property name="zip.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.zip" />
+    <property name="zip.file"
+        location="${result.dir}/lib/${module.name}-${vaadin.version}.zip" />
 
     <path id="classpath.javadoc">
         <fileset dir="${temp.deps.dir}" includes="*.jar">
@@ -23,61 +26,70 @@
     <target name="fetch.module.and.dependencies">
         <fail unless="module" message="No 'module' parameter given" />
 
-        <ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
+        <ivy:cachepath pathid="module.and.deps" inline="true"
+            organisation="com.vaadin" module="vaadin-${module}"
+            revision="${vaadin.version}" />
         <copy todir="${temp.dir}" flatten="true">
             <path refid="module.and.deps" />
         </copy>
     </target>
 
     <target name="unzip.to.javadoctemp">
-        <property name="file" location="${temp.dir}/vaadin-${module}-${vaadin.version}.jar" />
+        <property name="file"
+            location="${temp.dir}/vaadin-${module}-${vaadin.version}.jar" />
         <unzip src="${file}" dest="${javadoc.temp.dir}" />
     </target>
 
     <target name="javadoc" depends="copy-jars">
-      <!-- Ensure filtered webcontent files are available -->
-      <antcall target="common.filter.webcontent" />
+        <antcontrib:if>
+            <isset property="nojavadoc" />
+            <then>
+                <jar file="${javadoc.jar}" compress="true">
+                    <fileset dir="${common.jarfiles.dir}" />
+                </jar>
+            </then>
+            <else>
+                <!-- Unpack all source files to javadoc.temp.dir -->
+                <antcontrib:foreach list="${modules.producing.jar}"
+                    target="unzip.to.javadoctemp" param="module" />
 
-      <antcontrib:if>
-         <isset property="nojavadoc" />
-           <then>
-            <jar file="${javadoc.jar}" compress="true">
-              <fileset refid="common.files.for.all.jars" />
-            </jar>
-           </then>
-           <else>
-             <!-- Unpack all source files to javadoc.temp.dir -->
-             <antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
+                <property name="javadoc.dir" location="${result.dir}/javadoc" />
+                <property name="title" value="Vaadin ${vaadin.version} API" />
+                <javadoc maxmemory="1024m" destdir="${javadoc.dir}"
+                    author="true" version="true" use="true" windowtitle="${title}"
+                    encoding="utf-8" stylesheetfile="javadoc.css">
+                    <packageset dir="${javadoc.temp.dir}">
+                        <!-- TODO Javadoc throws ClassCastException if this 
+                            is included (#9660) -->
+                        <exclude
+                            name="com/google/gwt/uibinder/elementparsers" />
+                    </packageset>
+                    <doctitle>&lt;h1>${title}&lt;/h1></doctitle>
+                    <!-- <header><![CDATA[<script type="text/javascript" 
+                        src=".html-style/style.js"></script>]]></header> -->
+                    <bottom>${javadoc.bottom}</bottom>
+                    <link offline="true"
+                        href="http://docs.oracle.com/javase/6/docs/api/"
+                        packagelistLoc="build/javadoc/j2se-1.6.0" />
+                    <link offline="true"
+                        href="http://java.sun.com/j2ee/1.4/docs/api/"
+                        packagelistLoc="build/javadoc/j2ee-1.4" />
+                    <classpath refid="classpath.javadoc" />
+                </javadoc>
 
-             <property name="javadoc.dir" location="${result.dir}/javadoc" />
-             <property name="title" value="Vaadin ${vaadin.version} API" />
-             <javadoc maxmemory="1024m" destdir="${javadoc.dir}" author="true" version="true" 
-                use="true" windowtitle="${title}" encoding="utf-8" stylesheetfile="javadoc.css">
-               <packageset dir="${javadoc.temp.dir}">
-                  <!-- TODO Javadoc throws ClassCastException if this is included 
-                      (#9660) -->
-                  <exclude name="com/google/gwt/uibinder/elementparsers" />
-               </packageset>
-               <doctitle>&lt;h1>${title}&lt;/h1></doctitle>
-               <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-               <bottom>${javadoc.bottom}</bottom>
-               <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
-               <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-               <classpath refid="classpath.javadoc" />
-             </javadoc>
-
-             <!-- Create a javadoc jar -->
-             <jar file="${javadoc.jar}" compress="true">
-               <fileset dir="${javadoc.dir}" />
-               <fileset refid="common.files.for.all.jars" />
-             </jar>
-           </else>
-      </antcontrib:if>
+                <!-- Create a javadoc jar -->
+                <jar file="${javadoc.jar}" compress="true">
+                    <fileset dir="${javadoc.dir}" />
+                    <fileset dir="${common.jarfiles.dir}" />
+                </jar>
+            </else>
+        </antcontrib:if>
     </target>
 
     <target name="copy-jars">
         <delete dir="${temp.dir}" />
-        <antcontrib:foreach list="${modules.to.publish.to.maven}" target="fetch.module.and.dependencies" param="module" />
+        <antcontrib:foreach list="${modules.producing.jar}"
+            target="fetch.module.and.dependencies" param="module" />
         <!-- All jars are now in temp.dir. Still need to separate vaadin 
             and deps -->
         <move todir="${temp.deps.dir}">
@@ -90,9 +102,6 @@
 
     </target>
     <target name="zip" depends="copy-jars, javadoc">
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
-
         <zip destfile="${zip.file}">
             <fileset dir="${temp.dir}">
                 <!-- Avoid conflicts with servlet and portlet API. They are 
@@ -106,9 +115,8 @@
                 <exclude name="*.pom" />
                 <exclude name="*-javadoc.jar" />
                 <exclude name="*-sources.jar" />
-
             </fileset>
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <fileset dir="${result.dir}/..">
                 <include name="README.TXT" />
             </fileset>

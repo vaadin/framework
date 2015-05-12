@@ -41,24 +41,18 @@ public class CalendarNotificationsTestIE extends MultiBrowserTest {
     }
 
     @Override
-    protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(
-                super.getDesiredCapabilities());
-        desiredCapabilities.setCapability("enablePersistentHover", false);
-        desiredCapabilities.setCapability("requireWindowFocus", true);
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
 
-        return desiredCapabilities;
+    @Override
+    protected boolean usePersistentHoverForIE() {
+        return false;
     }
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.CHROME.getDesiredCapabilities());
-        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
-        browsers.remove(Browser.OPERA.getDesiredCapabilities());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        browsers.remove(Browser.SAFARI.getDesiredCapabilities());
-        return browsers;
+        return getIEBrowsersOnly();
     }
 
     @Test
@@ -68,7 +62,9 @@ public class CalendarNotificationsTestIE extends MultiBrowserTest {
         WebElement day = findElements(By.className("v-calendar-day-number"))
                 .get(2);
         // IE8 requires you to click on the text part to fire the event
-        new Actions(getDriver()).moveToElement(day, 83, 11).click().perform();
+        new Actions(getDriver())
+                .moveToElement(day, day.getSize().getWidth() - 3,
+                        day.getSize().getHeight() / 2).click().perform();
 
         // check that a notification was opened, this is done with a log instead
         // of a screenshot or element presence check due to problems with IE

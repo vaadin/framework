@@ -154,6 +154,18 @@ public class VLoadingIndicator {
     }
 
     /**
+     * Triggers displaying of this loading indicator unless it's already visible
+     * or scheduled to be shown after a delay.
+     * 
+     * @since 7.4
+     */
+    public void ensureTriggered() {
+        if (!isVisible() && !firstTimer.isRunning()) {
+            trigger();
+        }
+    }
+
+    /**
      * Shows the loading indicator in its standard state and triggers timers for
      * transitioning into the "second" and "third" states.
      */

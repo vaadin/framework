@@ -70,6 +70,7 @@ public class MetadataWriter implements Serializable {
             if (metaOpen) {
                 writer.write(", ");
             }
+            metaOpen = true;
             writer.write("\"async\":true");
         }
 

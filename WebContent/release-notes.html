@@ -41,40 +41,38 @@
         <ul>
             <li><a href="#overview">Overview of Vaadin
                     @version@ Release</a></li>
-            <li><a href="#changelog">Change log for Vaadin
+            <li><a href="#changelog">Change Log for Vaadin
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
-            <li><a href="#incompatible">Incompatible or behavior-altering changes in
+            <li><a href="#incompatible">Incompatible or Behavior-altering Changes in
                     @version-minor@</a></li>
-            <li><a href="#knownissues">Known issues in
-                    @version-minor@</a></li>
-            <li><a href="#limitations">Limitations in
-                    @version-minor@</a></li>
+            <li><a href="#knownissues">Known Issues and Limitations</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
             <li><a href="#package">Package Contents</a></li>
-            <li><a href="#migrating">Migrating from Vaadin 6 to
-                    Vaadin 7</a></li>
+            <li><a href="#migrating">Migrating from Vaadin 6</a></li>
             <li><a href="#dependencies">Vaadin @version@
                     dependencies</a></li>
             <li><a href="#upgrading">Upgrading to Vaadin
                     @version-minor@</a></li>
             <li><a href="#supportedversions">Supported
-                    technologies</a></li>
+                    Technologies</a></li>
             <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
         </ul>
 
         <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
         <p>
-            Vaadin @version@ is a minor release that includes a
-            number of new features and bug fixes, as listed in the <a
+            Vaadin @version@ is a
+<!--            feature release that includes --> 
+            pre-release for evaluating
+            a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
         </p>
 
         <!-- ================================================================ -->
-        <h3 id="changelog">Change log for Vaadin @version@</h3>
+        <h3 id="changelog">Change Log for Vaadin @version@</h3>
 
         <p>This release includes the following closed issues:</p>
 
@@ -87,56 +85,40 @@
         <br/>
         <p>
             You can also view the <a
-                href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=id">list
+                href="http://dev.vaadin.com/query?status=pending-release&status=released&resolution=fixed&milestone=Vaadin+@version@&order=id">list
                 of the closed issues</a> at the Vaadin developer's site.
         </p>
 
         <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
-        <p>The @version-minor@ includes many major and minor
+        <p>Vaadin @version-minor@ includes many major and minor
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Valo is a brand new built-in theme for Vaadin. It leverages 
-                the Sass CSS preprocessor heavily, 
-                providing a variety of ways to customize the look and feel of your theme. 
-                See <a href="https://vaadin.com/wiki/-/wiki/Main/Valo+theme+-+Getting+started">the Valo theme tutorial</a> or <a href="https://vaadin.com/book/-/page/themes.valo.html">the Valo theme section</a> in Book of Vaadin for information on how to get started.</li>
-            <li>Support for changing theme on the fly</li>
+            <li>Column reordering using drag and drop in Grid</li>
+            <li>Column hiding in Grid</li>
+            <li>Row details support in Grid</li>
         </ul>
 
         <p>
-            For enhancements introduced in Vaadin 7.2, see the <a
-                href="http://vaadin.com/download/release/7.2/7.2.0/release-notes.html">Release
-                Notes for Vaadin 7.2.0</a>.
+            For enhancements introduced in Vaadin 7.4, see the <a
+                href="http://vaadin.com/download/release/7.4/7.4.0/release-notes.html">Release
+                Notes for Vaadin 7.4.0</a>.
         </p>
 
-        <h3 id="incompatible">Incompatible or behavior-altering changes in @version-minor@</h3>
+        <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>
-                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>). 
-                In IE8 the old image-based implementation is still used.
-                </p><p>
-                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons, 
-                please update them accordingly to use CSS box-shadow instead.
-                </p><p>
-                Note that the CSS-based implementation is visually not 100% identical to the old implementation. This should not cause issues except
-                if you are using screenshot-based TestBench tests or similar visual regression tests.
-                </p>
-            </li>
-            <li>The theme for the debug window is now implemented using a GWT client bundle and is no longer included in the standard theme.</li>
-            <li>Reverted to use JSON.org implementation of the JSON library instead of the Android implementation that was used in Vaadin 7.2.
-                See <a href="licenses/the-json-license.txt">the-json-license.txt</a> for information about its license.</li>
+            <li>Push path has been changed from /PUSH/ to /PUSH to be compatible with JSR 356.</li>
+            <li>Widgetset files and other pre-compressed resources are sent as gzip to compatible browsers.
+                This may interfere with custom response compression solutions that do not respect the Content-Encoding response header.</li>
         </ul>
-        <h3 id="knownissues">Known issues</h3>
+        <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
+            <li>The user interface for hiding and unhiding Grid columns is not yet finalized.</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
             </li>
-        </ul>
-
-        <h3 id="limitations">Limitations</h3>
-        <ul>
             <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
@@ -145,17 +127,29 @@
                 because it results in fractional component sizes in many cases, which 
                 might cause unwanted 1px gaps between components.</p>
             </li>
-            <li>Push is currently not supported in portals (See <a
-                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+            <li>Up-to-date information about configuration needed for push and compatibility issues are available in
+            <a href="https://vaadin.com/wiki/-/wiki/Main/Configuring+push+for+your+environment">this wiki page.</a>
+            <br />
+            The most prominent limitations are:
+            <ul>
+	            <li>HTTP proxies can prevent push requests from working
+	            properly. To mitigate the issues, avoid using streaming
+	            and configure your proxy so it allows response headers
+	            to pass through before the whole response is received. 
+	            <a href="http://dev.vaadin.com/ticket/17075">#17075</a>
+	            should make long-polling work seamlessly with all proxies.
+	            </li>
+	            <li>HTTP session can not be invalidated while using
+	                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
+	            </li>
+	            <li>Cookies are not available while using websockets (<a
+	                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
+	            </li>
+	            <li>Push is currently not supported in portals (See <a
+	                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+	            </li>
+            </ul>
             </li>
-            <li>HTTP session can not be invalidated while using
-                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
-            </li>
-            <li>Cookies are not available while using websockets (<a
-                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
-            </li>
-            <li>Not all proxies are compatible with websockets or streaming.
-                Use long polling to avoid these problems.</li>
         </ul>
 
         <h2 id="vaadin">Vaadin Installation</h2>
@@ -319,7 +313,7 @@
             directory of the web application that uses validation.
         </p>
 
-        <h2 id="upgrading">Upgrading from Vaadin 7.1 to Vaadin @version-minor@</h2>
+        <h2 id="upgrading">Upgrading to Vaadin @version-minor@</h2>
 
         <p>When upgrading from an earlier Vaadin version, you must:
         </p>
@@ -501,12 +495,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-29</li>
-            <li>Mozilla Firefox 17 ESR, 24 ESR</li>
+            <li>Mozilla Firefox 18-35</li>
+            <li>Mozilla Firefox 17 ESR, 24 ESR, 31 ESR</li>
             <li>Internet Explorer 8-11</li>
-            <li>Safari 6-7</li>
-            <li>Opera 12, 16-20</li>
-            <li>Google Chrome 23-34</li>
+            <li>Safari 6-8</li>
+            <li>Opera 16-27</li>
+            <li>Google Chrome 23-40</li>
         </ul>
 
         <p>
@@ -515,8 +509,8 @@
         </p>
 
         <ul>
-            <li>iOS 5-7</li>
-            <li>Android 2.3-4</li>
+            <li>iOS 5-8</li>
+            <li>Android 2.3-5</li>
             <li>Windows Phone 8</li>
         </ul>
 

@@ -82,6 +82,10 @@ public class SelectorPath {
                 .extractPostFilterPredicates(path);
         if (postFilters.size() > 0) {
             tmpPath = tmpPath.substring(1, tmpPath.lastIndexOf(')'));
+            if (tmpPath.contains("#")) {
+                // FIXME: SubParts should be handled.
+                tmpPath = tmpPath.split("#")[0];
+            }
         }
 
         // Generate an ElementQuery

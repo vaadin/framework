@@ -33,13 +33,15 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.VWindow;
+
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonType;
+import elemental.json.JsonValue;
 
 /**
  * @author Vaadin Ltd
@@ -159,7 +161,7 @@ public class VUIDLBrowser extends SimpleTree {
             } else {
                 setText("Unknown connector (" + connectorId + ")");
             }
-            dir(new JSONObject(stateChanges), this);
+            dir((JsonObject) Util.jso2json(stateChanges), this);
         }
 
         @Override
@@ -167,28 +169,28 @@ public class VUIDLBrowser extends SimpleTree {
             return connectorId;
         }
 
-        private void dir(String key, JSONValue value, SimpleTree tree) {
-            if (value.isObject() != null) {
+        private void dir(String key, JsonValue value, SimpleTree tree) {
+            if (value.getType() == JsonType.OBJECT) {
                 SimpleTree subtree = new SimpleTree(key + "=object");
                 tree.add(subtree);
-                dir(value.isObject(), subtree);
-            } else if (value.isArray() != null) {
+                dir((JsonObject) value, subtree);
+            } else if (value.getType() == JsonType.ARRAY) {
                 SimpleTree subtree = new SimpleTree(key + "=array");
-                dir(value.isArray(), subtree);
+                dir((JsonArray) value, subtree);
                 tree.add(subtree);
             } else {
                 tree.addItem(key + "=" + value);
             }
         }
 
-        private void dir(JSONObject state, SimpleTree tree) {
-            for (String key : state.keySet()) {
+        private void dir(JsonObject state, SimpleTree tree) {
+            for (String key : state.keys()) {
                 dir(key, state.get(key), tree);
             }
         }
 
-        private void dir(JSONArray array, SimpleTree tree) {
-            for (int i = 0; i < array.size(); ++i) {
+        private void dir(JsonArray array, SimpleTree tree) {
+            for (int i = 0; i < array.length(); ++i) {
                 dir("" + i, array.get(i), tree);
             }
         }

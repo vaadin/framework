@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-uitest" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-uitest" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Provides a uitest WAR containing Vaadin UI tests
     </description>
@@ -12,20 +13,24 @@
     <property name="uitest.dir" location="${vaadin.basedir}/uitest" />
     <property name="result.dir" value="result" />
     <property name="theme.result.dir" value="${result.dir}/VAADIN/themes" />
-    <property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
+    <property name="result.war"
+        location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
     <path id="classpath.compile.custom">
     </path>
 
     <target name="dependencies">
-        <!-- This is copied from common.xml to be able to add server.test.source
+        <!-- This is copied from common.xml to be able to add server.test.source 
             to the source path -->
 
-        <ivy:resolve log="download-only" resolveid="common" conf="build, build-provided" />
-        <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+        <ivy:resolve log="download-only" resolveid="common"
+            conf="build, build-provided" />
+        <ivy:cachepath pathid="classpath.compile.dependencies"
+            conf="build, build-provided" />
     </target>
 
-    <target name="compile" description="Compiles the module" depends="dependencies">
+    <target name="compile" description="Compiles the module"
+        depends="dependencies">
 
         <fail unless="module.name" message="No module name given" />
         <property name="result.dir" location="result" />
@@ -35,16 +40,21 @@
         <mkdir dir="${classes}" />
 
         <!-- TODO: Get rid of this -->
-        <javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac destdir="${classes}" source="${vaadin.java.version}"
+            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
+            includeantruntime="false">
             <src path="${server.test.sources}" />
             <include name="com/vaadin/tests/data/bean/**" />
             <include name="com/vaadin/tests/VaadinClasses.java" />
-            <include name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
+            <include
+                name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
             <classpath refid="classpath.compile.dependencies" />
             <classpath refid="classpath.compile.custom" />
         </javac>
 
-        <javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac destdir="${classes}" source="${vaadin.java.version}"
+            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
+            includeantruntime="false">
             <src path="${src}" />
             <classpath location="${classes}" />
             <classpath refid="classpath.compile.dependencies" />
@@ -53,7 +63,8 @@
     </target>
 
     <target name="testing-widgetset" depends="dependencies,compile">
-        <property name="module" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+        <property name="module"
+            value="com.vaadin.tests.widgetset.TestingWidgetSet" />
         <property name="style" value="OBF" />
         <property name="localWorkers" value="6" />
         <property name="extraParams" value="" />
@@ -65,7 +76,8 @@
         <echo>Compiling ${module} to ${module.output.dir}</echo>
 
         <!-- compile the module -->
-        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies" failonerror="yes" fork="yes" maxmemory="512m">
+        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies"
+            failonerror="yes" fork="yes" maxmemory="512m">
             <classpath location="src" />
             <classpath location="${classes}" />
             <arg value="-workDir" />
@@ -92,15 +104,18 @@
 
     </target>
 
-    <target name="war" depends="dependencies, compile, compile-test-themes, testing-widgetset">
+    <target name="war"
+        depends="dependencies, compile, compile-test-themes, testing-widgetset">
         <property name="result.dir" location="result" />
         <property name="classes" location="${result.dir}/classes" />
         <property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
         <property name="deps.dir" location="${result.dir}/deps" />
         <property name="src" location="${result.dir}/../src" />
 
-        <ivy:resolve log="download-only" resolveid="common" conf="build" />
-        <ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
+        <ivy:resolve log="download-only" resolveid="common"
+            conf="build" />
+        <ivy:cachepath pathid="classpath.runtime.dependencies"
+            conf="build" />
 
         <delete dir="${deps.dir}" />
         <mkdir dir="${deps.dir}" />
@@ -110,16 +125,14 @@
         </copy>
 
         <delete>
-            <!-- Avoid including some potentially conflicting jars in the war -->
+            <!-- Avoid including some potentially conflicting jars in the 
+                war -->
             <fileset dir="${deps.dir}" includes="jetty-*.jar" />
             <fileset dir="${deps.dir}" includes="servlet-api-*.jar" />
         </delete>
 
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
-
         <war destfile="${result.war}" duplicate="fail" index="true">
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <fileset dir="${result.dir}">
                 <include name="VAADIN/widgetsets/**/*" />
                 <include name="VAADIN/themes/tests-valo*/**" />
@@ -156,38 +169,45 @@
     <target name="test" depends="checkstyle">
     </target>
 
-    <target name="test-testbench" depends="clean-testbench-errors" description="Run all TestBench based tests, including server tests">
+    <target name="test-testbench" depends="clean-testbench-errors"
+        description="Run all TestBench based tests, including server tests">
         <parallel>
             <daemons>
                 <!-- Start server -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
             </daemons>
             <sequential>
                 <!-- Server tests -->
 
-                <!-- Sleep before running integration tests so testbench 2
-                        tests have time to compile and start -->
+                <!-- Sleep before running integration tests so testbench 
+                    2 tests have time to compile and start -->
                 <sleep minutes="4" />
-                <ant antfile="${uitest.dir}/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
+                <ant antfile="${uitest.dir}/integration_tests.xml"
+                    target="integration-test-all" inheritall="false"
+                    inheritrefs="false">
                     <property name="demo.war" value="${war.file}" />
                 </ant>
             </sequential>
             <sequential>
                 <!-- Wait for server to start -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    target="wait-for-startup" />
 
                 <!-- Run all different kinds of TestBench tests in parallel -->
                 <parallel>
 
                     <!-- Legacy TestBench 2 tests -->
                     <sequential>
-                        <ant antfile="${uitest.dir}/test.xml" target="tb2-tests" />
+                        <ant antfile="${uitest.dir}/test.xml"
+                            target="tb2-tests" />
                         <echo message="TestBench 2 tests complete" />
                     </sequential>
 
                     <!-- TestBench 3 tests -->
                     <sequential>
-                        <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests" inheritall="true" />
+                        <ant antfile="${uitest.dir}/tb3test.xml"
+                            target="run-all-tb3-tests" inheritall="true" />
                         <echo message="TestBench 3 tests complete" />
                     </sequential>
                 </parallel>
@@ -196,13 +216,17 @@
     </target>
 
     <target name="test-server" depends="clean-testbench-errors">
-        <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+        <property name="war.file"
+            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <daemons>
-                <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
             </daemons>
             <sequential>
-                <ant antfile="${uitest.dir}/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
+                <ant antfile="${uitest.dir}/integration_tests.xml"
+                    target="integration-test-all" inheritall="false"
+                    inheritrefs="false">
                     <property name="demo.war" value="${war.file}" />
                 </ant>
             </sequential>
@@ -210,36 +234,45 @@
     </target>
 
     <target name="test-tb2" depends="clean-testbench-errors">
-        <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+        <property name="war.file"
+            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <daemons>
-                <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
             </daemons>
             <sequential>
-                <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    target="wait-for-startup" />
                 <ant antfile="${uitest.dir}/test.xml" target="tb2-tests" />
             </sequential>
         </parallel>
     </target>
 
     <target name="test-tb3" depends="clean-testbench-errors">
-        <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+        <property name="war.file"
+            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <daemons>
-                <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
             </daemons>
             <sequential>
-                <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
-                <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests" inheritall="true" />
+                <ant antfile="${uitest.dir}/vaadin-server.xml"
+                    target="wait-for-startup" />
+                <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests"
+                    inheritall="true" />
             </sequential>
         </parallel>
     </target>
 
     <target name="clean-testbench-errors">
-        <fail unless="com.vaadin.testbench.screenshot.directory" message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
+        <fail unless="com.vaadin.testbench.screenshot.directory"
+            message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
         <mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
         <delete>
-            <fileset dir="${com.vaadin.testbench.screenshot.directory}/errors">
+            <fileset
+                dir="${com.vaadin.testbench.screenshot.directory}/errors">
                 <include name="*" />
             </fileset>
         </delete>
@@ -268,22 +301,31 @@
             <param name="theme" value="tests-valo-blueprint" />
         </antcall>
         <antcall target="compile-theme">
-          <param name="theme" value="tests-valo-light" />
+            <param name="theme" value="tests-valo-light" />
+        </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="tests-valo-disabled-animations" />
         </antcall>
 
     </target>
     <target name="compile-theme" depends="copy-theme">
-        <fail unless="theme" message="You must give the theme name to compile in the 'theme' parameter" />
+        <fail unless="theme"
+            message="You must give the theme name to compile in the 'theme' parameter" />
 
-        <ivy:resolve log="download-only" resolveid="common" conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.compile.theme" conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.runtime.theme" conf="build" />
+        <ivy:resolve log="download-only" resolveid="common"
+            conf="compile-theme" />
+        <ivy:cachepath pathid="classpath.compile.theme"
+            conf="compile-theme" />
+        <ivy:cachepath pathid="classpath.runtime.theme"
+            conf="build" />
 
         <echo>Compiling ${theme}</echo>
         <mkdir dir="${theme.result.dir}" />
 
         <!-- compile the theme -->
-        <java classname="com.vaadin.buildhelpers.CompileTheme" classpathref="classpath.compile.theme" failonerror="yes" fork="yes" maxmemory="512m">
+        <java classname="com.vaadin.buildhelpers.CompileTheme"
+            classpathref="classpath.compile.theme" failonerror="yes"
+            fork="yes" maxmemory="512m">
             <arg value="--theme" />
             <arg value="${theme}" />
             <arg value="--theme-folder" />
@@ -298,7 +340,8 @@
     </target>
 
     <target name="copy-theme">
-        <fail unless="theme" message="You must give the theme name to copy n the 'theme' parameter" />
+        <fail unless="theme"
+            message="You must give the theme name to copy n the 'theme' parameter" />
         <property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
 
         <copy todir="${theme.result.dir}">

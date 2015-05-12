@@ -57,6 +57,9 @@ public class FileResource implements ConnectorResource {
      *            the file that should be served.
      */
     public FileResource(File sourceFile) {
+        if (sourceFile == null) {
+            throw new IllegalArgumentException("File cannot be null");
+        }
         setSourceFile(sourceFile);
     }
 
@@ -153,5 +156,4 @@ public class FileResource implements ConnectorResource {
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
-
 }

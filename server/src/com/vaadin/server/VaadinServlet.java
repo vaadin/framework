@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -45,13 +46,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gwt.thirdparty.guava.common.base.Charsets;
+import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
@@ -61,12 +69,45 @@ public class VaadinServlet extends HttpServlet implements Constants {
         private final String css;
         private final List<String> sourceUris;
         private final long timestamp;
+        private final String scssFileName;
 
-        public ScssCacheEntry(String css, List<String> sourceUris) {
+        public ScssCacheEntry(String scssFileName, String css,
+                List<String> sourceUris) {
+            this.scssFileName = scssFileName;
             this.css = css;
             this.sourceUris = sourceUris;
 
             timestamp = getLastModified();
+        }
+
+        public ScssCacheEntry(JsonObject json) {
+            css = json.getString("css");
+            timestamp = Long.parseLong(json.getString("timestamp"));
+
+            sourceUris = new ArrayList<String>();
+
+            JsonArray uris = json.getArray("uris");
+            for (int i = 0; i < uris.length(); i++) {
+                sourceUris.add(uris.getString(i));
+            }
+
+            // Not set for cache entries read from disk
+            scssFileName = null;
+        }
+
+        public String asJson() {
+            JsonArray uris = Json.createArray();
+            for (String uri : sourceUris) {
+                uris.set(uris.length(), uri);
+            }
+
+            JsonObject object = Json.createObject();
+            object.put("version", Version.getFullVersion());
+            object.put("timestamp", Long.toString(timestamp));
+            object.put("uris", uris);
+            object.put("css", css);
+
+            return object.toJson();
         }
 
         public String getCss() {
@@ -115,6 +156,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 return true;
             }
+        }
+
+        public String getScssFileName() {
+            return scssFileName;
         }
 
     }
@@ -291,11 +336,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        if (isStaticResourceRequest(request)) {
+        if (isStaticResourceRequest(vaadinRequest)) {
             // Define current servlet and service, but no request and response
             getService().setCurrentInstances(null, null);
             try {
-                serveStaticResources(request, response);
+                serveStaticResources(vaadinRequest, vaadinResponse);
                 return;
             } finally {
                 CurrentInstance.clearAll();
@@ -573,8 +618,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * A helper method to strip away characters that might somehow be used for
-     * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
-     * eg. ( and ), so values should be safe in javascript too.
+     * XSS attacks. Leaves at least alphanumeric characters intact. Also removes
+     * e.g. '(' and ')', so values should be safe in javascript too.
      * 
      * @param themeName
      * @return
@@ -583,7 +628,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             version
      */
     @Deprecated
-    protected static String stripSpecialChars(String themeName) {
+    public static String stripSpecialChars(String themeName) {
         StringBuilder sb = new StringBuilder();
         char[] charArray = themeName.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
@@ -612,7 +657,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Global cache of scss compilation results. This map is protected from
      * concurrent access by {@link #SCSS_MUTEX}.
      */
-    private static final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
+    private final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
+
+    /**
+     * Keeps track of whether a warning about not being able to persist cache
+     * files has already been printed. The flag is protected from concurrent
+     * access by {@link #SCSS_MUTEX}.
+     */
+    private static boolean scssCompileWarWarningEmitted = false;
 
     /**
      * Returns the default theme. Must never return null.
@@ -704,6 +756,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
+        String cacheControl = "public, max-age=0, must-revalidate";
+        int resourceCacheTime = getCacheTime(filename);
+        if (resourceCacheTime > 0) {
+            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+        }
+        response.setHeader("Cache-Control", cacheControl);
+        response.setDateHeader("Expires", System.currentTimeMillis()
+                + (resourceCacheTime * 1000));
+
         // Find the modification timestamp
         long lastModifiedTime = 0;
         URLConnection connection = null;
@@ -714,6 +775,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // are not returned by the browser in the "If-Modified-Since"
             // header).
             lastModifiedTime = lastModifiedTime - lastModifiedTime % 1000;
+            response.setDateHeader("Last-Modified", lastModifiedTime);
 
             if (browserHasNewestVersion(request, lastModifiedTime)) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -746,18 +808,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         final String mimetype = sc.getMimeType(filename);
         if (mimetype != null) {
             response.setContentType(mimetype);
-        }
-
-        // Provide modification timestamp to the browser if it is known.
-        if (lastModifiedTime > 0) {
-            response.setDateHeader("Last-Modified", lastModifiedTime);
-
-            String cacheControl = "public, max-age=0, must-revalidate";
-            int resourceCacheTime = getCacheTime(filename);
-            if (resourceCacheTime > 0) {
-                cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
-            }
-            response.setHeader("Cache-Control", cacheControl);
         }
 
         writeStaticResourceResponse(request, response, resourceUrl);
@@ -814,8 +864,39 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected void writeStaticResourceResponse(HttpServletRequest request,
             HttpServletResponse response, URL resourceUrl) throws IOException {
-        // Write the resource to the client.
-        URLConnection connection = resourceUrl.openConnection();
+
+        URLConnection connection = null;
+        InputStream is = null;
+        String urlStr = resourceUrl.toExternalForm();
+
+        if (allowServePrecompressedResource(request, urlStr)) {
+            // try to serve a precompressed version if available
+            URL url = new URL(urlStr + ".gz");
+            connection = url.openConnection();
+            try {
+                is = connection.getInputStream();
+                // set gzip headers
+                response.setHeader("Content-Encoding", "gzip");
+            } catch (IOException e) {
+                // NOP: will be still tried with non gzipped version
+            } catch (Exception e) {
+                getLogger().log(
+                        Level.FINE,
+                        "Unexpected exception looking for gzipped version of resource "
+                                + urlStr, e);
+            }
+        }
+        if (is == null) {
+            // precompressed resource not available, get non compressed
+            connection = resourceUrl.openConnection();
+            try {
+                is = connection.getInputStream();
+            } catch (FileNotFoundException e) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        }
+
         try {
             int length = connection.getContentLength();
             if (length >= 0) {
@@ -828,21 +909,50 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // prevent it from hanging, but that is done below.
         }
 
-        InputStream is = null;
         try {
-            is = connection.getInputStream();
-            final OutputStream os = response.getOutputStream();
-            final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-            int bytes;
-            while ((bytes = is.read(buffer)) >= 0) {
-                os.write(buffer, 0, bytes);
-            }
-        } catch (FileNotFoundException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            streamContent(response, is);
         } finally {
-            if (is != null) {
-                is.close();
-            }
+            is.close();
+        }
+    }
+
+    /**
+     * Returns whether this servlet should attempt to serve a precompressed
+     * version of the given static resource. If this method returns true, the
+     * suffix {@code .gz} is appended to the URL and the corresponding resource
+     * is served if it exists. It is assumed that the compression method used is
+     * gzip. If this method returns false or a compressed version is not found,
+     * the original URL is used.
+     * 
+     * The base implementation of this method returns true if and only if the
+     * request indicates that the client accepts gzip compressed responses and
+     * the filename extension of the requested resource is .js, .css, or .html.
+     * 
+     * @since 7.5.0
+     * 
+     * @param request
+     *            the request for the resource
+     * @param url
+     *            the URL of the requested resource
+     * @return true if the servlet should attempt to serve a precompressed
+     *         version of the resource, false otherwise
+     */
+    protected boolean allowServePrecompressedResource(
+            HttpServletRequest request, String url) {
+        String accept = request.getHeader("Accept-Encoding");
+        return accept != null
+                && accept.contains("gzip")
+                && (url.endsWith(".js") || url.endsWith(".css") || url
+                        .endsWith(".html"));
+    }
+
+    private void streamContent(HttpServletResponse response, InputStream is)
+            throws IOException {
+        final OutputStream os = response.getOutputStream();
+        final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
+        int bytes;
+        while ((bytes = is.read(buffer)) >= 0) {
+            os.write(buffer, 0, bytes);
         }
     }
 
@@ -902,10 +1012,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
         synchronized (SCSS_MUTEX) {
             ScssCacheEntry cacheEntry = scssCache.get(scssFilename);
 
+            if (cacheEntry == null) {
+                try {
+                    cacheEntry = loadPersistedScssCache(scssFilename, sc);
+                } catch (Exception e) {
+                    getLogger().log(Level.WARNING,
+                            "Could not read persisted scss cache", e);
+                }
+            }
+
             if (cacheEntry == null || !cacheEntry.isStillValid()) {
                 cacheEntry = compileScssOnTheFly(filename, scssFilename, sc);
-                scssCache.put(scssFilename, cacheEntry);
+                persistCacheEntry(cacheEntry);
             }
+            scssCache.put(scssFilename, cacheEntry);
 
             if (cacheEntry == null) {
                 // compilation did not produce any result, but logged a message
@@ -920,6 +1040,29 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             return true;
         }
+    }
+
+    private ScssCacheEntry loadPersistedScssCache(String scssFilename,
+            ServletContext sc) throws IOException {
+        String realFilename = sc.getRealPath(scssFilename);
+
+        File scssCacheFile = getScssCacheFile(new File(realFilename));
+        if (!scssCacheFile.exists()) {
+            return null;
+        }
+
+        String jsonString = Files.toString(scssCacheFile, Charsets.UTF_8);
+
+        JsonObject entryJson = Json.parse(jsonString);
+
+        String cacheVersion = entryJson.getString("version");
+        if (!Version.getFullVersion().equals(cacheVersion)) {
+            // Compiled for some other Vaadin version, discard cache
+            scssCacheFile.delete();
+            return null;
+        }
+
+        return new ScssCacheEntry(entryJson);
     }
 
     private ScssCacheEntry compileScssOnTheFly(String filename,
@@ -953,7 +1096,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return null;
         }
 
-        return new ScssCacheEntry(scss.printState(), scss.getSourceUris());
+        return new ScssCacheEntry(realFilename, scss.printState(),
+                scss.getSourceUris());
     }
 
     /**
@@ -1196,6 +1340,36 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public void destroy() {
         super.destroy();
         getService().destroy();
+    }
+
+    private static void persistCacheEntry(ScssCacheEntry cacheEntry) {
+        String scssFileName = cacheEntry.getScssFileName();
+        if (scssFileName == null) {
+            if (!scssCompileWarWarningEmitted) {
+                getLogger()
+                        .warning(
+                                "Could not persist scss cache because no real file was found for the compiled scss file. "
+                                        + "This might happen e.g. if serving the scss file directly from a .war file.");
+                scssCompileWarWarningEmitted = true;
+            }
+            return;
+        }
+
+        File scssFile = new File(scssFileName);
+        File cacheFile = getScssCacheFile(scssFile);
+
+        String cacheEntryJsonString = cacheEntry.asJson();
+
+        try {
+            Files.write(cacheEntryJsonString, cacheFile, Charsets.UTF_8);
+        } catch (IOException e) {
+            getLogger().log(Level.WARNING,
+                    "Error persisting scss cache " + cacheFile, e);
+        }
+    }
+
+    private static File getScssCacheFile(File scssFile) {
+        return new File(scssFile.getParentFile(), scssFile.getName() + ".cache");
     }
 
     /**

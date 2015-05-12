@@ -93,7 +93,8 @@ public class ServerRpcHandler implements Serializable {
 
             if (request.getService().getDeploymentConfiguration()
                     .isSyncIdCheckEnabled()) {
-                syncId = (int) json.getNumber(ApplicationConstants.SERVER_SYNC_ID);
+                syncId = (int) json
+                        .getNumber(ApplicationConstants.SERVER_SYNC_ID);
             } else {
                 syncId = -1;
             }
@@ -373,7 +374,8 @@ public class ServerRpcHandler implements Serializable {
         String methodName = invocationJson.getString(2);
 
         if (connectorTracker.getConnector(connectorId) == null
-                && !connectorId.equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
+                && !connectorId
+                        .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
 
             if (!connectorTracker.connectorWasPresentAsRequestWasSent(
                     connectorId, lastSyncIdSeenByClient)) {

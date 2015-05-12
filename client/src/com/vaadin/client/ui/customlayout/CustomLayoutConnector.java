@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.customlayout;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -33,6 +35,8 @@ import com.vaadin.ui.CustomLayout;
 @Connect(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractLayoutConnector implements
         SimpleManagedLayout, Paintable {
+
+    private boolean templateUpdated;
 
     @Override
     public CustomLayoutState getState() {
@@ -62,7 +66,7 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     }
 
     private void updateHtmlTemplate() {
-        if (getWidget().hasTemplate()) {
+        if (templateUpdated) {
             // We (currently) only do this once. You can't change the template
             // later on.
             return;
@@ -75,15 +79,26 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
             // (even though both can never be given at the same time)
             templateContents = getConnection().getResource(
                     "layouts/" + templateName + ".html");
-            if (templateContents == null) {
-                templateContents = "<em>Layout file layouts/"
-                        + templateName
-                        + ".html is missing. Components will be drawn for debug purposes.</em>";
-            }
         }
 
-        getWidget().initializeHTML(templateContents,
-                getConnection().getThemeUri());
+        if (templateContents != null) {
+            // Template ok -> initialize.
+            getWidget().initializeHTML(templateContents,
+                    getConnection().getThemeUri());
+        } else {
+            // Template missing -> show debug notice and render components in
+            // order.
+            String warning = templateName != null ? "Layout file layouts/"
+                    + templateName + ".html is missing."
+                    : "Layout file not specified.";
+            getWidget()
+                    .getElement()
+                    .setInnerHTML(
+                            "<em>"
+                                    + warning
+                                    + " Components will be drawn for debug purposes.</em>");
+        }
+        templateUpdated = true;
     }
 
     @Override
@@ -98,6 +113,9 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
                 getWidget().setWidget(child.getWidget(), location);
             } catch (final IllegalArgumentException e) {
                 // If no location is found, this component is not visible
+                getLogger().warning(
+                        "Child not rendered as no slot with id '" + location
+                                + "' has been defined");
             }
         }
         for (ComponentConnector oldChild : event.getOldChildren()) {
@@ -133,5 +151,9 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Not interested in anything from the UIDL - just implementing the
         // interface to avoid some warning (#8688)
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CustomLayoutConnector.class.getName());
     }
 }

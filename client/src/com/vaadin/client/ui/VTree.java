@@ -60,6 +60,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.dd.DDUtil;
@@ -159,6 +160,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public int dragMode;
 
     private boolean selectionHasChanged = false;
+
+    /*
+     * to fix #14388. The cause of defect #14388: event 'clickEvent' is sent to
+     * server before updating of "selected" variable, but should be sent after
+     * it
+     */
+    private boolean clickEventPending = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String[] bodyActionKeys;
@@ -339,7 +347,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     }
 
     private String findCurrentMouseOverKey(Element elementOver) {
-        TreeNode treeNode = Util.findWidget(elementOver, TreeNode.class);
+        TreeNode treeNode = WidgetUtil.findWidget(elementOver, TreeNode.class);
         return treeNode == null ? null : treeNode.key;
     }
 
@@ -471,9 +479,15 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         Command command = new Command() {
             @Override
             public void execute() {
+                /*
+                 * we should send selection to server immediately in 2 cases: 1)
+                 * 'immediate' property of Tree is true 2) clickEventPending is
+                 * true
+                 */
                 client.updateVariable(paintableId, "selected",
                         selectedIds.toArray(new String[selectedIds.size()]),
-                        immediate);
+                        clickEventPending || immediate);
+                clickEventPending = false;
                 selectionHasChanged = false;
             }
         };
@@ -831,26 +845,25 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     // server. We do not want to send the event if there is a
                     // selection event happening after this. In all other cases
                     // we want to send it immediately.
-                    boolean sendClickEventNow = true;
-
-                    if (details.getButton() == MouseButton.LEFT && immediate
-                            && selectable) {
+                    clickEventPending = false;
+                    if ((details.getButton() == MouseButton.LEFT || details
+                            .getButton() == MouseButton.MIDDLE)
+                            && !details.isDoubleClick() && selectable) {
                         // Probably a selection that will cause a value change
                         // event to be sent
-                        sendClickEventNow = false;
+                        clickEventPending = true;
 
                         // The exception is that user clicked on the
                         // currently selected row and null selection is not
                         // allowed == no selection event
                         if (isSelected() && selectedIds.size() == 1
                                 && !isNullSelectionAllowed) {
-                            sendClickEventNow = true;
+                            clickEventPending = false;
                         }
                     }
-
                     client.updateVariable(paintableId, "clickedKey", key, false);
                     client.updateVariable(paintableId, "clickEvent",
-                            details.toString(), sendClickEventNow);
+                            details.toString(), !clickEventPending);
                 }
             });
         }
@@ -1120,7 +1133,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
          * Scrolls the caption into view
          */
         public void scrollIntoView() {
-            Util.scrollIntoViewVertically(nodeCaptionDiv);
+            WidgetUtil.scrollIntoViewVertically(nodeCaptionDiv);
         }
 
         public void setIcon(String iconUrl, String altText) {
@@ -1724,8 +1737,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         selectNode(node, true);
                     }
                 }
+                showTooltipForKeyboardNavigation(node);
             }
-            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -1750,8 +1763,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         selectNode(node, true);
                     }
                 }
+                showTooltipForKeyboardNavigation(node);
             }
-            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -2131,7 +2144,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             return "fe";
         }
 
-        TreeNode treeNode = Util.findWidget(subElement, TreeNode.class);
+        TreeNode treeNode = WidgetUtil.findWidget(subElement, TreeNode.class);
         if (treeNode == null) {
             // Did not click on a node, let somebody else take care of the
             // locator string

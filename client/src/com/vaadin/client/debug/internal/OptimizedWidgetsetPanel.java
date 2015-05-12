@@ -17,13 +17,14 @@ package com.vaadin.client.debug.internal;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.UnknownComponentConnector;
 
 /**
@@ -46,10 +47,11 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         for (ApplicationConnection ac : ApplicationConfiguration
                 .getRunningApplications()) {
             ApplicationConfiguration conf = ac.getConfiguration();
-            s += "<h1>Used connectors for " + conf.getServiceUrl() + "</h1>";
+            s += "<h1>Used connectors for "
+                    + Util.escapeHTML(conf.getServiceUrl()) + "</h1>";
 
             for (String connectorName : getUsedConnectorNames(conf)) {
-                s += connectorName + "<br/>";
+                s += Util.escapeHTML(connectorName) + "<br/>";
             }
 
             s += "<h2>To make an optimized widgetset based on these connectors, do:</h2>";
@@ -93,7 +95,8 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
             tag++;
             if (tag > 10000) {
                 // Sanity check
-                VConsole.error("Search for used connector classes was forcefully terminated");
+                getLogger()
+                        .severe("Search for used connector classes was forcefully terminated");
                 break;
             }
         }
@@ -114,7 +117,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         s += "    private Set<String> eagerConnectors = new HashSet<String>();\n";
         s += "    {\n";
         for (String c : usedConnectors) {
-            s += "            eagerConnectors.add(" + c
+            s += "            eagerConnectors.add(" + Util.escapeHTML(c)
                     + ".class.getName());\n";
         }
         s += "    }\n";
@@ -134,4 +137,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         return s;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(OptimizedWidgetsetPanel.class.getName());
+    }
 }

@@ -24,6 +24,9 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.label.ContentMode;
 
+import elemental.json.JsonBoolean;
+import elemental.json.JsonValue;
+
 public class SerializerTestState extends AbstractComponentState {
 
     public boolean booleanValue;
@@ -55,6 +58,7 @@ public class SerializerTestState extends AbstractComponentState {
     public double[] doubleArray;
 
     public String string;
+    public String[] stringArray;
 
     public String nullString;
 
@@ -96,7 +100,12 @@ public class SerializerTestState extends AbstractComponentState {
 
     public Date date1;
     public Date date2;
+    public Date[] dateArray;
 
     public BeanWithAbstractSuperclass beanWithAbstractSuperclass;
+
+    public JsonValue jsonNull = null;
+    public JsonValue jsonString = null;
+    public JsonBoolean jsonBoolean = null;
 
 }

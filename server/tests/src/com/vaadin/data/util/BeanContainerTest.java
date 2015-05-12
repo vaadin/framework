@@ -13,7 +13,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
 
-public class BeanContainerTest extends AbstractBeanContainerTest {
+public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
     protected static class PersonNameResolver implements
             BeanIdResolver<String, Person> {
@@ -66,6 +66,19 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
     @Override
     protected boolean isFilteredOutItemNull() {
         return false;
+    }
+
+    public void testGetType_existingProperty_typeReturned() {
+        BeanContainer<String, ClassName> container = getContainer();
+        Assert.assertEquals(
+                "Unexpected type is returned for property 'simpleName'",
+                String.class, container.getType("simpleName"));
+    }
+
+    public void testGetType_notExistingProperty_nullReturned() {
+        BeanContainer<String, ClassName> container = getContainer();
+        Assert.assertNull("Not null type is returned for property ''",
+                container.getType(""));
     }
 
     public void testBasicOperations() {
@@ -332,7 +345,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
                 Person.class);
         // resolver that returns null as item id
         container
-                .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTest.Person>() {
+                .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTestBase.Person>() {
 
                     @Override
                     public String getIdForBean(Person bean) {

@@ -39,6 +39,14 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
+    /**
+     * Prefix used for theme resource URLs
+     * 
+     * @see com.vaadin.server.ThemeResource
+     * @since 7.5.0
+     */
+    public static final String THEME_PROTOCOL_PREFIX = "theme://";
+
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
     @Deprecated
@@ -48,11 +56,7 @@ public class ApplicationConstants implements Serializable {
 
     public static final String SERVICE_URL = "serviceUrl";
 
-    public static final String SERVICE_URL_PATH_AS_PARAMETER = "usePathParameter";
-
-    // Denotes the namespace which parameters should be prefixed with when
-    // passed as GET parameters. Currently only used by Liferay.
-    public static final String SERVICE_URL_PARAMETER_NAMESPACE = "pathParameterNS";
+    public static final String SERVICE_URL_PARAMETER_NAME = "pathParameterName";
 
     // Javadocs in ApplicationConfiguration should be updated if this is changed
     public static final String V_RESOURCE_PATH = "v-resourcePath";

@@ -88,7 +88,8 @@ public class BrowserInfo {
         } else if (browserDetails.isIE()) {
             touchDevice = detectIETouchDevice();
         } else {
-            touchDevice = detectTouchDevice();
+            //PhantomJS pretends to be a touch device which breaks some UI tests
+            touchDevice = !browserDetails.isPhantomJS() && detectTouchDevice();
         }
     }
 
@@ -343,7 +344,7 @@ public class BrowserInfo {
     public boolean requiresOverflowAutoFix() {
         return (getWebkitVersion() > 0 || getOperaVersion() >= 11
                 || getIEVersion() >= 10 || isFirefox())
-                && Util.getNativeScrollbarSize() > 0;
+                && WidgetUtil.getNativeScrollbarSize() > 0;
     }
 
     /**
@@ -359,7 +360,8 @@ public class BrowserInfo {
      *         otherwise <code>false</code>
      */
     public boolean requiresPositionAbsoluteOverflowAutoFix() {
-        return (getWebkitVersion() > 0) && Util.getNativeScrollbarSize() > 0;
+        return (getWebkitVersion() > 0)
+                && WidgetUtil.getNativeScrollbarSize() > 0;
     }
 
     /**
@@ -410,6 +412,11 @@ public class BrowserInfo {
         if (isIOS() && isWebkit() && getOperatingSystemMajorVersion() >= 6) {
             return false;
         }
+
+        if (isIE()) {
+            return false;
+        }
+
         return true;
     }
 

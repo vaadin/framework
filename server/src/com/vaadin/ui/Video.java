@@ -16,9 +16,17 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.video.VideoConstants;
 import com.vaadin.shared.ui.video.VideoState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * The Video component translates into an HTML5 &lt;video&gt; element and as
@@ -89,4 +97,35 @@ public class Video extends AbstractMedia {
         return getResource(VideoConstants.POSTER_RESOURCE);
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        Elements elems = design.getElementsByTag("poster");
+        for (Element poster : elems) {
+            if (getPoster() == null && poster.hasAttr("href")) {
+                setPoster(DesignAttributeHandler.readAttribute("href",
+                        poster.attributes(), Resource.class));
+            }
+            poster.remove();
+        }
+
+        // Poster is extracted so AbstractMedia does not include it in alt text
+        super.readDesign(design, designContext);
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        if (getPoster() != null) {
+            Attributes attr = design.appendElement("poster").attributes();
+            DesignAttributeHandler.writeAttribute("href", attr, getPoster(),
+                    null, Resource.class);
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("poster");
+        return result;
+    }
 }

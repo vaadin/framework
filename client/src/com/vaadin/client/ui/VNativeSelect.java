@@ -19,9 +19,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
@@ -119,14 +117,6 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         }
     }
 
-    public void addFocusHandler(FocusHandler handler) {
-        select.addFocusHandler(handler);
-    }
-
-    public void addBlurHandler(BlurHandler handler) {
-        select.addBlurHandler(handler);
-    }
-
     @Override
     public void setHeight(String height) {
         select.setHeight(height);
@@ -152,6 +142,13 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
     @Override
     public void focus() {
         select.setFocus(true);
+    }
+
+    /**
+     * @return the root select widget
+     */
+    public ListBox getSelect() {
+        return getOptionsContainer();
     }
 
 }

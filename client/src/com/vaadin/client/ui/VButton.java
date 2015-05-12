@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class VButton extends FocusWidget implements ClickHandler {
 
@@ -95,6 +96,7 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
+    private long lastClickTime = 0;
 
     public VButton() {
         super(DOM.createDiv());
@@ -163,13 +165,29 @@ public class VButton extends FocusWidget implements ClickHandler {
         int type = DOM.eventGetType(event);
         switch (type) {
         case Event.ONCLICK:
-            // If clicks are currently disallowed, keep it from bubbling or
-            // being passed to the superclass.
-            if (disallowNextClick) {
+            // fix for #14632 - on mobile safari 8, if we press the button long
+            // enough, we might get two click events, so we are suppressing
+            // second if it is too soon
+            boolean isPhantomClickPossible = BrowserInfo.get().isSafari()
+                    && BrowserInfo.get().isTouchDevice()
+                    && BrowserInfo.get().getBrowserMajorVersion() == 8;
+            long clickTime = isPhantomClickPossible ? System
+                    .currentTimeMillis() : 0;
+            // If clicks are currently disallowed or phantom, keep it from
+            // bubbling or being passed to the superclass.
+            if (disallowNextClick || isPhantomClickPossible
+                    && (clickTime - lastClickTime < 100)) { // the maximum
+                                                            // interval observed
+                                                            // for phantom click
+                                                            // is 69, with
+                                                            // majority under
+                                                            // 50, so we select
+                                                            // 100 to be safe
                 event.stopPropagation();
                 disallowNextClick = false;
                 return;
             }
+            lastClickTime = clickTime;
             break;
         case Event.ONMOUSEDOWN:
             if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
@@ -351,9 +369,16 @@ public class VButton extends FocusWidget implements ClickHandler {
 
         disallowNextClick = false;
 
-        // Mouse coordinates are not always available (e.g., when the click is
+        // Screen coordinates are not always available (e.g., when the click is
         // caused by a keyboard event).
-        NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false,
+        // Set (x,y) client coordinates to the middle of the button
+        int x = getElement().getAbsoluteLeft() - getElement().getScrollLeft()
+                - getElement().getOwnerDocument().getScrollLeft()
+                + WidgetUtil.getRequiredWidth(getElement()) / 2;
+        int y = getElement().getAbsoluteTop() - getElement().getScrollTop()
+                - getElement().getOwnerDocument().getScrollTop()
+                + WidgetUtil.getRequiredHeight(getElement()) / 2;
+        NativeEvent evt = Document.get().createClickEvent(1, 0, 0, x, y, false,
                 false, false, false);
         getElement().dispatchEvent(evt);
     }

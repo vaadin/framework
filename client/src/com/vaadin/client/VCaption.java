@@ -16,12 +16,15 @@
 
 package com.vaadin.client;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHTML;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
@@ -59,6 +62,8 @@ public class VCaption extends HTML {
     }
 
     private TooltipInfo tooltipInfo = null;
+
+    private boolean captionAsHtml = false;
 
     /**
      * Creates a caption that is not linked to a {@link ComponentConnector}.
@@ -145,7 +150,7 @@ public class VCaption extends HTML {
             }
         }
         if (!owner.isEnabled()) {
-            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+            style += " " + StyleConstants.DISABLED;
         }
         setStyleName(style);
 
@@ -213,7 +218,7 @@ public class VCaption extends HTML {
                     captionText.setInnerHTML("&nbsp;");
                 }
             } else {
-                DOM.setInnerText(captionText, c);
+                setCaptionText(captionText, owner.getState());
             }
 
         } else if (captionText != null) {
@@ -325,7 +330,7 @@ public class VCaption extends HTML {
 
         String style = VCaption.CLASSNAME;
         if (disabled) {
-            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+            style += " " + StyleConstants.DISABLED;
         }
         setStyleName(style);
         if (hasDescription) {
@@ -382,7 +387,11 @@ public class VCaption extends HTML {
                     captionText.setInnerHTML("&nbsp;");
                 }
             } else {
-                DOM.setInnerText(captionText, caption);
+                if (captionAsHtml) {
+                    captionText.setInnerHTML(caption);
+                } else {
+                    captionText.setInnerText(caption);
+                }
             }
 
         } else if (captionText != null) {
@@ -438,7 +447,9 @@ public class VCaption extends HTML {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
-                VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                getLogger()
+                        .warning(
+                                "Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }
@@ -503,17 +514,17 @@ public class VCaption extends HTML {
         int width = 0;
 
         if (icon != null) {
-            width += Util.getRequiredWidth(icon.getElement());
+            width += WidgetUtil.getRequiredWidth(icon.getElement());
         }
 
         if (captionText != null) {
-            width += Util.getRequiredWidth(captionText);
+            width += WidgetUtil.getRequiredWidth(captionText);
         }
         if (requiredFieldIndicator != null) {
-            width += Util.getRequiredWidth(requiredFieldIndicator);
+            width += WidgetUtil.getRequiredWidth(requiredFieldIndicator);
         }
         if (errorIndicatorElement != null) {
-            width += Util.getRequiredWidth(errorIndicatorElement);
+            width += WidgetUtil.getRequiredWidth(errorIndicatorElement);
         }
 
         return width;
@@ -524,7 +535,7 @@ public class VCaption extends HTML {
         int width = 0;
 
         if (icon != null) {
-            width += Util.getRequiredWidth(icon.getElement());
+            width += WidgetUtil.getRequiredWidth(icon.getElement());
         }
         if (captionText != null) {
             int textWidth = captionText.getScrollWidth();
@@ -533,7 +544,7 @@ public class VCaption extends HTML {
                  * In Firefox3 the caption might require more space than the
                  * scrollWidth returns as scrollWidth is rounded down.
                  */
-                int requiredWidth = Util.getRequiredWidth(captionText);
+                int requiredWidth = WidgetUtil.getRequiredWidth(captionText);
                 if (requiredWidth > textWidth) {
                     textWidth = requiredWidth;
                 }
@@ -542,10 +553,10 @@ public class VCaption extends HTML {
             width += textWidth;
         }
         if (requiredFieldIndicator != null) {
-            width += Util.getRequiredWidth(requiredFieldIndicator);
+            width += WidgetUtil.getRequiredWidth(requiredFieldIndicator);
         }
         if (errorIndicatorElement != null) {
-            width += Util.getRequiredWidth(errorIndicatorElement);
+            width += WidgetUtil.getRequiredWidth(errorIndicatorElement);
         }
 
         return width;
@@ -557,26 +568,26 @@ public class VCaption extends HTML {
         int h;
 
         if (icon != null) {
-            h = Util.getRequiredHeight(icon.getElement());
+            h = WidgetUtil.getRequiredHeight(icon.getElement());
             if (h > height) {
                 height = h;
             }
         }
 
         if (captionText != null) {
-            h = Util.getRequiredHeight(captionText);
+            h = WidgetUtil.getRequiredHeight(captionText);
             if (h > height) {
                 height = h;
             }
         }
         if (requiredFieldIndicator != null) {
-            h = Util.getRequiredHeight(requiredFieldIndicator);
+            h = WidgetUtil.getRequiredHeight(requiredFieldIndicator);
             if (h > height) {
                 height = h;
             }
         }
         if (errorIndicatorElement != null) {
-            h = Util.getRequiredHeight(errorIndicatorElement);
+            h = WidgetUtil.getRequiredHeight(errorIndicatorElement);
             if (h > height) {
                 height = h;
             }
@@ -612,11 +623,13 @@ public class VCaption extends HTML {
 
             // DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
             if (requiredFieldIndicator != null) {
-                availableWidth -= Util.getRequiredWidth(requiredFieldIndicator);
+                availableWidth -= WidgetUtil
+                        .getRequiredWidth(requiredFieldIndicator);
             }
 
             if (errorIndicatorElement != null) {
-                availableWidth -= Util.getRequiredWidth(errorIndicatorElement);
+                availableWidth -= WidgetUtil
+                        .getRequiredWidth(errorIndicatorElement);
             }
 
             if (availableWidth < 0) {
@@ -624,8 +637,8 @@ public class VCaption extends HTML {
             }
 
             if (icon != null) {
-                int iconRequiredWidth = Util
-                        .getRequiredWidth(icon.getElement());
+                int iconRequiredWidth = WidgetUtil.getRequiredWidth(icon
+                        .getElement());
                 if (availableWidth > iconRequiredWidth) {
                     availableWidth -= iconRequiredWidth;
                 } else {
@@ -635,7 +648,7 @@ public class VCaption extends HTML {
                 }
             }
             if (captionText != null) {
-                int captionWidth = Util.getRequiredWidth(captionText);
+                int captionWidth = WidgetUtil.getRequiredWidth(captionText);
                 if (availableWidth > captionWidth) {
                     availableWidth -= captionWidth;
 
@@ -687,4 +700,77 @@ public class VCaption extends HTML {
         return el.vOwnerPid;
     }-*/;
 
+    /**
+     * Sets whether the caption is rendered as HTML.
+     * <p>
+     * Default is false
+     * 
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setCaptionAsHtml(boolean captionAsHtml) {
+        this.captionAsHtml = captionAsHtml;
+    }
+
+    /**
+     * Checks whether captions are rendered as HTML.
+     * <p>
+     * Default is false
+     * 
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isCaptionAsHtml() {
+        return captionAsHtml;
+    }
+
+    /**
+     * Sets the text of the given caption element to the caption found in the
+     * state.
+     * <p>
+     * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
+     * set the caption as html or plain text
+     * 
+     * @since 7.4
+     * @param captionElement
+     *            the target element
+     * @param state
+     *            the state from which to read the caption text and mode
+     */
+    public static void setCaptionText(Element captionElement,
+            AbstractComponentState state) {
+        if (state.captionAsHtml) {
+            captionElement.setInnerHTML(state.caption);
+        } else {
+            captionElement.setInnerText(state.caption);
+        }
+
+    }
+
+    /**
+     * Sets the text of the given widget to the caption found in the state.
+     * <p>
+     * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
+     * set the caption as html or plain text
+     * 
+     * @since 7.4
+     * @param widget
+     *            the target widget
+     * @param state
+     *            the state from which to read the caption text and mode
+     */
+    public static void setCaptionText(HasHTML widget,
+            AbstractComponentState state) {
+        if (state.captionAsHtml) {
+            widget.setHTML(state.caption);
+        } else {
+            widget.setText(state.caption);
+        }
+
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VCaption.class.getName());
+    }
 }

@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.themes;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -35,9 +37,7 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Seems like stylesheet onload is not fired on PhantomJS
         // https://github.com/ariya/phantomjs/issues/12332
-        List<DesiredCapabilities> l = super.getBrowsersToTest();
-        l.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return l;
+        return getBrowsersExcludingPhantomJS();
     }
 
     @Test
@@ -100,9 +100,8 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
             @Override
             public Boolean apply(WebDriver input) {
                 String rootClass = rootDiv.getAttribute("class").trim();
-                String expected = "v-app " + theme;
-                expected = expected.trim();
-                return rootClass.equals(expected);
+
+                return rootClass.contains(theme);
             }
         }, 30);
     }
@@ -110,12 +109,9 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     private void assertOverlayTheme(String theme) {
         final WebElement overlayContainerDiv = findElement(By
                 .xpath("//div[contains(@class,'v-overlay-container')]"));
-        String expected = "v-app v-overlay-container " + theme;
-        expected = expected.trim();
-
         String overlayClass = overlayContainerDiv.getAttribute("class").trim();
 
-        Assert.assertEquals(expected, overlayClass);
+        assertThat(overlayClass, containsString(theme));
     }
 
 }

@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -23,6 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class IE8MeasuredSizeMemoryLeakTest extends MultiBrowserTest {
@@ -49,6 +49,6 @@ public class IE8MeasuredSizeMemoryLeakTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.IE8.getDesiredCapabilities());
+        return getBrowserCapabilities(Browser.IE8);
     }
 }

@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.vaadin.server.communication.DateSerializer;
-import com.vaadin.server.communication.JsonSerializer;
+import com.vaadin.server.communication.JSONSerializer;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
@@ -66,10 +66,12 @@ import elemental.json.impl.JreJsonArray;
 public class JsonCodec implements Serializable {
 
     /* Immutable Encode Result representing null */
-    private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(Json.createNull());
+    private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(
+            Json.createNull());
 
     /* Immutable empty JSONArray */
-    private static final JsonArray EMPTY_JSON_ARRAY = new JreJsonArray(Json.instance()) {
+    private static final JsonArray EMPTY_JSON_ARRAY = new JreJsonArray(
+            Json.instance()) {
         @Override
         public void set(int index, JsonValue value) {
             throw new UnsupportedOperationException(
@@ -212,7 +214,7 @@ public class JsonCodec implements Serializable {
      */
     private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
 
-    private static Map<Class<?>, JsonSerializer<?>> customSerializers = new HashMap<Class<?>, JsonSerializer<?>>();
+    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<Class<?>, JSONSerializer<?>>();
     static {
         customSerializers.put(Date.class, new DateSerializer());
     }
@@ -298,7 +300,9 @@ public class JsonCodec implements Serializable {
         }
 
         // Try to decode object using fields
-        if (value.getType() == JsonType.NULL) {
+        if (isJsonType(targetType)) {
+            return value;
+        } else if (value.getType() == JsonType.NULL) {
             return null;
         } else if (targetType == byte.class || targetType == Byte.class) {
             return Byte.valueOf((byte) value.asNumber());
@@ -316,7 +320,8 @@ public class JsonCodec implements Serializable {
                     .getGenericComponentType();
             return decodeArray(componentType, (JsonArray) value,
                     connectorTracker);
-        } else if (JsonValue.class.isAssignableFrom(getClassForType(targetType))) {
+        } else if (JsonValue.class
+                .isAssignableFrom(getClassForType(targetType))) {
             return value;
         } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
             Class<?> classForType = getClassForType(targetType);
@@ -329,6 +334,11 @@ public class JsonCodec implements Serializable {
             return decodeObject(targetType, (JsonObject) value,
                     connectorTracker);
         }
+    }
+
+    private static boolean isJsonType(Type type) {
+        return type instanceof Class<?>
+                && JsonValue.class.isAssignableFrom((Class<?>) type);
     }
 
     private static Object decodeArray(Type componentType, JsonArray value,
@@ -407,7 +417,7 @@ public class JsonCodec implements Serializable {
                     connectorTracker);
 
         } else if (JsonConstants.VTYPE_STRINGARRAY.equals(transportType)) {
-            return decodeStringArray((JsonArray) encodedJsonValue);
+            return decodeArray(String.class, (JsonArray) encodedJsonValue, null);
         }
 
         // Special Vaadin types
@@ -479,8 +489,7 @@ public class JsonCodec implements Serializable {
     }
 
     private static Map<Object, Object> decodeObjectMap(Type keyType,
-            Type valueType, JsonArray jsonMap, ConnectorTracker connectorTracker)
-            {
+            Type valueType, JsonArray jsonMap, ConnectorTracker connectorTracker) {
 
         JsonArray keys = jsonMap.getArray(0);
         JsonArray values = jsonMap.getArray(1);
@@ -564,15 +573,6 @@ public class JsonCodec implements Serializable {
         return Enum.valueOf(cls, value.getString());
     }
 
-    private static String[] decodeStringArray(JsonArray jsonArray) {
-        int length = jsonArray.length();
-        List<String> tokens = new ArrayList<String>(length);
-        for (int i = 0; i < length; ++i) {
-            tokens.add(jsonArray.getString(i));
-        }
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
     private static Object[] decodeObjectArray(Type targetType,
             JsonArray jsonArray, ConnectorTracker connectorTracker) {
         List<Object> list = decodeList(List.class, true, jsonArray,
@@ -650,8 +650,6 @@ public class JsonCodec implements Serializable {
             toReturn = Json.create(((Number) value).doubleValue());
         } else if (value instanceof Character) {
             toReturn = Json.create(Character.toString((Character) value));
-        } else if (value instanceof String[]) {
-            toReturn = toJsonArray((String[]) value);
         } else if (value instanceof Collection) {
             toReturn = encodeCollection(valueType, (Collection<?>) value,
                     connectorTracker);
@@ -748,7 +746,7 @@ public class JsonCodec implements Serializable {
                         fieldType, connectorTracker);
                 encoded.put(fieldName, encodeResult.getEncodedValue());
 
-                if (!jsonEquals(encodeResult.getEncodedValue(), fieldReference)) {
+                if (valueChanged(encodeResult.getEncodedValue(), fieldReference)) {
                     diff.put(fieldName, encodeResult.getDiffOrValue());
                 }
             }
@@ -760,24 +758,101 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Compares the value with the reference. If they match, returns true.
+     * Compares the value with the reference. If they match, returns false.
      *
      * @param fieldValue
      * @param referenceValue
      * @return
      */
-    private static boolean jsonEquals(JsonValue fieldValue, JsonValue referenceValue) {
+    private static boolean valueChanged(JsonValue fieldValue,
+            JsonValue referenceValue) {
         if (fieldValue instanceof JsonNull) {
             fieldValue = null;
         }
 
         if (fieldValue == referenceValue) {
-            return true;
-        } else if (fieldValue == null || referenceValue == null) {
             return false;
+        } else if (fieldValue == null || referenceValue == null) {
+            return true;
         } else {
-            return fieldValue.jsEquals(referenceValue);
+            return !jsonEquals(fieldValue, referenceValue);
         }
+    }
+
+    /**
+     * Compares two json values for deep equality.
+     * 
+     * This is a helper for overcoming the fact that
+     * {@link JsonValue#equals(Object)} only does an identity check and
+     * {@link JsonValue#jsEquals(JsonValue)} is defined to use JavaScript
+     * semantics where arrays and objects are equals only based on identity.
+     * 
+     * @since 7.4
+     * @param a
+     *            the first json value to check, may not be null
+     * @param b
+     *            the second json value to check, may not be null
+     * @return <code>true</code> if both json values are the same;
+     *         <code>false</code> otherwise
+     */
+    public static boolean jsonEquals(JsonValue a, JsonValue b) {
+        assert a != null;
+        assert b != null;
+
+        if (a == b) {
+            return true;
+        }
+
+        JsonType type = a.getType();
+        if (type != b.getType()) {
+            return false;
+        }
+
+        switch (type) {
+        case NULL:
+            return true;
+        case BOOLEAN:
+            return a.asBoolean() == b.asBoolean();
+        case NUMBER:
+            return a.asNumber() == b.asNumber();
+        case STRING:
+            return a.asString().equals(b.asString());
+        case OBJECT:
+            return jsonObjectEquals((JsonObject) a, (JsonObject) b);
+        case ARRAY:
+            return jsonArrayEquals((JsonArray) a, (JsonArray) b);
+        default:
+            throw new RuntimeException("Unsupported JsonType: " + type);
+        }
+    }
+
+    private static boolean jsonObjectEquals(JsonObject a, JsonObject b) {
+        String[] keys = a.keys();
+
+        if (keys.length != b.keys().length) {
+            return false;
+        }
+
+        for (String key : keys) {
+            JsonValue value = b.get(key);
+            if (value == null || !jsonEquals(a.get(key), value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean jsonArrayEquals(JsonArray a, JsonArray b) {
+        if (a.length() != b.length()) {
+            return false;
+        }
+        for (int i = 0; i < a.length(); i++) {
+            if (!jsonEquals(a.get(i), b.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static JsonArray encodeArrayContents(Type componentType,
@@ -795,13 +870,14 @@ public class JsonCodec implements Serializable {
             Collection<?> collection, ConnectorTracker connectorTracker) {
         JsonArray jsonArray = Json.createArray();
         for (Object o : collection) {
-            jsonArray.set(jsonArray.length(), encodeChild(targetType, 0, o, connectorTracker));
+            jsonArray.set(jsonArray.length(),
+                    encodeChild(targetType, 0, o, connectorTracker));
         }
         return jsonArray;
     }
 
-    private static JsonValue encodeChild(Type targetType, int typeIndex, Object o,
-            ConnectorTracker connectorTracker) {
+    private static JsonValue encodeChild(Type targetType, int typeIndex,
+            Object o, ConnectorTracker connectorTracker) {
         if (targetType instanceof ParameterizedType) {
             Type childType = ((ParameterizedType) targetType)
                     .getActualTypeArguments()[typeIndex];
@@ -907,16 +983,7 @@ public class JsonCodec implements Serializable {
 
     private static JsonValue serializeJson(Object value,
             ConnectorTracker connectorTracker) {
-        JsonSerializer serializer = customSerializers.get(value.getClass());
+        JSONSerializer serializer = customSerializers.get(value.getClass());
         return serializer.serialize(value, connectorTracker);
     }
-
-    private static JsonArray toJsonArray(String[] array) {
-        JsonArray jsonArray = Json.createArray();
-        for (int i = 0; i < array.length; ++i) {
-            jsonArray.set(i, array[i]);
-        }
-        return jsonArray;
-    }
-
 }

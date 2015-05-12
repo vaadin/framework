@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -40,6 +43,8 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -152,6 +157,13 @@ public class DateField extends AbstractField<Date> implements
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
     private DateRangeValidator currentRangeValidator;
+
+    /**
+     * Determines whether the ValueChangeEvent should be fired. Used to prevent
+     * firing the event when UI has invalid string until uiHasValidDateString
+     * flag is set
+     */
+    private boolean preventValueChangeEvent = false;
 
     static {
         variableNameForResolution.put(Resolution.SECOND, "sec");
@@ -309,10 +321,11 @@ public class DateField extends AbstractField<Date> implements
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
         }
-        getState().rangeStart = startDate;
-        // rangeStart = startDate;
-        // This has to be done to correct for the resolution
-        // updateRangeState();
+
+        // Create a defensive copy against issues when using java.sql.Date (and
+        // also against mutable Date).
+        getState().rangeStart = startDate != null ? new Date(
+                startDate.getTime()) : null;
         updateRangeValidator();
     }
 
@@ -429,8 +442,11 @@ public class DateField extends AbstractField<Date> implements
             throw new IllegalStateException(
                     "endDate cannot be earlier than startDate");
         }
-        // rangeEnd = endDate;
-        getState().rangeEnd = endDate;
+
+        // Create a defensive copy against issues when using java.sql.Date (and
+        // also against mutable Date).
+        getState().rangeEnd = endDate != null ? new Date(endDate.getTime())
+                : null;
         updateRangeValidator();
     }
 
@@ -543,13 +559,21 @@ public class DateField extends AbstractField<Date> implements
 
                     /*
                      * Datefield now contains some text that could't be parsed
-                     * into date.
+                     * into date. ValueChangeEvent is fired after the value is
+                     * changed and the flags are set
                      */
                     if (oldDate != null) {
                         /*
-                         * Set the logic value to null.
+                         * Set the logic value to null without firing the
+                         * ValueChangeEvent
                          */
-                        setValue(null);
+                        preventValueChangeEvent = true;
+                        try {
+                            setValue(null);
+                        } finally {
+                            preventValueChangeEvent = false;
+                        }
+
                         /*
                          * Reset the dateString (overridden to null by setValue)
                          */
@@ -569,6 +593,13 @@ public class DateField extends AbstractField<Date> implements
                      * not want to cause the client side value to change.
                      */
                     uiHasValidDateString = false;
+
+                    /*
+                     * If value was changed fire the ValueChangeEvent
+                     */
+                    if (oldDate != null) {
+                        fireValueChange(false);
+                    }
 
                     /*
                      * Because of our custom implementation of isValid(), that
@@ -600,6 +631,16 @@ public class DateField extends AbstractField<Date> implements
 
         if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
+        }
+    }
+
+    /*
+     * only fires the event if preventValueChangeEvent flag is false
+     */
+    @Override
+    protected void fireValueChange(boolean repaintIsNotNeeded) {
+        if (!preventValueChangeEvent) {
+            super.fireValueChange(repaintIsNotNeeded);
         }
     }
 
@@ -691,7 +732,7 @@ public class DateField extends AbstractField<Date> implements
                 Collection<?> visibleItemProperties = f.getItemPropertyIds();
                 for (Object fieldId : visibleItemProperties) {
                     Field<?> field = f.getField(fieldId);
-                    if (field == this) {
+                    if (equals(field)) {
                         /*
                          * this datefield is logically in a form. Do the same
                          * thing as form does in its value change listener that
@@ -783,17 +824,15 @@ public class DateField extends AbstractField<Date> implements
         // Clone the instance
         final Calendar newCal = (Calendar) calendar.clone();
 
-        // Assigns the current time tom calendar.
-        final Date currentDate = getValue();
-        if (currentDate != null) {
-            newCal.setTime(currentDate);
-        }
-
         final TimeZone currentTimeZone = getTimeZone();
         if (currentTimeZone != null) {
             newCal.setTimeZone(currentTimeZone);
         }
 
+        final Date currentDate = getValue();
+        if (currentDate != null) {
+            newCal.setTime(currentDate);
+        }
         return newCal;
     }
 
@@ -1027,4 +1066,40 @@ public class DateField extends AbstractField<Date> implements
         }
 
     }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
+            Date date = DesignAttributeHandler.getFormatter().parse(
+                    design.attr("value"), Date.class);
+            // formatting will return null if it cannot parse the string
+            if (date == null) {
+                Logger.getLogger(DateField.class.getName()).info(
+                        "cannot parse " + design.attr("value") + " as date");
+            }
+            this.setValue(date);
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        if (getValue() != null) {
+            design.attr("value",
+                    DesignAttributeHandler.getFormatter().format(getValue()));
+        }
+    }
+
+    /**
+     * Returns current date-out-of-range error message.
+     * 
+     * @see #setDateOutOfRangeMessage(String)
+     * @since 7.4
+     * @return Current error message for dates out of range.
+     */
+    public String getDateOutOfRangeMessage() {
+        return dateOutOfRangeMessage;
+    }
+
 }

@@ -43,6 +43,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonObject;
 
 /**
@@ -547,7 +548,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     protected void addExtension(Extension extension) {
         ClientConnector previousParent = extension.getParent();
-        if (previousParent == this) {
+        if (equals(previousParent)) {
             // Nothing to do, already attached
             return;
         } else if (previousParent != null) {
@@ -996,5 +997,52 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        /*
+         * This equals method must return true when we're comparing an object to
+         * its proxy. This happens a lot with CDI (and possibly Spring) when
+         * we're injecting Components. See #14639
+         */
+        if (obj instanceof AbstractClientConnector) {
+            AbstractClientConnector connector = (AbstractClientConnector) obj;
+            return connector.isThis(this);
+        }
+        return false;
+    }
+
+    /**
+     * For internal use only, may be changed or removed in future versions.
+     * <p>
+     * This method must be protected, because otherwise it will not be redefined
+     * by the proxy to actually be called on the underlying instance.
+     * <p>
+     * See #14639
+     * 
+     * @deprecated only defined for framework hacks, do not use.
+     */
+    @Deprecated
+    protected boolean isThis(Object that) {
+        return this == that;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -27,6 +27,16 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UIProviderInitParameterTest extends MultiBrowserTest {
 
+    @Override
+    protected void openTestURL(String... parameters) {
+        driver.get(getTestUrl());
+    }
+
+    @Override
+    protected String getDeploymentPath() {
+        return "/uiprovider";
+    }
+
     @Test
     public void testDefault() {
         // Test that UI parameter is used by default
@@ -48,11 +58,6 @@ public class UIProviderInitParameterTest extends MultiBrowserTest {
         LabelElement label = $(LabelElement.class).first();
         String message = "Test for basic JavaScript component functionality.";
         assertEquals("unexpected text found", message, label.getText());
-    }
-
-    @Override
-    protected String getDeploymentPath() {
-        return "/uiprovider";
     }
 
 }

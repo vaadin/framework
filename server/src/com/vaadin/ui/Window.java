@@ -18,7 +18,14 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -39,6 +46,9 @@ import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -1205,5 +1215,116 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      */
     public String getTabStopBottomAssistiveText() {
         return getState(false).assistiveTabStopBottomText;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext context) {
+        super.readDesign(design, context);
+
+        if (design.hasAttr("center")) {
+            center();
+        }
+        if (design.hasAttr("position")) {
+            String[] position = design.attr("position").split(",");
+            setPositionX(Integer.parseInt(position[0]));
+            setPositionY(Integer.parseInt(position[1]));
+        }
+        if (design.hasAttr("close-shortcut")) {
+            ShortcutAction shortcut = DesignAttributeHandler
+                    .readAttribute("close-shortcut", design.attributes(),
+                            ShortcutAction.class);
+            setCloseShortcut(shortcut.getKeyCode(), shortcut.getModifiers());
+        }
+    }
+
+    /**
+     * Reads the content and possible assistive descriptions from the list of
+     * child elements of a design. If an element has an
+     * {@code :assistive-description} attribute, adds the parsed component to
+     * the list of components used as the assistive description of this Window.
+     * Otherwise, sets the component as the content of this Window. If there are
+     * multiple non-description elements, throws a DesignException.
+     * 
+     * @param children
+     *            child elements in a design
+     * @param context
+     *            the DesignContext instance used to parse the design
+     * 
+     * @throws DesignException
+     *             if there are multiple non-description child elements
+     * @throws DesignException
+     *             if a child element could not be parsed as a Component
+     * 
+     * @see #setContent(Component)
+     * @see #setAssistiveDescription(Component...)
+     */
+    @Override
+    protected void readDesignChildren(Elements children, DesignContext context) {
+        List<Component> descriptions = new ArrayList<Component>();
+        Elements content = new Elements();
+
+        for (Element child : children) {
+            if (child.hasAttr(":assistive-description")) {
+                descriptions.add(context.readDesign(child));
+            } else {
+                content.add(child);
+            }
+        }
+        super.readDesignChildren(content, context);
+        setAssistiveDescription(descriptions.toArray(new Component[0]));
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext context) {
+        super.writeDesign(design, context);
+
+        Window def = context.getDefaultInstance(this);
+
+        if (getState().centered) {
+            design.attr("center", "");
+        }
+
+        DesignAttributeHandler.writeAttribute("position", design.attributes(),
+                getPosition(), def.getPosition(), String.class);
+
+        CloseShortcut shortcut = getCloseShortcut();
+        if (shortcut != null) {
+            // TODO What if several close shortcuts??
+
+            CloseShortcut defShortcut = def.getCloseShortcut();
+            if (defShortcut == null
+                    || shortcut.getKeyCode() != defShortcut.getKeyCode()
+                    || !Arrays.equals(shortcut.getModifiers(),
+                            defShortcut.getModifiers())) {
+                DesignAttributeHandler.writeAttribute("close-shortcut",
+                        design.attributes(), shortcut, null,
+                        CloseShortcut.class);
+            }
+        }
+
+        for (Component c : getAssistiveDescription()) {
+            Element child = context.createElement(c).attr(
+                    ":assistive-description", "");
+            design.appendChild(child);
+        }
+    }
+
+    private String getPosition() {
+        return getPositionX() + "," + getPositionY();
+    }
+
+    private CloseShortcut getCloseShortcut() {
+        return closeShortcut;
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("center");
+        result.add("position");
+        result.add("position-y");
+        result.add("position-x");
+        result.add("close-shortcut");
+        return result;
     }
 }

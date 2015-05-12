@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 import org.junit.Assert;
@@ -91,5 +92,18 @@ public class MetadataWriterTest {
         Assert.assertEquals(
                 "{\"timedRedirect\":{\"interval\":15,\"url\":\"\"}}", writer
                         .getBuffer().toString());
+    }
+
+    @Test
+    public void writeAsyncWithSystemMessages() throws IOException {
+        WrappedSession wrappedSession = mock(WrappedSession.class);
+        when(session.getSession()).thenReturn(wrappedSession);
+
+        disableSessionExpirationMessages(messages);
+
+        new MetadataWriter().write(ui, writer, false, true, messages);
+        Assert.assertEquals(
+                "{\"async\":true,\"timedRedirect\":{\"interval\":15,\"url\":\"\"}}",
+                writer.getBuffer().toString());
     }
 }

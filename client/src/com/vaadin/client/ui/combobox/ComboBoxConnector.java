@@ -166,7 +166,12 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         ) {
 
             String[] selectedKeys = uidl.getStringArrayVariable("selected");
-            if (selectedKeys.length > 0) {
+
+            // when filtering with empty filter, server sets the selected key
+            // to "", which we don't select here. Otherwise we won't be able to
+            // reset back to the item that was selected before filtering
+            // started.
+            if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
                 performSelection(selectedKeys[0]);
             } else {
                 resetSelection();
@@ -305,6 +310,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                     getWidget().tb.setValue("");
                 }
             }
+            getWidget().currentSuggestion = null; // #13217
             getWidget().setSelectedItemIcon(null);
             getWidget().selectedOptionKey = null;
         }

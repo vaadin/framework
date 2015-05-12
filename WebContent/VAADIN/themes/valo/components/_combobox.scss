@@ -1,9 +1,17 @@
+/**
+ * Outputs the selectors and properties for the ComboBox component.
+ *
+ * @param {string} $primary-stylename (v-filterselect) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group combobox
+ */
 @mixin valo-combobox ($primary-stylename: v-filterselect, $include-additional-styles: contains($v-included-additional-styles, combobox)) {
 
   .#{$primary-stylename} {
     position: relative;
     width: $v-default-field-width;
-    @include valo-combobox-style($primary-stylename: $primary-stylename);
+    @include valo-combobox-style;
     white-space: nowrap;
 
     .v-icon {
@@ -24,39 +32,11 @@
   }
 
   .#{$primary-stylename}-suggestpopup {
-    @include valo-combobox-popup-style($primary-stylename: $primary-stylename);
+    @include valo-combobox-popup-style;
   }
 
   .#{$primary-stylename}-no-input {
-    cursor: pointer;
-    text-shadow: valo-text-shadow();
-
-    @if $v-border-radius != $v-textfield-border-radius {
-      border-radius: $v-border-radius;
-    }
-
-    .#{$primary-stylename}-input {
-      @include user-select(none);
-      @include valo-gradient;
-      cursor: inherit;
-      @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient));
-      @include valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient);
-      text-shadow: inherit;
-      text-overflow: ellipsis;
-      border-radius: inherit;
-
-      &:focus {
-        @include valo-textfield-focus-style($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $background-color: $v-background-color);
-      }
-    }
-
-    .#{$primary-stylename}-button {
-      border-left: none !important;
-    }
-
-    &:hover .#{$primary-stylename}-button:before {
-      color: inherit;
-    }
+    @include valo-combobox-no-input-style;
   }
 
 
@@ -110,16 +90,29 @@
 }
 
 
-
-
-
-
+/**
+ * Outputs the styles for a combobox variant.
+ *
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the combobox, which corresponds its height
+ * @param {color} $font-color (null) - The font color of the combobox. Computed from the $background-color by default.
+ * @param {number} $font-weight (max(400, $v-font-weight)) - The font weight of the combobox
+ * @param {size} $font-size (null) - The font size of the combobox. Inherited from the parent by default.
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the combobox
+ * @param {list} $border ($v-textfield-border) - The border of the combobox
+ * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the combobox
+ * @param {list} $gradient (none) - Valo specific gradient value. See the documentation for $v-gradient.
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
+ * @param {list} $states (normal focus disabled) - The combobox states for which to output corresponding styles
+ *
+ * @group combobox
+ */
 @mixin valo-combobox-style (
     $unit-size: $v-unit-size,
 
-    $font-color: null, // Computed by default
+    $font-color: null,
     $font-weight: max(400, $v-font-weight),
-    $font-size: null, // Inherited by default
+    $font-size: null,
 
     $background-color: $v-textfield-background-color,
     $border: $v-textfield-border,
@@ -129,14 +122,13 @@
     $bevel: $v-textfield-bevel,
     $shadow: $v-textfield-shadow,
 
-    $primary-stylename: v-filterselect,
     $states: normal focus disabled
   ) {
 
     height: $unit-size;
     border-radius: $border-radius;
 
-  .#{$primary-stylename}-input {
+  [class*="input"] {
     @include valo-combobox-input-style(
           $unit-size: $unit-size,
           $gradient: $gradient,
@@ -151,7 +143,7 @@
           $states: $states);
   }
 
-  .v-icon + .#{$primary-stylename}-input {
+  .v-icon + [class*="input"] {
     padding-left: $unit-size;
   }
 
@@ -171,17 +163,17 @@
     padding-top: .12em;
   }
 
-  &.#{$primary-stylename}-prompt > .#{$primary-stylename}-input {
+  &[class*="prompt"] > [class*="input"] {
     @include valo-textfield-prompt-style($background-color);
   }
 
-  .#{$primary-stylename}-button {
-    @include valo-combobox-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color);
+  [class$="button"] {
+    @include valo-combobox-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color, $border-radius: $border-radius, $border: $border);
   }
 
   &.v-disabled  {
     @include opacity($v-textfield-disabled-opacity);
-    & .#{$primary-stylename}-button {
+    & [class$="button"] {
       cursor: default;
       pointer-events: none;
       &:active:after {
@@ -191,11 +183,11 @@
   }
 
   &.v-readonly {
-    .#{$primary-stylename}-input {
+    [class*="input"] {
       @include valo-textfield-readonly-style;
     }
 
-    .#{$primary-stylename}-button {
+    [class$="button"] {
       cursor: default;
       pointer-events: none;
       &:active:after {
@@ -206,18 +198,34 @@
 }
 
 
-
-
+/**
+ * Outputs the styles for a combobox variant input element.
+ * 
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the input (affects the padding only, width and height are 100%)
+ * @param {size | list} $padding (null) - The padding of the input. Computed from other parameters by default.
+ * @param {color} $font-color (null) - The font color of the input. Computed from the $background-color by default.
+ * @param {number} $font-weight (null) - The font weight of the input. Inherited from the parent by default.
+ * @param {size} $font-size (null) - The font size of the combobox. Inherited from the parent by default.
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the input
+ * @param {list} $border ($v-textfield-border) - The border of the input
+ * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the input
+ * @param {list} $gradient (none) - Valo specific gradient value. See the documentation for $v-gradient.
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
+ * @param {list} $states (normal focus disabled) - The combobox states for which to output corresponding styles
+ *
+ * @group combobox
+ */
 @mixin valo-combobox-input-style (
     $unit-size: $v-unit-size,
-    $padding: null, // Computed by default
+    $padding: null,
 
-    $font-color: null, // Computed by default
-    $font-weight: null, // Inherited by default
-    $font-size: null, // Inherited by default
+    $font-color: null,
+    $font-weight: null,
+    $font-size: null,
 
     $background-color: $v-textfield-background-color,
-    $border: $v-border,
+    $border: $v-textfield-border,
     $border-radius: $v-textfield-border-radius,
 
     $gradient: none,
@@ -246,23 +254,33 @@
 }
 
 
-
-
-
-
-
-@mixin valo-combobox-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color) {
-  $border-width: first-number($v-textfield-border);
+/**
+ * Outputs the styles for a combobox variant button element.
+ * 
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the input, which affects the font color of the button
+ * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the input, which affects the border-radius of the button
+ * @param {list} $border ($v-textfield-border) - The border of the input, which affects the border of the button
+ *
+ * @group combobox
+ */
+@mixin valo-combobox-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color, $border-radius: $v-border-radius, $border: $v-textfield-border) {
+  $border-width: first-number($border) or 0;
   @include valo-tappable;
   position: absolute;
-  top: $border-width;
-  right: $border-width;
-  bottom: $border-width;
   width: $unit-size;
-  cursor: pointer;
+
+  @if $border and $border != none {
+    top: $border-width;
+    right: $border-width;
+    bottom: $border-width;
+  }
 
   @if type-of($background-color) == color {
-    border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    @if $border {
+      border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    }
     color: mix($background-color, valo-font-color($background-color));
 
     .v-ie8 & {
@@ -310,16 +328,23 @@
 }
 
 
-
+/**
+ * Outputs the font icon styles for the combobox drop down button.
+ *
+ * @group combobox
+ */
 @mixin valo-combobox-button-icon-style {
   font-family: FontAwesome;
   content: "\f078";
 }
 
 
-
-
-@mixin valo-combobox-popup-style ($primary-stylename: v-filterselect) {
+/**
+ * Outputs the styles for a combobox popup.
+ *
+ * @group combobox
+ */
+@mixin valo-combobox-popup-style {
 
   @if $v-animations-enabled {
     @if $v-overlay-animate-in {
@@ -331,11 +356,15 @@
     // closing when the user selects an item
   }
 
-  .#{$primary-stylename}-suggestmenu {
+  [class$="suggestmenu"] {
     @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     position: relative;
     z-index: 1;
+
+    &[style*="height"] {
+      @include box-sizing(content-box);
+    }
   }
 
    margin-top: ceil($v-unit-size/8) !important;
@@ -355,7 +384,7 @@
     @include valo-selection-item-selected-style;
   }
 
-  .#{$primary-stylename}-status {
+  [class$="status"] {
     position: absolute;
     right: $v-border-radius;
     $bg: scale-color($v-background-color, $lightness: -15%);
@@ -371,7 +400,7 @@
     pointer-events: none;
 
     @if $v-animations-enabled {
-       @include animation(valo-anim-slide-in-down 200ms 80ms backwards);
+       @include animation(valo-animate-in-slide-down 200ms 80ms backwards);
     }
 
     > * {
@@ -396,9 +425,24 @@
 
     color: valo-font-color($v-background-color);
 
+    &:after {
+      // Extend click target when hovering over (popup width might change between pages)
+      content: "";
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+    }
+
     &:hover {
       @include opacity(1);
       background: rgba($v-background-color, .5);
+
+      &:after {
+        top: -10px;
+        bottom: -10px;
+        left: -20px;
+        right: -20px;
+      }
     }
 
     span {
@@ -432,5 +476,43 @@
 
   div[class*="-off"] {
     display: none;
+  }
+}
+
+/**
+ *
+ *
+ *
+ * @group combobox
+ */
+@mixin valo-combobox-no-input-style {
+  cursor: pointer;
+  text-shadow: valo-text-shadow();
+
+  @if $v-border-radius != $v-textfield-border-radius {
+    border-radius: $v-border-radius;
+  }
+
+  [class*="input"] {
+    @include user-select(none);
+    @include valo-gradient;
+    cursor: inherit;
+    @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient));
+    @include valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient);
+    text-shadow: inherit;
+    text-overflow: ellipsis;
+    border-radius: inherit;
+
+    &:focus {
+      @include valo-textfield-focus-style($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $background-color: $v-background-color);
+    }
+  }
+
+  [class$="button"] {
+    border-left: none !important;
+  }
+
+  &:hover [class$="button"]:before {
+    color: inherit;
   }
 }

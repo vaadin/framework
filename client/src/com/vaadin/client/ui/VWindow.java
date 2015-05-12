@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,7 +62,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
@@ -73,7 +75,7 @@ import com.vaadin.shared.ui.window.WindowRole;
 
 /**
  * "Sub window" component.
- *
+ * 
  * @author Vaadin Ltd
  */
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
@@ -178,8 +180,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
 
-    private boolean hasFocus;
-
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
      * until a position is received from the server, or the user moves or
@@ -233,7 +233,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         /*
          * Stores the element that has focus in the application UI when the
          * window is opened, so it can be restored when the window closes.
-         *
+         * 
          * This is currently implemented for the case when one non-modal window
          * can be open at the same time, and the focus is not changed while the
          * window is open.
@@ -267,7 +267,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         /*
          * Restores the previously stored focused element.
-         *
+         * 
          * When the focus was changed outside the window while the window was
          * open, the originally stored element is restored.
          */
@@ -309,7 +309,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Returns true if this window is the topmost VWindow
-     *
+     * 
      * @return
      */
     private boolean isActive() {
@@ -392,8 +392,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
-        DOM.appendChild(wrapper, maximizeRestoreBox);
-        DOM.appendChild(wrapper, closeBox);
+        DOM.appendChild(header, maximizeRestoreBox);
+        DOM.appendChild(header, closeBox);
         DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper, contents);
         DOM.appendChild(wrapper, footer);
@@ -420,6 +420,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 Id.of(headerText));
 
         // Handlers to Prevent tab to leave the window
+        // and backspace to cause browser navigation
         topEventBlocker = new NativePreviewHandler() {
             @Override
             public void onPreviewNativeEvent(NativePreviewEvent event) {
@@ -427,6 +428,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 if (nativeEvent.getEventTarget().cast() == topTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                         && nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+                if (nativeEvent.getEventTarget().cast() == topTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
                     nativeEvent.preventDefault();
                 }
             }
@@ -441,6 +446,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                         && !nativeEvent.getShiftKey()) {
                     nativeEvent.preventDefault();
                 }
+                if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                    nativeEvent.preventDefault();
+                }
             }
         };
     }
@@ -451,7 +460,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * is prevented.
      * <p>
      * This message is not visible on the screen.
-     *
+     * 
      * @param topMessage
      *            String provided when the user navigates with Shift-Tab keys to
      *            the top of the window
@@ -466,7 +475,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * key is prevented.
      * <p>
      * This message is not visible on the screen.
-     *
+     * 
      * @param bottomMessage
      *            String provided when the user navigates with the Tab key to
      *            the bottom of the window
@@ -479,7 +488,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the top of the window when leaving a window with the tab key
      * is prevented.
-     *
+     * 
      * @return the top message
      */
     public String getTabStopTopAssistiveText() {
@@ -490,7 +499,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the bottom of the window when leaving a window with the tab
      * key is prevented.
-     *
+     * 
      * @return the bottom message
      */
     public String getTabStopBottomAssistiveText() {
@@ -549,6 +558,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 w.bringToFrontSequence = -1;
             }
         }
+        focusTopmostModalWindow();
+    }
+
+    private static void focusTopmostModalWindow() {
+        // If we call focus() directly without scheduling, it does not work in
+        // IE and FF.
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                VWindow topmost = getTopmostWindow();
+                if ((topmost != null) && (topmost.vaadinModality)) {
+                    topmost.focus();
+                }
+            }
+        });
     }
 
     @Override
@@ -572,7 +596,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
              * ticket #11994 which was changing the size to 110% was replaced
              * with this due to ticket #12943
              */
-            Util.runWebkitOverflowAutoFix(contents.getFirstChildElement());
+            WidgetUtil
+                    .runWebkitOverflowAutoFix(contents.getFirstChildElement());
         }
     }
 
@@ -600,7 +625,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Sets the closable state of the window. Additionally hides/shows the close
      * button according to the new state.
-     *
+     * 
      * @param closable
      *            true if the window can be closed by the user
      */
@@ -611,9 +636,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         this.closable = closable;
         if (closable) {
-            closeBox.getStyle().clearDisplay();
+            DOM.setElementProperty(closeBox, "className", CLASSNAME
+                    + "-closebox");
+
         } else {
-            closeBox.getStyle().setDisplay(Display.NONE);
+            DOM.setElementProperty(closeBox, "className", CLASSNAME
+                    + "-closebox " + CLASSNAME + "-closebox-disabled");
+
         }
 
     }
@@ -622,7 +651,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Returns the closable state of the sub window. If the sub window is
      * closable a decoration (typically an X) is shown to the user. By clicking
      * on the X the user can close the window.
-     *
+     * 
      * @return true if the sub window is closable
      */
     protected boolean isClosable() {
@@ -654,7 +683,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * correctly if clicking on the "close" button in the window header but
          * closing the window from a button for example in the window will fail.
          * Symptom described in #10776
-         *
+         * 
          * The problematic part is that for the focus to be returned correctly
          * an input element needs to be focused in the root panel. Focusing some
          * other element apparently won't work.
@@ -676,6 +705,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         while (curIndex < windowOrder.size()) {
             windowOrder.get(curIndex).setWindowOrder(curIndex++);
         }
+        focusTopmostModalWindow();
     }
 
     private void fixIE8FocusCaptureIssue() {
@@ -862,14 +892,17 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         setCaption(c, null);
     }
 
-    public void setCaption(String c, String icon) {
-        String html = Util.escapeHTML(c);
-        if (icon != null) {
-            icon = client.translateVaadinUri(icon);
-            html = "<img src=\"" + Util.escapeAttribute(icon)
-                    + "\" class=\"v-icon\" alt=\"\" />" + html;
-        }
+    public void setCaption(String c, String iconURL) {
+        setCaption(c, iconURL, false);
+    }
 
+    public void setCaption(String c, String iconURL, boolean asHtml) {
+        String html;
+        if (asHtml) {
+            html = c == null ? "" : c;
+        } else {
+            html = WidgetUtil.escapeHTML(c);
+        }
         // Provide information to assistive device users that a sub window was
         // opened
         String prefix = "<span class='"
@@ -880,13 +913,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 + assistivePostfix + "</span>";
 
         html = prefix + html + postfix;
-        DOM.setInnerHTML(headerText, html);
+        headerText.setInnerHTML(html);
+
+        if (iconURL != null) {
+            Icon icon = client.getIcon(iconURL);
+            DOM.insertChild(headerText, icon.getElement(), 0);
+        }
     }
 
     /**
      * Setter for the text for assistive devices the window caption is prefixed
      * with.
-     *
+     * 
      * @param assistivePrefix
      *            the assistivePrefix to set
      */
@@ -897,7 +935,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Getter for the text for assistive devices the window caption is prefixed
      * with.
-     *
+     * 
      * @return the assistivePrefix
      */
     public String getAssistivePrefix() {
@@ -907,7 +945,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Setter for the text for assistive devices the window caption is postfixed
      * with.
-     *
+     * 
      * @param assistivePostfix
      *            the assistivePostfix to set
      */
@@ -918,7 +956,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Getter for the text for assistive devices the window caption is postfixed
      * with.
-     *
+     * 
      * @return the assistivePostfix
      */
     public String getAssistivePostfix() {
@@ -1022,7 +1060,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void onResizeEvent(Event event) {
-        if (resizable && Util.isTouchEventOrLeftMouseButton(event)) {
+        if (resizable && WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
             case Event.ONTOUCHSTART:
@@ -1034,8 +1072,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     resizeBox.getStyle().setVisibility(Visibility.HIDDEN);
                 }
                 resizing = true;
-                startX = Util.getTouchOrMouseClientX(event);
-                startY = Util.getTouchOrMouseClientY(event);
+                startX = WidgetUtil.getTouchOrMouseClientX(event);
+                startY = WidgetUtil.getTouchOrMouseClientY(event);
                 origW = getElement().getOffsetWidth();
                 origH = getElement().getOffsetHeight();
                 DOM.setCapture(getElement());
@@ -1070,14 +1108,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * TODO check if we need to support this with touch based devices.
-     *
+     * 
      * Checks if the cursor was inside the browser content area when the event
      * happened.
-     *
+     * 
      * @param event
      *            The event to be checked
      * @return true, if the cursor is inside the browser content area
-     *
+     * 
      *         false, otherwise
      */
     private boolean cursorInsideBrowserContentArea(Event event) {
@@ -1101,8 +1139,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             return;
         }
 
-        int w = Util.getTouchOrMouseClientX(event) - startX + origW;
-        int h = Util.getTouchOrMouseClientY(event) - startY + origH;
+        int w = WidgetUtil.getTouchOrMouseClientX(event) - startX + origW;
+        int h = WidgetUtil.getTouchOrMouseClientY(event) - startY + origH;
 
         w = Math.max(w, getMinWidth());
         h = Math.max(h, getMinHeight());
@@ -1165,7 +1203,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void onDragEvent(Event event) {
-        if (!Util.isTouchEventOrLeftMouseButton(event)) {
+        if (!WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
             return;
         }
 
@@ -1200,9 +1238,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             centered = false;
             if (cursorInsideBrowserContentArea(event)) {
                 // Only drag while cursor is inside the browser client area
-                final int x = Util.getTouchOrMouseClientX(event) - startX
+                final int x = WidgetUtil.getTouchOrMouseClientX(event) - startX
                         + origX;
-                final int y = Util.getTouchOrMouseClientY(event) - startY
+                final int y = WidgetUtil.getTouchOrMouseClientY(event) - startY
                         + origY;
                 setPopupPosition(x, y);
             }
@@ -1214,8 +1252,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (draggable) {
             showDraggingCurtain();
             dragging = true;
-            startX = Util.getTouchOrMouseClientX(event);
-            startY = Util.getTouchOrMouseClientY(event);
+            startX = WidgetUtil.getTouchOrMouseClientX(event);
+            startY = WidgetUtil.getTouchOrMouseClientY(event);
             origX = DOM.getAbsoluteLeft(getElement());
             origY = DOM.getAbsoluteTop(getElement());
             DOM.setCapture(getElement());
@@ -1263,7 +1301,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
-                Widget w = Util.findWidget(target, null);
+                Widget w = WidgetUtil.findWidget(target, null);
                 while (w != null) {
                     if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks
@@ -1302,10 +1340,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
-        if (hasFocus && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+        if (vaadinModality
+                && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE
+                && !isFocusedElementEditable()) {
             event.preventDefault();
         }
-
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
@@ -1322,8 +1361,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onBlur(BlurEvent event) {
-        hasFocus = false;
-
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
@@ -1331,8 +1368,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onFocus(FocusEvent event) {
-        hasFocus = true;
-
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
@@ -1366,7 +1401,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * assistive devices when it is opened.
      * <p>
      * When the provided array is empty, an existing description is removed.
-     *
+     * 
      * @param connectors
      *            with the connectors of the widgets to use as description
      */
@@ -1404,7 +1439,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the connectors that are used as assistive description. Text
      * contained in these connectors will be read by assistive devices when the
      * window is opened.
-     *
+     * 
      * @return list of previously set connectors
      */
     public List<Connector> getAssistiveDescription() {
@@ -1413,14 +1448,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Sets the WAI-ARIA role the window.
-     *
+     * 
      * This role defines how an assistive device handles a window. Available
      * roles are alertdialog and dialog (@see <a
      * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
-     *
+     * 
      * The default role is dialog.
-     *
+     * 
      * @param role
      *            WAI-ARIA role to set for the window
      */
@@ -1439,7 +1474,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * The value of the parameter doTabStop is stored and used for non-modal
      * windows. For modal windows, the handlers are always registered, while
      * preserving the stored value.
-     *
+     * 
      * @param doTabStop
      *            true to prevent leaving the window, false to allow leaving the
      *            window for non modal windows
@@ -1456,9 +1491,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Adds a Handler for when user moves the window.
-     *
+     * 
      * @since 7.1.9
-     *
+     * 
      * @return {@link HandlerRegistration} used to remove the handler
      */
     public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {

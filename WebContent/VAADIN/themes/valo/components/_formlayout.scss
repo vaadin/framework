@@ -1,12 +1,19 @@
+/**
+ * Outputs the selectors and properties for the FormLayout component.
+ *
+ * @param {string} $primary-stylename (v-formlayout) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group formlayout
+ */
 @mixin valo-formlayout ($primary-stylename: v-formlayout, $include-additional-styles: contains($v-included-additional-styles, formlayout)) {
 
   @include valo-formlayout-spacing;
-  @include valo-formlayout-margins;
+  @include valo-formlayout-margin;
 
   .#{$primary-stylename} > table {
     border-spacing: 0;
     position: relative;
-    padding: 0 $v-layout-spacing-horizontal;
   }
 
   .#{$primary-stylename}.v-has-width > table,
@@ -44,6 +51,8 @@
     > .v-label-h4 {
       position: absolute;
       left: 0;
+      right: 0;
+      width: auto !important;
       margin-top: -0.5em;
       padding-bottom: 0.5em;
       border-bottom: valo-border($color: $v-app-background-color, $strength: 0.5);
@@ -53,91 +62,130 @@
 
   @if $include-additional-styles {
     .#{$primary-stylename}.light {
-      @include valo-formlayout-light-style($primary-stylename);
+      @include valo-formlayout-light-style;
     }
   }
 
 }
 
 
-@mixin valo-formlayout-margins ($primary-stylename: v-formlayout, $all: null, $top: $v-layout-margin-top, $right: $v-layout-margin-right, $bottom: $v-layout-margin-bottom, $left: $v-layout-margin-left) {
-  @if $all != null {
-    $top: $all;
-    $right: $all;
-    $bottom: $all;
-    $left: $all;
+/**
+ * Outputs the styles for form layout margin.
+ *
+ * @param {list} $margin ($v-layout-margin-top $v-layout-margin-right $v-layout-margin-bottom $v-layout-margin-left) - The margin for the form layout (any valid CSS margin value)
+ *
+ * @group formlayout
+ */
+@mixin valo-formlayout-margin ($margin: $v-layout-margin-top $v-layout-margin-right $v-layout-margin-bottom $v-layout-margin-left) {
+  $top: 0;
+  $right: 0;
+  $bottom: 0;
+  $left: 0;
+
+  @if length($margin) == 1 {
+    $top: $margin;
+    $right: $margin;
+    $bottom: $margin;
+    $left: $margin;
+  } @else if length($margin) == 2 {
+    $top: nth($margin, 1);
+    $right: nth($margin, 2);
+    $bottom: nth($margin, 1);
+    $left: nth($margin, 2);
+  } @else if length($margin) == 3 {
+    $top: nth($margin, 1);
+    $right: nth($margin, 2);
+    $bottom: nth($margin, 3);
+    $left: nth($margin, 2);
+  } @else if length($margin) == 4 {
+    $top: nth($margin, 1);
+    $right: nth($margin, 2);
+    $bottom: nth($margin, 3);
+    $left: nth($margin, 4);
   }
 
-  .#{$primary-stylename}-margin-top > tbody > .#{$primary-stylename}-firstrow {
-    > .#{$primary-stylename}-captioncell,
-    > .#{$primary-stylename}-contentcell,
-    > .#{$primary-stylename}-errorcell {
-      padding-top: $top;
-    }
+  [class*="margin-top"] > tbody > [class*="firstrow"] > td {
+    padding-top: $top;
   }
 
-  .#{$primary-stylename}-margin-bottom > tbody > .#{$primary-stylename}-lastrow {
-    > .#{$primary-stylename}-captioncell,
-    > .#{$primary-stylename}-contentcell,
-    > .#{$primary-stylename}-errorcell {
-      padding-bottom: $bottom;
-    }
+  [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
+    padding-bottom: $bottom;
   }
 
-  .#{$primary-stylename}-margin-left > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-captioncell {
+  [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
     padding-left: $left;
   }
 
-  .#{$primary-stylename}-margin-right > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell {
-    padding-right: $right;
+  [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"] {
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      left: $left;
+    }
   }
-}
 
+  [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
+    padding-right: $right;
 
-@mixin valo-formlayout-spacing ($primary-stylename: v-formlayout, $vertical: $v-layout-spacing-vertical) {
-  .#{$primary-stylename}-spacing > tbody > .#{$primary-stylename}-row {
-    > .#{$primary-stylename}-captioncell,
-    > .#{$primary-stylename}-contentcell,
-    > .#{$primary-stylename}-errorcell {
-      padding-top: $vertical;
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      right: $right;
     }
   }
 }
 
 
+/**
+ * Outputs the styles for form layout spacing.
+ *
+ * @param {size} $vertical ($v-layout-spacing-vertical) - The vertical spacing between the rows in the form layout
+ *
+ * @group formlayout
+ */
+@mixin valo-formlayout-spacing ($vertical: $v-layout-spacing-vertical) {
+  [class*="spacing"] > tbody > [class*="row"] > td {
+    padding-top: $vertical;
+  }
+
+  [class*="spacing"] > tbody > [class*="firstrow"] > td {
+    padding-top: 0;
+  }
+}
 
 
-
-@mixin valo-formlayout-light-style ($primary-stylename: v-formlayout, $row-height: $v-unit-size) {
+/**
+ * Outputs the styles for a light style form layout. This mixin expects the target to have the normal styles of a form layout applied.
+ *
+ * @param {size} $row-height ($v-unit-size) - The height of an individual form layout row
+ *
+ * @group formlayout
+ */
+@mixin valo-formlayout-light-style ($row-height: $v-unit-size) {
   > table {
     padding: 0;
   }
 
-  > table > tbody > .#{$primary-stylename}-row {
-    > .#{$primary-stylename}-captioncell,
-    > .#{$primary-stylename}-contentcell,
-    > .#{$primary-stylename}-errorcell {
-      padding-top: 0;
-      height: $row-height; // Effectively min-height
-    }
-  }
-
-  > table > tbody > .#{$primary-stylename}-row td {
+  > table > tbody > tr > td {
+    padding-top: 0;
+    height: $row-height; // Effectively min-height
     border-bottom: valo-border($color: $v-app-background-color, $strength: 0.3);
   }
 
-  > table > tbody > .#{$primary-stylename}-lastrow td {
+  > table > tbody > [class*="lastrow"] > td {
     border-bottom: none;
   }
 
-  > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-captioncell {
+  > table > tbody > tr > [class*="captioncell"] {
     color: valo-font-color($v-background-color, .5);
     text-align: right;
     padding-left: ceil($v-unit-size/3);
     line-height: $row-height;
   }
 
-  .#{$primary-stylename}-contentcell {
+  > table > tbody > [class*="row"] > [class*="contentcell"] {
+    padding-right: 0;
+
     > .v-textfield,
     > .v-textarea,
     > .v-filterselect,
@@ -156,6 +204,10 @@
       background: transparent;
       border: none;
       color: inherit;
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     > .v-textfield-prompt,
@@ -168,6 +220,19 @@
     > .v-textarea,
     > .v-richtextarea {
       height: auto;
+    }
+
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      border-bottom: none;
+      left: 0;
+      right: 0;
+    }
+
+    > .v-label-h3,
+    > .v-label-h4 {
+      margin-top: 0;
     }
   }
 
@@ -191,18 +256,5 @@
 
   .v-checkbox {
     margin-left: ceil($v-unit-size/6);
-  }
-
-  > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell {
-    > .v-label-h2,
-    > .v-label-h3,
-    > .v-label-h4 {
-      border-bottom: none;
-    }
-
-    > .v-label-h3,
-    > .v-label-h4 {
-      margin-top: 0;
-    }
   }
 }

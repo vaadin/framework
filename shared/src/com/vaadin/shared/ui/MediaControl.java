@@ -16,6 +16,7 @@
 
 package com.vaadin.shared.ui;
 
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -27,10 +28,12 @@ public interface MediaControl extends ClientRpc {
     /**
      * Start playing the media.
      */
+    @NoLayout
     public void play();
 
     /**
      * Pause playback of the media.
      */
+    @NoLayout
     public void pause();
 }

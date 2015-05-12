@@ -76,6 +76,7 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
@@ -846,6 +847,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Loads the new theme and removes references to the old theme
      * 
+     * @since 7.4.3
      * @param oldTheme
      *            The name of the old theme
      * @param newTheme
@@ -855,7 +857,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @param newThemeUrl
      *            The url of the new theme
      */
-    private void replaceTheme(final String oldTheme, final String newTheme,
+    protected void replaceTheme(final String oldTheme, final String newTheme,
             String oldThemeUrl, final String newThemeUrl) {
 
         LinkElement tagToReplace = null;
@@ -884,6 +886,26 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
     }
+
+    private void updateVaadinFavicon(String newTheme) {
+        NodeList<Element> iconElements = querySelectorAll("link[rel~=\"icon\"]");
+        for (int i = 0; i < iconElements.getLength(); i++) {
+            Element iconElement = iconElements.getItem(i);
+
+            String href = iconElement.getAttribute("href");
+            if (href != null && href.contains("VAADIN/themes")
+                    && href.endsWith("/favicon.ico")) {
+                href = href.replaceFirst("VAADIN/themes/.+?/favicon.ico",
+                        "VAADIN/themes/" + newTheme + "/favicon.ico");
+                iconElement.setAttribute("href", href);
+            }
+        }
+    }
+
+    private static native NodeList<Element> querySelectorAll(String selector)
+    /*-{
+        return $doc.querySelectorAll(selector);
+    }-*/;
 
     /**
      * Finds a link tag for a style sheet with the given URL
@@ -960,10 +982,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * Activates the new theme. Assumes the theme has been loaded and taken into
      * use in the browser.
      * 
-     * @since 7.3
+     * @since 7.4.3
      * @param newTheme
+     *            The name of the new theme
      */
-    private void activateTheme(String newTheme) {
+    protected void activateTheme(String newTheme) {
         if (activeTheme != null) {
             getWidget().getParent().removeStyleName(activeTheme);
             VOverlay.getOverlayContainer(getConnection()).removeClassName(
@@ -976,6 +999,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getWidget().getParent().addStyleName(newTheme);
             VOverlay.getOverlayContainer(getConnection()).addClassName(
                     activeTheme);
+
+            updateVaadinFavicon(newTheme);
         }
 
         forceStateChangeRecursively(UIConnector.this);
@@ -1014,9 +1039,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return The URL the theme can be loaded from
      */
     private String getThemeUrl(String theme) {
-        return getConnection().translateVaadinUri(
+        String themeUrl = getConnection().translateVaadinUri(
                 ApplicationConstants.VAADIN_PROTOCOL_PREFIX + "themes/" + theme
                         + "/styles" + ".css");
+        // Parameter appended to bypass caches after version upgrade.
+        themeUrl += "?v=" + Version.getFullVersion();
+        return themeUrl;
+
     }
 
     /**

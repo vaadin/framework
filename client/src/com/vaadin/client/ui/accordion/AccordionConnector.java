@@ -17,7 +17,7 @@ package com.vaadin.client.ui.accordion;
 
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VAccordion;
@@ -50,12 +50,13 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             StackItem selectedItem = getWidget().getStackItem(
                     getWidget().selectedItemIndex);
 
-            getWidget().open(getWidget().selectedItemIndex);
-
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
                 selectedItem.setContent(contentConnector.getWidget());
             }
+
+            getWidget().open(getWidget().selectedItemIndex);
+
         } else if (getWidget().getOpenStackItem() != null) {
             getWidget().close(getWidget().getOpenStackItem());
         }
@@ -105,7 +106,8 @@ public class AccordionConnector extends TabsheetBaseConnector implements
                     usedPixels += item.getCaptionHeight();
                 } else {
                     // This includes the captionNode borders
-                    usedPixels += Util.getRequiredHeight(item.getElement());
+                    usedPixels += WidgetUtil.getRequiredHeight(item
+                            .getElement());
                 }
             }
             int rootElementInnerHeight = getLayoutManager().getInnerHeight(

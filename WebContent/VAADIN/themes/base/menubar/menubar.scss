@@ -54,7 +54,8 @@
 .#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:hover,
 .#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:focus,
 .#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:active {
-	color: #999;
+	opacity: .5;
+	filter: alpha(opacity=50);
 }
 .#{$primaryStyleName}-more-menuitem {
 	/* Arial has the most coverage for geometric entity characters */

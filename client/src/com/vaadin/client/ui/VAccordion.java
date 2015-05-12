@@ -29,8 +29,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.accordion.AccordionState;
@@ -159,6 +159,8 @@ public class VAccordion extends VTabsheetBase {
      */
     public class StackItem extends ComplexPanel implements ClickHandler {
 
+        private Widget widget;
+
         public void setHeight(int height) {
             if (height == -1) {
                 super.setHeight("");
@@ -171,10 +173,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public Widget getComponent() {
-            if (getWidgetCount() < 2) {
-                return null;
-            }
-            return getWidget(1);
+            return widget;
         }
 
         @Override
@@ -204,7 +203,7 @@ public class VAccordion extends VTabsheetBase {
             }
 
             int captionWidth = caption.getRequiredWidth();
-            int padding = Util.measureHorizontalPaddingAndBorder(
+            int padding = WidgetUtil.measureHorizontalPaddingAndBorder(
                     caption.getElement(), 18);
             return captionWidth + padding;
         }
@@ -268,24 +267,26 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public Widget getChildWidget() {
-            if (getWidgetCount() > 1) {
-                return getWidget(1);
-            } else {
-                return null;
-            }
+            return widget;
         }
 
         public void replaceWidget(Widget newWidget) {
-            if (getWidgetCount() > 1) {
-                Widget oldWidget = getWidget(1);
-                remove(oldWidget);
-                widgets.remove(oldWidget);
+            if (widget != null) {
+                widgets.remove(widget);
+                if (open) {
+                    remove(widget);
+                }
             }
-            add(newWidget, content);
+            widget = newWidget;
             widgets.add(newWidget);
+            if (open) {
+                add(widget, content);
+            }
+
         }
 
         public void open() {
+            add(widget, content);
             open = true;
             content.getStyle().setTop(getCaptionHeight(), Unit.PX);
             content.getStyle().setLeft(0, Unit.PX);
@@ -298,6 +299,9 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public void close() {
+            if (widget != null) {
+                remove(widget);
+            }
             content.getStyle().setVisibility(Visibility.HIDDEN);
             content.getStyle().setTop(-100000, Unit.PX);
             content.getStyle().setLeft(-100000, Unit.PX);
@@ -322,10 +326,10 @@ public class VAccordion extends VTabsheetBase {
          *            new content
          */
         public void setContent(Widget newWidget) {
-            if (getChildWidget() == null) {
-                add(newWidget, content);
+            if (widget == null) {
+                widget = newWidget;
                 widgets.add(newWidget);
-            } else if (getChildWidget() != newWidget) {
+            } else if (widget != newWidget) {
                 replaceWidget(newWidget);
             }
             if (isOpen() && isDynamicHeight()) {
@@ -340,6 +344,7 @@ public class VAccordion extends VTabsheetBase {
 
         public void updateCaption(TabState tabState) {
             // TODO need to call this because the caption does not have an owner
+            caption.setCaptionAsHtml(isTabCaptionsAsHtml());
             caption.updateCaptionWithoutOwner(
                     tabState.caption,
                     !tabState.enabled,
@@ -412,6 +417,9 @@ public class VAccordion extends VTabsheetBase {
     public void removeTab(int index) {
         StackItem item = getStackItem(index);
         remove(item);
+        if (selectedItemIndex == index) {
+            selectedItemIndex = -1;
+        }
         touchScrollHandler.removeElement(item.getContainerElement());
     }
 

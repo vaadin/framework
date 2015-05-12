@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.AbstractDeploymentConfiguration;
 import com.vaadin.shared.communication.PushMode;
 
-public class MockDeploymentConfiguration implements DeploymentConfiguration {
+public class MockDeploymentConfiguration extends
+        AbstractDeploymentConfiguration {
 
     private boolean productionMode = false;
     private boolean xsrfProtectionEnabled = true;
@@ -20,6 +21,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
     private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
     private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
     private boolean syncIdCheckEnabled = true;
+    private boolean sendUrlsAsParameters = true;
 
     @Override
     public boolean isProductionMode() {
@@ -116,6 +118,11 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
     public void setLegacyPropertyToStringMode(
             LegacyProperyToStringMode legacyPropertyToStringMode) {
         this.legacyPropertyToStringMode = legacyPropertyToStringMode;
+    }
+
+    @Override
+    public boolean isSendUrlsAsParameters() {
+        return sendUrlsAsParameters;
     }
 
 }

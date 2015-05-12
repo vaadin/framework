@@ -8,17 +8,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.junit.Assert;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Indexed.ItemAddEvent;
+import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.NestedMethodPropertyTest.Address;
+import com.vaadin.data.util.filter.Compare;
 
 /**
  * Test basic functionality of BeanItemContainer.
  * 
  * Most sorting related tests are in {@link BeanItemContainerSortTest}.
  */
-public class BeanItemContainerTest extends AbstractBeanContainerTest {
+public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     // basics from the common container test
 
@@ -69,6 +76,19 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
     @Override
     protected boolean isFilteredOutItemNull() {
         return false;
+    }
+
+    public void testGetType_existingProperty_typeReturned() {
+        BeanItemContainer<ClassName> container = getContainer();
+        Assert.assertEquals(
+                "Unexpected type is returned for property 'simpleName'",
+                String.class, container.getType("simpleName"));
+    }
+
+    public void testGetType_notExistingProperty_nullReturned() {
+        BeanItemContainer<ClassName> container = getContainer();
+        Assert.assertNull("Not null type is returned for property ''",
+                container.getType(""));
     }
 
     public void testBasicOperations() {
@@ -726,5 +746,224 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
         // the nested properties should return null
         assertNull(container.getContainerProperty(john, "address.street")
                 .getValue());
+    }
+
+    public void testItemAddedEvent() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        addListener.containerItemSetChange(EasyMock.isA(ItemAddEvent.class));
+        EasyMock.replay(addListener);
+
+        container.addItem(bean);
+
+        EasyMock.verify(addListener);
+    }
+
+    public void testItemAddedEvent_AddedItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+
+        container.addItem(bean);
+
+        assertEquals(bean, capturedEvent.getValue().getFirstItemId());
+    }
+
+    public void testItemAddedEvent_addItemAt_IndexOfAddedItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        container.addItem(bean);
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+
+        container.addItemAt(1, new Person(""));
+
+        assertEquals(1, capturedEvent.getValue().getFirstIndex());
+    }
+
+    public void testItemAddedEvent_addItemAfter_IndexOfAddedItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        container.addItem(bean);
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+
+        container.addItemAfter(bean, new Person(""));
+
+        assertEquals(1, capturedEvent.getValue().getFirstIndex());
+    }
+
+    public void testItemAddedEvent_amountOfAddedItems() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+        List<Person> beans = Arrays.asList(new Person("Jack"), new Person(
+                "John"));
+
+        container.addAll(beans);
+
+        assertEquals(2, capturedEvent.getValue().getAddedItemsCount());
+    }
+
+    public void testItemAddedEvent_someItemsAreFiltered_amountOfAddedItemsIsReducedByAmountOfFilteredItems() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+        List<Person> beans = Arrays.asList(new Person("Jack"), new Person(
+                "John"));
+        container.addFilter(new Compare.Equal("name", "John"));
+
+        container.addAll(beans);
+
+        assertEquals(1, capturedEvent.getValue().getAddedItemsCount());
+    }
+
+    public void testItemAddedEvent_someItemsAreFiltered_addedItemIsTheFirstVisibleItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        ItemSetChangeListener addListener = createListenerMockFor(container);
+        Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
+        EasyMock.replay(addListener);
+        List<Person> beans = Arrays.asList(new Person("Jack"), bean);
+        container.addFilter(new Compare.Equal("name", "John"));
+
+        container.addAll(beans);
+
+        assertEquals(bean, capturedEvent.getValue().getFirstItemId());
+    }
+
+    public void testItemRemovedEvent() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        container.addItem(bean);
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        removeListener.containerItemSetChange(EasyMock
+                .isA(ItemRemoveEvent.class));
+        EasyMock.replay(removeListener);
+
+        container.removeItem(bean);
+
+        EasyMock.verify(removeListener);
+    }
+
+    public void testItemRemovedEvent_RemovedItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person bean = new Person("John");
+        container.addItem(bean);
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeItem(bean);
+
+        assertEquals(bean, capturedEvent.getValue().getFirstItemId());
+    }
+
+    public void testItemRemovedEvent_indexOfRemovedItem() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        container.addItem(new Person("Jack"));
+        Person secondBean = new Person("John");
+        container.addItem(secondBean);
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeItem(secondBean);
+
+        assertEquals(1, capturedEvent.getValue().getFirstIndex());
+    }
+
+    public void testItemRemovedEvent_amountOfRemovedItems() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        container.addItem(new Person("Jack"));
+        container.addItem(new Person("John"));
+        ItemSetChangeListener removeListener = createListenerMockFor(container);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        EasyMock.replay(removeListener);
+
+        container.removeAllItems();
+
+        assertEquals(2, capturedEvent.getValue().getRemovedItemsCount());
+    }
+
+    private Capture<ItemAddEvent> captureAddEvent(
+            ItemSetChangeListener addListener) {
+        Capture<ItemAddEvent> capturedEvent = new Capture<ItemAddEvent>();
+        addListener.containerItemSetChange(EasyMock.capture(capturedEvent));
+        return capturedEvent;
+    }
+
+    private Capture<ItemRemoveEvent> captureRemoveEvent(
+            ItemSetChangeListener removeListener) {
+        Capture<ItemRemoveEvent> capturedEvent = new Capture<ItemRemoveEvent>();
+        removeListener.containerItemSetChange(EasyMock.capture(capturedEvent));
+        return capturedEvent;
+    }
+
+    private ItemSetChangeListener createListenerMockFor(
+            BeanItemContainer<Person> container) {
+        ItemSetChangeListener listener = EasyMock
+                .createNiceMock(ItemSetChangeListener.class);
+        container.addItemSetChangeListener(listener);
+        return listener;
+    }
+
+    public void testAddNestedContainerBeanBeforeData() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+
+        container.addNestedContainerBean("address");
+
+        assertTrue(container.getContainerPropertyIds().contains(
+                "address.street"));
+
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", new Address("streetname", 12345));
+        container.addBean(john);
+
+        assertTrue(container.getItem(john).getItemPropertyIds()
+                .contains("address.street"));
+        assertEquals("streetname",
+                container.getItem(john).getItemProperty("address.street")
+                        .getValue());
+
+    }
+
+    public void testAddNestedContainerBeanAfterData() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", new Address("streetname", 12345));
+        container.addBean(john);
+
+        container.addNestedContainerBean("address");
+
+        assertTrue(container.getContainerPropertyIds().contains(
+                "address.street"));
+        assertTrue(container.getItem(john).getItemPropertyIds()
+                .contains("address.street"));
+        assertEquals("streetname",
+                container.getItem(john).getItemProperty("address.street")
+                        .getValue());
+
     }
 }

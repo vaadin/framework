@@ -17,7 +17,7 @@ package com.vaadin.client.ui.calendar.schedule.dd;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
 import com.vaadin.client.ui.dd.VAcceptCallback;
@@ -51,7 +51,7 @@ public class CalendarMonthDropHandler extends CalendarDropHandler {
     protected void dragAccepted(VDragEvent drag) {
         deEmphasis();
         currentTargetElement = drag.getElementOver();
-        currentTargetDay = Util.findWidget(currentTargetElement,
+        currentTargetDay = WidgetUtil.findWidget(currentTargetElement,
                 SimpleDayCell.class);
         emphasis();
     }

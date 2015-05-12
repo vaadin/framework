@@ -17,9 +17,12 @@ package com.vaadin.client.componentlocator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -31,6 +34,7 @@ import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.ui.UIConnector;
 
 /**
  * The VaadinFinder locator strategy implements an XPath-like syntax for
@@ -72,8 +76,24 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public String getPathForElement(Element targetElement) {
-        if (targetElement == null) {
-            return "";
+        Element oldTarget = targetElement;
+        Widget targetWidget = Util.findPaintable(client, targetElement)
+                .getWidget();
+        targetElement = targetWidget.getElement();
+
+        // Find SubPart name if needed.
+        String subPart = null;
+        boolean hasSubParts = targetWidget instanceof SubPartAware;
+        if (oldTarget != targetElement) {
+            if (hasSubParts) {
+                subPart = ((SubPartAware) targetWidget).getSubPartName(DOM
+                        .asOld(oldTarget));
+            }
+
+            if (!hasSubParts || subPart == null) {
+                // Couldn't find SubPart name for element.
+                return null;
+            }
         }
 
         List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(targetElement);
@@ -102,7 +122,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             return null;
         }
 
-        return getBestSelector(generateQueries(path), targetElement);
+        return getBestSelector(generateQueries(path), targetElement, subPart);
     }
 
     /**
@@ -114,9 +134,12 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *            List of selectors
      * @param target
      *            Target element
+     * @param subPart
+     *            sub part selector string for actual target
      * @return Best selector string formatted with a post filter
      */
-    private String getBestSelector(List<String> selectors, Element target) {
+    private String getBestSelector(List<String> selectors, Element target,
+            String subPart) {
         // The last selector gives us smallest list index for target element.
         String bestSelector = selectors.get(selectors.size() - 1);
         int min = getElementsByPath(bestSelector).indexOf(target);
@@ -141,7 +164,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
             }
         }
-        return "(" + bestSelector + ")[" + min + "]";
+        return "(" + bestSelector + (subPart != null ? "#" + subPart : "")
+                + ")[" + min + "]";
 
     }
 
@@ -244,32 +268,6 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return connectorHierarchy;
     }
 
-    private boolean isNotificationExpression(String path) {
-        String[] starts = { "//", "/" };
-
-        String[] frags = { "com.vaadin.ui.Notification.class",
-                "com.vaadin.ui.Notification", "VNotification.class",
-                "VNotification", "Notification.class", "Notification" };
-
-        String[] ends = { "/", "[" };
-
-        for (String s : starts) {
-            for (String f : frags) {
-                if (path.equals(s + f)) {
-                    return true;
-                }
-
-                for (String e : ends) {
-                    if (path.startsWith(s + f + e)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -282,7 +280,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         }
 
         List<Element> elements = new ArrayList<Element>();
-        if (isNotificationExpression(path)) {
+        if (LocatorUtil.isNotificationElement(path)) {
 
             for (VNotification n : findNotificationsByPath(path)) {
                 elements.add(n.getElement());
@@ -290,8 +288,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         } else {
 
+            final UIConnector uiConnector = client.getUIConnector();
             elements.addAll(eliminateDuplicates(getElementsByPathStartingAtConnector(
-                    path, client.getUIConnector())));
+                    path, uiConnector, Document.get().getBody())));
         }
 
         for (SelectorPredicate p : postFilters) {
@@ -348,8 +347,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
+        final ComponentConnector searchRoot = Util.findPaintable(client, root);
         List<Element> elements = getElementsByPathStartingAtConnector(path,
-                Util.findPaintable(client, root));
+                searchRoot, root);
 
         for (SelectorPredicate p : postFilters) {
             // Post filtering supports only indexes and follows instruction
@@ -417,7 +417,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *         found.
      */
     private List<Element> getElementsByPathStartingAtConnector(String path,
-            ComponentConnector root) {
+            ComponentConnector root, Element actualRoot) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
         if (pathComponents[0].length() > 0) {
@@ -429,16 +429,20 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         List<Element> output = new ArrayList<Element>();
         if (null != connectors && !connectors.isEmpty()) {
-            if (pathComponents.length > 1) {
-                // We have subparts
-                for (ComponentConnector connector : connectors) {
+            for (ComponentConnector connector : connectors) {
+                if (!actualRoot
+                        .isOrHasChild(connector.getWidget().getElement())) {
+                    // Filter out widgets that are not children of actual root
+                    continue;
+                }
+
+                if (pathComponents.length > 1) {
+                    // We have SubParts
                     if (connector.getWidget() instanceof SubPartAware) {
                         output.add(((SubPartAware) connector.getWidget())
                                 .getSubPartElement(pathComponents[1]));
                     }
-                }
-            } else {
-                for (ComponentConnector connector : connectors) {
+                } else {
                     output.add(connector.getWidget().getElement());
                 }
             }
@@ -550,11 +554,19 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
         ArrayList<ComponentConnector> potentialMatches = new ArrayList<ComponentConnector>();
+        String widgetName = getWidgetName(pathFragment);
+        // Special case when searching for UIElement.
+        if (LocatorUtil.isUIElement(pathFragment)) {
+            if (connectorMatchesPathFragment(parent, widgetName)) {
+                potentialMatches.add(parent);
+            }
+        }
         if (parent instanceof HasComponentsConnector) {
+
             List<ComponentConnector> children = ((HasComponentsConnector) parent)
                     .getChildComponents();
             for (ComponentConnector child : children) {
-                String widgetName = getWidgetName(pathFragment);
+
                 if (connectorMatchesPathFragment(child, widgetName)) {
                     potentialMatches.add(child);
                 }
@@ -715,19 +727,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private final <T> List<T> eliminateDuplicates(List<T> list) {
 
-        int l = list.size();
-        for (int j = 0; j < l; ++j) {
-            T ref = list.get(j);
-
-            for (int i = j + 1; i < l; ++i) {
-                if (list.get(i) == ref) {
-                    list.remove(i);
-                    --i;
-                    --l;
-                }
-            }
-        }
-
+        LinkedHashSet<T> set = new LinkedHashSet<T>(list);
+        list.clear();
+        list.addAll(set);
         return list;
     }
 

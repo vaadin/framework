@@ -1,0 +1,98 @@
+// Variables defined in reindeer.scss
+
+@mixin reindeer-grid($primaryStyleName: v-grid) {
+
+  .#{$primaryStyleName}-header,
+  .#{$primaryStyleName}-footer {
+    .#{$primaryStyleName}-cell {
+      background-image: url(img/header-bg-light.png);
+      color: #222;
+      font-weight: bold;
+      text-shadow: #f3f5f8 0 1px 0;
+      text-transform: uppercase;
+    }
+  }
+
+  .#{$primaryStyleName}-header-deco,
+  .#{$primaryStyleName}-footer-deco,
+  .#{$primaryStyleName}-horizontal-scrollbar-deco {
+    background-image: url(img/header-bg-light.png);
+  }
+
+  // Selected row
+  .#{$primaryStyleName}-row-selected {
+    color: #fff;
+    text-shadow: #3b5a7a 0 1px 0;
+
+    > .#{$primaryStyleName}-cell {
+      background: #4d749f url(../common/img/sel-bg.png) repeat-x;
+      border-color: #466c90;
+    }
+
+    // Selected and focused
+    > .#{$primaryStyleName}-cell-focused:before {
+      border-color: #b1cde4;
+    }
+  }
+
+  // Sidebar
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    .#{$primaryStyleName}-sidebar-content {
+      background-color: #f8f8f9;
+    }
+  }
+
+  // Sort indicators
+  .#{$primaryStyleName} th.sort-asc,
+  .#{$primaryStyleName} th.sort-desc {
+    padding-right: 16px + $v-grid-cell-padding-horizontal;
+
+    &:after {
+      content: " " attr(sort-order);
+      background: transparent no-repeat right 7px;
+      width: 16px;
+      height: 12px;
+      top: 0;
+    }
+  }
+
+  .#{$primaryStyleName} th.sort-asc:after {
+    background-image: url(img/asc-light.png);
+  }
+
+  .#{$primaryStyleName} th.sort-desc:after {
+    background-image: url(img/desc-light.png);
+  }
+
+  .#{$primaryStyleName}-editor-footer {
+    background: #dfe1e3;
+  }
+
+  .#{$primaryStyleName}-editor-cells > div {
+    .v-textfield,
+    .v-textfield-focus,
+    .v-datefield,
+    .v-datefield .v-textfield-focus,
+    .v-filterselect,
+    .v-filterselect-input,
+    .v-filterselect-input:focus {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .v-filterselect {
+      overflow: hidden;
+    }
+
+    .v-filterselect-input {
+      height: 100%;
+    }
+
+    .v-filterselect-button {
+      // 24px is the height of v-filterselect
+      margin-top: round((24px - $v-grid-row-height) / -2)
+    }
+  }
+
+}

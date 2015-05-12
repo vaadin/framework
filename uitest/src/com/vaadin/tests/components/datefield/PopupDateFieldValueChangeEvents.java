@@ -27,11 +27,9 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 
 /**
@@ -39,7 +37,7 @@ import com.vaadin.ui.NativeSelect;
  * @since
  * @author Vaadin Ltd
  */
-public class PopupDateFieldValueChangeEvents extends AbstractTestUI {
+public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {
 
     private int count = 0;
 
@@ -76,14 +74,11 @@ public class PopupDateFieldValueChangeEvents extends AbstractTestUI {
             }
         });
 
-        final Label log = new Label("", ContentMode.PREFORMATTED);
-        addComponent(log);
-
         df.addValueChangeListener(new Property.ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                log.setValue("Value changes: " + (++count));
+                log("Value changes: " + (++count));
 
             }
         });

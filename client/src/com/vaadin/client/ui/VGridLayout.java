@@ -360,7 +360,8 @@ public class VGridLayout extends ComplexPanel {
 
                     cell.layoutVertically(y, reservedMargin);
                 }
-                if (rowHasComponentsOrRowSpan(row) || rowHeights[row] > 0) {
+                if (!hideEmptyRowsAndColumns || rowHasComponentsOrRowSpan(row)
+                        || rowHeights[row] > 0) {
                     y += rowHeights[row] + verticalSpacing;
                 }
             }
@@ -398,7 +399,8 @@ public class VGridLayout extends ComplexPanel {
                     cell.layoutHorizontally(x, reservedMargin);
                 }
             }
-            if (colHasComponentsOrColSpan(i) || columnWidths[i] > 0) {
+            if (!hideEmptyRowsAndColumns || colHasComponentsOrColSpan(i)
+                    || columnWidths[i] > 0) {
                 x += columnWidths[i] + horizontalSpacing;
             }
         }
@@ -887,6 +889,10 @@ public class VGridLayout extends ComplexPanel {
                 cell.slot.setCaption(null);
                 cell.slot.getWrapperElement().removeFromParent();
                 cell.slot = null;
+                Style style = w.getElement().getStyle();
+                style.clearTop();
+                style.clearLeft();
+                style.clearPosition();
 
                 if (cells.length < cell.col && cells.length != 0
                         && cells[0].length < cell.row

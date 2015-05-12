@@ -15,50 +15,61 @@
  */
 package com.vaadin.tests;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class VerifyBrowserVersionTest extends MultiBrowserTest {
 
-    private Map<DesiredCapabilities, String> expectedUserAgent = new HashMap<DesiredCapabilities, String>();
-
-    {
-        expectedUserAgent
-                .put(Browser.FIREFOX.getDesiredCapabilities(),
-                        "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
-        expectedUserAgent
-                .put(Browser.IE8.getDesiredCapabilities(),
-                        "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
-        expectedUserAgent
-                .put(Browser.IE9.getDesiredCapabilities(),
-                        "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
-        expectedUserAgent
-                .put(Browser.IE10.getDesiredCapabilities(),
-                        "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
-        expectedUserAgent
-                .put(Browser.IE11.getDesiredCapabilities(),
-                        "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
-        expectedUserAgent
-                .put(Browser.CHROME.getDesiredCapabilities(),
-                        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36");
-        expectedUserAgent
-                .put(Browser.PHANTOMJS.getDesiredCapabilities(),
-                        "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34");
-
-    }
-
     @Test
     public void verifyUserAgent() {
         openTestURL();
-        Assert.assertEquals(expectedUserAgent.get(getDesiredCapabilities()),
-                vaadinElementById("userAgent").getText());
-        Assert.assertEquals("Touch device? No",
-                vaadinElementById("touchDevice").getText());
+
+        DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
+
+        String userAgent = vaadinElementById("userAgent").getText();
+        String browserIdentifier;
+
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome version does not necessarily match the desired version
+            // because of auto updates...
+            browserIdentifier = getExpectedUserAgentString(getDesiredCapabilities())
+                    + "41";
+        } else {
+            browserIdentifier = getExpectedUserAgentString(desiredCapabilities)
+                    + desiredCapabilities.getVersion();
+        }
+
+        assertThat(userAgent, containsString(browserIdentifier));
+
+        assertThat(vaadinElementById("touchDevice").getText(),
+                is("Touch device? No"));
     }
+
+    private String getExpectedUserAgentString(DesiredCapabilities dCap) {
+        if (BrowserUtil.isIE(dCap)) {
+            if (!BrowserUtil.isIE(dCap, 11)) {
+                // IE8-10
+                return "MSIE ";
+            } else {
+                // IE11
+                return "Trident/7.0; rv:";
+            }
+        } else if (BrowserUtil.isFirefox(dCap)) {
+            return "Firefox/";
+        } else if (BrowserUtil.isChrome(dCap)) {
+            return "Chrome/";
+        } else if (BrowserUtil.isPhantomJS(dCap)) {
+            return "PhantomJS/";
+        }
+        throw new UnsupportedOperationException(
+                "Test is being run on unknown browser.");
+    }
+
 }

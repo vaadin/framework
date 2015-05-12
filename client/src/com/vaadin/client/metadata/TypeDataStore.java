@@ -25,8 +25,13 @@ import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.JSONSerializer;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class TypeDataStore {
+    public static enum MethodAttribute {
+        DELAYED, LAST_ONLY, NO_LAYOUT, NO_LOADING_INDICATOR;
+    }
+
     private static final String CONSTRUCTOR_NAME = "!new";
 
     private final FastStringMap<Class<?>> identifiers = FastStringMap.create();
@@ -37,6 +42,8 @@ public class TypeDataStore {
             .create();
     private final FastStringMap<JsArrayString> delegateToWidgetProperties = FastStringMap
             .create();
+    private final FastStringMap<Type> presentationTypes = FastStringMap
+            .create();
 
     /**
      * Maps connector class -> state property name -> hander method data
@@ -44,8 +51,8 @@ public class TypeDataStore {
     private final FastStringMap<FastStringMap<JsArrayObject<OnStateChangeMethod>>> onStateChangeMethods = FastStringMap
             .create();
 
-    private final FastStringSet delayedMethods = FastStringSet.create();
-    private final FastStringSet lastOnlyMethods = FastStringSet.create();
+    private final FastStringMap<FastStringSet> methodAttributes = FastStringMap
+            .create();
 
     private final FastStringMap<Type> returnTypes = FastStringMap.create();
     private final FastStringMap<Invoker> invokers = FastStringMap.create();
@@ -135,6 +142,10 @@ public class TypeDataStore {
         return get().delegateToWidgetProperties.get(type.getBaseTypeName());
     }
 
+    public static Type getPresentationType(Class<?> type) {
+        return get().presentationTypes.get(getType(type).getBaseTypeName());
+    }
+
     public void setDelegateToWidget(Class<?> clazz, String propertyName,
             String delegateValue) {
         Type type = getType(clazz);
@@ -148,6 +159,11 @@ public class TypeDataStore {
                     typeProperties);
         }
         typeProperties.push(propertyName);
+    }
+
+    public void setPresentationType(Class<?> type, Class<?> presentationType) {
+        presentationTypes.put(getType(type).getBaseTypeName(),
+                getType(presentationType));
     }
 
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
@@ -200,20 +216,33 @@ public class TypeDataStore {
     }
 
     public static boolean isDelayed(Method method) {
-        return get().delayedMethods.contains(method.getLookupKey());
+        return hasMethodAttribute(method, MethodAttribute.DELAYED);
     }
 
-    public void setDelayed(Class<?> type, String methodName) {
-        delayedMethods.add(getType(type).getMethod(methodName).getLookupKey());
+    public static boolean isNoLoadingIndicator(Method method) {
+        return hasMethodAttribute(method, MethodAttribute.NO_LOADING_INDICATOR);
+    }
+
+    private static boolean hasMethodAttribute(Method method,
+            MethodAttribute attribute) {
+        FastStringSet attributes = get().methodAttributes.get(method
+                .getLookupKey());
+        return attributes != null && attributes.contains(attribute.name());
+    }
+
+    public void setMethodAttribute(Class<?> type, String methodName,
+            MethodAttribute attribute) {
+        String key = getType(type).getMethod(methodName).getLookupKey();
+        FastStringSet attributes = methodAttributes.get(key);
+        if (attributes == null) {
+            attributes = FastStringSet.create();
+            methodAttributes.put(key, attributes);
+        }
+        attributes.add(attribute.name());
     }
 
     public static boolean isLastOnly(Method method) {
-        return get().lastOnlyMethods.contains(method.getLookupKey());
-    }
-
-    public void setLastOnly(Class<?> clazz, String methodName) {
-        lastOnlyMethods
-                .add(getType(clazz).getMethod(methodName).getLookupKey());
+        return hasMethodAttribute(method, MethodAttribute.LAST_ONLY);
     }
 
     /**
@@ -334,6 +363,12 @@ public class TypeDataStore {
         return typeData[beanName][propertyName].setter !== undefined;
     }-*/;
 
+    private static native boolean hasNoLayout(JavaScriptObject typeData,
+            String beanName, String propertyName)
+    /*-{
+        return typeData[beanName][propertyName].noLayout !== undefined;
+    }-*/;
+
     private static native Object getJsPropertyValue(JavaScriptObject typeData,
             String beanName, String propertyName, Object beanInstance)
     /*-{
@@ -417,5 +452,36 @@ public class TypeDataStore {
 
             propertyHandlers.add(method);
         }
+    }
+
+    /**
+     * Checks whether the provided method is annotated with {@link NoLayout}.
+     * 
+     * @param method
+     *            the rpc method to check
+     * 
+     * @since 7.4
+     * 
+     * @return <code>true</code> if the method has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public static boolean isNoLayoutRpcMethod(Method method) {
+        return hasMethodAttribute(method, MethodAttribute.NO_LAYOUT);
+    }
+
+    /**
+     * Checks whether the provided property is annotated with {@link NoLayout}.
+     * 
+     * @param property
+     *            the property to check
+     * 
+     * @since 7.4
+     * 
+     * @return <code>true</code> if the property has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public static boolean isNoLayoutProperty(Property property) {
+        return hasNoLayout(get().jsTypeData, property.getBeanType()
+                .getSignature(), property.getName());
     }
 }

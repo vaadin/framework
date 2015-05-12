@@ -273,6 +273,9 @@ public class DevelopmentServerLauncher {
             }
         }
 
+        // Read web.xml to find all configured servlets
+        webappcontext.start();
+
         try {
             server.start();
 

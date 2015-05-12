@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.componentlocator;
 
+import com.google.gwt.regexp.shared.RegExp;
+
 /**
  * Common String manipulator utilities used in VaadinFinderLocatorStrategy and
  * SelectorPredicates.
@@ -72,5 +74,32 @@ public class LocatorUtil {
      */
     protected static int indexOfIgnoringQuoted(String str, char find) {
         return indexOfIgnoringQuoted(str, find, 0);
+    }
+
+    /**
+     * Checks if path refers to vaadin UI element com.vaadin.ui.UI.
+     * 
+     * @param path
+     *            to vaadin element
+     * @return true if path refers to UI element, false otherwise
+     */
+    public static boolean isUIElement(String path) {
+        String regex = "^\\/{0,2}(com\\.vaadin\\.ui\\.)?V?UI[\\/\\[]?";
+        RegExp regexp = RegExp.compile(regex);
+        return regexp.test(path);
+    }
+
+    /**
+     * Checks if path refers to vaadin Notification element
+     * com.vaadin.ui.Notification.
+     * 
+     * @param path
+     *            to vaadin element
+     * @return true if path refers to Notification element, false otherwise
+     */
+    public static boolean isNotificationElement(String path) {
+        String regex = "^\\/{0,2}(com\\.vaadin\\.ui\\.)?V?Notification[\\/\\[]?";
+        RegExp regexp = RegExp.compile(regex);
+        return regexp.test(path);
     }
 }

@@ -59,6 +59,18 @@ public class Runo extends BaseTheme {
 
     /***************************************************************************
      * 
+     * ProgressBar Styles
+     * 
+     **************************************************************************/
+
+    /**
+     * Displays the progress bar with a static background, instead of an
+     * animated one.
+     */
+    public static final String PROGRESSBAR_STATIC = "static";
+
+    /***************************************************************************
+     * 
      * TabSheet styles
      * 
      **************************************************************************/

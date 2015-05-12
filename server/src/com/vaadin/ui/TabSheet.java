@@ -19,10 +19,14 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -40,6 +44,9 @@ import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
@@ -195,7 +202,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         if (component != null && components.contains(component)) {
 
             int componentIndex = components.indexOf(component);
-
             super.removeComponent(component);
             keyMapper.remove(component);
             components.remove(component);
@@ -232,7 +238,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                     fireSelectedTabChange();
                 }
             }
-            markAsDirty();
         }
     }
 
@@ -245,7 +250,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * the removed tab if it's not the last one, otherwise will choose the
      * closer enabled tab to the left.
      * 
-     * @since
+     * @since 7.4
      * @param removedTabIndex
      *            the index of the selected tab which was just remove.
      * @return the index of the tab to be selected or -1 if there are no more
@@ -394,8 +399,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 setSelected(tabComponent);
                 fireSelectedTabChange();
             }
+
             super.addComponent(tabComponent);
-            markAsDirty();
+
             return tab;
         }
     }
@@ -967,16 +973,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets the icon alt text for the tab.
-         *
+         * 
          * @since 7.2
          */
         public String getIconAlternateText();
 
         /**
          * Sets the icon alt text for the tab.
-         *
+         * 
          * @since 7.2
-         *
+         * 
          * @param iconAltText
          *            the icon to set
          */
@@ -1229,7 +1235,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public Component getComponent() {
             for (Map.Entry<Component, Tab> entry : tabs.entrySet()) {
-                if (entry.getValue() == this) {
+                if (equals(entry.getValue())) {
                     return entry.getKey();
                 }
             }
@@ -1446,5 +1452,203 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     protected TabsheetState getState() {
         return (TabsheetState) super.getState();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        // create new tabs
+        for (Element tab : design.children()) {
+            if (!tab.tagName().equals("tab")) {
+                throw new DesignException("Invalid tag name for tabsheet tab "
+                        + tab.tagName());
+            }
+            readTabFromDesign(tab, designContext);
+        }
+    }
+
+    /**
+     * Reads the given tab element from design
+     * 
+     * @since 7.4
+     * 
+     * @param tabElement
+     *            the element to be read
+     * @param designContext
+     *            the design context
+     */
+    private void readTabFromDesign(Element tabElement,
+            DesignContext designContext) {
+        Attributes attr = tabElement.attributes();
+        if (tabElement.children().size() != 1) {
+            throw new DesignException(
+                    "A tab must have exactly one child element");
+        }
+        // create the component that is in tab content
+        Element content = tabElement.child(0);
+        Component child = designContext.readDesign(content);
+        Tab tab = this.addTab(child);
+        if (attr.hasKey("visible")) {
+            tab.setVisible(DesignAttributeHandler.readAttribute("visible",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("closable")) {
+            tab.setClosable(DesignAttributeHandler.readAttribute("closable",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("caption")) {
+            tab.setCaption(DesignAttributeHandler.readAttribute("caption",
+                    attr, String.class));
+        }
+        if (attr.hasKey("enabled")) {
+            tab.setEnabled(DesignAttributeHandler.readAttribute("enabled",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("icon")) {
+            tab.setIcon(DesignAttributeHandler.readAttribute("icon", attr,
+                    Resource.class));
+        }
+        if (attr.hasKey("icon-alt")) {
+            tab.setIconAlternateText(DesignAttributeHandler.readAttribute(
+                    "icon-alt", attr, String.class));
+        }
+        if (attr.hasKey("description")) {
+            tab.setDescription(DesignAttributeHandler.readAttribute(
+                    "description", attr, String.class));
+        }
+        if (attr.hasKey("style-name")) {
+            tab.setStyleName(DesignAttributeHandler.readAttribute("style-name",
+                    attr, String.class));
+        }
+        if (attr.hasKey("id")) {
+            tab.setId(DesignAttributeHandler.readAttribute("id", attr,
+                    String.class));
+        }
+        if (attr.hasKey("selected")) {
+            boolean selected = DesignAttributeHandler.readAttribute("selected",
+                    attr, Boolean.class);
+            if (selected) {
+                this.setSelectedTab(tab.getComponent());
+            }
+        }
+    }
+
+    /**
+     * Writes the given tab to design
+     * 
+     * @since 7.4
+     * @param design
+     *            the design node for tabsheet
+     * @param designContext
+     *            the design context
+     * @param tab
+     *            the tab to be written
+     */
+    private void writeTabToDesign(Element design, DesignContext designContext,
+            Tab tab) {
+        // get default tab instance
+        Tab def = new TabSheetTabImpl(null, null, null);
+        // create element for tab
+        Element tabElement = design.appendElement("tab");
+        // add tab content
+        tabElement.appendChild(designContext.createElement(tab.getComponent()));
+        Attributes attr = tabElement.attributes();
+        // write attributes
+        DesignAttributeHandler.writeAttribute("visible", attr, tab.isVisible(),
+                def.isVisible(), Boolean.class);
+        DesignAttributeHandler.writeAttribute("closable", attr,
+                tab.isClosable(), def.isClosable(), Boolean.class);
+        DesignAttributeHandler.writeAttribute("caption", attr,
+                tab.getCaption(), def.getCaption(), String.class);
+        DesignAttributeHandler.writeAttribute("enabled", attr, tab.isEnabled(),
+                def.isEnabled(), Boolean.class);
+        DesignAttributeHandler.writeAttribute("icon", attr, tab.getIcon(),
+                def.getIcon(), Resource.class);
+        DesignAttributeHandler.writeAttribute("icon-alt", attr,
+                tab.getIconAlternateText(), def.getIconAlternateText(),
+                String.class);
+        DesignAttributeHandler.writeAttribute("description", attr,
+                tab.getDescription(), def.getDescription(), String.class);
+        DesignAttributeHandler.writeAttribute("style-name", attr,
+                tab.getStyleName(), def.getStyleName(), String.class);
+        DesignAttributeHandler.writeAttribute("id", attr, tab.getId(),
+                def.getId(), String.class);
+        if (getSelectedTab() != null
+                && getSelectedTab().equals(tab.getComponent())) {
+            // use write attribute to get consistent handling for boolean
+            DesignAttributeHandler.writeAttribute("selected", attr, true,
+                    false, boolean.class);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        // no need to list tab attributes since they are considered internal
+        return attributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        TabSheet def = (TabSheet) designContext.getDefaultInstance(this);
+        Attributes attr = design.attributes();
+
+        // write tabs
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+        for (Component component : this) {
+            Tab tab = this.getTab(component);
+            writeTabToDesign(design, designContext, tab);
+        }
+    }
+
+    /**
+     * Sets whether HTML is allowed in the tab captions.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the content is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @param tabCaptionsAsHtml
+     *            true if the tab captions are rendered as HTML, false if
+     *            rendered as plain text
+     * @since 7.4
+     */
+    public void setTabCaptionsAsHtml(boolean tabCaptionsAsHtml) {
+        getState().tabCaptionsAsHtml = tabCaptionsAsHtml;
+    }
+
+    /**
+     * Checks whether HTML is allowed in the tab captions.
+     * <p>
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @return true if the tab captions are rendered as HTML, false if rendered
+     *         as plain text
+     * @since 7.4
+     */
+    public boolean isTabCaptionsAsHtml() {
+        return getState(false).tabCaptionsAsHtml;
     }
 }

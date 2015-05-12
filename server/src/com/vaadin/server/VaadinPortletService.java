@@ -46,16 +46,6 @@ public class VaadinPortletService extends VaadinService {
             throws ServiceException {
         super(deploymentConfiguration);
         this.portlet = portlet;
-
-        // Set default class loader if not already set
-        if (getClassLoader() == null) {
-            /*
-             * The portlet is most likely to be loaded with a class loader
-             * specific to the application instead of some generic system class
-             * loader that loads the Vaadin classes.
-             */
-            setClassLoader(portlet.getClass().getClassLoader());
-        }
     }
 
     @Override
@@ -124,9 +114,7 @@ public class VaadinPortletService extends VaadinService {
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
 
-        String widgetset = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        VaadinPortlet.PARAMETER_WIDGETSET, null);
+        String widgetset = getDeploymentConfiguration().getWidgetset(null);
 
         if (widgetset == null) {
             widgetset = getParameter(request,
@@ -162,7 +150,11 @@ public class VaadinPortletService extends VaadinService {
         String staticFileLocation = getParameter(request,
                 Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, "/html");
 
-        return trimTrailingSlashes(staticFileLocation);
+        if (Constants.PORTLET_CONTEXT.equals(staticFileLocation)) {
+            return request.getContextPath();
+        } else {
+            return trimTrailingSlashes(staticFileLocation);
+        }
     }
 
     private PortletContext getPortletContext() {

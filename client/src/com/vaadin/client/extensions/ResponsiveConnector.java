@@ -24,11 +24,13 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * The client side connector for the Responsive extension.
@@ -68,6 +70,12 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
      */
     protected static JavaScriptObject heightRangeCache;
 
+    /**
+     * The theme that was in use when the width and height range caches were
+     * created.
+     */
+    protected static String parsedTheme;
+
     private static Logger getLogger() {
         return Logger.getLogger(ResponsiveConnector.class.getName());
     }
@@ -78,16 +86,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     @Override
     protected void extend(ServerConnector target) {
-        // Initialize cache if not already done
-        if (widthRangeCache == null) {
-            searchForBreakPoints();
-        }
-
         this.target = (AbstractComponentConnector) target;
-
-        // Get any breakpoints from the styles defined for this widget
-        getBreakPointsFor(constructSelectorsForTarget());
-
         // Start listening for size changes
         LayoutManager.get(getConnection()).addElementResizeListener(
                 this.target.getWidget().getElement(), this);
@@ -131,11 +130,37 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                 target.getWidget().getElement(), this);
     }
 
+    @Override
+    public void onStateChanged(StateChangeEvent event) {
+        super.onStateChanged(event);
+        // Changing the theme may introduce new style sheets so we may need to
+        // rebuild the cache
+        if (widthRangeCache == null
+                || !SharedUtil.equals(parsedTheme, getCurrentThemeName())) {
+            // updating break points
+            searchForBreakPoints();
+        }
+        // Get any breakpoints from the styles defined for this widget
+        getBreakPointsFor(constructSelectorsForTarget());
+        // make sure that the ranges are updated at least once regardless of
+        // resize events.
+        updateRanges();
+    }
+
+    private String getCurrentThemeName() {
+        return getConnection().getUIConnector().getActiveTheme();
+    }
+
+    private void searchForBreakPoints() {
+        searchForBreakPointsNative();
+        parsedTheme = getCurrentThemeName();
+    }
+
     /**
      * Build a cache of all 'width-range' and 'height-range' attribute selectors
      * found in the stylesheets.
      */
-    private static native void searchForBreakPoints()
+    private static native void searchForBreakPointsNative()
     /*-{
 
         // Initialize variables
@@ -307,36 +332,36 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     @Override
     public void onElementResize(final ElementResizeEvent event) {
-        int width = event.getLayoutManager().getOuterWidth(event.getElement());
-        int height = event.getLayoutManager()
-                .getOuterHeight(event.getElement());
+        updateRanges();
+    }
 
+    private void updateRanges() {
+        LayoutManager layoutManager = LayoutManager.get(getConnection());
         com.google.gwt.user.client.Element element = target.getWidget()
                 .getElement();
+        int width = layoutManager.getOuterWidth(element);
+        int height = layoutManager.getOuterHeight(element);
+
         boolean forceRedraw = false;
 
         String oldWidthRanges = currentWidthRanges;
         String oldHeightRanges = currentHeightRanges;
 
         // Loop through breakpoints and see which one applies to this width
-        currentWidthRanges = resolveBreakpoint("width", width,
-                event.getElement());
+        currentWidthRanges = resolveBreakpoint("width", width);
 
         if (!"".equals(currentWidthRanges)) {
-            target.getWidget().getElement()
-                    .setAttribute("width-range", currentWidthRanges);
+            element.setAttribute("width-range", currentWidthRanges);
             forceRedraw = true;
         } else {
             element.removeAttribute("width-range");
         }
 
         // Loop through breakpoints and see which one applies to this height
-        currentHeightRanges = resolveBreakpoint("height", height,
-                event.getElement());
+        currentHeightRanges = resolveBreakpoint("height", height);
 
         if (!"".equals(currentHeightRanges)) {
-            target.getWidget().getElement()
-                    .setAttribute("height-range", currentHeightRanges);
+            element.setAttribute("height-range", currentHeightRanges);
             forceRedraw = true;
         } else {
             element.removeAttribute("height-range");
@@ -350,14 +375,14 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         // case some new styles are applied
         if (!currentWidthRanges.equals(oldWidthRanges)
                 || !currentHeightRanges.equals(oldHeightRanges)) {
-            event.getLayoutManager().setNeedsMeasureRecursively(
-                    ResponsiveConnector.this.target);
+            layoutManager
+                    .setNeedsMeasureRecursively(ResponsiveConnector.this.target);
         }
     }
 
     /**
      * Forces IE8 to reinterpret CSS rules.
-     * {@link com.vaadin.client.Util#forceIE8Redraw(com.google.gwt.dom.client.Element)}
+     * {@link com.vaadin.client.WidgetUtil#forceIE8Redraw(com.google.gwt.dom.client.Element)}
      * doesn't work in this case.
      * 
      * @param element
@@ -370,8 +395,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         }
     }
 
-    private native String resolveBreakpoint(String which, int size,
-            Element element)
+    private native String resolveBreakpoint(String which, int size)
     /*-{
 
         // Default to "width" breakpoints

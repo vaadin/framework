@@ -37,7 +37,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.google.gwt.thirdparty.guava.common.net.UrlEscapers;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
+import com.vaadin.annotations.Viewport;
+import com.vaadin.annotations.ViewportGeneratorClass;
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
@@ -48,10 +55,10 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.0.0
- *
+ * 
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
@@ -73,6 +80,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private String themeName;
         private String appId;
         private PushMode pushMode;
+        private JsonObject applicationParameters;
+        private VaadinUriResolver uriResolver;
 
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
@@ -146,6 +155,71 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return bootstrapResponse;
         }
 
+        public JsonObject getApplicationParameters() {
+            if (applicationParameters == null) {
+                applicationParameters = BootstrapHandler.this
+                        .getApplicationParameters(this);
+            }
+
+            return applicationParameters;
+        }
+
+        public VaadinUriResolver getUriResolver() {
+            if (uriResolver == null) {
+                uriResolver = new BootstrapUriResolver(this);
+            }
+
+            return uriResolver;
+        }
+    }
+
+    private class BootstrapUriResolver extends VaadinUriResolver {
+        private final BootstrapContext context;
+
+        public BootstrapUriResolver(BootstrapContext bootstrapContext) {
+            context = bootstrapContext;
+        }
+
+        @Override
+        protected String getVaadinDirUrl() {
+            return context.getApplicationParameters().getString(
+                    ApplicationConstants.VAADIN_DIR_URL);
+        }
+
+        @Override
+        protected String getThemeUri() {
+            return getVaadinDirUrl() + "themes/" + context.getThemeName();
+        }
+
+        @Override
+        protected String getServiceUrlParameterName() {
+            return getConfigOrNull(ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
+        }
+
+        @Override
+        protected String getServiceUrl() {
+            String serviceUrl = getConfigOrNull(ApplicationConstants.SERVICE_URL);
+            if (serviceUrl == null) {
+                return "./";
+            } else if (!serviceUrl.endsWith("/")) {
+                serviceUrl += "/";
+            }
+            return serviceUrl;
+        }
+
+        private String getConfigOrNull(String name) {
+            JsonObject parameters = context.getApplicationParameters();
+            if (parameters.hasKey(name)) {
+                return parameters.getString(name);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected String encodeQueryStringParameterValue(String queryString) {
+            return UrlEscapers.urlFormParameterEscaper().escape(queryString);
+        }
     }
 
     @Override
@@ -287,6 +361,40 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "IE=11;chrome=1");
 
+        Class<? extends UI> uiClass = context.getUIClass();
+
+        String viewportContent = null;
+        Viewport viewportAnnotation = uiClass.getAnnotation(Viewport.class);
+        ViewportGeneratorClass viewportGeneratorClassAnnotation = uiClass
+                .getAnnotation(ViewportGeneratorClass.class);
+        if (viewportAnnotation != null
+                && viewportGeneratorClassAnnotation != null) {
+            throw new IllegalStateException(uiClass.getCanonicalName()
+                    + " cannot be annotated with both @"
+                    + Viewport.class.getSimpleName() + " and @"
+                    + ViewportGeneratorClass.class.getSimpleName());
+        }
+
+        if (viewportAnnotation != null) {
+            viewportContent = viewportAnnotation.value();
+        } else if (viewportGeneratorClassAnnotation != null) {
+            Class<? extends ViewportGenerator> viewportGeneratorClass = viewportGeneratorClassAnnotation
+                    .value();
+            try {
+                viewportContent = viewportGeneratorClass.newInstance()
+                        .getViewport(context.getRequest());
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Error processing viewport generator "
+                                + viewportGeneratorClass.getCanonicalName(), e);
+            }
+        }
+
+        if (viewportContent != null) {
+            head.appendElement("meta").attr("name", "viewport")
+                    .attr("content", viewportContent);
+        }
+
         String title = response.getUIProvider().getPageTitle(
                 new UICreateEvent(context.getRequest(), context.getUIClass()));
         if (title != null) {
@@ -308,9 +416,39 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
+        JavaScript javaScript = uiClass.getAnnotation(JavaScript.class);
+        if (javaScript != null) {
+            String[] resources = javaScript.value();
+            for (String resource : resources) {
+                String url = registerDependency(context, uiClass, resource);
+                head.appendElement("script").attr("type", "text/javascript")
+                        .attr("src", url);
+            }
+        }
+
+        StyleSheet styleSheet = uiClass.getAnnotation(StyleSheet.class);
+        if (styleSheet != null) {
+            String[] resources = styleSheet.value();
+            for (String resource : resources) {
+                String url = registerDependency(context, uiClass, resource);
+                head.appendElement("link").attr("rel", "stylesheet")
+                        .attr("type", "text/css").attr("href", url);
+            }
+        }
+
         Element body = document.body();
         body.attr("scroll", "auto");
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
+    }
+
+    private String registerDependency(BootstrapContext context,
+            Class<? extends UI> uiClass, String resource) {
+        String url = context.getSession().getCommunicationManager()
+                .registerDependency(resource, uiClass);
+
+        url = context.getUriResolver().resolveVaadinUri(url);
+
+        return url;
     }
 
     protected String getMainDivStyle(BootstrapContext context) {
@@ -339,9 +477,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      * Override this method if you want to add some custom html around around
      * the div element into which the actual Vaadin application will be
      * rendered.
-     *
+     * 
      * @param context
-     *
+     * 
      * @throws IOException
      */
     private void setupMainDiv(BootstrapContext context) throws IOException {
@@ -350,7 +488,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         /*- Add classnames;
          *      .v-app
          *      .v-app-loading
-         *      .v-app-<simpleName for app class>
          *- Additionally added from javascript:
          *      <themeName, remove non-alphanum>
          */
@@ -362,6 +499,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass("v-app");
         mainDiv.addClass(context.getThemeName());
+        mainDiv.addClass(context.getUIClass().getSimpleName()
+                .toLowerCase(Locale.ENGLISH));
         if (style != null && style.length() != 0) {
             mainDiv.attr("style", style);
         }
@@ -376,6 +515,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinLocation = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
 
+        // Parameter appended to JS to bypass caches after version upgrade.
+        String versionQueryParam = "?v=" + Version.getFullVersion();
+
         if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             String pushJS = vaadinLocation;
@@ -386,12 +528,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 pushJS += ApplicationConstants.VAADIN_PUSH_DEBUG_JS;
             }
 
+            pushJS += versionQueryParam;
+
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src", pushJS));
         }
 
         String bootstrapLocation = vaadinLocation
-                + ApplicationConstants.VAADIN_BOOTSTRAP_JS;
+                + ApplicationConstants.VAADIN_BOOTSTRAP_JS + versionQueryParam;
         fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
                 "text/javascript").attr("src", bootstrapLocation));
         Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
@@ -401,7 +545,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         builder.append("//<![CDATA[\n");
         builder.append("if (!window.vaadin) alert("
                 + JsonUtil.quote("Failed to load the bootstrap javascript: "
-                + bootstrapLocation) + ");\n");
+                        + bootstrapLocation) + ");\n");
 
         appendMainScriptTagContents(context, builder);
 
@@ -414,7 +558,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     protected void appendMainScriptTagContents(BootstrapContext context,
             StringBuilder builder) throws IOException {
-        JsonObject appConfig = getApplicationParameters(context);
+        JsonObject appConfig = context.getApplicationParameters();
 
         boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
@@ -447,8 +591,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
     }
 
-    protected JsonObject getApplicationParameters(BootstrapContext context)
-            throws PaintException {
+    protected JsonObject getApplicationParameters(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
         VaadinSession session = context.getSession();
         VaadinService vaadinService = request.getService();
@@ -468,8 +611,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         JsonObject versionInfo = Json.createObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
-        appConfig.put("versionInfo", versionInfo);
+        String atmosphereVersion = AtmospherePushConnection
+                .getAtmosphereVersion();
+        if (atmosphereVersion != null) {
+            versionInfo.put("atmosphereVersion", atmosphereVersion);
+        }
 
+        appConfig.put("versionInfo", versionInfo);
         appConfig.put("widgetset", context.getWidgetsetName());
 
         // Use locale from session if set, else from the request
@@ -481,41 +629,32 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JsonObject comErrMsg = Json.createObject();
-            comErrMsg.put("caption",
+            putValueOrNull(comErrMsg, "caption",
                     systemMessages.getCommunicationErrorCaption());
-            comErrMsg.put("message",
+            putValueOrNull(comErrMsg, "message",
                     systemMessages.getCommunicationErrorMessage());
-            if (systemMessages.getCommunicationErrorURL() == null) {
-                comErrMsg.put("url", Json.createNull());
-            } else {
-                comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
-            }
+            putValueOrNull(comErrMsg, "url",
+                    systemMessages.getCommunicationErrorURL());
 
             appConfig.put("comErrMsg", comErrMsg);
 
             JsonObject authErrMsg = Json.createObject();
-            authErrMsg.put("caption",
+            putValueOrNull(authErrMsg, "caption",
                     systemMessages.getAuthenticationErrorCaption());
-            authErrMsg.put("message",
+            putValueOrNull(authErrMsg, "message",
                     systemMessages.getAuthenticationErrorMessage());
-            if (systemMessages.getAuthenticationErrorURL() == null) {
-                authErrMsg.put("url", Json.createNull());
-            } else {
-                authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
-            }
+            putValueOrNull(authErrMsg, "url",
+                    systemMessages.getAuthenticationErrorURL());
 
             appConfig.put("authErrMsg", authErrMsg);
 
             JsonObject sessExpMsg = Json.createObject();
-            sessExpMsg
-                    .put("caption", systemMessages.getSessionExpiredCaption());
-            sessExpMsg
-                    .put("message", systemMessages.getSessionExpiredMessage());
-            if (systemMessages.getSessionExpiredURL() == null) {
-                sessExpMsg.put("url", Json.createNull());
-            } else {
-                sessExpMsg.put("url", systemMessages.getSessionExpiredURL());
-            }
+            putValueOrNull(sessExpMsg, "caption",
+                    systemMessages.getSessionExpiredCaption());
+            putValueOrNull(sessExpMsg, "message",
+                    systemMessages.getSessionExpiredMessage());
+            putValueOrNull(sessExpMsg, "url",
+                    systemMessages.getSessionExpiredURL());
 
             appConfig.put("sessExpMsg", sessExpMsg);
         }
@@ -542,6 +681,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             appConfig.put(ApplicationConstants.SERVICE_URL, serviceUrl);
         }
 
+        boolean sendUrlsAsParameters = vaadinService
+                .getDeploymentConfiguration().isSendUrlsAsParameters();
+        if (!sendUrlsAsParameters) {
+            appConfig.put("sendUrlsAsParameters", false);
+        }
+
         return appConfig;
     }
 
@@ -549,13 +694,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Get the URI for the application theme.
-     *
+     * 
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
-     *
+     * 
      * @param context
      * @param themeName
-     *
+     * 
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
@@ -568,7 +713,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Override if required
-     *
+     * 
      * @param context
      * @return
      */
@@ -579,8 +724,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Don not override.
-     *
+     * Do not override.
+     * 
      * @param context
      * @return
      */
@@ -602,5 +747,15 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             throws IOException {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 e.getLocalizedMessage());
+    }
+
+    private void putValueOrNull(JsonObject object, String key, String value) {
+        assert object != null;
+        assert key != null;
+        if (value == null) {
+            object.put(key, Json.createNull());
+        } else {
+            object.put(key, value);
+        }
     }
 }

@@ -23,9 +23,7 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -38,9 +36,9 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
@@ -61,188 +59,131 @@ public class VDragAndDropManager {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-active-drag-source";
 
+    /**
+     * Implementation if this interface is provided as a parameter to
+     * DDEventHandleStrategy methods. The mediator instance allows to manage
+     * DnD.
+     * 
+     * @since 7.4.4
+     */
+    public interface DDManagerMediator {
+        /**
+         * Returns DnD manager instance.
+         */
+        VDragAndDropManager getManager();
+
+        /**
+         * Returns current drag event.
+         */
+        VDragEvent getDragEvent();
+
+        /**
+         * Clean up server communication callback.
+         */
+        void clearServerCallback();
+    }
+
     private final class DefaultDragAndDropEventHandler implements
             NativePreviewHandler {
 
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
-            NativeEvent nativeEvent = event.getNativeEvent();
-
-            int typeInt = event.getTypeInt();
-            if (typeInt == Event.ONKEYDOWN) {
-                int keyCode = event.getNativeEvent().getKeyCode();
-                if (keyCode == KeyCodes.KEY_ESCAPE) {
-                    // end drag if ESC is hit
-                    interruptDrag();
-                    event.cancel();
-                    event.getNativeEvent().preventDefault();
-                }
-                // no use for handling for any key down event
+            if (getEventHandleStrategy().isDragInterrupted(event,
+                    managerMediator)) {
+                // end drag if ESC is hit
+                interruptDrag();
+                event.cancel();
+                event.getNativeEvent().preventDefault();
                 return;
             }
 
+            int typeInt = event.getTypeInt();
+            if (typeInt == Event.ONKEYDOWN) {
+                getEventHandleStrategy().handleKeyDownEvent(event,
+                        managerMediator);
+                return;
+            }
+
+            NativeEvent nativeEvent = event.getNativeEvent();
             currentDrag.setCurrentGwtEvent(nativeEvent);
-            updateDragImagePosition();
 
-            Node targetNode = Node.as(nativeEvent.getEventTarget());
-            Element targetElement;
-            if (Element.is(targetNode)) {
-                targetElement = Element.as(targetNode);
-            } else {
-                targetElement = targetNode.getParentElement();
-            }
+            String display = getEventHandleStrategy().updateDragImage(event,
+                    managerMediator);
 
-            if (Util.isTouchEvent(nativeEvent) || dragElement != null) {
-                // to detect the "real" target, hide dragelement temporary and
-                // use elementFromPoint
-                String display = dragElement.getStyle().getDisplay();
-                dragElement.getStyle().setDisplay(Display.NONE);
-                try {
-                    int x = Util.getTouchOrMouseClientX(nativeEvent);
-                    int y = Util.getTouchOrMouseClientY(nativeEvent);
-                    // Util.browserDebugger();
-                    targetElement = Util.getElementFromPoint(x, y);
-                    if (targetElement == null) {
-                        // ApplicationConnection.getConsole().log(
-                        // "Event on dragImage, ignored");
-                        event.cancel();
-                        nativeEvent.stopPropagation();
-                        return;
+            Element targetElement = getEventHandleStrategy().getTargetElement(
+                    event, managerMediator);
 
-                    } else {
-                        // ApplicationConnection.getConsole().log(
-                        // "Event on dragImage, target changed");
-                        // special handling for events over dragImage
-                        // pretty much all events are mousemove althout below
-                        // kind of happens mouseover
-                        switch (typeInt) {
-                        case Event.ONMOUSEOVER:
-                        case Event.ONMOUSEOUT:
-                            // ApplicationConnection
-                            // .getConsole()
-                            // .log(
-                            // "IGNORING proxy image event, fired because of hack or not significant");
-                            return;
-                        case Event.ONMOUSEMOVE:
-                        case Event.ONTOUCHMOVE:
-                            VDropHandler findDragTarget = findDragTarget(targetElement);
-                            if (findDragTarget != currentDropHandler) {
-                                // dragleave on old
-                                if (currentDropHandler != null) {
-                                    currentDropHandler.dragLeave(currentDrag);
-                                    currentDrag.getDropDetails().clear();
-                                    serverCallback = null;
-                                }
-                                // dragenter on new
-                                currentDropHandler = findDragTarget;
-                                if (findDragTarget != null) {
-                                    // ApplicationConnection.getConsole().log(
-                                    // "DropHandler now"
-                                    // + currentDropHandler
-                                    // .getPaintable());
-                                }
-
-                                if (currentDropHandler != null) {
-                                    currentDrag.setElementOver(targetElement);
-                                    currentDropHandler.dragEnter(currentDrag);
-                                }
-                            } else if (findDragTarget != null) {
-                                currentDrag.setElementOver(targetElement);
-                                currentDropHandler.dragOver(currentDrag);
-                            }
-                            // prevent text selection on IE
-                            nativeEvent.preventDefault();
-                            return;
-                        default:
-                            // just update element over and let the actual
-                            // handling code do the thing
-                            // ApplicationConnection.getConsole().log(
-                            // "Target just modified on "
-                            // + event.getType());
-                            currentDrag.setElementOver(targetElement);
-                            break;
-                        }
-
-                    }
-                } catch (RuntimeException e) {
-                    // ApplicationConnection.getConsole().log(
-                    // "ERROR during elementFromPoint hack.");
-                    throw e;
-                } finally {
-                    dragElement.getStyle().setProperty("display", display);
-                }
-            }
-
-            switch (typeInt) {
-            case Event.ONMOUSEOVER:
-                VDropHandler target = findDragTarget(targetElement);
-
-                if (target != null && target != currentDropHandler) {
-                    if (currentDropHandler != null) {
-                        currentDropHandler.dragLeave(currentDrag);
-                        currentDrag.getDropDetails().clear();
-                    }
-
-                    currentDropHandler = target;
-                    // ApplicationConnection.getConsole().log(
-                    // "DropHandler now"
-                    // + currentDropHandler.getPaintable());
-                    currentDrag.setElementOver(targetElement);
-                    target.dragEnter(currentDrag);
-                } else if (target == null && currentDropHandler != null) {
-                    // ApplicationConnection.getConsole().log("Invalid state!?");
-                    currentDropHandler.dragLeave(currentDrag);
-                    currentDrag.getDropDetails().clear();
-                    currentDropHandler = null;
-                }
-                break;
-            case Event.ONMOUSEOUT:
-                Element relatedTarget = Element.as(nativeEvent
-                        .getRelatedEventTarget());
-                VDropHandler newDragHanler = findDragTarget(relatedTarget);
-                if (dragElement != null
-                        && dragElement.isOrHasChild(relatedTarget)) {
-                    // ApplicationConnection.getConsole().log(
-                    // "Mouse out of dragImage, ignored");
+            try {
+                if (handleDragImage(targetElement, event)) {
                     return;
                 }
-
-                if (currentDropHandler != null
-                        && currentDropHandler != newDragHanler) {
-                    currentDropHandler.dragLeave(currentDrag);
-                    currentDrag.getDropDetails().clear();
-                    currentDropHandler = null;
-                    serverCallback = null;
-                }
-                break;
-            case Event.ONMOUSEMOVE:
-            case Event.ONTOUCHMOVE:
-                if (currentDropHandler != null) {
-                    currentDrag.setElementOver(targetElement);
-                    currentDropHandler.dragOver(currentDrag);
-                }
-                nativeEvent.preventDefault();
-
-                break;
-
-            case Event.ONTOUCHEND:
-                /* Avoid simulated event on drag end */
-                event.getNativeEvent().preventDefault();
-            case Event.ONMOUSEUP:
-                endDrag();
-                break;
-
-            default:
-                break;
+            } catch (RuntimeException e) {
+                // ApplicationConnection.getConsole().log(
+                // "ERROR during elementFromPoint hack.");
+                throw e;
+            } finally {
+                getEventHandleStrategy().restoreDragImage(display,
+                        managerMediator, event);
             }
 
+            getEventHandleStrategy().handleEvent(targetElement, event,
+                    managerMediator);
         }
 
+        private boolean handleDragImage(Element target, NativePreviewEvent event) {
+            if (!WidgetUtil.isTouchEvent(event.getNativeEvent())
+                    && getDragElement() == null) {
+                return false;
+            } else if (target == null) {
+                // ApplicationConnection.getConsole().log(
+                // "Event on dragImage, ignored");
+                event.cancel();
+                event.getNativeEvent().stopPropagation();
+                return true;
+            } else if (getEventHandleStrategy().handleDragImageEvent(target,
+                    event, managerMediator)) {
+                return true;
+            } else {
+                // just update element over and let the actual
+                // handling code do the thing
+                // ApplicationConnection.getConsole().log(
+                // "Target just modified on "
+                // + event.getType());
+                currentDrag.setElementOver(target);
+                return false;
+            }
+        }
     }
+
+    /*
+     * #13381, #14796. The drag only actually starts when the mouse move or
+     * touch move event is more than 3 pixel away.
+     */
+    public static final int MINIMUM_DISTANCE_TO_START_DRAG = 3;
 
     private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;
     private VDragEvent currentDrag;
+
+    private DDManagerMediator managerMediator = new DDManagerMediator() {
+
+        @Override
+        public VDragAndDropManager getManager() {
+            return VDragAndDropManager.this;
+        }
+
+        @Override
+        public VDragEvent getDragEvent() {
+            return currentDrag;
+        }
+
+        @Override
+        public void clearServerCallback() {
+            serverCallback = null;
+        }
+    };
+
+    private DDEventHandleStrategy eventHandleStrategy;
 
     /**
      * If dragging is currently on a drophandler, this field has reference to it
@@ -361,10 +302,10 @@ public class VDragAndDropManager {
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
 
-                        private int startX = Util
+                        private int startX = WidgetUtil
                                 .getTouchOrMouseClientX(currentDrag
                                         .getCurrentGwtEvent());
-                        private int startY = Util
+                        private int startY = WidgetUtil
                                 .getTouchOrMouseClientY(currentDrag
                                         .getCurrentGwtEvent());
 
@@ -419,31 +360,22 @@ public class VDragAndDropManager {
                                 }
                             case Event.ONMOUSEMOVE:
                             case Event.ONTOUCHMOVE:
-                                int currentX = Util
+                                int currentX = WidgetUtil
                                         .getTouchOrMouseClientX(event
                                                 .getNativeEvent());
-                                int currentY = Util
+                                int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(event
                                                 .getNativeEvent());
-                                if (Math.abs(startX - currentX) > 3
-                                        || Math.abs(startY - currentY) > 3) {
-                                    if (deferredStartRegistration != null) {
-                                        deferredStartRegistration
-                                                .removeHandler();
-                                        deferredStartRegistration = null;
-                                    }
+                                if (Math.abs(startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                        || Math.abs(startY - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
+                                    ensureDeferredRegistrationCleanup();
                                     currentDrag.setCurrentGwtEvent(event
                                             .getNativeEvent());
                                     startDrag.execute();
                                 }
                                 break;
                             default:
-                                // on any other events, clean up the
-                                // deferred drag start
-                                if (deferredStartRegistration != null) {
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
-                                }
+                                ensureDeferredRegistrationCleanup();
                                 currentDrag = null;
                                 clearDragElement();
                                 break;
@@ -459,13 +391,12 @@ public class VDragAndDropManager {
         return currentDrag;
     }
 
-    private void updateDragImagePosition() {
-        if (currentDrag.getCurrentGwtEvent() != null && dragElement != null) {
-            Style style = dragElement.getStyle();
-            int clientY = Util.getTouchOrMouseClientY(currentDrag
-                    .getCurrentGwtEvent());
-            int clientX = Util.getTouchOrMouseClientX(currentDrag
-                    .getCurrentGwtEvent());
+    protected void updateDragImagePosition(NativeEvent gwtEvent,
+            Element dragImage) {
+        if (gwtEvent != null && dragImage != null) {
+            Style style = dragImage.getStyle();
+            int clientY = WidgetUtil.getTouchOrMouseClientY(gwtEvent);
+            int clientX = WidgetUtil.getTouchOrMouseClientX(gwtEvent);
             style.setTop(clientY, Unit.PX);
             style.setLeft(clientX, Unit.PX);
         }
@@ -478,9 +409,9 @@ public class VDragAndDropManager {
      * @param element
      * @return
      */
-    private VDropHandler findDragTarget(Element element) {
+    protected VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = Util.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element, null);
             if (w == null) {
                 return null;
             }
@@ -534,10 +465,10 @@ public class VDragAndDropManager {
     }
 
     private void endDrag(boolean doDrop) {
-        if (handlerRegistration != null) {
-            handlerRegistration.removeHandler();
-            handlerRegistration = null;
-        }
+
+        ensureDeferredRegistrationCleanup();
+        ensureHandlerRegistrationCleanup();
+
         boolean sendTransferableToServer = false;
         if (currentDropHandler != null) {
             if (doDrop) {
@@ -568,8 +499,8 @@ public class VDragAndDropManager {
 
                 }
             } else {
-                currentDrag.setCurrentGwtEvent(null);
                 currentDropHandler.dragLeave(currentDrag);
+                currentDrag.setCurrentGwtEvent(null);
             }
             currentDropHandler = null;
             serverCallback = null;
@@ -593,6 +524,20 @@ public class VDragAndDropManager {
         // release the capture (set to prevent text selection in IE)
         Event.releaseCapture(RootPanel.getBodyElement());
 
+    }
+
+    private void ensureHandlerRegistrationCleanup() {
+        if (handlerRegistration != null) {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
+        }
+    }
+
+    private void ensureDeferredRegistrationCleanup() {
+        if (deferredStartRegistration != null) {
+            deferredStartRegistration.removeHandler();
+            deferredStartRegistration = null;
+        }
     }
 
     private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {
@@ -700,6 +645,21 @@ public class VDragAndDropManager {
         Profiler.leave("VDragAndDropManager.handleServerResponse");
     }
 
+    /**
+     * Returns DnD strategy to handle native preview events used by the manager.
+     * 
+     * Subclasses can override this method to return custom strategy or use GWT
+     * deferred binding.
+     * 
+     * @return internal DnD native preview event handler
+     */
+    protected DDEventHandleStrategy getEventHandleStrategy() {
+        if (eventHandleStrategy == null) {
+            eventHandleStrategy = GWT.create(DDEventHandleStrategy.class);
+        }
+        return eventHandleStrategy;
+    }
+
     private void runDeferredCommands() {
         if (deferredCommand != null) {
             Command command = deferredCommand;
@@ -721,7 +681,8 @@ public class VDragAndDropManager {
 
             dragElement = node;
             dragElement.addClassName("v-drag-element");
-            updateDragImagePosition();
+            updateDragImagePosition(currentDrag.getCurrentGwtEvent(),
+                    dragElement);
 
             if (isStarted) {
                 attachDragElement();

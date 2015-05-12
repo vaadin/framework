@@ -19,10 +19,10 @@ package com.vaadin.server.widgetsetutils.metadata;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.communication.JSONSerializer;
+import elemental.json.JsonValue;
 
 public abstract class JsonSerializer implements GeneratedSerializer {
 
@@ -51,7 +51,7 @@ public abstract class JsonSerializer implements GeneratedSerializer {
 
     protected void writeSerializerBody(TreeLogger logger, SourceWriter w) {
         String qualifiedSourceName = type.getQualifiedSourceName();
-        w.println("public " + JSONValue.class.getName() + " serialize("
+        w.println("public " + JsonValue.class.getName() + " serialize("
                 + qualifiedSourceName + " value, "
                 + ApplicationConnection.class.getName() + " connection) {");
         w.indent();
@@ -69,7 +69,7 @@ public abstract class JsonSerializer implements GeneratedSerializer {
         // T deserialize(Type type, JSONValue jsonValue, ApplicationConnection
         // connection);
         w.println("public " + qualifiedSourceName + " deserialize(Type type, "
-                + JSONValue.class.getName() + " jsonValue, "
+                + JsonValue.class.getName() + " jsonValue, "
                 + ApplicationConnection.class.getName() + " connection) {");
         w.indent();
 

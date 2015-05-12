@@ -193,6 +193,9 @@ public class InfoSection implements Section {
             ApplicationConfiguration applicationConfiguration) {
         String clientVersion = Version.getFullVersion();
         String servletVersion = applicationConfiguration.getServletVersion();
+        String atmosphereVersion = applicationConfiguration
+                .getAtmosphereVersion();
+        String jsVersion = applicationConfiguration.getAtmosphereJSVersion();
 
         String themeVersion;
         boolean themeOk;
@@ -213,6 +216,11 @@ public class InfoSection implements Section {
         addRow("Server engine version", servletVersion, servletOk ? null
                 : ERROR_STYLE);
         addRow("Theme version", themeVersion, themeOk ? null : ERROR_STYLE);
+        if (jsVersion != null) {
+            addRow("Push server version", atmosphereVersion);
+            addRow("Push client version", jsVersion
+                    + " (note: does not need to match server version)");
+        }
     }
 
     /**

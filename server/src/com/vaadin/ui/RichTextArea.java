@@ -18,9 +18,12 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Property;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -285,8 +288,19 @@ public class RichTextArea extends AbstractField<String> implements
     }
 
     @Override
-    protected boolean isEmpty() {
+    public boolean isEmpty() {
         return super.isEmpty() || getValue().length() == 0;
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        setValue(design.html());
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        design.html(getValue());
+    }
 }

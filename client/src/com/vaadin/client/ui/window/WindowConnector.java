@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -27,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
@@ -36,7 +38,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
@@ -245,7 +247,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             Style childStyle = layoutElement.getStyle();
 
             // IE8 needs some hackery to measure its content correctly
-            Util.forceIE8Redraw(layoutElement);
+            WidgetUtil.forceIE8Redraw(layoutElement);
 
             if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
                 childStyle.setPosition(Position.ABSOLUTE);
@@ -289,9 +291,52 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             // emptied during the following hierarchy update (we need to keep
             // the contents visible for the duration of a possible
             // 'out-animation')
-            windowClone = getWidget().getElement().getFirstChild()
-                    .cloneNode(true);
+
+            // Fix for #14645 and #14785 - as soon as we clone audio and video
+            // tags, they start fetching data, and playing immediately in
+            // background, in case autoplay attribute is present. Therefore we
+            // have to replace them with stubs in the clone. And we can't just
+            // erase them, because there are corresponding player widgets to
+            // animate
+            windowClone = cloneNodeFilteringMedia(getWidget().getElement()
+                    .getFirstChild());
         }
+    }
+
+    private Node cloneNodeFilteringMedia(Node node) {
+        if (node instanceof Element) {
+            Element old = (Element) node;
+            if ("audio".equalsIgnoreCase(old.getTagName())
+                    || "video".equalsIgnoreCase(old.getTagName())) {
+                if (!old.hasAttribute("controls")
+                        && "audio".equalsIgnoreCase(old.getTagName())) {
+                    return null; // nothing to animate, so we won't add this to
+                                 // the clone
+                }
+                Element newEl = DOM.createElement(old.getTagName());
+                if (old.hasAttribute("controls")) {
+                    newEl.setAttribute("controls", old.getAttribute("controls"));
+                }
+                if (old.hasAttribute("style")) {
+                    newEl.setAttribute("style", old.getAttribute("style"));
+                }
+                if (old.hasAttribute("class")) {
+                    newEl.setAttribute("class", old.getAttribute("class"));
+                }
+                return newEl;
+            }
+        }
+        Node res = node.cloneNode(false);
+        if (node.hasChildNodes()) {
+            NodeList<Node> nl = node.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node clone = cloneNodeFilteringMedia(nl.getItem(i));
+                if (clone != null) {
+                    res.appendChild(clone);
+                }
+            }
+        }
+        return res;
     }
 
     @Override
@@ -333,7 +378,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         window.setAssistivePrefix(state.assistivePrefix);
         window.setAssistivePostfix(state.assistivePostfix);
-        window.setCaption(state.caption, iconURL);
+        window.setCaption(state.caption, iconURL, getState().captionAsHtml);
 
         window.setWaiAriaRole(getState().role);
         window.setAssistiveDescription(state.contentDescription);
@@ -360,6 +405,10 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         // centered is this is unset on move/resize
         window.centered = state.centered;
+        // Ensure centering before setting visible (#16486)
+        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
+            window.center();
+        }
         window.setVisible(true);
 
         // ensure window is not larger than browser window
@@ -395,7 +444,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             }
         } else if (state.windowMode == WindowMode.MAXIMIZED) {
             window.setPopupPositionNoUpdate(0, 0);
-            window.bringToFront();
         }
     }
 
@@ -424,6 +472,10 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 state.windowMode = WindowMode.MAXIMIZED;
             }
             updateWindowMode();
+
+            VWindow window = getWidget();
+            window.bringToFront();
+
             getRpcProxy(WindowServerRpc.class).windowModeChanged(
                     state.windowMode);
         }

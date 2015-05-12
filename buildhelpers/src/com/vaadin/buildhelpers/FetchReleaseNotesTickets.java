@@ -20,25 +20,40 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
 public class FetchReleaseNotesTickets {
-    private static final String queryURL = "http://dev.vaadin.com/query?status=closed&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
+    private static final String queryURL = "https://dev.vaadin.com/query?status=pending-release&amp;status=released&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
     private static final String ticketTemplate = "<tr>"
             + "@badge@" //
-            + "<td class=\"ticket\"><a href=\"http://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
+            + "<td class=\"ticket\"><a href=\"https://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
             + "<td>@description@</td>" //
             + "</tr>"; //
 
     public static void main(String[] args) throws IOException {
-        String versions = System.getProperty("vaadin.version");
-        if (versions == null || versions.equals("")) {
+        String versionsProperty = System.getProperty("vaadin.version");
+        if (versionsProperty == null || versionsProperty.equals("")) {
             usage();
         }
         String milestone = "";
-        for (String version : versions.split(" ")) {
+
+        List<String> versions = new ArrayList<String>();
+        for (String version : versionsProperty.split(" ")) {
+            if (version.endsWith(".0") || version.matches(".*\\.rc\\d+")) {
+                // Find all prerelease versions for final or rc
+
+                // Strip potential rc prefix
+                version = version.replaceAll("\\.rc\\d+$", "");
+                versions.addAll(findPrereleaseVersions(version));
+            } else {
+                versions.add(version);
+            }
+        }
+
+        for (String version : versions) {
             if (!milestone.equals("")) {
                 milestone += "&amp;";
             }
@@ -46,6 +61,22 @@ public class FetchReleaseNotesTickets {
         }
 
         printMilestone(milestone);
+    }
+
+    private static List<String> findPrereleaseVersions(String baseVersion) {
+        List<String> versions = new ArrayList<String>();
+
+        for (int i = 0; i < 50; i++) {
+            versions.add(baseVersion + ".alpha" + i);
+        }
+        for (int i = 0; i < 10; i++) {
+            versions.add(baseVersion + ".beta" + i);
+        }
+        for (int i = 0; i < 10; i++) {
+            versions.add(baseVersion + ".rc" + i);
+        }
+
+        return versions;
     }
 
     private static void printMilestone(String milestone)
@@ -68,12 +99,9 @@ public class FetchReleaseNotesTickets {
                 continue;
             }
             String summary = fields[1];
-            if (summary.startsWith("\"") && summary.endsWith("\"")) {
-                // If a summary starts with " and ends with " then all quotes in
-                // the summary are encoded as double quotes
-                summary = summary.substring(1, summary.length() - 1);
-                summary = summary.replace("\"\"", "\"");
-            }
+
+            summary = modifySummaryString(summary);
+
             String badge = "<td></td>";
             if (fields.length >= 8 && !fields[7].equals("")) {
                 badge = "<td class=\"bfp\"><span class=\"bfp\">Priority</span></td>";
@@ -86,6 +114,52 @@ public class FetchReleaseNotesTickets {
                     .replace("@badge@", badge));
         }
         urlStream.close();
+    }
+
+    private static String modifySummaryString(String summary) {
+
+        if (summary.startsWith("\"") && summary.endsWith("\"")) {
+            // If a summary starts with " and ends with " then all quotes in
+            // the summary are encoded as double quotes
+            summary = summary.substring(1, summary.length() - 1);
+            summary = summary.replace("\"\"", "\"");
+        }
+
+        // this is needed for escaping html
+        summary = escapeHtml(summary);
+
+        return summary;
+    }
+
+    /**
+     * @since 7.4
+     * @param string
+     *            the string to be html-escaped
+     * @return string in html-escape format
+     */
+    private static String escapeHtml(String string) {
+
+        StringBuffer buf = new StringBuffer(string.length() * 2);
+
+        // we check the string character by character and escape only special
+        // characters
+        for (int i = 0; i < string.length(); ++i) {
+
+            char ch = string.charAt(i);
+            String charString = ch + "";
+
+            if ((charString).matches("[a-zA-Z0-9., ]")) {
+                // character is letter, digit, dot, comma or whitespace
+                buf.append(ch);
+            } else {
+                int charInt = ch;
+                buf.append("&");
+                buf.append("#");
+                buf.append(charInt);
+                buf.append(";");
+            }
+        }
+        return buf.toString();
     }
 
     private static void usage() {

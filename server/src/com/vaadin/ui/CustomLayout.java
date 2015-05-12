@@ -16,18 +16,23 @@
 
 package com.vaadin.ui;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -69,9 +74,11 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * for setting the appropriate fields. Either
      * {@link #setTemplateName(String)}, that makes layout fetch the template
      * from theme, or {@link #setTemplateContents(String)}.
+     * 
+     * @since 7.5.0
      */
-    protected CustomLayout() {
-        setWidth(100, UNITS_PERCENTAGE);
+    public CustomLayout() {
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
@@ -101,22 +108,20 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
-        InputStreamReader reader = new InputStreamReader(templateStream,
-                "UTF-8");
-        StringBuilder b = new StringBuilder(BUFFER_SIZE);
-
-        char[] cbuf = new char[BUFFER_SIZE];
-        int offset = 0;
-
-        while (true) {
-            int nrRead = reader.read(cbuf, offset, BUFFER_SIZE);
-            b.append(cbuf, 0, nrRead);
-            if (nrRead < BUFFER_SIZE) {
-                break;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                templateStream, "UTF-8"));
+        StringBuilder builder = new StringBuilder(BUFFER_SIZE);
+        try {
+            char[] cbuf = new char[BUFFER_SIZE];
+            int nRead;
+            while ((nRead = reader.read(cbuf, 0, BUFFER_SIZE)) > 0) {
+                builder.append(cbuf, 0, nRead);
             }
+        } finally {
+            reader.close();
         }
 
-        setTemplateContents(b.toString());
+        setTemplateContents(builder.toString());
     }
 
     @Override
@@ -145,8 +150,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
         slots.put(location, c);
         getState().childLocations.put(c, location);
-        c.setParent(this);
-        fireComponentAttachEvent(c);
+
+        super.addComponent(c);
     }
 
     /**
@@ -306,4 +311,32 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
     }
 
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        for (Element child : design.children()) {
+
+            Component childComponent = designContext.readDesign(child);
+
+            if (child.hasAttr(":location")) {
+                addComponent(childComponent, child.attr(":location"));
+            } else {
+                addComponent(childComponent);
+            }
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        for (Entry<String, Component> slot : slots.entrySet()) {
+            Element child = designContext.createElement(slot.getValue());
+            if (slots.size() > 1 || !"".equals(slot.getKey())) {
+                child.attr(":location", slot.getKey());
+            }
+            design.appendChild(child);
+        }
+    }
 }

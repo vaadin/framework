@@ -6,7 +6,7 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 
-public class NotFilterTest extends AbstractFilterTest<Not> {
+public class NotFilterTest extends AbstractFilterTestBase<Not> {
 
     protected Item item1 = new BeanItem<Integer>(1);
     protected Item item2 = new BeanItem<Integer>(2);

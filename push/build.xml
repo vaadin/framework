@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-push" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-push" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Meta package which defines dependencies needed for push
     </description>
@@ -13,10 +14,11 @@
     <property name="temp.dir" location="${result.dir}/temp" />
     <property name="jquery.unpack" location="${temp.dir}/jquery" />
     <property name="vaadinPush.js" location="${result.dir}/js/VAADIN/vaadinPush.js" />
-    <property name="vaadinPush.debug.js" location="${result.dir}/js/VAADIN/vaadinPush.debug.js" />
+    <property name="vaadinPush.debug.js"
+        location="${result.dir}/js/VAADIN/vaadinPush.debug.js" />
 
     <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
-    <property name="atmosphere.runtime.version" value="2.1.2.vaadin4" />
+    <property name="atmosphere.runtime.version" value="2.2.4.vaadin8" />
     <property name="jquery.js" location="lib/jquery/jquery-1.11.0.js" />
 
     <path id="classpath.compile.custom" />
@@ -30,8 +32,10 @@
 
     <target name="vaadinPush.js">
         <mkdir dir="${result.dir}/js/VAADIN" />
-        <ivy:resolve log="download-only" file="ivy.xml" conf="push.js" />
-        <ivy:cachepath pathid="atmosphere.jquery.deps" conf="push.js" />
+        <ivy:resolve log="download-only" file="ivy.xml"
+            conf="push.js" />
+        <ivy:cachepath pathid="atmosphere.jquery.deps"
+            conf="push.js" />
 
         <delete dir="${temp.dir}" />
         <copy flatten="true" tofile="${temp.dir}/jquery.war">
@@ -46,9 +50,12 @@
             <mapper type="flatten" />
         </unzip>
         <loadfile srcfile="${jquery.js}" property="jquery.js.contents" />
-        <loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+        <loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js"
+            property="jquery.atmosphere.js.contents" />
 
-        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
+        <loadfile
+            srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl"
+            property="vaadinPush.js.contents">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="jquery.js" value="${jquery.js.contents}" />
@@ -61,7 +68,9 @@
         <echo file="${vaadinPush.debug.js}">${vaadinPush.js.contents}</echo>
 
         <!-- Minify -->
-        <ivy:retrieve organisation="com.yahoo.platform.yui" module="yuicompressor" revision="2.4.7" inline="true" type="jar" pattern="${result.dir}/compressor.jar" />
+        <ivy:retrieve organisation="com.yahoo.platform.yui"
+            module="yuicompressor" revision="2.4.7" inline="true" type="jar"
+            pattern="${result.dir}/compressor.jar" />
         <java jar="${result.dir}/compressor.jar" fork="true">
             <arg value="-v" />
             <arg value="-o" />
@@ -72,7 +81,8 @@
 
     <target name="jar" depends="vaadinPush.js">
         <antcall target="common.jar">
-            <param name="require-bundle" value="com.vaadin.external.atmosphere.runtime;bundle-version=&quot;${atmosphere.runtime.version}&quot;;visibility:=reexport" />
+            <param name="require-bundle"
+                value="com.vaadin.external.atmosphere.runtime;bundle-version=&quot;${atmosphere.runtime.version}&quot;;visibility:=reexport" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
     </target>

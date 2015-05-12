@@ -43,7 +43,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class DateCell extends FocusableComplexPanel implements
         MouseDownHandler, MouseMoveHandler, MouseUpHandler, KeyDownHandler,
@@ -201,7 +201,7 @@ public class DateCell extends FocusableComplexPanel implements
             addStyleDependentName("Hsized");
 
             width = getOffsetWidth()
-                    - Util.measureHorizontalBorder(getElement());
+                    - WidgetUtil.measureHorizontalBorder(getElement());
             // Update moveWidth for any DateCellDayEvent child
             updateEventCellsWidth();
             recalculateEventWidths();
@@ -338,7 +338,7 @@ public class DateCell extends FocusableComplexPanel implements
     }
 
     public int getSlotBorder() {
-        return Util.measureVerticalBorder(slotElements[0]);
+        return WidgetUtil.measureVerticalBorder(slotElements[0]);
     }
 
     private void drawDayEvents(List<DateCellGroup> groups) {
@@ -506,8 +506,8 @@ public class DateCell extends FocusableComplexPanel implements
     @SuppressWarnings("deprecation")
     private void updatePositionFor(DateCellDayEvent dayEvent, Date targetDay,
             CalendarEvent calendarEvent) {
-        if (canDisplay(calendarEvent)) {
 
+        if (shouldDisplay(calendarEvent)) {
             dayEvent.getElement().getStyle().clearDisplay();
 
             Date fromDt = calendarEvent.getStartTime();
@@ -518,9 +518,8 @@ public class DateCell extends FocusableComplexPanel implements
             boolean onDifferentDays = calendarEvent.isTimeOnDifferentDays();
             if (onDifferentDays) {
                 if (calendarEvent.getStart().compareTo(targetDay) != 0) {
-                    // Current day slot is for the end date. Lets fix also
-                    // the
-                    // start & end times.
+                    // Current day slot is for the end date and all in-between
+                    // days. Lets fix also the start & end times.
                     h = 0;
                     m = 0;
                 }
@@ -528,7 +527,6 @@ public class DateCell extends FocusableComplexPanel implements
 
             int startFromMinutes = (h * 60) + m;
             dayEvent.updatePosition(startFromMinutes, range);
-
         } else {
             dayEvent.getElement().getStyle().setDisplay(Display.NONE);
         }
@@ -567,17 +565,28 @@ public class DateCell extends FocusableComplexPanel implements
      * 
      * @param event
      * @return
+     * 
+     *         This method is not necessary in the long run.. Or here can be
+     *         various types of implementations..
      */
     // Date methods not deprecated in GWT
     @SuppressWarnings("deprecation")
-    private boolean canDisplay(CalendarEvent event) {
-        Date eventStart = event.getStartTime();
-        Date eventEnd = event.getEndTime();
+    private boolean shouldDisplay(CalendarEvent event) {
+        boolean display = true;
+        if (event.isTimeOnDifferentDays()) {
+            display = true;
+        } else { // only in case of one-day event we are able not to display
+                 // event
+                 // which is placed in unpublished parts on calendar
+            Date eventStart = event.getStartTime();
+            Date eventEnd = event.getEndTime();
 
-        int eventStartHours = eventStart.getHours();
-        int eventEndHours = eventEnd.getHours();
+            int eventStartHours = eventStart.getHours();
+            int eventEndHours = eventEnd.getHours();
 
-        return (eventStartHours <= lastHour) && (eventEndHours >= firstHour);
+            display = !(eventEndHours < firstHour || eventStartHours > lastHour);
+        }
+        return display;
     }
 
     @Override

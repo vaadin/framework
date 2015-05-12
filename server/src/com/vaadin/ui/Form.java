@@ -1064,7 +1064,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             for (Object id : itemPropertyIds) {
                 if (id != null) {
                     Field<?> field = getField(id);
-                    if (field.isEnabled() && !field.isReadOnly()) {
+                    if (field.isConnectorEnabled() && !field.isReadOnly()) {
                         return field;
                     }
                 }
@@ -1186,9 +1186,14 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
-    /** Form is empty if all of its fields are empty. */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * A Form is empty if all of its fields are empty.
+     * 
+     */
     @Override
-    protected boolean isEmpty() {
+    public boolean isEmpty() {
 
         for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
             Field<?> f = i.next();
@@ -1200,6 +1205,21 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#clear()
+     */
+    @Override
+    public void clear() {
+        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
+            Field<?> f = i.next();
+            if (f instanceof AbstractField) {
+                ((AbstractField<?>) f).clear();
+            }
+        }
     }
 
     /**

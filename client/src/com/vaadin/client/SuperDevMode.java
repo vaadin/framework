@@ -15,6 +15,8 @@
  */
 package com.vaadin.client;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.UrlBuilder;
@@ -51,8 +53,9 @@ public class SuperDevMode {
 
     private static void recompileWidgetsetAndStartInDevMode(
             final String serverUrl) {
-        VConsole.log("Recompiling widgetset using<br/>" + serverUrl
-                + "<br/>and then reloading in super dev mode");
+        getLogger().info(
+                "Recompiling widgetset using<br/>" + serverUrl
+                        + "<br/>and then reloading in super dev mode");
         VNotification n = new VNotification();
         n.show("<b>Recompiling widgetset, please wait</b>",
                 VNotification.CENTERED, VNotification.STYLE_SYSTEM);
@@ -66,10 +69,10 @@ public class SuperDevMode {
 
                     @Override
                     public void onSuccess(RecompileResult result) {
-                        VConsole.log("JSONP compile call successful");
+                        getLogger().fine("JSONP compile call successful");
 
                         if (!result.ok()) {
-                            VConsole.log("* result: " + result);
+                            getLogger().fine("* result: " + result);
                             failed();
                             return;
                         }
@@ -80,17 +83,18 @@ public class SuperDevMode {
                                         serverUrl));
                         setSession(SKIP_RECOMPILE, "1");
 
-                        VConsole.log("* result: OK. Reloading");
+                        getLogger().fine("* result: OK. Reloading");
                         Location.reload();
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        VConsole.error("JSONP compile call failed");
+                        getLogger().severe("JSONP compile call failed");
                         // Don't log exception as they are shown as
                         // notifications
-                        VConsole.error(Util.getSimpleName(caught) + ": "
-                                + caught.getMessage());
+                        getLogger().severe(
+                                caught.getClass().getSimpleName() + ": "
+                                        + caught.getMessage());
                         failed();
 
                     }
@@ -189,7 +193,7 @@ public class SuperDevMode {
         }
 
         if (hasSession(SKIP_RECOMPILE)) {
-            VConsole.log("Running in SuperDevMode");
+            getLogger().info("Running in SuperDevMode");
             // When we get here, we are running in super dev mode
 
             // Remove the flag so next reload will recompile
@@ -259,5 +263,9 @@ public class SuperDevMode {
     private static void showError(String message) {
         VNotification n = new VNotification();
         n.show(message, VNotification.CENTERED_TOP, VNotification.STYLE_SYSTEM);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(SuperDevMode.class.getName());
     }
 }

@@ -27,8 +27,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.atmosphere.util.Version;
-
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
@@ -51,34 +50,23 @@ public class VaadinServletService extends VaadinService {
             throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
-
-        // Set default class loader if not already set
-        if (getClassLoader() == null) {
-            /*
-             * The servlet is most likely to be loaded with a class loader
-             * specific to the application instead of some generic system class
-             * loader that loads the Vaadin classes.
-             */
-            setClassLoader(servlet.getClass().getClassLoader());
-        }
     }
 
     private static boolean checkAtmosphereSupport() {
-        try {
-            String rawVersion = Version.getRawVersion();
-            if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION
-                    .equals(rawVersion)) {
-                getLogger().log(
-                        Level.WARNING,
-                        Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                        new Object[] {
-                                Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
-                                rawVersion });
-            }
-            return true;
-        } catch (NoClassDefFoundError e) {
+        String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
+        if (rawVersion == null) {
             return false;
         }
+
+        if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
+            getLogger().log(
+                    Level.WARNING,
+                    Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
+                    new Object[] {
+                            Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
+                            rawVersion });
+        }
+        return true;
     }
 
     @Override
@@ -118,9 +106,7 @@ public class VaadinServletService extends VaadinService {
         VaadinServletRequest servletRequest = (VaadinServletRequest) request;
         String staticFileLocation;
         // if property is defined in configurations, use that
-        staticFileLocation = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        VaadinServlet.PARAMETER_VAADIN_RESOURCES, null);
+        staticFileLocation = getDeploymentConfiguration().getResourcesPath();
         if (staticFileLocation != null) {
             return staticFileLocation;
         }
@@ -159,8 +145,7 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
-        return getDeploymentConfiguration().getApplicationOrSystemProperty(
-                VaadinServlet.PARAMETER_WIDGETSET,
+        return getDeploymentConfiguration().getWidgetset(
                 VaadinServlet.DEFAULT_WIDGETSET);
     }
 

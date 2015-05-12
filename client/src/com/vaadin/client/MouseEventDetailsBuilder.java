@@ -57,8 +57,8 @@ public class MouseEventDetailsBuilder {
             Element relativeToElement) {
         MouseEventDetails mouseEventDetails = new MouseEventDetails();
         mouseEventDetails.setType(Event.getTypeInt(evt.getType()));
-        mouseEventDetails.setClientX(Util.getTouchOrMouseClientX(evt));
-        mouseEventDetails.setClientY(Util.getTouchOrMouseClientY(evt));
+        mouseEventDetails.setClientX(WidgetUtil.getTouchOrMouseClientX(evt));
+        mouseEventDetails.setClientY(WidgetUtil.getTouchOrMouseClientY(evt));
         if (evt.getButton() == NativeEvent.BUTTON_LEFT) {
             mouseEventDetails.setButton(MouseButton.LEFT);
         } else if (evt.getButton() == NativeEvent.BUTTON_RIGHT) {

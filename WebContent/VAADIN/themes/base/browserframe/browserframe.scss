@@ -4,6 +4,13 @@
 	.v-browserframe {
 		font-size: 0;
 	}
+
+	/* fix for #14813 - unable to scroll on iOS devices */
+	.v-webkit.v-ios & .v-browserframe {
+		-webkit-overflow-scrolling: touch;
+		overflow:auto;
+	}
+
 	/* Some times a browser frame can contain a span with altenate text */
 	.v-browserframe > span {
 		font-size: $font-size;

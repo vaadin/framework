@@ -6,7 +6,7 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 
-public class AndOrFilterTest extends AbstractFilterTest<AbstractJunctionFilter> {
+public class AndOrFilterTest extends AbstractFilterTestBase<AbstractJunctionFilter> {
 
     protected Item item1 = new BeanItem<Integer>(1);
     protected Item item2 = new BeanItem<Integer>(2);

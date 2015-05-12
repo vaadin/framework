@@ -1,3 +1,11 @@
+/**
+ * Outputs the selectors and properties for the CheckBox component.
+ *
+ * @param {string} $primary-stylename (v-checkbox) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group checkbox
+ */
 @mixin valo-checkbox ($primary-stylename: v-checkbox, $include-additional-styles: contains($v-included-additional-styles, checkbox)) {
 
   .#{$primary-stylename} {
@@ -20,12 +28,26 @@
 }
 
 
+/**
+ * Outputs the font icon to indicate the checked state.
+ * 
+ * @group checkbox
+ */
 @mixin valo-checkbox-icon-style {
   content: "\f00c";
   font-family: FontAwesome;
 }
 
 
+/**
+ * Outputs the styles for a checkbox variant.
+ * 
+ * @param {color} $background-color ($v-background-color) - The background color of the checkbox
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the checkbox. The width and height of the checkbox will be the unit-size divided by 2.
+ * @param {color} $selection-color ($v-selection-color) - The color of the checked state icon 
+ * 
+ * @group checkbox
+ */
 @mixin valo-checkbox-style ($background-color: $v-background-color, $unit-size: $v-unit-size, $selection-color: $v-selection-color) {
 
   // So that we can use the same 'unit-size' for all component sizes
@@ -57,7 +79,7 @@
     margin: 0;
 
     &:focus ~ label:before {
-      @include valo-button-focus-style($background-color: $background-color, $border-fallback: null, $include-box-shadow: false);
+      @include valo-button-focus-style($background-color: $background-color, $border-fallback: null);
       @include box-shadow(valo-bevel-and-shadow($background-color: $background-color, $bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $include-focus: true));
     }
 
@@ -77,7 +99,7 @@
     }
 
     & ~ label:before {
-      @include valo-button-style($background-color: $background-color, $unit-size: $size, $border-radius: min(round($size/3), $v-border-radius));
+      @include valo-button-style($background-color: $background-color, $unit-size: $size, $border-radius: min(round($size/3), $v-border-radius), $states: normal);
       padding: 0;
       height: round($size);
     }
@@ -97,24 +119,6 @@
     &:checked ~ label:after {
       color: $selection-color;
     }
-
-    &[disabled] {
-      ~ label,
-      ~ label .v-icon,
-      ~ .v-icon {
-        cursor: default;
-      }
-
-      ~ label:before,
-      ~ label:after {
-        @include opacity($v-disabled-opacity);
-      }
-
-      &:active ~ label:after {
-        background: transparent;
-      }
-    }
-
   }
 
   & > .v-icon,
@@ -122,6 +126,22 @@
     margin: 0 round($size/3) 0 round($size/6);
     min-width: 1em;
     cursor: pointer;
+  }
+
+  &.v-disabled {
+    > label,
+    > .v-icon {
+      cursor: default;
+      @include opacity($v-disabled-opacity);
+    }
+
+    > label > .v-icon {
+      cursor: default;
+    }
+
+    :root & > input:active ~ label:after {
+      background: transparent;
+    }
   }
 
 }

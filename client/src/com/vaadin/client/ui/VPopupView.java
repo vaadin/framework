@@ -35,6 +35,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -51,7 +52,7 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
 
-public class VPopupView extends HTML implements Iterable<Widget>,
+public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
         DeferredWorker {
 
     public static final String CLASSNAME = "v-popupview";
@@ -78,6 +79,7 @@ public class VPopupView extends HTML implements Iterable<Widget>,
     private final Label loading = new Label();
 
     private boolean popupShowInProgress;
+    private boolean enabled = true;
 
     /**
      * loading constructor
@@ -97,10 +99,12 @@ public class VPopupView extends HTML implements Iterable<Widget>,
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                preparePopup(popup);
-                showPopup(popup);
-                center();
-                fireEvent(new VisibilityChangeEvent(true));
+                if (isEnabled()) {
+                    preparePopup(popup);
+                    showPopup(popup);
+                    center();
+                    fireEvent(new VisibilityChangeEvent(true));
+                }
             }
         });
 
@@ -195,6 +199,29 @@ public class VPopupView extends HTML implements Iterable<Widget>,
             e.blur();
         }
     }-*/;
+
+    /**
+     * Returns true if the popup is enabled, false if not.
+     *
+     * @since 7.3.4
+     */
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets whether this popup is enabled.
+     *
+     * @param enabled
+     *            <code>true</code> to enable the popup, <code>false</code> to
+     *            disable it
+     * @since 7.3.4
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     /**
      * This class is only public to enable overriding showPopup, and is
@@ -423,6 +450,14 @@ public class VPopupView extends HTML implements Iterable<Widget>,
         return Collections.singleton((Widget) popup).iterator();
     }
 
+    /**
+     * Checks whether there are operations pending for this widget that must be
+     * executed before reaching a steady state.
+     *
+     * @returns <code>true</code> iff there are operations pending which must be
+     *          executed before reaching a steady state
+     * @since 7.3.4
+     */
     @Override
     public boolean isWorkPending() {
         return popupShowInProgress;

@@ -14,6 +14,7 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.util.Log;
@@ -714,19 +715,12 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
     @Override
     public void error(com.vaadin.server.ErrorEvent event) {
-        String logMsg = "Exception occured, "
-                + event.getThrowable().getClass().getName();
+        final Throwable throwable = DefaultErrorHandler
+                .findRelevantThrowable(event.getThrowable());
 
-        String exceptionMsg = event.getThrowable().getMessage();
-        if (exceptionMsg != null && exceptionMsg.length() > 0) {
-            logMsg += exceptionMsg;
-        }
-        log.log(logMsg);
-        final Throwable t = event.getThrowable();
-        if (t != null) {
-            t.printStackTrace();
-        }
-
+        log.log("Exception occured, " + throwable.getClass().getName() + ": "
+                + throwable.getMessage());
+        throwable.printStackTrace();
     }
 
     @Override

@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
@@ -57,6 +59,9 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -1301,19 +1306,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    /**
-     * Tree does not support lazy options loading mode. Setting this true will
-     * throw UnsupportedOperationException.
-     * 
-     * @see com.vaadin.ui.Select#setLazyLoading(boolean)
-     */
-    public void setLazyLoading(boolean useLazyLoading) {
-        if (useLazyLoading) {
-            throw new UnsupportedOperationException(
-                    "Lazy options loading is not supported by Tree.");
-        }
-    }
-
     private ItemStyleGenerator itemStyleGenerator;
 
     private DropHandler dropHandler;
@@ -1802,5 +1794,106 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             }
         }
         expanded.removeAll(removedItemIds);
+    }
+
+    /**
+     * Reads an Item from a design and inserts it into the data source.
+     * Recursively handles any children of the item as well.
+     * 
+     * @since 7.5.0
+     * @param node
+     *            an element representing the item (tree node).
+     * @param selected
+     *            A set accumulating selected items. If the item that is read is
+     *            marked as selected, its item id should be added to this set.
+     * @param context
+     *            the DesignContext instance used in parsing
+     * @return the item id of the new item
+     * 
+     * @throws DesignException
+     *             if the tag name of the {@code node} element is not
+     *             {@code node}.
+     */
+    @Override
+    protected String readItem(Element node, Set<String> selected,
+            DesignContext context) {
+
+        if (!"node".equals(node.tagName())) {
+            throw new DesignException("Unrecognized child element in "
+                    + getClass().getSimpleName() + ": " + node.tagName());
+        }
+
+        String itemId = node.attr("text");
+        addItem(itemId);
+        if (node.hasAttr("icon")) {
+            Resource icon = DesignAttributeHandler.readAttribute("icon",
+                    node.attributes(), Resource.class);
+            setItemIcon(itemId, icon);
+        }
+        if (node.hasAttr("selected")) {
+            selected.add(itemId);
+        }
+
+        for (Element child : node.children()) {
+            String childItemId = readItem(child, selected, context);
+            setParent(childItemId, itemId);
+        }
+        return itemId;
+    }
+
+    /**
+     * Recursively writes the root items and their children to a design.
+     * 
+     * @since 7.5.0
+     * @param design
+     *            the element into which to insert the items
+     * @param context
+     *            the DesignContext instance used in writing
+     */
+    @Override
+    protected void writeItems(Element design, DesignContext context) {
+        for (Object itemId : rootItemIds()) {
+            writeItem(design, itemId, context);
+        }
+    }
+
+    /**
+     * Recursively writes a data source Item and its children to a design.
+     * 
+     * @since 7.5.0
+     * @param design
+     *            the element into which to insert the item
+     * @param itemId
+     *            the id of the item to write
+     * @param context
+     *            the DesignContext instance used in writing
+     * @return
+     */
+    @Override
+    protected Element writeItem(Element design, Object itemId,
+            DesignContext context) {
+        Element element = design.appendElement("node");
+
+        element.attr("text", itemId.toString());
+
+        Resource icon = getItemIcon(itemId);
+        if (icon != null) {
+            DesignAttributeHandler.writeAttribute("icon", element.attributes(),
+                    icon, null, Resource.class);
+        }
+
+        if (isSelected(itemId)) {
+            element.attr("selected", "");
+        }
+
+        Collection<?> children = getChildren(itemId);
+        if (children != null) {
+            // Yeah... see #5864
+            for (Object childItemId : children) {
+                writeItem(element, childItemId, context);
+            }
+        }
+
+        return element;
     }
 }

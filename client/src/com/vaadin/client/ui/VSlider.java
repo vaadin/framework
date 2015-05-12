@@ -34,11 +34,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
-        HasValue<Double> {
+        HasValue<Double>, SubPartAware {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -191,37 +191,54 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         // clear unnecessary opposite style attribute
         base.getStyle().clearProperty(oppositeStyleAttribute);
 
-        if (!getElement().hasParentElement()) {
-            return;
-        }
-
-        final Element p = getElement().getParentElement();
-        if (p.getPropertyInt(domProperty) > 50) {
-            if (isVertical()) {
-                setHeight();
-            } else {
-                base.getStyle().clearProperty(styleAttribute);
-            }
-        } else {
-            // Set minimum size and adjust after all components have
-            // (supposedly) been drawn completely.
-            base.getStyle().setPropertyPx(styleAttribute, MIN_SIZE);
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    final Element p = getElement().getParentElement();
-                    if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
-                        if (isVertical()) {
-                            setHeight();
-                        } else {
-                            base.getStyle().clearProperty(styleAttribute);
-                        }
-                        // Ensure correct position
-                        setValue(value, false);
-                    }
+        /*
+         * To resolve defect #13681 we should not return from method buildBase()
+         * if slider has no parentElement, because such operations as
+         * buildHandle() and setValues(), which are needed for Slider, are
+         * called at the end of method buildBase(). And these methods will not
+         * be called if there is no parentElement. So, instead of returning from
+         * method buildBase() if there is no parentElement "if condition" is
+         * applied to call code for parentElement only in case it exists.
+         */
+        if (getElement().hasParentElement()) {
+            final Element p = getElement();
+            if (p.getPropertyInt(domProperty) > MIN_SIZE) {
+                if (isVertical()) {
+                    setHeight();
+                } else {
+                    base.getStyle().clearProperty(styleAttribute);
                 }
-            });
+            } else {
+                // Set minimum size and adjust after all components have
+                // (supposedly) been drawn completely.
+                base.getStyle().setPropertyPx(styleAttribute, MIN_SIZE);
+                Scheduler.get().scheduleDeferred(new Command() {
+
+                    @Override
+                    public void execute() {
+                        final Element p = getElement();
+                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)
+                                || propertyNotNullOrEmpty(styleAttribute,
+                                        p)) {
+                            if (isVertical()) {
+                                setHeight();
+                            } else {
+                                base.getStyle().clearProperty(styleAttribute);
+                            }
+                            // Ensure correct position
+                            setValue(value, false);
+                        }
+                    }
+
+                    // Style has non empty property
+                    private boolean propertyNotNullOrEmpty(
+                            final String styleAttribute, final Element p) {
+                        return p.getStyle().getProperty(styleAttribute) != null
+                                && !p.getStyle().getProperty(styleAttribute)
+                                        .isEmpty();
+                    }
+                });
+            }
         }
 
         if (!isVertical()) {
@@ -292,7 +309,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();
         }
-        if (Util.isTouchEvent(event)) {
+        if (WidgetUtil.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }
@@ -416,9 +433,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      */
     protected int getEventPosition(Event event) {
         if (isVertical()) {
-            return Util.getTouchOrMouseClientY(event);
+            return WidgetUtil.getTouchOrMouseClientY(event);
         } else {
-            return Util.getTouchOrMouseClientX(event);
+            return WidgetUtil.getTouchOrMouseClientX(event);
         }
     }
 
@@ -642,5 +659,22 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         if (fireEvents) {
             fireValueChanged();
         }
+    }
+
+    @Override
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+        if (subPart.equals("popup")) {
+            feedbackPopup.show();
+            return feedbackPopup.getElement();
+        }
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+        if (feedbackPopup.getElement().isOrHasChild(subElement)) {
+            return "popup";
+        }
+        return null;
     }
 }

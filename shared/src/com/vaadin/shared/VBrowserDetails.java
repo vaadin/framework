@@ -41,6 +41,11 @@ public class VBrowserDetails implements Serializable {
     private boolean isFirefox = false;
     private boolean isOpera = false;
     private boolean isIE = false;
+    private boolean isPhantomJS = false;
+
+    private boolean isWindowsPhone;
+    private boolean isIPad;
+    private boolean isIPhone;
 
     private OperatingSystem os = OperatingSystem.UNKNOWN;
 
@@ -82,6 +87,7 @@ public class VBrowserDetails implements Serializable {
 
         isSafari = !isChrome && !isIE && userAgent.indexOf("safari") != -1;
         isFirefox = userAgent.indexOf(" firefox/") != -1;
+        isPhantomJS = userAgent.indexOf("phantomjs/") != -1;
 
         // chromeframe
         isChromeFrameCapable = userAgent.indexOf("chromeframe") != -1;
@@ -162,19 +168,18 @@ public class VBrowserDetails implements Serializable {
         // Operating system
         if (userAgent.contains("windows ")) {
             os = OperatingSystem.WINDOWS;
+            isWindowsPhone = userAgent.contains("windows phone");
+        } else if (userAgent.contains("android")) {
+            os = OperatingSystem.ANDROID;
+            parseAndroidVersion(userAgent);
         } else if (userAgent.contains("linux")) {
-            if (userAgent.contains("android")) {
-                os = OperatingSystem.ANDROID;
-                parseAndroidVersion(userAgent);
-            } else {
-                os = OperatingSystem.LINUX;
-
-            }
+            os = OperatingSystem.LINUX;
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {
-            if (userAgent.contains("ipad") || userAgent.contains("ipod")
-                    || userAgent.contains("iphone")) {
+            isIPad = userAgent.contains("ipad");
+            isIPhone = userAgent.contains("iphone");
+            if (isIPad || userAgent.contains("ipod") || isIPhone) {
                 os = OperatingSystem.IOS;
                 parseIOSVersion(userAgent);
             } else {
@@ -368,6 +373,15 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Tests if the browser is PhantomJS.
+     *
+     * @return true if it is PhantomJS, false otherwise
+     */
+    public boolean isPhantomJS() {
+        return isPhantomJS;
+    }
+
+    /**
      * Returns the version of the browser engine. For WebKit this is an integer
      * e.g., 532.0. For gecko it is a float e.g., 1.8 or 1.9.
      * 
@@ -425,6 +439,16 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Tests if the browser is run on Windows Phone.
+     * 
+     * @return true if run on Windows Phone, false otherwise
+     * @since 7.3.2
+     */
+    public boolean isWindowsPhone() {
+        return isWindowsPhone;
+    }
+
+    /**
      * Tests if the browser is run on Mac OSX.
      * 
      * @return true if run on Mac OSX, false otherwise
@@ -458,6 +482,26 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isIOS() {
         return os == OperatingSystem.IOS;
+    }
+
+    /**
+     * Tests if the browser is run on iPhone.
+     * 
+     * @return true if run on iPhone, false otherwise
+     * @since 7.3.3
+     */
+    public boolean isIPhone() {
+        return isIPhone;
+    }
+
+    /**
+     * Tests if the browser is run on iPad.
+     * 
+     * @return true if run on iPad, false otherwise
+     * @since 7.3.3
+     */
+    public boolean isIPad() {
+        return isIPad;
     }
 
     /**

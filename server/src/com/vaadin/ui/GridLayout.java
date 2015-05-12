@@ -17,12 +17,21 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -36,6 +45,8 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState.ChildComponentData;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
@@ -255,8 +266,6 @@ public class GridLayout extends AbstractLayout implements
                 cursorY = row1;
             }
         }
-
-        markAsDirty();
     }
 
     /**
@@ -390,7 +399,6 @@ public class GridLayout extends AbstractLayout implements
 
         getState().childData.remove(component);
         components.remove(component);
-
         super.removeComponent(component);
     }
 
@@ -1284,5 +1292,317 @@ public class GridLayout extends AbstractLayout implements
      */
     public boolean isHideEmptyRowsAndColumns() {
         return getState(false).hideEmptyRowsAndColumns;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * After reading the design, cursorY is set to point to a row outside of the
+     * GridLayout area. CursorX is reset to 0.
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        // Prepare a 2D map for reading column contents
+        Elements rowElements = design.getElementsByTag("row");
+        List<Map<Integer, Component>> rows = new ArrayList<Map<Integer, Component>>();
+        for (int i = 0; i < rowElements.size(); ++i) {
+            rows.add(new HashMap<Integer, Component>());
+        }
+        setRows(Math.max(rows.size(), 1));
+
+        List<Integer> columnExpandRatios = new ArrayList<Integer>();
+        for (int row = 0; row < rowElements.size(); ++row) {
+            Element rowElement = rowElements.get(row);
+
+            // Row Expand
+            if (rowElement.hasAttr("expand")) {
+                int expand = DesignAttributeHandler.readAttribute("expand",
+                        rowElement.attributes(), int.class);
+                setRowExpandRatio(row, expand);
+            }
+
+            Elements cols = rowElement.children();
+
+            // Amount of skipped columns due to spanned components
+            int skippedColumns = 0;
+
+            for (int column = 0; column < cols.size(); ++column) {
+                while (rows.get(row).containsKey(column + skippedColumns)) {
+                    // Skip any spanned components
+                    skippedColumns++;
+                }
+
+                Element col = cols.get(column);
+                Component child = null;
+
+                if (col.children().size() > 0) {
+                    child = designContext.readDesign(col.child(0));
+                    // TODO: Currently ignoring any extra children.
+                    // Needs Error handling?
+                } // Else: Empty placeholder. No child component.
+
+                // Handle rowspan and colspan for this child component
+                Attributes attr = col.attributes();
+                int colspan = DesignAttributeHandler.readAttribute("colspan",
+                        attr, 1, int.class);
+                int rowspan = DesignAttributeHandler.readAttribute("rowspan",
+                        attr, 1, int.class);
+
+                for (int rowIndex = row; rowIndex < row + rowspan; ++rowIndex) {
+                    for (int colIndex = column; colIndex < column + colspan; ++colIndex) {
+                        if (rowIndex == rows.size()) {
+                            // Rowspan with not enough rows. Fix by adding rows.
+                            rows.add(new HashMap<Integer, Component>());
+                        }
+                        rows.get(rowIndex)
+                                .put(colIndex + skippedColumns, child);
+                    }
+                }
+
+                // Read column expand ratios if handling the first row.
+                if (row == 0) {
+                    if (col.hasAttr("expand")) {
+                        for (String expand : col.attr("expand").split(",")) {
+                            columnExpandRatios.add(Integer.parseInt(expand));
+                        }
+                    } else {
+                        for (int c = 0; c < colspan; ++c) {
+                            columnExpandRatios.add(0);
+                        }
+                    }
+                }
+
+                skippedColumns += (colspan - 1);
+            }
+        }
+
+        // Calculate highest column count and set columns
+        int colMax = 0;
+        for (Map<Integer, Component> cols : rows) {
+            if (colMax < cols.size()) {
+                colMax = cols.size();
+            }
+        }
+        setColumns(Math.max(colMax, 1));
+
+        for (int i = 0; i < columnExpandRatios.size(); ++i) {
+            setColumnExpandRatio(i, columnExpandRatios.get(i));
+        }
+
+        // Reiterate through the 2D map and add components to GridLayout
+        Set<Component> visited = new HashSet<Component>();
+
+        // Ignore any missing components
+        visited.add(null);
+
+        for (int i = 0; i < rows.size(); ++i) {
+            Map<Integer, Component> row = rows.get(i);
+            for (int j = 0; j < colMax; ++j) {
+                Component child = row.get(j);
+                if (visited.contains(child)) {
+                    // Empty location or already handled child
+                    continue;
+                }
+                visited.add(child);
+
+                // Figure out col and rowspan from 2D map
+                int colspan = 0;
+                while (j + colspan + 1 < row.size()
+                        && row.get(j + colspan + 1) == child) {
+                    ++colspan;
+                }
+
+                int rowspan = 0;
+                while (i + rowspan + 1 < rows.size()
+                        && rows.get(i + rowspan + 1).get(j) == child) {
+                    ++rowspan;
+                }
+
+                // Add component with area
+                addComponent(child, j, i, j + colspan, i + rowspan);
+            }
+        }
+        // Set cursor position explicitly
+        setCursorY(getRows());
+        setCursorX(0);
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        GridLayout def = designContext.getDefaultInstance(this);
+        if (components.isEmpty()
+                || !designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+
+        final Map<Connector, ChildComponentData> childData = getState().childData;
+
+        // Make a 2D map of component areas.
+        Component[][] componentMap = new Component[getState().rows][getState().columns];
+        final Component dummyComponent = new Label("");
+
+        for (Component component : components) {
+            ChildComponentData coords = childData.get(component);
+            for (int row = coords.row1; row <= coords.row2; ++row) {
+                for (int col = coords.column1; col <= coords.column2; ++col) {
+                    componentMap[row][col] = component;
+                }
+            }
+        }
+
+        // Go through the map and write only needed column tags
+        Set<Connector> visited = new HashSet<Connector>();
+
+        // Skip the dummy placeholder
+        visited.add(dummyComponent);
+
+        for (int i = 0; i < componentMap.length; ++i) {
+            Element row = design.appendElement("row");
+
+            // Row Expand
+            DesignAttributeHandler.writeAttribute("expand", row.attributes(),
+                    (int) getRowExpandRatio(i), 0, int.class);
+
+            int colspan = 1;
+            Element col;
+            for (int j = 0; j < componentMap[i].length; ++j) {
+                Component child = componentMap[i][j];
+                if (child != null) {
+                    if (visited.contains(child)) {
+                        // Child has already been written in the design
+                        continue;
+                    }
+                    visited.add(child);
+
+                    Element childElement = designContext.createElement(child);
+                    col = row.appendElement("column");
+
+                    // Write child data into design
+                    ChildComponentData coords = childData.get(child);
+
+                    Alignment alignment = getComponentAlignment(child);
+                    if (alignment.isMiddle()) {
+                        childElement.attr(":middle", "");
+                    } else if (alignment.isBottom()) {
+                        childElement.attr(":bottom", "");
+                    }
+                    if (alignment.isCenter()) {
+                        childElement.attr(":center", "");
+                    } else if (alignment.isRight()) {
+                        childElement.attr(":right", "");
+                    }
+
+                    col.appendChild(childElement);
+                    if (coords.row1 != coords.row2) {
+                        col.attr("rowspan", ""
+                                + (1 + coords.row2 - coords.row1));
+                    }
+
+                    colspan = 1 + coords.column2 - coords.column1;
+                    if (colspan > 1) {
+                        col.attr("colspan", "" + colspan);
+                    }
+
+                } else {
+                    boolean hasExpands = false;
+                    if (i == 0
+                            && lastComponentOnRow(componentMap[i], j, visited)) {
+                        // A column with expand and no content in the end of
+                        // first row needs to be present.
+                        for (int c = j; c < componentMap[i].length; ++c) {
+                            if ((int) getColumnExpandRatio(c) > 0) {
+                                hasExpands = true;
+                            }
+                        }
+                    }
+
+                    if (lastComponentOnRow(componentMap[i], j, visited)
+                            && !hasExpands) {
+                        continue;
+                    }
+
+                    // Empty placeholder tag.
+                    col = row.appendElement("column");
+
+                    // Use colspan to make placeholders more pleasant
+                    while (j + colspan < componentMap[i].length
+                            && componentMap[i][j + colspan] == child) {
+                        ++colspan;
+                    }
+
+                    int rowspan = getRowSpan(componentMap, i, j, colspan, child);
+                    if (colspan > 1) {
+                        col.attr("colspan", "" + colspan);
+                    }
+                    if (rowspan > 1) {
+                        col.attr("rowspan", "" + rowspan);
+                    }
+                    for (int x = 0; x < rowspan; ++x) {
+                        for (int y = 0; y < colspan; ++y) {
+                            // Mark handled columns
+                            componentMap[i + x][j + y] = dummyComponent;
+                        }
+                    }
+                }
+
+                // Column expands
+                if (i == 0) {
+                    // Only do expands on first row
+                    String expands = "";
+                    boolean expandRatios = false;
+                    for (int c = 0; c < colspan; ++c) {
+                        int colExpand = (int) getColumnExpandRatio(j + c);
+                        if (colExpand > 0) {
+                            expandRatios = true;
+                        }
+                        expands += (c > 0 ? "," : "") + colExpand;
+                    }
+                    if (expandRatios) {
+                        col.attr("expand", expands);
+                    }
+                }
+
+                j += colspan - 1;
+            }
+        }
+    }
+
+    private int getRowSpan(Component[][] compMap, int i, int j, int colspan,
+            Component child) {
+        int rowspan = 1;
+        while (i + rowspan < compMap.length && compMap[i + rowspan][j] == child) {
+            for (int k = 0; k < colspan; ++k) {
+                if (compMap[i + rowspan][j + k] != child) {
+                    return rowspan;
+                }
+            }
+            rowspan++;
+        }
+        return rowspan;
+    }
+
+    private boolean lastComponentOnRow(Component[] componentArray, int j,
+            Set<Connector> visited) {
+        while ((++j) < componentArray.length) {
+            Component child = componentArray[j];
+            if (child != null && !visited.contains(child)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("cursor-x");
+        result.add("cursor-y");
+        result.add("rows");
+        result.add("columns");
+        return result;
     }
 }

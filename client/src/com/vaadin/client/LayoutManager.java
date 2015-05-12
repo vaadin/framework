@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
@@ -38,6 +39,8 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.LayoutDependencyTree;
 
 public class LayoutManager {
+    private static final String STATE_CHANGE_MESSAGE = "Cannot run layout while processing state change from the server.";
+
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
 
     private static final boolean debugLogging = false;
@@ -187,8 +190,7 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private final MeasuredSize getMeasuredSize(ComponentConnector connector) {
-        Element element = connector.getWidget().getElement();
+    private final MeasuredSize getMeasuredSize(Element element) {
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
             measuredSize = new MeasuredSize();
@@ -231,8 +233,9 @@ public class LayoutManager {
         }
         layoutCounts.put(layout.getConnectorId(), count);
         if (count.intValue() > 2) {
-            VConsole.error(Util.getConnectorString(layout)
-                    + " has been layouted " + count.intValue() + " times");
+            getLogger().severe(
+                    Util.getConnectorString(layout) + " has been layouted "
+                            + count.intValue() + " times");
         }
     }
 
@@ -248,6 +251,18 @@ public class LayoutManager {
             throw new IllegalStateException(
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
+
+        if (connection.isUpdatingState()) {
+            // If assertions are enabled, throw an exception
+            assert false : STATE_CHANGE_MESSAGE;
+
+            // Else just log a warning and postpone the layout
+            getLogger().warning(STATE_CHANGE_MESSAGE);
+
+            // Framework will call layoutNow when the state update is completed
+            return;
+        }
+
         layoutPending = false;
         layoutTimer.cancel();
         try {
@@ -268,7 +283,7 @@ public class LayoutManager {
     }
 
     private void doLayout() {
-        VConsole.log("Starting layout phase");
+        getLogger().info("Starting layout phase");
         Profiler.enter("LayoutManager phase init");
 
         FastStringMap<Integer> layoutCounts = FastStringMap.create();
@@ -297,8 +312,11 @@ public class LayoutManager {
         dump = needsMeasure.dump();
         dumpLength = dump.length();
         for (int i = 0; i < dumpLength; i++) {
-            String layoutId = dump.get(i);
-            currentDependencyTree.setNeedsMeasure(layoutId, true);
+            ServerConnector connector = connectorMap.getConnector(dump.get(i));
+            if (connector != null) {
+                currentDependencyTree.setNeedsMeasure(
+                        (ComponentConnector) connector, true);
+            }
         }
         needsMeasure = FastStringSet.create();
 
@@ -319,7 +337,7 @@ public class LayoutManager {
 
             everythingNeedsMeasure = false;
             if (measuredConnectorCount == 0) {
-                VConsole.log("No more changes in pass " + passes);
+                getLogger().info("No more changes in pass " + passes);
                 Profiler.leave("Layout pass");
                 break;
             }
@@ -346,7 +364,8 @@ public class LayoutManager {
                                 if (Profiler.isEnabled()) {
                                     Profiler.enter("ElementResizeListener.onElementResize construct profiler key");
                                     key = "ElementResizeListener.onElementResize for "
-                                            + Util.getSimpleName(listener);
+                                            + listener.getClass()
+                                                    .getSimpleName();
                                     Profiler.leave("ElementResizeListener.onElementResize construct profiler key");
                                     Profiler.enter(key);
                                 }
@@ -356,7 +375,8 @@ public class LayoutManager {
                                     Profiler.leave(key);
                                 }
                             } catch (RuntimeException e) {
-                                VConsole.error(e);
+                                getLogger().log(Level.SEVERE,
+                                        "Error in resize listener", e);
                             }
                         }
                         Profiler.leave("Layout fire resize events - listeners not null");
@@ -389,7 +409,7 @@ public class LayoutManager {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "layoutHorizontally() for "
-                                        + Util.getSimpleName(cl);
+                                        + cl.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -400,7 +420,8 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger().log(Level.SEVERE,
+                                    "Error in ManagedLayout handling", e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -411,7 +432,8 @@ public class LayoutManager {
                         try {
                             String key = null;
                             if (Profiler.isEnabled()) {
-                                key = "layout() for " + Util.getSimpleName(rr);
+                                key = "layout() for "
+                                        + rr.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -422,7 +444,11 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in SimpleManagedLayout (horizontal) handling",
+                                            e);
+
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -443,8 +469,8 @@ public class LayoutManager {
                         try {
                             String key = null;
                             if (Profiler.isEnabled()) {
-                                key = "layoutHorizontally() for "
-                                        + Util.getSimpleName(cl);
+                                key = "layoutVertically() for "
+                                        + cl.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -455,7 +481,10 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in DirectionalManagedLayout handling",
+                                            e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -466,7 +495,8 @@ public class LayoutManager {
                         try {
                             String key = null;
                             if (Profiler.isEnabled()) {
-                                key = "layout() for " + Util.getSimpleName(rr);
+                                key = "layout() for "
+                                        + rr.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -477,7 +507,10 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            VConsole.error(e);
+                            getLogger()
+                                    .log(Level.SEVERE,
+                                            "Error in SimpleManagedLayout (vertical) handling",
+                                            e);
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -512,18 +545,19 @@ public class LayoutManager {
                         b.append(connectorString);
                     }
                 }
-                VConsole.log(b.toString());
+                getLogger().info(b.toString());
             }
 
             Profiler.leave("Layout pass");
 
-            VConsole.log("Pass " + passes + " measured "
-                    + measuredConnectorCount + " elements, fired "
-                    + firedListeners + " listeners and did " + layoutCount
-                    + " layouts.");
+            getLogger()
+                    .info("Pass " + passes + " measured "
+                            + measuredConnectorCount + " elements, fired "
+                            + firedListeners + " listeners and did "
+                            + layoutCount + " layouts.");
 
             if (passes > 100) {
-                VConsole.log(LOOP_ABORT_MESSAGE);
+                getLogger().severe(LOOP_ABORT_MESSAGE);
                 if (ApplicationConfiguration.isDebugMode()) {
                     VNotification.createNotification(
                             VNotification.DELAY_FOREVER,
@@ -545,7 +579,7 @@ public class LayoutManager {
                 String key = null;
                 if (Profiler.isEnabled()) {
                     key = "layout PostLayoutListener for "
-                            + Util.getSimpleName(connector);
+                            + connector.getClass().getSimpleName();
                     Profiler.enter(key);
                 }
 
@@ -560,8 +594,9 @@ public class LayoutManager {
 
         cleanMeasuredSizes();
 
-        VConsole.log("Total layout phase time: "
-                + totalDuration.elapsedMillis() + "ms");
+        getLogger().info(
+                "Total layout phase time: " + totalDuration.elapsedMillis()
+                        + "ms");
     }
 
     private void logConnectorStatus(int connectorId) {
@@ -589,25 +624,18 @@ public class LayoutManager {
                 ComponentConnector componentConnector = (ComponentConnector) connectorMap
                         .getConnector(connectorId);
 
-                // Delay the overflow fix if the involved connectors might still
-                // change
-                boolean connectorChangesExpected = !currentDependencyTree
-                        .noMoreChangesExpected(componentConnector);
-                boolean parentChangesExcpected = componentConnector.getParent() instanceof ComponentConnector
-                        && !currentDependencyTree
-                                .noMoreChangesExpected((ComponentConnector) componentConnector
-                                        .getParent());
-                if (connectorChangesExpected || parentChangesExcpected) {
+                if (delayOverflowFix(componentConnector)) {
                     delayedOverflowFixes.add(connectorId);
                     continue;
                 }
 
                 if (debugLogging) {
-                    VConsole.log("Doing overflow fix for "
-                            + Util.getConnectorString(componentConnector)
-                            + " in "
-                            + Util.getConnectorString(componentConnector
-                                    .getParent()));
+                    getLogger()
+                            .info("Doing overflow fix for "
+                                    + Util.getConnectorString(componentConnector)
+                                    + " in "
+                                    + Util.getConnectorString(componentConnector
+                                            .getParent()));
                 }
                 Profiler.enter("Overflow fix apply");
 
@@ -653,13 +681,13 @@ public class LayoutManager {
                 parentElement.getStyle().setProperty("overflow",
                         originalOverflows.get(parentElement));
 
-                layoutDependencyTree.setNeedsMeasure(connectorId, true);
+                layoutDependencyTree.setNeedsMeasure(componentConnector, true);
             }
             Profiler.leave("Overflow fix restore");
 
             if (!pendingOverflowFixes.isEmpty()) {
-                VConsole.log("Did overflow fix for " + remainingCount
-                        + " elements");
+                getLogger().info(
+                        "Did overflow fix for " + remainingCount + " elements");
             }
             pendingOverflowFixes = delayedOverflowFixes;
         }
@@ -687,8 +715,7 @@ public class LayoutManager {
                 measureConnector(connectors.get(i));
             }
             for (int i = 0; i < connectorCount; i++) {
-                layoutDependencyTree.setNeedsMeasure(connectors.get(i)
-                        .getConnectorId(), false);
+                layoutDependencyTree.setNeedsMeasure(connectors.get(i), false);
             }
             measureCount += connectorCount;
 
@@ -707,8 +734,9 @@ public class LayoutManager {
                 measureCount++;
             }
             for (int i = 0; i < length; i++) {
-                String connectorId = measureTargets.get(i);
-                layoutDependencyTree.setNeedsMeasure(connectorId, false);
+                ComponentConnector connector = (ComponentConnector) connectorMap
+                        .getConnector(measureTargets.get(i));
+                layoutDependencyTree.setNeedsMeasure(connector, false);
             }
         }
         Profiler.leave("Layout measure from tree");
@@ -716,10 +744,27 @@ public class LayoutManager {
         return measureCount;
     }
 
+    /*
+     * Delay the overflow fix if the involved connectors might still change
+     */
+    private boolean delayOverflowFix(ComponentConnector componentConnector) {
+        if (!currentDependencyTree.noMoreChangesExpected(componentConnector)) {
+            return true;
+        }
+        ServerConnector parent = componentConnector.getParent();
+        if (parent instanceof ComponentConnector
+                && !currentDependencyTree
+                        .noMoreChangesExpected((ComponentConnector) parent)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private void measureConnector(ComponentConnector connector) {
         Profiler.enter("LayoutManager.measureConnector");
         Element element = connector.getWidget().getElement();
-        MeasuredSize measuredSize = getMeasuredSize(connector);
+        MeasuredSize measuredSize = getMeasuredSize(element);
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
@@ -766,8 +811,9 @@ public class LayoutManager {
             measuredAndUpdate(element, getMeasuredSize(element, null));
         }
         Profiler.leave("LayoutManager.measureNonConenctors");
-        VConsole.log("Measured " + measuredNonConnectorElements.size()
-                + " non connector elements");
+        getLogger().info(
+                "Measured " + measuredNonConnectorElements.size()
+                        + " non connector elements");
     }
 
     private MeasureResult measuredAndUpdate(Element element,
@@ -1425,14 +1471,14 @@ public class LayoutManager {
      *            of the component in pixels
      */
     public void reportOuterHeight(ComponentConnector component, int outerHeight) {
-        MeasuredSize measuredSize = getMeasuredSize(component);
+        Element element = component.getWidget().getElement();
+        MeasuredSize measuredSize = getMeasuredSize(element);
         if (isLayoutRunning()) {
             boolean heightChanged = measuredSize.setOuterHeight(outerHeight);
 
             if (heightChanged) {
                 onConnectorChange(component, false, true);
-                notifyListenersAndDepdendents(component.getWidget()
-                        .getElement(), false, true);
+                notifyListenersAndDepdendents(element, false, true);
             }
             currentDependencyTree.setNeedsVerticalMeasure(component, false);
         } else if (measuredSize.getOuterHeight() != outerHeight) {
@@ -1506,14 +1552,14 @@ public class LayoutManager {
      *            of the component in pixels
      */
     public void reportOuterWidth(ComponentConnector component, int outerWidth) {
-        MeasuredSize measuredSize = getMeasuredSize(component);
+        Element element = component.getWidget().getElement();
+        MeasuredSize measuredSize = getMeasuredSize(element);
         if (isLayoutRunning()) {
             boolean widthChanged = measuredSize.setOuterWidth(outerWidth);
 
             if (widthChanged) {
                 onConnectorChange(component, true, false);
-                notifyListenersAndDepdendents(component.getWidget()
-                        .getElement(), true, false);
+                notifyListenersAndDepdendents(element, true, false);
             }
             currentDependencyTree.setNeedsHorizontalMeasure(component, false);
         } else if (measuredSize.getOuterWidth() != outerWidth) {

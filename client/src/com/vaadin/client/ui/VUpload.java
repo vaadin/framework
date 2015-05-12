@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.upload.UploadIFrameOnloadStrategy;
 
@@ -184,7 +185,7 @@ public class VUpload extends SimplePanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void disableUpload() {
-        submitButton.setEnabled(false);
+        setEnabledForSubmitButton(false);
         if (!submitted) {
             // Cannot disable the fileupload while submitting or the file won't
             // be submitted at all
@@ -195,7 +196,7 @@ public class VUpload extends SimplePanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void enableUpload() {
-        submitButton.setEnabled(true);
+        setEnabledForSubmitButton(true);
         fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
         if (submitted) {
@@ -207,6 +208,11 @@ public class VUpload extends SimplePanel {
             cleanTargetFrame();
             submitted = false;
         }
+    }
+
+    private void setEnabledForSubmitButton(boolean enabled) {
+        submitButton.setEnabled(enabled);
+        submitButton.setStyleName(StyleConstants.DISABLED, !enabled);
     }
 
     /**
@@ -312,6 +318,27 @@ public class VUpload extends SimplePanel {
         Scheduler.get().scheduleDeferred(startUploadCmd);
     }
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public void disableTitle(boolean disable) {
+        if (disable) {
+            // Disable title attribute for upload element.
+            if (BrowserInfo.get().isChrome()) {
+                // In Chrome title has to be set to " " to make it invisible
+                fu.setTitle(" ");
+            } else if (BrowserInfo.get().isFirefox()) {
+                // In FF title has to be set to empty string to make it
+                // invisible
+                // Method setTitle removes title attribute when it's an empty
+                // string, so setAttribute() should be used here
+                fu.getElement().setAttribute("title", "");
+            }
+            // For other browsers absent title doesn't show default tooltip for
+            // input element
+        } else {
+            fu.setTitle(null);
+        }
+    }
+
     @Override
     protected void onAttach() {
         super.onAttach();
@@ -357,4 +384,5 @@ public class VUpload extends SimplePanel {
             synthesizedFrame = null;
         }
     }
+
 }

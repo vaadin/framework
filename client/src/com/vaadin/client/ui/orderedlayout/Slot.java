@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
@@ -74,7 +74,7 @@ public final class Slot extends SimplePanel {
         public void onElementResize(ElementResizeEvent e) {
             Element caption = getCaptionElement();
             if (caption != null) {
-                Util.forceIE8Redraw(caption);
+                WidgetUtil.forceIE8Redraw(caption);
             }
         }
     };
@@ -440,7 +440,7 @@ public final class Slot extends SimplePanel {
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot as text
      * 
      * @param captionText
      *            The text of the caption
@@ -459,13 +459,41 @@ public final class Slot extends SimplePanel {
      */
     public void setCaption(String captionText, Icon icon, List<String> styles,
             String error, boolean showError, boolean required, boolean enabled) {
+        setCaption(captionText, icon, styles, error, showError, required,
+                enabled, false);
+    }
+
+    /**
+     * Set the caption of the slot
+     * 
+     * @param captionText
+     *            The text of the caption
+     * @param icon
+     *            The icon
+     * @param styles
+     *            The style names
+     * @param error
+     *            The error message
+     * @param showError
+     *            Should the error message be shown
+     * @param required
+     *            Is the (field) required
+     * @param enabled
+     *            Is the component enabled
+     * @param captionAsHtml
+     *            true if the caption should be rendered as HTML, false
+     *            otherwise
+     */
+    public void setCaption(String captionText, Icon icon, List<String> styles,
+            String error, boolean showError, boolean required, boolean enabled,
+            boolean captionAsHtml) {
 
         // TODO place for optimization: check if any of these have changed
         // since last time, and only run those changes
 
         // Caption wrappers
         Widget widget = getWidget();
-        final Element focusedElement = Util.getFocusedElement();
+        final Element focusedElement = WidgetUtil.getFocusedElement();
         // By default focus will not be lost
         boolean focusLost = false;
         if (captionText != null || icon != null || error != null || required) {
@@ -507,7 +535,11 @@ public final class Slot extends SimplePanel {
             if (captionText.trim().equals("")) {
                 this.captionText.setInnerHTML("&nbsp;");
             } else {
-                this.captionText.setInnerText(captionText);
+                if (captionAsHtml) {
+                    this.captionText.setInnerHTML(captionText);
+                } else {
+                    this.captionText.setInnerText(captionText);
+                }
             }
         } else if (this.captionText != null) {
             this.captionText.removeFromParent();
@@ -581,7 +613,7 @@ public final class Slot extends SimplePanel {
 
         if (focusLost) {
             // Find out what element is currently focused.
-            Element currentFocus = Util.getFocusedElement();
+            Element currentFocus = WidgetUtil.getFocusedElement();
             if (currentFocus != null
                     && currentFocus.equals(Document.get().getBody())) {
                 // Focus has moved to BodyElement and should be moved back to
@@ -595,12 +627,12 @@ public final class Slot extends SimplePanel {
 
                     @Override
                     public void run() {
-                        if (Util.getFocusedElement() == null) {
+                        if (WidgetUtil.getFocusedElement() == null) {
                             // This should never become an infinite loop and
                             // even if it does it will be stopped once something
                             // is done with the browser.
                             schedule(25);
-                        } else if (Util.getFocusedElement().equals(
+                        } else if (WidgetUtil.getFocusedElement().equals(
                                 Document.get().getBody())) {
                             // Focus found it's way to BodyElement. Now it can
                             // be restored

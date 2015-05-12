@@ -25,5 +25,4 @@ public class CustomComponentChildVisibilityTest extends MultiBrowserTest {
         return $(LabelElement.class).all().size() > 1;
     }
 
-
 }

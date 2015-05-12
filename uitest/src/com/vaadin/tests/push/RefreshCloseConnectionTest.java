@@ -21,13 +21,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.WebsocketTest;
 
+@TestCategory("push")
 public class RefreshCloseConnectionTest extends MultiBrowserTest {
+
     @Test
     public void testSessionRefresh() {
-        openTestURL();
+        openTestURL("restartApplication");
 
         Assert.assertEquals("1. Init", getLogRow(0));
 
@@ -39,6 +41,6 @@ public class RefreshCloseConnectionTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return WebsocketTest.getWebsocketBrowsers();
+        return getBrowsersSupportingWebSocket();
     }
 }

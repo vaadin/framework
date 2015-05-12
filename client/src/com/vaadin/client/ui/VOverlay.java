@@ -44,6 +44,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ import com.vaadin.client.Util;
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
  * </p>
- *
+ * 
  * <h3>Shadow</h3>
  * <p>
  * The separate shadow element underneath the main overlay element is <strong>
@@ -62,7 +63,7 @@ import com.vaadin.client.Util;
  * supports, add <code>-webkit-box-shadow</code> and the standard
  * <code>box-shadow</code> properties.
  * </p>
- *
+ * 
  * <p>
  * For IE8, which doesn't support CSS box-shadow, you can use the proprietary
  * DropShadow filter. It doesn't provide the exact same features as box-shadow,
@@ -70,7 +71,7 @@ import com.vaadin.client.Util;
  * border or a pseudo-element underneath the overlay which mimics a shadow, or
  * any combination of these.
  * </p>
- *
+ * 
  * <p>
  * Read more about the DropShadow filter from <a
  * href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
@@ -78,6 +79,18 @@ import com.vaadin.client.Util;
  * </p>
  */
 public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
+
+    @Override
+    protected void onAttach() {
+        // Move the overlay to the appropriate overlay container
+        final VOverlay overlay = VOverlay.current;
+        if (overlay != null) {
+            final Element e = overlay.getOverlayContainer();
+            e.appendChild(getElement());
+        }
+
+        super.onAttach();
+    }
 
     public static class PositionAndSize {
         private int left, top, width, height;
@@ -152,7 +165,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Shadow element style. If an extending class wishes to use a different
      * style of shadow, it can use setShadowStyle(String) to give the shadow
      * element a new style name.
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      */
     @Deprecated
@@ -175,9 +188,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /**
      * The shadow element for this overlay.
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
-     *
+     * 
      */
     @Deprecated
     private Element shadow;
@@ -206,7 +219,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
      * nine different DIV-elements with the following class names:
-     *
+     * 
      * <pre>
      *   .v-shadow[-stylename]
      *   ----------------------------------------------
@@ -219,9 +232,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *   | .bottom-left  |  .bottom  |  .bottom-right |
      *   ----------------------------------------------
      * </pre>
-     *
+     * 
      * See default theme 'shadow.css' for implementation example.
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      */
     @Deprecated
@@ -268,7 +281,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Return true if a separate shadow div should be used. Since Vaadin 7.3,
      * shadows are implemented with CSS box-shadow. Thus, a shadow div is only
      * used for IE8 by default.
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      * @since 7.3
      * @return true to use a shadow div
@@ -282,10 +295,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Method to control whether DOM elements for shadow are added. With this
      * method subclasses can control displaying of shadow also after the
      * constructor.
-     *
+     * 
      * @param enabled
      *            true if shadow should be displayed
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      */
     @Deprecated
@@ -349,7 +362,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /**
      * Set the z-index (visual stack position) for this overlay.
-     *
+     * 
      * @param zIndex
      *            The new z-index
      */
@@ -562,12 +575,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Sets the shadow style for this overlay. Will override any previous style
      * for the shadow. The default style name is defined by CLASSNAME_SHADOW.
      * The given style will be prefixed with CLASSNAME_SHADOW.
-     *
+     * 
      * @param style
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
      *            name=='v-shadow-foobar'.
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      */
     @Deprecated
@@ -581,7 +594,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Extending classes should always call this method after they change the
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
-     *
+     * 
      */
     public void positionOrSizeUpdated() {
         positionOrSizeUpdated(1.0);
@@ -600,7 +613,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * elements. Can be used to animate the related elements, using the
      * 'progress' parameter (used to animate the shadow in sync with GWT
      * PopupPanel's default animation 'PopupPanel.AnimationType.CENTER').
-     *
+     * 
      * @param progress
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
@@ -660,7 +673,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         // IE9 and IE10 have a bug, when resize an a element with box-shadow.
         // IE9 and IE10 need explicit update to remove extra box-shadows
         if (BrowserInfo.get().isIE9() || BrowserInfo.get().isIE10()) {
-            Util.forceIERedraw(getElement());
+            WidgetUtil.forceIERedraw(getElement());
         }
     }
 
@@ -709,7 +722,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Returns true if we should add a shim iframe below the overlay to deal
      * with zindex issues with PDFs and applets. Can be overriden to disable
      * shim iframes if they are not needed.
-     *
+     * 
      * @return true if a shim iframe should be added, false otherwise
      */
     protected boolean needsShimElement() {
@@ -771,13 +784,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Enables or disables sinking the events of the shadow to the same
      * onBrowserEvent as events to the actual overlay goes.
-     *
+     * 
      * Please note, that if you enable this, you can't assume that e.g.
      * event.getEventTarget returns an element inside the DOM structure of the
      * overlay
-     *
+     * 
      * @param sinkShadowEvents
-     *
+     * 
      * @deprecated See main JavaDoc for VOverlay
      */
     @Deprecated
@@ -801,7 +814,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Get owner (Widget that made this VOverlay, not the layout parent) of
      * VOverlay
-     *
+     * 
      * @return Owner (creator) or null if not defined
      */
     public Widget getOwner() {
@@ -811,7 +824,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Set owner (Widget that made this VOverlay, not the layout parent) of
      * VOverlay
-     *
+     * 
      * @param owner
      *            Owner (creator) of VOverlay
      */
@@ -822,7 +835,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Get the {@link ApplicationConnection} that this overlay belongs to. If
      * it's not set, {@link #getOwner()} is used to figure it out.
-     *
+     * 
      * @return
      */
     protected ApplicationConnection getApplicationConnection() {
@@ -842,7 +855,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Gets the 'overlay container' element. Tries to find the current
      * {@link ApplicationConnection} using {@link #getApplicationConnection()}.
-     *
+     * 
      * @return the overlay container element for the current
      *         {@link ApplicationConnection} or another element if the current
      *         {@link ApplicationConnection} cannot be determined.
@@ -866,7 +879,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * {@link ApplicationConnection}. Each overlay should be created in a
      * overlay container element, so that the correct theme and styles can be
      * applied.
-     *
+     * 
      * @param ac
      *            A reference to {@link ApplicationConnection}
      * @return The overlay container
@@ -893,7 +906,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Set the label of the container element, where tooltip, notification and
      * dialgs are added to.
-     *
+     * 
      * @param applicationConnection
      *            the application connection for which to change the label
      * @param overlayContainerLabel
@@ -926,10 +939,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Gets the visual viewport width, which is useful for e.g iOS where the
      * view can be zoomed in while keeping the layout viewport intact.
-     *
+     * 
      * Falls back to layout viewport; for those browsers/devices the difference
      * is that the scrollbar with is included (if there is a scrollbar).
-     *
+     * 
      * @since 7.0.7
      * @return
      */
@@ -945,10 +958,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Gets the visual viewport height, which is useful for e.g iOS where the
      * view can be zoomed in while keeping the layout viewport intact.
-     *
+     * 
      * Falls back to layout viewport; for those browsers/devices the difference
      * is that the scrollbar with is included (if there is a scrollbar).
-     *
+     * 
      * @since 7.0.7
      * @return
      */
@@ -988,10 +1001,34 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     @Override
     public void hide(final boolean autoClosed) {
+        hide(autoClosed, true, true);
+    }
+
+    /**
+     * 
+     * Hides the popup and detaches it from the page. This has no effect if it
+     * is not currently showing. Animation-in, animation-out can be
+     * enable/disabled for different use cases.
+     * 
+     * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
+     * 
+     * @param autoClosed
+     *            the value that will be passed to
+     *            {@link CloseHandler#onClose(CloseEvent)} when the popup is
+     *            closed
+     * @param animateIn
+     *            enable/disable animate-in animation
+     * @param animateOut
+     *            enable/disable animate-out animation
+     * @since 7.3.7
+     */
+    public void hide(final boolean autoClosed, final boolean animateIn,
+            final boolean animateOut) {
         if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
             super.hide(autoClosed);
         } else {
-            if (getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+            if (animateIn
+                    && getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 AnimationUtil.addAnimationEndListener(getElement(),
                         new AnimationEndListener() {
                             @Override
@@ -1017,7 +1054,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                     animationName = "";
                 }
 
-                if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                if (animateOut
+                        && animationName
+                                .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
                     // Disable GWT PopupPanel closing animation if used
                     setAnimationEnabled(false);
 
@@ -1061,4 +1100,5 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             }
         }
     }
+
 }

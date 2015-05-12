@@ -23,11 +23,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
@@ -67,7 +69,8 @@ public class FieldGroup implements Serializable {
     /**
      * The field factory used by builder methods.
      */
-    private FieldGroupFieldFactory fieldFactory = new DefaultFieldGroupFieldFactory();
+    private FieldGroupFieldFactory fieldFactory = DefaultFieldGroupFieldFactory
+            .get();
 
     /**
      * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
@@ -209,7 +212,8 @@ public class FieldGroup implements Serializable {
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
         for (Field<?> field : getFields()) {
-            if (!field.getPropertyDataSource().isReadOnly()) {
+            if (field.getPropertyDataSource() == null
+                    || !field.getPropertyDataSource().isReadOnly()) {
                 field.setReadOnly(fieldsReadOnly);
             } else {
                 field.setReadOnly(true);
@@ -242,18 +246,19 @@ public class FieldGroup implements Serializable {
      * @param propertyId
      *            The propertyId to bind to the field
      * @throws BindException
-     *             If the property id is already bound to another field by this
-     *             field binder
+     *             If the field is null or the property id is already bound to
+     *             another field by this field binder
      */
     public void bind(Field<?> field, Object propertyId) throws BindException {
-        if (propertyIdToField.containsKey(propertyId)
-                && propertyIdToField.get(propertyId) != field) {
-            throw new BindException("Property id " + propertyId
-                    + " is already bound to another field");
-        }
+        throwIfFieldIsNull(field, propertyId);
+        throwIfPropertyIdAlreadyBound(field, propertyId);
+
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
         if (itemDataSource == null) {
+            // Clear any possible existing binding to clear the field
+            field.setPropertyDataSource(null);
+            field.clear();
             // Will be bound when data source is set
             return;
         }
@@ -262,9 +267,29 @@ public class FieldGroup implements Serializable {
         configureField(field);
     }
 
-    private <T> Property.Transactional<T> wrapInTransactionalProperty(
+    /**
+     * Wrap property to transactional property.
+     */
+    protected <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
         return new TransactionalPropertyWrapper<T>(itemProperty);
+    }
+
+    private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
+        if (field == null) {
+            throw new BindException(
+                    String.format(
+                            "Cannot bind property id '%s' to a null field.",
+                            propertyId));
+        }
+    }
+
+    private void throwIfPropertyIdAlreadyBound(Field<?> field, Object propertyId) {
+        if (propertyIdToField.containsKey(propertyId)
+                && propertyIdToField.get(propertyId) != field) {
+            throw new BindException("Property id " + propertyId
+                    + " is already bound to another field");
+        }
     }
 
     /**
@@ -320,7 +345,8 @@ public class FieldGroup implements Serializable {
                     .getWrappedProperty();
 
         }
-        if (fieldDataSource == getItemProperty(propertyId)) {
+        if (getItemDataSource() != null
+                && fieldDataSource == getItemProperty(propertyId)) {
             if (null != wrapper) {
                 wrapper.detachFromProperty();
             }
@@ -434,37 +460,111 @@ public class FieldGroup implements Serializable {
             // Not using buffered mode, nothing to do
             return;
         }
-        for (Field<?> f : fieldToPropertyId.keySet()) {
-            ((Property.Transactional<?>) f.getPropertyDataSource())
-                    .startTransaction();
-        }
+
+        startTransactions();
+
         try {
             firePreCommitEvent();
-            // Commit the field values to the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                f.commit();
-            }
-            firePostCommitEvent();
 
-            // Commit the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                ((Property.Transactional<?>) f.getPropertyDataSource())
-                        .commit();
-            }
+            Map<Field<?>, InvalidValueException> invalidValueExceptions = commitFields();
 
+            if (invalidValueExceptions.isEmpty()) {
+                firePostCommitEvent();
+                commitTransactions();
+            } else {
+                throw new FieldGroupInvalidValueException(
+                        invalidValueExceptions);
+            }
         } catch (Exception e) {
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                try {
-                    ((Property.Transactional<?>) f.getPropertyDataSource())
-                            .rollback();
-                } catch (Exception rollbackException) {
-                    // FIXME: What to do ?
-                }
-            }
-
-            throw new CommitException("Commit failed", e);
+            rollbackTransactions();
+            throw new CommitException("Commit failed", this, e);
         }
 
+    }
+
+    /**
+     * Tries to commit all bound fields one by one and gathers any validation
+     * exceptions in a map, which is returned to the caller
+     * 
+     * @return a propertyId to validation exception map which is empty if all
+     *         commits succeeded
+     */
+    private Map<Field<?>, InvalidValueException> commitFields() {
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
+
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                f.commit();
+            } catch (InvalidValueException e) {
+                invalidValueExceptions.put(f, e);
+            }
+        }
+
+        return invalidValueExceptions;
+    }
+
+    /**
+     * Exception which wraps InvalidValueExceptions from all invalid fields in a
+     * FieldGroup
+     * 
+     * @since 7.4
+     */
+    public static class FieldGroupInvalidValueException extends
+            InvalidValueException {
+        private Map<Field<?>, InvalidValueException> invalidValueExceptions;
+
+        /**
+         * Constructs a new exception with the specified validation exceptions.
+         * 
+         * @param invalidValueExceptions
+         *            a property id to exception map
+         */
+        public FieldGroupInvalidValueException(
+                Map<Field<?>, InvalidValueException> invalidValueExceptions) {
+            super(null, invalidValueExceptions.values().toArray(
+                    new InvalidValueException[invalidValueExceptions.size()]));
+            this.invalidValueExceptions = invalidValueExceptions;
+        }
+
+        /**
+         * Returns a map containing fields which failed validation and the
+         * exceptions the corresponding validators threw.
+         *
+         * @return a map with all the invalid value exceptions
+         */
+        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+            return invalidValueExceptions;
+        }
+    }
+
+    private void startTransactions() throws CommitException {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            Property.Transactional<?> property = (Property.Transactional<?>) f
+                    .getPropertyDataSource();
+            if (property == null) {
+                throw new CommitException("Property \""
+                        + fieldToPropertyId.get(f)
+                        + "\" not bound to datasource.");
+            }
+            property.startTransaction();
+        }
+    }
+
+    private void commitTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            ((Property.Transactional<?>) f.getPropertyDataSource()).commit();
+        }
+    }
+
+    private void rollbackTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                ((Property.Transactional<?>) f.getPropertyDataSource())
+                        .rollback();
+            } catch (Exception rollbackException) {
+                // FIXME: What to do ?
+            }
+        }
     }
 
     /**
@@ -602,7 +702,7 @@ public class FieldGroup implements Serializable {
 
         /**
          * Called after changes are committed to the fields and the item is
-         * updated..
+         * updated.
          * <p>
          * Throw a {@link CommitException} to abort the commit.
          * 
@@ -935,26 +1035,64 @@ public class FieldGroup implements Serializable {
         return fieldName.toLowerCase().replace("_", "");
     }
 
+    /**
+     * Exception thrown by a FieldGroup when the commit operation fails.
+     * 
+     * Provides information about validation errors through
+     * {@link #getInvalidFields()} if the cause of the failure is that all bound
+     * fields did not pass validation
+     * 
+     */
     public static class CommitException extends Exception {
+
+        private FieldGroup fieldGroup;
 
         public CommitException() {
             super();
-            // TODO Auto-generated constructor stub
+        }
+
+        public CommitException(String message, FieldGroup fieldGroup,
+                Throwable cause) {
+            super(message, cause);
+            this.fieldGroup = fieldGroup;
         }
 
         public CommitException(String message, Throwable cause) {
             super(message, cause);
-            // TODO Auto-generated constructor stub
         }
 
         public CommitException(String message) {
             super(message);
-            // TODO Auto-generated constructor stub
         }
 
         public CommitException(Throwable cause) {
             super(cause);
-            // TODO Auto-generated constructor stub
+        }
+
+        /**
+         * Returns a map containing the fields which failed validation and the
+         * exceptions the corresponding validators threw.
+         *
+         * @since 7.4
+         * @return a map with all the invalid value exceptions. Can be empty but
+         *         not null
+         */
+        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+            if (getCause() instanceof FieldGroupInvalidValueException) {
+                return ((FieldGroupInvalidValueException) getCause())
+                        .getInvalidFields();
+            }
+            return new HashMap<Field<?>, InvalidValueException>();
+        }
+
+        /**
+         * Returns the field group where the exception occurred
+         * 
+         * @since 7.4
+         * @return the field group
+         */
+        public FieldGroup getFieldGroup() {
+            return fieldGroup;
         }
 
     }
@@ -1094,5 +1232,19 @@ public class FieldGroup implements Serializable {
             searchClass = searchClass.getSuperclass();
         }
         return memberFieldInOrder;
+    }
+
+    /**
+     * Clears the value of all fields.
+     * 
+     * @since 7.4
+     */
+    public void clear() {
+        for (Field<?> f : getFields()) {
+            if (f instanceof AbstractField) {
+                ((AbstractField) f).clear();
+            }
+        }
+
     }
 }

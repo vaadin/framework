@@ -64,7 +64,7 @@ public class ResourceReference extends URLReference {
             String uri = getConnectorResourceBase(prefix, connector);
             return uri;
         } else if (resource instanceof ThemeResource) {
-            final String uri = "theme://"
+            final String uri = ApplicationConstants.THEME_PROTOCOL_PREFIX
                     + ((ThemeResource) resource).getResourceId();
             return uri;
         } else if (resource instanceof FontIcon) {

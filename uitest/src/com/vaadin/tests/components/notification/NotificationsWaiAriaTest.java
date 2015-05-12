@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.data.util.converter.StringToEnumConverter;
 import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -30,7 +31,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Unit test class for Notification ARIA (Accessible Rich Internet Applications)
  * roles.
- *
+ * 
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -38,7 +39,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
 
     /**
      * Checks if the ARIA roles are correctly applied to Notification.
-     *
+     * 
      * @since 7.2
      * @throws Exception
      */
@@ -57,7 +58,8 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         postfix.clear();
         postfix.sendKeys("- press ESC to close");
 
-        type.selectByText(NotificationRole.ALERT.toString());
+        type.selectByText(StringToEnumConverter.enumToString(
+                NotificationRole.ALERT, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
@@ -78,12 +80,10 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         Assert.assertTrue("Expected '- press ESC to close', found " + text,
                 text.equals("- press ESC to close"));
 
-        try {
-            notification.closeNotification();
-        } catch (Exception e) {
-        }
+        notification.close();
 
-        type.selectByText("STATUS");
+        type.selectByText(StringToEnumConverter.enumToString(
+                NotificationRole.STATUS, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
@@ -94,10 +94,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         Assert.assertTrue("Expected attribute 'role' to equal 'status', found "
                 + text, text.equals("status"));
 
-        try {
-            notification.closeNotification();
-        } catch (Exception e) {
-        }
+        notification.close();
 
         prefix.clear();
         postfix.clear();

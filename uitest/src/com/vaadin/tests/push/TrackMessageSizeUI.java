@@ -30,6 +30,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.JavaScriptFunction;
+
 import elemental.json.JsonArray;
 
 // Load vaadinPush.js so that jQueryVaadin is defined 
@@ -39,7 +40,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
     private String testMethod = "function testSequence(expected, data) {\n"
             + "    var request = {trackMessageLength: true, messageDelimiter: '|'};\n"
             + "    _request = {trackMessageLength: true, messageDelimiter: '|'};\n"
-            + "    _handleProtocol = function(a,b) {return true;};"
+            + "    _handleProtocol = function(a,message) {return message;};"
             + "    var response = {partialMessage: ''};\n"
             + "    var messages = [];\n"
             + "    for(var i = 0; i < data.length; i++) {\n"

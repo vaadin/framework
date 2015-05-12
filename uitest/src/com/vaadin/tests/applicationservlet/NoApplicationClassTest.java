@@ -15,35 +15,34 @@
  */
 package com.vaadin.tests.applicationservlet;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class NoApplicationClassTest extends MultiBrowserTest {
+public class NoApplicationClassTest extends SingleBrowserTest {
 
     @Test
     public void testInvalidApplicationClass() {
         openTestURL();
         String exceptionMessage = getDriver().findElement(By.xpath("//pre[2]"))
                 .getText();
-        Assert.assertTrue(exceptionMessage
-                .contains("ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent"));
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
-                .getDesiredCapabilities());
+        String expected = "ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent";
+        Assert.assertTrue(
+                String.format(
+                        "Unexpected error message.\n expected to contain: '%s'\n was: %s",
+                        expected, exceptionMessage), exceptionMessage
+                        .contains(expected));
     }
 
     @Override
     protected String getDeploymentPath() {
         return "/run/ClassThatIsNotPresent";
+    }
+
+    @Override
+    protected void openTestURL(String... parameters) {
+        driver.get(getTestUrl());
     }
 }

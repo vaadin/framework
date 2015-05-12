@@ -36,6 +36,26 @@ public abstract class AbstractExtension extends AbstractClientConnector
     private ClientConnector parent;
 
     /**
+     * Creates a new extension instance without extending any connector.
+     */
+    public AbstractExtension() {
+        // Empty default constructor
+    }
+
+    /**
+     * Creates a new extension instance that extends the provided connector.
+     * 
+     * @since 7.4
+     * 
+     * @param target
+     *            the connector to extend
+     */
+    public AbstractExtension(AbstractClientConnector target) {
+        this();
+        extend(target);
+    }
+
+    /**
      * Gets a type that the parent must be an instance of. Override this if the
      * extension only support certain targets, e.g. if only TextFields can be
      * extended.

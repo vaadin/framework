@@ -101,12 +101,6 @@ public class ValoThemeUI extends UI {
                 && getPage().getWebBrowser().getBrowserMajorVersion() == 9) {
             menu.setWidth("320px");
         }
-        // Show .v-app-loading valo-menu-badge
-        // try {
-        // Thread.sleep(2000);
-        // } catch (InterruptedException e) {
-        // e.printStackTrace();
-        // }
 
         if (!testMode) {
             Responsive.makeResponsive(this);
@@ -175,6 +169,7 @@ public class ValoThemeUI extends UI {
                         break;
                     }
                 }
+                menu.removeStyleName("valo-menu-visible");
             }
         });
 
@@ -433,7 +428,6 @@ public class ValoThemeUI extends UI {
                             sg.nextString(true) + " " + sg.nextString(false));
                     child.getItemProperty(ICON_PROPERTY).setValue(
                             testIcon.get());
-                    // ((Hierarchical) container).setChildrenAllowed(id, false);
                     ((Hierarchical) container).setParent(id, i);
 
                     for (int k = 1; k < 6; k++) {
@@ -444,8 +438,6 @@ public class ValoThemeUI extends UI {
                                         + sg.nextString(false));
                         child.getItemProperty(ICON_PROPERTY).setValue(
                                 testIcon.get());
-                        // ((Hierarchical) container)
-                        // .setChildrenAllowed(id, false);
                         ((Hierarchical) container).setParent(id2, id);
 
                         for (int l = 1; l < 5; l++) {
@@ -456,8 +448,6 @@ public class ValoThemeUI extends UI {
                                             + sg.nextString(false));
                             child.getItemProperty(ICON_PROPERTY).setValue(
                                     testIcon.get());
-                            // ((Hierarchical) container)
-                            // .setChildrenAllowed(id, false);
                             ((Hierarchical) container).setParent(id3, id2);
                         }
                     }

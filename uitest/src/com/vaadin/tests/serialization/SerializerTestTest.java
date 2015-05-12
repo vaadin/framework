@@ -27,6 +27,12 @@ public class SerializerTestTest extends MultiBrowserTest {
         openTestURL();
         int logRow = 0;
 
+        Assert.assertEquals(
+                "sendJson: {\"b\":false,\"s\":\"JSON\"}, null, \"value\"",
+                getLogRow(logRow++));
+        Assert.assertEquals(
+                "sendDateArray: January 31, 2013 10:00:00 PM UTC January 31, 2012 10:00:00 PM UTC",
+                getLogRow(logRow++));
         Assert.assertEquals("sendDate: May 31, 2013 8:12:13 AM UTC",
                 getLogRow(logRow++));
         Assert.assertEquals("sendDate: January 1, 1970 12:00:00 AM UTC",
@@ -59,7 +65,7 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals(
                 "sendConnector: com.vaadin.tests.widgetset.server.SerializerTestExtension",
                 getLogRow(logRow++));
-        Assert.assertEquals("sendString: Taegghiiiinnrsssstt‡",
+        Assert.assertEquals("sendString: Taegghiiiinnrsssstt‡, [null, ‡]",
                 getLogRow(logRow++));
         Assert.assertEquals(
                 "sendDouble: 0.423310825130748, 5.859874482048838, [2.0, 1.7976931348623157E308, 4.9E-324]",
@@ -78,6 +84,19 @@ public class SerializerTestTest extends MultiBrowserTest {
                 getLogRow(logRow++));
         Assert.assertEquals("sendBeanSubclass: 43", getLogRow(logRow++));
         Assert.assertEquals(
+                "state.dateArray: Thu Jan 01 02:00:00 GMT+200 1970 Thu Jan 01 02:00:00 GMT+200 1970",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.date2: Fri May 31 11:12:13 GMT+300 2013",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.date1: Thu Jan 01 02:00:00 GMT+200 1970",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
+        Assert.assertEquals("state.jsonString: a string", getLogRow(logRow++));
+        Assert.assertEquals("state.jsonNull: NULL", getLogRow(logRow++));
+        Assert.assertEquals("state.stringArray: [null, ‡]", getLogRow(logRow++));
+        Assert.assertEquals("state.string: This is a tesing string ‡",
+                getLogRow(logRow++));
+        Assert.assertEquals(
                 "state.doubleArray: [1.7976931348623157e+308, 5e-324]",
                 getLogRow(logRow++));
         Assert.assertEquals("state.doubleObjectValue: -2.718281828459045",
@@ -86,8 +105,10 @@ public class SerializerTestTest extends MultiBrowserTest {
                 getLogRow(logRow++));
         Assert.assertEquals("state.floatArray: [57, 0, -12]",
                 getLogRow(logRow++));
-        Assert.assertTrue(getLogRow(logRow++).startsWith("state.floatObjectValue: 1.0000001"));
-        Assert.assertTrue(getLogRow(logRow++).startsWith("state.floatValue: 3.14159"));
+        Assert.assertTrue(getLogRow(logRow++).startsWith(
+                "state.floatObjectValue: 1.0000001"));
+        Assert.assertTrue(getLogRow(logRow++).startsWith(
+                "state.floatValue: 3.14159"));
         Assert.assertEquals("state.longArray: [-57841235865, 57]",
                 getLogRow(logRow++));
         Assert.assertEquals("state.longObjectValue: 577431841360",

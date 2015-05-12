@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
@@ -27,6 +29,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -146,8 +149,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * <p>
      * Each style name will occur in two versions: one as specified and one that
-     * is prefixed wil the style name of the component. For example, if you have
-     * a {@code Button} component and give it "{@code mystyle}" style, the
+     * is prefixed with the style name of the component. For example, if you
+     * have a {@code Button} component and give it "{@code mystyle}" style, the
      * component will have both "{@code mystyle}" and "{@code v-button-mystyle}"
      * styles. You could then style the component either with:
      * </p>
@@ -250,9 +253,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public boolean isEnabled();
 
     /**
-     * Enables or disables the component. The user can not interact disabled
-     * components, which are shown with a style that indicates the status,
-     * usually shaded in light gray color. Components are enabled by default.
+     * Enables or disables the component. The user can not interact with
+     * disabled components, which are shown with a style that indicates the
+     * status, usually shaded in light gray color. Components are enabled by
+     * default.
      * 
      * <pre>
      * Button enabled = new Button(&quot;Enabled&quot;);
@@ -726,6 +730,47 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      */
     public String getDescription();
 
+    /* Declarative support */
+
+    /**
+     * Reads the component state from the given design.
+     * <p>
+     * The component is responsible not only for updating its own state but also
+     * for ensuring that its children update their state based on the design.
+     * <p>
+     * It is assumed that the component is in its default state when this method
+     * is called. Reading should only take into consideration attributes
+     * specified in the design and not reset any unspecified attributes to their
+     * defaults.
+     * <p>
+     * This method must not modify the design.
+     * 
+     * @since 7.4
+     * @param design
+     *            The element to obtain the state from
+     * @param designContext
+     *            The DesignContext instance used for parsing the design
+     */
+    public void readDesign(Element design, DesignContext designContext);
+
+    /**
+     * Writes the component state to the given design.
+     * <p>
+     * The component is responsible not only for writing its own state but also
+     * for ensuring that its children write their state to the design.
+     * <p>
+     * This method must not modify the component state.
+     * 
+     * @since 7.4
+     * @param design
+     *            The element to write the component state to. Any previous
+     *            attributes or child nodes are <i>not</i> cleared.
+     * @param designContext
+     *            The DesignContext instance used for writing the design
+     * 
+     */
+    public void writeDesign(Element design, DesignContext designContext);
+
     /* Component event framework */
 
     /**
@@ -868,7 +913,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * </pre>
          * 
          * @param event
-         *            the event that has occured.
+         *            the event that has occurred.
          */
         public void componentEvent(Component.Event event);
     }

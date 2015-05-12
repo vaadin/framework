@@ -17,7 +17,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table;
@@ -46,17 +45,14 @@ public class TableWidthItemRemove extends AbstractTestUI {
         table.setColumnWidth("lastName", 100);
         table.setColumnWidth("year", 50);
 
-        Button cleanButton = new Button("Clean");
-        cleanButton.addClickListener(new ClickListener() {
+        addButton("Clean", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.removeAllItems();
             }
         });
-        addComponent(cleanButton);
 
-        Button populateButton = new Button("Populate");
-        populateButton.addClickListener(new ClickListener() {
+        addButton("Populate", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.addItem(
@@ -64,7 +60,6 @@ public class TableWidthItemRemove extends AbstractTestUI {
                         Math.random() * 1000);
             }
         });
-        addComponent(populateButton);
 
         addComponent(table);
     }

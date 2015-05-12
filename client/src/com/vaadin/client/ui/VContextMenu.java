@@ -51,7 +51,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.Focusable;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class VContextMenu extends VOverlay implements SubPartAware {
 
@@ -89,7 +89,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         addCloseHandler(new CloseHandler<PopupPanel>() {
             @Override
             public void onClose(CloseEvent<PopupPanel> event) {
-                Element currentFocus = Util.getFocusedElement();
+                Element currentFocus = WidgetUtil.getFocusedElement();
                 if (focusedElement != null
                         && (currentFocus == null
                                 || menu.getElement().isOrHasChild(currentFocus) || RootPanel
@@ -137,11 +137,14 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         }
 
         // Attach onload listeners to all images
-        Util.sinkOnloadForImages(menu.getElement());
+        WidgetUtil.sinkOnloadForImages(menu.getElement());
 
         // Store the currently focused element, which will be re-focused when
         // context menu is closed
-        focusedElement = Util.getFocusedElement();
+        focusedElement = WidgetUtil.getFocusedElement();
+
+        // reset height (if it has been previously set explicitly)
+        setHeight("");
 
         setPopupPositionAndShow(new PositionCallback() {
             @Override
@@ -158,12 +161,10 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                     }
                 }
                 if (offsetHeight + top > Window.getClientHeight()) {
-                    top = top - offsetHeight;
-                    if (top < 0) {
-                        top = 0;
-
-                        setHeight(Window.getClientHeight() + "px");
-                    }
+                    top = Math.max(0, Window.getClientHeight() - offsetHeight);
+                }
+                if (top == 0) {
+                    setHeight(Window.getClientHeight() + "px");
                 }
                 setPopupPosition(left, top);
 

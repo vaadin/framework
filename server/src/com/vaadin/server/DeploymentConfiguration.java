@@ -111,6 +111,15 @@ public interface DeploymentConfiguration extends Serializable {
     public int getHeartbeatInterval();
 
     /**
+     * Returns whether the sending of URL's as GET and POST parameters in
+     * requests with content-type <code>application/x-www-form-urlencoded</code>
+     * is enabled or not.
+     * 
+     * @return <code>false</code> if set to false or <code>true</code> otherwise
+     */
+    public boolean isSendUrlsAsParameters();
+
+    /**
      * Returns whether a session should be closed when all its open UIs have
      * been idle for longer than its configured maximum inactivity time.
      * <p>
@@ -161,6 +170,48 @@ public interface DeploymentConfiguration extends Serializable {
      */
     public String getApplicationOrSystemProperty(String propertyName,
             String defaultValue);
+
+    /**
+     * Gets UI class configuration option value.
+     * 
+     * @return UI class name
+     * 
+     * @since 7.4
+     */
+    public String getUIClassName();
+
+    /**
+     * Gets UI provider class configuration option value.
+     * 
+     * @since 7.4
+     * 
+     * @return UI class name
+     */
+    public String getUIProviderClassName();
+
+    /**
+     * Gets Widgetset configuration option value. {@code defaultValue} is
+     * returned if widgetset parameter is not configured.
+     * 
+     * @since 7.4
+     * 
+     * @return UI class name
+     */
+    public String getWidgetset(String defaultValue);
+
+    /**
+     * Gets resources path configuration option value.
+     * 
+     * @since 7.4
+     */
+    public String getResourcesPath();
+
+    /**
+     * Gets class loader configuration option value.
+     * 
+     * @since 7.4
+     */
+    public String getClassLoaderName();
 
     /**
      * Returns to legacy Property.toString() mode used. See

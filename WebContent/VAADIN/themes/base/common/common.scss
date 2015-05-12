@@ -259,6 +259,18 @@ input::-ms-clear {
 	-webkit-overflow-scrolling: none;
 }
 
+/* "Unnecessary scrollbar" related fixes (#14631, copied from Valo) */
+.v-scrollable.v-panel-content > .v-widget {
+        /* This is needed for IE */
+        vertical-align: middle;
+
+        /* Needed for all browsers. Can't really show anything outside the
+         * scrolling area anyway, so we can safely hide any overflow */
+        overflow: hidden;
+}
+
+
+
 &.v-overlay-container {
 	width: 0;
 	height: 0;
@@ -274,3 +286,8 @@ input::-ms-clear {
 	width: 10px;
 	overflow: hidden;
 }
+/* fix for #14681 - mobile safari 8 sometimes displayed text cursor on that element */
+.v-radiobutton {
+	-webkit-user-select: none;
+}
+

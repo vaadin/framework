@@ -30,6 +30,8 @@ import com.vaadin.shared.ui.colorpicker.ColorPickerState;
 public abstract class AbstractColorPickerConnector extends
         AbstractComponentConnector implements ClickHandler {
 
+    private static final String DEFAULT_WIDTH_STYLE = "v-default-caption-width";
+
     @Override
     public ColorPickerState getState() {
         return (ColorPickerState) super.getState();
@@ -59,6 +61,7 @@ public abstract class AbstractColorPickerConnector extends
                 || stateChangeEvent.hasPropertyChanged("showDefaultCaption")) {
 
             setCaption(getCaption());
+            refreshDefaultCaptionStyle();
         }
     }
 
@@ -81,6 +84,19 @@ public abstract class AbstractColorPickerConnector extends
             return getState().color;
         }
         return getState().caption;
+    }
+
+    /**
+     * Add/remove default caption style.
+     */
+    protected void refreshDefaultCaptionStyle() {
+        if (getState().showDefaultCaption
+                && (getState().caption == null || getState().caption.isEmpty())
+                && getState().width.isEmpty()) {
+            getWidget().addStyleName(DEFAULT_WIDTH_STYLE);
+        } else {
+            getWidget().removeStyleName(DEFAULT_WIDTH_STYLE);
+        }
     }
 
     /**

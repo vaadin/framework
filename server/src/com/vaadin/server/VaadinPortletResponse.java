@@ -30,6 +30,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.Cookie;
 
+import com.google.gwt.thirdparty.guava.common.html.HtmlEscapers;
+
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
  * 
@@ -95,6 +97,14 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     @Override
+    public void setContentLength(int len) {
+        if (response instanceof ResourceResponse) {
+            ((ResourceResponse) response).setContentLength(len);
+        }
+
+    }
+
+    @Override
     public PrintWriter getWriter() throws IOException {
         if (response instanceof MimeResponse) {
             return ((MimeResponse) response).getWriter();
@@ -128,6 +138,9 @@ public class VaadinPortletResponse implements VaadinResponse {
     @Override
     public void sendError(int errorCode, String message) throws IOException {
         setStatus(errorCode);
+        if (message != null) {
+            message = HtmlEscapers.htmlEscaper().escape(message);
+        }
         getWriter().write(message);
     }
 

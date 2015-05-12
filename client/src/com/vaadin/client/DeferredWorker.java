@@ -16,18 +16,21 @@
 package com.vaadin.client;
 
 /**
- * Give widgets the possibility to indicate to the framework that there is work
- * scheduled to be executed in the near future and that the framework should
- * wait for this work to complete before assuming the UI has reached a steady
- * state.
+ * Give widgets and connectors the possibility to indicate to the framework that
+ * there is work scheduled to be executed in the near future and that the
+ * framework should wait for this work to complete before assuming the UI has
+ * reached a steady state.
  * 
  * @since 7.3
  * @author Vaadin Ltd
  */
 public interface DeferredWorker {
     /**
-     * @returns true, if there are operations pending which must be executed
-     *          before reaching a steady state
+     * Checks whether there are operations pending for this widget or connector
+     * that must be executed before reaching a steady state.
+     * 
+     * @returns <code>true</code> iff there are operations pending which must be
+     *          executed before reaching a steady state
      */
     public boolean isWorkPending();
 }

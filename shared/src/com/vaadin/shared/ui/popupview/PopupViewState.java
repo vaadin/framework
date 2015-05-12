@@ -16,10 +16,12 @@
 package com.vaadin.shared.ui.popupview;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class PopupViewState extends AbstractComponentState {
 
     public String html;
+    @NoLayout
     public boolean hideOnMouseOut;
 
 }

@@ -34,7 +34,7 @@ public class RenderSpace extends Size {
     public RenderSpace(int width, int height, boolean useNativeScrollbarSize) {
         super(width, height);
         if (useNativeScrollbarSize) {
-            scrollBarSize = Util.getNativeScrollbarSize();
+            scrollBarSize = WidgetUtil.getNativeScrollbarSize();
         }
     }
 

@@ -67,10 +67,10 @@ public class DefaultErrorHandler implements ErrorHandler {
      * 
      * @since 7.2
      * @param t
-     *            throwable given for default error handler
+     *            a throwable passed to ErrorHandler
      * @return the throwable that is relevant for Vaadin users
      */
-    private static Throwable findRelevantThrowable(Throwable t) {
+    public static Throwable findRelevantThrowable(Throwable t) {
         try {
             if ((t instanceof RpcInvocationException)
                     && (t.getCause() instanceof InvocationTargetException)) {

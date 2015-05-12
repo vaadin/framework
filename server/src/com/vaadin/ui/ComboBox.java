@@ -151,6 +151,11 @@ public class ComboBox extends AbstractSelect implements
         markAsDirty();
     }
 
+    private boolean isFilteringNeeded() {
+        return filterstring != null && filterstring.length() > 0
+                && filteringMode != FilteringMode.OFF;
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         isPainting = true;
@@ -210,9 +215,7 @@ public class ComboBox extends AbstractSelect implements
                 filterstring = "";
             }
 
-            boolean nullFilteredOut = filterstring != null
-                    && !"".equals(filterstring)
-                    && filteringMode != FilteringMode.OFF;
+            boolean nullFilteredOut = isFilteringNeeded();
             // null option is needed and not filtered out, even if not on
             // current
             // page
@@ -351,8 +354,8 @@ public class ComboBox extends AbstractSelect implements
     protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
         Container container = getContainerDataSource();
 
-        if (pageLength == 0) {
-            // no paging: return all items
+        if (pageLength == 0 && !isFilteringNeeded()) {
+            // no paging or filtering: return all items
             filteredSize = container.size();
             assert filteredSize >= 0;
             return new ArrayList<Object>(container.getItemIds());
@@ -593,8 +596,7 @@ public class ComboBox extends AbstractSelect implements
      * @return
      */
     protected List<?> getFilteredOptions() {
-        if (null == filterstring || "".equals(filterstring)
-                || FilteringMode.OFF == filteringMode) {
+        if (!isFilteringNeeded()) {
             prevfilterstring = null;
             filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
@@ -620,7 +622,7 @@ public class ComboBox extends AbstractSelect implements
             if (caption == null || caption.equals("")) {
                 continue;
             } else {
-                caption = caption.toLowerCase();
+                caption = caption.toLowerCase(getLocale());
             }
             switch (filteringMode) {
             case CONTAINS:
@@ -680,7 +682,7 @@ public class ComboBox extends AbstractSelect implements
             currentPage = ((Integer) variables.get("page")).intValue();
             filterstring = newFilter;
             if (filterstring != null) {
-                filterstring = filterstring.toLowerCase();
+                filterstring = filterstring.toLowerCase(getLocale());
             }
             requestRepaint();
         } else if (isNewItemsAllowed()) {

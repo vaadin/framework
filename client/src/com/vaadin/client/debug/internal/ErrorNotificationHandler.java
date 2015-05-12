@@ -20,6 +20,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.logging.client.TextLogFormatter;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration;
@@ -65,10 +66,12 @@ public class ErrorNotificationHandler extends Handler {
                         .getRunningApplications().get(0);
                 owner = connection.getUIConnector().getWidget();
             }
-            VNotification
-                    .createNotification(VNotification.DELAY_FOREVER, owner)
-                    .show("<h1>Uncaught client side exception</h1><br />"
-                            + exceptionText, VNotification.CENTERED, "error");
+            VNotification n = VNotification.createNotification(
+                    VNotification.DELAY_FOREVER, owner);
+            n.getElement().getStyle().setTextAlign(TextAlign.LEFT);
+            n.show("<h1>Uncaught client side exception</h1><br />"
+                    + exceptionText.replace("\n", "<br/>\n"),
+                    VNotification.CENTERED, "error");
         } catch (Exception e2) {
             // Just swallow this exception
         }

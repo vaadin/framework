@@ -4,7 +4,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 
-public class CssLayoutTest extends AbstractIndexedLayoutTest {
+public class CssLayoutTest extends AbstractIndexedLayoutTestBase {
 
     @Override
     protected Layout createLayout() {

@@ -155,7 +155,7 @@ public abstract class VaadinService implements Serializable {
         this.deploymentConfiguration = deploymentConfiguration;
 
         final String classLoaderName = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty("ClassLoader", null);
+                .getClassLoaderName();
         if (classLoaderName != null) {
             try {
                 final Class<?> classLoaderClass = getClass().getClassLoader()
@@ -169,6 +169,10 @@ public abstract class VaadinService implements Serializable {
                         "Could not find specified class loader: "
                                 + classLoaderName, e);
             }
+        }
+
+        if (getClassLoader() == null) {
+            setDefaultClassLoader();
         }
     }
 
@@ -448,7 +452,7 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.accessSynchronously(new Runnable() {
+        session.access(new Runnable() {
             @Override
             public void run() {
                 if (session.getState() == State.CLOSED) {
@@ -699,12 +703,12 @@ public abstract class VaadinService implements Serializable {
             final boolean closeApplication = hasParameter(request,
                     URL_PARAMETER_CLOSE_APPLICATION);
 
-            if (restartApplication) {
-                closeSession(session, request.getWrappedSession(false));
-                return createAndRegisterSession(request);
-            } else if (closeApplication) {
+            if (closeApplication) {
                 closeSession(session, request.getWrappedSession(false));
                 return null;
+            } else if (restartApplication) {
+                closeSession(session, request.getWrappedSession(false));
+                return createAndRegisterSession(request);
             } else {
                 return session;
             }
@@ -1429,6 +1433,10 @@ public abstract class VaadinService implements Serializable {
             ErrorHandler errorHandler = ErrorEvent
                     .findErrorHandler(vaadinSession);
 
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(t));
+            }
+
             // if this was an UIDL request, send UIDL back to the client
             if (ServletPortletHelper.isUIDLRequest(request)) {
                 SystemMessages ci = getSystemMessages(
@@ -1450,14 +1458,7 @@ public abstract class VaadinService implements Serializable {
                                     "Failed to write critical notification response to the client",
                                     e);
                 }
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(t));
-                }
             } else {
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(t));
-                }
-
                 // Re-throw other exceptions
                 throw new ServiceException(t);
             }
@@ -1570,20 +1571,11 @@ public abstract class VaadinService implements Serializable {
             String message, String details, String url) {
         String returnString = "";
         try {
-            if (message == null) {
-                message = details;
-            } else if (details != null) {
-                message += "<br/><br/>" + details;
-            }
-
             JsonObject appError = Json.createObject();
-            appError.put("caption", caption);
-            appError.put("message", message);
-            if (url == null) {
-                appError.put("url", Json.createNull());
-            } else {
-                appError.put("url", url);
-            }
+            putValueOrJsonNull(appError, "caption", caption);
+            putValueOrJsonNull(appError, "url", url);
+            putValueOrJsonNull(appError, "message",
+                    createCriticalNotificationMessage(message, details));
 
             JsonObject meta = Json.createObject();
             meta.put("appError", appError);
@@ -1601,6 +1593,26 @@ public abstract class VaadinService implements Serializable {
         }
 
         return "for(;;);[" + returnString + "]";
+    }
+
+    private static String createCriticalNotificationMessage(String message,
+            String details) {
+        if (message == null) {
+            return details;
+        } else if (details != null) {
+            return message + "<br/><br/>" + details;
+        }
+
+        return message;
+    }
+
+    private static void putValueOrJsonNull(JsonObject json, String key,
+            String value) {
+        if (value == null) {
+            json.put(key, Json.createNull());
+        } else {
+            json.put(key, value);
+        }
     }
 
     /**
@@ -1861,4 +1873,25 @@ public abstract class VaadinService implements Serializable {
         eventRouter.fireEvent(new ServiceDestroyEvent(this));
     }
 
+    /**
+     * Tries to acquire default class loader and sets it as a class loader for
+     * this {@link VaadinService} if found. If current security policy disallows
+     * acquiring class loader instance it will log a message and re-throw
+     * {@link SecurityException}
+     * 
+     * @throws SecurityException
+     *             If current security policy forbids acquiring class loader
+     * 
+     * @since 7.3.5
+     */
+    protected void setDefaultClassLoader() {
+        try {
+            setClassLoader(VaadinServiceClassLoaderUtil
+                    .findDefaultClassLoader());
+        } catch (SecurityException e) {
+            getLogger().log(Level.SEVERE,
+                    Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);
+            throw e;
+        }
+    }
 }

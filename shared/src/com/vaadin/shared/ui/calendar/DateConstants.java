@@ -32,4 +32,7 @@ public class DateConstants implements Serializable {
     public static final long DAYINMILLIS = 24 * HOURINMILLIS;
     public static final long WEEKINMILLIS = 7 * DAYINMILLIS;
 
+    public static final int DAYINMINUTES = 24 * 60;
+    public static final int HOURINMINUTES = 60;
+
 }

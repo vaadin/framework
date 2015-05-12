@@ -1,40 +1,160 @@
-@function valo-overlay-background-color ($context: $v-background-color) {
-  @if is-dark-color($context) {
-    @return darken($context, 3%);
-  }
-  @return lighten($context, 2%);
-}
+/**
+ * The background color for overlay elements.
+ *
+ * @type color
+ * @group overlay
+ */
+$v-overlay-background-color: if(is-dark-color($v-background-color), darken($v-background-color, 3%), lighten($v-background-color, 2%)) !default;
 
-
-$v-overlay-background-color: valo-overlay-background-color() !default;
+/**
+ * The corner radius for overlay elements.
+ *
+ * @type size (px)
+ * @group overlay
+ */
 $v-overlay-border-radius: $v-border-radius !default;
+
+/**
+ * The border width for overlay elements.
+ *
+ * @type size (px)
+ * @group overlay
+ */
 $v-overlay-border-width: first-number($v-border) !default;
 
+/**
+ * The animation which is used when overlay elements are made visible.
+ *
+ * @type list
+ * @group overlay
+ */
 $v-overlay-animate-in: valo-overlay-animate-in 120ms !default;
-$v-overlay-animate-out: valo-placeholder-animate-out 120ms, valo-anim-fade-out 120ms !default;
 
+/**
+ * The animation which is used when overlay elements are removed.
+ *
+ * @type list
+ * @group overlay
+ */
+$v-overlay-animate-out: valo-animate-out-fade 120ms !default;
+
+/**
+ * The padding on each size of overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-overlay-padding: round($v-unit-size/9) !default;
+
+/**
+ * The padding on the top and bottom edges of overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-overlay-padding-vertical: $v-overlay-padding !default;
+
+/**
+ * The padding on the left and right edges of overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-overlay-padding-horizontal: $v-overlay-padding !default;
 
+/**
+ * The shadow used for overlay elements.
+ *
+ * @type list
+ * @group overlay
+ */
 $v-overlay-shadow: 0 4px 10px 0 (v-shade 2), 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade (2.5 - color-luminance($v-background-color)/255 + $v-bevel-depth/100%)) !default;
 
+/**
+ * The background color for selection overlays, i.e. overlays which present a
+ * list of options for the user to choose from, such as context menus and drop down
+ * menus.
+ *
+ * @type color
+ * @group overlay
+ */
 $v-selection-overlay-background-color: $v-overlay-background-color !default;
+
+/**
+ * The padding on each size of selection overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-selection-overlay-padding: $v-overlay-padding !default;
+
+/**
+ * The padding on the top and bottom edges of selection overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-selection-overlay-padding-vertical: $v-selection-overlay-padding !default;
+
+/**
+ * The padding on the left and right edges of selection overlay elements.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-selection-overlay-padding-horizontal: $v-selection-overlay-padding !default;
 
+/**
+ * The corner radius for selection overlay elements.
+ *
+ * @type size (px)
+ * @group overlay
+ */
 $v-selection-item-border-radius: $v-border-radius - 1px !default;
+
+/**
+ * The height of individual selection overlay list items.
+ *
+ * @type size (px)
+ * @group overlay
+ */
 $v-selection-item-height: ceil($v-unit-size/1.4) !default;
+
+/**
+ * The horizontal padding for individual selection overlay list items.
+ *
+ * @type size
+ * @group overlay
+ */
 $v-selection-item-padding-horizontal: ceil($v-unit-size/4) !default;
+
+/**
+ * The font weight for individual selection overlay list items.
+ *
+ * @type number | identifier
+ * @group overlay
+ */
 $v-selection-item-font-weight: max(400, $v-font-weight);
+
+/**
+ * The font color for individual selection overlay list items.
+ *
+ * @type color
+ * @group overlay
+ */
 $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
 
 
-
+/*
+ * Simulates CSS box-shadow using the extraneous shadow elements in the DOM.
+ *
+ * @access private
+ * @deprecated The .v-shadow element is deprecated since 7.3.0
+ * @group overlay
+ */
 @mixin valo-ie8-shadow($shadow, $element: top) {
   .#{$element} {
     $shadow-offset-x: nth($shadow, 1);
@@ -97,7 +217,16 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-
+/**
+ * Outputs styles for overlay elements
+ *
+ * @group overlay
+ *
+ * @param {color} $background-color ($v-overlay-background-color) - the background color for the overlay
+ * @param {list} $shadow ($v-overlay-shadow) - the shadow for the overlay
+ * @param {list} $animate-in ($v-overlay-animate-in) - the animation used when the overlay is made visible
+ * @param {list} $animate-out ($v-overlay-animate-out) - the animation used when the overlay is removed
+ */
 @mixin valo-overlay-style (
     $background-color: $v-overlay-background-color,
     $shadow: $v-overlay-shadow,
@@ -135,7 +264,15 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-
+/**
+ * Outputs styles for selection overlay elements.
+ *
+ * @group overlay
+ *
+ * @param {color} $background-color ($v-selection-overlay-background-color) - the background color for the overlay
+ * @param {list} $animate-in ($v-overlay-animate-in) - the animation used when the selection overlay is made visible
+ * @param {list} $animate-out ($v-overlay-animate-out) - the animation used when the selection overlay is removed
+ */
 @mixin valo-selection-overlay-style ($background-color: $v-selection-overlay-background-color, $animate-in: $v-overlay-animate-in, $animate-out: $v-overlay-animate-out) {
   @include valo-overlay-style($background-color: $background-color, $animate-in: $animate-in, $animate-out: $animate-out);
   padding: $v-selection-overlay-padding-vertical $v-selection-overlay-padding-horizontal;
@@ -143,7 +280,11 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-
+/**
+ * Outputs the styles for selection item elements (i.e. individual items in context menus and drop down menus).
+ *
+ * @group overlay
+ */
 @mixin valo-selection-item-style {
   cursor: pointer;
   line-height: $v-selection-item-height;
@@ -178,7 +319,11 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-
+/**
+ * Outputs the styles for selected selection item elements.
+ *
+ * @group overlay
+ */
 @mixin valo-selection-item-selected-style {
   @include valo-gradient($v-selection-item-selection-color);
   $font-color: valo-font-color($v-selection-item-selection-color, 0.9);
@@ -192,13 +337,24 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-
+/**
+ * Outputs the selectors and styles for generic dragging ghost elements.
+ *
+ * @group drag-n-drop
+ */
 @mixin valo-drag-element {
   .v-drag-element {
     @include valo-drag-element-style;
   }
 }
 
+/**
+ * Outputs the styles for generic dragging ghost elements.
+ *
+ * @group drag-n-drop
+ *
+ * @param {color} $background-color ($v-app-background-color) - the background color for the ghost element
+ */
 @mixin valo-drag-element-style ($background-color: $v-app-background-color) {
   background: $background-color;
   color: valo-font-color($background-color);

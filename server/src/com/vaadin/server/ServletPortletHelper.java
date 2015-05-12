@@ -102,6 +102,24 @@ public class ServletPortletHelper implements Serializable {
         return false;
     }
 
+    private static boolean isPathInfo(VaadinRequest request, String string) {
+        String pathInfo = request.getPathInfo();
+
+        if (pathInfo == null) {
+            return false;
+        }
+
+        if (!string.startsWith("/")) {
+            string = '/' + string;
+        }
+
+        if (pathInfo.equals(string)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean isFileUploadRequest(VaadinRequest request) {
         return hasPathPrefix(request, UPLOAD_URL_PREFIX);
     }
@@ -124,14 +142,13 @@ public class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isPushRequest(VaadinRequest request) {
-        return hasPathPrefix(request, ApplicationConstants.PUSH_PATH + '/');
+        return isPathInfo(request, ApplicationConstants.PUSH_PATH);
     }
 
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
-                        null);
+                .getUIClassName();
 
         // Add provider for UI parameter first to give it lower priority
         // (providers are FILO)
@@ -141,8 +158,7 @@ public class ServletPortletHelper implements Serializable {
         }
 
         String uiProviderProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        Constants.SERVLET_PARAMETER_UI_PROVIDER, null);
+                .getUIProviderClassName();
         // Then add custom UI provider if defined
         if (uiProviderProperty != null) {
             UIProvider uiProvider = getUIProvider(uiProviderProperty,

@@ -10,14 +10,8 @@
 
     <inherits name="com.google.gwt.http.HTTP" />
 
-    <inherits name="com.google.gwt.json.JSON" />
-
     <inherits name="com.google.gwt.logging.Logging" />
-    <!-- Firebug handler is deprecated but for some reason still enabled 
-        by default -->
-    <set-property name="gwt.logging.firebugHandler" value="DISABLED" />
-    <!-- Disable popup logging as we have our own popup logger -->
-    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+    <set-property name="gwt.logging.enabled" value="TRUE" />
 
     <inherits name="com.vaadin.VaadinBrowserSpecificOverrides" />
 
@@ -29,17 +23,6 @@
     <replace-with class="com.vaadin.client.VSchedulerImpl">
         <when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
     </replace-with>
-
-    <generate-with
-        class="com.vaadin.server.widgetsetutils.AcceptCriteriaFactoryGenerator">
-        <when-type-is class="com.vaadin.client.ui.dd.VAcceptCriterionFactory" />
-    </generate-with>
-
-    <generate-with
-        class="com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory">
-        <when-type-assignable
-            class="com.vaadin.client.metadata.ConnectorBundleLoader" />
-    </generate-with>
 
     <replace-with
         class="com.vaadin.client.communication.AtmospherePushConnection">
@@ -58,10 +41,9 @@
 
     <!-- Use the new cross site linker to get a nocache.js without document.write -->
     <add-linker name="xsiframe" />
-    <extend-property name="user.agent" values="opera" />
 
     <!-- Remove IE6/IE7 permutation as they are not supported -->
-    <set-property name="user.agent" value="ie8,ie9,ie10,gecko1_8,safari,opera" />
+    <set-property name="user.agent" value="ie8,ie9,ie10,gecko1_8,safari" />
 
     <!-- Pointer event support -->
     <define-property name="modernie" values="none,yes" />
@@ -97,4 +79,9 @@
         <when-type-is class="com.vaadin.client.event.PointerEventSupportImpl" />
         <when-property-is value="ie10" name="user.agent" />
     </replace-with>
+
+    <!-- Make Sass linking available -->
+    <define-linker name="sass"
+        class="com.vaadin.sass.linker.SassLinker" />
+
 </module>

@@ -82,6 +82,7 @@ div.#{$primaryStyleName}-header {
 	height: 0;
 }
 .#{$primaryStyleName}-resizebox-disabled,
+.#{$primaryStyleName}-closebox-disabled,
 .#{$primaryStyleName}-restorebox-disabled,
 .#{$primaryStyleName}-maximizebox-disabled {
 	cursor: default;

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-buildhelpers" basedir="." default="publish-local">
+<project name="vaadin-buildhelpers" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Compiles build helpers used when building other
         modules.
@@ -13,17 +14,26 @@
     <property name="result.dir" location="result" />
     <path id="classpath.compile.custom" />
 
-    <target name="jar">
-        <antcall target="common.jar">
-            <reference torefid="extra.jar.includes" refid="empty.reference" />
-        </antcall>
+    <property name="filtered.webcontent.dir" location="${result.dir}/WebContent" />
+    <property name="release-notes-tickets-file" location="${result.dir}/release-notes-tickets.html" />
+    <property name="release-notes-authors-file" location="${result.dir}/release-notes-authors.html" />
+
+    <target name="jar" depends="filter.webcontent">
+        <antcall target="common.compile" />
+        <property name="result.jar"
+            location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+        <property name="classes" location="${result.dir}/classes" />
+        <property name="src" location="${result.dir}/../src" />
+
+        <jar destfile="${result.jar}" duplicate="fail" index="true">
+            <fileset dir="${classes}" excludes="${classes.exclude}"
+                erroronmissingdir="false" />
+            <fileset dir="${filtered.webcontent.dir}/.."
+                includes="WebContent/**" />
+        </jar>
     </target>
 
     <target name="publish-local" depends="jar">
-        <antcall target="common.sources.jar">
-            <reference torefid="extra.jar.includes" refid="empty.reference" />
-        </antcall>
-        <antcall target="common.javadoc.jar" />
         <antcall target="common.publish-local" />
     </target>
 
@@ -31,26 +41,96 @@
         <antcall target="common.clean" />
     </target>
 
+    <target name="filter.webcontent"
+        depends="fetch-release-notes-tickets,fetch-release-notes-authors">
+        <!-- Running without build.release-notes will cause an error, which 
+            is ignored -->
+        <loadfile property="release-notes-tickets" srcFile="${release-notes-tickets-file}"
+            failonerror="false" />
+        <loadfile property="release-notes-authors" srcFile="${release-notes-authors-file}"
+            failonerror="false" />
+
+        <delete dir="${filtered.webcontent.dir}" />
+        <copy todir="${filtered.webcontent.dir}">
+            <fileset dir="${vaadin.basedir}/WebContent">
+                <include name="img/**" />
+            </fileset>
+        </copy>
+        <copy todir="${filtered.webcontent.dir}">
+            <fileset dir="${vaadin.basedir}/WebContent">
+                <patternset>
+                    <include name="release-notes.html" />
+                    <include name="license.html" />
+                    <include name="licenses/**" />
+                    <include name="css/**" />
+                </patternset>
+            </fileset>
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="version" value="${vaadin.version}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="version-minor"
+                        value="${vaadin.version.major}.${vaadin.version.minor}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="builddate" value="${build.date}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="release-notes-tickets" value="${release-notes-tickets}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="release-notes-authors" value="${release-notes-authors}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+    </target>
+
+
+    <target name="fetch-release-notes-tickets" if="build.release-notes">
+        <mkdir dir="${filtered.webcontent.dir}" />
+        <antcall target="exec-buildhelper">
+            <param name="main.class"
+                value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
+            <param name="output" location="${release-notes-tickets-file}" />
+        </antcall>
+    </target>
+
+    <target name="fetch-release-notes-authors" if="build.release-notes">
+        <copy file="src/com/vaadin/buildhelpers/authormap.properties"
+            tofile="${result.dir}/classes/com/vaadin/buildhelpers/authormap.properties" />
+
+        <mkdir dir="${filtered.webcontent.dir}" />
+        <antcall target="exec-buildhelper">
+            <param name="main.class"
+                value="com.vaadin.buildhelpers.FetchReleaseNotesAuthors" />
+            <param name="output" location="${release-notes-authors-file}" />
+        </antcall>
+        <delete
+            file="${result.dir}/classes/com/vaadin/buildhelpers/authormap.properties" />
+    </target>
+
+    <target name="exec-buildhelper">
+        <antcall target="common.compile" />
+        <fail unless="main.class" message="No main class given in 'main.class'" />
+        <fail unless="output" message="No output file given in 'output'" />
+        <ivy:resolve log="download-only" conf="build" />
+        <ivy:cachepath pathid="deps" />
+        <java classname="${main.class}" output="${output}"
+            failonerror="true" fork="yes">
+            <classpath>
+                <pathelement location="${result.dir}/classes" />
+            </classpath>
+            <classpath refid="deps" />
+            <jvmarg value="-Dvaadin.version=${vaadin.version}" />
+        </java>
+    </target>
+
     <target name="checkstyle">
         <antcall target="common.checkstyle">
             <param name="cs.src" location="src" />
         </antcall>
-    </target>
-
-    <target name="fetch-release-notes-tickets">
-        <antcall target="common.exec-buildhelper">
-            <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
-            <param name="output" value="${output}" />
-        </antcall>
-    </target>
-
-    <target name="fetch-release-notes-authors">
-        <copy file="src/com/vaadin/buildhelpers/authormap.properties" tofile="result/classes/com/vaadin/buildhelpers/authormap.properties" />
-        <antcall target="common.exec-buildhelper">
-            <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesAuthors" />
-            <param name="output" value="${output}" />
-        </antcall>
-        <delete file="result/classes/com/vaadin/buildhelpers/authormap.properties" />
     </target>
 
     <target name="test" depends="checkstyle">

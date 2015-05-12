@@ -1,8 +1,31 @@
+/**
+ * @group window
+ */
 $v-window-background-color: $v-panel-background-color !default;
+
+/**
+ * @group window
+ */
 $v-window-border-radius: $v-border-radius !default;
+
+/**
+ * @group window
+ */
 $v-window-shadow: 0 2px 10px (v-shade 2), 0 16px 80px -6px (v-shade 3), last($v-overlay-shadow) !default;
-$v-window-animate-in: valo-placeholder-animate-in 140ms, valo-anim-fade-in 140ms !default;
-$v-window-animate-out: valo-placeholder-animate-out 100ms, valo-anim-scale-down-fade-out 100ms !default;
+
+/**
+ * @group window
+ */
+$v-window-animate-in: valo-animate-in-fade 140ms !default;
+
+/**
+ * @group window
+ */
+$v-window-animate-out: valo-animate-out-scale-down-fade 100ms !default;
+
+/**
+ * @group window
+ */
 $v-window-modality-curtain-background-color: #222 !default;
 
 
@@ -12,7 +35,7 @@ $v-window-modality-curtain-background-color: #222 !default;
     100% { opacity: 1; }
   }
 
-  @include keyframes(valo-anim-scale-down-fade-out) {
+  @include keyframes(valo-animate-out-scale-down-fade) {
     100% {
       @include transform(scale(0.8));
       opacity: 0;
@@ -21,6 +44,13 @@ $v-window-modality-curtain-background-color: #222 !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-window) - 
+ *
+ * @group window
+ */
 @mixin valo-window ($primary-stylename: v-window) {
 
   .#{$primary-stylename} {
@@ -59,11 +89,12 @@ $v-window-modality-curtain-background-color: #222 !default;
     left: 0;
     @include radial-gradient(circle at 50% 50%, $v-window-modality-curtain-background-color, darken($v-window-modality-curtain-background-color, valo-gradient-opacity()), $fallback: $v-window-modality-curtain-background-color);
     @include opacity(max(0.2, 0.8 - valo-gradient-opacity()/100%));
-    @include valo-anim-fade-in($duration: 400ms, $delay: 100ms);
-
-    .v-op12 & {
-      // Opera 12 has a shitbreak with the fade-in (flickers)
-      @include animation(none);
+    @if $v-animations-enabled {
+        @include valo-animate-in-fade($duration: 400ms, $delay: 100ms);
+        .v-op12 & {
+          // Opera 12 has a shitbreak with the fade-in (flickers)
+          @include animation(none);
+        }
     }
   }
 
@@ -79,6 +110,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   $scroll-divider-width: max(1px, first-number($v-border));
 
   .#{$primary-stylename}-outerheader {
+    cursor: move;
     position: absolute;
     z-index: 2;
     top: 0;
@@ -102,7 +134,6 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 
   .#{$primary-stylename}-header {
-    cursor: move;
     line-height: $v-unit-size - 1px;
     padding-left: round($v-unit-size/3);
     margin-right: $v-unit-size * 2;
@@ -110,6 +141,17 @@ $v-window-modality-curtain-background-color: #222 !default;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: blend-normal(rgba(valo-font-color($v-window-background-color), .7), $v-window-background-color);
+  }
+
+  //Adjust header margin according to visible buttons on header
+  .#{$primary-stylename}-restorebox-disabled,
+  .#{$primary-stylename}-maximizebox-disabled {
+    ~ .#{$primary-stylename}-closebox ~ .#{$primary-stylename}-header {
+      margin-right: $v-unit-size;
+    }
+    ~ .#{$primary-stylename}-closebox-disabled ~ .#{$primary-stylename}-header {
+      margin-right: round($v-unit-size/3);
+    }
   }
 
   .#{$primary-stylename}-closebox,
@@ -170,6 +212,8 @@ $v-window-modality-curtain-background-color: #222 !default;
     }
   }
 
+  .#{$primary-stylename}-closebox-disabled,
+  .#{$primary-stylename}-resizebox-disabled,
   .#{$primary-stylename}-restorebox-disabled,
   .#{$primary-stylename}-maximizebox-disabled {
     display: none;
@@ -205,7 +249,7 @@ $v-window-modality-curtain-background-color: #222 !default;
       @include valo-panel-adjust-content-margins;
 
       > .v-formlayout {
-        @include valo-formlayout-margins($all: round($v-unit-size/3));
+        @include valo-formlayout-margin(round($v-unit-size/3));
       }
 
       position: relative;
@@ -257,10 +301,6 @@ $v-window-modality-curtain-background-color: #222 !default;
     .v-ie9 & {
       cursor: se-resize;
     }
-  }
-
-  .#{$primary-stylename}-resizebox-disabled {
-    display: none;
   }
 
 
@@ -345,6 +385,12 @@ $v-window-modality-curtain-background-color: #222 !default;
 }
 
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-close-icon-style {
   &:before {
     // times cross
@@ -352,12 +398,24 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-maximize-icon-style {
   &:before {
     content: "+";
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-restore-icon-style {
   &:before {
     // en-dash

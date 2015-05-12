@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VTabsheet;
@@ -41,6 +41,7 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
                     final String key = getState().tabs.get(i).key;
                     final boolean selected = key.equals(getState().selected);
                     if (selected) {
+                        getWidget().waitingForResponse = false;
                         getWidget().selectTab(i);
                         break;
                     }
@@ -92,8 +93,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         }
 
         getWidget().iLayout();
-
-        getWidget().waitingForResponse = false;
     }
 
     @Override
@@ -140,7 +139,8 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         // Find a tooltip for the tab, if the element is a tab
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, VTabsheet.TabCaption.class);
+            Object node = WidgetUtil.findWidget(element,
+                    VTabsheet.TabCaption.class);
 
             if (node != null) {
                 VTabsheet.TabCaption caption = (VTabsheet.TabCaption) node;

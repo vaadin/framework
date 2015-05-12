@@ -17,6 +17,10 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
@@ -27,6 +31,8 @@ import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
 import com.vaadin.ui.components.colorpicker.ColorChangeListener;
 import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
 import com.vaadin.ui.components.colorpicker.ColorSelector;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * An abstract class that defines default implementation for a color picker
@@ -276,6 +282,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
+     * Gets the style for the popup window
+     * 
+     * @since 7.5.0
+     * @return popup window style
+     */
+    public PopupStyle getPopupStyle() {
+        return popupStyle;
+    }
+
+    /**
      * Set the visibility of the RGB Tab
      * 
      * @param visible
@@ -291,6 +307,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         if (window != null) {
             window.setRGBTabVisible(visible);
         }
+    }
+
+    /**
+     * Gets the visibility of the RGB Tab
+     * 
+     * @since 7.5.0
+     * @return visibility of the RGB tab
+     */
+    public boolean getRGBVisibility() {
+        return rgbVisible;
     }
 
     /**
@@ -311,6 +337,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
+     * Gets the visibility of the HSV Tab
+     * 
+     * @since 7.5.0
+     * @return visibility of the HSV tab
+     */
+    public boolean getHSVVisibility() {
+        return hsvVisible;
+    }
+
+    /**
      * Set the visibility of the Swatches Tab
      * 
      * @param visible
@@ -328,6 +364,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
+     * Gets the visibility of the Swatches Tab
+     * 
+     * @since 7.5.0
+     * @return visibility of the swatches tab
+     */
+    public boolean getSwatchesVisibility() {
+        return swatchesVisible;
+    }
+
+    /**
      * Sets the visibility of the Color History
      * 
      * @param visible
@@ -341,6 +387,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
+     * Gets the visibility of the Color History
+     * 
+     * @since 7.5.0
+     * @return visibility of color history
+     */
+    public boolean getHistoryVisibility() {
+        return historyVisible;
+    }
+
+    /**
      * Sets the visibility of the CSS color code text field
      * 
      * @param visible
@@ -351,6 +407,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         if (window != null) {
             window.setPreviewVisible(visible);
         }
+    }
+
+    /**
+     * Gets the visibility of CSS color code text field
+     * 
+     * @since 7.5.0
+     * @return visibility of css color code text field
+     */
+    public boolean getTextfieldVisibility() {
+        return textfieldVisible;
     }
 
     @Override
@@ -455,9 +521,11 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * @param htmlContentAllowed
      *            <code>true</code> if caption is rendered as HTML,
      *            <code>false</code> otherwise
+     * @deprecated as of , use {@link #setCaptionAsHtml(boolean)} instead
      */
+    @Deprecated
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().htmlContentAllowed = htmlContentAllowed;
+        setCaptionAsHtml(htmlContentAllowed);
     }
 
     /**
@@ -465,8 +533,55 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * 
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
+     * @deprecated as of , use {@link #isCaptionAsHtml()} instead
      */
+    @Deprecated
     public boolean isHtmlContentAllowed() {
-        return getState(false).htmlContentAllowed;
+        return isCaptionAsHtml();
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        Attributes attributes = design.attributes();
+        if (design.hasAttr("color")) {
+            // Ignore the # character
+            String hexColor = DesignAttributeHandler.readAttribute("color",
+                    attributes, String.class).substring(1);
+            setColor(new Color(Integer.parseInt(hexColor, 16)));
+        }
+        if (design.hasAttr("popup-style")) {
+            setPopupStyle(PopupStyle.valueOf("POPUP_"
+                    + attributes.get("popup-style").toUpperCase()));
+        }
+        if (design.hasAttr("position")) {
+            String[] position = attributes.get("position").split(",");
+            setPosition(Integer.parseInt(position[0]),
+                    Integer.parseInt(position[1]));
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        Attributes attribute = design.attributes();
+        DesignAttributeHandler.writeAttribute("color", attribute,
+                color.getCSS(), Color.WHITE.getCSS(), String.class);
+        DesignAttributeHandler.writeAttribute("popup-style", attribute,
+                (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
+                "normal", String.class);
+        DesignAttributeHandler.writeAttribute("position", attribute, positionX
+                + "," + positionY, "0,0", String.class);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("color");
+        result.add("position");
+        result.add("popup-style");
+        return result;
     }
 }

@@ -16,42 +16,38 @@
 
 package com.vaadin.tests.tb3;
 
-import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.logging.Level;
 
-import elemental.json.JsonObject;
-import elemental.json.impl.JsonUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
-import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -59,16 +55,25 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.gwt.thirdparty.guava.common.base.Joiner;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
-import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.annotations.BrowserConfiguration;
+import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.elements.VerticalLayoutElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.ParallelTest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
+
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -86,8 +91,12 @@ import com.vaadin.ui.UI;
  * 
  * @author Vaadin Ltd
  */
-@RunWith(value = TB3Runner.class)
-public abstract class AbstractTB3Test extends TestBenchTestCase {
+@RunWith(TB3Runner.class)
+public abstract class AbstractTB3Test extends ParallelTest {
+
+    @Rule
+    public RetryOnFail retry = new RetryOnFail();
+
     /**
      * Height of the screenshots we want to capture
      */
@@ -103,17 +112,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
 
-    private static final int BROWSER_INIT_ATTEMPTS = 5;
-
-    private DesiredCapabilities desiredCapabilities;
-
     private boolean debug = false;
 
     private boolean push = false;
-    {
-        // Default browser to run on unless setDesiredCapabilities is called
-        desiredCapabilities = Browser.FIREFOX.getDesiredCapabilities();
-    }
 
     static {
         com.vaadin.testbench.Parameters
@@ -126,61 +127,14 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @throws Exception
      */
-    @Before
+    @Override
     public void setup() throws Exception {
-        setupDriver();
-    }
-
-    /**
-     * Creates and configure the web driver to be used for the test. By default
-     * creates a remote web driver which connects to {@link #getHubURL()} and
-     * selects a browser based on {@link #getDesiredCapabilities()}.
-     * 
-     * This method MUST call {@link #setDriver(WebDriver)} with the newly
-     * generated driver.
-     * 
-     * @throws Exception
-     *             If something goes wrong
-     */
-    protected void setupDriver() throws Exception {
-        DesiredCapabilities capabilities;
-
-        Browser runLocallyBrowser = getRunLocallyBrowser();
-        if (runLocallyBrowser != null) {
-            if (System.getenv().containsKey("TEAMCITY_VERSION")) {
-                throw new RuntimeException(
-                        "@RunLocally is not supported for tests run on the build server");
-            }
-            capabilities = runLocallyBrowser.getDesiredCapabilities();
-            setupLocalDriver(capabilities);
-        } else {
-            capabilities = getDesiredCapabilities();
-
-            for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
-                try {
-                    if (localWebDriverIsUsed()) {
-                        setupLocalDriver(capabilities);
-                    } else {
-                        setupRemoteDriver(capabilities);
-                    }
-                    break;
-                } catch (Exception e) {
-                    System.err
-                            .println("Browser startup for " + capabilities
-                                    + " failed on attempt " + i + ": "
-                                    + e.getMessage());
-                    if (i == BROWSER_INIT_ATTEMPTS) {
-                        throw e;
-                    }
-                }
-            }
-
-        }
+        super.setup();
 
         int w = SCREENSHOT_WIDTH;
         int h = SCREENSHOT_HEIGHT;
 
-        if (BrowserUtil.isIE8(capabilities)) {
+        if (BrowserUtil.isIE8(super.getDesiredCapabilities())) {
             // IE8 gets size wrong, who would have guessed...
             w += 4;
             h += 4;
@@ -190,16 +144,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
-
     }
 
-    protected Browser getRunLocallyBrowser() {
-        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
-        if (runLocally != null) {
-            return runLocally.value();
-        } else {
-            return null;
+    /**
+     * Method for closing the tested application.
+     */
+    protected void closeApplication() {
+        if (driver != null) {
+            try {
+                openTestURL("closeApplication");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    protected WebElement getTooltipErrorElement() {
+        WebElement tooltip = getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip"));
+        return tooltip.findElement(By.className("v-errormessage"));
     }
 
     protected WebElement getTooltipElement() {
@@ -241,45 +204,24 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                 .click();
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    public @interface RunLocally {
-        public Browser value() default Browser.FIREFOX;
+    protected void waitUntilRowIsVisible(final TableElement table, final int row) {
+        waitUntil(new ExpectedCondition<Object>() {
+            @Override
+            public Object apply(WebDriver input) {
+                try {
+                    return table.getCell(row, 0) != null;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
+            }
+        });
     }
 
-    /**
-     * Creates a {@link WebDriver} instance used for running the test locally
-     * for debug purposes. Used only when {@link #runLocally()} is overridden to
-     * return true;
-     */
-    protected abstract void setupLocalDriver(
-            DesiredCapabilities desiredCapabilities);
+    protected void scrollTable(TableElement table, int rows, int rowToWait) {
+        testBenchElement(table.findElement(By.className("v-scrollable")))
+                .scroll(rows * 30);
 
-    /**
-     * Creates a {@link WebDriver} instance used for running the test remotely.
-     * 
-     * @since
-     * @param capabilities
-     *            the type of browser needed
-     * @throws Exception
-     */
-    private void setupRemoteDriver(DesiredCapabilities capabilities)
-            throws Exception {
-        if (BrowserUtil.isIE(capabilities)) {
-            if (requireWindowFocusForIE()) {
-                capabilities.setCapability(
-                        InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-            }
-            if (!usePersistentHoverForIE()) {
-                capabilities.setCapability(
-                        InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
-                        false);
-            }
-        }
-
-        WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
-                getHubURL()), capabilities));
-        setDriver(dr);
+        waitUntilRowIsVisible(table, rowToWait);
     }
 
     /**
@@ -287,8 +229,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
-    protected void openTestURL() {
-        openTestURL("");
+    protected void openTestURL(String... parameters) {
+        openTestURL(getUIClass(), parameters);
     }
 
     /**
@@ -296,13 +238,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
-    protected void openTestURL(String extraParameters) {
-        String url = getTestUrl();
-        if (url.contains("?")) {
-            url = url + "&" + extraParameters;
-        } else {
-            url = url + "?" + extraParameters;
+    protected void openTestURL(Class<?> uiClass, String... parameters) {
+        openTestURL(uiClass, new HashSet<String>(Arrays.asList(parameters)));
+    }
+
+    private void openTestURL(Class<?> uiClass, Set<String> parameters) {
+        String url = getTestURL(uiClass);
+
+        if (isDebug()) {
+            parameters.add("debug");
         }
+
+        if (LegacyApplication.class.isAssignableFrom(uiClass)) {
+            parameters.add("restartApplication");
+        }
+
+        if (parameters.size() > 0) {
+            url += "?" + Joiner.on("&").join(parameters);
+        }
+
         driver.get(url);
     }
 
@@ -312,28 +266,18 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return the full URL for the test
      */
     protected String getTestUrl() {
-        String baseUrl = getBaseURL();
-        if (baseUrl.endsWith("/")) {
-            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        }
-
-        return baseUrl + getDeploymentPath();
+        return StringUtils.strip(getBaseURL(), "/") + getDeploymentPath();
     }
 
     /**
+     * Returns the full URL to be used for the test for the provided UI class.
      * 
-     * @return the location (URL) of the TB hub
+     * @return the full URL for the test
      */
-    protected String getHubURL() {
-        return "http://" + getHubHostname() + ":4444/wd/hub";
+    protected String getTestURL(Class<?> uiClass) {
+        return StringUtils.strip(getBaseURL(), "/")
+                + getDeploymentPath(uiClass);
     }
-
-    /**
-     * Used for building the hub URL to use for the test
-     * 
-     * @return the host name of the TestBench hub
-     */
-    protected abstract String getHubHostname();
 
     /**
      * Used to determine what URL to initially open for the test
@@ -362,47 +306,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @return The browsers to run the test on
      */
+    @BrowserConfiguration
     public List<DesiredCapabilities> getBrowsersToTest() {
         return Collections.singletonList(Browser.FIREFOX
                 .getDesiredCapabilities());
-    }
-
-    /**
-     * Used to determine which capabilities should be used when setting up a
-     * {@link WebDriver} for this test. Typically set by a test runner or left
-     * at its default (Firefox 24). If you want to run a test on a single
-     * browser other than Firefox 24 you can override this method.
-     * 
-     * @return the requested browser capabilities
-     */
-    protected DesiredCapabilities getDesiredCapabilities() {
-        return desiredCapabilities;
-    }
-
-    /**
-     * Sets the requested browser capabilities (typically browser name and
-     * version)
-     * 
-     * @param desiredCapabilities
-     */
-    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
-        // Make a copy as the desired capabilities can come from a shared,
-        // static resource. This will cause all kinds of problems if some test
-        // modifies the capabilities
-        this.desiredCapabilities = new DesiredCapabilities(desiredCapabilities);
-    }
-
-    /**
-     * Shuts down the driver after the test has been completed
-     * 
-     * @throws Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        if (driver != null) {
-            driver.quit();
-        }
-        driver = null;
     }
 
     /**
@@ -795,18 +702,16 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *            true if /run-push should be used instead of /run
      * @return The path to the given UI class
      */
-    private String getDeploymentPath(Class<?> uiClass) {
+    protected String getDeploymentPath(Class<?> uiClass) {
         String runPath = "/run";
         if (isPush()) {
             runPath = "/run-push";
         }
 
-        if (UI.class.isAssignableFrom(uiClass)) {
-            return runPath + "/" + uiClass.getCanonicalName()
-                    + (isDebug() ? "?debug" : "");
-        } else if (LegacyApplication.class.isAssignableFrom(uiClass)) {
-            return runPath + "/" + uiClass.getCanonicalName()
-                    + "?restartApplication" + (isDebug() ? "&debug" : "");
+        if (UI.class.isAssignableFrom(uiClass)
+                || UIProvider.class.isAssignableFrom(uiClass)
+                || LegacyApplication.class.isAssignableFrom(uiClass)) {
+            return runPath + "/" + uiClass.getCanonicalName();
         } else {
             throw new IllegalArgumentException(
                     "Unable to determine path for enclosing class "
@@ -864,264 +769,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Provides helper method for selecting the browser to run on
-     * 
-     * @author Vaadin Ltd
-     */
-    public static class BrowserUtil {
-        /**
-         * Gets the capabilities for Safari of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given Safari version
-         */
-        public static DesiredCapabilities safari(int version) {
-            DesiredCapabilities c = DesiredCapabilities.safari();
-            c.setPlatform(Platform.MAC);
-            c.setVersion("" + version);
-            return c;
-        }
-
-        /**
-         * Gets the capabilities for Chrome of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given Chrome version
-         */
-        public static DesiredCapabilities chrome(int version) {
-            DesiredCapabilities c = DesiredCapabilities.chrome();
-            c.setVersion("" + version);
-            c.setPlatform(Platform.XP);
-            return c;
-        }
-
-        /**
-         * Gets the capabilities for Opera of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given Opera version
-         */
-        public static DesiredCapabilities opera(int version) {
-            DesiredCapabilities c = DesiredCapabilities.opera();
-            c.setVersion("" + version);
-            c.setPlatform(Platform.XP);
-            return c;
-        }
-
-        /**
-         * Gets the capabilities for Firefox of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given Firefox version
-         */
-        public static DesiredCapabilities firefox(int version) {
-            DesiredCapabilities c = DesiredCapabilities.firefox();
-            c.setVersion("" + version);
-            c.setPlatform(Platform.XP);
-            return c;
-        }
-
-        /**
-         * Gets the capabilities for Internet Explorer of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given Internet Explorer version
-         */
-        public static DesiredCapabilities ie(int version) {
-            DesiredCapabilities c = DesiredCapabilities.internetExplorer();
-            c.setVersion("" + version);
-            c.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
-                    true);
-            return c;
-        }
-
-        /**
-         * Gets the capabilities for PhantomJS of the given version
-         * 
-         * @param version
-         *            the major version
-         * @return an object describing the capabilities required for running a
-         *         test on the given PhantomJS version
-         */
-        public static DesiredCapabilities phantomJS(int version) {
-            DesiredCapabilities c = DesiredCapabilities.phantomjs();
-            c.setPlatform(Platform.LINUX);
-            c.setVersion("" + version);
-            return c;
-        }
-
-        /**
-         * Checks if the given capabilities refer to Internet Explorer 8
-         * 
-         * @param capabilities
-         * @param version
-         * @return true if the capabilities refer to IE8, false otherwise
-         */
-        public static boolean isIE8(DesiredCapabilities capabilities) {
-            return isIE(8, capabilities);
-        }
-
-        /**
-         * Checks if the given capabilities refer to Internet Explorer of the
-         * given version
-         * 
-         * @param capabilities
-         * @param version
-         * @return true if the capabilities refer to IE of the given version,
-         *         false otherwise
-         */
-        public static boolean isIE(int version, DesiredCapabilities capabilities) {
-            return isIE(capabilities)
-                    && ("" + version).equals(capabilities.getVersion());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to Internet Explorer, false
-         *         otherwise
-         */
-        public static boolean isIE(DesiredCapabilities capabilities) {
-            return BrowserType.IE.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to Chrome, false otherwise
-         */
-        public static boolean isChrome(DesiredCapabilities capabilities) {
-            return BrowserType.CHROME.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to Opera, false otherwise
-         */
-        public static boolean isOpera(DesiredCapabilities capabilities) {
-            return BrowserType.OPERA.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to Safari, false otherwise
-         */
-        public static boolean isSafari(DesiredCapabilities capabilities) {
-            return BrowserType.SAFARI.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to Firefox, false otherwise
-         */
-        public static boolean isFirefox(DesiredCapabilities capabilities) {
-            return BrowserType.FIREFOX.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * @param capabilities
-         *            The capabilities to check
-         * @return true if the capabilities refer to PhantomJS, false otherwise
-         */
-        public static boolean isPhantomJS(DesiredCapabilities capabilities) {
-            return BrowserType.PHANTOMJS.equals(capabilities.getBrowserName());
-        }
-
-        /**
-         * Returns a human readable identifier of the given browser. Used for
-         * test naming and screenshots
-         * 
-         * @param capabilities
-         * @return a human readable string describing the capabilities
-         */
-        public static String getBrowserIdentifier(
-                DesiredCapabilities capabilities) {
-            if (isIE(capabilities)) {
-                return "InternetExplorer";
-            } else if (isFirefox(capabilities)) {
-                return "Firefox";
-            } else if (isChrome(capabilities)) {
-                return "Chrome";
-            } else if (isSafari(capabilities)) {
-                return "Safari";
-            } else if (isOpera(capabilities)) {
-                return "Opera";
-            } else if (isPhantomJS(capabilities)) {
-                return "PhantomJS";
-            }
-
-            return capabilities.getBrowserName();
-        }
-
-        /**
-         * Returns a human readable identifier of the platform described by the
-         * given capabilities. Used mainly for screenshots
-         * 
-         * @param capabilities
-         * @return a human readable string describing the platform
-         */
-        public static String getPlatform(DesiredCapabilities capabilities) {
-            if (capabilities.getPlatform() == Platform.WIN8
-                    || capabilities.getPlatform() == Platform.WINDOWS
-                    || capabilities.getPlatform() == Platform.VISTA
-                    || capabilities.getPlatform() == Platform.XP) {
-                return "Windows";
-            } else if (capabilities.getPlatform() == Platform.MAC) {
-                return "Mac";
-            }
-            return capabilities.getPlatform().toString();
-        }
-
-        /**
-         * Returns a string which uniquely (enough) identifies this browser.
-         * Used mainly in screenshot names.
-         * 
-         * @param capabilities
-         * 
-         * @return a unique string for each browser
-         */
-        public static String getUniqueIdentifier(
-                DesiredCapabilities capabilities) {
-            return getUniqueIdentifier(getPlatform(capabilities),
-                    getBrowserIdentifier(capabilities),
-                    capabilities.getVersion());
-        }
-
-        /**
-         * Returns a string which uniquely (enough) identifies this browser.
-         * Used mainly in screenshot names.
-         * 
-         * @param capabilities
-         * 
-         * @return a unique string for each browser
-         */
-        public static String getUniqueIdentifier(
-                DesiredCapabilities capabilities, String versionOverride) {
-            return getUniqueIdentifier(getPlatform(capabilities),
-                    getBrowserIdentifier(capabilities), versionOverride);
-        }
-
-        private static String getUniqueIdentifier(String platform,
-                String browser, String version) {
-            return platform + "_" + browser + "_" + version;
-        }
-
-    }
-
-    /**
      * Called by the test runner whenever there is an exception in the test that
      * will cause termination of the test
      * 
@@ -1176,6 +823,22 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     private WebElement getDebugLogButton() {
         return findElement(By.xpath("//button[@title='Debug message log']"));
+    }
+
+    protected void assertNoDebugMessage(Level level) {
+        // class="v-debugwindow-row Level.getName()"
+        List<WebElement> logElements = driver
+                .findElements(By.xpath(String
+                        .format("//div[@class='v-debugwindow-row %s']/span[@class='v-debugwindow-message']",
+                                level.getName())));
+        if (!logElements.isEmpty()) {
+            String logRows = "";
+            for (WebElement e : logElements) {
+                logRows += "\n" + e.getText();
+            }
+            Assert.fail("Found debug messages with level " + level.getName()
+                    + ": " + logRows);
+        }
     }
 
     /**
@@ -1258,11 +921,59 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return null;
     }
 
-    private static JsonObject extractObject(HttpResponse resp) throws IOException {
+    protected boolean logContainsText(String string) {
+        List<String> logs = getLogs();
+
+        for (String text : logs) {
+            if (text.contains(string)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected List<String> getLogs() {
+        VerticalLayoutElement log = $(VerticalLayoutElement.class).id("Log");
+        List<LabelElement> logLabels = log.$(LabelElement.class).all();
+        List<String> logTexts = new ArrayList<String>();
+
+        for (LabelElement label : logLabels) {
+            logTexts.add(label.getText());
+        }
+
+        return logTexts;
+    }
+
+    private static JsonObject extractObject(HttpResponse resp)
+            throws IOException {
         InputStream contents = resp.getEntity().getContent();
         StringWriter writer = new StringWriter();
         IOUtils.copy(contents, writer, "UTF8");
         return JsonUtil.parse(writer.toString());
     }
 
+    protected void click(CheckBoxElement checkbox) {
+        checkbox.findElement(By.xpath("input")).click();
+    }
+
+    protected boolean isLoadingIndicatorVisible() {
+        WebElement loadingIndicator = findElement(By
+                .className("v-loading-indicator"));
+
+        return loadingIndicator.isDisplayed();
+    }
+
+    protected void waitUntilLoadingIndicatorNotVisible() {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                WebElement loadingIndicator = input.findElement(By
+                        .className("v-loading-indicator"));
+
+                return !loadingIndicator.isDisplayed();
+            }
+        });
+    }
 }

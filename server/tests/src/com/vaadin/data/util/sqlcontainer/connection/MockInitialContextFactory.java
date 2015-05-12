@@ -12,12 +12,6 @@ import org.junit.Test;
 public class MockInitialContextFactory implements InitialContextFactory {
     private static Context mockCtx = null;
 
-    @Test
-    public void testDummy() {
-        // Added dummy test so JUnit will not complain about
-        // "No runnable methods".
-    }
-
     public static void setMockContext(Context ctx) {
         mockCtx = ctx;
     }

@@ -63,7 +63,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.ui.aria.AriaHelper;
@@ -77,6 +77,8 @@ import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware {
+
+    private static final String PREV_SCROLLER_DISABLED_CLASSNAME = "Prev-disabled";
 
     private static class VCloseEvent {
         private Tab tab;
@@ -233,6 +235,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         }
 
         private void updateFromState(TabState tabState) {
+            tabCaption.setCaptionAsHtml(getTabsheet().isTabCaptionsAsHtml());
             tabCaption.update(tabState);
             // Apply the styleName set for the tab
             String newStyleName = tabState.styleName;
@@ -412,7 +415,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         public int getRequiredWidth() {
             int width = super.getRequiredWidth();
             if (closeButton != null) {
-                width += Util.getRequiredWidth(closeButton);
+                width += WidgetUtil.getRequiredWidth(closeButton);
             }
             return width;
         }
@@ -512,6 +515,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             return (Tab) super.getWidget(index);
         }
 
+        private int getTabIndex(String tabId) {
+            if (tabId == null) {
+                return -1;
+            }
+            for (int i = 0; i < getTabCount(); i++) {
+                if (tabId.equals(getTab(i).id)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public void selectTab(int index) {
             final Tab newSelected = getTab(index);
             final Tab oldSelected = selected;
@@ -572,8 +587,40 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             if (tab == selected) {
                 selected = null;
             }
-
             // FIXME: Shouldn't something be selected instead?
+
+            int scrollerIndexCandidate = getTabIndex(getTabsheet().scrollerPositionTabId);
+            if (scrollerIndexCandidate < 0) {
+                // The tab with id scrollerPositionTabId has been removed
+                scrollerIndexCandidate = getTabsheet().scrollerIndex;
+            }
+            scrollerIndexCandidate = selectNewShownTab(scrollerIndexCandidate);
+            if (scrollerIndexCandidate >= 0
+                    && scrollerIndexCandidate < getTabCount()) {
+                getTabsheet().scrollIntoView(getTab(scrollerIndexCandidate));
+            }
+        }
+
+        private int selectNewShownTab(int oldPosition) {
+            // After removing a tab, find a new scroll position. In most
+            // cases the scroll position does not change, but if the tab
+            // at the scroll position was removed, need to find a nearby
+            // tab that is visible.
+            for (int i = oldPosition; i < getTabCount(); i++) {
+                Tab tab = getTab(i);
+                if (!tab.isHiddenOnServer()) {
+                    return i;
+                }
+            }
+
+            for (int i = oldPosition - 1; i >= 0; i--) {
+                Tab tab = getTab(i);
+                if (!tab.isHiddenOnServer()) {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private boolean isFirstVisibleTab(int index) {
@@ -581,9 +628,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         }
 
         /**
-         * Returns the index of the first visible tab
-         *
-         * @return
+         * Returns the index of the first visible tab on the server
          */
         private int getFirstVisibleTab() {
             return getNextVisibleTab(-1);
@@ -600,6 +645,23 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             do {
                 i++;
             } while (i < tabs && getTab(i).isHiddenOnServer());
+
+            if (i == tabs) {
+                return -1;
+            } else {
+                return i;
+            }
+        }
+
+        /**
+         * Returns the index of the first visible tab in browser.
+         */
+        private int getFirstVisibleTabClient() {
+            int tabs = getTabCount();
+            int i = 0;
+            while (i < tabs && !getTab(i).isVisible()) {
+                i++;
+            }
 
             if (i == tabs) {
                 return -1;
@@ -685,6 +747,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
      * The index of the first visible tab (when scrolled)
      */
     private int scrollerIndex = 0;
+    /**
+     * The id of the tab at position scrollerIndex. This is used for keeping the
+     * scroll position unchanged when a tab is removed from the server side and
+     * the removed tab lies to the left of the current scroll position. For
+     * other cases scrollerIndex alone would be sufficient. Since the tab at the
+     * current scroll position can be removed, scrollerIndex is required in
+     * addition to this variable.
+     */
+    private String scrollerPositionTabId;
 
     final TabBar tb = new TabBar(this);
     /** For internal use only. May be removed or replaced in the future. */
@@ -911,6 +982,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
         if (newFirstIndex != -1) {
             scrollerIndex = newFirstIndex;
+            scrollerPositionTabId = tb.getTab(scrollerIndex).id;
             updateTabScroller();
         }
 
@@ -1016,6 +1088,28 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         updateOpenTabSize();
     }
 
+    private boolean isAllTabsBeforeIndexInvisible() {
+        boolean invisible = true;
+        for (int i = 0; i < scrollerIndex; i++) {
+            invisible = invisible & !tb.getTab(i).isVisible();
+        }
+        return invisible;
+    }
+
+    private boolean isScrollerPrevDisabled() {
+        return scrollerPrev.getClassName().contains(
+                PREV_SCROLLER_DISABLED_CLASSNAME);
+    }
+
+    private boolean isScrollerHidden() {
+        return scroller.getStyle().getDisplay().equals(Display.NONE.getCssName());
+    }
+
+    private boolean isIndexSkippingHiddenTabs() {
+        return isAllTabsBeforeIndexInvisible()
+                && (isScrollerPrevDisabled() || isScrollerHidden());
+    }
+
     @Override
     public void renderTab(final TabState tabState, int index) {
         Tab tab = tb.getTab(index);
@@ -1027,11 +1121,25 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
         tab.setHiddenOnServer(!tabState.visible);
 
-        if (scrolledOutOfView(index)) {
+        if (scrolledOutOfView(index) && !isIndexSkippingHiddenTabs()) {
             // Should not set tabs visible if they are scrolled out of view
             tab.setVisible(false);
         } else {
-            tab.setVisible(tabState.visible);
+            //When the tab was hidden and then turned visible again
+            //and there is space for it, it should be in view (#17096) (#17333)
+            if (isTabSetVisibleBeforeScroller(tabState, index, tab)) {
+                scrollerIndex = index;
+                tab.setVisible(true);
+                tab.setStyleNames(false, true);
+
+                //scroll to the currently selected tab if it got clipped
+                //after making another tab visible
+                if(isClippedTabs()) {
+                    scrollIntoView(getActiveTab());
+                }
+            } else {
+                tab.setVisible(tabState.visible);
+            }
         }
 
         /*
@@ -1039,6 +1147,26 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
          * and tabs won't be too narrow in certain browsers
          */
         tab.recalculateCaptionWidth();
+    }
+
+    /**
+     * Checks whether the tab has been set to visible and the scroller is at the first visible tab.
+     * That means that the scroller has to be adjusted so that the tab is visible again.
+     */
+    private boolean isTabSetVisibleBeforeScroller(TabState tabState, int index, Tab tab) {
+        return isIndexSkippingHiddenTabs() && isScrollerAtFirstVisibleTab()
+                && hasTabChangedVisibility(tabState, tab) && scrolledOutOfView(index);
+    }
+
+    /**
+     * Checks whether the tab is visible on server but is not visible on client yet.
+     */
+    private boolean hasTabChangedVisibility(TabState tabState, Tab tab) {
+        return !tab.isVisible() && tabState.visible;
+    }
+
+    private boolean isScrollerAtFirstVisibleTab() {
+        return tb.getFirstVisibleTabClient() == scrollerIndex;
     }
 
     /**
@@ -1170,7 +1298,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             scroller.getStyle().clearDisplay();
             DOM.setElementProperty(scrollerPrev, "className",
-                    SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
+                    SCROLLER_CLASSNAME
+                            + (scrolled ? "Prev"
+                                    : PREV_SCROLLER_DISABLED_CLASSNAME));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
 
@@ -1206,6 +1336,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     /** For internal use only. May be removed or replaced in the future. */
     public void showAllTabs() {
         scrollerIndex = tb.getFirstVisibleTab();
+        scrollerPositionTabId = scrollerIndex < 0 ? null : tb
+                .getTab(scrollerIndex).id;
         for (int i = 0; i < tb.getTabCount(); i++) {
             Tab t = tb.getTab(i);
             if (!t.isHiddenOnServer()) {
@@ -1247,7 +1379,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
     /** For internal use only. May be removed or replaced in the future. */
     public int getContentAreaBorderWidth() {
-        return Util.measureHorizontalBorder(contentNode);
+        return WidgetUtil.measureHorizontalBorder(contentNode);
     }
 
     @Override
@@ -1427,7 +1559,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             /**
              * Stop the command from being executed.
              *
-             * @since
+             * @since 7.4
              */
             public void stopSchedule() {
                 blurSource = null;
@@ -1436,7 +1568,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             /**
              * Schedule the command for a deferred execution.
              *
-             * @since
+             * @since 7.4
              */
             public void scheduleDeferred() {
                 Scheduler.get().scheduleDeferred(this);
@@ -1780,12 +1912,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
                 }
                 updateTabScroller();
             }
+            if (scrollerIndex >= 0 && scrollerIndex < tb.getTabCount()) {
+                scrollerPositionTabId = tb.getTab(scrollerIndex).id;
+            } else {
+                scrollerPositionTabId = null;
+            }
         }
     }
 
     /**
      * Makes tab bar visible.
-     *
+     * 
      * @since 7.2
      */
     public void showTabs() {

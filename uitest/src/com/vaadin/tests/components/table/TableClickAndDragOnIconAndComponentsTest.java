@@ -15,19 +15,22 @@
  */
 package com.vaadin.tests.components.table;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.openqa.selenium.interactions.Actions;
 
 /**
  * Tests that clicking on active fields doesn't change Table selection, nor does
@@ -36,203 +39,169 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
-    @Test
-    public void testClickingAndDragging() {
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
         openTestURL();
-
-        TableElement table = $(TableElement.class).first();
-
-        // ensure there's no initial selection
-        List<WebElement> selected = table.findElements(By
-                .className("v-selected"));
-        assertTrue("selection found when there should be none",
-                selected.isEmpty());
-
-        // click a cell
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 2nd row expected)",
-                "red 1foo", table.getCell(1, 2).getText());
-        table.getCell(1, 2).click();
-
-        // ensure the correct row and nothing but that got selected
-        selected = table.findElements(By.className("v-selected"));
-        assertFalse("no selection found when there should be some",
-                selected.isEmpty());
-        // find cell contents (row header included)
-        List<WebElement> cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 2nd row expected)",
-                "red 1foo", cellContents.get(2).getText());
-        assertEquals("unexpected table selection size", 1, selected.size());
-
-        List<WebElement> rows = table.findElement(By.className("v-table-body"))
-                .findElements(By.tagName("tr"));
-        assertEquals("unexpected table row count", 5, rows.size());
-
-        // find a row that isn't the one selected
-        cellContents = rows.get(2).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 3rd row expected)",
-                "red 2foo", cellContents.get(2).getText());
-
-        // click on a TextField on that row
-        WebElement textField = rows.get(2)
-                .findElements(By.className("v-textfield")).get(0);
-        assertEquals(
-                "expected value not found, wrong cell or contents (6th column of the 3rd row expected)",
-                "foo 2foo", textField.getAttribute("value"));
-        textField.click();
-
-        // ensure the focus shifted correctly
-        List<WebElement> focused = table.findElements(By
-                .className("v-textfield-focus"));
-        assertEquals("unexpected amount of focused textfields", 1,
-                focused.size());
-        assertEquals(
-                "expected value not found, wrong cell or contents (6th column of the 3rd row expected)",
-                "foo 2foo", focused.get(0).getAttribute("value"));
-
-        // ensure the selection didn't change
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 2nd row expected)",
-                "red 1foo", cellContents.get(2).getText());
-
-        // click on a Label on that row
-        WebElement label = rows.get(2).findElements(By.className("v-label"))
-                .get(0);
-        assertEquals(
-                "expected value not found, wrong cell or contents (5th column of the 3rd row expected)",
-                "foo 2foo", label.getText());
-        label.click();
-
-        // ensure the focus shifted correctly
-        focused = table.findElements(By.className("v-textfield-focus"));
-        assertTrue("focused textfields found when there should be none",
-                focused.isEmpty());
-
-        // ensure the selection changed
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 3rd row expected)",
-                "red 2foo", cellContents.get(2).getText());
-
-        // click on the selected row's textfield (same as earlier)
-        textField.click();
-
-        // ensure the focus shifted correctly
-        focused = table.findElements(By.className("v-textfield-focus"));
-        assertEquals("unexpected amount of focused textfields", 1,
-                focused.size());
-        assertEquals(
-                "expected value not found, wrong cell or contents (6th column of the 3rd row expected)",
-                "foo 2foo", focused.get(0).getAttribute("value"));
-
-        // ensure the selection didn't change
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 3rd row expected)",
-                "red 2foo", cellContents.get(2).getText());
-
-        // find the readOnly TextField of the previously selected row
-        textField = rows.get(1).findElements(By.className("v-textfield"))
-                .get(1);
-        assertEquals(
-                "expected value not found, wrong cell or contents (7th column of the 2nd row expected)",
-                "foo 1foo", textField.getAttribute("value"));
-        assertEquals(
-                "expected readonly status not found, wrong cell or contents (7th column of the 2nd row expected)",
-                "true", textField.getAttribute("readonly"));
-
-        // click on that TextField
-        textField.click();
-
-        // ensure the focus shifted correctly
-        focused = table.findElements(By.className("v-textfield-focus"));
-        assertTrue("focused textfields found when there should be none",
-                focused.isEmpty());
-
-        // ensure the selection changed
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 2nd row expected)",
-                "red 1foo", cellContents.get(2).getText());
-
-        // click the embedded icon of the other row
-        WebElement embedded = rows.get(2).findElement(
-                By.className("v-embedded"));
-        embedded.click();
-
-        // ensure the selection changed
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 3rd row expected)",
-                "red 2foo", cellContents.get(2).getText());
-
-        // check row you are about to drag
-        cellContents = rows.get(4).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 5th row expected)",
-                "red 4foo", cellContents.get(2).getText());
-
-        // check the row above it
-        cellContents = rows.get(3).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 4th row expected)",
-                "red 3foo", cellContents.get(2).getText());
-
-        // drag the row to the row that's two places above it (gets dropped
-        // below that)
-        cellContents = rows.get(4).findElements(
-                By.className("v-table-cell-content"));
-        new Actions(getDriver()).moveToElement(cellContents.get(2))
-                .clickAndHold().moveToElement(rows.get(2)).release().perform();
-
-        // find the current order of the rows
-        rows = table.findElement(By.className("v-table-body")).findElements(
-                By.tagName("tr"));
-        assertEquals("unexpected table row count", 5, rows.size());
-
-        // ensure the row got dragged
-        cellContents = rows.get(3).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the dragged row expected, should be on 4th row now)",
-                "red 4foo", cellContents.get(2).getText());
-
-        cellContents = rows.get(4).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the previous 4th row expected, should be on 5th row now)",
-                "red 3foo", cellContents.get(2).getText());
-
-        // ensure the selection didn't change
-        selected = table.findElements(By.className("v-selected"));
-        assertEquals("unexpected table selection size", 1, selected.size());
-        cellContents = selected.get(0).findElements(
-                By.className("v-table-cell-content"));
-        assertEquals(
-                "expected value not found, wrong cell or contents (3rd column of the 3rd row expected)",
-                "red 2foo", cellContents.get(2).getText());
     }
 
+    @Test
+    public void clickOnTextFieldDoesNotSelectRow() {
+        selectRow(1);
+
+        clickOnTextField(2);
+        assertThatFocusTextFieldHasText("foo 2foo");
+
+        assertThat(getSelectedRowTextValue(), is(1));
+    }
+
+    @Test
+    public void clickOnReadOnlyTextFieldSelectsRow() {
+        selectRow(1);
+
+        clickOnReadOnlyTextField(2);
+
+        assertThat(getSelectedRowTextValue(), is(2));
+    }
+
+    @Test
+    public void clickOnLabelSelectsRow() {
+        selectRow(1);
+
+        clickOnLabel(2);
+
+        assertThat(getSelectedRowTextValue(), is(2));
+    }
+
+    @Test
+    public void clickOnEmbeddedIconSelectsRow() {
+        selectRow(1);
+
+        clickOnEmbeddedIcon(2);
+
+        assertThat(getSelectedRowTextValue(), is(2));
+    }
+
+    @Test
+    public void dragAndDroppingRowDoesNotSelectRow() {
+        selectRow(1);
+
+        moveRow(0, 3);
+
+        assertThat(getSelectedRowTextValue(), is(1));
+        assertThat(getSelectedRowIndex(), is(0));
+    }
+
+    @Test
+    public void dragAndDroppingSelectedRowStaysSelected() {
+        selectRow(1);
+
+        moveRow(1, 4);
+
+        assertThat(getSelectedRowTextValue(), is(1));
+        assertThat(getSelectedRowIndex(), is(4));
+    }
+
+    private void assertThatFocusTextFieldHasText(String text) {
+        List<WebElement> focused = getTable().findElements(
+                By.className("v-textfield-focus"));
+
+        assertThat(focused.get(0).getAttribute("value"), is(text));
+    }
+
+    private int getSelectedRowTextValue() {
+        WebElement selectedRow = getSelectedRow();
+
+        // i.e. 'red 1foo'
+        String text = getText(selectedRow, 2);
+
+        return Integer.parseInt(text.substring(4, 5));
+    }
+
+    private String getText(WebElement row, int column) {
+        List<WebElement> cellContents = getCellContents(row);
+
+        return cellContents.get(column).getText();
+    }
+
+    private List<WebElement> getCellContents(WebElement row) {
+        return row.findElements(By.className("v-table-cell-content"));
+    }
+
+    private WebElement getSelectedRow() {
+        return getTable().findElement(By.className("v-selected"));
+    }
+
+    private void clickOnTextField(int row) {
+        WebElement textField = getTextField(row, 0);
+
+        textField.click();
+    }
+
+    private void clickOnReadOnlyTextField(int row) {
+        WebElement textField = getTextField(row, 1);
+
+        textField.click();
+    }
+
+    private WebElement getTextField(int row, int index) {
+        return getElement(row, index, "v-textfield");
+    }
+
+    private WebElement getElement(int row, String className) {
+        return getElement(row, 0, className);
+    }
+
+    private WebElement getElement(int row, int index, String className) {
+        return getRows().get(row).findElements(By.className(className))
+                .get(index);
+    }
+
+    private List<WebElement> getRows() {
+        return getTable().findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
+    }
+
+    private void selectRow(int row) {
+        TableElement table = getTable();
+
+        table.getCell(row, 2).click();
+    }
+
+    private TableElement getTable() {
+        return $(TableElement.class).first();
+    }
+
+    private void clickOnLabel(int row) {
+        WebElement label = getElement(row, "v-label");
+        label.click();
+    }
+
+    private void clickOnEmbeddedIcon(int row) {
+        WebElement embeddedIcon = getElement(row, "v-embedded");
+        embeddedIcon.click();
+    }
+
+    private void moveRow(int from, int to) {
+        List<WebElement> rows = getRows();
+        List<WebElement> cellContents = getCellContents(rows.get(from));
+
+        new Actions(getDriver()).moveToElement(cellContents.get(2))
+                .clickAndHold().moveToElement(rows.get(to)).release().perform();
+    }
+
+    private int getSelectedRowIndex() {
+        List<WebElement> rows = getRows();
+
+        // Unfortunately rows.getIndexOf(getSelectedRow()) doesn't work.
+        for (WebElement r : rows) {
+            if (r.getAttribute("class").contains("v-selected")) {
+                return rows.indexOf(r);
+            }
+        }
+
+        return -1;
+    }
 }

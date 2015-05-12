@@ -4,13 +4,20 @@
   }
 }
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-popupview) - 
+ *
+ * @group popupview
+ */
 @mixin valo-popupview ($primary-stylename: v-popupview) {
   .#{$primary-stylename} {
     @include valo-link-style;
   }
-  
+
   .#{$primary-stylename}-popup {
-    @include valo-overlay-style($animate-in: v-popupview-animate-in 120ms, $animate-out: (valo-placeholder-animate-out 120ms, valo-anim-fade-out 120ms));
+    @include valo-overlay-style($animate-in: v-popupview-animate-in 120ms, $animate-out: (valo-animate-out-fade 120ms));
 
     .popupContent {
       @include valo-panel-adjust-content-margins;

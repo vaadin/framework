@@ -23,25 +23,18 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.Select;
 
 public class PushConfigurationWebSocketTest extends PushConfigurationTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        browsers.remove(Browser.IE9.getDesiredCapabilities());
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-
-        return browsers;
+        return getBrowsersSupportingWebSocket();
     }
 
     @Test
     public void testWebsocket() throws InterruptedException {
-        new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        getTransportSelect().selectByText("Websocket");
+        getPushModeSelect().selectByText("Automatic");
 
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));

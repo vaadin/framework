@@ -10,12 +10,8 @@
 	opacity: .9;
 	filter: alpha(opacity=90);
 }
-.#{$primaryStyleName} h1,
-.#{$primaryStyleName} p,
-.#{$primaryStyleName}-error h1,
-.#{$primaryStyleName}-error p,
-.#{$primaryStyleName}-warning h1,
-.#{$primaryStyleName}-warning p {
+.#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-description {
 	display: inline;
 	margin: 0 0.5em 0 0;
 }
@@ -25,16 +21,16 @@
 .#{$primaryStyleName}-error {
 	background: red;
 }
-.#{$primaryStyleName}-tray h1 {
-	display: block;
-}
-.#{$primaryStyleName}-tray p {
-	display: block;
+.#{$primaryStyleName}-tray {
+	.#{$primaryStyleName}-caption,
+	.#{$primaryStyleName}-description {
+		display: block;
+	}
 }
 .#{$primaryStyleName}-system {
 	background-color: red;
 }
-.#{$primaryStyleName}-system h1 {
+.#{$primaryStyleName}-system .#{$primaryStyleName}-caption {
 	display: block;
 	margin: 0;
 }

@@ -122,6 +122,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         final GridLayout g = new GridLayout(4, 4);
         g.setWidth("300px");
         g.setHeight("300px");
+        g.setHideEmptyRowsAndColumns(true);
         g.addComponentAttachListener(new ComponentAttachListener() {
             @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {

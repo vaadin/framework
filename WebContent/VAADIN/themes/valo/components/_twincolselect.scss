@@ -1,3 +1,10 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-select-twincol) - 
+ *
+ * @group twin-column-select
+ */
 @mixin valo-twincolselect ($primary-stylename: v-select-twincol) {
 
   .#{$primary-stylename} {
@@ -75,11 +82,23 @@
 
 
 
+/**
+ *
+ *
+ *
+ * @group twin-column-select
+ */
 @mixin valo-twincolselect-add-icon-style {
   font-family: FontAwesome;
   content: "\f054";
 }
 
+/**
+ *
+ *
+ *
+ * @group twin-column-select
+ */
 @mixin valo-twincolselect-remove-icon-style {
   font-family: FontAwesome;
   content: "\f053";

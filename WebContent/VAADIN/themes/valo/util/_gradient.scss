@@ -1,3 +1,13 @@
+/**
+ * Outputs cross-browser Valo-specific linear gradient background-image declarations.
+ * 
+ * @group style
+ * 
+ * @param {color} $color ($v-background-color) - The base color for the gradient color stops
+ * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
+ * @param {color} $fallback (null) - A fallback color for browser which do not support linear gradients (IE8 and IE9 in particular). If null, the base $color is used instead.
+ * @param {string} $direction (to bottom) - the direction of the linear gradient. The color stops are by default so that a lighter shade is at the start and a darker shade is at the end.
+ */
 @mixin valo-gradient($color: $v-background-color, $gradient: $v-gradient, $fallback: null, $direction: to bottom) {
   @if $color {
     @if $gradient {
@@ -9,6 +19,14 @@
   }
 }
 
+/**
+ * Returns a valid CSS, Valo-specific, color stop list to be used in a linear gradient.
+ * 
+ * @group style
+ * 
+ * @param {color} $color - the base color for the color stops
+ * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
+ */
 @function valo-gradient-color-stops($color, $gradient: $v-gradient) {
   $style: valo-gradient-style($gradient);
   $opacity: valo-gradient-opacity($gradient);
@@ -31,6 +49,13 @@
 }
 
 
+/**
+ * Returns the style part of a Valo-specific gradient value.
+ * 
+ * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
+ * 
+ * @return {string} One of the possible style values for $v-gradient 
+ */
 @function valo-gradient-style($gradient: $v-gradient) {
   @if type-of($gradient) != list {
     @return none;
@@ -38,6 +63,13 @@
   @return first-string($gradient);
 }
 
+/**
+ * Returns the opacity part of a Valo-specific gradient value.
+ * 
+ * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
+ * 
+ * @return {number} A percentage value from 0% to 100% 
+ */
 @function valo-gradient-opacity($gradient: $v-gradient) {
   @if type-of($gradient) != list {
     @return 0%;

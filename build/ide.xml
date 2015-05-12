@@ -29,10 +29,10 @@
             <path refid="client-compiler.deps" />
             <path refid="server.deps" />
             <path refid="shared.deps" />
-            <path refid="uitest.deps" />
             <path refid="client.deps" />
             <path refid="buildhelpers.deps" />
             <path refid="gwt.deps" />
+            <path refid="uitest.deps" />
             <path location="server/src" />
             <path location="shared/src" />
             <path location="uitest/src" />
@@ -95,6 +95,9 @@
             <antcall target="compile-theme" inheritRefs="true">
               <param name="theme" value="tests-valo-light" />
             </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+              <param name="theme" value="tests-valo-disabled-animations" />
+            </antcall>
         </parallel>
     </target>
 
@@ -135,6 +138,9 @@
              Either "-ea" to enable or "" to disable. -->
         <property name="assertions" value="-ea" />
         <property name="extraParams" value="" />
+        
+        <property name="gwt.usearchives" value="true" />
+        <property name="gwt.persistentunitcache" value="false" />
 
         <mkdir dir="${module.output.dir}" />
 
@@ -163,10 +169,11 @@
             <sysproperty key="vFailIfNotSerializable" value="true" />
 
             <jvmarg value="-Xss8M" />
+            <jvmarg value="-Xmx1G" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />
-            <jvmarg value="-Dgwt.usearchives=false" />
-            <jvmarg value="-Dgwt.persistentunitcache=false" />
+            <jvmarg value="-Dgwt.usearchives=${gwt.usearchives}" />
+            <jvmarg value="-Dgwt.persistentunitcache=${gwt.persistentunitcache}" />
         </java>
     </target>
     <target name="vaadinPush.js" depends="resolve">
@@ -177,5 +184,9 @@
             <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*">
             </fileset>
         </copy>
+    </target>
+    
+    <target name="clean-unitcache">
+        <delete dir="WebContent/VAADIN/gwt-unitCache" />
     </target>
 </project>

@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
@@ -146,7 +147,7 @@ public class VNativeButton extends Button implements ClickHandler {
             setEnabled(false);
             // FIXME: This should be moved to NativeButtonConnector along with
             // buttonRpcProxy
-            addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
+            addStyleName(StyleConstants.DISABLED);
             buttonRpcProxy.disableOnClick();
         }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ivy-module [
 <!-- Keep the version number in sync with build.xml -->
-    <!ENTITY atmosphere.runtime.version "2.1.2.vaadin4">
+    <!ENTITY atmosphere.runtime.version "2.2.4.vaadin8">
 
-    <!ENTITY atmosphere.js.version "2.1.5.vaadin4">
+    <!ENTITY atmosphere.js.version "2.2.6.vaadin4">
 ]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -29,9 +29,9 @@
     <dependencies>
         <!-- API DEPENDENCIES -->
 
-        <!--Servlet API version 2.4 -->
-        <dependency org="javax.servlet" name="servlet-api"
-            rev="2.4" conf="build-provided,ide,test -> default" />
+	<!-- @WebListener is used for JSR356 websockets so we need to compile with servlet 3 API --> 
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided,ide,test -> default" />
 
         <!-- Atmosphere -->
         <dependency org="com.vaadin.external.atmosphere"

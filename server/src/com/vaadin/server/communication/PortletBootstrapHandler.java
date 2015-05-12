@@ -26,7 +26,6 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceURL;
 
 import com.vaadin.server.BootstrapHandler;
-import com.vaadin.server.PaintException;
 import com.vaadin.server.VaadinPortlet;
 import com.vaadin.server.VaadinPortlet.VaadinLiferayRequest;
 import com.vaadin.server.VaadinPortletRequest;
@@ -36,6 +35,7 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+
 import elemental.json.JsonObject;
 
 public class PortletBootstrapHandler extends BootstrapHandler {
@@ -92,8 +92,7 @@ public class PortletBootstrapHandler extends BootstrapHandler {
     }
 
     @Override
-    protected JsonObject getApplicationParameters(BootstrapContext context)
-            throws PaintException {
+    protected JsonObject getApplicationParameters(BootstrapContext context) {
         JsonObject parameters = super.getApplicationParameters(context);
         VaadinPortletResponse response = (VaadinPortletResponse) context
                 .getResponse();
@@ -105,17 +104,16 @@ public class PortletBootstrapHandler extends BootstrapHandler {
         resourceURL.setResourceID("v-browserDetails");
         parameters.put("browserDetailsUrl", resourceURL.toString());
 
-        // Always send path info as a query parameter
-        parameters
-                .put(ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER, true);
+        String serviceUrlParameterName = ApplicationConstants.V_RESOURCE_PATH;
 
         // If we are running in Liferay then we need to prefix all parameters
         // with the portlet namespace
         if (request instanceof VaadinLiferayRequest) {
-            parameters.put(
-                    ApplicationConstants.SERVICE_URL_PARAMETER_NAMESPACE,
-                    response.getPortletResponse().getNamespace());
+            serviceUrlParameterName = response.getPortletResponse()
+                    .getNamespace() + serviceUrlParameterName;
         }
+        parameters.put(ApplicationConstants.SERVICE_URL_PARAMETER_NAME,
+                serviceUrlParameterName);
 
         return parameters;
     }

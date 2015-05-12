@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
@@ -36,7 +35,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
@@ -89,7 +87,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         } catch (NoDataException e) {
             throw new IllegalStateException(
                     "Default implementation of createWidget() does not work for "
-                            + Util.getSimpleName(this)
+                            + getClass().getSimpleName()
                             + ". This might be caused by explicitely using "
                             + "super.createWidget() or some unspecified "
                             + "problem with the widgetset compilation.", e);
@@ -106,10 +104,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public Widget getWidget() {
         if (widget == null) {
             Profiler.enter("AbstractComponentConnector.createWidget for "
-                    + Util.getSimpleName(this));
+                    + getClass().getSimpleName());
             widget = createWidget();
             Profiler.leave("AbstractComponentConnector.createWidget for "
-                    + Util.getSimpleName(this));
+                    + getClass().getSimpleName());
         }
 
         return widget;
@@ -195,8 +193,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public void setWidgetEnabled(boolean widgetEnabled) {
         // add or remove v-disabled style name from the widget
-        setWidgetStyleName(ApplicationConnection.DISABLED_CLASSNAME,
-                !widgetEnabled);
+        setWidgetStyleName(StyleConstants.DISABLED, !widgetEnabled);
 
         if (getWidget() instanceof HasEnabled) {
             // set widget specific enabled state
@@ -343,8 +340,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         // add / remove error style name
         setWidgetStyleNameWithPrefix(primaryStyleName,
-                ApplicationConnection.ERROR_CLASSNAME_EXT,
-                null != state.errorMessage);
+                StyleConstants.ERROR_EXT, null != state.errorMessage);
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
@@ -407,7 +403,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * updated in another widget in addition to the one returned by the
      * <code>Connector</code>'s {@link #getWidget()}, or if the prefix should be
      * different. For example see
-     * {@link PopupDateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
+     * {@link com.vaadin.client.ui.datefield.DateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
      * 
      * @param styleName

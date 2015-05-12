@@ -16,8 +16,13 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -26,10 +31,13 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -105,7 +113,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void addComponentAsFirst(Component c) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if (c.getParent() == this) {
+        if (equals(c.getParent())) {
             removeComponent(c);
         }
         components.addFirst(c);
@@ -131,7 +139,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void addComponent(Component c, int index) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if (c.getParent() == this) {
+        if (equals(c.getParent())) {
             // When c is removed, all components after it are shifted down
             if (index > getComponentIndex(c)) {
                 index--;
@@ -459,4 +467,170 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         setExpandRatio(target, expandRatio);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // process default attributes
+        super.readDesign(design, designContext);
+
+        // handle margins
+        if (design.hasAttr("margin")) {
+            setMargin(DesignAttributeHandler.readAttribute("margin",
+                    design.attributes(), Boolean.class));
+        } else {
+            boolean marginLeft = DesignAttributeHandler.readAttribute(
+                    "margin-left", design.attributes(), getMargin().hasLeft(),
+                    Boolean.class);
+
+            boolean marginRight = DesignAttributeHandler.readAttribute(
+                    "margin-right", design.attributes(),
+                    getMargin().hasRight(), Boolean.class);
+
+            boolean marginTop = DesignAttributeHandler.readAttribute(
+                    "margin-top", design.attributes(), getMargin().hasTop(),
+                    Boolean.class);
+
+            boolean marginBottom = DesignAttributeHandler.readAttribute(
+                    "margin-bottom", design.attributes(), getMargin()
+                            .hasBottom(), Boolean.class);
+
+            setMargin(new MarginInfo(marginTop, marginBottom, marginLeft,
+                    marginRight));
+        }
+
+        // handle children
+        for (Element childComponent : design.children()) {
+            Attributes attr = childComponent.attributes();
+            Component newChild = designContext.readDesign(childComponent);
+            addComponent(newChild);
+            // handle alignment
+            int bitMask = 0;
+            if (attr.hasKey(":middle")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
+            } else if (attr.hasKey(":bottom")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
+            } else {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
+            }
+            if (attr.hasKey(":center")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
+            } else if (attr.hasKey(":right")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
+            } else {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
+            }
+            setComponentAlignment(newChild, new Alignment(bitMask));
+            // handle expand ratio
+            if (attr.hasKey(":expand")) {
+                String value = attr.get(":expand");
+                if (value.length() > 0) {
+                    try {
+                        float ratio = Float.valueOf(value);
+                        setExpandRatio(newChild, ratio);
+                    } catch (NumberFormatException nfe) {
+                        getLogger().info(
+                                "Failed to parse expand ratio " + value);
+                    }
+                } else {
+                    setExpandRatio(newChild, 1.0f);
+                }
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        // write default attributes
+        super.writeDesign(design, designContext);
+
+        AbstractOrderedLayout def = (AbstractOrderedLayout) designContext
+                .getDefaultInstance(this);
+
+        // handle margin
+        MarginInfo marginInfo = getMargin();
+
+        if (marginInfo.hasAll()) {
+            DesignAttributeHandler.writeAttribute("margin",
+                    design.attributes(), marginInfo.hasAll(), def.getMargin()
+                            .hasAll(), Boolean.class);
+        } else {
+
+            DesignAttributeHandler.writeAttribute("margin-left", design
+                    .attributes(), marginInfo.hasLeft(), def.getMargin()
+                    .hasLeft(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-right", design
+                    .attributes(), marginInfo.hasRight(), def.getMargin()
+                    .hasRight(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-top", design
+                    .attributes(), marginInfo.hasTop(), def.getMargin()
+                    .hasTop(), Boolean.class);
+
+            DesignAttributeHandler.writeAttribute("margin-bottom", design
+                    .attributes(), marginInfo.hasBottom(), def.getMargin()
+                    .hasBottom(), Boolean.class);
+        }
+
+        // handle children
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+
+        for (Component child : this) {
+            Element childElement = designContext.createElement(child);
+            design.appendChild(childElement);
+            // handle alignment
+            Alignment alignment = getComponentAlignment(child);
+            if (alignment.isMiddle()) {
+                childElement.attr(":middle", "");
+            } else if (alignment.isBottom()) {
+                childElement.attr(":bottom", "");
+            }
+            if (alignment.isCenter()) {
+                childElement.attr(":center", "");
+            } else if (alignment.isRight()) {
+                childElement.attr(":right", "");
+            }
+            // handle expand ratio
+            float expandRatio = getExpandRatio(child);
+            if (expandRatio == 1.0f) {
+                childElement.attr(":expand", "");
+            } else if (expandRatio > 0) {
+                childElement.attr(":expand", DesignAttributeHandler
+                        .getFormatter().format(expandRatio));
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("margin");
+        customAttributes.add("margin-left");
+        customAttributes.add("margin-right");
+        customAttributes.add("margin-top");
+        customAttributes.add("margin-bottom");
+        return customAttributes;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractOrderedLayout.class.getName());
+    }
 }

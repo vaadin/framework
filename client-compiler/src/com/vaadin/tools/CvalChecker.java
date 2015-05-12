@@ -18,6 +18,7 @@ package com.vaadin.tools;
 
 import static java.lang.Integer.parseInt;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,18 +32,20 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.io.IOUtils;
+
 import elemental.json.JsonException;
+import elemental.json.JsonNull;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
-import org.apache.commons.io.IOUtils;
 
 /**
  * This class is able to validate the vaadin CVAL license.
- * 
+ *
  * It reads the developer license file and asks the server to validate the
  * licenseKey. If the license is invalid it throws an exception with the
  * information about the problem and the server response.
- * 
+ *
  * @since 7.3
  */
 public final class CvalChecker {
@@ -53,8 +56,8 @@ public final class CvalChecker {
      * It is not in a separate f le, so as it is easier to copy into any product
      * which does not depend on vaadin core.
      * 
-     * We are using org.json in order not to use additional dependency like
-     * auto-beans, gson, etc.
+     * We are using elemental.json in order not to use additional dependency
+     * like auto-beans, gson, etc.
      */
     public static class CvalInfo {
 
@@ -78,6 +81,10 @@ public final class CvalChecker {
         private static <T> T get(JsonObject o, String k, Class<T> clz) {
             Object ret = null;
             try {
+                if (o == null || o.get(k) == null
+                        || o.get(k) instanceof JsonNull) {
+                    return null;
+                }
                 if (clz == String.class) {
                     ret = o.getString(k);
                 } else if (clz == JsonObject.class) {
@@ -297,7 +304,7 @@ public final class CvalChecker {
 
     /**
      * Given a product name returns the name of the file with the license key.
-     * 
+     *
      * Traditionally we have delivered license keys with a name like
      * 'vaadin.touchkit.developer.license' but our database product name is
      * 'vaadin-touchkit' so we have to replace '-' by '.' to maintain
@@ -338,7 +345,7 @@ public final class CvalChecker {
 
     /**
      * Validate whether there is a valid license key for a product.
-     * 
+     *
      * @param productName
      *            for example vaadin-touchkit
      * @param productVersion
@@ -451,12 +458,12 @@ public final class CvalChecker {
 
         try {
             String dotLicenseName = "." + licenseName;
-            String userHome = "file://" + System.getProperty("user.home") + "/";
-            for (URL url : new URL[] { new URL(userHome + dotLicenseName),
-                    new URL(userHome + licenseName),
+            String userHome = System.getProperty("user.home");
+            for (URL url : new URL[] {
+                    new File(userHome, dotLicenseName).toURI().toURL(),
+                    new File(userHome, licenseName).toURI().toURL(),
                     URL.class.getResource("/" + dotLicenseName),
                     URL.class.getResource("/" + licenseName) }) {
-
                 if (url != null) {
                     try {
                         key = readKeyFromFile(url,

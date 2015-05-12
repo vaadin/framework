@@ -16,6 +16,8 @@
 
 package com.vaadin.data.util;
 
+import static com.vaadin.util.ReflectTools.convertPrimitiveType;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -130,7 +132,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             setArguments(getArgs, setArgs, setArgumentIndex);
             String name = (String) in.readObject();
             Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
-            if (name != null) {
+            if (instance != null && name != null) {
                 setMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 setMethod = null;
@@ -138,7 +140,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
             name = (String) in.readObject();
             paramTypes = SerializerHelper.readClassArray(in);
-            if (name != null) {
+            if (instance != null && name != null) {
                 getMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 getMethod = null;
@@ -551,30 +553,6 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         return getMethod;
     }
 
-    static Class<?> convertPrimitiveType(Class<?> type) {
-        // Gets the return type from get method
-        if (type.isPrimitive()) {
-            if (type.equals(Boolean.TYPE)) {
-                type = Boolean.class;
-            } else if (type.equals(Integer.TYPE)) {
-                type = Integer.class;
-            } else if (type.equals(Float.TYPE)) {
-                type = Float.class;
-            } else if (type.equals(Double.TYPE)) {
-                type = Double.class;
-            } else if (type.equals(Byte.TYPE)) {
-                type = Byte.class;
-            } else if (type.equals(Character.TYPE)) {
-                type = Character.class;
-            } else if (type.equals(Short.TYPE)) {
-                type = Short.class;
-            } else if (type.equals(Long.TYPE)) {
-                type = Long.class;
-            }
-        }
-        return type;
-    }
-
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and
      * <code>setValue</code> must be compatible with this type: one must be able
@@ -611,7 +589,11 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     @Override
     public T getValue() {
         try {
-            return (T) getMethod.invoke(instance, getArgs);
+            if (instance == null) {
+                return null;
+            } else {
+                return (T) getMethod.invoke(instance, getArgs);
+            }
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }

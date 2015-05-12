@@ -1,5 +1,16 @@
+/**
+ * @group valo-menu
+ */
+
 $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if(color-luminance($v-app-background-color) < 10, 15%, -70%)) !default;
 
+/**
+ *
+ *
+ * @param {string} $bg ($valo-menu-background-color) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu ($bg: $valo-menu-background-color) {
 
   .valo-menu {
@@ -75,6 +86,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
     @include valo-menubar-borderless-style;
     margin: round($v-unit-size/2) round($v-unit-size/5);
     display: block;
+    overflow: hidden;
     text-align: center;
     height: auto;
     color: inherit;
@@ -83,6 +95,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       color: inherit;
       white-space: normal;
       line-height: 1.4;
+      margin: 0;
 
       img.v-icon {
         width: round($v-unit-size * 1.5);
@@ -92,6 +105,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         display: block;
         margin: 0 auto .3em;
         border: valo-border();
+      }
+
+      &:after {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
     }
 
@@ -125,8 +145,14 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 }
 
 
+/**
+ *
+ *
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-responsive {
-  .v-ui {
+  .v-ui.valo-menu-responsive {
     @include width-range($min: 801px, $max: 1100px) {
       .valo-menu-part {
         @include valo-menu-large-icons-style($valo-menu-background-color);
@@ -150,6 +176,10 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         border-right: none;
       }
 
+      .valo-menu-part {
+        overflow: visible;
+      }
+
       .valo-menu-toggle {
         display: inline-block;
       }
@@ -163,6 +193,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         height: $v-unit-size !important;
         padding-top: 0;
         padding-bottom: 0;
+        -webkit-backface-visibility: hidden;
       }
 
       .valo-menu .v-menubar-user-menu {
@@ -175,6 +206,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         height: $v-unit-size;
         color: valo-font-color($v-selection-color, 0.5);
         max-width: 30%;
+        -webkit-backface-visibility: hidden;
 
         .v-menubar-menuitem {
           line-height: $v-unit-size - 1px;
@@ -226,6 +258,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ * @param {string} $bg ($valo-menu-background-color) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-style ($bg: $valo-menu-background-color) {
   height: 100%;
   @include linear-gradient(to left, (darken($bg, valo-gradient-opacity() / 2) 0%, $bg round($v-unit-size/4)), $fallback: $bg);
@@ -238,6 +277,12 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-title-style {
   line-height: 1.2;
   @include valo-gradient($color: $v-selection-color);
@@ -252,6 +297,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ * @param {color} $bg ($valo-menu-background-color) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-subtitle-style ($bg: $valo-menu-background-color) {
   color: valo-font-color($bg, 0.33);
   margin: round($v-unit-size/5) 0 round($v-unit-size/5) round($v-unit-size/2);
@@ -264,6 +316,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ * @param {color} $bg ($valo-menu-background-color) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-item-style ($bg: $valo-menu-background-color) {
   $font-color: valo-font-color($bg, 0.5);
   outline: none;
@@ -271,7 +330,8 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
   padding: 0 round($v-unit-size) 0 round($v-unit-size/2);
   cursor: pointer;
   position: relative;
-  text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $bg, $offset: -2px);
+  overflow: hidden;
+  text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $bg, $offset: 2px);
   @include transition(background-color 300ms, color 60ms);
 
   $diff: color-luminance($bg) - color-luminance($v-selection-color);
@@ -297,7 +357,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       color: $active-color;
     }
   }
-  
+
   &.selected {
     background: if(is-dark-color($bg), darken($bg, 3%), lighten($bg, 5%));
 
@@ -340,6 +400,15 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ * @param {string} $states (inactive active) - 
+ * @param {color} $background-color (null) - 
+ * @param {color} $active-color ($v-selection-color) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-badge-style ($states: inactive active, $background-color: null, $active-color: $v-selection-color) {
   @if contains($states, inactive) {
     background-color: $background-color;
@@ -360,6 +429,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ * @param {color} $bg (darken($valo-menu-background-color, 4%)) - 
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-large-icons-style ($bg: darken($valo-menu-background-color, 4%)) {
   background-color: $bg;
   min-width: $v-unit-size * 2;
@@ -457,6 +533,12 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 
 
+/**
+ *
+ *
+ *
+ * @group valo-menu
+ */
 @mixin valo-menu-logo-style {
   display: block;
   overflow: hidden;

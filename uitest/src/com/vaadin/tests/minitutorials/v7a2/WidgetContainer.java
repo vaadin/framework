@@ -15,14 +15,12 @@ public class WidgetContainer extends AbstractComponentContainer {
     public void addComponent(Component c) {
         children.add(c);
         super.addComponent(c);
-        markAsDirty();
     }
 
     @Override
     public void removeComponent(Component c) {
         children.remove(c);
         super.removeComponent(c);
-        markAsDirty();
     }
 
     @Override

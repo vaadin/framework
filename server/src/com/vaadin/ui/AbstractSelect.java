@@ -29,10 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -47,6 +51,9 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 
 /**
  * <p>
@@ -1181,7 +1188,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         switch (getItemCaptionMode()) {
 
         case ID:
-            caption = itemId.toString();
+            caption = idToCaption(itemId);
             break;
 
         case INDEX:
@@ -1207,7 +1214,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         case EXPLICIT_DEFAULTS_ID:
             caption = itemCaptions.get(itemId);
             if (caption == null) {
-                caption = itemId.toString();
+                caption = idToCaption(itemId);
             }
             break;
 
@@ -1227,8 +1234,19 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         return caption != null ? caption : "";
     }
 
+    private String idToCaption(Object itemId) {
+        try {
+            Converter<String, Object> c = (Converter<String, Object>) ConverterUtil
+                    .getConverter(String.class, itemId.getClass(), getSession());
+            return ConverterUtil.convertFromModel(itemId, String.class, c,
+                    getLocale());
+        } catch (Exception e) {
+            return itemId.toString();
+        }
+    }
+
     /**
-     * Sets tqhe icon for an item.
+     * Sets the icon for an item.
      * 
      * @param itemId
      *            the id of the item to be assigned an icon.
@@ -1763,7 +1781,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see AbstractField#isEmpty().
      */
     @Override
-    protected boolean isEmpty() {
+    public boolean isEmpty() {
         if (!multiSelect) {
             return super.isEmpty();
         } else {
@@ -2167,5 +2185,144 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          */
         public String generateDescription(Component source, Object itemId,
                 Object propertyId);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext context) {
+        // handle default attributes
+        super.readDesign(design, context);
+        // handle children specifying selectable items (<option>)
+        readItems(design, context);
+    }
+
+    protected void readItems(Element design, DesignContext context) {
+        Set<String> selected = new HashSet<String>();
+        for (Element child : design.children()) {
+            readItem(child, selected, context);
+        }
+        if (!selected.isEmpty()) {
+            if (isMultiSelect()) {
+                setValue(selected);
+            } else if (selected.size() == 1) {
+                setValue(selected.iterator().next());
+            } else {
+                throw new DesignException(
+                        "Multiple values selected for a single select component");
+            }
+        }
+    }
+
+    /**
+     * Reads an Item from a design and inserts it into the data source.
+     * Hierarchical select components should override this method to recursively
+     * recursively read any child items as well.
+     * 
+     * @since 7.5.0
+     * @param child
+     *            a child element representing the item
+     * @param selected
+     *            A set accumulating selected items. If the item that is read is
+     *            marked as selected, its item id should be added to this set.
+     * @param context
+     *            the DesignContext instance used in parsing
+     * @return the item id of the new item
+     * 
+     * @throws DesignException
+     *             if the tag name of the {@code child} element is not
+     *             {@code option}.
+     */
+    protected Object readItem(Element child, Set<String> selected,
+            DesignContext context) {
+        if (!"option".equals(child.tagName())) {
+            throw new DesignException("Unrecognized child element in "
+                    + getClass().getSimpleName() + ": " + child.tagName());
+        }
+
+        String itemId;
+        if (child.hasAttr("item-id")) {
+            itemId = child.attr("item-id");
+            addItem(itemId);
+            setItemCaption(itemId, child.html());
+        } else {
+            addItem(itemId = child.html());
+        }
+
+        if (child.hasAttr("icon")) {
+            setItemIcon(
+                    itemId,
+                    DesignAttributeHandler.readAttribute("icon",
+                            child.attributes(), Resource.class));
+        }
+
+        if (child.hasAttr("selected")) {
+            selected.add(itemId);
+        }
+
+        return itemId;
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext context) {
+        // Write default attributes
+        super.writeDesign(design, context);
+
+        // Write options if warranted
+        if (context.shouldWriteData(this)) {
+            writeItems(design, context);
+        }
+    }
+
+    /**
+     * Writes the data source items to a design. Hierarchical select components
+     * should override this method to only write the root items.
+     * 
+     * @since 7.5.0
+     * @param design
+     *            the element into which to insert the items
+     * @param context
+     *            the DesignContext instance used in writing
+     */
+    protected void writeItems(Element design, DesignContext context) {
+        for (Object itemId : getItemIds()) {
+            writeItem(design, itemId, context);
+        }
+    }
+
+    /**
+     * Writes a data source Item to a design. Hierarchical select components
+     * should override this method to recursively write any child items as well.
+     * 
+     * @since 7.5.0
+     * @param design
+     *            the element into which to insert the item
+     * @param itemId
+     *            the id of the item to write
+     * @param context
+     *            the DesignContext instance used in writing
+     * @return
+     */
+    protected Element writeItem(Element design, Object itemId,
+            DesignContext context) {
+        Element element = design.appendElement("option");
+
+        String caption = getItemCaption(itemId);
+        if (caption != null && !caption.equals(itemId.toString())) {
+            element.html(caption);
+            element.attr("item-id", itemId.toString());
+        } else {
+            element.html(itemId.toString());
+        }
+
+        Resource icon = getItemIcon(itemId);
+        if (icon != null) {
+            DesignAttributeHandler.writeAttribute("icon", element.attributes(),
+                    icon, null, Resource.class);
+        }
+
+        if (isSelected(itemId)) {
+            element.attr("selected", "");
+        }
+
+        return element;
     }
 }

@@ -20,26 +20,26 @@ import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Select;
 
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("push")
 abstract class PushConfigurationTest extends MultiBrowserTest {
 
     @Override
-    public void setup() throws Exception {
-        super.setup();
-
-        openTestURL();
-        disablePush();
+    protected Class<?> getUIClass() {
+        return PushConfiguration.class;
     }
 
     @Override
-    protected String getDeploymentPath() {
-        return "/run/" + PushConfiguration.class.getCanonicalName()
-                + "?restartApplication&debug";
+    public void setup() throws Exception {
+        super.setup();
+        setDebug(true);
+
+        openTestURL("restartApplication");
+        disablePush();
     }
 
     protected String getStatusText() {
@@ -49,7 +49,7 @@ abstract class PushConfigurationTest extends MultiBrowserTest {
     }
 
     protected void disablePush() throws InterruptedException {
-        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
+        getPushModeSelect().selectByText("Disabled");
 
         int counter = getServerCounter();
         sleep(2000);
@@ -57,12 +57,12 @@ abstract class PushConfigurationTest extends MultiBrowserTest {
                 getServerCounter());
     }
 
-    protected WebElement getPushModeSelect() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VNativeSelect[0]/domChild[0]");
+    protected NativeSelectElement getPushModeSelect() {
+        return $(NativeSelectElement.class).caption("Push mode").first();
     }
 
-    protected WebElement getTransportSelect() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[1]/VNativeSelect[0]/domChild[0]");
+    protected NativeSelectElement getTransportSelect() {
+        return $(NativeSelectElement.class).caption("Transport").first();
     }
 
     protected int getServerCounter() {

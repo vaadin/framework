@@ -15,62 +15,70 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 /**
+ * Test for identical item captions in ComboBox.
+ * 
  * @author Vaadin Ltd
  */
 public class ComboBoxIdenticalItemsTest extends MultiBrowserTest {
 
-    private WebElement select;
-
-    /* This test has been directly ported from a TB2 test */
     @Test
-    public void identicalItemsKeyboardTest() throws Exception {
+    public void identicalItemsKeyboardTest() {
         openTestURL();
+        int delay = BrowserUtil.isPhantomJS(getDesiredCapabilities()) ? 500 : 0;
 
-        // wait for the UI to be fully loaded
-        waitForElementVisible(By.className("v-filterselect"));
-        waitForElementVisible(By.id("Log"));
+        ComboBoxElement combobox = $(ComboBoxElement.class).first();
 
-        select = findElement(By
-                .vaadin("/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]"));
-        select.click();
+        combobox.sendKeys(delay, Keys.ARROW_DOWN, getReturn());
+        waitUntilLogText("1. Item one-1 selected");
 
         Keys[] downDownEnter = new Keys[] { Keys.ARROW_DOWN, Keys.ARROW_DOWN,
-                Keys.ENTER };
-        sendKeys(downDownEnter);
-        assertLogText("1. Item one-1 selected");
+                getReturn() };
 
-        sendKeys(downDownEnter);
-        assertLogText("2. Item one-2 selected");
+        combobox.sendKeys(delay, downDownEnter);
+        waitUntilLogText("2. Item one-2 selected");
 
-        sendKeys(downDownEnter);
-        assertLogText("3. Item two selected");
+        combobox.sendKeys(delay, downDownEnter);
+        waitUntilLogText("3. Item two selected");
 
-        sendKeys(new Keys[] { Keys.ARROW_UP, Keys.ARROW_UP, Keys.ARROW_UP,
-                Keys.ENTER });
-        assertLogText("4. Item one-1 selected");
+        combobox.sendKeys(delay, new Keys[] { Keys.ARROW_UP, Keys.ARROW_UP,
+                Keys.ARROW_UP, getReturn() });
+        waitUntilLogText("4. Item one-1 selected");
     }
 
-    private void assertLogText(String expected) throws Exception {
-        String text = findElement(By.vaadin("PID_SLog_row_0")).getText();
-        Assert.assertTrue("Expected '" + expected + "' found '" + text + "'",
-                text.equals(expected));
-    }
-
-    private void sendKeys(Keys[] keys) throws Exception {
-        for (Keys key : keys) {
-            select.sendKeys(key);
-            // wait a while between the key presses, at least PhantomJS fails if
-            // they are sent too fast
-            sleep(10);
+    private Keys getReturn() {
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            return Keys.ENTER;
         }
+        return Keys.RETURN;
+    }
+
+    private void waitUntilLogText(final String expected) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            private String text;
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                text = findElement(By.vaadin("PID_SLog_row_0")).getText();
+                return text.equals(expected);
+            }
+
+            @Override
+            public String toString() {
+                return String.format(
+                        "log content to update. Expected: '%s' (was: '%s')",
+                        expected, text);
+            }
+        });
     }
 }

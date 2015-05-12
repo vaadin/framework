@@ -24,6 +24,7 @@ import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TreeElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ValoThemeUITest extends MultiBrowserTest {
@@ -39,7 +40,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void buttonsLinks() throws Exception {
         openTestURL("test");
         open("Buttons & Links", "Buttons");
-        compareScreen("buttonsLinks");
+        compareScreen("buttonsLinks_with_disabled");
     }
 
     @Test
@@ -64,7 +65,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         // Note that this can look broken in IE9 because of some browser
         // rendering issue... The problem seems to be in the customized
         // horizontal layout in the test app
-        compareScreen("datefields");
+        compareScreen("datefields-with-range");
     }
 
     @Test
@@ -85,7 +86,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void checkboxes() throws Exception {
         openTestURL("test");
         open("Check Boxes & Option Groups", "Check Boxes");
-        compareScreen("checkboxes");
+        compareScreen("checkboxes_with_disabled");
     }
 
     @Test
@@ -133,6 +134,15 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     @Test
+    public void treeTables() throws Exception {
+        openTestURL("test");
+        open("Tables");
+        check("Hierarchical");
+        check("Footer");
+        compareScreen("treetables");
+    }
+
+    @Test
     public void dragging() throws Exception {
         openTestURL("test");
         open("Drag and Drop", "Dragging Components");
@@ -169,6 +179,17 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Disable tabs");
         check("Overflow");
         compareScreen("tabs-closable-disabled");
+    }
+
+    @Test
+    public void tabsClosableUnframed() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Closable");
+        // Framed option is checked by default so we are actually unchecking
+        check("Framed");
+        check("Overflow");
+        compareScreen("tabs-closable-unframed");
     }
 
     @Test
@@ -276,6 +297,9 @@ public class ValoThemeUITest extends MultiBrowserTest {
                     + getRemoteControlName());
 
             open(link, caption, tries - 1);
+        } else {
+            // Done opening, scroll left panel to the top again for consistency
+            scrollTo(0, 0);
         }
     }
 

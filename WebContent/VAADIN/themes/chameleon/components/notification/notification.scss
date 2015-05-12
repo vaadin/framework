@@ -9,11 +9,11 @@ div.#{$primaryStyleName} {
 	-moz-box-shadow: 0 2px 5px rgba(0,0,0,.7);
 	box-shadow: 0 2px 5px rgba(0,0,0,.7);
 	//IE8 does not support rgba, using just rgb
-	background:rgb(255,255,255) url(../img/grad-light-top.png) repeat-x;
-	background:rgba(255,255,255,.90) url(../img/grad-light-top.png) repeat-x;
+	background:rgb(255,255,255) url(../../img/grad-light-top.png) repeat-x;
+	background:rgba(255,255,255,.90) url(../../img/grad-light-top.png) repeat-x;
 	}
 
-.#{$primaryStyleName} p {
+.#{$primaryStyleName}-description {
 	line-height: 1.3;
 	}
 
@@ -23,7 +23,7 @@ div.#{$primaryStyleName}-warning {
 	border: 2px solid #fee3af;
 	}
 
-div.#{$primaryStyleName}-warning h1 {
+div.#{$primaryStyleName}-warning .#{$primaryStyleName}-caption {
 	padding-left: 44px;
 	background: transparent url(../../img/label-warning-icon-big.png) no-repeat 0 50%;
 	}
@@ -35,7 +35,7 @@ div.#{$primaryStyleName}-error {
 	border: 2px solid #ca3030;
 	}
 
-div.#{$primaryStyleName}-error h1 {
+div.#{$primaryStyleName}-error .#{$primaryStyleName}-caption {
 	padding-left: 44px;
 	background: transparent url(../../img/label-error-icon-big.png) no-repeat 0 50%;
 	}
@@ -52,12 +52,12 @@ div.#{$primaryStyleName}-tray {
 	text-shadow: 0 1px 1px rgba(0,0,0,.5);
 	}
 
-.#{$primaryStyleName}-tray h1 {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-caption {
 	font-size: 14px;
 	line-height: 18px;
 	}
 
-.#{$primaryStyleName}-tray p {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-description {
 	font-size: 12px;
 	font-weight: normal;
 	}

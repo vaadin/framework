@@ -15,102 +15,59 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class NativeSelectsFocusAndBlurListenerTests extends MultiBrowserTest {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.MultiBrowserTest#getBrowsersToTest()
-     */
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
-                .getDesiredCapabilities());
-    }
-
     @Test
-    public void testFocusListener() throws InterruptedException {
+    public void testFocusAndBlurListener() throws InterruptedException {
         setDebug(true);
         openTestURL();
-        Thread.sleep(1000);
+        Thread.sleep(200);
         menu("Component");
         menuSub("Listeners");
         menuSub("Focus listener");
-
-        getDriver().findElement(By.tagName("body")).click();
-
-        WebElement select = getDriver().findElement(By.tagName("select"));
-        select.click();
-
-        String bodytext = getDriver().findElement(By.tagName("body")).getText();
-
-        Assert.assertTrue(bodytext.contains("FocusEvent"));
-
-    }
-
-    @Test
-    public void testBlurListener() throws InterruptedException {
-        setDebug(true);
-        openTestURL();
-        Thread.sleep(1000);
         menu("Component");
         menuSub("Listeners");
         menuSub("Blur listener");
 
+        findElement(By.tagName("body")).click();
+
+        NativeSelectElement s = $(NativeSelectElement.class).first();
+        s.selectByText("Item 3");
         getDriver().findElement(By.tagName("body")).click();
 
-        WebElement select = getDriver().findElement(By.tagName("select"));
-        select.click();
-
-        getDriver().findElement(By.tagName("body")).click();
-
-        String bodytext = getDriver().findElement(By.tagName("body")).getText();
-
-        Assert.assertTrue(bodytext.contains("BlurEvent"));
+        // Somehow selectByText causes focus + blur + focus + blur on
+        // Chrome/PhantomJS
+        if (BrowserUtil.isChrome(getDesiredCapabilities())
+                || BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            Assert.assertEquals("4. FocusEvent", getLogRow(1));
+            Assert.assertEquals("5. BlurEvent", getLogRow(0));
+        } else {
+            Assert.assertEquals("2. FocusEvent", getLogRow(1));
+            Assert.assertEquals("3. BlurEvent", getLogRow(0));
+        }
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getUIClass()
-     */
     @Override
     protected Class<?> getUIClass() {
         return NativeSelects.class;
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menuSub(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();
         new Actions(getDriver()).moveByOffset(100, 0).build().perform();
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menu(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();

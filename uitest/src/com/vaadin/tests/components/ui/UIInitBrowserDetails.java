@@ -39,6 +39,14 @@ public class UIInitBrowserDetails extends AbstractTestUI {
         addDetail("current date", "v-curdate", wb.getCurrentDate());
     }
 
+    private void addDetail(String name, String param, Object value) {
+        Label requestLabel = new Label(r.getParameter(param));
+        requestLabel.setId(param);
+        Label browserLabel = new Label("" + value);
+        browserLabel.setId(name);
+        l.addComponents(new Label(name), requestLabel, browserLabel);
+    }
+
     @Override
     public String getTestDescription() {
         return "Browser details should be available in UI init";
@@ -47,10 +55,5 @@ public class UIInitBrowserDetails extends AbstractTestUI {
     @Override
     protected Integer getTicketNumber() {
         return Integer.valueOf(9037);
-    }
-
-    private void addDetail(String name, String param, Object value) {
-        l.addComponents(new Label(name), new Label(r.getParameter(param)),
-                new Label("" + value));
     }
 }

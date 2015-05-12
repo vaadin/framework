@@ -1,48 +1,20 @@
 package com.vaadin.tests.application;
 
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
+import static org.junit.Assert.assertEquals;
 
-public class WebBrowserSizeTest extends TestBase {
+import org.junit.Test;
 
-    @Override
-    protected void setup() {
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-        final Label screenSizeLabel = new Label("n/a");
-        screenSizeLabel.setCaption("Screen size");
-
-        final Label browserSizeLabel = new Label("n/a");
-        browserSizeLabel.setCaption("Client (browser window) size");
-
-        final Button update = new Button("Refresh", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                screenSizeLabel.setValue(getBrowser().getScreenWidth() + " x "
-                        + getBrowser().getScreenHeight());
-                browserSizeLabel.setValue(getMainWindow()
-                        .getBrowserWindowWidth()
-                        + " x "
-                        + getMainWindow().getBrowserWindowHeight());
-            }
-        });
-
-        addComponent(update);
-        addComponent(screenSizeLabel);
-        addComponent(browserSizeLabel);
-
+public class WebBrowserSizeTest extends MultiBrowserTest {
+    @Test
+    public void testBrowserSize() {
+        openTestURL();
+        $(ButtonElement.class).first().click();
+        // Thanks to selenium the browser size should always be 1500 x 850
+        assertEquals("Browser size is not correct.", "1500 x 850",
+                $(LabelElement.class).get(2).getText());
     }
-
-    @Override
-    protected String getDescription() {
-        return "Verifies that browser sizes are reported correctly. Note that client width differs depending on browser decorations.";
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        return 5655;
-    }
-
 }

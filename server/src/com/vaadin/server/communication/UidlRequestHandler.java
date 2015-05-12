@@ -36,6 +36,7 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonException;
 
 /**
@@ -70,7 +71,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         if (uI == null) {
             // This should not happen but it will if the UI has been closed. We
             // really don't want to see it in the server logs though
-            response.getWriter().write(
+            UIInitHandler.commitJsonResponse(request, response,
                     getUINotFoundErrorJSON(session.getService(), request));
             return true;
         }
@@ -99,18 +100,14 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
-            response.getWriter().write(
-                    VaadinService.createCriticalNotificationJSON(null, null,
-                            null, null));
+            writeRefresh(request, response);
             return true;
         } catch (InvalidUIDLSecurityKeyException e) {
             getLogger().log(Level.WARNING,
                     "Invalid security key received from {0}",
                     request.getRemoteHost());
             // Refresh on client side
-            response.getWriter().write(
-                    VaadinService.createCriticalNotificationJSON(null, null,
-                            null, null));
+            writeRefresh(request, response);
             return true;
         } finally {
             stringWriter.close();
@@ -140,6 +137,13 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
                     String.format(Constants.WIDGETSET_MISMATCH_INFO,
                             Version.getFullVersion(), widgetsetVersion));
         }
+    }
+
+    private void writeRefresh(VaadinRequest request, VaadinResponse response)
+            throws IOException {
+        String json = VaadinService.createCriticalNotificationJSON(null, null,
+                null, null);
+        UIInitHandler.commitJsonResponse(request, response, json);
     }
 
     private void writeUidl(VaadinRequest request, VaadinResponse response,

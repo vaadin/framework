@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -36,6 +37,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -84,6 +88,8 @@ import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.components.calendar.handler.BasicForwardHandler;
 import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -297,6 +303,11 @@ public class Calendar extends AbstractComponent implements
     }
 
     @Override
+    protected CalendarState getState(boolean markAsDirty) {
+        return (CalendarState) super.getState(markAsDirty);
+    }
+
+    @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
@@ -329,6 +340,10 @@ public class Calendar extends AbstractComponent implements
      */
     public Date getStartDate() {
         if (startDate == null) {
+            currentCalendar.set(java.util.Calendar.MILLISECOND, 0);
+            currentCalendar.set(java.util.Calendar.SECOND, 0);
+            currentCalendar.set(java.util.Calendar.MINUTE, 0);
+            currentCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
             currentCalendar.set(java.util.Calendar.DAY_OF_WEEK,
                     currentCalendar.getFirstDayOfWeek());
             return currentCalendar.getTime();
@@ -358,6 +373,10 @@ public class Calendar extends AbstractComponent implements
      */
     public Date getEndDate() {
         if (endDate == null) {
+            currentCalendar.set(java.util.Calendar.MILLISECOND, 0);
+            currentCalendar.set(java.util.Calendar.SECOND, 59);
+            currentCalendar.set(java.util.Calendar.MINUTE, 59);
+            currentCalendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
             currentCalendar.set(java.util.Calendar.DAY_OF_WEEK,
                     currentCalendar.getFirstDayOfWeek() + 6);
             return currentCalendar.getTime();
@@ -516,7 +535,8 @@ public class Calendar extends AbstractComponent implements
             day.date = df_date.format(date);
             day.localizedDateFormat = weeklyCaptionFormatter.format(date);
             day.dayOfWeek = getDowByLocale(currentCalendar);
-            day.week = currentCalendar.get(java.util.Calendar.WEEK_OF_YEAR);
+            day.week = getWeek(currentCalendar);
+            day.yearOfWeek = getYearOfWeek(currentCalendar);
 
             days.add(day);
 
@@ -558,6 +578,23 @@ public class Calendar extends AbstractComponent implements
         }
         state.days = days;
         state.actions = createActionsList(actionMap);
+    }
+
+    private int getWeek(java.util.Calendar calendar) {
+        return calendar.get(java.util.Calendar.WEEK_OF_YEAR);
+    }
+
+    private int getYearOfWeek(java.util.Calendar calendar) {
+        // Would use calendar.getWeekYear() but it's only available since 1.7.
+        int week = getWeek(calendar);
+        int month = calendar.get(java.util.Calendar.MONTH);
+        int year = calendar.get(java.util.Calendar.YEAR);
+
+        if (week == 1 && month == java.util.Calendar.DECEMBER) {
+            return year + 1;
+        }
+
+        return year;
     }
 
     private void setActionsForEachHalfHour(
@@ -632,8 +669,14 @@ public class Calendar extends AbstractComponent implements
      */
     public TimeFormat getTimeFormat() {
         if (currentTimeFormat == null) {
-            SimpleDateFormat f = (SimpleDateFormat) SimpleDateFormat
-                    .getTimeInstance(SimpleDateFormat.SHORT, getLocale());
+            SimpleDateFormat f;
+            if (getLocale() == null) {
+                f = (SimpleDateFormat) SimpleDateFormat
+                        .getTimeInstance(SimpleDateFormat.SHORT);
+            } else {
+                f = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
+                        SimpleDateFormat.SHORT, getLocale());
+            }
             String p = f.toPattern();
             if (p.indexOf("HH") != -1 || p.indexOf("H") != -1) {
                 return TimeFormat.Format24H;
@@ -890,17 +933,21 @@ public class Calendar extends AbstractComponent implements
      * @see #isEventClickAllowed()
      */
     protected boolean isClientChangeAllowed() {
-        return !isReadOnly() && isEnabled();
+        return !isReadOnly();
     }
 
     /**
-     * Is the user allowed to trigger click events
+     * Is the user allowed to trigger click events. Returns {@code true} by
+     * default. Subclass can override this method to disallow firing event
+     * clicks got from the client side.
      * 
      * @return true if the client is allowed to click events
      * @see #isClientChangeAllowed()
+     * @deprecated As of 7.4, override {@link #fireEventClick(Integer)} instead.
      */
+    @Deprecated
     protected boolean isEventClickAllowed() {
-        return isEnabled();
+        return true;
     }
 
     /**
@@ -1430,7 +1477,7 @@ public class Calendar extends AbstractComponent implements
     @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        Map<String, Object> serverVariables = new HashMap<String, Object>(1);
+        Map<String, Object> serverVariables = new HashMap<String, Object>();
 
         if (clientVariables.containsKey("dropSlotIndex")) {
             int slotIndex = (Integer) clientVariables.get("dropSlotIndex");
@@ -1450,6 +1497,7 @@ public class Calendar extends AbstractComponent implements
             currentCalendar.add(java.util.Calendar.DATE, dayIndex);
             serverVariables.put("dropDay", currentCalendar.getTime());
         }
+        serverVariables.put("mouseEvent", clientVariables.get("mouseEvent"));
 
         CalendarTargetDetails td = new CalendarTargetDetails(serverVariables,
                 this);
@@ -1645,7 +1693,7 @@ public class Calendar extends AbstractComponent implements
      *         weekly mode
      */
     public boolean isMonthlyMode() {
-        CalendarState state = (CalendarState) getState(false);
+        CalendarState state = getState(false);
         if (state.days != null) {
             return state.days.size() > 7;
         } else {
@@ -1747,9 +1795,6 @@ public class Calendar extends AbstractComponent implements
 
         @Override
         public void dateClick(String date) {
-            if (!isClientChangeAllowed()) {
-                return;
-            }
             if (date != null && date.length() > 6) {
                 try {
                     Date d = df_date.parse(date);
@@ -1761,14 +1806,11 @@ public class Calendar extends AbstractComponent implements
 
         @Override
         public void weekClick(String event) {
-            if (!isClientChangeAllowed()) {
-                return;
-            }
             if (event.length() > 0 && event.contains("w")) {
                 String[] splitted = event.split("w");
                 if (splitted.length == 2) {
                     try {
-                        int yr = 1900 + Integer.parseInt(splitted[0]);
+                        int yr = Integer.parseInt(splitted[0]);
                         int week = Integer.parseInt(splitted[1]);
                         fireWeekClick(week, yr);
                     } catch (NumberFormatException e) {
@@ -1872,5 +1914,82 @@ public class Calendar extends AbstractComponent implements
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    /**
+     * Sets whether the event captions are rendered as HTML.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the caption is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
+        getState().eventCaptionAsHtml = eventCaptionAsHtml;
+    }
+
+    /**
+     * Checks whether event captions are rendered as HTML
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isEventCaptionAsHtml() {
+        return getState(false).eventCaptionAsHtml;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        Attributes attr = design.attributes();
+        if (design.hasAttr("time-format")) {
+            setTimeFormat(TimeFormat.valueOf("Format"
+                    + design.attr("time-format").toUpperCase()));
+        }
+
+        if (design.hasAttr("start-date")) {
+            setStartDate(DesignAttributeHandler.readAttribute("start-date",
+                    attr, Date.class));
+        }
+        if (design.hasAttr("end-date")) {
+            setEndDate(DesignAttributeHandler.readAttribute("end-date", attr,
+                    Date.class));
+        }
+    };
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        if (currentTimeFormat != null) {
+            design.attr("time-format",
+                    (currentTimeFormat == TimeFormat.Format12H ? "12h" : "24h"));
+        }
+        if (startDate != null) {
+            design.attr("start-date", df_date.format(getStartDate()));
+        }
+        if (endDate != null) {
+            design.attr("end-date", df_date.format(getEndDate()));
+        }
+        if (!getTimeZone().equals(TimeZone.getDefault())) {
+            design.attr("time-zone", getTimeZone().getID());
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("time-format");
+        customAttributes.add("start-date");
+        customAttributes.add("end-date");
+        return customAttributes;
     }
 }

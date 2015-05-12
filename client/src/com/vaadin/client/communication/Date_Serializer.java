@@ -17,10 +17,11 @@ package com.vaadin.client.communication;
 
 import java.util.Date;
 
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.metadata.Type;
+
+import elemental.json.Json;
+import elemental.json.JsonValue;
 
 /**
  * Client side serializer/deserializer for java.util.Date
@@ -31,14 +32,14 @@ import com.vaadin.client.metadata.Type;
 public class Date_Serializer implements JSONSerializer<Date> {
 
     @Override
-    public Date deserialize(Type type, JSONValue jsonValue,
+    public Date deserialize(Type type, JsonValue jsonValue,
             ApplicationConnection connection) {
-        return new Date((long) ((JSONNumber) jsonValue).doubleValue());
+        return new Date((long) jsonValue.asNumber());
     }
 
     @Override
-    public JSONValue serialize(Date value, ApplicationConnection connection) {
-        return new JSONNumber(value.getTime());
+    public JsonValue serialize(Date value, ApplicationConnection connection) {
+        return Json.create(value.getTime());
     }
 
 }

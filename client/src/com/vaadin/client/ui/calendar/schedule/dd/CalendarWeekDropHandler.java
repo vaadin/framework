@@ -17,7 +17,7 @@ package com.vaadin.client.ui.calendar.schedule.dd;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.DateCell;
 import com.vaadin.client.ui.calendar.schedule.DateCellDayEvent;
@@ -52,8 +52,8 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
     protected void dragAccepted(VDragEvent drag) {
         deEmphasis();
         currentTargetElement = drag.getElementOver();
-        currentTargetDay = Util
-                .findWidget(currentTargetElement, DateCell.class);
+        currentTargetDay = WidgetUtil.findWidget(currentTargetElement,
+                DateCell.class);
         emphasis();
     }
 
@@ -121,7 +121,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
         return DOM.isOrHasChild(weekGridElement, elementOver)
                 && !DOM.isOrHasChild(timeBarElement, elementOver)
                 && todayBarElement != elementOver
-                && (Util.findWidget(elementOver, DateCellDayEvent.class) == null);
+                && (WidgetUtil.findWidget(elementOver, DateCellDayEvent.class) == null);
     }
 
     /*

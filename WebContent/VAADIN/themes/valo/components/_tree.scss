@@ -1,5 +1,19 @@
+/**
+ *
+ * @group tree
+ */
 $v-tree-row-height: round($v-unit-size/1.3) !default;
+
+/**
+ *
+ * @group tree
+ */
 $v-tree-animations-enabled: true !default;
+
+/**
+ *
+ * @group tree
+ */
 $v-tree-expand-animation-enabled: false !default;
 
 
@@ -24,6 +38,13 @@ $v-tree-expand-animation-enabled: false !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-tree) - 
+ *
+ * @group tree
+ */
 @mixin valo-tree ($primary-stylename: v-tree) {
 
   .#{$primary-stylename} {
@@ -261,11 +282,24 @@ $v-tree-expand-animation-enabled: false !default;
 }
 
 
+/**
+ *
+ *
+ *
+ * @group tree
+ */
 @mixin valo-tree-collapsed-icon-style {
   content: "\f0da";
   font-family: FontAwesome;
 }
 
+/**
+ *
+ *
+ * @param {bool} $force (false) - 
+ *
+ * @group tree
+ */
 @mixin valo-tree-expanded-icon-style ($force: false) {
   @if $v-tree-animations-enabled == false or $force {
     content: "\f0d7";

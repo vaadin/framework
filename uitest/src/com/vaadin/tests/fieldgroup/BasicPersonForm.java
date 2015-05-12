@@ -10,12 +10,12 @@ import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
@@ -26,9 +26,8 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class BasicPersonForm extends TestBase {
+public class BasicPersonForm extends AbstractTestUIWithLog {
 
-    private Log log = new Log(5);
     private TextField firstName;
     private TextArea lastName;
     private TextField email;
@@ -80,7 +79,7 @@ public class BasicPersonForm extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         addComponent(log);
         Panel confPanel = new ConfigurationPanel();
         addComponent(confPanel);
@@ -133,7 +132,7 @@ public class BasicPersonForm extends TestBase {
                     msg = "Commit failed: " + e.getMessage();
                 }
                 Notification.show(msg);
-                log.log(msg);
+                log(msg);
 
             }
         });
@@ -143,7 +142,7 @@ public class BasicPersonForm extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         fieldGroup.discard();
-                        log.log("Discarded changes");
+                        log("Discarded changes");
 
                     }
                 });
@@ -152,7 +151,7 @@ public class BasicPersonForm extends TestBase {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        log.log(getPerson(fieldGroup).toString());
+                        log(getPerson(fieldGroup).toString());
 
                     }
                 });
@@ -182,20 +181,19 @@ public class BasicPersonForm extends TestBase {
         fieldGroup.setItemDataSource(new BeanItem<Person>(p));
     }
 
+    @SuppressWarnings("unchecked")
     public static Person getPerson(FieldGroup binder) {
         return ((BeanItem<Person>) binder.getItemDataSource()).getBean();
     }
 
     @Override
-    protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+    public String getDescription() {
+        return "Basic Person Form";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return 8094;
     }
 
 }

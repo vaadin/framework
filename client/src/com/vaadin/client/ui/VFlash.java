@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class VFlash extends HTML {
 
@@ -156,7 +156,8 @@ public class VFlash extends HTML {
          * this by setting his own classid.
          */
         if (classId != null) {
-            html.append("classid=\"" + Util.escapeAttribute(classId) + "\" ");
+            html.append("classid=\"" + WidgetUtil.escapeAttribute(classId)
+                    + "\" ");
         } else {
             html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
         }
@@ -170,29 +171,33 @@ public class VFlash extends HTML {
          * codebase
          */
         if (codebase != null) {
-            html.append("codebase=\"" + Util.escapeAttribute(codebase) + "\" ");
+            html.append("codebase=\"" + WidgetUtil.escapeAttribute(codebase)
+                    + "\" ");
         } else {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
         // Add width and height
-        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
+        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
         if (codetype != null) {
-            html.append("codetype=\"" + Util.escapeAttribute(codetype) + "\" ");
+            html.append("codetype=\"" + WidgetUtil.escapeAttribute(codetype)
+                    + "\" ");
         }
 
         // Standby
         if (standby != null) {
-            html.append("standby=\"" + Util.escapeAttribute(standby) + "\" ");
+            html.append("standby=\"" + WidgetUtil.escapeAttribute(standby)
+                    + "\" ");
         }
 
         // Archive
         if (archive != null) {
-            html.append("archive=\"" + Util.escapeAttribute(archive) + "\" ");
+            html.append("archive=\"" + WidgetUtil.escapeAttribute(archive)
+                    + "\" ");
         }
 
         // End object tag
@@ -206,25 +211,25 @@ public class VFlash extends HTML {
         // Add parameters to OBJECT
         for (String name : embedParams.keySet()) {
             html.append("<param ");
-            html.append("name=\"" + Util.escapeAttribute(name) + "\" ");
+            html.append("name=\"" + WidgetUtil.escapeAttribute(name) + "\" ");
             html.append("value=\""
-                    + Util.escapeAttribute(embedParams.get(name)) + "\" ");
+                    + WidgetUtil.escapeAttribute(embedParams.get(name)) + "\" ");
             html.append("/>");
         }
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + Util.escapeAttribute(source) + "\" ");
-        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
+        html.append("src=\"" + WidgetUtil.escapeAttribute(source) + "\" ");
+        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Add the parameters to the Embed
         for (String name : embedParams.keySet()) {
-            html.append(Util.escapeAttribute(name));
+            html.append(WidgetUtil.escapeAttribute(name));
             html.append("=");
-            html.append("\"" + Util.escapeAttribute(embedParams.get(name))
-                    + "\"");
+            html.append("\""
+                    + WidgetUtil.escapeAttribute(embedParams.get(name)) + "\"");
         }
 
         // End embed tag

@@ -21,8 +21,11 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -36,41 +39,60 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return getBrowsersExcludingIE8();
+    }
+
     @Test
     public void testResizing() throws InterruptedException {
         openTestURL();
 
-        TableElement table = $(TableElement.class).first();
         List<ButtonElement> buttons = $(ButtonElement.class).all();
 
-        WebElement textField = table.findElement(By.className("v-textfield"));
-        WebElement resizer = table.findElement(By.className("v-table-resizer"));
+        WebElement resizer = getTable().findElement(
+                By.className("v-table-resizer"));
 
-        assertEquals(100, textField.getSize().width);
+        assertEquals(100, getTextFieldWidth());
 
-        // drag resizer to left
-        new Actions(getDriver()).moveToElement(resizer).clickAndHold()
-                .moveByOffset(-20, 0).release().perform();
+        moveResizer(resizer, -20);
+        assertEquals(80, getTextFieldWidth());
 
-        assertEquals(80, textField.getSize().width);
-
-        // drag resizer to right
-        new Actions(getDriver()).moveToElement(resizer).clickAndHold()
-                .moveByOffset(40, 0).release().perform();
-
-        assertEquals(120, textField.getSize().width);
+        moveResizer(resizer, 40);
+        assertEquals(120, getTextFieldWidth());
 
         // click the button for decreasing size
         buttons.get(1).click();
-        sleep(50);
-
-        assertEquals(80, textField.getSize().width);
+        waitUntilTextFieldWidthIs(80);
 
         // click the button for increasing size
         buttons.get(0).click();
-        sleep(50);
-
-        assertEquals(100, textField.getSize().width);
+        waitUntilTextFieldWidthIs(100);
     }
 
+    private void waitUntilTextFieldWidthIs(final int width) {
+        waitUntil(new ExpectedCondition<Object>() {
+            @Override
+            public Object apply(WebDriver input) {
+                return getTextFieldWidth() == width;
+            }
+        });
+    }
+
+    private int getTextFieldWidth() {
+        TableElement table = getTable();
+        final WebElement textField = table.findElement(By
+                .className("v-textfield"));
+
+        return textField.getSize().width;
+    }
+
+    private TableElement getTable() {
+        return $(TableElement.class).first();
+    }
+
+    private void moveResizer(WebElement resizer, int offset) {
+        new Actions(driver).clickAndHold(resizer).moveByOffset(offset, 0)
+                .release().perform();
+    }
 }

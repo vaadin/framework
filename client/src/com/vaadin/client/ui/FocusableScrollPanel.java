@@ -48,9 +48,11 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         Style style = getElement().getStyle();
         style.setProperty("zoom", "1");
         style.setPosition(Position.RELATIVE);
+        browserInfo = BrowserInfo.get();
     }
 
     private DivElement focusElement;
+    private BrowserInfo browserInfo;
 
     public FocusableScrollPanel(boolean useFakeFocusElement) {
         this();
@@ -72,6 +74,12 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                 style.setPosition(Position.FIXED);
                 style.setTop(0, Unit.PX);
                 style.setLeft(0, Unit.PX);
+                if (browserInfo.isIE()) {
+                    // for #15294: artificially hide little bit more the
+                    // focusElement, otherwise IE will make the window to scroll
+                    // into it when focused
+                    style.setLeft(-999, Unit.PX);
+                }
                 getElement().appendChild(focusElement);
                 /* Sink from focusElemet too as focusa and blur don't bubble */
                 DOM.sinkEvents(focusElement, Event.FOCUSEVENTS);

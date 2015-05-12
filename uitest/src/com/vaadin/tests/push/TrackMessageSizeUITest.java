@@ -18,7 +18,7 @@ package com.vaadin.tests.push;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("push")

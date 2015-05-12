@@ -23,12 +23,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.shared.ui.BrowserWindowOpenerState;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Client-side code for {@link BrowserWindowOpener}
@@ -81,8 +81,7 @@ public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
                 }
             }
 
-            url = ApplicationConnection
-                    .addGetParameters(url, params.toString());
+            url = SharedUtil.addGetParameters(url, params.toString());
         }
 
         if (getState().uriFragment != null) {

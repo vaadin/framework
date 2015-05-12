@@ -35,6 +35,13 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
+import elemental.json.Json;
+import elemental.json.JsonBoolean;
+import elemental.json.JsonObject;
+import elemental.json.JsonString;
+import elemental.json.JsonType;
+import elemental.json.JsonValue;
+
 @Connect(SerializerTestExtension.class)
 public class SerializerTestConnector extends AbstractExtensionConnector {
 
@@ -64,10 +71,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             }
 
             @Override
-            public void sendString(String value) {
+            public void sendString(String value, String[] array) {
                 char[] chars = value.toCharArray();
                 Arrays.sort(chars);
-                rpc.sendString(new String(chars));
+                rpc.sendString(new String(chars), new String[] { array[1],
+                        array[0] });
             }
 
             @Override
@@ -259,6 +267,32 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             }
 
             @Override
+            public void sendDateArray(Date[] date) {
+                rpc.sendDateArray(date);
+            }
+
+            @Override
+            public void sendJson(JsonValue value1, JsonValue value2,
+                    JsonString string) {
+                if (value1.getType() != JsonType.BOOLEAN) {
+                    throw new RuntimeException("Expected boolean, got "
+                            + value1.toJson());
+                }
+
+                if (value2.getType() != JsonType.NULL) {
+                    throw new RuntimeException("Expected null, got "
+                            + value2.toJson());
+                }
+
+                JsonObject returnObject = Json.createObject();
+                returnObject.put("b", !((JsonBoolean) value1).asBoolean());
+                returnObject.put("s", string);
+
+                rpc.sendJson(returnObject, Json.createNull(),
+                        Json.create("value"));
+            }
+
+            @Override
             public void log(String message) {
                 // Do nothing, used only in the other direction
             }
@@ -310,6 +344,22 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
         rpc.log("state.doubleValue: " + getState().doubleValue);
         rpc.log("state.doubleObjectValue: " + getState().doubleObjectValue);
         rpc.log("state.doubleArray: " + Arrays.toString(getState().doubleArray));
+
+        rpc.log("state.string: " + getState().string);
+        rpc.log("state.stringArray: " + Arrays.toString(getState().stringArray));
+
+        rpc.log("state.jsonNull: " + getState().jsonNull.getType().name());
+        rpc.log("state.jsonString: "
+                + ((JsonString) getState().jsonString).getString());
+        rpc.log("state.jsonBoolean: " + getState().jsonBoolean.getBoolean());
+
+        rpc.log("state.date1: " + getState().date1);
+        rpc.log("state.date2: " + getState().date2);
+        String arrStr = "";
+        for (Date d : getState().dateArray) {
+            arrStr += d + " ";
+        }
+        rpc.log("state.dateArray: " + arrStr);
 
         /*
          * TODO public double doubleValue; public Double DoubleValue; public

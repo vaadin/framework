@@ -31,7 +31,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VScrollTable;
@@ -198,19 +198,6 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                             uidl.getIntAttribute("rows"));
                     if (getWidget().headerChangedDuringUpdate) {
                         getWidget().triggerLazyColumnAdjustment(true);
-                    } else if (!getWidget().isScrollPositionVisible()
-                            || totalRowsHaveChanged
-                            || getWidget().lastRenderedHeight != getWidget().scrollBody
-                                    .getOffsetHeight()) {
-                        // webkits may still bug with their disturbing scrollbar
-                        // bug, see #3457
-                        // Run overflow fix for the scrollable area
-                        // #6698 - If there's a scroll going on, don't abort it
-                        // by changing overflows as the length of the contents
-                        // *shouldn't* have changed (unless the number of rows
-                        // or the height of the widget has also changed)
-                        Util.runWebkitOverflowAutoFixDeferred(getWidget().scrollBodyPanel
-                                .getElement());
                     }
                 } else {
                     getWidget().initializeRows(uidl, rowData);
@@ -355,7 +342,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                 @Override
                 public void execute() {
                     // IE8 needs some hacks to measure sizes correctly
-                    Util.forceIE8Redraw(getWidget().getElement());
+                    WidgetUtil.forceIE8Redraw(getWidget().getElement());
 
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
@@ -407,7 +394,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, VScrollTableRow.class);
+            Object node = WidgetUtil.findWidget(element, VScrollTableRow.class);
 
             if (node != null) {
                 VScrollTableRow row = (VScrollTableRow) node;
@@ -438,4 +425,15 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         // TODO Move code from updateFromUIDL to this method
     }
 
+    @Override
+    protected void updateComponentSize(String newWidth, String newHeight) {
+        super.updateComponentSize(newWidth, newHeight);
+
+        if("".equals(newWidth)) {
+            getWidget().updateWidth();
+        }
+        if("".equals(newHeight)) {
+            getWidget().updateHeight();
+        }
+    }
 }

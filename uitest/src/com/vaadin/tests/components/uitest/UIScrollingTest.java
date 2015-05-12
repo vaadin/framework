@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -58,10 +57,7 @@ public class UIScrollingTest extends MultiBrowserTest {
                 notification.findElement(By.tagName("h1")).getText());
 
         // attempt to close the notification
-        try {
-            notification.closeNotification();
-        } catch (StaleElementReferenceException e) {
-        }
+        notification.close();
 
         WebElement ui = findElement(By.className("v-ui"));
         testBenchElement(ui).scroll(1020);
@@ -74,9 +70,7 @@ public class UIScrollingTest extends MultiBrowserTest {
         assertEquals("Scrolled to 1020 px",
                 notification.findElement(By.tagName("h1")).getText());
 
-        try {
-            notification.closeNotification();
-        } catch (StaleElementReferenceException e) {
-        }
+        notification.close();
+
     }
 }

@@ -26,9 +26,9 @@
         <dependency org="com.liferay.portal" name="portal-service"
             rev="6.0.2" conf="build-provided,ide -> default" />
 
-        <!--Servlet API version 2.4 -->
-        <dependency org="javax.servlet" name="servlet-api"
-            rev="2.4" conf="build-provided,ide,test -> default" />
+        <!--Servlet API version 3.0 -->
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided,ide,test -> default" />
 
         <!--Portlet API version 2.0 (JSR-286) -->
         <dependency org="javax.portlet" name="portlet-api"
@@ -60,7 +60,7 @@
         </dependency>
 
         <!-- Jsoup for BootstrapHandler -->
-        <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
+        <dependency org="org.jsoup" name="jsoup" rev="1.8.1"
             conf="build,ide,test -> default" />
 
         <!-- TESTING DEPENDENCIES -->
@@ -70,6 +70,8 @@
             conf="test,ide -> default" />
         <dependency org="org.mockito" name="mockito-all" rev="1.9.5"
             conf="test,ide->default" />
+        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3"
+                    conf="test,ide->default" />
         <dependency org="org.easymock" name="easymock" rev="3.0"
             conf="test,ide-> default" transitive="true" />
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"

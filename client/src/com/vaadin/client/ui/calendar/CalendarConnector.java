@@ -35,8 +35,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -138,7 +138,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         getWidget().setListener(new DateClickListener() {
             @Override
             public void dateClick(String date) {
-                if (!getWidget().isDisabledOrReadOnly()
+                if (!getWidget().isDisabled()
                         && hasEventListener(CalendarEventId.DATECLICK)) {
                     rpc.dateClick(date);
                 }
@@ -171,7 +171,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         getWidget().setListener(new WeekClickListener() {
             @Override
             public void weekClick(String event) {
-                if (!getWidget().isDisabledOrReadOnly()
+                if (!getWidget().isDisabled()
                         && hasEventListener(CalendarEventId.WEEKCLICK)) {
                     rpc.weekClick(event);
                 }
@@ -345,6 +345,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
         widget.setEventMoveAllowed(hasEventListener(CalendarEventId.EVENTMOVE));
         widget.setEventResizeAllowed(hasEventListener(CalendarEventId.EVENTRESIZE));
 
+        widget.setEventCaptionAsHtml(state.eventCaptionAsHtml);
+
         List<CalendarState.Day> days = state.days;
         List<CalendarState.Event> events = state.events;
 
@@ -420,7 +422,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = Util.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element, null);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());
@@ -675,7 +677,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         List<CalendarDay> list = new ArrayList<CalendarDay>(days.size());
         for (CalendarState.Day day : days) {
             CalendarDay d = new CalendarDay(day.date, day.localizedDateFormat,
-                    day.dayOfWeek, day.week);
+                    day.dayOfWeek, day.week, day.yearOfWeek);
 
             list.add(d);
         }

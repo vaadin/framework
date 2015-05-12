@@ -1,6 +1,18 @@
+/**
+ *
+ * @group notification
+ */
 $v-notification-title-color: $v-focus-color !default;
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-Notification) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group notification
+ */
 @mixin valo-notification ($primary-stylename: v-Notification, $include-additional-styles: contains($v-included-additional-styles, notification)) {
 
   // Positional offsets
@@ -33,23 +45,23 @@ $v-notification-title-color: $v-focus-color !default;
   @if $v-animations-enabled {
 
     .#{$primary-stylename}-animate-in {
-      @include animation(valo-placeholder-animate-in 100ms, valo-anim-fade-in 100ms);
+      @include animation(valo-animate-in-fade 180ms 10ms backwards);
 
-      &.v-position-left {
-        @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-right 200ms);
+      &.v-position-top {
+        @include animation(valo-animate-in-slide-down 400ms 10ms backwards);
       }
 
-      &.v-position-right {
-        @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-left 200ms);
+      &.v-position-bottom {
+        @include animation(valo-animate-in-slide-up 400ms 10ms backwards);
       }
     }
 
     .#{$primary-stylename}-animate-out {
-      @include animation(valo-placeholder-animate-out 150ms, valo-anim-fade-out 150ms);
+      @include animation(valo-animate-out-fade 150ms);
 
-      &.v-position-left,
-      &.v-position-right {
-        @include animation(valo-placeholder-animate-out 120ms, valo-anim-drop-fade-out 120ms);
+      &.v-position-top,
+      &.v-position-bottom {
+        @include animation(valo-animate-out-slide-down-fade 200ms);
       }
     }
   }
@@ -66,38 +78,38 @@ $v-notification-title-color: $v-focus-color !default;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    h1 {
-      margin: 0;
-      display: inline-block;
-      text-align: left;
-      font-weight: inherit;
-      line-height: inherit;
-      white-space: nowrap;
-      letter-spacing: 0;
-    }
-
-    p {
-      margin: 0;
-      display: inline-block;
-      vertical-align: middle;
-      max-width: 30em;
-      text-align: left;
-      max-height: 20em;
-      overflow: auto;
-    }
-
-    h1 ~ p {
-      margin-left: round($v-font-size * 1.5);
-    }
-
-    .v-icon + h1 {
-      margin-left: round($v-font-size);
-    }
-
     @include valo-notification-style;
 
   }
 
+  .#{$primary-stylename}-caption {
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+    font-weight: inherit;
+    line-height: inherit;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  .#{$primary-stylename}-description {
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 30em;
+    text-align: left;
+    max-height: 20em;
+    overflow: auto;
+  }
+
+  .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description {
+    margin-left: round($v-font-size * 1.5);
+  }
+
+  .v-icon + .#{$primary-stylename}-caption {
+    margin-left: round($v-font-size);
+  }
+  
   .#{$primary-stylename}-system {
     @include valo-notification-bar-style;
     @include valo-notification-system-style;
@@ -105,11 +117,11 @@ $v-notification-title-color: $v-focus-color !default;
 
   .#{$primary-stylename}.tray {
     text-align: left;
-    h1 {
+    .#{$primary-stylename}-caption {
       //display: block;
     }
 
-    h1 + p {
+    .#{$primary-stylename}-caption + .#{$primary-stylename}-description {
       display: block;
       margin: .5em 0 0;
     }
@@ -167,7 +179,7 @@ $v-notification-title-color: $v-focus-color !default;
       color: #555;
       border: 2px solid $v-friendly-color;
 
-      h1 {
+      .#{$primary-stylename}-caption {
         color: $v-friendly-color;
         font-weight: $v-font-weight + 100;
 
@@ -186,7 +198,7 @@ $v-notification-title-color: $v-focus-color !default;
     .#{$primary-stylename}.failure {
       border-color: $v-error-indicator-color;
 
-      h1 {
+      .#{$primary-stylename}-caption {
         color: $v-error-indicator-color;
 
         &:before {
@@ -200,6 +212,12 @@ $v-notification-title-color: $v-focus-color !default;
 
 
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-closable-style {
   padding-right: $v-unit-size + round($v-unit-size/1.7);
   overflow: hidden !important; // Override GWT PopupPanel
@@ -216,11 +234,12 @@ $v-notification-title-color: $v-focus-color !default;
     height: round($v-unit-size/1.5);
     line-height: round($v-unit-size/1.5) - 1px;
     cursor: pointer;
-    color: #000;
+    $color: if(is-dark-color($v-overlay-background-color), #fff, #000);
+    color: $color;
     @include opacity(.5);
     text-align: center;
-    border: first-number($v-border) solid #000;
-    border-color: rgba(0,0,0,.3);
+    border: first-number($v-border) solid $color;
+    border-color: rgba($color, .3);
     border-radius: 50%;
     @include transition(opacity 200ms);
   }
@@ -230,8 +249,10 @@ $v-notification-title-color: $v-focus-color !default;
   }
 
   &:active:after {
-    background-color: #000;
-    color: #fff;
+    $color: if(is-dark-color($v-overlay-background-color), #000, #fff);
+    $bg: if(is-dark-color($v-overlay-background-color), #fff, #000);
+    background-color: $bg;
+    color: $color;
     @include opacity(.3);
     @include transition(none 200ms);
   }
@@ -241,21 +262,33 @@ $v-notification-title-color: $v-focus-color !default;
 
 
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-style {
-  background: valo-overlay-background-color();
+  background: $v-overlay-background-color;
   @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.15));
   padding: round($v-unit-size/2) round($v-unit-size/1.7);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: $v-notification-title-color;
     font-size: round($v-font-size * 1.2);
     line-height: 1;
   }
-  p {
+  .#{$primary-stylename}-description {
     line-height: 1.4;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-bar-style {
   left: 0 !important;
   right: 0;
@@ -265,7 +298,7 @@ $v-notification-title-color: $v-focus-color !default;
   @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
   padding: round($v-unit-size/3) round($v-unit-size/2.5);
 
-  p {
+  .#{$primary-stylename}-description {
     max-width: 50em;
   }
 
@@ -274,11 +307,11 @@ $v-notification-title-color: $v-focus-color !default;
 
     @if $v-animations-enabled {
       &[class*="animate-in"] {
-        @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-down 200ms);
+        @include animation(valo-animate-in-slide-down 300ms 10ms backwards);
       }
 
       &[class*="animate-out"] {
-        @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-up 200ms);
+        @include animation(valo-animate-out-slide-up 200ms);
       }
     }
   }
@@ -288,32 +321,44 @@ $v-notification-title-color: $v-focus-color !default;
 
     @if $v-animations-enabled {
       &[class*="animate-in"] {
-        @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-up 200ms);
+        @include animation(valo-animate-in-slide-up 300ms 10ms backwards);
       }
 
       &[class*="animate-out"] {
-        @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-down 200ms);
+        @include animation(valo-animate-out-slide-down 200ms);
       }
     }
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-dark-style {
   background-color: #444;
   background-color: rgba(#444, .9);
   font-weight: $v-font-weight + 100;
   line-height: round($v-font-size * 1.4);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: #fff;
     vertical-align: middle;
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: #e6e6e6;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-system-style {
   @include valo-notification-dark-style;
 
@@ -323,41 +368,65 @@ $v-notification-title-color: $v-focus-color !default;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-tray-style {}
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-warning-style {
   background: #FFF3D2;
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: #AC7C00;
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: #9D874D;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-error-style {
   background: $v-error-indicator-color;
   font-weight: $v-font-weight + 100;
   @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.25));
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: valo-font-color($v-error-indicator-color, 1);
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: valo-font-color($v-error-indicator-color, .8);
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group notification
+ */
 @mixin valo-notification-small-style {
   padding: round($v-unit-size/3.3) round($v-unit-size/2.8);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     font-size: $v-font-size;
   }
-  p {
+  .#{$primary-stylename}-description {
     font-size: round($v-font-size * 0.85);
   }
 }

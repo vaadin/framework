@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.window;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -27,6 +26,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -48,18 +48,9 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
         return SubWindows.class;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.MultiBrowserTest#getBrowsersToTest()
-     */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        ArrayList<DesiredCapabilities> list = new ArrayList<DesiredCapabilities>();
-        list.add(BrowserUtil.ie(9));
-        list.add(BrowserUtil.ie(10));
-        list.add(BrowserUtil.ie(11));
-        return list;
+        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11);
     }
 
     @Test

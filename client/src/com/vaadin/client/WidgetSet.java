@@ -16,6 +16,9 @@
 
 package com.vaadin.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.metadata.BundleLoadCallback;
@@ -132,11 +135,15 @@ public class WidgetSet {
 
                 @Override
                 public void failed(Throwable reason) {
-                    VConsole.error(reason);
+                    getLogger().log(Level.SEVERE, "Error loading bundle",
+                            reason);
                     ApplicationConfiguration.endDependencyLoading();
                 }
             });
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(WidgetSet.class.getName());
+    }
 }

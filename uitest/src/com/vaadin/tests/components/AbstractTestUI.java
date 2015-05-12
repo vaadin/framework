@@ -10,6 +10,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -45,6 +46,11 @@ public abstract class AbstractTestUI extends UI {
     }
 
     protected void warnIfWidgetsetMaybeNotCompiled() {
+        // Can't check location if sendUrlAsParameters is disabled
+        if (!getSession().getConfiguration().isSendUrlsAsParameters()) {
+            return;
+        }
+
         // Ignore if using debug mode
         String query = getPage().getLocation().getQuery();
         if (query != null && query.matches(".*[&?]gwt\\.codesvr.*")) {
@@ -181,9 +187,19 @@ public abstract class AbstractTestUI extends UI {
         getLayout().replaceComponent(oldComponent, newComponent);
     }
 
-    protected abstract String getTestDescription();
+    protected void addButton(String caption, Button.ClickListener listener) {
+        Button button = new Button(caption);
+        button.addClickListener(listener);
+        addComponent(button);
+    }
 
-    protected abstract Integer getTicketNumber();
+    protected String getTestDescription() {
+        return null;
+    };
+
+    protected Integer getTicketNumber() {
+        return null;
+    };
 
     protected WebBrowser getBrowser() {
         return getSession().getBrowser();

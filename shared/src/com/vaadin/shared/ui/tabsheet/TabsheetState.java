@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class TabsheetState extends AbstractComponentState {
     public static final String PRIMARY_STYLE_NAME = "v-tabsheet";
@@ -31,6 +33,7 @@ public class TabsheetState extends AbstractComponentState {
      * Index of the component when switching focus - not related to Tabsheet
      * tabs.
      */
+    @NoLayout
     public int tabIndex;
 
     public List<TabState> tabs = new ArrayList<TabState>();
@@ -40,5 +43,8 @@ public class TabsheetState extends AbstractComponentState {
 
     /** the key of the currently selected tab */
     public String selected;
+
+    @DelegateToWidget
+    public boolean tabCaptionsAsHtml = false;
 
 }

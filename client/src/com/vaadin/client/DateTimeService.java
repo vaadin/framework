@@ -17,6 +17,8 @@
 package com.vaadin.client;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -71,7 +73,7 @@ public class DateTimeService {
         try {
             return LocaleService.getMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getMonth", e);
             return null;
         }
     }
@@ -80,7 +82,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getShortMonth", e);
             return null;
         }
     }
@@ -89,7 +91,7 @@ public class DateTimeService {
         try {
             return LocaleService.getDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getDay", e);
             return null;
         }
     }
@@ -98,7 +100,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getShortDay", e);
             return null;
         }
     }
@@ -107,7 +109,7 @@ public class DateTimeService {
         try {
             return LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getFirstDayOfWeek", e);
             return 0;
         }
     }
@@ -116,7 +118,7 @@ public class DateTimeService {
         try {
             return LocaleService.isTwelveHourClock(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in isTwelveHourClock", e);
             return false;
         }
     }
@@ -125,7 +127,7 @@ public class DateTimeService {
         try {
             return LocaleService.getClockDelimiter(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE, "Error in getClockDelimiter", e);
             return ":";
         }
     }
@@ -137,8 +139,8 @@ public class DateTimeService {
             return LocaleService.getAmPmStrings(currentLocale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
-            VConsole.error("Locale not loaded, using fallback : AM/PM");
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    "Locale not loaded, using fallback : AM/PM", e);
             return DEFAULT_AMPM_STRINGS;
         }
     }
@@ -150,8 +152,8 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            VConsole.error("Locale not loaded, using fallback 0");
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    "Locale not loaded, using fallback 0", e);
             firstDay = 0;
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
@@ -496,4 +498,7 @@ public class DateTimeService {
 
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(DateTimeService.class.getName());
+    }
 }

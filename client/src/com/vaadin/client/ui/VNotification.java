@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -37,7 +38,7 @@ import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ui.NotificationRole;
@@ -61,6 +62,9 @@ public class VNotification extends VOverlay {
     private static final String STYLENAME_POSITION_MIDDLE = "v-position-middle";
     private static final String STYLENAME_POSITION_CENTER = "v-position-center";
     private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
+
+    private static final String CAPTION = "caption";
+    private static final String DESCRIPTION = "description";
 
     /**
      * Position that is only accessible for assistive devices, invisible for
@@ -255,11 +259,16 @@ public class VNotification extends VOverlay {
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
-         * nudge (#8551)
+         * nudge (#8551) Chrome 41 now requires this too (#17252)
          */
-        if (BrowserInfo.get().isAndroid()) {
-            Util.setStyleTemporarily(getElement(), "display", "none");
+        if (BrowserInfo.get().isAndroid() || isChrome41OrHigher()) {
+            WidgetUtil.setStyleTemporarily(getElement(), "display", "none");
         }
+    }
+
+    private boolean isChrome41OrHigher() {
+        return BrowserInfo.get().isChrome()
+                && BrowserInfo.get().getBrowserMajorVersion() >= 41;
     }
 
     protected void hideAfterDelay() {
@@ -389,6 +398,20 @@ public class VNotification extends VOverlay {
     }
 
     @Override
+    /*
+     * Fix for #14689: {@link #onEventPreview(Event)} method is deprecated and
+     * it's called now only for the very first handler (see super impl). We need
+     * it to work for any handler. So let's call old {@link
+     * #onEventPreview(Event)} method explicitly with updated logic for {@link
+     * #onPreviewNativeEvent(Event)}.
+     */
+    protected void onPreviewNativeEvent(NativePreviewEvent event) {
+        if (!onEventPreview(Event.as(event.getNativeEvent()))) {
+            event.cancel();
+        }
+    }
+
+    @Override
     public boolean onEventPreview(Event event) {
         int type = DOM.eventGetType(event);
         // "modal"
@@ -476,20 +499,22 @@ public class VNotification extends VOverlay {
             String caption = notification
                     .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
-                caption = Util.escapeHTML(caption);
+                caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
-            html += "<h1>" + caption + "</h1>";
+            html += "<h1 class='" + getDependentStyle(client, CAPTION) + "'>"
+                    + caption + "</h1>";
         }
         if (notification
                 .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
             String message = notification
                     .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
-                message = Util.escapeHTML(message);
+                message = WidgetUtil.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
             }
-            html += "<p>" + message + "</p>";
+            html += "<p class='" + getDependentStyle(client, DESCRIPTION)
+                    + "'>" + message + "</p>";
         }
 
         final String style = notification
@@ -505,6 +530,16 @@ public class VNotification extends VOverlay {
                 .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay, client.getUIConnector().getWidget()).show(
                 html, position, style);
+    }
+
+    private static String getDependentStyle(ApplicationConnection client,
+            String style) {
+        VNotification notification = createNotification(-1, client
+                .getUIConnector().getWidget());
+        String styleName = notification.getStyleName();
+        notification.addStyleDependentName(style);
+        String extendedStyle = notification.getStyleName();
+        return extendedStyle.substring(styleName.length()).trim();
     }
 
     public static VNotification createNotification(int delayMsec, Widget owner) {

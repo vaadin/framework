@@ -23,11 +23,14 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.server.FileDownloader;
+import com.vaadin.shared.VBrowserDetails;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(FileDownloader.class)
@@ -47,22 +50,27 @@ public class FileDownloaderConnector extends AbstractExtensionConnector
     public void onClick(ClickEvent event) {
         final String url = getResourceUrl("dl");
         if (url != null && !url.isEmpty()) {
-            if (iframe != null) {
-                // make sure it is not on dom tree already, might start
-                // multiple downloads at once
-                iframe.removeFromParent();
+            BrowserInfo browser = BrowserInfo.get();
+            if (browser.isIOS()) {
+                Window.open(url, "_blank", "");
+            } else {
+                if (iframe != null) {
+                    // make sure it is not on dom tree already, might start
+                    // multiple downloads at once
+                    iframe.removeFromParent();
+                }
+                iframe = Document.get().createIFrameElement();
+
+                Style style = iframe.getStyle();
+                style.setVisibility(Visibility.HIDDEN);
+                style.setHeight(0, Unit.PX);
+                style.setWidth(0, Unit.PX);
+
+                iframe.setFrameBorder(0);
+                iframe.setTabIndex(-1);
+                iframe.setSrc(url);
+                RootPanel.getBodyElement().appendChild(iframe);
             }
-            iframe = Document.get().createIFrameElement();
-
-            Style style = iframe.getStyle();
-            style.setVisibility(Visibility.HIDDEN);
-            style.setHeight(0, Unit.PX);
-            style.setWidth(0, Unit.PX);
-
-            iframe.setFrameBorder(0);
-            iframe.setTabIndex(-1);
-            iframe.setSrc(url);
-            RootPanel.getBodyElement().appendChild(iframe);
         }
     }
 

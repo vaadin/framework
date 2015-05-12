@@ -38,12 +38,14 @@ public class CalendarState extends AbstractComponentState {
     public List<CalendarState.Day> days;
     public List<CalendarState.Event> events;
     public List<CalendarState.Action> actions;
+    public boolean eventCaptionAsHtml;
 
     public static class Day implements java.io.Serializable {
         public String date;
         public String localizedDateFormat;
         public int dayOfWeek;
         public int week;
+        public int yearOfWeek;
     }
 
     public static class Action implements java.io.Serializable {

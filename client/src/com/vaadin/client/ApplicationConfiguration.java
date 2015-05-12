@@ -32,6 +32,8 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
@@ -170,6 +172,33 @@ public class ApplicationConfiguration implements EntryPoint {
             return this.getConfig("versionInfo").vaadinVersion;
         }-*/;
 
+        /**
+         * Gets the version of the Atmosphere framework.
+         * 
+         * @return a string with the version
+         * 
+         * @see org.atmosphere.util#getRawVersion()
+         */
+        private native String getAtmosphereVersion()
+        /*-{
+            return this.getConfig("versionInfo").atmosphereVersion;
+        }-*/;
+
+        /**
+         * Gets the JS version used in the Atmosphere framework.
+         * 
+         * @return a string with the version
+         */
+        private native String getAtmosphereJSVersion()
+        /*-{
+            if ($wnd.jQueryVaadin != undefined){
+                return $wnd.jQueryVaadin.atmosphere.version;
+            }
+            else {
+                return null;
+            }
+        }-*/;
+
         private native String getUIDL()
         /*-{
            return this.getConfig("uidl");
@@ -247,8 +276,7 @@ public class ApplicationConfiguration implements EntryPoint {
      *         <code>false</code> if the path info goes after the service URL
      */
     public boolean useServiceUrlPathParam() {
-        return getJsoConfiguration(id).getConfigBoolean(
-                ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER) == Boolean.TRUE;
+        return getServiceUrlParameterName() != null;
     }
 
     /**
@@ -260,12 +288,8 @@ public class ApplicationConfiguration implements EntryPoint {
      * @return The parameter name, by default <code>v-resourcePath</code>
      */
     public String getServiceUrlParameterName() {
-        String prefix = getJsoConfiguration(id).getConfigString(
-                ApplicationConstants.SERVICE_URL_PARAMETER_NAMESPACE);
-        if (prefix == null) {
-            prefix = "";
-        }
-        return prefix + ApplicationConstants.V_RESOURCE_PATH;
+        return getJsoConfiguration(id).getConfigString(
+                ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
     }
 
     public String getRootPanelId() {
@@ -382,14 +406,14 @@ public class ApplicationConfiguration implements EntryPoint {
              * desired locations even if the base URL of the page changes later
              * (e.g. with pushState)
              */
-            serviceUrl = Util.getAbsoluteUrl(serviceUrl);
+            serviceUrl = WidgetUtil.getAbsoluteUrl(serviceUrl);
         }
         // Ensure there's an ending slash (to make appending e.g. UIDL work)
         if (!useServiceUrlPathParam() && !serviceUrl.endsWith("/")) {
             serviceUrl += '/';
         }
 
-        vaadinDirUrl = Util.getAbsoluteUrl(jsoConfiguration
+        vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
@@ -457,6 +481,28 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public String getServletVersion() {
         return getJsoConfiguration(id).getVaadinVersion();
+    }
+
+    /**
+     * Return Atmosphere version.
+     * 
+     * @since 7.4
+     * 
+     * @return Atmosphere version.
+     */
+    public String getAtmosphereVersion() {
+        return getJsoConfiguration(id).getAtmosphereVersion();
+    }
+
+    /**
+     * Return Atmosphere JS version.
+     * 
+     * @since 7.4
+     * 
+     * @return Atmosphere JS version.
+     */
+    public String getAtmosphereJSVersion() {
+        return getJsoConfiguration(id).getAtmosphereJSVersion();
     }
 
     public Class<? extends ServerConnector> getConnectorClassByEncodedTag(
@@ -547,7 +593,11 @@ public class ApplicationConfiguration implements EntryPoint {
 
     String getUnknownServerClassNameByTag(int tag) {
         if (unknownComponents != null) {
-            return unknownComponents.get(tag);
+            String className = unknownComponents.get(tag);
+            if (className == null) {
+                className = "unknown class with id " + tag;
+            }
+            return className;
         }
         return null;
     }
@@ -588,17 +638,27 @@ public class ApplicationConfiguration implements EntryPoint {
 
                         @Override
                         public void failed(Throwable reason) {
-                            VConsole.error(reason);
+                            getLogger().log(Level.SEVERE,
+                                    "Error loading deferred bundle", reason);
                         }
                     });
         }
     }
 
+    private boolean vaadinBootstrapLoaded() {
+        Element window = ScriptInjector.TOP_WINDOW.cast();
+        return window.getPropertyJSO("vaadin") != null;
+    }
+
     @Override
     public void onModuleLoad() {
 
-        // Don't run twice if the module has been inherited several times.
-        if (moduleLoaded) {
+        // Don't run twice if the module has been inherited several times,
+        // and don't continue if vaadinBootstrap was not executed.
+        if (moduleLoaded || !vaadinBootstrapLoaded()) {
+            getLogger()
+                    .log(Level.WARNING,
+                            "vaadinBootstrap.js was not loaded, skipping vaadin application configuration.");
             return;
         }
         moduleLoaded = true;

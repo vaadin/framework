@@ -22,11 +22,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.json.client.JSONArray;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
@@ -34,6 +34,8 @@ import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
+
+import elemental.json.JsonArray;
 
 public class JavaScriptConnectorHelper {
 
@@ -49,7 +51,7 @@ public class JavaScriptConnectorHelper {
     private JavaScriptObject connectorWrapper;
     private int tag;
 
-    private boolean inited = false;
+    private String initFunctionName;
 
     public JavaScriptConnectorHelper(ServerConnector connector) {
         this.connector = connector;
@@ -58,51 +60,79 @@ public class JavaScriptConnectorHelper {
         rpcObjects.put("", JavaScriptObject.createObject());
     }
 
+    /**
+     * The id of the previous response for which state changes have been
+     * processed. If this is the same as the
+     * {@link ApplicationConnection#getLastResponseId()}, it means that the
+     * state change has already been handled and should not be done again.
+     */
+    private int processedResponseId = -1;
+
     public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                JavaScriptObject wrapper = getConnectorWrapper();
-                JavaScriptConnectorState state = getConnectorState();
-
-                for (String callback : state.getCallbackNames()) {
-                    ensureCallback(JavaScriptConnectorHelper.this, wrapper,
-                            callback);
-                }
-
-                for (Entry<String, Set<String>> entry : state
-                        .getRpcInterfaces().entrySet()) {
-                    String rpcName = entry.getKey();
-                    String jsName = getJsInterfaceName(rpcName);
-                    if (!rpcObjects.containsKey(jsName)) {
-                        Set<String> methods = entry.getValue();
-                        rpcObjects.put(jsName,
-                                createRpcObject(rpcName, methods));
-
-                        // Init all methods for wildcard rpc
-                        for (String method : methods) {
-                            JavaScriptObject wildcardRpcObject = rpcObjects
-                                    .get("");
-                            Set<String> interfaces = rpcMethods.get(method);
-                            if (interfaces == null) {
-                                interfaces = new HashSet<String>();
-                                rpcMethods.put(method, interfaces);
-                                attachRpcMethod(wildcardRpcObject, null, method);
-                            }
-                            interfaces.add(rpcName);
-                        }
-                    }
-                }
-
-                // Init after setting up callbacks & rpc
-                if (!inited) {
-                    initJavaScript();
-                    inited = true;
-                }
-
-                invokeIfPresent(wrapper, "onStateChange");
+                processStateChanges();
             }
         });
+    }
+
+    /**
+     * Makes sure the javascript part of the connector has been initialized. The
+     * javascript is usually initalized the first time a state change event is
+     * received, but it might in some cases be necessary to make this happen
+     * earlier.
+     * 
+     * @since 7.4.0
+     */
+    public void ensureJavascriptInited() {
+        if (initFunctionName == null) {
+            processStateChanges();
+        }
+    }
+
+    private void processStateChanges() {
+        int lastResponseId = connector.getConnection().getLastResponseId();
+        if (processedResponseId == lastResponseId) {
+            return;
+        }
+        processedResponseId = lastResponseId;
+
+        JavaScriptObject wrapper = getConnectorWrapper();
+        JavaScriptConnectorState state = getConnectorState();
+
+        for (String callback : state.getCallbackNames()) {
+            ensureCallback(JavaScriptConnectorHelper.this, wrapper, callback);
+        }
+
+        for (Entry<String, Set<String>> entry : state.getRpcInterfaces()
+                .entrySet()) {
+            String rpcName = entry.getKey();
+            String jsName = getJsInterfaceName(rpcName);
+            if (!rpcObjects.containsKey(jsName)) {
+                Set<String> methods = entry.getValue();
+                rpcObjects.put(jsName, createRpcObject(rpcName, methods));
+
+                // Init all methods for wildcard rpc
+                for (String method : methods) {
+                    JavaScriptObject wildcardRpcObject = rpcObjects.get("");
+                    Set<String> interfaces = rpcMethods.get(method);
+                    if (interfaces == null) {
+                        interfaces = new HashSet<String>();
+                        rpcMethods.put(method, interfaces);
+                        attachRpcMethod(wildcardRpcObject, null, method);
+                    }
+                    interfaces.add(rpcName);
+                }
+            }
+        }
+
+        // Init after setting up callbacks & rpc
+        if (initFunctionName == null) {
+            initJavaScript();
+        }
+
+        invokeIfPresent(wrapper, "onStateChange");
     }
 
     private static String getJsInterfaceName(String rpcName) {
@@ -119,7 +149,7 @@ public class JavaScriptConnectorHelper {
         return object;
     }
 
-    private boolean initJavaScript() {
+    protected boolean initJavaScript() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> attemptedNames = new ArrayList<String>();
@@ -129,17 +159,21 @@ public class JavaScriptConnectorHelper {
             String initFunctionName = serverSideClassName
                     .replaceAll("\\.", "_");
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
-                VConsole.log("JavaScript connector initialized using "
-                        + initFunctionName);
+                getLogger().info(
+                        "JavaScript connector initialized using "
+                                + initFunctionName);
+                this.initFunctionName = initFunctionName;
                 return true;
             } else {
-                VConsole.log("No JavaScript function " + initFunctionName
-                        + " found");
+                getLogger()
+                        .warning(
+                                "No JavaScript function " + initFunctionName
+                                        + " found");
                 attemptedNames.add(initFunctionName);
                 tag = conf.getParentTag(tag.intValue());
             }
         }
-        VConsole.log("No JavaScript init for connector not found");
+        getLogger().info("No JavaScript init for connector found");
         showInitProblem(attemptedNames);
         return false;
     }
@@ -159,7 +193,7 @@ public class JavaScriptConnectorHelper {
         }
     }-*/;
 
-    private JavaScriptObject getConnectorWrapper() {
+    public JavaScriptObject getConnectorWrapper() {
         if (connectorWrapper == null) {
             connectorWrapper = createConnectorWrapper(this,
                     connector.getConnection(), nativeState, rpcMap,
@@ -318,7 +352,7 @@ public class JavaScriptConnectorHelper {
             iface = findWildcardInterface(method);
         }
 
-        JSONArray argumentsArray = new JSONArray(arguments);
+        JsonArray argumentsArray = Util.jso2json(arguments);
         Object[] parameters = new Object[arguments.length()];
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = argumentsArray.get(i);
@@ -355,7 +389,7 @@ public class JavaScriptConnectorHelper {
         MethodInvocation invocation = new JavaScriptMethodInvocation(
                 connector.getConnectorId(),
                 "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
-                new Object[] { name, new JSONArray(arguments) });
+                new Object[] { name, arguments });
         connector.getConnection().addMethodInvocationToQueue(invocation, false,
                 false);
     }
@@ -381,8 +415,8 @@ public class JavaScriptConnectorHelper {
         }
     }-*/;
 
-    public Object[] decodeRpcParameters(JSONArray parametersJson) {
-        return new Object[] { parametersJson.getJavaScriptObject() };
+    public Object[] decodeRpcParameters(JsonArray parametersJson) {
+        return new Object[] { Util.json2jso(parametersJson) };
     }
 
     public void setTag(int tag) {
@@ -390,18 +424,16 @@ public class JavaScriptConnectorHelper {
     }
 
     public void invokeJsRpc(MethodInvocation invocation,
-            JSONArray parametersJson) {
+            JsonArray parametersJson) {
         String iface = invocation.getInterfaceName();
         String method = invocation.getMethodName();
         if ("com.vaadin.ui.JavaScript$JavaScriptCallbackRpc".equals(iface)
                 && "call".equals(method)) {
-            String callbackName = parametersJson.get(0).isString()
-                    .stringValue();
-            JavaScriptObject arguments = parametersJson.get(1).isArray()
-                    .getJavaScriptObject();
+            String callbackName = parametersJson.getString(0);
+            JavaScriptObject arguments = Util.json2jso(parametersJson.get(1));
             invokeCallback(getConnectorWrapper(), callbackName, arguments);
         } else {
-            JavaScriptObject arguments = parametersJson.getJavaScriptObject();
+            JavaScriptObject arguments = Util.json2jso(parametersJson);
             invokeJsRpc(rpcMap, iface, method, arguments);
             // Also invoke wildcard interface
             invokeJsRpc(rpcMap, "", method, arguments);
@@ -466,4 +498,11 @@ public class JavaScriptConnectorHelper {
         }
     }-*/;
 
+    public String getInitFunctionName() {
+        return initFunctionName;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(JavaScriptConnectorHelper.class.getName());
+    }
 }

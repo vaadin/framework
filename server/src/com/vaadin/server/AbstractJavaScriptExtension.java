@@ -106,8 +106,8 @@ import com.vaadin.ui.JavaScriptFunction;
  * <li>Java Dates are represented by JavaScript numbers containing the timestamp
  * </li>
  * <li>List, Set and all arrays in Java are represented by JavaScript arrays.</li>
- * <li>Map<String, ?> in Java is represented by JavaScript object with fields
- * corresponding to the map keys.</li>
+ * <li>Map&lt;String, ?&gt; in Java is represented by JavaScript object with
+ * fields corresponding to the map keys.</li>
  * <li>Any other Java Map is represented by a JavaScript array containing two
  * arrays, the first contains the keys and the second contains the values in the
  * same order.</li>
@@ -126,6 +126,27 @@ import com.vaadin.ui.JavaScriptFunction;
 public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
+
+    /**
+     * Creates a new JavasScript extension instance without extending any
+     * connector.
+     */
+    public AbstractJavaScriptExtension() {
+        // Empty default constructor
+    }
+
+    /**
+     * Creates a new JavaScript extension extending the provided connector.
+     * 
+     * @since 7.4
+     * 
+     * @param target
+     *            the connector to extend
+     */
+    public AbstractJavaScriptExtension(AbstractClientConnector target) {
+        this();
+        extend(target);
+    }
 
     @Override
     protected <T extends ServerRpc> void registerRpc(T implementation,

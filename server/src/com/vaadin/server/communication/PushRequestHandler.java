@@ -17,6 +17,8 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,9 +27,13 @@ import org.atmosphere.cache.UUIDBroadcasterCache;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
+import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
+import org.atmosphere.cpr.AtmosphereHandler;
 import org.atmosphere.cpr.AtmosphereInterceptor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.interceptor.HeartbeatInterceptor;
+import org.atmosphere.util.VoidAnnotationProcessor;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceDestroyEvent;
@@ -46,7 +52,8 @@ import com.vaadin.shared.communication.PushConstants;
 /**
  * Handles requests to open a push (bidirectional) communication channel between
  * the client and the server. After the initial request, communication through
- * the push channel is managed by {@link PushHandler}.
+ * the push channel is managed by {@link PushAtmosphereHandler} and
+ * {@link PushHandler}
  *
  * @author Vaadin Ltd
  * @since 7.1
@@ -57,19 +64,88 @@ public class PushRequestHandler implements RequestHandler,
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
 
-    /**
-     * Atmosphere 2.x has a race condition when AtmosphereFramework init(config)
-     * is run from two threads at once. See http://dev.vaadin.com/ticket/13528
-     */
-    private static Object atmosphereInitRaceConditionWorkaroundLock = new Object();
-
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
+
+        service.addServiceDestroyListener(new ServiceDestroyListener() {
+            @Override
+            public void serviceDestroy(ServiceDestroyEvent event) {
+                destroy();
+            }
+        });
 
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();
 
-        atmosphere = new AtmosphereFramework() {
+        pushHandler = new PushHandler(service);
+
+        atmosphere = getPreInitializedAtmosphere(vaadinServletConfig);
+        if (atmosphere == null) {
+            // Not initialized by JSR356WebsocketInitializer
+            getLogger().fine(
+                    "Initializing Atmosphere for servlet "
+                            + vaadinServletConfig.getServletName());
+            try {
+                atmosphere = initAtmosphere(vaadinServletConfig);
+            } catch (Exception e) {
+                getLogger().log(
+                        Level.WARNING,
+                        "Failed to initialize Atmosphere for "
+                                + service.getServlet().getServletName()
+                                + ". Push will not work.", e);
+                return;
+            }
+        } else {
+            getLogger().fine(
+                    "Using pre-initialized Atmosphere for servlet "
+                            + vaadinServletConfig.getServletName());
+        }
+
+        for (AtmosphereHandlerWrapper handlerWrapper : atmosphere
+                .getAtmosphereHandlers().values()) {
+            AtmosphereHandler handler = handlerWrapper.atmosphereHandler;
+            if (handler instanceof PushAtmosphereHandler) {
+                // Map the (possibly pre-initialized) handler to the actual push
+                // handler
+                ((PushAtmosphereHandler) handler).setPushHandler(pushHandler);
+            }
+
+        }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(PushRequestHandler.class.getName());
+    }
+
+    /**
+     * Returns an AtmosphereFramework instance which was initialized in the
+     * servlet context init phase by {@link JSR356WebsocketInitializer}, if such
+     * exists
+     */
+    private AtmosphereFramework getPreInitializedAtmosphere(
+            ServletConfig vaadinServletConfig) {
+        String attributeName = JSR356WebsocketInitializer
+                .getAttributeName(vaadinServletConfig.getServletName());
+        Object framework = vaadinServletConfig.getServletContext()
+                .getAttribute(attributeName);
+        if (framework != null && framework instanceof AtmosphereFramework) {
+            return (AtmosphereFramework) framework;
+        }
+
+        return null;
+    }
+
+    /**
+     * Initializes Atmosphere for the given ServletConfiguration
+     * 
+     * @since 7.5.0
+     * @param vaadinServletConfig
+     *            The servlet configuration for the servlet which should have
+     *            Atmosphere support
+     */
+    static AtmosphereFramework initAtmosphere(
+            final ServletConfig vaadinServletConfig) {
+        AtmosphereFramework atmosphere = new AtmosphereFramework() {
             @Override
             protected void analytics() {
                 // Overridden to disable version number check
@@ -85,50 +161,51 @@ public class PushRequestHandler implements RequestHandler,
             }
         };
 
-        service.addServiceDestroyListener(new ServiceDestroyListener() {
-            @Override
-            public void serviceDestroy(ServiceDestroyEvent event) {
-                destroy();
-            }
-        });
+        atmosphere.addAtmosphereHandler("/*", new PushAtmosphereHandler());
+        atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
+                UUIDBroadcasterCache.class.getName());
+        atmosphere.addInitParameter(ApplicationConfig.ANNOTATION_PROCESSOR,
+                VoidAnnotationProcessor.class.getName());
+        atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
+                "true");
+        atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
+                String.valueOf(PushConstants.MESSAGE_DELIMITER));
+        atmosphere.addInitParameter(
+                ApplicationConfig.DROP_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
+                "false");
+        // Disable heartbeat (it does not emit correct events client side)
+        // https://github.com/Atmosphere/atmosphere-javascript/issues/141
+        atmosphere.addInitParameter(
+                ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTORS,
+                HeartbeatInterceptor.class.getName());
 
-        synchronized (atmosphereInitRaceConditionWorkaroundLock) {
-            pushHandler = new PushHandler(service);
-            atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
-            atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
-                    UUIDBroadcasterCache.class.getName());
-            atmosphere.addInitParameter(
-                    ApplicationConfig.PROPERTY_SESSION_SUPPORT, "true");
-            atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
-                    String.valueOf(PushConstants.MESSAGE_DELIMITER));
+        final String bufferSize = String
+                .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_BUFFER_SIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXTEXTSIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXBINARYSIZE,
+                bufferSize);
+        atmosphere.addInitParameter(
+                ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
+                "false");
+        // Disable Atmosphere's message about commercial support
+        atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
+                "false");
 
-            final String bufferSize = String
-                    .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_BUFFER_SIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_MAXTEXTSIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_MAXBINARYSIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
-                    "false");
-            // Disable Atmosphere's message about commercial support
-            atmosphere.addInitParameter(
-                    "org.atmosphere.cpr.showSupportMessage", "false");
+        try {
+            atmosphere.init(vaadinServletConfig);
 
-            try {
-                atmosphere.init(vaadinServletConfig);
-
-                // Ensure the client-side knows how to split the message stream
-                // into individual messages when using certain transports
-                AtmosphereInterceptor trackMessageSize = new TrackMessageSizeInterceptor();
-                trackMessageSize.configure(atmosphere.getAtmosphereConfig());
-                atmosphere.interceptor(trackMessageSize);
-            } catch (ServletException e) {
-                throw new ServiceException("Atmosphere init failed", e);
-            }
+            // Ensure the client-side knows how to split the message stream
+            // into individual messages when using certain transports
+            AtmosphereInterceptor trackMessageSize = new TrackMessageSizeInterceptor();
+            trackMessageSize.configure(atmosphere.getAtmosphereConfig());
+            atmosphere.interceptor(trackMessageSize);
+        } catch (ServletException e) {
+            throw new RuntimeException("Atmosphere init failed", e);
         }
+        return atmosphere;
     }
 
     @Override
@@ -140,6 +217,11 @@ public class PushRequestHandler implements RequestHandler,
         }
 
         if (request instanceof VaadinServletRequest) {
+            if (atmosphere == null) {
+                response.sendError(500,
+                        "Atmosphere initialization failed. No push available.");
+                return true;
+            }
             try {
                 atmosphere.doCometSupport(AtmosphereRequest
                         .wrap((VaadinServletRequest) request),

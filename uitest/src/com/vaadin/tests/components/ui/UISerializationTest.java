@@ -12,15 +12,22 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class UISerializationTest extends SingleBrowserTest {
+
     @Test
-    public void tb2test() throws Exception {
+    public void uiIsSerialized() throws Exception {
         openTestURL();
-        $(ButtonElement.class).first().click();
+
+        serialize();
+
         assertThat(getLogRow(0), startsWith("3. Diff states match, size: "));
         assertThat(getLogRow(1), startsWith("2. Deserialized UI in "));
         assertThat(
                 getLogRow(2),
                 allOf(startsWith("1. Serialized UI in"),
                         containsString(" into "), endsWith(" bytes")));
+    }
+
+    private void serialize() {
+        $(ButtonElement.class).first().click();
     }
 }
