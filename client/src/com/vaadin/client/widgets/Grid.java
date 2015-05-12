@@ -216,6 +216,8 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Abstract base class for Grid header and footer sections.
      * 
+     * @since 7.5.0
+     * 
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */

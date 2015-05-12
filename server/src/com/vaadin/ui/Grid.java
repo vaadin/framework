@@ -3175,14 +3175,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return getState().hidable;
         }
 
-        /*
+        /**
          * Writes the design attributes for this column into given element.
          * 
          * @since 7.5.0
          * 
-         * @param design Element to write attributes into
+         * @param design
+         *            Element to write attributes into
          * 
-         * @param designContext the design context
+         * @param designContext
+         *            the design context
          */
         protected void writeDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
@@ -4302,6 +4304,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * property id is not in propertyIds are removed. Similarly, a column is
      * added for any property id in propertyIds that has no corresponding column
      * in this Grid.
+     * 
+     * @since 7.5.0
      * 
      * @param propertyIds
      *            properties in the desired column order

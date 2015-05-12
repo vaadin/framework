@@ -171,6 +171,8 @@ public class DesignContext implements Serializable {
      * component was mapped to some string s different from localId, the mapping
      * from s to component is removed.
      * 
+     * @since 7.5.0
+     * 
      * @param component
      *            The component whose local id is to be set.
      * @param localId
@@ -186,7 +188,9 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Returns the local id for a component
+     * Returns the local id for a component.
+     * 
+     * @since 7.5.0
      * 
      * @param component
      *            The component whose local id to get.

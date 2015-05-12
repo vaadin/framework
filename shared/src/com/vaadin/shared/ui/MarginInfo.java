@@ -115,6 +115,8 @@ public class MarginInfo implements Serializable {
     /**
      * Checks if this MarginInfo object has margins on all edges enabled.
      * 
+     * @since 7.5.0
+     * 
      * @return true if all edges have margins enabled
      */
     public boolean hasAll() {

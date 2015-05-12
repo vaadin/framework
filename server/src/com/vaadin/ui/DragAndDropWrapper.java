@@ -191,6 +191,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * This is an internal constructor. Use
      * {@link DragAndDropWrapper#DragAndDropWrapper(Component)} instead.
+     * 
+     * @since 7.5.0
      */
     @Deprecated
     public DragAndDropWrapper() {
