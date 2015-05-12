@@ -6007,7 +6007,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return datasourceExtension.isDetailsVisible(itemId);
     }
 
-    protected SelectionMode getDefaultSelectionMode() {
+    private static SelectionMode getDefaultSelectionMode() {
         return SelectionMode.SINGLE;
     }
 
