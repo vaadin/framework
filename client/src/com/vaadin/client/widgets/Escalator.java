@@ -5471,6 +5471,12 @@ public class Escalator extends Widget implements RequiresResize,
         }
     }
 
+    /**
+     * Utility class for parsing and storing SubPart request string attributes
+     * for Grid and Escalator.
+     * 
+     * @since 7.5.0
+     */
     public static class SubPartArguments {
         private String type;
         private int[] indices;
