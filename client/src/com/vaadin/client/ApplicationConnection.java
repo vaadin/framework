@@ -207,8 +207,6 @@ public class ApplicationConnection implements HasHandlers {
 
     private final UIConnector uIConnector;
 
-    protected boolean applicationRunning = false;
-
     private boolean hasActiveRequest = false;
 
     /**
@@ -280,6 +278,12 @@ public class ApplicationConnection implements HasHandlers {
 
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
+
+    public enum State {
+        INITIALIZING, RUNNING, TERMINATED;
+    }
+
+    private State state = State.INITIALIZING;
 
     /**
      * The communication handler methods are called at certain points during
@@ -1024,20 +1028,17 @@ public class ApplicationConnection implements HasHandlers {
         getLogger().info(
                 "JSON parsing took " + (new Date().getTime() - start.getTime())
                         + "ms");
-        if (isApplicationRunning()) {
+        if (getState() == State.RUNNING) {
             handleReceivedJSONMessage(start, jsonText, json);
+        } else if (getState() == State.INITIALIZING) {
+            // Application is starting up for the first time
+            setApplicationRunning(true);
+            handleWhenCSSLoaded(jsonText, json);
         } else {
-            if (!cssLoaded) {
-                // Application is starting up for the first time
-                setApplicationRunning(true);
-                handleWhenCSSLoaded(jsonText, json);
-            } else {
-                getLogger()
-                        .warning(
-                                "Ignored received message because application has already been stopped");
-                return;
-
-            }
+            getLogger()
+                    .warning(
+                            "Ignored received message because application has already been stopped");
+            return;
         }
     }
 
@@ -3528,15 +3529,44 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     public void setApplicationRunning(boolean applicationRunning) {
-        boolean stopped = (this.applicationRunning && !applicationRunning);
-        this.applicationRunning = applicationRunning;
-        if (stopped) {
-            eventBus.fireEvent(new ApplicationStoppedEvent());
+        if (getState() == State.TERMINATED) {
+            if (applicationRunning) {
+                getLogger()
+                        .severe("Tried to restart a terminated application. This is not supported");
+            } else {
+                getLogger()
+                        .warning(
+                                "Tried to stop a terminated application. This should not be done");
+            }
+            return;
+        } else if (getState() == State.INITIALIZING) {
+            if (applicationRunning) {
+                state = State.RUNNING;
+            } else {
+                getLogger()
+                        .warning(
+                                "Tried to stop the application before it has started. This should not be done");
+            }
+        } else if (getState() == State.RUNNING) {
+            if (!applicationRunning) {
+                state = State.TERMINATED;
+                eventBus.fireEvent(new ApplicationStoppedEvent());
+            } else {
+                getLogger()
+                        .warning(
+                                "Tried to start an already running application. This should not be done");
+            }
         }
     }
 
+    /**
+     * Checks if the application is in the {@link State#RUNNING} state.
+     * 
+     * @since
+     * @return true if the application is in the running state, false otherwise
+     */
     public boolean isApplicationRunning() {
-        return applicationRunning;
+        return state == State.RUNNING;
     }
 
     public <H extends EventHandler> HandlerRegistration addHandler(
@@ -3663,5 +3693,18 @@ public class ApplicationConnection implements HasHandlers {
      */
     public boolean isUpdatingState() {
         return updatingState;
+    }
+
+    /**
+     * Returns the state of this application. An application state goes from
+     * "initializing" to "running" to "stopped". There is no way for an
+     * application to go back to a previous state, i.e. a stopped application
+     * can never be re-started
+     * 
+     * @since
+     * @return the current state of this application
+     */
+    public State getState() {
+        return state;
     }
 }
