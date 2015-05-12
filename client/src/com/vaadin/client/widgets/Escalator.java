@@ -6653,7 +6653,7 @@ public class Escalator extends Widget implements RequiresResize,
     @Override
     @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        SubPartArguments args = parseSubPartArguments(subPart);
+        SubPartArguments args = SubPartArguments.create(subPart);
 
         Element tableStructureElement = getSubPartElementTableStructure(args);
         if (tableStructureElement != null) {
@@ -6815,9 +6815,5 @@ public class Escalator extends Widget implements RequiresResize,
 
     private String getSubPartNameSpacer(Element subElement) {
         return body.spacerContainer.getSubPartName(subElement);
-    }
-
-    public static SubPartArguments parseSubPartArguments(String subPart) {
-        return SubPartArguments.create(subPart);
     }
 }

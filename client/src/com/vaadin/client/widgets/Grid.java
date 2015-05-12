@@ -6513,7 +6513,7 @@ public class Grid<T> extends ResizeComposite implements
             return DOM.asOld(escalatorElement);
         }
 
-        SubPartArguments args = Escalator.parseSubPartArguments(subPart);
+        SubPartArguments args = SubPartArguments.create(subPart);
 
         Element editor = getSubPartElementEditor(args);
         if (editor != null) {
