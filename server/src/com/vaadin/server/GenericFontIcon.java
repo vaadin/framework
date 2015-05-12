@@ -85,7 +85,6 @@ public class GenericFontIcon implements FontIcon {
      * Utility method for generating HTML that displays an icon from specific
      * fontFamiliy with a given codePoint in the font
      * 
-     * @since 7.5
      * @param fontFamily
      *            Name of the font family
      * @param codePoint
