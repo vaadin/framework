@@ -877,8 +877,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 is = connection.getInputStream();
                 // set gzip headers
                 response.setHeader("Content-Encoding", "gzip");
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 // NOP: will be still tried with non gzipped version
+            } catch (Exception e) {
+                getLogger().log(
+                        Level.FINE,
+                        "Unexpected exception looking for gzipped version of resource "
+                                + urlStr, e);
             }
         }
         if (is == null) {
