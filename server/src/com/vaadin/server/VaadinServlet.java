@@ -871,9 +871,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         if (allowServePrecompressedResource(request, urlStr)) {
             // try to serve a precompressed version if available
-            URL url = new URL(urlStr + ".gz");
-            connection = url.openConnection();
             try {
+                connection = new URL(urlStr + ".gz").openConnection();
                 is = connection.getInputStream();
                 // set gzip headers
                 response.setHeader("Content-Encoding", "gzip");
