@@ -273,7 +273,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param sendChildTree
      *            flag to indicate if client needs subtree or not (may be
      *            cached)
-     * @return True iff the expand operation succeeded
+     * @return True if the expand operation succeeded
      */
     private boolean expandItem(Object itemId, boolean sendChildTree) {
 
