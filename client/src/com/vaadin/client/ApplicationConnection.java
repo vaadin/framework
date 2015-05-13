@@ -1285,12 +1285,18 @@ public class ApplicationConnection implements HasHandlers {
 
         StringBuilder html = new StringBuilder();
         if (caption != null) {
-            html.append("<h1>");
+            html.append("<h1 class='");
+            html.append(VNotification.getDependentStyle(this,
+                    VNotification.CAPTION));
+            html.append("'>");
             html.append(caption);
             html.append("</h1>");
         }
         if (message != null) {
-            html.append("<p>");
+            html.append("<p class='");
+            html.append(VNotification.getDependentStyle(this,
+                    VNotification.DESCRIPTION));
+            html.append("'>");
             html.append(message);
             html.append("</p>");
         }

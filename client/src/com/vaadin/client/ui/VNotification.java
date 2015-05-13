@@ -63,8 +63,8 @@ public class VNotification extends VOverlay {
     private static final String STYLENAME_POSITION_CENTER = "v-position-center";
     private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
 
-    private static final String CAPTION = "caption";
-    private static final String DESCRIPTION = "description";
+    public static final String CAPTION = "caption";
+    public static final String DESCRIPTION = "description";
 
     /**
      * Position that is only accessible for assistive devices, invisible for
@@ -532,7 +532,18 @@ public class VNotification extends VOverlay {
                 html, position, style);
     }
 
-    private static String getDependentStyle(ApplicationConnection client,
+    /**
+     * Meant for internal usage only.
+     * 
+     * @since 7.5.0
+     * @param client
+     *            application connection
+     * @param style
+     *            the dependent style name
+     * @return the given dependent style name prefixed with current notification
+     *         primary style
+     */
+    public static String getDependentStyle(ApplicationConnection client,
             String style) {
         VNotification notification = createNotification(-1, client
                 .getUIConnector().getWidget());

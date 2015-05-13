@@ -57,19 +57,20 @@ public class NotificationStyleTest extends MultiBrowserTest {
     public void testNotificationPStyle() {
         openTestURL();
 
-        $(ButtonElement.class).first().click();
+        $(ButtonElement.class).get(1).click();
 
         new Actions(getDriver()).moveByOffset(10, 10).perform();
         waitUntil(notificationPresentCondition(), 2);
 
         WebElement notification = findElement(By.className("v-Notification"));
-        List<WebElement> headers = notification.findElements(By.tagName("p"));
-        String lineHeight = headers.get(0).getCssValue("line-height");
-        String lineHeightInnerHeader = headers.get(1)
-                .getCssValue("line-height");
+        WebElement description = notification.findElement(By
+                .className("v-Notification-description"));
+        String display = description.getCssValue("display");
+        String displayP2 = notification.findElement(
+                By.className("tested-p")).getCssValue("display");
         Assert.assertNotEquals("Styles for notification defined 'p' tag "
-                + "and custom HTML tag are the same", lineHeight,
-                lineHeightInnerHeader);
+                + "and custom HTML tag are the same", display,
+                displayP2);
     }
 
     private ExpectedCondition<Boolean> notificationPresentCondition() {
