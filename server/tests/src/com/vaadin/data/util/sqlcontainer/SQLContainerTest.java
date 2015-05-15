@@ -26,11 +26,11 @@ import com.vaadin.data.util.filter.Compare.Equal;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
 import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
+import com.vaadin.data.util.sqlcontainer.query.ValidatingSimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.generator.MSSQLGenerator;
 import com.vaadin.data.util.sqlcontainer.query.generator.OracleGenerator;
 import com.vaadin.data.util.sqlcontainer.query.generator.SQLGenerator;
@@ -45,7 +45,7 @@ public class SQLContainerTest {
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(
+            connectionPool = new ValidatingSimpleJDBCConnectionPool(
                     SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
