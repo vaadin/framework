@@ -258,7 +258,19 @@ public class FieldGroup implements Serializable {
         if (itemDataSource == null) {
             // Clear any possible existing binding to clear the field
             field.setPropertyDataSource(null);
-            field.clear();
+            boolean fieldReadOnly = field.isReadOnly();
+            if (!fieldReadOnly) {
+                field.clear();
+            } else {
+                // Temporarily make the field read-write so we can clear the
+                // value. Needed because setPropertyDataSource(null) does not
+                // currently clear the field
+                // (https://dev.vaadin.com/ticket/14733)
+                field.setReadOnly(false);
+                field.clear();
+                field.setReadOnly(true);
+            }
+
             // Will be bound when data source is set
             return;
         }
@@ -1247,4 +1259,5 @@ public class FieldGroup implements Serializable {
         }
 
     }
+
 }
