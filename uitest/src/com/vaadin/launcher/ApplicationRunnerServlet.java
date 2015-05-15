@@ -25,8 +25,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -63,6 +65,33 @@ import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends LegacyVaadinServlet {
+
+    private static class ApplicationRunnerRedirectException extends
+            RuntimeException {
+        private final String target;
+
+        public ApplicationRunnerRedirectException(String target) {
+            this.target = target;
+        }
+
+        public String getTarget() {
+            return target;
+        }
+
+        public static String extractRedirectTarget(ServletException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof ServiceException) {
+                ServiceException se = (ServiceException) cause;
+                Throwable serviceCause = se.getCause();
+                if (serviceCause instanceof ApplicationRunnerRedirectException) {
+                    ApplicationRunnerRedirectException redirect = (ApplicationRunnerRedirectException) serviceCause;
+                    return redirect.getTarget();
+                }
+            }
+
+            return null;
+        }
+    }
 
     public static String CUSTOM_SYSTEM_MESSAGES_PROPERTY = "custom-"
             + SystemMessages.class.getName();
@@ -129,6 +158,15 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         this.request.set(request);
         try {
             super.service(request, response);
+        } catch (ServletException e) {
+            String redirectTarget = ApplicationRunnerRedirectException
+                    .extractRedirectTarget(e);
+            if (redirectTarget != null) {
+                response.sendRedirect(redirectTarget + "?restartApplication");
+            } else {
+                // Not the exception we were looking for, just rethrow
+                throw e;
+            }
         } finally {
             this.request.set(null);
         }
@@ -266,9 +304,11 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             // class name comes after web context and runner application
             // runner = urlParts[2];
             if (urlParts.length == 3) {
-                throw new IllegalArgumentException("No application specified");
+                throw new ApplicationRunnerRedirectException(
+                        findLastModifiedApplication());
+            } else {
+                applicationClassname = urlParts[3];
             }
-            applicationClassname = urlParts[3];
 
             // uris.applicationURI = "/" + context + "/" + runner + "/"
             // + applicationClassname;
@@ -279,9 +319,11 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             // no context
             // runner = urlParts[1];
             if (urlParts.length == 2) {
-                throw new IllegalArgumentException("No application specified");
+                throw new ApplicationRunnerRedirectException(
+                        findLastModifiedApplication());
+            } else {
+                applicationClassname = urlParts[2];
             }
-            applicationClassname = urlParts[2];
 
             // uris.applicationURI = "/" + runner + "/" + applicationClassname;
             // uris.context = context;
@@ -289,6 +331,62 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             uris.applicationClassname = applicationClassname;
         }
         return uris;
+    }
+
+    private static String findLastModifiedApplication() {
+        String lastModifiedClassName = null;
+
+        File uitestDir = new File("uitest/src");
+        if (uitestDir.isDirectory()) {
+            LinkedList<File> stack = new LinkedList<File>();
+            stack.add(uitestDir);
+
+            long lastModifiedTimestamp = Long.MIN_VALUE;
+            while (!stack.isEmpty()) {
+                File file = stack.pop();
+                if (file.isDirectory()) {
+                    stack.addAll(Arrays.asList(file.listFiles()));
+                } else if (file.getName().endsWith(".java")) {
+                    if (lastModifiedTimestamp < file.lastModified()) {
+                        String className = file.getPath()
+                                .substring(uitestDir.getPath().length() + 1)
+                                .replace(File.separatorChar, '.');
+                        className = className.substring(0, className.length()
+                                - ".java".length());
+                        if (isSupportedClass(className)) {
+                            lastModifiedTimestamp = file.lastModified();
+                            lastModifiedClassName = className;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        if (lastModifiedClassName == null) {
+            throw new IllegalArgumentException("No application specified");
+        } else {
+            return lastModifiedClassName;
+        }
+    }
+
+    private static boolean isSupportedClass(String className) {
+        try {
+            Class<?> type = Class.forName(className, false,
+                    ApplicationRunnerServlet.class.getClassLoader());
+
+            if (UI.class.isAssignableFrom(type)) {
+                return true;
+            } else if (LegacyApplication.class.isAssignableFrom(type)) {
+                return true;
+            } else if (UIProvider.class.isAssignableFrom(type)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Class<?> getClassToRun() throws ClassNotFoundException {
