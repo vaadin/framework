@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -236,7 +237,15 @@ public class Flash extends AbstractEmbedded {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
+
+        // Parameters, in alphabetic order
+        ArrayList<String> paramNames = new ArrayList<String>();
         for (String param : getParameterNames()) {
+            paramNames.add(param);
+        }
+
+        Collections.sort(paramNames);
+        for (String param : paramNames) {
             design.appendElement("parameter").attr("name", param)
                     .attr("value", getParameter(param));
         }
