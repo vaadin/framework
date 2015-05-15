@@ -37,11 +37,13 @@ import com.vaadin.ui.declarative.DesignContext;
 public class ProgressBar extends AbstractField<Float> implements
         Property.Viewer, Property.ValueChangeListener {
 
+    private static final float DEFAULT_VALUE = 0f;
+
     /**
      * Creates a new progress bar initially set to 0% progress.
      */
     public ProgressBar() {
-        this(0);
+        this(DEFAULT_VALUE);
     }
 
     /**
@@ -169,5 +171,16 @@ public class ProgressBar extends AbstractField<Float> implements
                 .getDefaultInstance(this)).getValue();
         DesignAttributeHandler.writeAttribute("value", design.attributes(),
                 getValue(), defaultValue, Float.class);
+    }
+
+    @Override
+    public void clear() {
+        setValue(DEFAULT_VALUE);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty() || getValue() == DEFAULT_VALUE;
+
     }
 }
