@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -3494,6 +3495,7 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
+    private double lastTouchEventTime = 0;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -6438,8 +6440,15 @@ public class Grid<T> extends ResizeComposite implements
 
         final boolean closeEvent = event.getTypeInt() == Event.ONKEYDOWN
                 && event.getKeyCode() == Editor.KEYCODE_HIDE;
+        double now = Duration.currentTimeMillis();
         final boolean openEvent = event.getTypeInt() == Event.ONDBLCLICK
-                || (event.getTypeInt() == Event.ONKEYDOWN && event.getKeyCode() == Editor.KEYCODE_SHOW);
+                || (event.getTypeInt() == Event.ONKEYDOWN && event.getKeyCode() == Editor.KEYCODE_SHOW)
+                || (event.getTypeInt() == Event.ONTOUCHEND && now
+                        - lastTouchEventTime < 500);
+
+        if (event.getTypeInt() == Event.ONTOUCHEND) {
+            lastTouchEventTime = now;
+        }
 
         if (editor.getState() != Editor.State.INACTIVE) {
             if (closeEvent) {
@@ -6452,6 +6461,7 @@ public class Grid<T> extends ResizeComposite implements
         if (container == escalator.getBody() && editor.isEnabled() && openEvent) {
             editor.editRow(eventCell.getRowIndex(),
                     eventCell.getColumnIndexDOM());
+            event.preventDefault();
             return true;
         }
 
