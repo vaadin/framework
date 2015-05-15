@@ -9,13 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
+import com.vaadin.data.util.sqlcontainer.query.ValidatingSimpleJDBCConnectionPool;
 
 public class SimpleJDBCConnectionPoolTest {
     private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
-        connectionPool = new SimpleJDBCConnectionPool(
+        connectionPool = new ValidatingSimpleJDBCConnectionPool(
                 SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                 SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
     }
@@ -145,8 +146,11 @@ public class SimpleJDBCConnectionPoolTest {
         EasyMock.expectLastCall().atLeastOnce();
         EasyMock.replay(c);
         // make sure the connection pool is initialized
-        connectionPool.reserveConnection();
-        connectionPool.releaseConnection(c);
+        // Bypass validation
+        JDBCConnectionPool realPool = ((ValidatingSimpleJDBCConnectionPool) connectionPool)
+                .getRealPool();
+        realPool.reserveConnection();
+        realPool.releaseConnection(c);
         EasyMock.verify(c);
     }
 
@@ -154,7 +158,13 @@ public class SimpleJDBCConnectionPoolTest {
     public void destroy_shouldCloseAllConnections() throws SQLException {
         Connection c1 = connectionPool.reserveConnection();
         Connection c2 = connectionPool.reserveConnection();
-        connectionPool.destroy();
+        try {
+            connectionPool.destroy();
+        } catch (RuntimeException e) {
+            // The test connection pool throws an exception when the pool was
+            // not empty but only after cleanup of the real pool has been done
+        }
+
         Assert.assertTrue(c1.isClosed());
         Assert.assertTrue(c2.isClosed());
     }

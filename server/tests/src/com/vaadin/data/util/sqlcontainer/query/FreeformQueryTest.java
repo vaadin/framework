@@ -23,7 +23,6 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 
 public class FreeformQueryTest {
 
@@ -34,7 +33,7 @@ public class FreeformQueryTest {
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(
+            connectionPool = new ValidatingSimpleJDBCConnectionPool(
                     SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
@@ -148,7 +147,10 @@ public class FreeformQueryTest {
                 connectionPool, "ID");
         query.getCount();
         query.getCount();
-        Assert.assertNotNull(connectionPool.reserveConnection());
+        Connection c = connectionPool.reserveConnection();
+        Assert.assertNotNull(c);
+        // Cleanup to make test connection pool happy
+        connectionPool.releaseConnection(c);
     }
 
     @Test
@@ -276,37 +278,38 @@ public class FreeformQueryTest {
                 new Object[] { 1 }), null));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void storeRow_noDelegate_shouldFail() throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
         SQLContainer container = EasyMock.createNiceMock(SQLContainer.class);
         EasyMock.replay(container);
         query.beginTransaction();
-        query.storeRow(new RowItem(container, new RowId(new Object[] { 1 }),
-                null));
-        query.commit();
-        EasyMock.verify(container);
+        try {
+            query.storeRow(new RowItem(container,
+                    new RowId(new Object[] { 1 }), null));
+            Assert.fail("storeRow should fail when there is no delegate");
+        } catch (UnsupportedOperationException e) {
+            // Cleanup to make test connection pool happy
+            query.rollback();
+        }
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void removeRow_noDelegate_shouldFail() throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
         SQLContainer container = EasyMock.createNiceMock(SQLContainer.class);
         EasyMock.replay(container);
         query.beginTransaction();
-        query.removeRow(new RowItem(container, new RowId(new Object[] { 1 }),
-                null));
-        query.commit();
-        EasyMock.verify(container);
-    }
-
-    @Test
-    public void beginTransaction_readOnly_shouldSucceed() throws SQLException {
-        FreeformQuery query = new FreeformQuery("SELECT * FROM people",
-                Arrays.asList("ID"), connectionPool);
-        query.beginTransaction();
+        try {
+            query.removeRow(new RowItem(container,
+                    new RowId(new Object[] { 1 }), null));
+            Assert.fail("removeRow should fail when there is no delgate");
+        } catch (UnsupportedOperationException e) {
+            // Cleanup to make test connection pool happy
+            query.rollback();
+        }
     }
 
     @Test
@@ -628,7 +631,7 @@ public class FreeformQueryTest {
         EasyMock.verify(delegate, container);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void storeRow_delegateDoesNotImplementStoreRow_shouldFail()
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
@@ -646,10 +649,13 @@ public class FreeformQueryTest {
         query.beginTransaction();
         RowItem row = new RowItem(container, new RowId(new Object[] { 1 }),
                 null);
-        query.storeRow(row);
-        query.commit();
-
-        EasyMock.verify(delegate, container);
+        try {
+            query.storeRow(row);
+            Assert.fail("storeRow should fail when delgate does not implement storeRow");
+        } catch (UnsupportedOperationException e) {
+            // Cleanup to make test connection pool happy
+            query.rollback();
+        }
     }
 
     @Test
@@ -675,7 +681,7 @@ public class FreeformQueryTest {
         EasyMock.verify(delegate, container);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void removeRow_delegateDoesNotImplementRemoveRow_shouldFail()
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
@@ -693,10 +699,13 @@ public class FreeformQueryTest {
         query.beginTransaction();
         RowItem row = new RowItem(container, new RowId(new Object[] { 1 }),
                 null);
-        query.removeRow(row);
-        query.commit();
-
-        EasyMock.verify(delegate, container);
+        try {
+            query.removeRow(row);
+            Assert.fail("removeRow should fail when delegate does not implement removeRow");
+        } catch (UnsupportedOperationException e) {
+            // Cleanup to make test connection pool happy
+            query.rollback();
+        }
     }
 
     @Test
@@ -710,16 +719,24 @@ public class FreeformQueryTest {
         query.setDelegate(delegate);
 
         query.beginTransaction();
+        // Cleanup to make test connection pool happy
+        query.rollback();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void beginTransaction_transactionAlreadyActive_shouldFail()
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
 
         query.beginTransaction();
-        query.beginTransaction();
+        try {
+            query.beginTransaction();
+            Assert.fail("Should throw exception when starting a transaction while already in a transaction");
+        } catch (IllegalStateException e) {
+            // Cleanup to make test connection pool happy
+            query.rollback();
+        }
     }
 
     @Test(expected = SQLException.class)

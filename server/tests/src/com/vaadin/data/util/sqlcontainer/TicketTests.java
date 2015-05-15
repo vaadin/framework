@@ -16,10 +16,11 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare.Equal;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.data.util.sqlcontainer.query.ValidatingSimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 import com.vaadin.ui.Table;
@@ -27,11 +28,11 @@ import com.vaadin.ui.Window;
 
 public class TicketTests {
 
-    private SimpleJDBCConnectionPool connectionPool;
+    private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
-        connectionPool = new SimpleJDBCConnectionPool(
+        connectionPool = new ValidatingSimpleJDBCConnectionPool(
                 SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                 SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         DataGenerator.addPeopleToDatabase(connectionPool);

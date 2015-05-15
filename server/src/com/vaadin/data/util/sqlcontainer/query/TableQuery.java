@@ -213,8 +213,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
         } finally {
             try {
                 if (r != null) {
-                    releaseConnection(r.getStatement().getConnection(),
-                            r.getStatement(), r);
+                    // Do not release connection, it is done in commit()
+                    releaseConnection(null, r.getStatement(), r);
                 }
             } finally {
                 if (shouldCloseTransaction) {
@@ -774,8 +774,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
         } finally {
             try {
                 if (rs != null) {
-                    releaseConnection(rs.getStatement().getConnection(),
-                            rs.getStatement(), rs);
+                    // Do not release connection, it is done in commit()
+                    releaseConnection(null, rs.getStatement(), rs);
                 }
             } finally {
                 if (shouldCloseTransaction) {

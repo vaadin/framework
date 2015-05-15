@@ -24,7 +24,6 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.generator.DefaultSQLGenerator;
 
 public class TableQueryTest {
@@ -33,16 +32,14 @@ public class TableQueryTest {
 
     @Before
     public void setUp() throws SQLException {
-
         try {
-            connectionPool = new SimpleJDBCConnectionPool(
+            connectionPool = new ValidatingSimpleJDBCConnectionPool(
                     SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
-
         DataGenerator.addPeopleToDatabase(connectionPool);
     }
 
@@ -139,7 +136,9 @@ public class TableQueryTest {
                 SQLTestsConstants.sqlGen);
         tQuery.getCount();
         tQuery.getCount();
-        Assert.assertNotNull(connectionPool.reserveConnection());
+        Connection c = connectionPool.reserveConnection();
+        Assert.assertNotNull(c);
+        connectionPool.releaseConnection(c);
     }
 
     /**********************************************************************
@@ -193,20 +192,19 @@ public class TableQueryTest {
      * TableQuery transaction management tests
      **********************************************************************/
     @Test
-    public void beginTransaction_readOnly_shouldSucceed() throws SQLException {
-        TableQuery tQuery = new TableQuery("people", connectionPool,
-                SQLTestsConstants.sqlGen);
-        tQuery.beginTransaction();
-    }
-
-    @Test(expected = IllegalStateException.class)
     public void beginTransaction_transactionAlreadyActive_shouldFail()
             throws SQLException {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
 
         tQuery.beginTransaction();
-        tQuery.beginTransaction();
+        try {
+            tQuery.beginTransaction();
+            Assert.fail("Should throw exception when starting a transaction while already in a transaction");
+        } catch (IllegalStateException e) {
+            // Cleanup to make test connection pool happy
+            tQuery.rollback();
+        }
     }
 
     @Test
@@ -284,8 +282,13 @@ public class TableQueryTest {
                     .fail("null should throw an IllegalArgumentException from StatementHelper");
         } catch (IllegalArgumentException e) {
             // We should now be able to reserve two connections
-            connectionPool.reserveConnection();
-            connectionPool.reserveConnection();
+            Connection c1 = connectionPool.reserveConnection();
+            Connection c2 = connectionPool.reserveConnection();
+
+            // Cleanup to make test connection pool happy
+            connectionPool.releaseConnection(c1);
+            connectionPool.releaseConnection(c2);
+
         }
     }
 
@@ -693,6 +696,9 @@ public class TableQueryTest {
             // cleanup - might not be an in-memory DB
             statement.execute(SQLTestsConstants.dropSchema);
         }
+
+        // Cleanup to make test connection pool happy
+        connectionPool.releaseConnection(conn);
     }
 
     @Test
