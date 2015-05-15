@@ -243,6 +243,34 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
+    /**
+     * Adds or removes a style name. Multiple styles can be specified as a
+     * space-separated list of style names.
+     * 
+     * If the {@code add} parameter is true, the style name is added to the
+     * component. If the {@code add} parameter is false, the style name is
+     * removed from the component.
+     * <p>
+     * Functionally this is equivalent to using {@link #addStyleName(String)} or
+     * {@link #removeStyleName(String)}
+     * 
+     * @since
+     * @param style
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     * @see #addStyleName(String)
+     * @see #removeStyleName(String)
+     */
+    public void setStyleName(String style, boolean add) {
+        if (add) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
+
     /*
      * Get's the component's caption. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
