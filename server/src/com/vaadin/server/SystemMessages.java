@@ -224,35 +224,6 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * @return null to reload the application after out of sync message.
-     */
-    public String getOutOfSyncURL() {
-        return outOfSyncURL;
-    }
-
-    /**
-     * @return true to enable showing out of sync message
-     */
-    public boolean isOutOfSyncNotificationEnabled() {
-        return outOfSyncNotificationEnabled;
-    }
-
-    /**
-     * @return "Out of sync"
-     */
-    public String getOutOfSyncCaption() {
-        return (outOfSyncNotificationEnabled ? outOfSyncCaption : null);
-    }
-
-    /**
-     * @return "Something has caused us to be out of sync with the server.<br/>
-     *         Take note of any unsaved data, and <u>click here</u> to re-sync."
-     */
-    public String getOutOfSyncMessage() {
-        return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
-    }
-
-    /**
      * Returns the URL the user should be redirected to after dismissing the
      * "you have to enable your cookies" message. Typically null.
      * 
