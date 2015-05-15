@@ -1012,9 +1012,15 @@ public class SQLContainer implements Container, Container.Filterable,
             queryDelegate.beginTransaction();
             /* Perform buffered deletions */
             for (RowItem item : removedItems.values()) {
-                if (!queryDelegate.removeRow(item)) {
+                try {
+                    if (!queryDelegate.removeRow(item)) {
+                        throw new SQLException(
+                                "Removal failed for row with ID: "
+                                        + item.getId());
+                    }
+                } catch (IllegalArgumentException e) {
                     throw new SQLException("Removal failed for row with ID: "
-                            + item.getId());
+                            + item.getId(), e);
                 }
             }
             /* Perform buffered modifications */

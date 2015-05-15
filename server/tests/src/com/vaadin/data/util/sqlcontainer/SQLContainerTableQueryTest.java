@@ -99,23 +99,14 @@ public class SQLContainerTableQueryTest {
         assertTrue(container.removeItem(container.lastItemId()));
     }
 
-    @Test
+    @Test(expected = SQLException.class)
     public void itemWithNonExistingVersionColumnCannotBeRemoved()
             throws SQLException {
         query.setVersionColumn("version");
 
         container.removeItem(container.lastItemId());
 
-        // FIXME Remove try-catch when https://dev.vaadin.com/ticket/17858 is
-        // fixed
-        try {
-            container.commit();
-            Assert.fail("Commit should not succeed when version column does not exist");
-        } catch (IllegalArgumentException e) {
-            // This should not be here at all as commit() should not leave the
-            // transaction open!
-            container.getQueryDelegate().rollback();
-        }
+        container.commit();
     }
 
     @Test
