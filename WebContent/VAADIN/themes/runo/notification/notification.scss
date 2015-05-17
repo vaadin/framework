@@ -16,7 +16,9 @@
 	margin: 10px;
 }
 .#{$primaryStyleName}-caption,
-.#{$primaryStyleName}-description {
+.#{$primaryStyleName}-description,
+.#{$primaryStyleName}-system .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-system .#{$primaryStyleName}-description {
 	display: inline;
 	font-weight: normal;
 	line-height: normal;
