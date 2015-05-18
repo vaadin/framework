@@ -120,6 +120,11 @@ import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
+import com.vaadin.client.widget.grid.events.EditorCloseEvent;
+import com.vaadin.client.widget.grid.events.EditorEvent;
+import com.vaadin.client.widget.grid.events.EditorEventHandler;
+import com.vaadin.client.widget.grid.events.EditorMoveEvent;
+import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -1188,6 +1193,7 @@ public class Grid<T> extends ResizeComposite implements
                                 + " remember to call success() or fail()?");
             }
         };
+
         private final EditorRequestImpl.RequestCallback<T> bindRequestCallback = new EditorRequestImpl.RequestCallback<T>() {
             @Override
             public void onSuccess(EditorRequest<T> request) {
@@ -1313,6 +1319,7 @@ public class Grid<T> extends ResizeComposite implements
             handler.cancel(request);
             state = State.INACTIVE;
             updateSelectionCheckboxesAsNeeded(true);
+            grid.fireEvent(new EditorCloseEvent(grid.eventCell));
         }
 
         private void updateSelectionCheckboxesAsNeeded(boolean isEnabled) {
@@ -5706,6 +5713,19 @@ public class Grid<T> extends ResizeComposite implements
         return editor;
     }
 
+    /**
+     * Add handler for editor open/move/close events
+     * 
+     * @param handler
+     *            editor handler object
+     * @return a {@link HandlerRegistration} object that can be used to remove
+     *         the event handler
+     */
+    public HandlerRegistration addEditorEventHandler(EditorEventHandler handler) {
+        return addHandler(handler, EditorEvent.TYPE);
+
+    }
+
     protected Escalator getEscalator() {
         return escalator;
     }
@@ -6285,12 +6305,25 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         if (container == escalator.getBody() && editor.isEnabled()) {
+
+            boolean wasOpen = editor.getState() != Editor.State.INACTIVE;
+            boolean opened = false;
+
             if (event.getTypeInt() == Event.ONDBLCLICK) {
                 editor.editRow(eventCell.getRowIndex());
-                return true;
+                opened = true;
             } else if (event.getTypeInt() == Event.ONKEYDOWN
                     && event.getKeyCode() == Editor.KEYCODE_SHOW) {
                 editor.editRow(cellFocusHandler.rowWithFocus);
+                opened = true;
+            }
+
+            if (opened) {
+                if (wasOpen) {
+                    fireEvent(new EditorMoveEvent(eventCell));
+                } else {
+                    fireEvent(new EditorOpenEvent(eventCell));
+                }
                 return true;
             }
         }

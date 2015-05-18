@@ -57,6 +57,7 @@ import com.vaadin.data.RpcDataProviderExtension.DetailComponentManager;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -508,6 +509,100 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             return userOriginated;
         }
 
+    }
+
+    /**
+     * Interface for an editor event listener
+     */
+    public interface EditorListener extends Serializable {
+
+        public static final Method EDITOR_OPEN_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorOpened",
+                        EditorOpenEvent.class);
+        public static final Method EDITOR_MOVE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorMoved",
+                        EditorMoveEvent.class);
+        public static final Method EDITOR_CLOSE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorClosed",
+                        EditorCloseEvent.class);
+
+        /**
+         * Called when an editor is opened
+         * 
+         * @param e
+         *            an editor open event object
+         */
+        public void editorOpened(EditorOpenEvent e);
+
+        /**
+         * Called when an editor is reopened without closing it first
+         * 
+         * @param e
+         *            an editor move event object
+         */
+        public void editorMoved(EditorMoveEvent e);
+
+        /**
+         * Called when an editor is closed
+         * 
+         * @param e
+         *            an editor close event object
+         */
+        public void editorClosed(EditorCloseEvent e);
+
+    }
+
+    /**
+     * Base class for editor related events
+     */
+    public static abstract class EditorEvent extends Component.Event {
+
+        private Object itemID;
+
+        protected EditorEvent(Grid source, Object itemID) {
+            super(source);
+            this.itemID = itemID;
+        }
+
+        /**
+         * Get the item (row) for which this editor was opened
+         */
+        public Object getItem() {
+            return itemID;
+        }
+
+    }
+
+    /**
+     * This event gets fired when an editor is opened
+     */
+    public static class EditorOpenEvent extends EditorEvent {
+
+        public EditorOpenEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is opened while another row is being
+     * edited (i.e. editor focus moves elsewhere)
+     */
+    public static class EditorMoveEvent extends EditorEvent {
+
+        public EditorMoveEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is dismissed or closed by other
+     * means.
+     */
+    public static class EditorCloseEvent extends EditorEvent {
+
+        public EditorCloseEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
     }
 
     /**
@@ -3808,6 +3903,24 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         detailComponentManager.getAndResetConnectorChanges(),
                         fetchId);
             }
+
+            @Override
+            public void editorOpen(String rowKey) {
+                fireEvent(new EditorOpenEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
+
+            @Override
+            public void editorMove(String rowKey) {
+                fireEvent(new EditorMoveEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
+
+            @Override
+            public void editorClose(String rowKey) {
+                fireEvent(new EditorCloseEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
         });
 
         registerRpc(new EditorServerRpc() {
@@ -5875,6 +5988,37 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         return getState(false).editorCancelCaption;
     }
 
+    /**
+     * Add an editor event listener
+     * 
+     * @param listener
+     *            the event listener object to add
+     */
+    public void addEditorListener(EditorListener listener) {
+        addListener(GridConstants.EDITOR_OPEN_EVENT_ID, EditorOpenEvent.class,
+                listener, EditorListener.EDITOR_OPEN_METHOD);
+        addListener(GridConstants.EDITOR_MOVE_EVENT_ID, EditorMoveEvent.class,
+                listener, EditorListener.EDITOR_MOVE_METHOD);
+        addListener(GridConstants.EDITOR_CLOSE_EVENT_ID,
+                EditorCloseEvent.class, listener,
+                EditorListener.EDITOR_CLOSE_METHOD);
+    }
+
+    /**
+     * Remove an editor event listener
+     * 
+     * @param listener
+     *            the event listener object to remove
+     */
+    public void removeEditorListener(EditorListener listener) {
+        removeListener(GridConstants.EDITOR_OPEN_EVENT_ID,
+                EditorOpenEvent.class, listener);
+        removeListener(GridConstants.EDITOR_MOVE_EVENT_ID,
+                EditorMoveEvent.class, listener);
+        removeListener(GridConstants.EDITOR_CLOSE_EVENT_ID,
+                EditorCloseEvent.class, listener);
+    }
+
     @Override
     public void addItemClickListener(ItemClickListener listener) {
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
@@ -6169,6 +6313,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         result.add("footer-visible");
         result.add("editor-error-handler");
         result.add("height-mode");
+
         return result;
     }
 }

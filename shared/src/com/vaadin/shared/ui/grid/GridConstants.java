@@ -74,4 +74,19 @@ public final class GridConstants implements Serializable {
 
     /** The default cancel button caption in the editor */
     public static final String DEFAULT_CANCEL_CAPTION = "Cancel";
+
+    /**
+     * Event ID constant for editor open event
+     */
+    public static final String EDITOR_OPEN_EVENT_ID = "editorOpen";
+
+    /**
+     * Event ID constant for editor move event
+     */
+    public static final String EDITOR_MOVE_EVENT_ID = "editorMove";
+
+    /**
+     * Event ID constant for editor close event
+     */
+    public static final String EDITOR_CLOSE_EVENT_ID = "editorClose";
 }
