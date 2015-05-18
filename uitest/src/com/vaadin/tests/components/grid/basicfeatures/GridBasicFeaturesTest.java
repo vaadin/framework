@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -127,6 +130,17 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return getDriver()
                 .findElement(
                         By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
+    }
+
+    protected void assertColumnIsSorted(int index) {
+        WebElement columnHeader = getDefaultColumnHeader(index);
+        assertTrue(columnHeader.getAttribute("class").contains("sort"));
+    }
+
+    protected GridCellElement getDefaultColumnHeader(int index) {
+        List<GridCellElement> headerRowCells = getGridElement().getHeaderCells(
+                0);
+        return headerRowCells.get(index);
     }
 
     /**
