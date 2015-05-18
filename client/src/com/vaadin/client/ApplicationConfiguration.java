@@ -688,7 +688,7 @@ public class ApplicationConfiguration implements EntryPoint {
              * cleared up when an API for extending the debug window is
              * implemented.
              */
-            VDebugWindow window = GWT.create(VDebugWindow.class);
+            VDebugWindow window = VDebugWindow.get();
 
             if (LogConfiguration.loggingIsEnabled()) {
                 window.addSection((Section) GWT.create(LogSection.class));
