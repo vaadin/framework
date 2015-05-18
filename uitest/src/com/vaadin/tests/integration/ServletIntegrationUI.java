@@ -1,5 +1,6 @@
 package com.vaadin.tests.integration;
 
+import com.vaadin.annotations.DesignRoot;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -10,6 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.declarative.Design;
 
 public class ServletIntegrationUI extends UI {
 
@@ -36,7 +38,7 @@ public class ServletIntegrationUI extends UI {
         item.getItemProperty("icon").setValue(new FlagSeResource());
         item.getItemProperty("country").setValue("Sweden");
 
-        final Label selectedLabel = new Label();
+        final Label selectedLabel = new LabelFromDesign();
         table.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
@@ -44,5 +46,12 @@ public class ServletIntegrationUI extends UI {
             }
         });
         layout.addComponent(selectedLabel);
+    }
+
+    @DesignRoot
+    public static class LabelFromDesign extends Label {
+        public LabelFromDesign() {
+            Design.read(this);
+        }
     }
 }
