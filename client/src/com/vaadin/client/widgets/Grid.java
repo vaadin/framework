@@ -5056,9 +5056,12 @@ public class Grid<T> extends ResizeComposite implements
                 if (event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
                     return;
                 }
-
-                sorter.sort(event.getFocusedCell().getColumn(),
-                        event.isShiftKeyDown());
+                if (getHeader().getRow(event.getFocusedCell().getRowIndex())
+                        .isDefault()) {
+                    // Only sort for enter on the default header
+                    sorter.sort(event.getFocusedCell().getColumn(),
+                            event.isShiftKeyDown());
+                }
             }
         });
 

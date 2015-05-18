@@ -213,6 +213,33 @@ public class GridSortingTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testKeyboardSortingMultipleHeaders() {
+        openTestURL();
+        selectMenuPath("Component", "Header", "Append row");
+
+        // Sort according to first column by clicking
+        getGridElement().getHeaderCell(0, 0).click();
+        assertColumnIsSorted(0);
+
+        // Try to sort according to second column by pressing enter on the new
+        // header
+        sendKey(Keys.ARROW_RIGHT);
+        sendKey(Keys.ARROW_DOWN);
+        sendKey(Keys.ENTER);
+
+        // Should not have sorted
+        assertColumnIsSorted(0);
+
+        // Sort using default header
+        sendKey(Keys.ARROW_UP);
+        sendKey(Keys.ENTER);
+
+        // Should have sorted
+        assertColumnIsSorted(1);
+
+    }
+
+    @Test
     public void testKeyboardSorting() {
         openTestURL();
 
