@@ -46,7 +46,7 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
                 .createContainer(100));
 
         ageHeaderCell = grid.getDefaultHeaderRow().getCell("age");
-
+        grid.getDefaultHeaderRow().setStyleName("foo");
         headerRow = grid.prependHeaderRow();
         mergedCityCountryCell = headerRow.join("city", "country");
         mergedCityCountryCell.setText("Merged cell");

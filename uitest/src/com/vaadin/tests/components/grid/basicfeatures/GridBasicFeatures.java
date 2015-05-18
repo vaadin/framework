@@ -73,9 +73,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS = "Row numbers";
+    public static final String ROW_STYLE_GENERATOR_EMPTY = "Empty string";
+    public static final String ROW_STYLE_GENERATOR_NULL = "Null";
     public static final String CELL_STYLE_GENERATOR_NONE = "None";
     public static final String CELL_STYLE_GENERATOR_PROPERTY_TO_STRING = "Property to string";
     public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
+    public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
+    public static final String CELL_STYLE_GENERATOR_NULL = "Null";
     private static final int MANUALLY_FORMATTED_COLUMNS = 5;
     public static final int COLUMNS = 12;
     public static final int EDITABLE_COLUMNS = COLUMNS - 1;
@@ -409,6 +413,22 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 });
+        rowStyleGenerators.put(ROW_STYLE_GENERATOR_EMPTY,
+                new RowStyleGenerator() {
+
+                    @Override
+                    public String getStyle(RowReference rowReference) {
+                        return "";
+                    }
+                });
+        rowStyleGenerators.put(ROW_STYLE_GENERATOR_NULL,
+                new RowStyleGenerator() {
+
+                    @Override
+                    public String getStyle(RowReference rowReference) {
+                        return null;
+                    }
+                });
         cellStyleGenerators.put(CELL_STYLE_GENERATOR_NONE, null);
         cellStyleGenerators.put(CELL_STYLE_GENERATOR_PROPERTY_TO_STRING,
                 new CellStyleGenerator() {
@@ -432,6 +452,20 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             return null;
                         }
                         return propertyId.toString().replace(' ', '_');
+                    }
+                });
+        cellStyleGenerators.put(CELL_STYLE_GENERATOR_EMPTY,
+                new CellStyleGenerator() {
+                    @Override
+                    public String getStyle(CellReference cellReference) {
+                        return "";
+                    }
+                });
+        cellStyleGenerators.put(CELL_STYLE_GENERATOR_NULL,
+                new CellStyleGenerator() {
+                    @Override
+                    public String getStyle(CellReference cellReference) {
+                        return null;
                     }
                 });
 

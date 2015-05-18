@@ -835,7 +835,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             Object propertyId = column.getPropertyId();
             cellReference.set(propertyId);
             String style = generator.getStyle(cellReference);
-            if (style != null) {
+            if (style != null && !style.isEmpty()) {
                 if (cellStyles == null) {
                     cellStyles = Json.createObject();
                 }
@@ -853,7 +853,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private void setGeneratedRowStyles(RowStyleGenerator generator,
             JsonObject rowObject) {
         String rowStyle = generator.getStyle(rowReference);
-        if (rowStyle != null) {
+        if (rowStyle != null && !rowStyle.isEmpty()) {
             rowObject.put(GridState.JSONKEY_ROWSTYLE, rowStyle);
         }
     }
