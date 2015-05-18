@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -174,7 +175,6 @@ public final class VDebugWindow extends VOverlay {
      */
     public VDebugWindow() {
         super(false, false);
-        instance = this;
         getElement().getStyle().setOverflow(Overflow.HIDDEN);
         setStylePrimaryName(STYLENAME);
 
@@ -255,7 +255,7 @@ public final class VDebugWindow extends VOverlay {
      */
     public static VDebugWindow get() {
         if (instance == null) {
-            instance = new VDebugWindow();
+            instance = GWT.create(VDebugWindow.class);
         }
         return instance;
     }
