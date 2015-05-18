@@ -50,10 +50,10 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     public void testFeatures() {
 
         String design = "<v-window position='100,100' window-mode='maximized' "
-                + "center modal=true resizable=false resize-lazy=true closable=false draggable=false "
+                + "center modal='' resizable=false resize-lazy='' closable=false draggable=false "
                 + "close-shortcut='ctrl-alt-escape' "
                 + "assistive-prefix='Hello' assistive-postfix='World' assistive-role='alertdialog' "
-                + "tab-stop-enabled=true "
+                + "tab-stop-enabled='' "
                 + "tab-stop-top-assistive-text='Do not move above the window' "
                 + "tab-stop-bottom-assistive-text='End of window'>"
                 + "</v-window>";

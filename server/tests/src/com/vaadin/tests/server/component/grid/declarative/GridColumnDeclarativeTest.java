@@ -25,11 +25,11 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
     public void testSimpleGridColumns() {
         String design = "<v-grid><table>"//
                 + "<colgroup>"
-                + "   <col sortable=true width='100' property-id='Column1'>"
+                + "   <col sortable='' width='100' property-id='Column1'>"
                 + "   <col sortable=false max-width='200' expand='2' property-id='Column2'>"
-                + "   <col sortable=true editable=false min-width='15' expand='1' property-id='Column3'>"
-                + "   <col sortable=true hidable=true hiding-toggle-caption='col 4' property-id='Column4'>"
-                + "   <col sortable=true hidden=true property-id='Column5'>"
+                + "   <col sortable='' editable=false min-width='15' expand='1' property-id='Column3'>"
+                + "   <col sortable='' hidable='' hiding-toggle-caption='col 4' property-id='Column4'>"
+                + "   <col sortable='' hidden='' property-id='Column5'>"
                 + "</colgroup>" //
                 + "<thead />" //
                 + "</table></v-grid>";
