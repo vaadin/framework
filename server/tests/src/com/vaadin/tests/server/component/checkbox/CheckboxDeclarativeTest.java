@@ -38,7 +38,7 @@ public class CheckboxDeclarativeTest extends DeclarativeTestBase<CheckBox> {
 
     @Test
     public void testUnchecked() {
-        String design = "<v-check-box checked='true' />";
+        String design = "<v-check-box checked='' />";
         CheckBox checkBox = new CheckBox();
         checkBox.setValue(true);
         testRead(design, checkBox);

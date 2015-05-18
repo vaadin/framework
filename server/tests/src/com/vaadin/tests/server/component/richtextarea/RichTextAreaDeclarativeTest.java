@@ -24,7 +24,7 @@ public class RichTextAreaDeclarativeTest extends
         DeclarativeTestBase<RichTextArea> {
 
     private String getBasicDesign() {
-        return "<v-rich-text-area null-representation='' null-setting-allowed='true'>\n"
+        return "<v-rich-text-area null-representation='' null-setting-allowed=''>\n"
                 + "\n      <b>Header</b> <br/>Some text\n      "
                 + "</v-rich-text-area>";
     }

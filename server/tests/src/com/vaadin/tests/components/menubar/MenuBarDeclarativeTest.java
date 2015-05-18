@@ -38,10 +38,10 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testReadWrite() throws IOException {
-        String design = "<v-menu-bar auto-open='true' tabindex=5>"
-                + "<menu checkable='true'>Save</menu>"
+        String design = "<v-menu-bar auto-open='' tabindex=5>"
+                + "<menu checkable=''>Save</menu>"
                 + "<menu description='Open a file'>Open</menu>"
-                + "<menu disabled='true'>Close</menu>"
+                + "<menu disabled=''>Close</menu>"
                 + "<menu icon='http://foo.bar/ico.png'>Help</menu>"
                 + "<menu visible='false'>About</menu>"
                 + "<menu>Sub<menu>Item</menu></menu>"
@@ -69,19 +69,19 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testTicketSpec1() throws IOException {
-        String design = "<v-menu-bar auto-open='true' plain-text tabindex=5> "
+        String design = "<v-menu-bar auto-open='' plain-text tabindex=5> "
                 + "<menu>File"
                 + "<menu>Save</menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
-                + "<menu separator='true' />"
-                + "<menu disabled='true'>Exit</menu>"
+                + "<menu separator='' />"
+                + "<menu disabled=''>Exit</menu>"
                 + "<menu visible='false'>Not for everybody</menu>"
                 + "</menu>"
                 + "<menu description=\"This contains many items in sub menus\">Other"
                 + "<menu style-name=\"fancy\">Sub"
-                + "<menu checkable='true' checked='true'>Option 1 - no <b>html</b></menu>"
-                + "<menu checkable='true'>Option 2</menu>"
-                + "<menu checkable='true'>Option 3</menu>" //
+                + "<menu checkable='' checked=''>Option 1 - no <b>html</b></menu>"
+                + "<menu checkable=''>Option 2</menu>"
+                + "<menu checkable=''>Option 3</menu>" //
                 + "</menu>" //
                 + "</menu>" //
                 + "<menu more icon=\"theme://icon.png\">foo</menu>"
@@ -124,8 +124,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "<menu><b>File</b>"
                 + "<menu><font style=\"color: red\">Save</font></menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
-                + "<menu separator='true' />"
-                + "<menu disabled='true'>Exit</menu>" //
+                + "<menu separator='' />" + "<menu disabled=''>Exit</menu>" //
                 + "</menu></v-menu-bar>";
         MenuBar menuBar = new MenuBar();
         menuBar.setHtmlContentAllowed(true);

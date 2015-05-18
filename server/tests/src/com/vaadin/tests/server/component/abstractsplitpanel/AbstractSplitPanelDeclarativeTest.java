@@ -38,7 +38,7 @@ public class AbstractSplitPanelDeclarativeTest extends
     @Test
     public void testWithBothChildren() {
         String design = "<v-horizontal-split-panel split-position=20.5% "
-                + "min-split-position=20% max-split-position=50px locked=true "
+                + "min-split-position=20% max-split-position=50px locked='' "
                 + "reversed=\"\"> <v-table /> <v-vertical-layout />"
                 + "</v-horizontal-split-panel>";
         AbstractSplitPanel sp = new HorizontalSplitPanel();
