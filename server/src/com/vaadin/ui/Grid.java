@@ -4887,6 +4887,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             column.getState().editorConnector = getEditorField(column
                     .getPropertyId());
         }
+
+        // Must ensure that all fields, recursively, are sent to the client
+        // This is needed because the fields are hidden using isRendered
+        for (Field<?> f : getEditorFields()) {
+            f.markAsDirtyRecursive();
+        }
+
     }
 
     private void setEditorField(Object propertyId, Field<?> field) {
