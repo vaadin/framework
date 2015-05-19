@@ -230,7 +230,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertFalse("Exception should not exist",
                 isElementPresent(NotificationElement.class));
         assertEquals("There should be no editor error message", null,
-                editor.getErrorMessage());
+                getGridElement().getEditor().getErrorMessage());
     }
 
     @Test
