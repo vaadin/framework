@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
@@ -39,17 +40,17 @@ public class DisabledGridClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "single");
 
         GridRowElement row = getGridElement().getRow(0);
-        row.click();
+        GridCellElement cell = getGridElement().getCell(0, 0);
+        cell.click();
         assertFalse("disabled row should not be selected", row.isSelected());
-
     }
 
     @Test
     public void testEditorOpening() {
         selectMenuPath("Component", "Editor", "Enabled");
-
         GridRowElement row = getGridElement().getRow(0);
-        row.click();
+        GridCellElement cell = getGridElement().getCell(0, 0);
+        cell.click();
         assertNull("Editor should not open", getEditor());
 
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
