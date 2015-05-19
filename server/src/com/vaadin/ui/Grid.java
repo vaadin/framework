@@ -5371,7 +5371,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     @Override
     public Iterator<Component> iterator() {
-        List<Component> componentList = new ArrayList<Component>();
+        // This is a hash set to avoid adding header/footer components inside
+        // merged cells multiple times
+        LinkedHashSet<Component> componentList = new LinkedHashSet<Component>();
 
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
