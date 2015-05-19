@@ -32,17 +32,11 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -52,6 +46,7 @@ import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
@@ -86,7 +81,6 @@ import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.Connector;
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DetailsConnectorChange;
@@ -119,7 +113,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout, DeferredWorker, FocusHandler, BlurHandler {
+        SimpleManagedLayout, DeferredWorker {
 
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JsonObject> {
@@ -764,9 +758,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private final LazyDetailsScrollAdjuster lazyDetailsScrollAdjuster = new LazyDetailsScrollAdjuster();
 
-    private HandlerRegistration focusHandlerRegistration = null;
-    private HandlerRegistration blurHandlerRegistration = null;
-
     @Override
     @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
@@ -915,6 +906,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().addColumnReorderHandler(columnReorderHandler);
         getWidget().addColumnVisibilityChangeHandler(
                 columnVisibilityChangeHandler);
+
+        ConnectorFocusAndBlurHandler.addHandlers(this);
+
         getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
 
@@ -992,12 +986,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             getWidget().resetSizesFromDom();
             lastKnownTheme = activeTheme;
         }
-
-        // Focus and blur events
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
-                blurHandlerRegistration);
     }
 
     private void updateSelectDeselectAllowed() {
@@ -1433,19 +1421,5 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     public DetailsListener getDetailsListener() {
         return detailsListener;
-    }
-
-    @Override
-    public void onFocus(FocusEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).focus();
-    }
-
-    @Override
-    public void onBlur(BlurEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
 }

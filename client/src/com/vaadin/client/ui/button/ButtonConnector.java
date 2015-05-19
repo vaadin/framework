@@ -16,24 +16,17 @@
 
 package com.vaadin.client.ui.button;
 
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
@@ -42,10 +35,7 @@ import com.vaadin.ui.Button;
 
 @Connect(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector implements
-        BlurHandler, FocusHandler, ClickHandler {
-
-    private HandlerRegistration focusHandlerRegistration = null;
-    private HandlerRegistration blurHandlerRegistration = null;
+        ClickHandler {
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -57,6 +47,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
         super.init();
         getWidget().addClickHandler(this);
         getWidget().client = getConnection();
+        ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
     @OnStateChange("errorMessage")
@@ -90,15 +81,6 @@ public class ButtonConnector extends AbstractComponentConnector implements
         }
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
-                blurHandlerRegistration);
-    }
-
     @OnStateChange({ "caption", "captionAsHtml" })
     void setCaption() {
         VCaption.setCaptionText(getWidget().captionElement, getState());
@@ -124,20 +106,6 @@ public class ButtonConnector extends AbstractComponentConnector implements
     @Override
     public ButtonState getState() {
         return (ButtonState) super.getState();
-    }
-
-    @Override
-    public void onFocus(FocusEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).focus();
-    }
-
-    @Override
-    public void onBlur(BlurEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
 
     @Override

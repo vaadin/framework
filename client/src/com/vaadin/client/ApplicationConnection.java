@@ -63,6 +63,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -94,7 +95,6 @@ import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.VaadinUriResolver;
@@ -3414,20 +3414,19 @@ public class ApplicationConnection implements HasHandlers {
      * before the component is updated so the value is correct if called from
      * updatedFromUIDL.
      * 
-     * @param paintable
+     * @param connector
      *            The connector to register event listeners for
      * @param eventIdentifier
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
      * @deprecated As of 7.0. Use
-     *             {@link AbstractComponentState#hasEventListener(String)}
-     *             instead
+     *             {@link AbstractConnector#hasEventListener(String)} instead
      */
     @Deprecated
-    public boolean hasEventListeners(ComponentConnector paintable,
+    public boolean hasEventListeners(ComponentConnector connector,
             String eventIdentifier) {
-        return paintable.hasEventListener(eventIdentifier);
+        return connector.hasEventListener(eventIdentifier);
     }
 
     /**

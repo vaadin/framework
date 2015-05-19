@@ -16,25 +16,19 @@
 package com.vaadin.client.ui.checkbox;
 
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
@@ -42,10 +36,7 @@ import com.vaadin.ui.CheckBox;
 
 @Connect(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector implements
-        FocusHandler, BlurHandler, ClickHandler {
-
-    private HandlerRegistration focusHandlerRegistration;
-    private HandlerRegistration blurHandlerRegistration;
+        ClickHandler {
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -55,20 +46,17 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
     @Override
     protected void init() {
         super.init();
+
         getWidget().addClickHandler(this);
         getWidget().client = getConnection();
         getWidget().id = getConnectorId();
 
+        ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
-                blurHandlerRegistration);
 
         if (null != getState().errorMessage) {
             getWidget().setAriaInvalid(true);
@@ -124,20 +112,6 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
     @Override
     public VCheckBox getWidget() {
         return (VCheckBox) super.getWidget();
-    }
-
-    @Override
-    public void onFocus(FocusEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).focus();
-    }
-
-    @Override
-    public void onBlur(BlurEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
 
     @Override

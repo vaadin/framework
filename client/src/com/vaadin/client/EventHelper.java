@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * 
  * </pre>
- * 
  */
 public class EventHelper {
 
@@ -69,7 +68,7 @@ public class EventHelper {
      */
     public static <T extends ComponentConnector & FocusHandler> HandlerRegistration updateFocusHandler(
             T connector, HandlerRegistration handlerRegistration) {
-        return updateHandler(connector, FOCUS, handlerRegistration,
+        return updateHandler(connector, connector, FOCUS, handlerRegistration,
                 FocusEvent.getType(), connector.getWidget());
     }
 
@@ -89,7 +88,7 @@ public class EventHelper {
      */
     public static <T extends ComponentConnector & FocusHandler> HandlerRegistration updateFocusHandler(
             T connector, HandlerRegistration handlerRegistration, Widget widget) {
-        return updateHandler(connector, FOCUS, handlerRegistration,
+        return updateHandler(connector, connector, FOCUS, handlerRegistration,
                 FocusEvent.getType(), widget);
     }
 
@@ -107,7 +106,7 @@ public class EventHelper {
      */
     public static <T extends ComponentConnector & BlurHandler> HandlerRegistration updateBlurHandler(
             T connector, HandlerRegistration handlerRegistration) {
-        return updateHandler(connector, BLUR, handlerRegistration,
+        return updateHandler(connector, connector, BLUR, handlerRegistration,
                 BlurEvent.getType(), connector.getWidget());
     }
 
@@ -128,23 +127,21 @@ public class EventHelper {
      */
     public static <T extends ComponentConnector & BlurHandler> HandlerRegistration updateBlurHandler(
             T connector, HandlerRegistration handlerRegistration, Widget widget) {
-        return updateHandler(connector, BLUR, handlerRegistration,
+        return updateHandler(connector, connector, BLUR, handlerRegistration,
                 BlurEvent.getType(), widget);
     }
 
-    private static <H extends EventHandler> HandlerRegistration updateHandler(
-            ComponentConnector connector, String eventIdentifier,
+    public static <H extends EventHandler> HandlerRegistration updateHandler(
+            ComponentConnector connector, H handler, String eventIdentifier,
             HandlerRegistration handlerRegistration, Type<H> type, Widget widget) {
         if (connector.hasEventListener(eventIdentifier)) {
             if (handlerRegistration == null) {
-                handlerRegistration = widget.addDomHandler((H) connector, type);
+                handlerRegistration = widget.addDomHandler(handler, type);
             }
         } else if (handlerRegistration != null) {
             handlerRegistration.removeHandler();
             handlerRegistration = null;
         }
         return handlerRegistration;
-
     }
-
 }
