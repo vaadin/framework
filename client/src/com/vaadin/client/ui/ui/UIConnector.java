@@ -59,6 +59,7 @@ import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
@@ -319,19 +320,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    ComponentConnector paintable = (ComponentConnector) uidl
+                    ComponentConnector connector = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
 
-                    if (paintable == null) {
+                    if (connector == null) {
                         // Do not try to focus invisible components which not
                         // present in UIDL
                         return;
                     }
 
-                    final Widget toBeFocused = paintable.getWidget();
+                    final Widget toBeFocused = connector.getWidget();
                     /*
                      * Two types of Widgets can be focused, either implementing
-                     * GWT HasFocus of a thinner Vaadin specific Focusable
+                     * GWT Focusable of a thinner Vaadin specific Focusable
                      * interface.
                      */
                     if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
@@ -340,7 +341,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        VConsole.log("Could not focus component");
+                        getLogger()
+                                .severe("Server is trying to set focus to the widget of connector "
+                                        + Util.getConnectorString(connector)
+                                        + " but it is not focusable. The widget should implement either "
+                                        + com.google.gwt.user.client.ui.Focusable.class
+                                                .getName()
+                                        + " or "
+                                        + Focusable.class.getName());
                     }
                 }
             });
