@@ -64,9 +64,10 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals("column 1", getGridElement().getHeaderCell(0, 0).getText()
                 .toLowerCase());
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
-        // Column 0 is appended to the end of grid
-        assertEquals("column 0", getGridElement().getHeaderCell(0, 11)
-                .getText().toLowerCase());
+
+        // Column 0 is now the last column in Grid.
+        assertEquals("Unexpected column content", "(0, 0)", getGridElement()
+                .getCell(0, 11).getText());
     }
 
     @Test
