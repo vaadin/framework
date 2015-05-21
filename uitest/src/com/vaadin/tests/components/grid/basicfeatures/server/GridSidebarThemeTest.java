@@ -45,15 +45,15 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
     private void runTestSequence(String theme) throws IOException {
         openTestURL("theme=" + theme);
 
-        compareScreen(theme + "|SidebarClosed");
+        compareScreen(theme + "_SidebarClosed");
         getSidebarOpenButton().click();
 
-        compareScreen(theme + "|SidebarOpen");
+        compareScreen(theme + "_SidebarOpen");
 
         new Actions(getDriver()).moveToElement(getColumnHidingToggle(2), 5, 5)
                 .perform();
 
-        compareScreen(theme + "|OnMouseOverNotHiddenToggle");
+        compareScreen(theme + "_OnMouseOverNotHiddenToggle");
 
         getColumnHidingToggle(2).click();
         getColumnHidingToggle(3).click();
@@ -63,17 +63,17 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
                 .perform();
         ;
 
-        compareScreen(theme + "|TogglesTriggered");
+        compareScreen(theme + "_TogglesTriggered");
 
         new Actions(getDriver()).moveToElement(getColumnHidingToggle(2))
                 .perform();
         ;
 
-        compareScreen(theme + "|OnMouseOverHiddenToggle");
+        compareScreen(theme + "_OnMouseOverHiddenToggle");
 
         getSidebarOpenButton().click();
 
-        compareScreen(theme + "|SidebarClosed2");
+        compareScreen(theme + "_SidebarClosed2");
     }
 
     @Override
