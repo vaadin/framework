@@ -18,6 +18,7 @@ package com.vaadin.client.debug.internal;
 
 public enum Icon {
 
+    // Font can be updated using e.g. http://icomoon.io/
     SEARCH("&#xf002;"), //
     OK("&#xf00c;"), //
     REMOVE("&#xf00d;"), //
@@ -46,6 +47,7 @@ public enum Icon {
     RESET("&#xf021;"), //
     PERSIST("&#xf02e"), //
     TESTBENCH("&#xe600"), //
+    SHOW_DESIGN("&#xf1c9"), //
     ;
 
     private String id;

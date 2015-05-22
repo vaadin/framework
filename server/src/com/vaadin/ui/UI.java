@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +69,7 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.Design;
 import com.vaadin.util.ConnectorHelper;
 import com.vaadin.util.CurrentInstance;
 
@@ -211,6 +214,32 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                     json.toString());
         }
 
+        @Override
+        public void showServerDesign(Connector connector) {
+            if (!(connector instanceof Component)) {
+                getLogger().severe(
+                        "Tried to output declarative design for " + connector
+                                + ", which is not a component");
+                return;
+            }
+            if (connector instanceof UI) {
+                // We want to see the content of the UI, so we can add it to
+                // another UI or component container
+                connector = ((UI) connector).getContent();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                Design.write((Component) connector, baos);
+                getLogger().info(
+                        "Design for " + connector
+                                + " requested from debug window:\n"
+                                + baos.toString("UTF-8"));
+            } catch (IOException e) {
+                getLogger().log(Level.WARNING,
+                        "Error producing design for " + connector, e);
+            }
+
+        }
     };
 
     /**

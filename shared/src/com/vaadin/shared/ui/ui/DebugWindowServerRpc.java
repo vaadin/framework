@@ -47,4 +47,14 @@ public interface DebugWindowServerRpc extends ServerRpc {
      */
     public void analyzeLayouts();
 
+    /**
+     * Sends a request to the server to print a design to the console for the
+     * given component.
+     * 
+     * @since
+     * @param connector
+     *            the component connector to output a declarative design for
+     */
+    public void showServerDesign(Connector connector);
+
 }
