@@ -145,7 +145,7 @@ public class PushRequestHandler implements RequestHandler,
      */
     static AtmosphereFramework initAtmosphere(
             final ServletConfig vaadinServletConfig) {
-        AtmosphereFramework atmosphere = new AtmosphereFramework() {
+        AtmosphereFramework atmosphere = new AtmosphereFramework(false, false) {
             @Override
             protected void analytics() {
                 // Overridden to disable version number check
