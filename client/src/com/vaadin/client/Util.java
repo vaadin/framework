@@ -51,6 +51,8 @@ public class Util {
      * 
      * Stops execution on firefox browsers on a breakpoint.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#browserDebugger()}
+     *             instead.
      */
     @Deprecated
     public static void browserDebugger() {
@@ -61,6 +63,9 @@ public class Util {
      * Helper method for a bug fix #14041. For mozilla getKeyCode return 0 for
      * space bar (because space is considered as char). If return 0 use
      * getCharCode.
+     * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getKeyCode(KeyEvent)}
+     *             instead.
      * 
      * @param event
      * @return return key code
@@ -77,6 +82,9 @@ public class Util {
      * 
      * TODO fix crossplat issues clientX vs pageX. See quircksmode. Not critical
      * for vaadin as we scroll div istead of page.
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getElementFromPoint(int, int)} instead.
      * 
      * @param x
      * @param y
@@ -136,6 +144,10 @@ public class Util {
         return null;
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#parseRelativeSize(String)}
+     *             instead.
+     */
     @Deprecated
     public static float parseRelativeSize(String size) {
         return WidgetUtil.parseRelativeSize(size);
@@ -143,6 +155,9 @@ public class Util {
 
     /**
      * Converts html entities to text.
+     * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#escapeHTML(String)}
+     *             instead.
      * 
      * @param html
      * @return escaped string presentation of given html
@@ -154,6 +169,9 @@ public class Util {
 
     /**
      * Escapes the string so it is safe to write inside an HTML attribute.
+     * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#escapeAttribute(String)}
+     *             instead.
      * 
      * @param attribute
      *            The string to escape
@@ -169,6 +187,9 @@ public class Util {
      * 
      * Deprecate this if there appears similar method into GWT someday.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#cloneNode(Element, boolean)} instead.
+     * 
      * @param element
      * @param deep
      *            clone child tree also
@@ -180,6 +201,11 @@ public class Util {
         return DOM.asOld(WidgetUtil.cloneNode(element, deep));
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#measureHorizontalPaddingAndBorder(Element, int)}
+     *             instead.
+     */
     @Deprecated
     public static int measureHorizontalPaddingAndBorder(Element element,
             int paddingGuess) {
@@ -187,6 +213,11 @@ public class Util {
                 paddingGuess);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#measureVerticalPaddingAndBorder(Element, int)}
+     *             instead.
+     */
     @Deprecated
     public static int measureVerticalPaddingAndBorder(Element element,
             int paddingGuess) {
@@ -194,21 +225,38 @@ public class Util {
                 .measureVerticalPaddingAndBorder(element, paddingGuess);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#measureHorizontalBorder(Element)} instead.
+     */
     @Deprecated
     public static int measureHorizontalBorder(Element element) {
         return WidgetUtil.measureHorizontalBorder(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#measureVerticalBorder(Element)} instead.
+     */
     @Deprecated
     public static int measureVerticalBorder(Element element) {
         return WidgetUtil.measureVerticalBorder(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#measureMarginLeft(Element)} instead.
+     */
     @Deprecated
     public static int measureMarginLeft(Element element) {
         return WidgetUtil.measureMarginLeft(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setHeightExcludingPaddingAndBorder(Widget, String, int)}
+     *             instead.
+     */
     @Deprecated
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
@@ -216,6 +264,11 @@ public class Util {
                 paddingBorderGuess);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setWidthExcludingPaddingAndBorder(Widget, String, int)}
+     *             instead.
+     */
     @Deprecated
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
@@ -223,6 +276,11 @@ public class Util {
                 paddingBorderGuess);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setWidthExcludingPaddingAndBorder(Element, int, int, boolean)}
+     *             instead.
+     */
     @Deprecated
     public static int setWidthExcludingPaddingAndBorder(Element element,
             int requestedWidth, int horizontalPaddingBorderGuess,
@@ -232,6 +290,11 @@ public class Util {
                 requestedWidthIncludesPaddingBorder);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setHeightExcludingPaddingAndBorder(Element, int, int, boolean)}
+     *             instead.
+     */
     @Deprecated
     public static int setHeightExcludingPaddingAndBorder(Element element,
             int requestedHeight, int verticalPaddingBorderGuess,
@@ -241,6 +304,9 @@ public class Util {
                 requestedHeightIncludesPaddingBorder);
     }
 
+    /**
+     * @deprecated As of 7.4, use {@link Class#getSimpleName()} instead.
+     */
     @Deprecated
     public static String getSimpleName(Object widget) {
         if (widget == null) {
@@ -251,11 +317,19 @@ public class Util {
         return name.substring(name.lastIndexOf('.') + 1);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#setFloat(Element, String)}
+     *             instead.
+     */
     @Deprecated
     public static void setFloat(Element element, String value) {
         WidgetUtil.setFloat(element, value);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getNativeScrollbarSize()}
+     *             instead.
+     */
     @Deprecated
     public static int getNativeScrollbarSize() {
         return WidgetUtil.getNativeScrollbarSize();
@@ -263,6 +337,10 @@ public class Util {
 
     /**
      * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#runWebkitOverflowAutoFixDeferred(Element)}
+     *             instead.
      * 
      * @since 7.2.6
      * @param elem
@@ -277,6 +355,9 @@ public class Util {
      * Run workaround for webkits overflow auto issue.
      * 
      * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#runWebkitOverflowAutoFix(Element)} instead.
      * 
      * @param elem
      *            with overflow auto
@@ -314,6 +395,9 @@ public class Util {
         return uidl.getBooleanAttribute("cached");
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#alert(String)} instead.
+     */
     @Deprecated
     public static void alert(String string) {
         WidgetUtil.alert(string);
@@ -345,6 +429,9 @@ public class Util {
      * Gets the border-box width for the given element, i.e. element width +
      * border + padding. Always rounds up to nearest integer.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getRequiredWidth(Element)}
+     *             instead.
+     * 
      * @param element
      *            The element to check
      * @return The border-box width for the element
@@ -358,6 +445,9 @@ public class Util {
      * Gets the border-box height for the given element, i.e. element height +
      * border + padding. Always rounds up to nearest integer.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getRequiredHeight(Element)} instead.
+     * 
      * @param element
      *            The element to check
      * @return The border-box height for the element
@@ -368,35 +458,63 @@ public class Util {
         return WidgetUtil.getRequiredHeight(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getRequiredWidthBoundingClientRect(Element)}
+     *             instead.
+     */
     @Deprecated
     public int getRequiredWidthBoundingClientRect(
             com.google.gwt.dom.client.Element element) {
         return WidgetUtil.getRequiredWidthBoundingClientRect(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getRequiredHeightComputedStyle(Element)}
+     *             instead.
+     */
     @Deprecated
     public static int getRequiredHeightComputedStyle(
             com.google.gwt.dom.client.Element element) {
         return WidgetUtil.getRequiredHeightComputedStyle(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getRequiredWidthComputedStyle(Element)}
+     *             instead.
+     */
     @Deprecated
     public static int getRequiredWidthComputedStyle(
             com.google.gwt.dom.client.Element element) {
         return WidgetUtil.getRequiredWidthComputedStyle(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getRequiredHeightBoundingClientRect(Element)}
+     *             instead.
+     */
     @Deprecated
     public static int getRequiredHeightBoundingClientRect(
             com.google.gwt.dom.client.Element element) {
         return WidgetUtil.getRequiredHeightBoundingClientRect(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getRequiredWidth(Widget)}
+     *             instead.
+     */
     @Deprecated
     public static int getRequiredWidth(Widget widget) {
         return WidgetUtil.getRequiredWidth(widget);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getRequiredHeight(Widget)}
+     *             instead.
+     */
     @Deprecated
     public static int getRequiredHeight(Widget widget) {
         return WidgetUtil.getRequiredHeight(widget);
@@ -404,6 +522,9 @@ public class Util {
 
     /**
      * Detects what is currently the overflow style attribute in given element.
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#mayHaveScrollBars(Element)} instead.
      * 
      * @param pe
      *            the element to detect
@@ -481,6 +602,8 @@ public class Util {
     /**
      * Will (attempt) to focus the given DOM Element.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#focus(Element)} instead.
+     * 
      * @param el
      *            the element to focus
      */
@@ -511,6 +634,9 @@ public class Util {
      * Helper method to find first instance of given Widget type found by
      * traversing DOM upwards from given element.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#findWidget(Element, Class)} instead.
+     * 
      * @param element
      *            the element where to start seeking of Widget
      * @param class1
@@ -525,6 +651,9 @@ public class Util {
     /**
      * Force webkit to redraw an element
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#forceWebkitRedraw(Element)} instead.
+     * 
      * @param element
      *            The element that should be redrawn
      */
@@ -538,6 +667,9 @@ public class Util {
      * necessary in cases where IE8 "forgets" to update child elements when they
      * resize.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#forceIE8Redraw(Element)}
+     *             instead.
+     * 
      * @param e
      *            The element to perform the hack on
      */
@@ -550,6 +682,9 @@ public class Util {
      * Performs a hack to trigger a re-layout in the IE browser. This is usually
      * necessary in cases where IE "forgets" to update child elements when they
      * resize.
+     * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#forceIERedraw(Element)}
+     *             instead.
      * 
      * @since 7.3
      * @param e
@@ -566,6 +701,9 @@ public class Util {
      * 
      * Does nothing if the element is not attached to the DOM.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#detachAttach(Element)}
+     *             instead.
+     * 
      * @param element
      *            The element to detach and re-attach
      */
@@ -574,6 +712,10 @@ public class Util {
         WidgetUtil.detachAttach(element);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#sinkOnloadForImages(Element)} instead.
+     */
     @Deprecated
     public static void sinkOnloadForImages(Element element) {
         WidgetUtil.sinkOnloadForImages(element);
@@ -581,6 +723,9 @@ public class Util {
 
     /**
      * Returns the index of the childElement within its parent.
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getChildElementIndex(Element)} instead.
      * 
      * @param subElement
      * @return
@@ -656,6 +801,10 @@ public class Util {
      * resets it to its current value. Used mainly to work around rendering
      * issues in IE (and possibly in other browsers)
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setStyleTemporarily(Element, String, String)}
+     *             instead.
+     * 
      * @param element
      *            The target element
      * @param styleProperty
@@ -674,6 +823,9 @@ public class Util {
      * position from either first changed touch (if touch event) or from the
      * event itself.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getTouchOrMouseClientX(Event)} instead.
+     * 
      * @param event
      * @return
      */
@@ -686,6 +838,9 @@ public class Util {
      * Find the element corresponding to the coordinates in the passed mouse
      * event. Please note that this is not always the same as the target of the
      * event e.g. if event capture is used.
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getElementUnderMouse(NativeEvent)} instead.
      * 
      * @param event
      *            the mouse event to get coordinates from
@@ -702,6 +857,9 @@ public class Util {
      * position from either first changed touch (if touch event) or from the
      * event itself.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getTouchOrMouseClientY(Event)} instead.
+     * 
      * @param event
      * @return
      */
@@ -711,6 +869,9 @@ public class Util {
     }
 
     /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getTouchOrMouseClientY(NativeEvent)}
+     *             instead.
      * 
      * @see #getTouchOrMouseClientY(Event)
      * @param currentGwtEvent
@@ -722,6 +883,10 @@ public class Util {
     }
 
     /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#getTouchOrMouseClientX(NativeEvent)}
+     *             instead.
+     * 
      * @see #getTouchOrMouseClientX(Event)
      * 
      * @param event
@@ -732,16 +897,29 @@ public class Util {
         return WidgetUtil.getTouchOrMouseClientX(event);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#isTouchEvent(Event)}
+     *             instead.
+     */
     @Deprecated
     public static boolean isTouchEvent(Event event) {
         return WidgetUtil.isTouchEvent(event);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#isTouchEvent(NativeEvent)}
+     *             instead.
+     */
     @Deprecated
     public static boolean isTouchEvent(NativeEvent event) {
         return WidgetUtil.isTouchEvent(event);
     }
 
+    /**
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#simulateClickFromTouchEvent(Event, Widget)}
+     *             instead.
+     */
     @Deprecated
     public static void simulateClickFromTouchEvent(Event touchevent,
             Widget widget) {
@@ -750,6 +928,9 @@ public class Util {
 
     /**
      * Gets the currently focused element.
+     * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getFocusedElement()}
+     *             instead.
      * 
      * @return The active element or null if no active element could be found.
      */
@@ -772,6 +953,9 @@ public class Util {
     /**
      * Gets currently focused element and checks if it's editable
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#isFocusedElementEditable()} instead.
+     * 
      * @since 7.4
      * 
      * @return true if focused element is editable
@@ -787,6 +971,9 @@ public class Util {
      * be e.g used to check whether component should react to some events or
      * not.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#isAttachedAndDisplayed(Widget)} instead.
+     * 
      * @param widget
      * @return true if attached and displayed
      */
@@ -799,6 +986,9 @@ public class Util {
      * Scrolls an element into view vertically only. Modified version of
      * Element.scrollIntoView.
      * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#scrollIntoViewVertically(Element)} instead.
+     * 
      * @param elem
      *            The element to scroll into view
      */
@@ -810,6 +1000,10 @@ public class Util {
     /**
      * Checks if the given event is either a touch event or caused by the left
      * mouse button
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#isTouchEventOrLeftMouseButton(Event)}
+     *             instead.
      * 
      * @param event
      * @return true if the event is a touch event or caused by the left mouse
@@ -868,6 +1062,9 @@ public class Util {
      * Resolve a relative URL to an absolute URL based on the current document's
      * location.
      * 
+     * @deprecated As of 7.4.0, use {@link WidgetUtil#getAbsoluteUrl(String)}
+     *             instead.
+     * 
      * @param url
      *            a string with the relative URL to resolve
      * @return the corresponding absolute URL as a string
@@ -884,6 +1081,10 @@ public class Util {
      * optional direction attribute to set the anchor to the end and the focus
      * to the start. This makes Firefox work the same way as other browsers
      * (#13477)
+     * 
+     * @deprecated As of 7.4.0, use
+     *             {@link WidgetUtil#setSelectionRange(Element, int, int, String)}
+     *             instead.
      * 
      * @param elem
      *            the html input element.
