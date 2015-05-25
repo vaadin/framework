@@ -74,12 +74,14 @@ import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
+import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
+import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
 import com.vaadin.client.widget.escalator.Cell;
@@ -1131,6 +1133,7 @@ public class Grid<T> extends ResizeComposite implements
         private boolean enabled = false;
         private State state = State.INACTIVE;
         private int rowIndex = -1;
+        private int columnIndex = -1;
         private String styleName = null;
 
         private HandlerRegistration scrollHandler;
@@ -1196,8 +1199,11 @@ public class Grid<T> extends ResizeComposite implements
                     state = State.ACTIVE;
                     bindTimeout.cancel();
 
-                    showOverlay(grid.getEscalator().getBody()
-                            .getRowElement(request.getRowIndex()));
+                    assert rowIndex == request.getRowIndex() : "Request row index "
+                            + request.getRowIndex()
+                            + " did not match the saved row index " + rowIndex;
+
+                    showOverlay();
                 }
             }
 
@@ -1257,17 +1263,33 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Opens the editor over the row with the given index.
+         * Equivalent to {@code editRow(rowIndex, -1)}.
+         * 
+         * @see #editRow(int, int)
+         */
+        public void editRow(int rowIndex) {
+            editRow(rowIndex, -1);
+        }
+
+        /**
+         * Opens the editor over the row with the given index and attempts to
+         * focus the editor widget in the given column index. Does not move
+         * focus if the widget is not focusable or if the column index is -1.
          * 
          * @param rowIndex
          *            the index of the row to be edited
+         * @param columnIndex
+         *            the column index of the editor widget that should be
+         *            initially focused or -1 to not set focus
          * 
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
          *             if this editor is already in edit mode
+         * 
+         * @since
          */
-        public void editRow(int rowIndex) {
+        public void editRow(int rowIndex, int columnIndex) {
             if (!enabled) {
                 throw new IllegalStateException(
                         "Cannot edit row: editor is not enabled");
@@ -1278,6 +1300,7 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             this.rowIndex = rowIndex;
+            this.columnIndex = columnIndex;
 
             state = State.ACTIVATING;
 
@@ -1457,14 +1480,30 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Opens the editor overlay over the given table row.
+         * Equivalent to {@code showOverlay()}. The argument is ignored.
+         *
+         * @param unused
+         *            ignored argument
          * 
-         * @param tr
-         *            the row to be edited
+         * @deprecated As of 7.5, use {@link #showOverlay()} instead.
          */
-        protected void showOverlay(TableRowElement tr) {
+        @Deprecated
+        protected void showOverlay(TableRowElement unused) {
+            showOverlay();
+        }
+
+        /**
+         * Opens the editor overlay over the table row indicated by
+         * {@link #getRow()}.
+         * 
+         * @since
+         */
+        protected void showOverlay() {
 
             DivElement gridElement = DivElement.as(grid.getElement());
+
+            TableRowElement tr = grid.getEscalator().getBody()
+                    .getRowElement(rowIndex);
 
             scrollHandler = grid.addScrollHandler(new ScrollHandler() {
                 @Override
@@ -1485,9 +1524,19 @@ public class Grid<T> extends ResizeComposite implements
                 Column<?, T> column = grid.getVisibleColumn(i);
                 if (column.isEditable()) {
                     Widget editor = getHandler().getWidget(column);
+
                     if (editor != null) {
                         columnToWidget.put(column, editor);
                         attachWidget(editor, cell);
+                    }
+
+                    if (i == columnIndex) {
+                        if (editor instanceof Focusable) {
+                            ((Focusable) editor).focus();
+                        } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
+                            ((com.google.gwt.user.client.ui.Focusable) editor)
+                                    .setFocus(true);
+                        }
                     }
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
@@ -1521,7 +1570,7 @@ public class Grid<T> extends ResizeComposite implements
                 // Move message and buttons wrapper on top of cell wrapper if
                 // there is not enough space visible space under and fix the
                 // overlay from the bottom
-                editorOverlay.appendChild(cellWrapper);
+                editorOverlay.insertFirst(messageAndButtonsWrapper);
                 int gridHeight = grid.getElement().getOffsetHeight();
                 editorOverlay.getStyle()
                         .setBottom(
@@ -6309,24 +6358,25 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
 
+        final boolean closeEvent = event.getTypeInt() == Event.ONKEYDOWN
+                && event.getKeyCode() == Editor.KEYCODE_HIDE;
+        final boolean openEvent = event.getTypeInt() == Event.ONDBLCLICK
+                || (event.getTypeInt() == Event.ONKEYDOWN && event.getKeyCode() == Editor.KEYCODE_SHOW);
+
         if (editor.getState() != Editor.State.INACTIVE) {
-            if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getKeyCode() == Editor.KEYCODE_HIDE) {
+            if (closeEvent) {
                 editor.cancel();
+                FocusUtil.setFocus(this, true);
             }
             return true;
         }
 
-        if (container == escalator.getBody() && editor.isEnabled()) {
-            if (event.getTypeInt() == Event.ONDBLCLICK) {
-                editor.editRow(eventCell.getRowIndex());
-                return true;
-            } else if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getKeyCode() == Editor.KEYCODE_SHOW) {
-                editor.editRow(cellFocusHandler.rowWithFocus);
-                return true;
-            }
+        if (container == escalator.getBody() && editor.isEnabled() && openEvent) {
+            editor.editRow(eventCell.getRowIndex(),
+                    eventCell.getColumnIndexDOM());
+            return true;
         }
+
         return false;
     }
 
