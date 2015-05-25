@@ -87,4 +87,28 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
         selectMenuPath("Component", "State", "Column Reordering");
     }
 
+    protected boolean isRowSelected(int index) {
+        boolean selected = getGridElement().getRow(index).isSelected();
+        return selected;
+    }
+
+    protected void setSelectionModelMulti() {
+        setSelectionModel("multi");
+    }
+
+    protected void setSelectionModelSingle(boolean deselectAllowed) {
+        String mode = "single";
+        if (!deselectAllowed) {
+            mode += " (no deselect)";
+        }
+        setSelectionModel(mode);
+    }
+
+    protected void setSelectionModelNone() {
+        setSelectionModel("none");
+    }
+
+    protected void setSelectionModel(String model) {
+        selectMenuPath("Component", "State", "Selection mode", model);
+    }
 }

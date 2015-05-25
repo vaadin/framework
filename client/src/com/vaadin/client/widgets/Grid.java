@@ -2299,8 +2299,26 @@ public class Grid<T> extends ResizeComposite implements
                     }
                 });
                 checkBox.setValue(selected);
-
                 selectionCell.setWidget(checkBox);
+                // Select all with space when "select all" cell is active
+                addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
+                    @Override
+                    public void onKeyUp(GridKeyUpEvent event) {
+                        if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+                            return;
+                        }
+                        HeaderRow targetHeaderRow = getHeader().getRow(
+                                event.getFocusedCell().getRowIndex());
+                        if (!targetHeaderRow.isDefault()) {
+                            return;
+                        }
+                        if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
+                            // Send events to ensure row selection state is
+                            // updated
+                            checkBox.setValue(!checkBox.getValue(), true);
+                        }
+                    }
+                });
 
             }
         }
