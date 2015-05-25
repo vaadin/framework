@@ -478,9 +478,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Are the tab selection parts ("tabs") hidden.
      * 
      * @return true if the tabs are hidden in the UI
+     * @deprecated as of 7.5, use {@link #isTabsVisible()} instead
      */
+    @Deprecated
     public boolean areTabsHidden() {
-        return !getState(false).tabsVisible;
+        return !isTabsVisible();
     }
 
     /**
@@ -488,9 +490,33 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @param tabsHidden
      *            true if the tabs should be hidden
+     * @deprecated as of 7.5, use {@link #setTabsVisible(boolean)} instead
      */
+    @Deprecated
     public void hideTabs(boolean tabsHidden) {
-        getState().tabsVisible = !tabsHidden;
+        setTabsVisible(!tabsHidden);
+    }
+
+    /**
+     * Sets whether the tab selection part should be shown in the UI
+     * 
+     * @since 7.5
+     * @param tabsVisible
+     *            true if the tabs should be shown in the UI, false otherwise
+     */
+    public void setTabsVisible(boolean tabsVisible) {
+        getState().tabsVisible = tabsVisible;
+    }
+
+    /**
+     * Checks if the tab selection part should be shown in the UI
+     *
+     * @return true if the tabs are shown in the UI, false otherwise
+     * @since 7.5
+     */
+    public boolean isTabsVisible() {
+        return getState(false).tabsVisible;
+
     }
 
     /**

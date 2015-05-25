@@ -18,7 +18,9 @@ package com.vaadin.tests.server.component.tabsheet;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
@@ -64,5 +66,22 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
         ts.setSelectedTab(tf);
         testRead(design, ts);
         testWrite(design, ts);
+    }
+
+    @Test
+    public void tabsNotShown() {
+        String design = "<v-tab-sheet tabs-visible=\"false\">\n"
+                + "  <tab caption=\"My Tab\" selected=\"true\">\n"
+                + "    <v-label>My Content</v-label>\n" + "  </tab>\n"
+                + "</v-tab-sheet>\n";
+        TabSheet ts = new TabSheet();
+        ts.setTabsVisible(false);
+        Label l = new Label("My Content", ContentMode.HTML);
+        Tab tab = ts.addTab(l);
+        tab.setCaption("My Tab");
+        ts.setSelectedTab(tab);
+        testRead(design, ts);
+        testWrite(design, ts);
+
     }
 }
