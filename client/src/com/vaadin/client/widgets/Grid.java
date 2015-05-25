@@ -6202,7 +6202,7 @@ public class Grid<T> extends ResizeComposite implements
 
         assert cell != null : "received " + eventType
                 + "-event with a null cell target";
-        eventCell.set(cell);
+        eventCell.set(cell, getSectionFromContainer(container));
 
         // Editor can steal focus from Grid and is still handled
         if (handleEditorEvent(event, container)) {
@@ -6235,6 +6235,20 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
         }
+    }
+
+    private Section getSectionFromContainer(RowContainer container) {
+        assert container != null : "RowContainer should not be null";
+
+        if (container == escalator.getBody()) {
+            return Section.BODY;
+        } else if (container == escalator.getFooter()) {
+            return Section.FOOTER;
+        } else if (container == escalator.getHeader()) {
+            return Section.HEADER;
+        }
+        assert false : "RowContainer was not header, footer or body.";
+        return null;
     }
 
     private boolean isOrContainsInSpacer(Node node) {
@@ -7779,5 +7793,18 @@ public class Grid<T> extends ResizeComposite implements
         } else {
             sidebar.close();
         }
+    }
+
+    /**
+     * Returns the {@link EventCellReference} for the latest event fired from
+     * this Grid.
+     * <p>
+     * Note: This cell reference will be updated when firing the next event.
+     * 
+     * @since
+     * @return event cell reference
+     */
+    public EventCellReference<T> getEventCell() {
+        return eventCell;
     }
 }
