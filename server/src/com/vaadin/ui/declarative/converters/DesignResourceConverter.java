@@ -28,8 +28,8 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.GenericFontIcon;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -109,8 +109,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             @Override
             public String format(Resource value)
                     throws Converter.ConversionException {
-                return ApplicationConstants.THEME_PROTOCOL_PREFIX
-                        + ((ThemeResource) value).getResourceId();
+                return new ResourceReference(value, null, null).getURL();
             }
         },
         FONTICON {
@@ -118,8 +117,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             public Resource parse(String value) {
                 final String address = (value.split("://", 2))[1];
                 final String[] familyAndCode = address.split("/", 2);
-                final int codepoint = Integer.valueOf(
-                        familyAndCode[1].substring(2), 16);
+                final int codepoint = Integer.valueOf(familyAndCode[1], 16);
 
                 if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
                     try {
@@ -141,9 +139,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             public String format(Resource value)
                     throws Converter.ConversionException {
                 FontIcon icon = (FontIcon) value;
-                return ApplicationConstants.FONTICON_PROTOCOL_PREFIX
-                        + icon.getFontFamily() + "/0x"
-                        + Integer.toHexString(icon.getCodepoint());
+                return new ResourceReference(icon, null, null).getURL();
+
             }
         },
         @Deprecated

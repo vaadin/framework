@@ -275,8 +275,8 @@ public class DesignFormatterTest {
         String httpUrl = "http://example.com/icon.png";
         String httpsUrl = "https://example.com/icon.png";
         String themePath = "icons/icon.png";
-        String fontAwesomeUrl = "fonticon://FontAwesome/0xf0f9";
-        String someOtherFontUrl = "fonticon://SomeOther/0xF0F9";
+        String fontAwesomeUrl = "fonticon://FontAwesome/f0f9";
+        String someOtherFontUrl = "fonticon://SomeOther/F0F9";
         String fileSystemPath = "c:\\app\\resources\\icon.png";
 
         assertEquals(httpUrl, formatter.format(new ExternalResource(httpUrl)));
@@ -315,8 +315,8 @@ public class DesignFormatterTest {
         String httpUrl = "http://example.com/icon.png";
         String httpsUrl = "https://example.com/icon.png";
         String themePath = "icons/icon.png";
-        String fontAwesomeUrl = "fonticon://FontAwesome/0xf0f9";
-        String someOtherFont = "fonticon://SomeOther/0xF0F9";
+        String fontAwesomeUrl = "fonticon://FontAwesome/f0f9";
+        String someOtherFont = "fonticon://SomeOther/F0F9";
         String fontAwesomeUrlOld = "font://AMBULANCE";
         String fileSystemPath = "c:\\app\\resources\\icon.png";
 
