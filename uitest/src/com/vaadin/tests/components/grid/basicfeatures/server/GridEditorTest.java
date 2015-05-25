@@ -47,6 +47,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
             "Editor", "Edit item 100" };
     private static final String[] TOGGLE_EDIT_ENABLED = new String[] {
             "Component", "Editor", "Enabled" };
+    private static final String[] TOGGLE_EDITOR_BUFFERED_ENABLED = new String[] {
+            "Component", "Editor", "Buffered mode" };
 
     @Before
     public void setUp() {
@@ -300,6 +302,41 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
         assertFalse("Uneditable column should not have an editor widget",
                 getGridElement().getEditor().isEditable(3));
+    }
+
+    @Test
+    public void testEditorUnbufferedShowsNoButtons() {
+        selectMenuPath(TOGGLE_EDITOR_BUFFERED_ENABLED);
+        selectMenuPath(EDIT_ITEM_5);
+
+        assertEditorOpen();
+
+        boolean saveButtonFound = true;
+        try {
+            getSaveButton();
+        } catch (NoSuchElementException e) {
+            saveButtonFound = false;
+        }
+        assertFalse("Save button should not be visible in unbuffered mode.",
+                saveButtonFound);
+
+        boolean cancelButtonFound = true;
+        try {
+            getCancelButton();
+        } catch (NoSuchElementException e) {
+            cancelButtonFound = false;
+        }
+        assertFalse("Cancel button should not be visible in unbuffered mode.",
+                cancelButtonFound);
+    }
+
+    @Test
+    public void testEditorUnbufferedWhileOpen() {
+        selectMenuPath(EDIT_ITEM_5);
+        selectMenuPath(TOGGLE_EDITOR_BUFFERED_ENABLED);
+        assertEditorOpen();
+        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        assertTrue("IllegalStateException thrown", thrown);
     }
 
     private WebElement getSaveButton() {

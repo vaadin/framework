@@ -154,6 +154,10 @@ public class GridState extends TabIndexState {
     /** The enabled state of the editor interface */
     public boolean editorEnabled = false;
 
+    /** Buffered editor mode */
+    @DelegateToWidget
+    public boolean editorBuffered = true;
+
     /** Whether row data might contain generated row styles */
     public boolean hasRowStyleGenerator;
     /** Whether row data might contain generated cell styles */

@@ -1176,6 +1176,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
+        createBooleanAction("Buffered mode", "Editor", true,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.setEditorBuffered(value);
+                    }
+                });
+
         createClickAction("Edit item 5", "Editor", new Command<Grid, String>() {
             @Override
             public void execute(Grid c, String value, Object data) {

@@ -1225,6 +1225,7 @@ public class Grid<T> extends ResizeComposite implements
 
         /** A set of all the columns that display an error flag. */
         private final Set<Column<?, T>> columnErrors = new HashSet<Grid.Column<?, T>>();
+        private boolean buffered = true;
 
         public Editor() {
             saveButton = new Button();
@@ -1504,8 +1505,10 @@ public class Grid<T> extends ResizeComposite implements
                 messageAndButtonsWrapper.appendChild(buttonsWrapper);
             }
 
-            attachWidget(saveButton, buttonsWrapper);
-            attachWidget(cancelButton, buttonsWrapper);
+            if (isBuffered()) {
+                attachWidget(saveButton, buttonsWrapper);
+                attachWidget(cancelButton, buttonsWrapper);
+            }
 
             updateHorizontalScrollPosition();
 
@@ -1714,6 +1717,14 @@ public class Grid<T> extends ResizeComposite implements
 
         public boolean isEditorColumnError(Column<?, T> column) {
             return columnErrors.contains(column);
+        }
+
+        public void setBuffered(boolean buffered) {
+            this.buffered = buffered;
+        }
+
+        public boolean isBuffered() {
+            return buffered;
         }
     }
 
@@ -7839,5 +7850,28 @@ public class Grid<T> extends ResizeComposite implements
     @Override
     public void focus() {
         setFocus(true);
+    }
+
+    /**
+     * Sets the buffered editor mode.
+     * 
+     * @since
+     * @param editorUnbuffered
+     *            <code>true</code> to enable buffered editor,
+     *            <code>false</code> to disable it
+     */
+    public void setEditorBuffered(boolean editorBuffered) {
+        editor.setBuffered(editorBuffered);
+    }
+
+    /**
+     * Gets the buffered editor mode.
+     * 
+     * @since
+     * @return <code>true</code> if buffered editor is enabled,
+     *         <code>false</code> otherwise
+     */
+    public boolean isEditorBuffered() {
+        return editor.isBuffered();
     }
 }

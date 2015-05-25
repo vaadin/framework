@@ -6019,6 +6019,39 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 EditorCloseEvent.class, listener);
     }
 
+    /**
+     * Sets the buffered editor mode. The default mode is buffered (
+     * <code>true</code>).
+     * 
+     * @since
+     * @param editorBuffered
+     *            <code>true</code> to enable buffered editor,
+     *            <code>false</code> to disable it
+     * @throws IllegalStateException
+     *             If editor is active while attempting to change the buffered
+     *             mode.
+     */
+    public void setEditorBuffered(boolean editorBuffered)
+            throws IllegalStateException {
+        if (isEditorActive()) {
+            throw new IllegalStateException(
+                    "Can't change editor unbuffered mode while editor is active.");
+        }
+        getState().editorBuffered = editorBuffered;
+        editorFieldGroup.setBuffered(editorBuffered);
+    }
+
+    /**
+     * Gets the buffered editor mode.
+     * 
+     * @since
+     * @return <code>true</code> if buffered editor is enabled,
+     *         <code>false</code> otherwise
+     */
+    public boolean isEditorBuffered() {
+        return getState().editorBuffered;
+    }
+
     @Override
     public void addItemClickListener(ItemClickListener listener) {
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
