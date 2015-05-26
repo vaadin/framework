@@ -3854,7 +3854,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             protected <T> SelectionModel<T> createModel() {
-                return new SelectionModelSingle<T>();
+                return GWT.create(SelectionModelSingle.class);
             }
         },
 
@@ -3865,7 +3865,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             protected <T> SelectionModel<T> createModel() {
-                return new SelectionModelMulti<T>();
+                return GWT.create(SelectionModelMulti.class);
             }
         },
 
@@ -3876,7 +3876,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             protected <T> SelectionModel<T> createModel() {
-                return new SelectionModelNone<T>();
+                return GWT.create(SelectionModelNone.class);
             }
         };
 
