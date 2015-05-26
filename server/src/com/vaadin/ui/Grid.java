@@ -3274,15 +3274,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An abstract base class for server-side Grid renderers.
      * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. This class
-     * currently extends the AbstractExtension superclass, but this fact should
-     * be regarded as an implementation detail and subject to change in a future
-     * major or minor Vaadin revision.
+     * currently extends the AbstractGridExtension superclass, but this fact
+     * should be regarded as an implementation detail and subject to change in a
+     * future major or minor Vaadin revision.
      * 
      * @param <T>
      *            the type this renderer knows how to present
      */
-    public static abstract class AbstractRenderer<T> extends AbstractExtension
-            implements Renderer<T> {
+    public static abstract class AbstractRenderer<T> extends
+            AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
 
@@ -3339,6 +3339,33 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         protected <U> JsonValue encode(U value, Class<U> type) {
             return JsonCodec.encode(value, null, type,
                     getUI().getConnectorTracker()).getEncodedValue();
+        }
+    }
+
+    /**
+     * An abstract base class for server-side Grid extensions.
+     * 
+     * @since
+     */
+    public static abstract class AbstractGridExtension extends
+            AbstractExtension {
+
+        /**
+         * Constructs a new Grid extension.
+         */
+        public AbstractGridExtension() {
+            super();
+        }
+
+        /**
+         * Constructs a new Grid extension and extends given Grid.
+         * 
+         * @param grid
+         *            a grid instance
+         */
+        public AbstractGridExtension(Grid grid) {
+            super();
+            extend(grid);
         }
 
         /**
