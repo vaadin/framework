@@ -3930,13 +3930,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 boolean success = false;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
-                    if (editedItemId == null) {
+                    if (!isEditorBuffered() || editedItemId == null) {
                         editedItemId = id;
                     }
 
                     if (editedItemId.equals(id)) {
-                        success = true;
                         doEditItem();
+                        success = true;
                     }
                 } catch (Exception e) {
                     handleError(e);

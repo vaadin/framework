@@ -1425,6 +1425,13 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
+        protected void hide() {
+            hideOverlay();
+            grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
+            state = State.INACTIVE;
+            updateSelectionCheckboxesAsNeeded(true);
+        }
+
         protected void setGrid(final Grid<T> grid) {
             assert grid != null : "Grid cannot be null";
             assert this.grid == null : "Can only attach editor to Grid once";
@@ -5063,7 +5070,7 @@ public class Grid<T> extends ResizeComposite implements
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
                 BrowserEvents.KEYPRESS, BrowserEvents.DBLCLICK,
-                BrowserEvents.MOUSEDOWN));
+                BrowserEvents.MOUSEDOWN, BrowserEvents.CLICK));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
         addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
@@ -6306,31 +6313,43 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
+        int type = event.getTypeInt();
+        boolean editorIsActive = editor.getState() != Editor.State.INACTIVE;
 
-        if (editor.getState() != Editor.State.INACTIVE) {
-            if (event.getTypeInt() == Event.ONKEYDOWN
+        if (editorIsActive) {
+            // React to closing by keyboard in buffered and unbuffered mode
+            if (type == Event.ONKEYDOWN
                     && event.getKeyCode() == Editor.KEYCODE_HIDE) {
                 editor.cancel();
+                return true;
             }
-            return true;
+            // Swallow all other events in buffered mode and everything except
+            // ONCLICK in unbuffered mode
+            if (editor.isBuffered() || type != Event.ONCLICK) {
+                return true;
+            }
         }
 
         if (container == escalator.getBody() && editor.isEnabled()) {
 
-            boolean wasOpen = editor.getState() != Editor.State.INACTIVE;
             boolean opened = false;
 
-            if (event.getTypeInt() == Event.ONDBLCLICK) {
+            if (editorIsActive && !editor.isBuffered() && type == Event.ONCLICK) {
+                editor.hide();
+                cellFocusHandler.setCellFocus(eventCell);
                 editor.editRow(eventCell.getRowIndex());
                 opened = true;
-            } else if (event.getTypeInt() == Event.ONKEYDOWN
+            } else if (type == Event.ONDBLCLICK) {
+                editor.editRow(eventCell.getRowIndex());
+                opened = true;
+            } else if (type == Event.ONKEYDOWN
                     && event.getKeyCode() == Editor.KEYCODE_SHOW) {
                 editor.editRow(cellFocusHandler.rowWithFocus);
                 opened = true;
             }
 
             if (opened) {
-                if (wasOpen) {
+                if (editorIsActive) {
                     fireEvent(new EditorMoveEvent(eventCell));
                 } else {
                     fireEvent(new EditorOpenEvent(eventCell));

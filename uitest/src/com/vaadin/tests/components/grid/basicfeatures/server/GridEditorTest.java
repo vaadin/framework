@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -32,23 +31,18 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.testbench.elements.GridElement.GridEditorElement;
-import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
-public class GridEditorTest extends GridBasicFeaturesTest {
+public abstract class GridEditorTest extends GridBasicFeaturesTest {
 
-    private static final String[] EDIT_ITEM_5 = new String[] { "Component",
+    protected static final String[] EDIT_ITEM_5 = new String[] { "Component",
             "Editor", "Edit item 5" };
-    private static final String[] EDIT_ITEM_100 = new String[] { "Component",
+    protected static final String[] EDIT_ITEM_100 = new String[] { "Component",
             "Editor", "Edit item 100" };
-    private static final String[] TOGGLE_EDIT_ENABLED = new String[] {
+    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
             "Component", "Editor", "Enabled" };
-    private static final String[] TOGGLE_EDITOR_BUFFERED_ENABLED = new String[] {
-            "Component", "Editor", "Buffered mode" };
 
     @Before
     public void setUp() {
@@ -129,110 +123,20 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertEquals("<b>100</b>", widgets.get(8).getAttribute("value"));
     }
 
-    @Test
-    public void testSave() {
-        selectMenuPath(EDIT_ITEM_100);
-
-        WebElement textField = getEditorWidgets().get(0);
-
-        textField.click();
-
-        textField.sendKeys(" changed");
-
-        WebElement saveButton = getEditor().findElement(
-                By.className("v-grid-editor-save"));
-
-        saveButton.click();
-
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
-    }
-
-    @Test
-    public void testProgrammaticSave() {
-        selectMenuPath(EDIT_ITEM_100);
-
-        WebElement textField = getEditorWidgets().get(0);
-
-        textField.click();
-
-        textField.sendKeys(" changed");
-
-        selectMenuPath("Component", "Editor", "Save");
-
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
-    }
-
-    @Test
-    public void testCaptionChange() {
-        selectMenuPath(EDIT_ITEM_5);
-        assertEquals("Save button caption should've been \""
-                + GridConstants.DEFAULT_SAVE_CAPTION + "\" to begin with",
-                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
-        assertEquals("Cancel button caption should've been \""
-                + GridConstants.DEFAULT_CANCEL_CAPTION + "\" to begin with",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
-
-        selectMenuPath("Component", "Editor", "Change save caption");
-        assertNotEquals(
-                "Save button caption should've changed while editor is open",
-                GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
-
-        getCancelButton().click();
-
-        selectMenuPath("Component", "Editor", "Change cancel caption");
-        selectMenuPath(EDIT_ITEM_5);
-        assertNotEquals(
-                "Cancel button caption should've changed while editor is closed",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
-    }
-
-    private void assertEditorOpen() {
+    protected void assertEditorOpen() {
         assertNotNull("Editor is supposed to be open", getEditor());
         assertEquals("Unexpected number of widgets",
                 GridBasicFeatures.EDITABLE_COLUMNS, getEditorWidgets().size());
     }
 
-    private void assertEditorClosed() {
+    protected void assertEditorClosed() {
         assertNull("Editor is supposed to be closed", getEditor());
     }
 
-    private List<WebElement> getEditorWidgets() {
+    protected List<WebElement> getEditorWidgets() {
         assertNotNull(getEditor());
         return getEditor().findElements(By.className("v-textfield"));
 
-    }
-
-    @Test
-    public void testInvalidEdition() {
-        selectMenuPath(EDIT_ITEM_5);
-        assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
-
-        GridEditorElement editor = getGridElement().getEditor();
-
-        assertFalse(
-                "Field 7 should not have been marked with an error before error",
-                editor.isFieldErrorMarked(7));
-
-        WebElement intField = editor.getField(7);
-        intField.clear();
-        intField.sendKeys("banana phone");
-        editor.save();
-
-        assertEquals("Column 7: Could not convert value to Integer",
-                editor.getErrorMessage());
-        assertTrue("Field 7 should have been marked with an error after error",
-                editor.isFieldErrorMarked(7));
-        editor.cancel();
-
-        selectMenuPath(EDIT_ITEM_100);
-        assertFalse("Exception should not exist",
-                isElementPresent(NotificationElement.class));
-        assertEquals("There should be no editor error message", null,
-                editor.getErrorMessage());
     }
 
     @Test
@@ -272,30 +176,6 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testEditorInDisabledGrid() {
-        int originalScrollPos = getGridVerticalScrollPos();
-
-        selectMenuPath(EDIT_ITEM_5);
-        assertEditorOpen();
-
-        selectMenuPath("Component", "State", "Enabled");
-        assertEditorOpen();
-
-        GridEditorElement editor = getGridElement().getEditor();
-        editor.save();
-        assertEditorOpen();
-
-        editor.cancel();
-        assertEditorOpen();
-
-        selectMenuPath("Component", "State", "Enabled");
-
-        scrollGridVerticallyTo(100);
-        assertEquals("Grid shouldn't scroll vertically while editing",
-                originalScrollPos, getGridVerticalScrollPos());
-    }
-
-    @Test
     public void testUneditableColumn() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
@@ -304,46 +184,11 @@ public class GridEditorTest extends GridBasicFeaturesTest {
                 getGridElement().getEditor().isEditable(3));
     }
 
-    @Test
-    public void testEditorUnbufferedShowsNoButtons() {
-        selectMenuPath(TOGGLE_EDITOR_BUFFERED_ENABLED);
-        selectMenuPath(EDIT_ITEM_5);
-
-        assertEditorOpen();
-
-        boolean saveButtonFound = true;
-        try {
-            getSaveButton();
-        } catch (NoSuchElementException e) {
-            saveButtonFound = false;
-        }
-        assertFalse("Save button should not be visible in unbuffered mode.",
-                saveButtonFound);
-
-        boolean cancelButtonFound = true;
-        try {
-            getCancelButton();
-        } catch (NoSuchElementException e) {
-            cancelButtonFound = false;
-        }
-        assertFalse("Cancel button should not be visible in unbuffered mode.",
-                cancelButtonFound);
-    }
-
-    @Test
-    public void testEditorUnbufferedWhileOpen() {
-        selectMenuPath(EDIT_ITEM_5);
-        selectMenuPath(TOGGLE_EDITOR_BUFFERED_ENABLED);
-        assertEditorOpen();
-        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
-        assertTrue("IllegalStateException thrown", thrown);
-    }
-
-    private WebElement getSaveButton() {
+    protected WebElement getSaveButton() {
         return getDriver().findElement(By.className("v-grid-editor-save"));
     }
 
-    private WebElement getCancelButton() {
+    protected WebElement getCancelButton() {
         return getDriver().findElement(By.className("v-grid-editor-cancel"));
     }
 }

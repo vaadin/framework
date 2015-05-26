@@ -1,0 +1,88 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.tests.components.grid.basicfeatures.server;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
+
+public class GridEditorUnbufferedTest extends GridEditorTest {
+
+    private static final String[] TOGGLE_EDITOR_BUFFERED = new String[] {
+            "Component", "Editor", "Buffered mode" };
+
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        selectMenuPath(TOGGLE_EDITOR_BUFFERED);
+    }
+
+    @Test
+    public void testEditorShowsNoButtons() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        assertEditorOpen();
+
+        boolean saveButtonFound = true;
+        try {
+            getSaveButton();
+        } catch (NoSuchElementException e) {
+            saveButtonFound = false;
+        }
+        assertFalse("Save button should not be visible in unbuffered mode.",
+                saveButtonFound);
+
+        boolean cancelButtonFound = true;
+        try {
+            getCancelButton();
+        } catch (NoSuchElementException e) {
+            cancelButtonFound = false;
+        }
+        assertFalse("Cancel button should not be visible in unbuffered mode.",
+                cancelButtonFound);
+    }
+
+    @Test
+    public void testToggleEditorUnbufferedWhileOpen() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+        selectMenuPath(TOGGLE_EDITOR_BUFFERED);
+        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        assertTrue("IllegalStateException thrown", thrown);
+    }
+
+    @Test
+    public void testEditorMove() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        assertEditorOpen();
+
+        String firstFieldValue = getEditorWidgets().get(0)
+                .getAttribute("value");
+        assertTrue("Editor is not at correct row index (5)",
+                "(5, 0)".equals(firstFieldValue));
+
+        getGridElement().getCell(10, 0).click();
+        firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
+
+        assertTrue("Editor is not at correct row index (10)",
+                "(10, 0)".equals(firstFieldValue));
+    }
+}
