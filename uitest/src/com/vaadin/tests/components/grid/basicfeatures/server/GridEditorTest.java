@@ -27,11 +27,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -84,12 +82,6 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         assertEditorOpen();
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testVerticalScrollLocking() {
-        selectMenuPath(EDIT_ITEM_5);
-        getGridElement().getCell(200, 0);
-    }
-
     @Test
     public void testKeyboardOpeningClosing() {
 
@@ -137,42 +129,6 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         assertNotNull(getEditor());
         return getEditor().findElements(By.className("v-textfield"));
 
-    }
-
-    @Test
-    public void testNoScrollAfterEditByAPI() {
-        int originalScrollPos = getGridVerticalScrollPos();
-
-        selectMenuPath(EDIT_ITEM_5);
-
-        scrollGridVerticallyTo(100);
-        assertEquals("Grid shouldn't scroll vertically while editing",
-                originalScrollPos, getGridVerticalScrollPos());
-    }
-
-    @Test
-    public void testNoScrollAfterEditByMouse() {
-        int originalScrollPos = getGridVerticalScrollPos();
-
-        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
-        new Actions(getDriver()).doubleClick(cell_5_0).perform();
-
-        scrollGridVerticallyTo(100);
-        assertEquals("Grid shouldn't scroll vertically while editing",
-                originalScrollPos, getGridVerticalScrollPos());
-    }
-
-    @Test
-    public void testNoScrollAfterEditByKeyboard() {
-        int originalScrollPos = getGridVerticalScrollPos();
-
-        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
-        cell_5_0.click();
-        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
-
-        scrollGridVerticallyTo(100);
-        assertEquals("Grid shouldn't scroll vertically while editing",
-                originalScrollPos, getGridVerticalScrollPos());
     }
 
     @Test

@@ -20,7 +20,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.interactions.Actions;
+
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
 
@@ -84,5 +88,44 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
         assertTrue("Editor is not at correct row index (10)",
                 "(10, 0)".equals(firstFieldValue));
+    }
+
+    @Test
+    public void testNoScrollAfterEditByAPI() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        selectMenuPath(EDIT_ITEM_5);
+
+        scrollGridVerticallyTo(100);
+        assertGreater(
+                "Grid should scroll vertically while editing in unbuffered mode",
+                getGridVerticalScrollPos(), originalScrollPos);
+    }
+
+    @Test
+    public void testNoScrollAfterEditByMouse() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
+        new Actions(getDriver()).doubleClick(cell_5_0).perform();
+
+        scrollGridVerticallyTo(100);
+        assertGreater(
+                "Grid should scroll vertically while editing in unbuffered mode",
+                getGridVerticalScrollPos(), originalScrollPos);
+    }
+
+    @Test
+    public void testNoScrollAfterEditByKeyboard() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
+        cell_5_0.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        scrollGridVerticallyTo(100);
+        assertGreater(
+                "Grid should scroll vertically while editing in unbuffered mode",
+                getGridVerticalScrollPos(), originalScrollPos);
     }
 }

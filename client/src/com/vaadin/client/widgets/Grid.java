@@ -1227,6 +1227,11 @@ public class Grid<T> extends ResizeComposite implements
         private final Set<Column<?, T>> columnErrors = new HashSet<Grid.Column<?, T>>();
         private boolean buffered = true;
 
+        /** Original position of editor */
+        private double originalTop;
+        /** Original scroll position of grid when editor was opened */
+        private double originalScrollTop;
+
         public Editor() {
             saveButton = new Button();
             saveButton.setText(GridConstants.DEFAULT_SAVE_CAPTION);
@@ -1420,7 +1425,8 @@ public class Grid<T> extends ResizeComposite implements
                 EditorRequest<T> request = new EditorRequestImpl<T>(grid,
                         rowIndex, bindRequestCallback);
                 handler.bind(request);
-                grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
+                grid.getEscalator().setScrollLocked(Direction.VERTICAL,
+                        isBuffered());
                 updateSelectionCheckboxesAsNeeded(false);
             }
         }
@@ -1484,6 +1490,9 @@ public class Grid<T> extends ResizeComposite implements
                 @Override
                 public void onScroll(ScrollEvent event) {
                     updateHorizontalScrollPosition();
+                    if (!isBuffered()) {
+                        updateVerticalScrollPosition();
+                    }
                 }
             });
 
@@ -1527,9 +1536,11 @@ public class Grid<T> extends ResizeComposite implements
             int gridTop = gridElement.getAbsoluteTop();
             double overlayTop = rowTop + bodyTop - gridTop;
 
-            if (buttonsShouldBeRenderedBelow(tr)) {
+            originalScrollTop = grid.getScrollTop();
+            if (!isBuffered() || buttonsShouldBeRenderedBelow(tr)) {
                 // Default case, editor buttons are below the edited row
                 editorOverlay.getStyle().setTop(overlayTop, Unit.PX);
+                originalTop = overlayTop;
                 editorOverlay.getStyle().clearBottom();
             } else {
                 // Move message and buttons wrapper on top of cell wrapper if
@@ -1647,6 +1658,35 @@ public class Grid<T> extends ResizeComposite implements
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
             cellWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
+        }
+
+        /**
+         * Moves the editor overlay on scroll so that it stays on top of the
+         * edited row. This will also snap the editor to top or bottom of the
+         * row container if the edited row is scrolled out of the visible area.
+         */
+        private void updateVerticalScrollPosition() {
+            double newScrollTop = grid.getScrollTop();
+
+            int gridTop = grid.getElement().getAbsoluteTop();
+            int editorHeight = editorOverlay.getOffsetHeight();
+
+            Escalator escalator = grid.getEscalator();
+            TableSectionElement header = escalator.getHeader().getElement();
+            int footerTop = escalator.getFooter().getElement().getAbsoluteTop();
+            int headerBottom = header.getAbsoluteBottom();
+
+            double newTop = originalTop - (newScrollTop - originalScrollTop);
+
+            if (newTop + gridTop < headerBottom) {
+                // Snap editor to top of the row container
+                newTop = header.getOffsetHeight();
+            } else if (newTop + gridTop > footerTop - editorHeight) {
+                // Snap editor to the bottom of the row container
+                newTop = footerTop - editorHeight - gridTop;
+            }
+
+            editorOverlay.getStyle().setTop(newTop, Unit.PX);
         }
 
         protected void setGridEnabled(boolean enabled) {
