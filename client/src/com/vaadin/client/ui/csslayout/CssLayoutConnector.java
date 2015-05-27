@@ -32,6 +32,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.CssLayout;
 
 /**
@@ -160,13 +161,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      * @return A string converted to camelcase
      */
     private static final String makeCamelCase(String cssProperty) {
-        // TODO this might be cleaner to implement with regexp
-        while (cssProperty.contains("-")) {
-            int indexOf = cssProperty.indexOf("-");
-            cssProperty = cssProperty.substring(0, indexOf)
-                    + String.valueOf(cssProperty.charAt(indexOf + 1))
-                            .toUpperCase() + cssProperty.substring(indexOf + 2);
-        }
+        cssProperty = SharedUtil.dashSeparatedToCamelCase(cssProperty);
         if ("float".equals(cssProperty)) {
             if (BrowserInfo.get().isIE()) {
                 return "styleFloat";

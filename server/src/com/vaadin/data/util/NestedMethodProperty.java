@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.MethodProperty.MethodException;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Nested accessor based property for a bean.
@@ -164,11 +165,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         try {
             // Assure that the first letter is upper cased (it is a common
             // mistake to write firstName, not FirstName).
-            if (Character.isLowerCase(lastSimplePropertyName.charAt(0))) {
-                final char[] buf = lastSimplePropertyName.toCharArray();
-                buf[0] = Character.toUpperCase(buf[0]);
-                lastSimplePropertyName = new String(buf);
-            }
+            lastSimplePropertyName = SharedUtil
+                    .capitalize(lastSimplePropertyName);
 
             setMethod = lastClass.getMethod("set" + lastSimplePropertyName,
                     new Class[] { type });

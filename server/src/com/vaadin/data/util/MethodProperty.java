@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.util.SerializerHelper;
 
 /**
@@ -189,11 +190,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
         // Assure that the first letter is upper cased (it is a common
         // mistake to write firstName, not FirstName).
-        if (Character.isLowerCase(beanPropertyName.charAt(0))) {
-            final char[] buf = beanPropertyName.toCharArray();
-            buf[0] = Character.toUpperCase(buf[0]);
-            beanPropertyName = new String(buf);
-        }
+        beanPropertyName = SharedUtil.capitalize(beanPropertyName);
 
         // Find the get method
         getMethod = null;
@@ -534,8 +531,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      */
     static Method initGetterMethod(String propertyName, final Class<?> beanClass)
             throws NoSuchMethodException {
-        propertyName = propertyName.substring(0, 1).toUpperCase()
-                + propertyName.substring(1);
+        propertyName = SharedUtil.capitalize(propertyName);
 
         Method getMethod = null;
         try {
@@ -772,4 +768,5 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Logger getLogger() {
         return Logger.getLogger(MethodProperty.class.getName());
     }
+
 }

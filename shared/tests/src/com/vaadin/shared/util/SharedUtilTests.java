@@ -3,6 +3,8 @@ package com.vaadin.shared.util;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -76,4 +78,44 @@ public class SharedUtilTests {
         String[] splitParts = SharedUtil.splitCamelCase(camelCaseString);
         Assert.assertArrayEquals(parts, splitParts);
     }
+
+    @Test
+    public void join() {
+        String s1 = "foo-bar-baz";
+        String s2 = "foo--bar";
+
+        Assert.assertEquals("foobarbaz", SharedUtil.join(s1.split("-"), ""));
+        Assert.assertEquals("foo!bar!baz", SharedUtil.join(s1.split("-"), "!"));
+        Assert.assertEquals("foo!!bar!!baz",
+                SharedUtil.join(s1.split("-"), "!!"));
+
+        Assert.assertEquals("foo##bar", SharedUtil.join(s2.split("-"), "#"));
+    }
+
+    @Test
+    public void dashSeparatedToCamelCase() {
+        Assert.assertEquals(null, SharedUtil.dashSeparatedToCamelCase(null));
+        Assert.assertEquals("", SharedUtil.dashSeparatedToCamelCase(""));
+        Assert.assertEquals("foo", SharedUtil.dashSeparatedToCamelCase("foo"));
+        Assert.assertEquals("fooBar",
+                SharedUtil.dashSeparatedToCamelCase("foo-bar"));
+        Assert.assertEquals("fooBar",
+                SharedUtil.dashSeparatedToCamelCase("foo--bar"));
+        Assert.assertEquals("fooBarBaz",
+                SharedUtil.dashSeparatedToCamelCase("foo-bar-baz"));
+        Assert.assertEquals("fooBarBaz",
+                SharedUtil.dashSeparatedToCamelCase("foo-Bar-Baz"));
+    }
+
+    @Test
+    public void methodUppercaseWithTurkishLocale() {
+        Locale defaultLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("tr", "TR"));
+            Assert.assertEquals("Integer", SharedUtil.capitalize("integer"));
+        } finally {
+            Locale.setDefault(defaultLocale);
+        }
+    }
+
 }
