@@ -1050,6 +1050,7 @@ public class Grid<T> extends ResizeComposite implements
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
         private static final String ERROR_CLASS_NAME = "error";
+        private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
 
         protected enum State {
             INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
@@ -1433,6 +1434,8 @@ public class Grid<T> extends ResizeComposite implements
                         columnToWidget.put(column, editor);
                         attachWidget(editor, cell);
                     }
+                } else {
+                    cell.addClassName(NOT_EDITABLE_CLASS_NAME);
                 }
             }
 
