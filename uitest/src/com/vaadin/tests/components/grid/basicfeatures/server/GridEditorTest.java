@@ -298,8 +298,16 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
 
+        GridEditorElement editor = getGridElement().getEditor();
         assertFalse("Uneditable column should not have an editor widget",
-                getGridElement().getEditor().isEditable(3));
+                editor.isEditable(3));
+        assertEquals(
+                "Not editable cell did not contain correct classname",
+                "not-editable",
+                editor.findElement(By.className("v-grid-editor-cells"))
+                        .findElements(By.xpath("./div")).get(3)
+                        .getAttribute("class"));
+
     }
 
     private WebElement getSaveButton() {
