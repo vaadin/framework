@@ -57,6 +57,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
+    private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
 
     static {
         if (propertiesFile.exists()) {
@@ -73,6 +74,10 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 if (properties.containsKey(FIREFOX_PATH)) {
                     System.setProperty(FIREFOX_PATH,
                             properties.getProperty(FIREFOX_PATH));
+                }
+                if (properties.containsKey(PHANTOMJS_PATH)) {
+                    System.setProperty(PHANTOMJS_PATH,
+                            properties.getProperty(PHANTOMJS_PATH));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
