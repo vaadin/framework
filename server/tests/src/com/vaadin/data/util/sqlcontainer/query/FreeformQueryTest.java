@@ -23,6 +23,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class FreeformQueryTest {
 
@@ -892,6 +893,83 @@ public class FreeformQueryTest {
         EasyMock.verify(delegate);
     }
 
+    public static class NonMatchingDelegateWithGroupBy implements
+            FreeformQueryDelegate {
+
+        private String fromWhere = "FROM people p1 LEFT JOIN people p2 ON p2.id = p1.id WHERE p1.\"NAME\" LIKE 'notfound' GROUP BY p1.ID";
+
+        @Override
+        public int storeRow(Connection conn, RowItem row)
+                throws UnsupportedOperationException, SQLException {
+            // Not used in this test
+            return 0;
+        }
+
+        @Override
+        public void setOrderBy(List<OrderBy> orderBys)
+                throws UnsupportedOperationException {
+            // Not used in this test
+        }
+
+        @Override
+        public void setFilters(List<Filter> filters)
+                throws UnsupportedOperationException {
+            // Not used in this test
+        }
+
+        @Override
+        public boolean removeRow(Connection conn, RowItem row)
+                throws UnsupportedOperationException, SQLException {
+            // Not used in this test
+            return false;
+        }
+
+        @Override
+        public String getQueryString(int offset, int limit)
+                throws UnsupportedOperationException {
+            return "SELECT * " + fromWhere;
+        }
+
+        @Override
+        public String getCountQuery() throws UnsupportedOperationException {
+            return "SELECT COUNT(*) " + fromWhere;
+        }
+
+        @Override
+        public String getContainsRowQueryString(Object... keys)
+                throws UnsupportedOperationException {
+            // Not used in this test
+            return null;
+        }
+    }
+
+    public static class NonMatchingStatementDelegateWithGroupBy extends
+            NonMatchingDelegateWithGroupBy implements FreeformStatementDelegate {
+
+        @Override
+        public StatementHelper getQueryStatement(int offset, int limit)
+                throws UnsupportedOperationException {
+            StatementHelper sh = new StatementHelper();
+            sh.setQueryString(getQueryString(offset, limit));
+            return sh;
+        }
+
+        @Override
+        public StatementHelper getCountStatement()
+                throws UnsupportedOperationException {
+            StatementHelper sh = new StatementHelper();
+            sh.setQueryString(getCountQuery());
+            return sh;
+        }
+
+        @Override
+        public StatementHelper getContainsRowQueryStatement(Object... keys)
+                throws UnsupportedOperationException {
+            // Not used in this test
+            return null;
+        }
+    }
+
     @Test
     public void containsRowWithKeys_delegateRegisteredGetContainsRowQueryStringNotImplemented_shouldBuildQueryString()
             throws SQLException {
@@ -908,5 +986,25 @@ public class FreeformQueryTest {
         Assert.assertTrue(query.containsRowWithKey(1));
 
         EasyMock.verify(delegate);
+    }
+
+    @Test
+    public void delegateStatementCountWithGroupBy() throws SQLException {
+        String dummyNotUsed = "foo";
+        FreeformQuery query = new FreeformQuery(dummyNotUsed, connectionPool,
+                "p1.ID");
+        query.setDelegate(new NonMatchingStatementDelegateWithGroupBy());
+
+        Assert.assertEquals(0, query.getCount());
+    }
+
+    @Test
+    public void delegateCountWithGroupBy() throws SQLException {
+        String dummyNotUsed = "foo";
+        FreeformQuery query = new FreeformQuery(dummyNotUsed, connectionPool,
+                "p1.ID");
+        query.setDelegate(new NonMatchingDelegateWithGroupBy());
+
+        Assert.assertEquals(0, query.getCount());
     }
 }

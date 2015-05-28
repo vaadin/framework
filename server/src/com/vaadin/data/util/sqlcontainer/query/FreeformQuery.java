@@ -155,8 +155,13 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
                     pstmt = c.prepareStatement(sh.getQueryString());
                     sh.setParameterValuesToStatement(pstmt);
                     rs = pstmt.executeQuery();
-                    rs.next();
-                    count = rs.getInt(1);
+                    if (rs.next()) {
+                        count = rs.getInt(1);
+                    } else {
+                        // The result can be empty when using group by and there
+                        // are no matches (#18043)
+                        count = 0;
+                    }
                 } finally {
                     releaseConnection(c, pstmt, rs);
                 }
@@ -175,8 +180,13 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
                 try {
                     statement = conn.createStatement();
                     rs = statement.executeQuery(countQuery);
-                    rs.next();
-                    count = rs.getInt(1);
+                    if (rs.next()) {
+                        count = rs.getInt(1);
+                    } else {
+                        // The result can be empty when using group by and there
+                        // are no matches (#18043)
+                        count = 0;
+                    }
                     return count;
                 } finally {
                     releaseConnection(conn, statement, rs);
