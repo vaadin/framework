@@ -363,7 +363,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     }
 
     protected void setText(String text) {
-        if (inputPrompt != null && (text == null || "".equals(text))) {
+        if (inputPrompt != null
+                && (text == null || "".equals(text))
+                && !this.text.getStyleName()
+                        .contains(
+                                VTextField.CLASSNAME + "-"
+                                        + VTextField.CLASSNAME_FOCUS)) {
             text = readonly ? "" : inputPrompt;
             setPrompting(true);
         } else {
