@@ -153,19 +153,9 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
     public void applyInvocation(ServerRpcMethodInvocation invocation)
             throws RpcInvocationException {
         Method method = invocation.getMethod();
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        Object[] args = new Object[parameterTypes.length];
         Object[] arguments = invocation.getParameters();
-        for (int i = 0; i < args.length; i++) {
-            // no conversion needed for basic cases
-            // Class<?> type = parameterTypes[i];
-            // if (type.isPrimitive()) {
-            // type = boxedTypes.get(type);
-            // }
-            args[i] = arguments[i];
-        }
         try {
-            method.invoke(implementation, args);
+            method.invoke(implementation, arguments);
         } catch (Exception e) {
             throw new RpcInvocationException("Unable to invoke method "
                     + invocation.getMethodName() + " in "
