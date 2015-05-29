@@ -35,6 +35,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
@@ -270,8 +271,13 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
         WebElement focused = getFocusedElement();
 
-        // GWT menubar loses focus after clicking a menuitem
-        assertEquals("Focus should be in body", "body", focused.getTagName());
+        if (BrowserUtil.isIE(getDesiredCapabilities())) {
+            assertEquals("Focus should be nowhere", null, focused);
+        } else {
+            // GWT menubar loses focus after clicking a menuitem
+            assertEquals("Focus should be in body", "body",
+                    focused.getTagName());
+        }
     }
 
     protected WebElement getSaveButton() {
