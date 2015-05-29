@@ -3364,7 +3364,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * An abstract base class for server-side Grid extensions.
      * 
-     * @since
+     * @since 7.5
      */
     public static abstract class AbstractGridExtension extends
             AbstractExtension {

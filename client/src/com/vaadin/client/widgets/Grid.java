@@ -1287,7 +1287,7 @@ public class Grid<T> extends ResizeComposite implements
          * @throws IllegalStateException
          *             if this editor is already in edit mode
          * 
-         * @since
+         * @since 7.5
          */
         public void editRow(int rowIndex, int columnIndex) {
             if (!enabled) {
@@ -1496,7 +1496,7 @@ public class Grid<T> extends ResizeComposite implements
          * Opens the editor overlay over the table row indicated by
          * {@link #getRow()}.
          * 
-         * @since
+         * @since 7.5
          */
         protected void showOverlay() {
 
@@ -7872,7 +7872,7 @@ public class Grid<T> extends ResizeComposite implements
      * <p>
      * Note: This cell reference will be updated when firing the next event.
      * 
-     * @since
+     * @since 7.5
      * @return event cell reference
      */
     public EventCellReference<T> getEventCell() {
