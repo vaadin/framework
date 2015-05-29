@@ -288,6 +288,13 @@ public class ComboBox extends AbstractSelect implements
 
             // Paint variables
             target.addVariable(this, "selected", selectedKeys);
+            if (getValue() != null && selectedKeys[0] == null) {
+                // not always available, e.g. scrollToSelectedIndex=false
+                // Give the caption for selected item still, not to make it look
+                // like there is no selection at all
+                target.addAttribute("selectedCaption",
+                        getItemCaption(getValue()));
+            }
             if (isNewItemsAllowed()) {
                 target.addVariable(this, "newitem", "");
             }
