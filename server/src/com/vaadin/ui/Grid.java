@@ -794,7 +794,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Marks an item as selected.
              * 
-             * @param itemIds
+             * @param itemId
              *            the itemId to mark as selected; <code>null</code> for
              *            deselect
              * @return <code>true</code> if the selection state changed.
@@ -1944,7 +1944,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Removes the row at the given position.
          * 
-         * @param index
+         * @param rowIndex
          *            the position of the row
          * 
          * @throws IllegalArgumentException
@@ -2441,7 +2441,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         private Converter<?, Object> converter;
 
         /**
-         * A check for allowing the {@link #Column(Grid, GridColumnState)
+         * A check for allowing the {@link #Column(Grid, GridColumnState, Object)
          * constructor} to call {@link #setConverter(Converter)} with a
          * <code>null</code>, even if model and renderer aren't compatible.
          */
@@ -3101,7 +3101,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * 
          * @throws IllegalArgumentException
          *             if there is no column for the provided property id
-         * @throws BindException
+         * @throws FieldGroup.BindException
          *             if no field has been configured and there is a problem
          *             building or binding
          */
@@ -3272,12 +3272,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * An abstract base class for server-side Grid renderers.
-     * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. This class
-     * currently extends the AbstractGridExtension superclass, but this fact
-     * should be regarded as an implementation detail and subject to change in a
-     * future major or minor Vaadin revision.
-     * 
+     * An abstract base class for server-side
+     * {@link com.vaadin.ui.renderers.Renderer Grid renderers}. This class
+     * currently extends the AbstractExtension superclass, but this fact should
+     * be regarded as an implementation detail and subject to change in a future
+     * major or minor Vaadin revision.
+     *
      * @param <T>
      *            the type this renderer knows how to present
      */
@@ -3348,7 +3348,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * is desired. For instance, a {@code Renderer<Date>} could first turn a
          * date value into a formatted string and return
          * {@code encode(dateString, String.class)}.
-         * 
+         *
          * @param value
          *            the value to be encoded
          * @param type
@@ -3363,7 +3363,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * An abstract base class for server-side Grid extensions.
-     * 
+     *
      * @since 7.5
      */
     public static abstract class AbstractGridExtension extends
@@ -3378,7 +3378,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         /**
          * Constructs a new Grid extension and extends given Grid.
-         * 
+         *
          * @param grid
          *            a grid instance
          */
@@ -3537,7 +3537,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * in Grid() constructor, or <code>false</code> if the user has set their
      * own Container.
      * 
-     * @see #setContainerDataSource()
+     * @see #setContainerDataSource(Indexed)
      * @see #Grid()
      */
     private boolean defaultContainer = true;
@@ -4513,7 +4513,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isInifinite(double)
+     *             if {@code rows} is {@link Double#isInfinite(double)
      *             infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
@@ -4759,7 +4759,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
      * 
-     * @param itemIds
+     * @param itemId
      *            the itemId to mark as selected
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId already was selected
@@ -4852,10 +4852,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * {@link SelectionModel SelectionModels} would be able to inform Grid of
      * these events.
      * 
-     * @param addedSelections
-     *            the selections that were added by this event
-     * @param removedSelections
-     *            the selections that were removed by this event
+     * @param newSelection
+     *            the selection that was added by this event
+     * @param oldSelection
+     *            the selection that was removed by this event
      */
     public void fireSelectionEvent(Collection<Object> oldSelection,
             Collection<Object> newSelection) {
@@ -5235,7 +5235,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes the row at the given position from the header section.
      * 
-     * @param index
+     * @param rowIndex
      *            the position of the row
      * 
      * @throws IllegalArgumentException
@@ -5382,7 +5382,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes the row at the given position from the footer section.
      * 
-     * @param index
+     * @param rowIndex
      *            the position of the row
      * 
      * @throws IllegalArgumentException
