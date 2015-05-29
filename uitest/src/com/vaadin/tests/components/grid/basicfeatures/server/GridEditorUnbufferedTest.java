@@ -20,8 +20,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -88,6 +90,19 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
         assertTrue("Editor is not at correct row index (10)",
                 "(10, 0)".equals(firstFieldValue));
+    }
+
+    @Test
+    public void testErrorMessageWrapperHidden() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        assertEditorOpen();
+
+        WebElement editorFooter = getEditor().findElement(
+                By.className("v-grid-editor-footer"));
+
+        assertTrue("Editor footer should not be visible when there's no error",
+                editorFooter.getCssValue("display").equalsIgnoreCase("none"));
     }
 
     @Test

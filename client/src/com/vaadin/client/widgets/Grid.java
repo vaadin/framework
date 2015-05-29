@@ -41,6 +41,7 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
@@ -1261,6 +1262,10 @@ public class Grid<T> extends ResizeComposite implements
                     messageWrapper.appendChild(message);
                 }
             }
+            // In unbuffered mode only show message wrapper if there is an error
+            if (!isBuffered()) {
+                setMessageAndButtonsWrapperVisible(errorMessage != null);
+            }
         }
 
         public int getRow() {
@@ -1526,6 +1531,8 @@ public class Grid<T> extends ResizeComposite implements
                 attachWidget(cancelButton, buttonsWrapper);
             }
 
+            setMessageAndButtonsWrapperVisible(isBuffered());
+
             updateHorizontalScrollPosition();
 
             AbstractRowContainer body = (AbstractRowContainer) grid
@@ -1768,10 +1775,19 @@ public class Grid<T> extends ResizeComposite implements
 
         public void setBuffered(boolean buffered) {
             this.buffered = buffered;
+            setMessageAndButtonsWrapperVisible(buffered);
         }
 
         public boolean isBuffered() {
             return buffered;
+        }
+
+        private void setMessageAndButtonsWrapperVisible(boolean visible) {
+            if (visible) {
+                messageAndButtonsWrapper.getStyle().clearDisplay();
+            } else {
+                messageAndButtonsWrapper.getStyle().setDisplay(Display.NONE);
+            }
         }
     }
 
