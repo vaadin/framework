@@ -27,6 +27,7 @@ public class EncodeResultDisplayTest extends SingleBrowserTest {
 
         int logRow = 0;
 
+        Assert.assertEquals("Void: null", getLogRow(logRow++));
         Assert.assertEquals("SimpleTestBean: {\"value\":5}",
                 getLogRow(logRow++));
         Assert.assertEquals("List: [\"Three\",\"Four\"]", getLogRow(logRow++));
