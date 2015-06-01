@@ -1645,7 +1645,8 @@ public class Escalator extends Widget implements RequiresResize,
 
             for (int row = 0; row < getDomRowCount(); row++) {
                 final TableRowElement tr = getTrByVisualIndex(row);
-                paintInsertCells(tr, row, offset, numberOfColumns);
+                int logicalRowIndex = getLogicalRowIndex(tr);
+                paintInsertCells(tr, logicalRowIndex, offset, numberOfColumns);
             }
             reapplyRowWidths();
 
@@ -2127,6 +2128,11 @@ public class Escalator extends Widget implements RequiresResize,
          * @return the height of this table section
          */
         protected abstract double getHeightOfSection();
+
+        protected int getLogicalRowIndex(final TableRowElement tr) {
+            return tr.getSectionRowIndex();
+        };
+
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -3396,7 +3402,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
-        private int getLogicalRowIndex(final Element tr) {
+        @Override
+        protected int getLogicalRowIndex(final TableRowElement tr) {
             assert tr.getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
             return getTopRowLogicalIndex() + internalIndex;
@@ -3854,7 +3861,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             // Convert DOM coordinates to logical coordinates for rows
-            Element rowElement = cell.getElement().getParentElement();
+            TableRowElement rowElement = (TableRowElement) cell.getElement()
+                    .getParentElement();
             return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
                     cell.getElement());
         }
