@@ -297,11 +297,18 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row {
     background-color: $background-color;
+    cursor: pointer;
   }
 
   .#{$primary-stylename}-row-odd {
     $bg-lightness: if(color-luminance($background-color) < 10, 4%, -4%);
     background-color: scale-color($background-color, $lightness: $bg-lightness);
+    cursor: pointer;
+  }
+
+  .#{$primary-stylename}-body-noselection .#{$primary-stylename}-row,
+  .#{$primary-stylename}-body-noselection .#{$primary-stylename}-row-odd {
+    cursor: default;
   }
 
   .#{$primary-stylename} [class*="-row"].v-selected {

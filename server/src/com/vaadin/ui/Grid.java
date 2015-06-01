@@ -3270,14 +3270,16 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             return getState().hidable;
         }
 
-        /*
+        /**
          * Writes the design attributes for this column into given element.
          * 
          * @since 7.5.0
          * 
-         * @param design Element to write attributes into
+         * @param design
+         *            Element to write attributes into
          * 
-         * @param designContext the design context
+         * @param designContext
+         *            the design context
          */
         protected void writeDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
@@ -3367,20 +3369,27 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * An abstract base class for server-side Grid renderers.
      * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. This class
-     * currently extends the AbstractExtension superclass, but this fact should
-     * be regarded as an implementation detail and subject to change in a future
-     * major or minor Vaadin revision.
+     * currently extends the AbstractGridExtension superclass, but this fact
+     * should be regarded as an implementation detail and subject to change in a
+     * future major or minor Vaadin revision.
      * 
      * @param <T>
      *            the type this renderer knows how to present
      */
-    public static abstract class AbstractRenderer<T> extends AbstractExtension
-            implements Renderer<T> {
+    public static abstract class AbstractRenderer<T> extends
+            AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
 
-        protected AbstractRenderer(Class<T> presentationType) {
+        private final String nullRepresentation;
+
+        protected AbstractRenderer(Class<T> presentationType, String nullRepresentation) {
             this.presentationType = presentationType;
+            this.nullRepresentation = nullRepresentation;
+        }
+
+        protected AbstractRenderer(Class<T> presentationType) {
+            this(presentationType, null);
         }
 
         /**
@@ -3410,7 +3419,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public JsonValue encode(T value) {
-            return encode(value, getPresentationType());
+            if (value == null) {
+                return encode(getNullRepresentation(), String.class);
+            } else {
+                return encode(value, getPresentationType());
+            }
+        }
+
+        /**
+         * Null representation for the renderer
+         * @return a textual representation of {@code null}
+         */
+        protected String getNullRepresentation() {
+            return nullRepresentation;
         }
 
         /**
@@ -3432,6 +3453,33 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected <U> JsonValue encode(U value, Class<U> type) {
             return JsonCodec.encode(value, null, type,
                     getUI().getConnectorTracker()).getEncodedValue();
+        }
+    }
+
+    /**
+     * An abstract base class for server-side Grid extensions.
+     * 
+     * @since 7.5
+     */
+    public static abstract class AbstractGridExtension extends
+            AbstractExtension {
+
+        /**
+         * Constructs a new Grid extension.
+         */
+        public AbstractGridExtension() {
+            super();
+        }
+
+        /**
+         * Constructs a new Grid extension and extends given Grid.
+         * 
+         * @param grid
+         *            a grid instance
+         */
+        public AbstractGridExtension(Grid grid) {
+            super();
+            extend(grid);
         }
 
         /**
@@ -4415,6 +4463,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * property id is not in propertyIds are removed. Similarly, a column is
      * added for any property id in propertyIds that has no corresponding column
      * in this Grid.
+     * 
+     * @since 7.5.0
      * 
      * @param propertyIds
      *            properties in the desired column order
@@ -5480,7 +5530,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     @Override
     public Iterator<Component> iterator() {
-        List<Component> componentList = new ArrayList<Component>();
+        // This is a hash set to avoid adding header/footer components inside
+        // merged cells multiple times
+        LinkedHashSet<Component> componentList = new LinkedHashSet<Component>();
 
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
@@ -5797,6 +5849,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             column.getState().editorConnector = getEditorField(column
                     .getPropertyId());
         }
+
+        // Must ensure that all fields, recursively, are sent to the client
+        // This is needed because the fields are hidden using isRendered
+        for (Field<?> f : getEditorFields()) {
+            f.markAsDirtyRecursive();
+        }
+
     }
 
     private void setEditorField(Object propertyId, Field<?> field) {
@@ -6184,7 +6243,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         return datasourceExtension.isDetailsVisible(itemId);
     }
 
-    protected SelectionMode getDefaultSelectionMode() {
+    private static SelectionMode getDefaultSelectionMode() {
         return SelectionMode.SINGLE;
     }
 

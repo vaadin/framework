@@ -113,4 +113,10 @@ public class PasswordField extends AbstractTextField {
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class);
     }
+
+    @Override
+    public void clear() {
+        setValue("");
+    }
+
 }

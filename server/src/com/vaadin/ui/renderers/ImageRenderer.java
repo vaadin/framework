@@ -39,7 +39,7 @@ public class ImageRenderer extends ClickableRenderer<Resource> {
      * Creates a new image renderer.
      */
     public ImageRenderer() {
-        super(Resource.class);
+        super(Resource.class, null);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ImageRenderer extends ClickableRenderer<Resource> {
 
     @Override
     public JsonValue encode(Resource resource) {
-        if (!(resource instanceof ExternalResource || resource instanceof ThemeResource)) {
+        if (!(resource == null || resource instanceof ExternalResource || resource instanceof ThemeResource)) {
             throw new IllegalArgumentException(
                     "ImageRenderer only supports ExternalResource and ThemeResource ("
                             + resource.getClass().getSimpleName() + "given )");

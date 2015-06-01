@@ -21,9 +21,9 @@ import elemental.json.JsonValue;
 
 /**
  * A renderer that represents a double values as a graphical progress bar.
- * 
- * @since 7.4
+ *
  * @author Vaadin Ltd
+ * @since 7.4
  */
 public class ProgressBarRenderer extends AbstractRenderer<Double> {
 
@@ -31,13 +31,15 @@ public class ProgressBarRenderer extends AbstractRenderer<Double> {
      * Creates a new text renderer
      */
     public ProgressBarRenderer() {
-        super(Double.class);
+        super(Double.class, null);
     }
 
     @Override
     public JsonValue encode(Double value) {
         if (value != null) {
             value = Math.max(Math.min(value, 1), 0);
+        } else {
+            value = 0d;
         }
         return super.encode(value);
     }

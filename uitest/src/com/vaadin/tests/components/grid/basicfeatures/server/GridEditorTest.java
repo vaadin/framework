@@ -30,6 +30,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -132,12 +134,58 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testFocusOnMouseOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.doubleClick();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testFocusOnKeyboardOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testNoFocusOnProgrammaticOpen() {
+
+        selectMenuPath(EDIT_ITEM_5);
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("Focus should remain in the menu", "menu",
+                focused.getAttribute("id"));
+    }
+
+    @Test
     public void testUneditableColumn() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
 
+        GridEditorElement editor = getGridElement().getEditor();
         assertFalse("Uneditable column should not have an editor widget",
-                getGridElement().getEditor().isEditable(3));
+                editor.isEditable(3));
+        assertEquals(
+                "Not editable cell did not contain correct classname",
+                "not-editable",
+                editor.findElement(By.className("v-grid-editor-cells"))
+                        .findElements(By.xpath("./div")).get(3)
+                        .getAttribute("class"));
+
     }
 
     protected WebElement getSaveButton() {

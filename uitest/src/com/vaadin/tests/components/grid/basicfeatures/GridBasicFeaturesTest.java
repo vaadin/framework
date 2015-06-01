@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -50,21 +51,32 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return GridBasicFeatures.class;
     }
 
-    protected void selectSubMenu(String menuCaption) {
-        selectMenu(menuCaption);
-        new Actions(getDriver()).moveByOffset(100, 0).build().perform();
+    protected void selectMenu(String menuCaption) {
+        selectMenu(menuCaption, true);
     }
 
-    protected void selectMenu(String menuCaption) {
-        getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']")).click();
+    protected void selectMenu(String menuCaption, boolean click) {
+        WebElement menuElement = getMenuElement(menuCaption);
+        Dimension size = menuElement.getSize();
+        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
+                size.height / 2).perform();
+        if (click) {
+            new Actions(getDriver()).click().perform();
+        }
+    }
+
+    protected WebElement getMenuElement(String menuCaption) {
+        return getDriver().findElement(
+                By.xpath("//span[text() = '" + menuCaption + "']"));
     }
 
     protected void selectMenuPath(String... menuCaptions) {
-        selectMenu(menuCaptions[0]);
-        for (int i = 1; i < menuCaptions.length; i++) {
-            selectSubMenu(menuCaptions[i]);
+        selectMenu(menuCaptions[0], true);
+        for (int i = 1; i < menuCaptions.length - 1; i++) {
+            selectMenu(menuCaptions[i]);
+            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
         }
+        selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
 
     protected CustomGridElement getGridElement() {

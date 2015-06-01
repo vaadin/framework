@@ -50,6 +50,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.DetailsConnectorChange;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.util.SharedUtil;
@@ -135,6 +136,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return String.valueOf(rollingIndex++);
         }
 
+        /**
+         * Gets the key for a given item id. Creates a new key mapping if no
+         * existing mapping was found for the given item id.
+         * 
+         * @since 7.5.0
+         * @param itemId
+         *            the item id to get the key for
+         * @return the key for the given item id
+         */
         public String getKey(Object itemId) {
             String key = itemIdToKey.get(itemId);
             if (key == null) {
@@ -1124,7 +1134,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             Object propertyId = column.getPropertyId();
             cellReference.set(propertyId);
             String style = generator.getStyle(cellReference);
-            if (style != null) {
+            if (style != null && !style.isEmpty()) {
                 if (cellStyles == null) {
                     cellStyles = Json.createObject();
                 }
@@ -1142,7 +1152,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private void setGeneratedRowStyles(RowStyleGenerator generator,
             JsonObject rowObject) {
         String rowStyle = generator.getStyle(rowReference);
-        if (rowStyle != null) {
+        if (rowStyle != null && !rowStyle.isEmpty()) {
             rowObject.put(GridState.JSONKEY_ROWSTYLE, rowStyle);
         }
     }
@@ -1428,6 +1438,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return visibleDetails.contains(itemId);
     }
 
+    /**
+     * Refreshes all visible detail sections.
+     * 
+     * @since 7.5.0
+     */
     public void refreshDetails() {
         for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
             detailComponentManager.refresh(itemId);
@@ -1443,7 +1458,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return container.indexOfId(itemId);
     }
 
-    /** Gets the detail component manager for this data provider */
+    /**
+     * Gets the detail component manager for this data provider
+     * 
+     * @since 7.5.0
+     * @return the detail component manager
+     * */
     public DetailComponentManager getDetailComponentManager() {
         return detailComponentManager;
     }

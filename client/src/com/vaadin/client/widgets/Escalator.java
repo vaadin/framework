@@ -1354,6 +1354,8 @@ public class Escalator extends Widget implements RequiresResize,
          * Any extra content, such as spacers for the body, should not be
          * included in this count.
          * 
+         * @since 7.5.0
+         * 
          * @return the actual DOM count of rows
          */
         public abstract int getDomRowCount();
@@ -1755,6 +1757,8 @@ public class Escalator extends Widget implements RequiresResize,
          * In practice, this applies for all header and footer rows. For body
          * rows, it applies for all rows except spacer rows.
          * 
+         * @since 7.5.0
+         * 
          * @param tr
          *            the row element to check for if it is or has elements that
          *            can be frozen
@@ -2117,6 +2121,8 @@ public class Escalator extends Widget implements RequiresResize,
          * <p>
          * Note that {@link Escalator#getBody() the body} will calculate its
          * height, while the others will return a precomputed value.
+         * 
+         * @since 7.5.0
          * 
          * @return the height of this table section
          */
@@ -5465,6 +5471,12 @@ public class Escalator extends Widget implements RequiresResize,
         }
     }
 
+    /**
+     * Utility class for parsing and storing SubPart request string attributes
+     * for Grid and Escalator.
+     * 
+     * @since 7.5.0
+     */
     public static class SubPartArguments {
         private String type;
         private int[] indices;
@@ -6647,7 +6659,7 @@ public class Escalator extends Widget implements RequiresResize,
     @Override
     @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        SubPartArguments args = parseSubPartArguments(subPart);
+        SubPartArguments args = SubPartArguments.create(subPart);
 
         Element tableStructureElement = getSubPartElementTableStructure(args);
         if (tableStructureElement != null) {
@@ -6809,9 +6821,5 @@ public class Escalator extends Widget implements RequiresResize,
 
     private String getSubPartNameSpacer(Element subElement) {
         return body.spacerContainer.getSubPartName(subElement);
-    }
-
-    public static SubPartArguments parseSubPartArguments(String subPart) {
-        return SubPartArguments.create(subPart);
     }
 }

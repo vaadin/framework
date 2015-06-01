@@ -32,6 +32,8 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
     private static final String[] TOGGLE_EDITOR_BUFFERED = new String[] {
             "Component", "Editor", "Buffered mode" };
+    private static final String[] CANCEL_EDIT = new String[] { "Component",
+            "Editor", "Cancel edit" };
 
     @Override
     @Before
@@ -106,7 +108,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByAPI() {
+    public void testScrollAfterEditByAPI() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         selectMenuPath(EDIT_ITEM_5);
@@ -118,7 +120,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByMouse() {
+    public void testScrollAfterEditByMouse() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -131,7 +133,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByKeyboard() {
+    public void testScrollAfterEditByKeyboard() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -142,5 +144,35 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         assertGreater(
                 "Grid should scroll vertically while editing in unbuffered mode",
                 getGridVerticalScrollPos(), originalScrollPos);
+    }
+
+    @Test
+    public void testEditorInDisabledGrid() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        selectMenuPath("Component", "State", "Enabled");
+        assertEditorOpen();
+
+        assertTrue("Editor text field should be disabled",
+                null != getEditorWidgets().get(2).getAttribute("disabled"));
+
+        selectMenuPath("Component", "State", "Enabled");
+        assertEditorOpen();
+
+        assertFalse("Editor text field should not be disabled",
+                null != getEditorWidgets().get(2).getAttribute("disabled"));
+    }
+
+    @Test
+    public void testMouseOpeningClosing() {
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorOpen();
+
+        selectMenuPath(CANCEL_EDIT);
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorClosed();
     }
 }

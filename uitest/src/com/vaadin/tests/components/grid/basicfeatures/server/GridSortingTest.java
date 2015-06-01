@@ -141,12 +141,12 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // String.
 
         // Click header twice to sort descending
-        GridCellElement header = grid.getHeaderCell(0, 9);
-        header.click();
+        clickHeader(grid.getHeaderCell(0, 9));
+
         assertLastSortIsUserOriginated(true);
 
         assertColumnsAreSortedAs(_(9, 1, SortDirection.ASCENDING));
-        grid.getHeaderCell(0, 9).click();
+        clickHeader(grid.getHeaderCell(0, 9));
         assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
 
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
@@ -163,7 +163,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                 "Auto");
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
-        grid.getHeaderCell(0, 10).click();
+        clickHeader(grid.getHeaderCell(0, 10));
         assertColumnsAreSortedAs(_(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
@@ -181,9 +181,9 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Column 7 is row index as a number. Last three row are original rows
         // 2, 1 and 0.
         // Click header twice to sort descending
-        grid.getHeaderCell(0, 7).click();
+        clickHeader(grid.getHeaderCell(0, 7));
         assertColumnsAreSortedAs(_(7, 1, SortDirection.ASCENDING));
-        grid.getHeaderCell(0, 7).click();
+        clickHeader(grid.getHeaderCell(0, 7));
         assertColumnsAreSortedAs(_(7, 1, SortDirection.DESCENDING));
 
         for (int i = 0; i < 3; ++i) {
@@ -193,6 +193,11 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
 
+    }
+
+    private void clickHeader(GridCellElement headerCell) {
+        new Actions(getDriver()).moveToElement(headerCell, 5, 5).click()
+                .perform();
     }
 
     private void sendKey(Keys seq) {
@@ -205,6 +210,33 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
     private void releaseKey(Keys key) {
         new Actions(getDriver()).keyUp(key).perform();
+    }
+
+    @Test
+    public void testKeyboardSortingMultipleHeaders() {
+        openTestURL();
+        selectMenuPath("Component", "Header", "Append row");
+
+        // Sort according to first column by clicking
+        getGridElement().getHeaderCell(0, 0).click();
+        assertColumnIsSorted(0);
+
+        // Try to sort according to second column by pressing enter on the new
+        // header
+        sendKey(Keys.ARROW_RIGHT);
+        sendKey(Keys.ARROW_DOWN);
+        sendKey(Keys.ENTER);
+
+        // Should not have sorted
+        assertColumnIsSorted(0);
+
+        // Sort using default header
+        sendKey(Keys.ARROW_UP);
+        sendKey(Keys.ENTER);
+
+        // Should have sorted
+        assertColumnIsSorted(1);
+
     }
 
     @Test

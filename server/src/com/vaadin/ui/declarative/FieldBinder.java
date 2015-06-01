@@ -204,11 +204,14 @@ public class FieldBinder implements Serializable {
             }
             return true;
         } catch (IllegalAccessException e) {
-            throw new FieldBindingException("Field binding failed", e);
+            throw new FieldBindingException("Field binding failed for "
+                    + identifier, e);
         } catch (IllegalArgumentException e) {
-            throw new FieldBindingException("Field binding failed", e);
+            throw new FieldBindingException("Field binding failed for "
+                    + identifier, e);
         } catch (InvocationTargetException e) {
-            throw new FieldBindingException("Field binding failed", e);
+            throw new FieldBindingException("Field binding failed for "
+                    + identifier, e);
         }
     }
 

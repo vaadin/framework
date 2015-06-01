@@ -28,7 +28,10 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -52,6 +55,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
+import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
@@ -521,6 +525,46 @@ public class GridBasicClientFeaturesWidget extends
                                 .addColumnVisibilityChangeHandler(handler);
                     }
                 }, listenersPath);
+        addMenuCommand("Add context menu listener", new ScheduledCommand() {
+
+            HandlerRegistration handler = null;
+            ContextMenuHandler contextMenuHandler = new ContextMenuHandler() {
+
+                @Override
+                public void onContextMenu(ContextMenuEvent event) {
+                    event.preventDefault();
+                    final String location;
+                    EventCellReference<?> cellRef = grid
+                            .getEventCell();
+                    if (cellRef.isHeader()) {
+                        location = "header";
+                    } else if (cellRef.isBody()) {
+                        location = "body";
+                    } else if (cellRef.isFooter()) {
+                        location = "footer";
+                    } else {
+                        location = "somewhere";
+                    }
+
+                    getLogger().info(
+                            "Prevented opening a context menu in grid "
+                                    + location);
+                }
+            };
+
+            @Override
+            public void execute() {
+                if (handler != null) {
+                    grid.unsinkEvents(Event.ONCONTEXTMENU);
+                    handler.removeHandler();
+                } else {
+                    grid.sinkEvents(Event.ONCONTEXTMENU);
+                    handler = grid.addDomHandler(contextMenuHandler,
+                            ContextMenuEvent.getType());
+                }
+            }
+
+        }, listenersPath);
     }
 
     private void createStateMenu() {

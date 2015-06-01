@@ -159,4 +159,10 @@ public class TextArea extends AbstractTextField {
         super.writeDesign(design, designContext);
         design.html(getValue());
     }
+
+    @Override
+    public void clear() {
+        setValue("");
+    }
+
 }

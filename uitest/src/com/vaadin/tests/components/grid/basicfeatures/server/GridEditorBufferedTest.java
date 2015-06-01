@@ -200,4 +200,18 @@ public class GridEditorBufferedTest extends GridEditorTest {
                 "Grid shouldn't scroll vertically while editing in buffered mode",
                 originalScrollPos, getGridVerticalScrollPos());
     }
+
+    @Test
+    public void testMouseOpeningClosing() {
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorOpen();
+
+        getCancelButton().click();
+        assertEditorClosed();
+
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorClosed();
+    }
 }

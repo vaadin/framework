@@ -293,6 +293,11 @@ public class RichTextArea extends AbstractField<String> implements
     }
 
     @Override
+    public void clear() {
+        setValue("");
+    }
+
+    @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         setValue(design.html());

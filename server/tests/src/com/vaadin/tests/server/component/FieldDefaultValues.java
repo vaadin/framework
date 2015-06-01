@@ -23,11 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.ProgressBar;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.TextArea;
 
 public class FieldDefaultValues {
 
@@ -35,13 +31,6 @@ public class FieldDefaultValues {
     public void testFieldsHaveDefaultValueAfterClear() throws Exception {
         for (Field<?> field : createFields()) {
             Object originalValue = field.getValue();
-
-            // Some fields are not initialized to the "empty" value. #17089
-            if (field instanceof PasswordField || field instanceof ProgressBar
-                    || field instanceof RichTextArea
-                    || field instanceof TextArea) {
-                originalValue = null;
-            }
 
             field.clear();
 

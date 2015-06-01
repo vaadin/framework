@@ -98,6 +98,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         private Menu() {
             title = "";
             menubar = new MenuBar();
+            menubar.getElement().setId("menu");
             children = new ArrayList<Menu>();
             items = new ArrayList<Command>();
         }

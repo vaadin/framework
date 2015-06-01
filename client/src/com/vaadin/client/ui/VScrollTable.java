@@ -3659,16 +3659,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // Do a more thorough update if a column is resized from
                         // the server *after* the header has been properly
                         // initialized
-                        final int colIx = getColIndexByKey(c.cid);
                         final int newWidth = width;
-                        Scheduler.get().scheduleDeferred(
-                                new ScheduledCommand() {
+                        Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
-                                    @Override
-                                    public void execute() {
-                                        setColWidth(colIx, newWidth, true);
-                                    }
-                                });
+                            @Override
+                            public void execute() {
+                                final int colIx = getColIndexByKey(cid);
+                                setColWidth(colIx, newWidth, true);
+                            }
+                        });
                         refreshContentWidths = true;
                     } else {
                         // get min width with no indent or padding
@@ -3710,7 +3709,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             if (refreshContentWidths) {
                 // Recalculate the column sizings if any column has changed
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
                     @Override
                     public void execute() {

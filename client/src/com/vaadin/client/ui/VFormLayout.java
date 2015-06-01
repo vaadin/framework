@@ -223,7 +223,7 @@ public class VFormLayout extends SimplePanel {
 
         private Icon icon;
 
-        private Element captionText;
+        private Element captionContent;
 
         /**
          * 
@@ -274,13 +274,13 @@ public class VFormLayout extends SimplePanel {
             }
 
             if (state.caption != null) {
-                if (captionText == null) {
-                    captionText = DOM.createSpan();
+                if (captionContent == null) {
+                    captionContent = DOM.createSpan();
 
-                    AriaHelper.bindCaption(owner.getWidget(), captionText);
+                    AriaHelper.bindCaption(owner.getWidget(), captionContent);
 
-                    DOM.insertChild(getElement(), captionText, icon == null ? 0
-                            : 1);
+                    DOM.insertChild(getElement(), captionContent,
+                            icon == null ? 0 : 1);
                 }
                 String c = state.caption;
                 if (c == null) {
@@ -288,12 +288,16 @@ public class VFormLayout extends SimplePanel {
                 } else {
                     isEmpty = false;
                 }
-                DOM.setInnerText(captionText, c);
+                if (state.captionAsHtml) {
+                    captionContent.setInnerHTML(c);
+                } else {
+                    captionContent.setInnerText(c);
+                }
             } else {
                 // TODO should span also be removed
             }
 
-            if (state.description != null && captionText != null) {
+            if (state.description != null && captionContent != null) {
                 addStyleDependentName("hasdescription");
             } else {
                 removeStyleDependentName("hasdescription");

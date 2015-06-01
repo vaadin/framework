@@ -818,6 +818,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 serverConnector);
     }
 
+    /**
+     * Sends a request to the server to print a design to the console for the
+     * given component.
+     * 
+     * @since 7.5
+     * @param connector
+     *            the component connector to output a declarative design for
+     */
+    public void showServerDesign(ServerConnector connector) {
+        getRpcProxy(DebugWindowServerRpc.class).showServerDesign(connector);
+    }
+
     @OnStateChange("theme")
     void onThemeChange() {
         final String oldTheme = activeTheme;
@@ -1069,5 +1081,4 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     private static Logger getLogger() {
         return Logger.getLogger(UIConnector.class.getName());
     }
-
 }

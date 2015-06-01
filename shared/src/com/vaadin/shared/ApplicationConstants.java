@@ -137,4 +137,9 @@ public class ApplicationConstants implements Serializable {
      */
     public static final String CSRF_TOKEN_DEFAULT_VALUE = "init";
 
+    /**
+     * The name of the parameter used for re-synchronizing.
+     */
+    public static final String RESYNCHRONIZE_ID = "resynchronize";
+
 }

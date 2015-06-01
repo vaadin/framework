@@ -437,9 +437,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   }
 
   .#{$primaryStyleName}-spacer {
-    left: $v-grid-details-marker-width - $v-grid-border-size;
+    // using padding since left is used with some position functions in escalator
+    padding-left: $v-grid-details-marker-width - $v-grid-border-size;
   }
-  
+
   .#{$primaryStyleName}-spacer > td {
     display: block;
     padding: 0;

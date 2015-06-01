@@ -33,6 +33,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Section;
 
 /**
  * An abstract superclass for renderers that render clickable widgets. Click
@@ -152,7 +153,9 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
             Cell cell = container.getCell(e);
             EventCellReference<T> cellReference = new EventCellReference<T>(
                     grid);
-            cellReference.set(cell);
+            // FIXME: Section is currently always body. Might be useful for the
+            // future to have an actual check.
+            cellReference.set(cell, Section.BODY);
             return cellReference;
         }
 

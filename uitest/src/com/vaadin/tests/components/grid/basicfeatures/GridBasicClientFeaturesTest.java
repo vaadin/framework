@@ -17,9 +17,7 @@ package com.vaadin.tests.components.grid.basicfeatures;
 
 import java.util.List;
 
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
@@ -55,29 +53,14 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
 
     @Override
     protected void selectMenu(String menuCaption) {
-        WebElement menuElement = getMenuElement(menuCaption);
-        Dimension size = menuElement.getSize();
-        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
-                size.height / 2).perform();
-    }
-
-    private WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+        // GWT menu does not need to be clicked.
+        selectMenu(menuCaption, false);
     }
 
     @Override
-    protected void selectMenuPath(String... menuCaptions) {
-        new Actions(getDriver()).moveToElement(getMenuElement(menuCaptions[0]))
-                .click().perform();
-        for (int i = 1; i < menuCaptions.length - 1; ++i) {
-            selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(20, 0).perform();
-        }
-        new Actions(getDriver())
-                .moveToElement(
-                        getMenuElement(menuCaptions[menuCaptions.length - 1]))
-                .click().perform();
+    protected WebElement getMenuElement(String menuCaption) {
+        return getDriver().findElement(
+                By.xpath("//td[text() = '" + menuCaption + "']"));
     }
 
     @Override
@@ -104,4 +87,28 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
         selectMenuPath("Component", "State", "Column Reordering");
     }
 
+    protected boolean isRowSelected(int index) {
+        boolean selected = getGridElement().getRow(index).isSelected();
+        return selected;
+    }
+
+    protected void setSelectionModelMulti() {
+        setSelectionModel("multi");
+    }
+
+    protected void setSelectionModelSingle(boolean deselectAllowed) {
+        String mode = "single";
+        if (!deselectAllowed) {
+            mode += " (no deselect)";
+        }
+        setSelectionModel(mode);
+    }
+
+    protected void setSelectionModelNone() {
+        setSelectionModel("none");
+    }
+
+    protected void setSelectionModel(String model) {
+        selectMenuPath("Component", "State", "Selection mode", model);
+    }
 }

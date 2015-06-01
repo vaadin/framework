@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.renderers;
 
+import elemental.json.JsonValue;
+
 /**
  * A Renderer that displays a button with a textual caption. The value of the
  * corresponding property is used as the caption. Click listeners can be added
@@ -27,9 +29,12 @@ public class ButtonRenderer extends ClickableRenderer<String> {
 
     /**
      * Creates a new button renderer.
+     *
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
      */
-    public ButtonRenderer() {
-        super(String.class);
+    public ButtonRenderer(String nullRepresentation) {
+        super(String.class, nullRepresentation);
     }
 
     /**
@@ -37,9 +42,34 @@ public class ButtonRenderer extends ClickableRenderer<String> {
      * 
      * @param listener
      *            the click listener to register
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
      */
-    public ButtonRenderer(RendererClickListener listener) {
-        this();
+    public ButtonRenderer(RendererClickListener listener, String nullRepresentation) {
+        this(nullRepresentation);
         addClickListener(listener);
     }
+
+    /**
+     * Creates a new button renderer.
+     */
+    public ButtonRenderer() {
+        this("");
+    }
+
+    /**
+     * Creates a new button renderer and adds the given click listener to it.
+     *
+     * @param listener
+     *            the click listener to register
+     */
+    public ButtonRenderer(RendererClickListener listener) {
+        this(listener, "");
+    }
+
+    @Override
+    public String getNullRepresentation() {
+        return super.getNullRepresentation();
+    }
+
 }
