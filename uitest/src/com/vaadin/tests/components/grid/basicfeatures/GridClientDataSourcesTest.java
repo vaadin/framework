@@ -21,11 +21,9 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -152,29 +150,16 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
                         + "\"v-grid-scroller-vertical\")]"));
     }
 
-    private void selectMenu(String menuCaption) {
-        WebElement menuElement = getMenuElement(menuCaption);
-        Dimension size = menuElement.getSize();
-        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
-                size.height / 2).perform();
+    @Override
+    protected void selectMenu(String menuCaption) {
+        // GWT menu does not need to be clicked.
+        selectMenu(menuCaption, false);
     }
 
-    private WebElement getMenuElement(String menuCaption) {
+    @Override
+    protected WebElement getMenuElement(String menuCaption) {
         return getDriver().findElement(
                 By.xpath("//td[text() = '" + menuCaption + "']"));
-    }
-
-    private void selectMenuPath(String... menuCaptions) {
-        new Actions(getDriver()).moveToElement(getMenuElement(menuCaptions[0]))
-                .click().perform();
-        for (int i = 1; i < menuCaptions.length - 1; ++i) {
-            selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(20, 0).perform();
-        }
-        new Actions(getDriver())
-                .moveToElement(
-                        getMenuElement(menuCaptions[menuCaptions.length - 1]))
-                .click().perform();
     }
 
 }

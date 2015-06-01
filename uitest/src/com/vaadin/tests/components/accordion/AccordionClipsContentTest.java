@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.accordion;
 
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
 
 public class AccordionClipsContentTest extends MultiBrowserTest {
     @Override
@@ -29,21 +30,8 @@ public class AccordionClipsContentTest extends MultiBrowserTest {
     public void testAccordionClipsContent() throws Exception {
         openTestURL();
 
-        /*
-         * MenuBarElement doesn't have any API, so this part is ugly until
-         * #13364 is fixed
-         */
-
-        // Component
-        vaadinElement("PID_Smenu#item0").click();
-        // Component container features
-        clickAt("Root/VOverlay[0]/VMenuBar[0]#item3", 136, 8);
-        // Add component
-        clickAt("Root/VOverlay[1]/VMenuBar[0]#item0", 65, 4);
-        // NativeButton
-        clickAt("Root/VOverlay[2]/VMenuBar[0]#item1", 86, 2);
-        // autoxauto
-        vaadinElement("Root/VOverlay[3]/VMenuBar[0]#item0").click();
+        selectMenuPath("Component", "Component container features",
+                "Add component", "NativeButton", "auto x auto");
 
         $(NativeButtonElement.class).first().click();
 
@@ -53,9 +41,5 @@ public class AccordionClipsContentTest extends MultiBrowserTest {
         Thread.sleep(10);
 
         compareScreen("button-clicked");
-    }
-
-    private void clickAt(String vaadinLocator, int x, int y) {
-        testBenchElement(vaadinElement(vaadinLocator)).click(x, y);
     }
 }
