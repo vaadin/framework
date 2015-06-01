@@ -840,6 +840,30 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
                 .getDetails(1));
     }
 
+    @Test
+    public void testHideShowAllColumns() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        int colCount = 12;
+        for (int i = 0; i < colCount; i++) {
+            toggleHidableColumnAPI(i);
+        }
+        clickSidebarOpenButton();
+        for (int i = 0; i < colCount; i++) {
+            getColumnHidingToggle(i).click();
+        }
+
+        clickSidebarOpenButton();
+        // All columns hidden
+        assertEquals(0, getGridHeaderRowCells().size());
+        clickSidebarOpenButton();
+        for (int i = 0; i < colCount; i++) {
+            getColumnHidingToggle(i).click();
+        }
+
+        assertEquals(colCount, getGridHeaderRowCells().size());
+
+    }
+
     private void loadSpannedCellsFixture() {
         selectMenuPath("Component", "State", "Width", "1000px");
         appendHeaderRow();

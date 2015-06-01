@@ -3238,27 +3238,22 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void setHeightToHeaderCellHeight() {
-            try {
-                double height = WidgetUtil
-                        .getRequiredHeightBoundingClientRectDouble(grid.escalator
-                                .getHeader().getRowElement(0)
-                                .getFirstChildElement())
-                        - (WidgetUtil.measureVerticalBorder(getElement()) / 2);
-                openCloseButton.setHeight(height + "px");
-            } catch (NullPointerException npe) {
+            RowContainer header = grid.escalator.getHeader();
+            if (header.getRowCount() == 0
+                    || !header.getRowElement(0).hasChildNodes()) {
                 getLogger()
-                        .warning(
-                                "Got null header first row or first row cell when calculating sidebar button height");
-                openCloseButton.setHeight(grid.escalator.getHeader()
-                        .getDefaultRowHeight() + "px");
-            } catch (IndexOutOfBoundsException ioobe) {
-                // happens when escalator doesn't have any headers rendered yet.
-                getLogger()
-                        .warning(
-                                "No header cell available when calculating sidebar button height");
-                openCloseButton.setHeight(grid.escalator.getHeader()
-                        .getDefaultRowHeight() + "px");
+                        .info("No header cell available when calculating sidebar button height");
+                openCloseButton.setHeight(header.getDefaultRowHeight() + "px");
+
+                return;
             }
+
+            Element firstHeaderCell = header.getRowElement(0)
+                    .getFirstChildElement();
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(firstHeaderCell)
+                    - (WidgetUtil.measureVerticalBorder(getElement()) / 2);
+            openCloseButton.setHeight(height + "px");
         }
 
         private void updateVisibility() {
