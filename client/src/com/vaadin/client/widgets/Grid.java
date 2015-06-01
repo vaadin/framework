@@ -5384,8 +5384,17 @@ public class Grid<T> extends ResizeComposite implements
         // Register this grid instance with the column
         ((Column<?, T>) column).setGrid(this);
 
-        // Add to escalator
-        escalator.getColumnConfiguration().insertColumns(index, 1);
+        // Grid knows about hidden columns, Escalator only knows about what is
+        // visible so column indexes do not match
+        if (!column.isHidden()) {
+            int escalatorIndex = index;
+            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
+                if (getColumn(existingColumn).isHidden()) {
+                    escalatorIndex--;
+                }
+            }
+            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
+        }
 
         // Reapply column width
         column.reapplyWidth();
