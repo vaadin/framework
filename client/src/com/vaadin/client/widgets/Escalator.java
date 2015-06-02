@@ -879,6 +879,7 @@ public class Escalator extends Widget implements RequiresResize,
                     .getCalculatedColumnsWidth(Range.between(
                             columnConfiguration.getFrozenColumnCount(),
                             columnConfiguration.getColumnCount()));
+            unfrozenPixels -= subpixelBrowserBugDetector.getActiveAdjustment();
             double frozenPixels = scrollContentWidth - unfrozenPixels;
             double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
             horizontalScrollbar.setOffsetSize(hScrollOffsetWidth);
@@ -4146,7 +4147,8 @@ public class Escalator extends Widget implements RequiresResize,
          * @return the width of a row, in pixels
          */
         public double calculateRowWidth() {
-            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()));
+            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()))
+                    - subpixelBrowserBugDetector.getActiveAdjustment();
         }
 
         private void assertArgumentsAreValidAndWithinRange(final int index,
@@ -4443,7 +4445,7 @@ public class Escalator extends Widget implements RequiresResize,
 
     private class SubpixelBrowserBugDetector {
         private static final double SUBPIXEL_ADJUSTMENT = .1;
-        private boolean hasAlreadyBeenFixed = false;
+        private boolean fixActive = false;
 
         /**
          * This is a fix essentially for Firefox and how it handles subpixels.
@@ -4460,15 +4462,23 @@ public class Escalator extends Widget implements RequiresResize,
          * {@value #SUBPIXEL_ADJUSTMENT}px narrower.
          */
         public void checkAndFix() {
-            if (!hasAlreadyBeenFixed && hasSubpixelBrowserBug()) {
+            if (!fixActive && hasSubpixelBrowserBug()) {
                 fixSubpixelBrowserBug();
-                hasAlreadyBeenFixed = true;
+                fixActive = true;
+            }
+        }
+
+        private double getActiveAdjustment() {
+            if (fixActive) {
+                return -SUBPIXEL_ADJUSTMENT;
+            } else {
+                return 0.0;
             }
         }
 
         public void invalidateFix() {
             adjustBookkeepingPixels(SUBPIXEL_ADJUSTMENT);
-            hasAlreadyBeenFixed = false;
+            fixActive = false;
         }
 
         private boolean hasSubpixelBrowserBug() {
