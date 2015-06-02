@@ -30,6 +30,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
@@ -203,6 +204,51 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
 
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
         assertEditorClosed();
+    }
+
+    public void testEditorMoveOnResize() {
+        selectMenuPath("Component", "Size", "Height", "500px");
+        getGridElement().getCell(22, 0).doubleClick();
+        assertEditorOpen();
+
+        GridEditorElement editor = getGridElement().getEditor();
+        TestBenchElement tableWrapper = getGridElement().getTableWrapper();
+
+        int tableWrapperBottom = tableWrapper.getLocation().getY()
+                + tableWrapper.getSize().getHeight();
+        int editorBottom = editor.getLocation().getY()
+                + editor.getSize().getHeight();
+
+        assertTrue("Editor should not be initially outside grid",
+                tableWrapperBottom - editorBottom <= 2);
+
+        selectMenuPath("Component", "Size", "Height", "300px");
+        assertEditorOpen();
+
+        tableWrapperBottom = tableWrapper.getLocation().getY()
+                + tableWrapper.getSize().getHeight();
+        editorBottom = editor.getLocation().getY()
+                + editor.getSize().getHeight();
+
+        assertTrue("Editor should not be outside grid after resize",
+                tableWrapperBottom - editorBottom <= 2);
+    }
+
+    public void testEditorDoesNotMoveOnResizeIfNotNeeded() {
+        selectMenuPath("Component", "Size", "Height", "500px");
+
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+
+        GridEditorElement editor = getGridElement().getEditor();
+
+        int editorPos = editor.getLocation().getY();
+
+        selectMenuPath("Component", "Size", "Height", "300px");
+        assertEditorOpen();
+
+        assertTrue("Editor should not have moved due to resize",
+                editorPos == editor.getLocation().getY());
     }
 
     protected WebElement getSaveButton() {

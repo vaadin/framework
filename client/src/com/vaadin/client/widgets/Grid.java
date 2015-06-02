@@ -7692,6 +7692,11 @@ public class Grid<T> extends ResizeComposite implements
             @Override
             public void execute() {
                 recalculateColumnWidths();
+                // Vertical resizing could make editor positioning invalid so it
+                // needs to be recalculated on resize
+                if (isEditorActive()) {
+                    editor.updateVerticalScrollPosition();
+                }
             }
         });
     }
