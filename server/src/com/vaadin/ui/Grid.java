@@ -3383,7 +3383,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private final String nullRepresentation;
 
-        protected AbstractRenderer(Class<T> presentationType, String nullRepresentation) {
+        protected AbstractRenderer(Class<T> presentationType,
+                String nullRepresentation) {
             this.presentationType = presentationType;
             this.nullRepresentation = nullRepresentation;
         }
@@ -3428,6 +3429,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Null representation for the renderer
+         * 
          * @return a textual representation of {@code null}
          */
         protected String getNullRepresentation() {
@@ -5819,7 +5821,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
-     *             if the editor is not enabled or already editing an item
+     *             if the editor is not enabled or already editing an item in
+     *             buffered mode
      * @throws IllegalArgumentException
      *             if the {@code itemId} is not in the backing container
      * @see #setEditorEnabled(boolean)
@@ -5828,7 +5831,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             IllegalArgumentException {
         if (!isEditorEnabled()) {
             throw new IllegalStateException("Item editor is not enabled");
-        } else if (editedItemId != null) {
+        } else if (isEditorBuffered() && editedItemId != null) {
             throw new IllegalStateException("Editing item + " + itemId
                     + " failed. Item editor is already editing item "
                     + editedItemId);

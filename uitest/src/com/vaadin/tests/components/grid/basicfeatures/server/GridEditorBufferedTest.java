@@ -214,4 +214,20 @@ public class GridEditorBufferedTest extends GridEditorTest {
         getGridElement().getCell(4, 0).doubleClick();
         assertEditorClosed();
     }
+
+    @Test
+    public void testProgrammaticOpeningWhenOpen() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+        assertEquals("Editor should edit row 5", "(5, 0)", getEditorWidgets()
+                .get(0).getAttribute("value"));
+
+        selectMenuPath(EDIT_ITEM_100);
+        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        assertTrue("IllegalStateException thrown", thrown);
+
+        assertEditorOpen();
+        assertEquals("Editor should still edit row 5", "(5, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
+    }
 }

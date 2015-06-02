@@ -1209,7 +1209,6 @@ public class Grid<T> extends ResizeComposite implements
                     assert rowIndex == request.getRowIndex() : "Request row index "
                             + request.getRowIndex()
                             + " did not match the saved row index " + rowIndex;
-
                     showOverlay();
                 }
             }
@@ -1316,7 +1315,8 @@ public class Grid<T> extends ResizeComposite implements
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
-         *             if this editor is already in edit mode
+         *             if this editor is already in edit mode and in buffered
+         *             mode
          * 
          * @since 7.5
          */
@@ -1326,8 +1326,10 @@ public class Grid<T> extends ResizeComposite implements
                         "Cannot edit row: editor is not enabled");
             }
             if (state != State.INACTIVE) {
-                throw new IllegalStateException(
-                        "Cannot edit row: editor already in edit mode");
+                if (isBuffered()) {
+                    throw new IllegalStateException(
+                            "Cannot edit row: editor already in edit mode");
+                }
             }
 
             this.rowIndex = rowIndex;
@@ -1474,13 +1476,6 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
-        protected void hide() {
-            hideOverlay();
-            grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
-            state = State.INACTIVE;
-            updateSelectionCheckboxesAsNeeded(true);
-        }
-
         protected void setGrid(final Grid<T> grid) {
             assert grid != null : "Grid cannot be null";
             assert this.grid == null : "Can only attach editor to Grid once";
@@ -1539,6 +1534,8 @@ public class Grid<T> extends ResizeComposite implements
          * @since 7.5
          */
         protected void showOverlay() {
+            // Ensure overlay is hidden initially
+            hideOverlay();
 
             DivElement gridElement = DivElement.as(grid.getElement());
 
@@ -1646,6 +1643,10 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         protected void hideOverlay() {
+            if (editorOverlay.getParentElement() == null) {
+                return;
+            }
+
             for (Widget w : columnToWidget.values()) {
                 setParent(w, null);
             }
@@ -6492,7 +6493,6 @@ public class Grid<T> extends ResizeComposite implements
             return true;
 
         } else if (editorIsActive && moveEvent) {
-            editor.hide();
             cellFocusHandler.setCellFocus(eventCell);
 
             editor.editRow(eventCell.getRowIndex(),
