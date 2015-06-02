@@ -4139,8 +4139,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         if (datasource.getContainerPropertyIds().contains(propertyId)
                 && !columns.containsKey(propertyId)) {
             appendColumn(propertyId);
-        } else {
+        } else if (defaultContainer) {
             addColumnProperty(propertyId, String.class, "");
+        } else {
+            if (columns.containsKey(propertyId)) {
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId.toString()
+                        + "' already exists in this grid");
+            } else {
+                throw new IllegalStateException("Property id '"
+                        + propertyId.toString()
+                        + "' does not exist in the container");
+            }
         }
 
         // Inform the data provider of this new column.
