@@ -21,19 +21,25 @@ import java.util.HashSet;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
@@ -47,7 +53,8 @@ import com.vaadin.client.widgets.Grid;
  *            the type of the associated grid
  * @since 7.4
  */
-public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
+public class MultiSelectionRenderer<T> extends
+        ClickableRenderer<Boolean, CheckBox> {
 
     /** The size of the autoscroll area, both top and bottom. */
     private static final int SCROLL_AREA_GRADIENT_PX = 100;
@@ -60,6 +67,43 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
      * pressed.
      */
     private static final int MIN_NO_AUTOSCROLL_AREA_PX = 50;
+
+    /**
+     * Handler for MouseDown and TouchStart events for selection checkboxes.
+     * 
+     * @since 7.5
+     */
+    private final class CheckBoxEventHandler implements MouseDownHandler,
+            TouchStartHandler, ClickHandler {
+        private final CheckBox checkBox;
+
+        /**
+         * @param checkBox
+         *            checkbox widget for this handler
+         */
+        private CheckBoxEventHandler(CheckBox checkBox) {
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        public void onMouseDown(MouseDownEvent event) {
+            if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
+                startDragSelect(event.getNativeEvent(), checkBox.getElement());
+            }
+        }
+
+        @Override
+        public void onTouchStart(TouchStartEvent event) {
+            startDragSelect(event.getNativeEvent(), checkBox.getElement());
+        }
+
+        @Override
+        public void onClick(ClickEvent event) {
+            // Clicking is already handled with MultiSelectionRenderer
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
 
     /**
      * This class's main objective is to listen when to stop autoscrolling, and
@@ -558,19 +602,30 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     @Override
-    public void init(RendererCellReference cell) {
-        final InputElement checkbox = InputElement.as(DOM.createInputCheck());
-        cell.getElement().removeAllChildren();
-        cell.getElement().appendChild(checkbox);
+    public CheckBox createWidget() {
+        final CheckBox checkBox = GWT.create(CheckBox.class);
+        CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
+
+        // Sink events
+        checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
+        checkBox.sinkBitlessEvent(BrowserEvents.TOUCHSTART);
+        checkBox.sinkBitlessEvent(BrowserEvents.CLICK);
+
+        // Add handlers
+        checkBox.addMouseDownHandler(handler);
+        checkBox.addTouchStartHandler(handler);
+        checkBox.addClickHandler(handler);
+
+        return checkBox;
     }
 
     @Override
-    public void render(final RendererCellReference cell, final Boolean data) {
-        InputElement checkbox = InputElement.as(cell.getElement()
-                .getFirstChildElement());
-        checkbox.setChecked(data.booleanValue());
-        checkbox.setDisabled(grid.isEditorActive());
-        checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRowIndex());
+    public void render(final RendererCellReference cell, final Boolean data,
+            CheckBox checkBox) {
+        checkBox.setValue(data, false);
+        checkBox.setEnabled(!grid.isEditorActive());
+        checkBox.getElement().setPropertyInt(LOGICAL_ROW_PROPERTY_INT,
+                cell.getRowIndex());
     }
 
     @Override
@@ -594,17 +649,20 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         if (BrowserEvents.TOUCHSTART.equals(event.getType())
                 || (BrowserEvents.MOUSEDOWN.equals(event.getType()) && event
                         .getButton() == NativeEvent.BUTTON_LEFT)) {
-            injectNativeHandler();
-            int logicalRowIndex = getLogicalRowIndex(Element.as(event
-                    .getEventTarget()));
-            autoScrollHandler.start(logicalRowIndex);
-            event.preventDefault();
-            event.stopPropagation();
+            startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
         } else {
             throw new IllegalStateException("received unexpected event: "
                     + event.getType());
         }
+    }
+
+    private void startDragSelect(NativeEvent event, final Element target) {
+        injectNativeHandler();
+        int logicalRowIndex = getLogicalRowIndex(target);
+        autoScrollHandler.start(logicalRowIndex);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     private void injectNativeHandler() {
@@ -701,8 +759,9 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     private int getBodyClientTop() {
+        // Off by one pixel miscalculation. possibly border related.
         return getClientTop(grid.getElement())
-                + getTheadElement().getOffsetHeight();
+                + getTheadElement().getOffsetHeight() + 1;
     }
 
     protected boolean isSelected(final int logicalRow) {

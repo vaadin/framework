@@ -1481,7 +1481,7 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Equivalent to {@code showOverlay()}. The argument is ignored.
-         *
+         * 
          * @param unused
          *            ignored argument
          * 
@@ -2333,7 +2333,7 @@ public class Grid<T> extends ResizeComposite implements
                  * exist.
                  */
                 final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
-                final CheckBox checkBox = new CheckBox();
+                final CheckBox checkBox = GWT.create(CheckBox.class);
                 checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
                     @Override
