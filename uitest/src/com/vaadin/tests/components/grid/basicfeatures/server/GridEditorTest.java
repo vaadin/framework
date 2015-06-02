@@ -162,6 +162,20 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testFocusOnProgrammaticOpenOnItemClick() {
+        selectMenuPath("Component", "State", "EditorOpeningItemClickListener");
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.click();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
     public void testNoFocusOnProgrammaticOpen() {
 
         selectMenuPath(EDIT_ITEM_5);

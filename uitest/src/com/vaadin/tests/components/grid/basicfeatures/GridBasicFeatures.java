@@ -127,6 +127,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
     };
 
+    private ItemClickListener editorOpeningItemClickListener = new ItemClickListener() {
+
+        @Override
+        public void itemClick(ItemClickEvent event) {
+            grid.editItem(event.getItemId());
+        }
+    };
+
     private ColumnReorderListener columnReorderListener = new ColumnReorderListener() {
 
         @Override
@@ -639,6 +647,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             c.removeItemClickListener(itemClickListener);
                         } else {
                             c.addItemClickListener(itemClickListener);
+                        }
+                    }
+
+                });
+        createBooleanAction("EditorOpeningItemClickListener", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        if (!value) {
+                            c.removeItemClickListener(editorOpeningItemClickListener);
+                        } else {
+                            c.addItemClickListener(editorOpeningItemClickListener);
                         }
                     }
 

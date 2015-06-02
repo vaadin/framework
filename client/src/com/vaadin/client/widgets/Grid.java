@@ -1280,12 +1280,26 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Equivalent to {@code editRow(rowIndex, -1)}.
+         * If a cell of this Grid had focus once this editRow call was
+         * triggered, the editor component at the previously focused column
+         * index will be focused.
+         * 
+         * If a Grid cell was not focused prior to calling this method, it will
+         * be equivalent to {@code editRow(rowIndex, -1)}.
          * 
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            editRow(rowIndex, -1);
+            // Focus the last focused column in the editor iff grid or its child
+            // was focused before the edit request
+            Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
+            if (focusedCell != null
+                    && grid.getElement().isOrHasChild(
+                            WidgetUtil.getFocusedElement())) {
+                editRow(rowIndex, focusedCell.getColumn());
+            } else {
+                editRow(rowIndex, -1);
+            }
         }
 
         /**
