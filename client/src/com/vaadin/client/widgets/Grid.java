@@ -6462,10 +6462,10 @@ public class Grid<T> extends ResizeComposite implements
         final int key = event.getKeyCode();
         final boolean editorIsActive = editor.getState() != Editor.State.INACTIVE;
 
-        final boolean openEvent = type == Event.ONDBLCLICK
-                || (type == Event.ONKEYDOWN && key == Editor.KEYCODE_SHOW);
+        final boolean openEvent = eventCell.isBody()
+                && (type == Event.ONDBLCLICK || (type == Event.ONKEYDOWN && key == Editor.KEYCODE_SHOW));
 
-        final boolean moveEvent = type == Event.ONCLICK;
+        final boolean moveEvent = eventCell.isBody() && type == Event.ONCLICK;
 
         final boolean closeEvent = type == Event.ONKEYDOWN
                 && key == Editor.KEYCODE_HIDE;
@@ -6477,7 +6477,7 @@ public class Grid<T> extends ResizeComposite implements
 
             return true;
 
-        } else if (editorIsActive && eventCell.isBody() && moveEvent) {
+        } else if (editorIsActive && moveEvent) {
             editor.hide();
             cellFocusHandler.setCellFocus(eventCell);
 

@@ -188,6 +188,23 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
 
     }
 
+    @Test
+    public void testNoOpenFromHeaderOrFooter() {
+        selectMenuPath("Component", "Footer", "Visible");
+
+        getGridElement().getHeaderCell(0, 0).doubleClick();
+        assertEditorClosed();
+
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        assertEditorClosed();
+
+        getGridElement().getFooterCell(0, 0).doubleClick();
+        assertEditorClosed();
+
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        assertEditorClosed();
+    }
+
     protected WebElement getSaveButton() {
         return getDriver().findElement(By.className("v-grid-editor-save"));
     }
