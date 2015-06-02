@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -40,9 +39,12 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -975,5 +977,65 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 return !loadingIndicator.isDisplayed();
             }
         });
+    }
+
+    /**
+     * Selects a menu item. By default, this will click on the menu item.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     */
+    protected void selectMenu(String menuCaption) {
+        selectMenu(menuCaption, true);
+    }
+
+    /**
+     * Selects a menu item.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     * @param click
+     *            <code>true</code> if should click the menu item;
+     *            <code>false</code> if not
+     */
+    protected void selectMenu(String menuCaption, boolean click) {
+        WebElement menuElement = getMenuElement(menuCaption);
+        Dimension size = menuElement.getSize();
+        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
+                size.height / 2).perform();
+        if (click) {
+            new Actions(getDriver()).click().perform();
+        }
+    }
+
+    /**
+     * Finds the menu item from the DOM based on menu item caption.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     * @return the found menu item
+     * @throws NoSuchElementException
+     *             if menu item is not found
+     */
+    protected WebElement getMenuElement(String menuCaption)
+            throws NoSuchElementException {
+        return getDriver().findElement(
+                By.xpath("//span[text() = '" + menuCaption + "']"));
+    }
+
+    /**
+     * Selects a submenu described by a path of menus from the first MenuBar in
+     * the UI.
+     * 
+     * @param menuCaptions
+     *            array of menu captions
+     */
+    protected void selectMenuPath(String... menuCaptions) {
+        selectMenu(menuCaptions[0], true);
+        for (int i = 1; i < menuCaptions.length - 1; i++) {
+            selectMenu(menuCaptions[i]);
+            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+        }
+        selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
 }

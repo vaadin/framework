@@ -3,6 +3,8 @@ package com.vaadin.tests.themes.base;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -13,7 +15,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class DisabledMenuBarItemTest extends MultiBrowserTest {
 
     @Test
-    public void disabledMenuItemShouldHaveOpacity() {
+    public void disabledMenuItemShouldHaveOpacity() throws IOException {
         openTestURL();
 
         WebElement element = driver.findElement(By
@@ -23,8 +25,9 @@ public class DisabledMenuBarItemTest extends MultiBrowserTest {
 
         if (browserIsIE8or9()) {
             assertThat(element.getCssValue("filter"), is("alpha(opacity=50)"));
-
         }
+
+        compareScreen("transparent");
     }
 
     private boolean browserIsIE8or9() {

@@ -128,6 +128,19 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
             gender.setNullRepresentation("");
             age.setNullRepresentation("");
             address_country.setNullRepresentation("");
+
+            // Last name editing is disabled through property readonly.
+            // Postal code editing is disabled through disabling field.
+            /*
+             * Currently only sets the initial state because of
+             * https://dev.vaadin.com/ticket/17847
+             * 
+             * Must set lastName state initially as BeanFieldGroup can't tell it
+             * should be read-only before setting an item data source
+             */
+            lastName.setReadOnly(true);
+            address_postalCode.setEnabled(false);
+
             birthDate.setNullRepresentation("");
 
             age.addValidator(new IntegerRangeValidator(
@@ -184,7 +197,21 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
         protected Button cancel = new Button("Cancel");
 
         protected BeanFieldGroup<ComplexPerson> fieldGroup = new BeanFieldGroup<ComplexPerson>(
-                ComplexPerson.class);
+                ComplexPerson.class) {
+            @Override
+            protected void configureField(com.vaadin.ui.Field<?> field) {
+                super.configureField(field);
+                if (field.getCaption().equals("Postal code")) {
+                    // Last name editing is disabled through property.
+                    // Postal code editing is disabled through field.
+                    /*
+                     * This is needed because of
+                     * https://dev.vaadin.com/ticket/17847
+                     */
+                    field.setEnabled(false);
+                }
+            };
+        };
 
         public AbstractForm() {
             super(5, 1);

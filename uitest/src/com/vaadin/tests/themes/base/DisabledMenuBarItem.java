@@ -12,7 +12,7 @@ public class DisabledMenuBarItem extends AbstractTestUI {
 
         MenuBar.MenuItem item = menubar.addItem("Item", null);
         item.setEnabled(false);
-        item.setIcon(new ThemeResource("just_a_placeholder.png"));
+        item.setIcon(new ThemeResource("common/icons/error.png"));
 
         addComponent(menubar);
     }

@@ -102,21 +102,4 @@ public class TableDragColumnTest extends MultiBrowserTest {
 
         new Actions(getDriver()).release().perform();
     }
-
-    protected void selectSubMenu(String menuCaption) {
-        selectMenu(menuCaption);
-        new Actions(getDriver()).moveByOffset(100, 0).build().perform();
-    }
-
-    protected void selectMenu(String menuCaption) {
-        getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']")).click();
-    }
-
-    protected void selectMenuPath(String... menuCaptions) {
-        selectMenu(menuCaptions[0]);
-        for (int i = 1; i < menuCaptions.length; i++) {
-            selectSubMenu(menuCaptions[i]);
-        }
-    }
 }
