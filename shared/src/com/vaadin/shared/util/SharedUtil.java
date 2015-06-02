@@ -248,7 +248,7 @@ public class SharedUtil implements Serializable {
      * {@literal foo} becomes {@literal foo} {@literal foo-bar} becomes
      * {@literal fooBar} {@literal foo--bar} becomes {@literal fooBar}
      * 
-     * @since
+     * @since 7.5
      * @param dashSeparated
      *            The dash separated string to convert
      * @return a camelCase version of the input string
