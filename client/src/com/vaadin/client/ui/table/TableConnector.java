@@ -15,24 +15,29 @@
  */
 package com.vaadin.client.ui.table;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VScrollTable.ContextMenuDetails;
@@ -42,8 +47,15 @@ import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
-public class TableConnector extends AbstractHasComponentsConnector implements
-        Paintable, DirectionalManagedLayout, PostLayoutListener {
+public class TableConnector extends AbstractFieldConnector implements
+        HasComponentsConnector, ConnectorHierarchyChangeHandler, Paintable,
+        DirectionalManagedLayout, PostLayoutListener {
+
+    private List<ComponentConnector> childComponents;
+
+    public TableConnector() {
+        addConnectorHierarchyChangeHandler(this);
+    }
 
     @Override
     protected void init() {
@@ -371,7 +383,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     /**
      * Shows a saved row context menu if the row for the context menu is still
      * visible. Does nothing if a context menu has not been saved.
-     *
+     * 
      * @param savedContextMenu
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {
@@ -429,11 +441,33 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     protected void updateComponentSize(String newWidth, String newHeight) {
         super.updateComponentSize(newWidth, newHeight);
 
-        if("".equals(newWidth)) {
+        if ("".equals(newWidth)) {
             getWidget().updateWidth();
         }
-        if("".equals(newHeight)) {
+        if ("".equals(newHeight)) {
             getWidget().updateHeight();
         }
     }
+
+    @Override
+    public List<ComponentConnector> getChildComponents() {
+        if (childComponents == null) {
+            return Collections.emptyList();
+        }
+
+        return childComponents;
+    }
+
+    @Override
+    public void setChildComponents(List<ComponentConnector> childComponents) {
+        this.childComponents = childComponents;
+    }
+
+    @Override
+    public HandlerRegistration addConnectorHierarchyChangeHandler(
+            ConnectorHierarchyChangeHandler handler) {
+        return ensureHandlerManager().addHandler(
+                ConnectorHierarchyChangeEvent.TYPE, handler);
+    }
+
 }
