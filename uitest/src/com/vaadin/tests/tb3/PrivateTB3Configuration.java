@@ -141,6 +141,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getBaseURL() {
+        if (isRunLocally()) {
+            return "http://localhost:8888";
+        }
         String url = getProperty(DEPLOYMENT_PROPERTY);
         if (url == null || url.trim().isEmpty()) {
             return super.getBaseURL();
@@ -150,10 +153,24 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
-        if (getRunLocallyBrowser() != null) {
+        if (isRunLocally()) {
             return "localhost";
         }
         return getConfiguredDeploymentHostname();
+    }
+
+    private boolean isRunLocally() {
+        if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+            return true;
+        }
+
+        if (properties.containsKey(ALLOW_RUN_LOCALLY_PROPERTY)
+                && properties.get(ALLOW_RUN_LOCALLY_PROPERTY).equals("true")
+                && getClass().getAnnotation(RunLocally.class) != null) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
