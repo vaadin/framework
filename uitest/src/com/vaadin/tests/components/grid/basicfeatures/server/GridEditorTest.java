@@ -38,6 +38,10 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public abstract class GridEditorTest extends GridBasicFeaturesTest {
 
+    protected static final By BY_EDITOR_CANCEL = By
+            .className("v-grid-editor-cancel");
+    protected static final By BY_EDITOR_SAVE = By
+            .className("v-grid-editor-save");
     protected static final String[] EDIT_ITEM_5 = new String[] { "Component",
             "Editor", "Edit item 5" };
     protected static final String[] EDIT_ITEM_100 = new String[] { "Component",
@@ -266,10 +270,10 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     protected WebElement getSaveButton() {
-        return getDriver().findElement(By.className("v-grid-editor-save"));
+        return getDriver().findElement(BY_EDITOR_SAVE);
     }
 
     protected WebElement getCancelButton() {
-        return getDriver().findElement(By.className("v-grid-editor-cancel"));
+        return getDriver().findElement(BY_EDITOR_CANCEL);
     }
 }

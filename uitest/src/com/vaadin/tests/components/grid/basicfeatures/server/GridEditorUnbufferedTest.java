@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -48,23 +47,11 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
         assertEditorOpen();
 
-        boolean saveButtonFound = true;
-        try {
-            getSaveButton();
-        } catch (NoSuchElementException e) {
-            saveButtonFound = false;
-        }
         assertFalse("Save button should not be visible in unbuffered mode.",
-                saveButtonFound);
+                isElementPresent(BY_EDITOR_SAVE));
 
-        boolean cancelButtonFound = true;
-        try {
-            getCancelButton();
-        } catch (NoSuchElementException e) {
-            cancelButtonFound = false;
-        }
         assertFalse("Cancel button should not be visible in unbuffered mode.",
-                cancelButtonFound);
+                isElementPresent(BY_EDITOR_CANCEL));
     }
 
     @Test
