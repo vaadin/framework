@@ -3065,6 +3065,26 @@ public class Grid<T> extends ResizeComposite implements
 
         private final Grid<?> grid;
 
+        private NativePreviewHandler clickOutsideToCloseHandler = new NativePreviewHandler() {
+
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                if (event.getTypeInt() != Event.ONMOUSEDOWN) {
+                    return;
+                }
+
+                // Click outside the panel
+                EventTarget clickTarget = event.getNativeEvent()
+                        .getEventTarget();
+                if (!rootContainer.getElement().isOrHasChild(
+                        Element.as(clickTarget))) {
+                    close();
+                }
+            }
+        };
+
+        private HandlerRegistration clickOutsideToCloseHandlerRegistration;
+
         private Sidebar(Grid<?> grid) {
             this.grid = grid;
 
@@ -3157,6 +3177,8 @@ public class Grid<T> extends ResizeComposite implements
                 addStyleName("opened");
                 removeStyleName("closed");
                 rootContainer.add(content);
+                clickOutsideToCloseHandlerRegistration = Event
+                        .addNativePreviewHandler(clickOutsideToCloseHandler);
             }
             openCloseButton.setHeight("");
         }
@@ -3171,6 +3193,10 @@ public class Grid<T> extends ResizeComposite implements
                 content.removeFromParent();
                 // adjust open button to header height when closed
                 setHeightToHeaderCellHeight();
+                if (clickOutsideToCloseHandlerRegistration != null) {
+                    clickOutsideToCloseHandlerRegistration.removeHandler();
+                    clickOutsideToCloseHandlerRegistration = null;
+                }
             }
         }
 

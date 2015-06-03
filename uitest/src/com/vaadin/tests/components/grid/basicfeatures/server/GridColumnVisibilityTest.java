@@ -173,11 +173,14 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
 
         toggleColumnHidingToggleCaptionChange(1);
+
+        getSidebarOpenButton().click();
         assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
                 .toLowerCase());
         assertEquals("Column 1 caption 0", getColumnHidingToggle(1).getText());
 
         toggleColumnHidingToggleCaptionChange(1);
+        getSidebarOpenButton().click();
         assertEquals("Column 1 caption 1", getColumnHidingToggle(1).getText());
     }
 
@@ -192,6 +195,7 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
                 "Widget Header");
 
+        getSidebarOpenButton().click();
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
     }
 
@@ -243,6 +247,7 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         verifyColumnNotFrozen(0);
         verifyColumnNotFrozen(1);
 
+        getSidebarOpenButton().click();
         getColumnHidingToggle(0).click();
         assertColumnHeaderOrder(0, 2, 3, 4, 5);
         verifyColumnFrozen(0);
@@ -277,6 +282,7 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         verifyColumnNotFrozen(0);
         verifyColumnNotFrozen(1);
 
+        getSidebarOpenButton().click();
         getColumnHidingToggle(0).click();
         assertColumnHeaderOrder(0, 2, 3, 4, 5);
         verifyColumnNotFrozen(0);
