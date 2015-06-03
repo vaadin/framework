@@ -4390,8 +4390,8 @@ public class Grid<T> extends ResizeComposite implements
          * for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
          * <p>
-         * Defaults to <code>null</code>, when will use whatever is set with
-         * {@link #setHeaderCaption(String)}.
+         * The default value is <code>null</code>. In this case the header
+         * caption is used, see {@link #setHeaderCaption(String)}.
          * 
          * @since 7.5.0
          * @param hidingToggleCaption

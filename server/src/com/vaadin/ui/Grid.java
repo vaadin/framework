@@ -2441,9 +2441,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         private Converter<?, Object> converter;
 
         /**
-         * A check for allowing the {@link #Column(Grid, GridColumnState, Object)
-         * constructor} to call {@link #setConverter(Converter)} with a
-         * <code>null</code>, even if model and renderer aren't compatible.
+         * A check for allowing the
+         * {@link #Column(Grid, GridColumnState, Object) constructor} to call
+         * {@link #setConverter(Converter)} with a <code>null</code>, even if
+         * model and renderer aren't compatible.
          */
         private boolean isFirstConverterAssignment = true;
 
@@ -2503,7 +2504,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Sets the caption of the header.
+         * Sets the caption of the header. This caption is also used as the
+         * hiding toggle caption, unless it is explicitly set via
+         * {@link #setHidingToggleCaption(String)}.
          * 
          * @param caption
          *            the text to show in the caption
@@ -2515,6 +2518,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setHeaderCaption(String caption)
                 throws IllegalStateException {
             checkColumnIsAttached();
+
+            state.headerCaption = caption;
+
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
                 row.getCell(grid.getPropertyIdByColumnId(state.id)).setText(
@@ -2542,11 +2548,11 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * toggle for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
          * <p>
-         * By default, before triggering this setter, a user friendly version of
-         * the column's {@link #getPropertyId() property id} is used.
+         * The default value is <code>null</code>, and in that case the column's
+         * {@link #getHeaderCaption() header caption} is used.
          * <p>
-         * <em>NOTE:</em> setting this to <code>null</code> or empty string
-         * might cause the hiding toggle to not render correctly.
+         * <em>NOTE:</em> setting this to empty string might cause the hiding
+         * toggle to not render correctly.
          * 
          * @since 7.5.0
          * @param hidingToggleCaption
@@ -3207,9 +3213,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             DesignAttributeHandler.writeAttribute("hidden", attributes,
                     isHidden(), def.hidden, boolean.class);
             DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
-                    attributes, getHidingToggleCaption(),
-                    SharedUtil.propertyIdToHumanFriendly(getPropertyId()),
-                    String.class);
+                    attributes, getHidingToggleCaption(), null, String.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -3288,7 +3292,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private final String nullRepresentation;
 
-        protected AbstractRenderer(Class<T> presentationType, String nullRepresentation) {
+        protected AbstractRenderer(Class<T> presentationType,
+                String nullRepresentation) {
             this.presentationType = presentationType;
             this.nullRepresentation = nullRepresentation;
         }
@@ -3333,6 +3338,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         /**
          * Null representation for the renderer
+         * 
          * @return a textual representation of {@code null}
          */
         protected String getNullRepresentation() {
@@ -4303,7 +4309,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         String humanFriendlyPropertyId = SharedUtil
                 .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
         column.setHeaderCaption(humanFriendlyPropertyId);
-        column.setHidingToggleCaption(humanFriendlyPropertyId);
 
         if (datasource instanceof Sortable
                 && ((Sortable) datasource).getSortableContainerPropertyIds()
@@ -4513,8 +4518,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isInfinite(double)
-     *             infinite}
+     *             if {@code rows} is {@link Double#isInfinite(double) infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
      */
