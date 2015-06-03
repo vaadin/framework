@@ -29,11 +29,13 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
@@ -48,6 +50,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
@@ -72,6 +75,7 @@ import com.vaadin.client.widget.escalator.PositionFunction.AbsolutePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
+import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
@@ -302,8 +306,6 @@ public class Escalator extends Widget implements RequiresResize,
     static class JsniUtil {
         public static class TouchHandlerBundle {
 
-            private static final double FLICK_POLL_FREQUENCY = 100d;
-
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -338,104 +340,7 @@ public class Escalator extends Widget implements RequiresResize,
                 }-*/;
             }
 
-            private double touches = 0;
-            private int lastX = 0;
-            private int lastY = 0;
-            private boolean snappedScrollEnabled = true;
-            private double deltaX = 0;
-            private double deltaY = 0;
-
             private final Escalator escalator;
-
-            private CustomTouchEvent latestTouchMoveEvent;
-
-            /** The timestamp of {@link #flickPageX1} and {@link #flickPageY1} */
-            private double flickStartTime = 0;
-
-            /** The timestamp of {@link #flickPageX2} and {@link #flickPageY2} */
-            private double flickTimestamp = 0;
-
-            /** The most recent flick touch reference Y */
-            private double flickPageY1 = -1;
-            /** The most recent flick touch reference X */
-            private double flickPageX1 = -1;
-
-            /** The previous flick touch reference Y, before {@link #flickPageY1} */
-            private double flickPageY2 = -1;
-            /** The previous flick touch reference X, before {@link #flickPageX1} */
-            private double flickPageX2 = -1;
-
-            /**
-             * This animation callback guarantees the fact that we don't scroll
-             * the grid more than once per visible frame.
-             * 
-             * It seems that there will never be more touch events than there
-             * are rendered frames, but there's no guarantee for that. If it was
-             * guaranteed, we probably could do all of this immediately in
-             * {@link #touchMove(CustomTouchEvent)}, instead of deferring it
-             * over here.
-             */
-            private AnimationCallback mover = new AnimationCallback() {
-
-                @Override
-                public void execute(double timestamp) {
-                    if (touches != 1) {
-                        return;
-                    }
-
-                    final int x = latestTouchMoveEvent.getPageX();
-                    final int y = latestTouchMoveEvent.getPageY();
-
-                    /*
-                     * Check if we need a new flick coordinate sample ( more
-                     * than FLICK_POLL_FREQUENCY ms have passed since the last
-                     * sample )
-                     */
-                    if (System.currentTimeMillis() - flickTimestamp > FLICK_POLL_FREQUENCY) {
-
-                        flickTimestamp = System.currentTimeMillis();
-                        // Set target coordinates
-                        flickPageY2 = y;
-                        flickPageX2 = x;
-                    }
-
-                    deltaX = x - lastX;
-                    deltaY = y - lastY;
-                    lastX = x;
-                    lastY = y;
-
-                    // snap the scroll to the major axes, at first.
-                    if (snappedScrollEnabled) {
-                        final double oldDeltaX = deltaX;
-                        final double oldDeltaY = deltaY;
-
-                        /*
-                         * Scrolling snaps to 40 degrees vs. flick scroll's 30
-                         * degrees, since slow movements have poor resolution -
-                         * it's easy to interpret a slight angle as a steep
-                         * angle, since the sample rate is "unnecessarily" high.
-                         * 40 simply felt better than 30.
-                         */
-                        final double[] snapped = Escalator.snapDeltas(deltaX,
-                                deltaY, RATIO_OF_40_DEGREES);
-                        deltaX = snapped[0];
-                        deltaY = snapped[1];
-
-                        /*
-                         * if the snap failed once, let's follow the pointer
-                         * from now on.
-                         */
-                        if (oldDeltaX != 0 && deltaX == oldDeltaX
-                                && oldDeltaY != 0 && deltaY == oldDeltaY) {
-                            snappedScrollEnabled = false;
-                        }
-                    }
-
-                    moveScrollFromEvent(escalator, -deltaX, -deltaY,
-                            latestTouchMoveEvent.getNativeEvent());
-                }
-            };
-            private AnimationHandle animationHandle;
 
             public TouchHandlerBundle(final Escalator escalator) {
                 this.escalator = escalator;
@@ -468,79 +373,157 @@ public class Escalator extends Widget implements RequiresResize,
                 });
             }-*/;
 
-            public void touchStart(final CustomTouchEvent event) {
-                touches = event.getNativeEvent().getTouches().length();
-                if (touches != 1) {
-                    return;
+            // Duration of the inertial scrolling simulation. Devices with
+            // larger screens take longer durations.
+            private static final int DURATION = (int)Window.getClientHeight();
+            // multiply scroll velocity with repeated touching
+            private int acceleration = 1;
+            private boolean touching = false;
+            // Two movement objects for storing status and processing touches
+            private Movement yMov, xMov;
+            final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500, F_ACC = 0.7, F_AXIS = 1;
+
+            // The object to deal with one direction scrolling
+            private class Movement {
+                final List<Double> speeds = new ArrayList<Double>();
+                final ScrollbarBundle scroll;
+                double position, offset, velocity, prevPos, prevTime, delta;
+                boolean run, vertical;
+
+                public Movement(boolean vertical) {
+                    this.vertical = vertical;
+                    scroll = vertical ? escalator.verticalScrollbar : escalator.horizontalScrollbar;
                 }
 
-                escalator.scroller.cancelFlickScroll();
+                public void startTouch(CustomTouchEvent event) {
+                    speeds.clear();
+                    prevPos = pagePosition(event);
+                    prevTime = Duration.currentTimeMillis();
+                }
+                public void moveTouch(CustomTouchEvent event) {
+                    double pagePosition = pagePosition(event);
+                    if (pagePosition > -1) {
+                        delta = prevPos - pagePosition;
+                        double now = Duration.currentTimeMillis();
+                        double ellapsed = now - prevTime;
+                        velocity = delta / ellapsed;
+                        // if last speed was so low, reset speeds and start storing again
+                        if (speeds.size() > 0 && !validSpeed(speeds.get(0))) {
+                            speeds.clear();
+                            run = true;
+                        }
+                        speeds.add(0, velocity);
+                        prevTime = now;
+                        prevPos = pagePosition;
+                    }
+                }
+                public void endTouch(CustomTouchEvent event) {
+                    // Compute average speed
+                    velocity = 0;
+                    for (double s : speeds) {
+                        velocity += s / speeds.size();
+                    }
+                    position = scroll.getScrollPos();
+                    // Compute offset, and adjust it with an easing curve so as movement is smoother.
+                    offset = F_VEL * velocity * acceleration * easingInOutCos(velocity, MAX_VEL);
+                    // Check that offset does not over-scroll
+                    double minOff = -scroll.getScrollPos();
+                    double maxOff = scroll.getScrollSize() - scroll.getOffsetSize() + minOff;
+                    offset = Math.min(Math.max(offset, minOff), maxOff);
+                    // Enable or disable inertia movement in this axis
+                    run = validSpeed(velocity) && minOff < 0 && maxOff > 0;
+                    if (run) {
+                        event.getNativeEvent().preventDefault();
+                    }
+                }
+                void validate(Movement other) {
+                    if (!run || other.velocity > 0 && Math.abs(velocity / other.velocity) < F_AXIS) {
+                        delta = offset = 0;
+                        run = false;
+                    }
+                }
+                void stepAnimation(double progress) {
+                    scroll.setScrollPos(position + offset * progress);
+                }
 
-                lastX = event.getPageX();
-                lastY = event.getPageY();
+                int pagePosition(CustomTouchEvent event) {
+                    JsArray<Touch> a = event.getNativeEvent().getTouches();
+                    return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
+                }
+                boolean validSpeed(double speed) {
+                    return Math.abs(speed) > MIN_VEL;
+                }
+            }
 
-                // Reset flick parameters
-                flickPageX1 = lastX;
-                flickPageX2 = -1;
-                flickPageY1 = lastY;
-                flickPageY2 = -1;
-                flickStartTime = System.currentTimeMillis();
-                flickTimestamp = 0;
+            // Using GWT animations which take care of native animation frames.
+            private Animation animation = new Animation() {
+                public void onUpdate(double progress) {
+                    xMov.stepAnimation(progress);
+                    yMov.stepAnimation(progress);
+                }
+                public double interpolate(double progress) {
+                    return easingOutCirc(progress);
+                };
+                public void onComplete() {
+                    touching = false;
+                    escalator.body.domSorter.reschedule();
+                };
+                public void run(int duration) {
+                    if (xMov.run || yMov.run) {
+                        super.run(duration);
+                    } else {
+                        onComplete();
+                    }
+                };
+            };
 
-                snappedScrollEnabled = true;
+            public void touchStart(final CustomTouchEvent event) {
+                if (event.getNativeEvent().getTouches().length() == 1) {
+                    if (yMov == null) {
+                        yMov = new Movement(true);
+                        xMov = new Movement(false);
+                    }
+                    if (animation.isRunning()) {
+                        acceleration += F_ACC;
+                        event.getNativeEvent().preventDefault();
+                        animation.cancel();
+                    } else {
+                        acceleration = 1;
+                    }
+                    xMov.startTouch(event);
+                    yMov.startTouch(event);
+                    touching = true;
+                }
             }
 
             public void touchMove(final CustomTouchEvent event) {
-                /*
-                 * since we only use the getPageX/Y, and calculate the diff
-                 * within the handler, we don't need to calculate any
-                 * intermediate deltas.
-                 */
-                latestTouchMoveEvent = event;
-
-                if (animationHandle != null) {
-                    animationHandle.cancel();
-                }
-                animationHandle = AnimationScheduler.get()
-                        .requestAnimationFrame(mover, escalator.bodyElem);
-                event.getNativeEvent().preventDefault();
+                xMov.moveTouch(event);
+                yMov.moveTouch(event);
+                xMov.validate(yMov);
+                yMov.validate(xMov);
+                moveScrollFromEvent(escalator, xMov.delta, yMov.delta, event.getNativeEvent());
             }
 
             public void touchEnd(final CustomTouchEvent event) {
-                touches = event.getNativeEvent().getTouches().length();
+                xMov.endTouch(event);
+                yMov.endTouch(event);
+                xMov.validate(yMov);
+                yMov.validate(xMov);
+                // Adjust duration so as longer movements take more duration
+                boolean vert = !xMov.run || yMov.run &&  Math.abs(yMov.offset) > Math.abs(xMov.offset);
+                double delta = Math.abs((vert ? yMov : xMov).offset);
+                animation.run((int)(3 * DURATION * easingOutExp(delta)));
+            }
 
-                if (touches == 0) {
-
-                    /*
-                     * We want to smooth the flick calculations here. We have
-                     * taken a frame of reference every FLICK_POLL_FREQUENCY.
-                     * But if the sample is too fresh, we might introduce noise
-                     * in our sampling, so we use the older sample instead. it
-                     * might be less accurate, but it's smoother.
-                     * 
-                     * flickPage?1 is the most recent one, while flickPage?2 is
-                     * the previous one.
-                     */
-
-                    final double finalPageY;
-                    final double finalPageX;
-                    double deltaT = flickTimestamp - flickStartTime;
-                    boolean onlyOneSample = flickPageX2 < 0 || flickPageY2 < 0;
-                    if (onlyOneSample) {
-                        finalPageX = latestTouchMoveEvent.getPageX();
-                        finalPageY = latestTouchMoveEvent.getPageY();
-                    } else {
-                        finalPageY = flickPageY2;
-                        finalPageX = flickPageX2;
-                    }
-
-                    double deltaX = finalPageX - flickPageX1;
-                    double deltaY = finalPageY - flickPageY1;
-
-                    escalator.scroller
-                            .handleFlickScroll(deltaX, deltaY, deltaT);
-                    escalator.body.domSorter.reschedule();
-                }
+            private double easingInOutCos(double val, double max) {
+                return 0.5 - 0.5 * Math.cos(Math.PI * Math.signum(val)
+                        * Math.min(Math.abs(val), max) / max);
+            }
+            private double easingOutExp(double delta) {
+                return (1 - Math.pow(2, -delta / 1000));
+            }
+            private double easingOutCirc(double progress) {
+                return Math.sqrt(1 - (progress - 1) * (progress - 1));
             }
         }
 
@@ -570,117 +553,6 @@ public class Escalator extends Widget implements RequiresResize,
         }
     }
 
-    /**
-     * The animation callback that handles the animation of a touch-scrolling
-     * flick with inertia.
-     */
-    private class FlickScrollAnimator implements AnimationCallback {
-        private static final double MIN_MAGNITUDE = 0.005;
-        private static final double MAX_SPEED = 7;
-
-        private double velX;
-        private double velY;
-        private double prevTime = 0;
-        private int millisLeft;
-        private double xFric;
-        private double yFric;
-
-        private boolean cancelled = false;
-        private double lastLeft;
-        private double lastTop;
-
-        /**
-         * Creates a new animation callback to handle touch-scrolling flick with
-         * inertia.
-         * 
-         * @param deltaX
-         *            the last scrolling delta in the x-axis in a touchmove
-         * @param deltaY
-         *            the last scrolling delta in the y-axis in a touchmove
-         * @param lastTime
-         *            the timestamp of the last touchmove
-         */
-        public FlickScrollAnimator(final double deltaX, final double deltaY,
-                final double deltaT) {
-            velX = Math.max(Math.min(deltaX / deltaT, MAX_SPEED), -MAX_SPEED);
-            velY = Math.max(Math.min(deltaY / deltaT, MAX_SPEED), -MAX_SPEED);
-
-            lastLeft = horizontalScrollbar.getScrollPos();
-            lastTop = verticalScrollbar.getScrollPos();
-
-            /*
-             * If we're scrolling mainly in one of the four major directions,
-             * and only a teeny bit to any other side, snap the scroll to that
-             * major direction instead.
-             */
-            final double[] snapDeltas = Escalator.snapDeltas(velX, velY,
-                    RATIO_OF_30_DEGREES);
-            velX = snapDeltas[0];
-            velY = snapDeltas[1];
-
-            if (velX * velX + velY * velY > MIN_MAGNITUDE) {
-                millisLeft = 1500;
-                xFric = velX / millisLeft;
-                yFric = velY / millisLeft;
-            } else {
-                millisLeft = 0;
-            }
-
-        }
-
-        @Override
-        public void execute(final double doNotUseThisTimestamp) {
-            /*
-             * We cannot use the timestamp provided to this method since it is
-             * of a format that cannot be determined at will. Therefore, we need
-             * a timestamp format that we can handle, so our calculations are
-             * correct.
-             */
-
-            if (millisLeft <= 0 || cancelled) {
-                scroller.currentFlickScroller = null;
-                return;
-            }
-
-            final double timestamp = Duration.currentTimeMillis();
-            if (prevTime == 0) {
-                prevTime = timestamp;
-                AnimationScheduler.get().requestAnimationFrame(this);
-                return;
-            }
-
-            double currentLeft = horizontalScrollbar.getScrollPos();
-            double currentTop = verticalScrollbar.getScrollPos();
-
-            final double timeDiff = timestamp - prevTime;
-            double left = currentLeft - velX * timeDiff;
-            setScrollLeft(left);
-            velX -= xFric * timeDiff;
-
-            double top = currentTop - velY * timeDiff;
-            setScrollTop(top);
-            velY -= yFric * timeDiff;
-
-            cancelBecauseOfEdgeOrCornerMaybe();
-
-            prevTime = timestamp;
-            millisLeft -= timeDiff;
-            lastLeft = currentLeft;
-            lastTop = currentTop;
-            AnimationScheduler.get().requestAnimationFrame(this);
-        }
-
-        private void cancelBecauseOfEdgeOrCornerMaybe() {
-            if (lastLeft == horizontalScrollbar.getScrollPos()
-                    && lastTop == verticalScrollbar.getScrollPos()) {
-                cancel();
-            }
-        }
-
-        public void cancel() {
-            cancelled = true;
-        }
-    }
 
     /**
      * ScrollDestination case-specific handling logic.
@@ -760,11 +632,6 @@ public class Escalator extends Widget implements RequiresResize,
     private class Scroller extends JsniWorkaround {
         private double lastScrollTop = 0;
         private double lastScrollLeft = 0;
-        /**
-         * The current flick scroll animator. This is <code>null</code> if the
-         * view isn't animating a flick scroll at the moment.
-         */
-        private FlickScrollAnimator currentFlickScroller;
 
         public Scroller() {
             super(Escalator.this);
@@ -782,7 +649,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             return $entry(function(e) {
                 var target = e.target || e.srcElement; // IE8 uses e.scrElement
-            
+
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -1099,30 +966,6 @@ public class Escalator extends Widget implements RequiresResize,
                 // this would be IE8, but we don't support it with touch
             }
         }-*/;
-
-        private void cancelFlickScroll() {
-            if (currentFlickScroller != null) {
-                currentFlickScroller.cancel();
-            }
-        }
-
-        /**
-         * Handles a touch-based flick scroll.
-         * 
-         * @param deltaX
-         *            the last scrolling delta in the x-axis in a touchmove
-         * @param deltaY
-         *            the last scrolling delta in the y-axis in a touchmove
-         * @param lastTime
-         *            the timestamp of the last touchmove
-         */
-        public void handleFlickScroll(double deltaX, double deltaY,
-                double deltaT) {
-            currentFlickScroller = new FlickScrollAnimator(deltaX, deltaY,
-                    deltaT);
-            AnimationScheduler.get()
-                    .requestAnimationFrame(currentFlickScroller);
-        }
 
         public void scrollToColumn(final int columnIndex,
                 final ScrollDestination destination, final int padding) {
@@ -2481,9 +2324,9 @@ public class Escalator extends Widget implements RequiresResize,
             private boolean sortIfConditionsMet() {
                 boolean enoughFramesHavePassed = framesPassed >= REQUIRED_FRAMES_PASSED;
                 boolean enoughTimeHasPassed = (Duration.currentTimeMillis() - startTime) >= SORT_DELAY_MILLIS;
-                boolean notAnimatingFlick = (scroller.currentFlickScroller == null);
+                boolean notTouchActivity = !scroller.touchHandlerBundle.touching;
                 boolean conditionsMet = enoughFramesHavePassed
-                        && enoughTimeHasPassed && notAnimatingFlick;
+                        && enoughTimeHasPassed && notTouchActivity;
 
                 if (conditionsMet) {
                     resetConditions();
@@ -2663,15 +2506,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             if (rowsWereMoved) {
                 fireRowVisibilityChangeEvent();
-
-                if (scroller.touchHandlerBundle.touches == 0) {
-                    /*
-                     * this will never be called on touch scrolling. That is
-                     * handled separately and explicitly by
-                     * TouchHandlerBundle.touchEnd();
-                     */
-                    domSorter.reschedule();
-                }
+                domSorter.reschedule();
             }
         }
 
