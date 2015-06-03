@@ -718,6 +718,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         page.init(request);
 
+        // Reset heartbeat timeout to avoid surprise if it's almost expired
+        setLastHeartbeatTimestamp(System.currentTimeMillis());
+
         refresh(request);
 
         URI newLocation = page.getLocation();
