@@ -18,55 +18,45 @@ package com.vaadin.tests.components.checkbox;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
-public class CheckBoxRpcCount extends AbstractTestUI {
+public class CheckBoxImmediate extends AbstractTestUI {
+    private int count = 0;
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Label countLabel = new Label("No RPC calls made yet.");
-        countLabel.setId("count-label");
-        addComponent(countLabel);
+        final Label status = new Label("Events received: " + count);
+        status.setId("count");
+        addComponent(status);
 
-        CheckBox cb = new CheckBox("Click me to start counting...") {
-            {
-                // Register a new RPC that counts the number of invocations.
-                registerRpc(new CheckBoxServerRpc() {
-                    private int rpcCount = 0;
-
-                    @Override
-                    public void setChecked(boolean checked,
-                            MouseEventDetails mouseEventDetails) {
-                        rpcCount++;
-                        countLabel.setValue(rpcCount + " RPC call(s) made.");
-                    }
-
-                });
-            }
-        };
-        cb.addValueChangeListener(new ValueChangeListener() {
-
+        CheckBox cb = new CheckBox("Non-immediate");
+        ValueChangeListener listener = new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                // Adding an empty ValueChangeListener just to ensure that
-                // immediate mode is set to true
+                count++;
+                status.setValue("Events received: " + count);
             }
-        });
+        };
+        cb.addValueChangeListener(listener);
+        cb.setImmediate(false);
+        addComponent(cb);
+
+        cb = new CheckBox("Immediate");
+        cb.addValueChangeListener(listener);
+        cb.setImmediate(true);
         addComponent(cb);
     }
 
     @Override
     protected String getTestDescription() {
-        return "Test for verifying that no extra RPC calls are made when clicking on CheckBox label.";
+        return "Test for verifying that a non-immediate CheckBox does not send value change to server immediately.";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        return 8259;
+        return 18102;
     }
 
 }
