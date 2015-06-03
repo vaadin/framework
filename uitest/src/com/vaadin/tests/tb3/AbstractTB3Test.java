@@ -1032,6 +1032,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void selectMenuPath(String... menuCaptions) {
         selectMenu(menuCaptions[0], true);
+
+        // Move to the menu item opened below the menu bar.
+        new Actions(getDriver()).moveByOffset(0,
+                getMenuElement(menuCaptions[0]).getSize().getHeight())
+                .perform();
+
         for (int i = 1; i < menuCaptions.length - 1; i++) {
             selectMenu(menuCaptions[i]);
             new Actions(getDriver()).moveByOffset(40, 0).build().perform();
