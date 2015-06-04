@@ -28,6 +28,7 @@ public abstract class SingleBrowserTestPhantomJS2 extends
     public List<DesiredCapabilities> getBrowsersToTest() {
         DesiredCapabilities p2 = Browser.PHANTOMJS.getDesiredCapabilities();
         p2.setVersion("2");
+        p2.setCapability("phantomjs.binary.path", "/usr/bin/phantomjs2");
         return Collections.singletonList(p2);
     }
 }
