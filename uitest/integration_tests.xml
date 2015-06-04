@@ -89,7 +89,7 @@
         <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test.appspot.com/" />
+            <property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test-hrd.appspot.com/" />
             <property name="server.start.succeeded" value="1" />
             <property name="browsers" value="${test_browsers}" />
             <property name="testfiles" value="${test-GAE}" />
