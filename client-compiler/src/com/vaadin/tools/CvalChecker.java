@@ -243,7 +243,9 @@ public final class CvalChecker {
             String msg = "";
             int majorVers = computeMajorVersion(version);
 
-            if (info != null && info.getMessage() != null) {
+            if (info != null && !info.isValidVersion(majorVers)) {
+                msg = getErrorMessage("invalid", title, majorVers);
+            } else if (info != null && info.getMessage() != null) {
                 msg = info.getMessage().replace("\\n", "\n");
             } else if (info != null && info.isLicenseExpired()) {
                 String type = "evaluation".equals(info.getType()) ? "Evaluation license"
