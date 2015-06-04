@@ -58,7 +58,15 @@ public class AttachDetachListenersTest {
 
     @Test
     public void attachListeners_setSessionLast() {
-        setupAttachListeners();
+        attachListener.attach(eventEquals(new AttachEvent(component)));
+        attachListener.attach(eventEquals(new AttachEvent(content)));
+        attachListener.attach(eventEquals(new AttachEvent(ui)));
+
+        control.replay();
+
+        ui.addAttachListener(attachListener);
+        content.addAttachListener(attachListener);
+        component.addAttachListener(attachListener);
 
         ui.setContent(content);
         content.addComponent(component);
@@ -69,7 +77,15 @@ public class AttachDetachListenersTest {
 
     @Test
     public void attachListeners_setSessionFirst() {
-        setupAttachListeners();
+        attachListener.attach(eventEquals(new AttachEvent(ui)));
+        attachListener.attach(eventEquals(new AttachEvent(content)));
+        attachListener.attach(eventEquals(new AttachEvent(component)));
+
+        control.replay();
+
+        ui.addAttachListener(attachListener);
+        content.addAttachListener(attachListener);
+        component.addAttachListener(attachListener);
 
         ui.setSession(session);
         ui.setContent(content);
@@ -80,7 +96,15 @@ public class AttachDetachListenersTest {
 
     @Test
     public void attachListeners_setSessionBetween() {
-        setupAttachListeners();
+        attachListener.attach(eventEquals(new AttachEvent(content)));
+        attachListener.attach(eventEquals(new AttachEvent(ui)));
+        attachListener.attach(eventEquals(new AttachEvent(component)));
+
+        control.replay();
+
+        ui.addAttachListener(attachListener);
+        content.addAttachListener(attachListener);
+        component.addAttachListener(attachListener);
 
         ui.setContent(content);
         ui.setSession(session);
@@ -168,15 +192,4 @@ public class AttachDetachListenersTest {
         ui.setSession(session);
     }
 
-    private void setupAttachListeners() {
-        attachListener.attach(eventEquals(new AttachEvent(ui)));
-        attachListener.attach(eventEquals(new AttachEvent(content)));
-        attachListener.attach(eventEquals(new AttachEvent(component)));
-
-        control.replay();
-
-        ui.addAttachListener(attachListener);
-        content.addAttachListener(attachListener);
-        component.addAttachListener(attachListener);
-    }
 }

@@ -610,11 +610,11 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
         getUI().getConnectorTracker().registerConnector(this);
 
-        fireEvent(new AttachEvent(this));
-
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
         }
+
+        fireEvent(new AttachEvent(this));
     }
 
     /**
