@@ -782,7 +782,14 @@ public class GridLayout extends AbstractLayout implements
                 }
             }
         }
-        // TODO forget expands for removed columns
+
+        // Forget expands for removed columns
+        if (columns < getColumns()) {
+            for (int i = columns - 1; i < getColumns(); i++) {
+                columnExpandRatio.remove(i);
+                getState().explicitColRatios.remove(i);
+            }
+        }
 
         getState().columns = columns;
     }
