@@ -541,6 +541,29 @@ public class WidgetUtil {
     }
 
     /**
+     * Gets the border-box width for the given element, i.e. element width +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box width for the element
+     */
+    public static double getRequiredWidthDouble(
+            com.google.gwt.dom.client.Element element) {
+        double reqWidth = getRequiredWidthBoundingClientRectDouble(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            double csWidth = getRequiredWidthComputedStyleDouble(element);
+            if (csWidth > reqWidth && csWidth < (reqWidth + 1)) {
+                // IE9 rounds reqHeight to integers BUT sometimes reports wrong
+                // csHeight it seems, so we only use csHeight if it is within a
+                // rounding error
+                return csWidth;
+            }
+        }
+        return reqWidth;
+    }
+
+    /**
      * Gets the border-box height for the given element, i.e. element height +
      * border + padding. Always rounds up to nearest integer.
      * 
@@ -561,6 +584,29 @@ public class WidgetUtil {
                 // in GridLayouts produces senseless values (see e.g.
                 // ThemeTestUI with Runo).
                 return csSize;
+            }
+        }
+        return reqHeight;
+    }
+
+    /**
+     * Gets the border-box height for the given element, i.e. element height +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box height for the element
+     */
+    public static double getRequiredHeightDouble(
+            com.google.gwt.dom.client.Element element) {
+        double reqHeight = getRequiredHeightBoundingClientRectDouble(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            double csHeight = getRequiredHeightComputedStyleDouble(element);
+            if (csHeight > reqHeight && csHeight < (reqHeight + 1)) {
+                // IE9 rounds reqHeight to integers BUT sometimes reports wrong
+                // csHeight it seems, so we only use csHeight if it is within a
+                // rounding error
+                return csHeight;
             }
         }
         return reqHeight;
@@ -605,34 +651,44 @@ public class WidgetUtil {
         }
     }-*/;
 
-    public static native int getRequiredHeightComputedStyle(
+    public static int getRequiredHeightComputedStyle(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getRequiredHeightComputedStyleDouble(element));
+    }
+
+    public static native double getRequiredHeightComputedStyleDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
          if(heightPx == 'auto'){
              // Fallback for inline elements
-             return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element);
+             return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
          var height = parseFloat(heightPx); // Will automatically skip "px" suffix
          var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
          var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
-         return Math.ceil(height+border+padding);
+         return height+border+padding;
      }-*/;
 
-    public static native int getRequiredWidthComputedStyle(
+    public static int getRequiredWidthComputedStyle(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getRequiredWidthComputedStyleDouble(element));
+    }
+
+    public static native int getRequiredWidthComputedStyleDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
          if(widthPx == 'auto'){
              // Fallback for inline elements
-             return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element);
+             return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
          var width = parseFloat(widthPx); // Will automatically skip "px" suffix
          var border = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth); // Will automatically skip "px" suffix
          var padding = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight); // Will automatically skip "px" suffix
-         return Math.ceil(width+border+padding);
+         return width+border+padding;
      }-*/;
 
     /**
