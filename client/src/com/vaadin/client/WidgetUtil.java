@@ -611,17 +611,12 @@ public class WidgetUtil {
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
          if(heightPx == 'auto'){
-             // Fallback for when IE reports auto
-             heightPx = @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+             // Fallback for inline elements
+             return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element);
          }
-         var borderTopPx = cs.borderTop;
-         var borderBottomPx = cs.borderBottom;
-         var paddingTopPx = cs.paddingTop;
-         var paddingBottomPx = cs.paddingBottom;
-
-         var height = heightPx.substring(0,heightPx.length-2);
-         var border = borderTopPx.substring(0,borderTopPx.length-2)+borderBottomPx.substring(0,borderBottomPx.length-2);
-         var padding = paddingTopPx.substring(0,paddingTopPx.length-2)+paddingBottomPx.substring(0,paddingBottomPx.length-2);
+         var height = parseFloat(heightPx); // Will automatically skip "px" suffix
+         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
+         var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
          return Math.ceil(height+border+padding);
      }-*/;
 
@@ -631,17 +626,12 @@ public class WidgetUtil {
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
          if(widthPx == 'auto'){
-             // Fallback for when IE reports auto
-             widthPx = @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+             // Fallback for inline elements
+             return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element);
          }
-         var borderLeftPx = cs.borderLeft;
-         var borderRightPx = cs.borderRight;
-         var paddingLeftPx = cs.paddingLeft;
-         var paddingRightPx = cs.paddingRight;
-
-         var width = widthPx.substring(0,widthPx.length-2);
-         var border = borderLeftPx.substring(0,borderLeftPx.length-2)+borderRightPx.substring(0,borderRightPx.length-2);
-         var padding = paddingLeftPx.substring(0,paddingLeftPx.length-2)+paddingRightPx.substring(0,paddingRightPx.length-2);
+         var width = parseFloat(widthPx); // Will automatically skip "px" suffix
+         var border = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth); // Will automatically skip "px" suffix
+         var padding = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight); // Will automatically skip "px" suffix
          return Math.ceil(width+border+padding);
      }-*/;
 
