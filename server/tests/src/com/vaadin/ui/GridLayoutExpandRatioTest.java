@@ -30,6 +30,7 @@ public class GridLayoutExpandRatioTest {
     public void testColExpandRatioIsForgotten() {
         gridLayout = new GridLayout(4, 1);
         gridLayout.setWidth(100, Unit.PERCENTAGE);
+        gridLayout.setSizeFull();
         gridLayout.setSpacing(true);
 
         addComponents(true);
@@ -46,7 +47,9 @@ public class GridLayoutExpandRatioTest {
         assertFalse(gridLayout.getState().explicitColRatios.contains(2));
         assertTrue(gridLayout.getState().explicitColRatios.contains(3));
 
-        remove();
+        gridLayout.removeAllComponents();
+        gridLayout.setColumns(3);
+        addComponents(false);
 
         assertTrue(gridLayout.getColumnExpandRatio(0) == 0);
         assertTrue(gridLayout.getColumnExpandRatio(1) == 1);
@@ -56,13 +59,41 @@ public class GridLayoutExpandRatioTest {
         assertTrue(gridLayout.getState().explicitColRatios.contains(1));
         assertFalse(gridLayout.getState().explicitColRatios.contains(2));
         assertFalse(gridLayout.getState().explicitColRatios.contains(3));
-
     }
 
-    private void remove() {
+    @Test
+    public void testRowExpandRatioIsForgotten() {
+        gridLayout = new GridLayout(1, 4);
+        gridLayout.setWidth(100, Unit.PERCENTAGE);
+        gridLayout.setSizeFull();
+        gridLayout.setSpacing(true);
+
+        addComponents(true);
+
+        gridLayout.setRowExpandRatio(1, 1);
+        gridLayout.setRowExpandRatio(3, 1);
+
+        assertTrue(gridLayout.getRowExpandRatio(0) == 0);
+        assertTrue(gridLayout.getRowExpandRatio(1) == 1);
+        assertTrue(gridLayout.getRowExpandRatio(2) == 0);
+        assertTrue(gridLayout.getRowExpandRatio(3) == 1);
+        assertFalse(gridLayout.getState().explicitRowRatios.contains(0));
+        assertTrue(gridLayout.getState().explicitRowRatios.contains(1));
+        assertFalse(gridLayout.getState().explicitRowRatios.contains(2));
+        assertTrue(gridLayout.getState().explicitRowRatios.contains(3));
+
         gridLayout.removeAllComponents();
-        gridLayout.setColumns(3);
+        gridLayout.setRows(3);
         addComponents(false);
+
+        assertTrue(gridLayout.getRowExpandRatio(0) == 0);
+        assertTrue(gridLayout.getRowExpandRatio(1) == 1);
+        assertTrue(gridLayout.getRowExpandRatio(2) == 0);
+        assertTrue(gridLayout.getRowExpandRatio(3) == 0);
+        assertFalse(gridLayout.getState().explicitRowRatios.contains(0));
+        assertTrue(gridLayout.getState().explicitRowRatios.contains(1));
+        assertFalse(gridLayout.getState().explicitRowRatios.contains(2));
+        assertFalse(gridLayout.getState().explicitRowRatios.contains(3));
     }
 
     private void addComponents(boolean includeLastOne) {
