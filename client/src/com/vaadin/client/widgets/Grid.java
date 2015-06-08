@@ -3496,6 +3496,9 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean enabled = true;
     private double lastTouchEventTime = 0;
+    private int lastTouchEventX = -1;
+    private int lastTouchEventY = -1;
+    private int lastTouchEventRow = -1;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -6440,14 +6443,29 @@ public class Grid<T> extends ResizeComposite implements
 
         final boolean closeEvent = event.getTypeInt() == Event.ONKEYDOWN
                 && event.getKeyCode() == Editor.KEYCODE_HIDE;
+
         double now = Duration.currentTimeMillis();
+        int currentX = WidgetUtil.getTouchOrMouseClientX(event);
+        int currentY = WidgetUtil.getTouchOrMouseClientY(event);
+
+        final boolean validTouchOpenEvent = event.getTypeInt() == Event.ONTOUCHEND
+                && now - lastTouchEventTime < 500
+                && lastTouchEventRow == eventCell.getRowIndex()
+                && Math.abs(lastTouchEventX - currentX) < 20
+                && Math.abs(lastTouchEventY - currentY) < 20;
+
         final boolean openEvent = event.getTypeInt() == Event.ONDBLCLICK
                 || (event.getTypeInt() == Event.ONKEYDOWN && event.getKeyCode() == Editor.KEYCODE_SHOW)
-                || (event.getTypeInt() == Event.ONTOUCHEND && now
-                        - lastTouchEventTime < 500);
+                || validTouchOpenEvent;
+
+        if (event.getTypeInt() == Event.ONTOUCHSTART) {
+            lastTouchEventX = currentX;
+            lastTouchEventY = currentY;
+        }
 
         if (event.getTypeInt() == Event.ONTOUCHEND) {
             lastTouchEventTime = now;
+            lastTouchEventRow = eventCell.getRowIndex();
         }
 
         if (editor.getState() != Editor.State.INACTIVE) {
