@@ -535,10 +535,8 @@ public class MultiSelectionRenderer<T> extends
             final int topBorder = getBodyClientTop();
             final int bottomBorder = getBodyClientBottom();
 
-            final int scrollCompensation = getScrollCompensation();
-            topBound = scrollCompensation + topBorder + SCROLL_AREA_GRADIENT_PX;
-            bottomBound = scrollCompensation + bottomBorder
-                    - SCROLL_AREA_GRADIENT_PX;
+            topBound = topBorder + SCROLL_AREA_GRADIENT_PX;
+            bottomBound = bottomBorder - SCROLL_AREA_GRADIENT_PX;
             gradientArea = SCROLL_AREA_GRADIENT_PX;
 
             // modify bounds if they're too tightly packed
@@ -549,17 +547,6 @@ public class MultiSelectionRenderer<T> extends
                 bottomBound += adjustment / 2;
                 gradientArea -= adjustment / 2;
             }
-        }
-
-        private int getScrollCompensation() {
-            Element cursor = grid.getElement();
-            int scroll = 0;
-            while (cursor != null) {
-                scroll -= cursor.getScrollTop();
-                cursor = cursor.getParentElement();
-            }
-
-            return scroll;
         }
 
         public void stop() {
@@ -743,15 +730,8 @@ public class MultiSelectionRenderer<T> extends
     }
 
     /** Get the "top" of an element in relation to "client" coordinates. */
-    @SuppressWarnings("static-method")
     private int getClientTop(final Element e) {
-        Element cursor = e;
-        int top = 0;
-        while (cursor != null) {
-            top += cursor.getOffsetTop();
-            cursor = cursor.getOffsetParent();
-        }
-        return top;
+        return e.getAbsoluteTop();
     }
 
     private int getBodyClientBottom() {
