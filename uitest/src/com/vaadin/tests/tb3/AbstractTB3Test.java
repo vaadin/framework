@@ -1044,4 +1044,25 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
         selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
+
+    /**
+     * Asserts that an element is present
+     * 
+     * @param by
+     *            the locatore for the element
+     */
+    protected void assertElementPresent(By by) {
+        Assert.assertTrue("Element is not present", isElementPresent(by));
+    }
+
+    /**
+     * Asserts that an element is not present
+     * 
+     * @param by
+     *            the locatore for the element
+     */
+    protected void assertElementNotPresent(By by) {
+        Assert.assertFalse("Element is present", isElementPresent(by));
+    }
+
 }
