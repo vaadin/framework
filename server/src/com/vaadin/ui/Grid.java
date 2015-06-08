@@ -3868,7 +3868,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                boolean success = false;
+                Exception exception = null;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     if (editedItemId == null) {
@@ -3876,13 +3876,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     }
 
                     if (editedItemId.equals(id)) {
-                        success = true;
                         doEditItem();
                     }
                 } catch (Exception e) {
-                    handleError(e);
+                    exception = e;
                 }
-                getEditorRpc().confirmBind(success);
+
+                if (exception != null) {
+                    handleError(exception);
+                    doCancelEditor();
+                    getEditorRpc().confirmBind(false);
+                } else {
+                    doEditItem();
+                    getEditorRpc().confirmBind(true);
+                }
             }
 
             @Override
@@ -5702,13 +5709,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
-        if (editor == null) {
-            editor = editorFieldGroup.buildAndBind(propertyId);
-        }
 
-        if (editor.getParent() != Grid.this) {
-            assert editor.getParent() == null;
-            editor.setParent(this);
+        try {
+            if (editor == null) {
+                editor = editorFieldGroup.buildAndBind(propertyId);
+            }
+        } finally {
+            if (editor == null) {
+                editor = editorFieldGroup.getField(propertyId);
+            }
+
+            if (editor != null && editor.getParent() != Grid.this) {
+                assert editor.getParent() == null;
+                editor.setParent(this);
+            }
         }
         return editor;
     }
@@ -5803,6 +5817,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     protected void doCancelEditor() {
         editedItemId = null;
         editorFieldGroup.discard();
+        editorFieldGroup.setItemDataSource(null);
     }
 
     void resetEditor() {
