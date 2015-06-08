@@ -48,7 +48,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 
-public class FileDownloaderTest extends AbstractTestUIWithLog {
+public class FileDownloaderUI extends AbstractTestUIWithLog {
 
     private AbstractComponent firstDownloadComponent;
 
