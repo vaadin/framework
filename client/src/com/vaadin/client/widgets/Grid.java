@@ -3175,7 +3175,7 @@ public class Grid<T> extends ResizeComposite implements
          */
         public void open() {
             if (!isOpen() && isInDOM()) {
-                addStyleName("opened");
+                addStyleName("open");
                 removeStyleName("closed");
                 rootContainer.add(content);
                 clickOutsideToCloseHandlerRegistration = Event
@@ -3189,7 +3189,7 @@ public class Grid<T> extends ResizeComposite implements
          */
         public void close() {
             if (isOpen()) {
-                removeStyleName("opened");
+                removeStyleName("open");
                 addStyleName("closed");
                 content.removeFromParent();
                 // adjust open button to header height when closed

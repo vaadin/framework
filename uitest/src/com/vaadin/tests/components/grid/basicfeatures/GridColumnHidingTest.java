@@ -1012,12 +1012,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     private void verifySidebarOpened() {
         WebElement sidebar = getSidebar();
-        assertTrue(sidebar.getAttribute("class").contains("opened"));
+        assertTrue(sidebar.getAttribute("class").contains("open"));
     }
 
     private void verifySidebarClosed() {
         WebElement sidebar = getSidebar();
-        assertFalse(sidebar.getAttribute("class").contains("opened"));
+        assertFalse(sidebar.getAttribute("class").contains("open"));
     }
 
     private void verifySidebarNotVisible() {

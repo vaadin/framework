@@ -125,7 +125,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       border-radius: 0;
     }
 
-    &.opened {
+    &.open {
       .#{$primaryStyleName}-sidebar-button {
         width: 100%;
  
@@ -137,11 +137,11 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       }
     }
 
-    .v-ie &.opened .#{$primaryStyleName}-sidebar-button {
+    .v-ie &.open .#{$primaryStyleName}-sidebar-button {
       vertical-align: middle;
     }
 
-    .v-ie8 &.opened .#{$primaryStyleName}-sidebar-button:after {
+    .v-ie8 &.open .#{$primaryStyleName}-sidebar-button:after {
       display: inline;
     }
 

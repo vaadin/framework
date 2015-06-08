@@ -30,7 +30,7 @@
   
   // Sidebar
   .#{$primaryStyleName}-sidebar.v-contextmenu {
-    &.opened {
+    &.open {
       .#{$primaryStyleName}-sidebar-button {
         &:after {
           font-size: 22px;
