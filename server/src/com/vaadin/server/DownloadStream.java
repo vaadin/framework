@@ -25,7 +25,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -323,7 +322,7 @@ public class DownloadStream implements Serializable {
      * Returns the filename formatted for inclusion in a Content-Disposition
      * header. Includes both a plain version of the name and a UTF-8 version
      * 
-     * @since
+     * @since 7.4.8
      * @param filename
      *            The filename to include
      * @return A value for inclusion in a Content-Disposition header
@@ -336,11 +335,6 @@ public class DownloadStream implements Serializable {
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-
-    }
-
-    public static Logger getLogger() {
-        return Logger.getLogger(DownloadStream.class.getName());
     }
 
     /**
