@@ -42,9 +42,11 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
+// This is really typed to <JsonValue>, but because of the way native strings
+// are not always instanceof JsonValue, we need to accept Object
 @Connect(AbstractJavaScriptRenderer.class)
 public class JavaScriptRendererConnector extends
-        AbstractRendererConnector<JsonValue> implements
+        AbstractRendererConnector<Object> implements
         HasJavaScriptConnectorHelper {
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
@@ -131,7 +133,7 @@ public class JavaScriptRendererConnector extends
     }-*/;
 
     @Override
-    protected Renderer<JsonValue> createRenderer() {
+    protected Renderer<Object> createRenderer() {
         helper.ensureJavascriptInited();
 
         if (!hasFunction("render")) {
@@ -146,11 +148,13 @@ public class JavaScriptRendererConnector extends
         final boolean hasGetConsumedEvents = hasFunction("getConsumedEvents");
         final boolean hasOnBrowserEvent = hasFunction("onBrowserEvent");
 
-        return new ComplexRenderer<JsonValue>() {
+        return new ComplexRenderer<Object>() {
             @Override
-            public void render(RendererCellReference cell, JsonValue data) {
-                render(helper.getConnectorWrapper(), getJsCell(cell),
-                        Util.json2jso(data));
+            public void render(RendererCellReference cell, Object data) {
+                if (data instanceof JsonValue) {
+                    data = Util.json2jso((JsonValue) data);
+                }
+                render(helper.getConnectorWrapper(), getJsCell(cell), data);
             }
 
             private JavaScriptObject getJsCell(CellReference<?> cell) {
@@ -159,7 +163,7 @@ public class JavaScriptRendererConnector extends
             }
 
             public native void render(JavaScriptObject wrapper,
-                    JavaScriptObject cell, JavaScriptObject data)
+                    JavaScriptObject cell, Object data)
             /*-{
                 wrapper.render(cell, data);
             }-*/;
@@ -262,7 +266,7 @@ public class JavaScriptRendererConnector extends
     }
 
     @Override
-    public JsonValue decode(JsonValue value) {
+    public Object decode(JsonValue value) {
         // Let the js logic decode the raw json that the server sent
         return value;
     }

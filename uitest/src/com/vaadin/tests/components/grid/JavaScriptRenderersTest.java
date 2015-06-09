@@ -34,8 +34,12 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         GridCellElement cell_1_1 = grid.getCell(1, 1);
 
+        GridCellElement cell_2_2 = grid.getCell(2, 2);
+
         // Verify render functionality
         Assert.assertEquals("Bean(2, 0)", cell_1_1.getText());
+
+        Assert.assertEquals("string2", cell_2_2.getText());
 
         // Verify init functionality
         Assert.assertEquals("1", cell_1_1.getAttribute("column"));

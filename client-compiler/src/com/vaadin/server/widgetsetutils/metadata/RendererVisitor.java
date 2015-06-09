@@ -22,7 +22,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.vaadin.client.connectors.AbstractRendererConnector;
+
+import elemental.json.JsonValue;
 
 /**
  * Generates type data for renderer connectors.
@@ -86,10 +89,31 @@ public class RendererVisitor extends TypeVisitor {
         JType presentationType = getPresentationType(type, logger);
         bundle.setPresentationType(type, presentationType);
 
-        bundle.setNeedsSerialize(presentationType);
+        if (!hasCustomDecodeMethod(type, logger)) {
+            bundle.setNeedsSerialize(presentationType);
+        }
 
         logger.log(Type.DEBUG, "Presentation type of " + type + " is "
                 + presentationType);
+    }
+
+    private static boolean hasCustomDecodeMethod(JClassType type,
+            TreeLogger logger) throws UnableToCompleteException {
+        try {
+            JMethod decodeMethod = ConnectorBundle.findInheritedMethod(type,
+                    "decode",
+                    type.getOracle().getType(JsonValue.class.getName()));
+            if (decodeMethod == null) {
+                throw new NotFoundException();
+            }
+
+            return !decodeMethod.getEnclosingType().getQualifiedSourceName()
+                    .equals(AbstractRendererConnector.class.getName());
+        } catch (NotFoundException e) {
+            logger.log(Type.ERROR, "Can't find decode method for renderer "
+                    + type, e);
+            throw new UnableToCompleteException();
+        }
     }
 
     private static JType getPresentationType(JClassType type, TreeLogger logger)
