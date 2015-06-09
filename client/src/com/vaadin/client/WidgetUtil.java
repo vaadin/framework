@@ -389,6 +389,7 @@ public class WidgetUtil {
     }
 
     private static int detectedScrollbarSize = -1;
+    private static int detectedSubPixelRoundingFactor = -1;
 
     public static int getNativeScrollbarSize() {
         if (detectedScrollbarSize < 0) {
@@ -1630,4 +1631,134 @@ public class WidgetUtil {
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
+
+    /**
+     * Rounds the given size up to a value which the browser will accept.
+     * 
+     * Safari/WebKit uses 1/64th of a pixel to enable using integer math
+     * (http://trac.webkit.org/wiki/LayoutUnit).
+     * 
+     * Firefox uses 1/60th of a pixel because it is divisible by three
+     * (https://bugzilla.mozilla.org/show_bug.cgi?id=1070940)
+     * 
+     * @since
+     * @param size
+     *            the value to round
+     * @return the rounded value
+     */
+    public static double roundSizeUp(double size) {
+        return roundSize(size, true);
+    }
+
+    /**
+     * Rounds the given size down to a value which the browser will accept.
+     * 
+     * Safari/WebKit uses 1/64th of a pixel to enable using integer math
+     * (http://trac.webkit.org/wiki/LayoutUnit).
+     * 
+     * Firefox uses 1/60th of a pixel because it is divisible by three
+     * (https://bugzilla.mozilla.org/show_bug.cgi?id=1070940)
+     * 
+     * IE9+ uses 1/100th of a pixel
+     * 
+     * @since
+     * @param size
+     *            the value to round
+     * @return the rounded value
+     */
+    public static double roundSizeDown(double size) {
+        return roundSize(size, false);
+    }
+
+    private static double roundSize(double size, boolean roundUp) {
+        if (BrowserInfo.get().isIE8()) {
+            if (roundUp) {
+                return Math.ceil(size);
+            } else {
+                return (int) size;
+            }
+        }
+
+        double factor = getSubPixelRoundingFactor();
+        if (factor < 0 || size < 0) {
+            return size;
+        }
+
+        if (roundUp) {
+            return roundSizeUp(size, factor);
+        } else {
+            return roundSizeDown(size, factor);
+        }
+    }
+
+    /**
+     * Returns the factor used by browsers to round subpixel values
+     * 
+     * @since
+     * @return the factor N used by the browser when storing subpixels as X+Y/N
+     */
+    private static double getSubPixelRoundingFactor() {
+        // Detects how the browser does subpixel rounding
+        // Currently Firefox uses 1/60th pixels
+        // and Safari uses 1/64th pixels
+        // IE 1/100th pixels
+        if (detectedSubPixelRoundingFactor != -1) {
+            return detectedSubPixelRoundingFactor;
+        }
+
+        double probeSize = 0.999999;
+        DivElement div = Document.get().createDivElement();
+        Document.get().getBody().appendChild(div);
+        div.getStyle().setHeight(probeSize, Unit.PX);
+        ComputedStyle computedStyle = new ComputedStyle(div);
+        double computedHeight = computedStyle.getHeight();
+
+        if (computedHeight < probeSize) {
+            // Rounded down by browser, all browsers but Firefox do this
+            // today
+            detectedSubPixelRoundingFactor = (int) Math
+                    .round(1.0 / (1.0 - computedHeight));
+        } else {
+            // Rounded up / to nearest by browser
+            probeSize = 1;
+
+            while (computedStyle.getHeight() != 0.0) {
+                computedHeight = computedStyle.getHeight();
+                probeSize /= 2.0;
+                div.getStyle().setHeight(probeSize, Unit.PX);
+            }
+
+            detectedSubPixelRoundingFactor = (int) Math
+                    .round(1.0 / computedHeight);
+        }
+
+        div.removeFromParent();
+        return detectedSubPixelRoundingFactor;
+    }
+
+    private static double roundSizeUp(double size, double divisor) {
+        // In: 12.51, 60.0
+
+        // 12
+        double integerPart = (int) size;
+
+        // (12.51 - 12) * 60 = 30.6
+        double nrFractions = (size - integerPart) * divisor;
+
+        // 12 + ceil(30.6) / 60 = 12 + 31/60 = 12.51666
+        return integerPart + (Math.ceil(nrFractions)) / divisor;
+    }
+
+    private static double roundSizeDown(double size, double divisor) {
+        // In: 12.51, 60.0
+
+        // 12
+        double integerPart = (int) size;
+
+        // (12.51 - 12) * 60 = 30.6
+        double nrFractions = (size - integerPart) * divisor;
+
+        // 12 + int(30.6) / 60 = 12 + 30/60 = 12.5
+        return integerPart + ((int) nrFractions) / divisor;
+    }
 }
