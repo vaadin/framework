@@ -821,7 +821,6 @@ public class Escalator extends Widget implements RequiresResize,
             double scrollContentHeight = body.calculateTotalRowHeight()
                     + body.spacerContainer.getSpacerHeightsSum();
             double scrollContentWidth = columnConfiguration.calculateRowWidth();
-
             double tableWrapperHeight = heightOfEscalator;
             double tableWrapperWidth = widthOfEscalator;
 
@@ -879,7 +878,6 @@ public class Escalator extends Widget implements RequiresResize,
                     .getCalculatedColumnsWidth(Range.between(
                             columnConfiguration.getFrozenColumnCount(),
                             columnConfiguration.getColumnCount()));
-            unfrozenPixels -= subpixelBrowserBugDetector.getActiveAdjustment();
             double frozenPixels = scrollContentWidth - unfrozenPixels;
             double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
             horizontalScrollbar.setOffsetSize(hScrollOffsetWidth);
@@ -2085,7 +2083,6 @@ public class Escalator extends Widget implements RequiresResize,
                 rowElement.insertBefore(cellClone, cellOriginal);
                 double requiredWidth = WidgetUtil
                         .getRequiredWidthBoundingClientRectDouble(cellClone);
-
                 if (BrowserInfo.get().isIE()) {
                     /*
                      * IE browsers have some issues with subpixels. Occasionally
@@ -4147,8 +4144,7 @@ public class Escalator extends Widget implements RequiresResize,
          * @return the width of a row, in pixels
          */
         public double calculateRowWidth() {
-            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()))
-                    - subpixelBrowserBugDetector.getActiveAdjustment();
+            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()));
         }
 
         private void assertArgumentsAreValidAndWithinRange(final int index,
@@ -4179,8 +4175,6 @@ public class Escalator extends Widget implements RequiresResize,
          */
         @Override
         public void insertColumns(final int index, final int numberOfColumns) {
-            subpixelBrowserBugDetector.invalidateFix();
-
             // Validate
             if (index < 0 || index > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given index(" + index
@@ -4333,11 +4327,10 @@ public class Escalator extends Widget implements RequiresResize,
                 int index = entry.getKey().intValue();
                 double width = entry.getValue().doubleValue();
 
-                if (index == getColumnCount() - 1) {
-                    subpixelBrowserBugDetector.invalidateFix();
-                }
-
                 checkValidColumnIndex(index);
+
+                // Not all browsers will accept any fractional size..
+                width = WidgetUtil.roundSizeDown(width);
                 columns.get(index).setWidth(width);
 
             }
@@ -4346,8 +4339,6 @@ public class Escalator extends Widget implements RequiresResize,
             header.reapplyColumnWidths();
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
-
-            subpixelBrowserBugDetector.checkAndFix();
 
             recalculateElementSizes();
         }
@@ -4440,145 +4431,6 @@ public class Escalator extends Widget implements RequiresResize,
             header.refreshColumns(index, numberOfColumns);
             body.refreshColumns(index, numberOfColumns);
             footer.refreshColumns(index, numberOfColumns);
-        }
-    }
-
-    private class SubpixelBrowserBugDetector {
-        private static final double SUBPIXEL_ADJUSTMENT = .1;
-        private boolean fixActive = false;
-
-        /**
-         * This is a fix essentially for Firefox and how it handles subpixels.
-         * <p>
-         * Even if an element has {@code style="width: 1000.12px"}, the bounding
-         * box's width in Firefox is usually nothing of that sort. It's actually
-         * 1000.11669921875 (in version 35.0.1). That's not even close, when
-         * talking about floating point precision. Other browsers handle the
-         * subpixels way better
-         * <p>
-         * In any case, we need to fix that. And that's fixed by simply checking
-         * if the sum of the width of all the cells is larger than the width of
-         * the row. If it is, we <i>hack</i> the last column
-         * {@value #SUBPIXEL_ADJUSTMENT}px narrower.
-         */
-        public void checkAndFix() {
-            if (!fixActive && hasSubpixelBrowserBug()) {
-                fixSubpixelBrowserBug();
-                fixActive = true;
-            }
-        }
-
-        private double getActiveAdjustment() {
-            if (fixActive) {
-                return -SUBPIXEL_ADJUSTMENT;
-            } else {
-                return 0.0;
-            }
-        }
-
-        public void invalidateFix() {
-            adjustBookkeepingPixels(SUBPIXEL_ADJUSTMENT);
-            fixActive = false;
-        }
-
-        private boolean hasSubpixelBrowserBug() {
-            final RowContainer rowContainer;
-            if (header.getRowCount() > 0) {
-                rowContainer = header;
-            } else if (body.getRowCount() > 0) {
-                rowContainer = body;
-            } else if (footer.getRowCount() > 0) {
-                rowContainer = footer;
-            } else {
-                return false;
-            }
-
-            double sumOfCellWidths = 0;
-            TableRowElement tr = rowContainer.getElement().getRows().getItem(0);
-
-            if (tr == null) {
-                /*
-                 * for some weird reason, the row might be null at this point in
-                 * (some?) webkit browsers.
-                 */
-                return false;
-            }
-
-            NodeList<TableCellElement> cells = tr.getCells();
-            assert cells != null : "cells was null, why is it null?";
-
-            for (int i = 0; i < cells.getLength(); i++) {
-                TableCellElement cell = cells.getItem(i);
-                if (!cell.getStyle().getDisplay()
-                        .equals(Display.NONE.getCssName())) {
-                    sumOfCellWidths += WidgetUtil.getBoundingClientRect(cell)
-                            .getWidth();
-                }
-            }
-
-            double rowWidth = WidgetUtil.getBoundingClientRect(tr).getWidth();
-            return sumOfCellWidths >= rowWidth;
-        }
-
-        private void fixSubpixelBrowserBug() {
-            assert columnConfiguration.getColumnCount() > 0 : "Why are we running this code if there are no columns?";
-
-            adjustBookkeepingPixels(-SUBPIXEL_ADJUSTMENT);
-
-            fixSubpixelBrowserBugFor(header);
-            fixSubpixelBrowserBugFor(body);
-            fixSubpixelBrowserBugFor(footer);
-        }
-
-        private void adjustBookkeepingPixels(double adjustment) {
-            int lastColumnIndex = columnConfiguration.columns.size() - 1;
-            if (lastColumnIndex < 0) {
-                return;
-            }
-
-            columnConfiguration.columns.get(lastColumnIndex).calculatedWidth += adjustment;
-            if (columnConfiguration.widthsArray != null) {
-                columnConfiguration.widthsArray[lastColumnIndex] += adjustment;
-            }
-        }
-
-        /**
-         * Adjust the last non-spanned cell by {@link #SUBPIXEL_ADJUSTMENT} (
-         * {@value #SUBPIXEL_ADJUSTMENT}px).
-         * <p>
-         * We'll do this brute-force, by individually measuring and shrinking
-         * the last non-spanned cell. Brute-force, since each row might be
-         * spanned differently - we can't simply pick one index and one width,
-         * and mass-apply that to everything :(
-         */
-        private void fixSubpixelBrowserBugFor(RowContainer rowContainer) {
-            if (rowContainer.getRowCount() == 0) {
-                return;
-            }
-
-            NodeList<TableRowElement> rows = rowContainer.getElement()
-                    .getRows();
-            for (int i = 0; i < rows.getLength(); i++) {
-
-                NodeList<TableCellElement> cells = rows.getItem(i).getCells();
-                TableCellElement lastNonspannedCell = null;
-                for (int j = cells.getLength() - 1; j >= 0; j--) {
-                    TableCellElement cell = cells.getItem(j);
-                    if (!cell.getStyle().getDisplay()
-                            .equals(Display.NONE.getCssName())) {
-                        lastNonspannedCell = cell;
-                        break;
-                    }
-                }
-
-                assert lastNonspannedCell != null : "all cells were \"display: none\" on row "
-                        + i + " in " + rowContainer.getElement().getTagName();
-
-                double cellWidth = WidgetUtil.getBoundingClientRect(
-                        lastNonspannedCell).getWidth();
-                double newWidth = cellWidth - SUBPIXEL_ADJUSTMENT;
-                lastNonspannedCell.getStyle().setWidth(newWidth, Unit.PX);
-            }
         }
     }
 
@@ -5646,8 +5498,6 @@ public class Escalator extends Widget implements RequiresResize,
             layoutIsScheduled = false;
         }
     };
-
-    private final SubpixelBrowserBugDetector subpixelBrowserBugDetector = new SubpixelBrowserBugDetector();
 
     private final ElementPositionBookkeeper positions = new ElementPositionBookkeeper();
 
