@@ -254,7 +254,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Functionally this is equivalent to using {@link #addStyleName(String)} or
      * {@link #removeStyleName(String)}
      * 
-     * @since
+     * @since 7.5
      * @param style
      *            the style name to be added or removed
      * @param add
