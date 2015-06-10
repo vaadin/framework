@@ -1278,7 +1278,7 @@ public class Escalator extends Widget implements RequiresResize,
          * <p>
          * The implementation must call {@link #paintRemoveRow(Element, int)}
          * for each row that is removed from the DOM.
-         *
+         * 
          * @param index
          *            the logical index of the first removed row
          * @param numberOfRows
@@ -4994,7 +4994,8 @@ public class Escalator extends Widget implements RequiresResize,
                 spacerScrollerRegistration.removeHandler();
                 spacerScrollerRegistration = null;
             }
-            recalculateElementSizes();
+
+            updateSpacerDecosVisibility();
         }
 
         public Map<Integer, SpacerImpl> getSpacers() {
@@ -5305,7 +5306,7 @@ public class Escalator extends Widget implements RequiresResize,
             initSpacerContent(spacer);
 
             body.sortDomElements();
-            recalculateElementSizes();
+            updateSpacerDecosVisibility();
         }
 
         private void updateExistingSpacer(int rowIndex, double newHeight) {
@@ -6286,7 +6287,6 @@ public class Escalator extends Widget implements RequiresResize,
         body.recalculateSectionHeight();
         footer.recalculateSectionHeight();
 
-        body.spacerContainer.updateSpacerDecosVisibility();
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
         body.reapplySpacerWidths();
