@@ -4845,9 +4845,17 @@ public class Escalator extends Widget implements RequiresResize,
                     final double bodyBottom, final double decoWidth) {
                 final int top = deco.getAbsoluteTop();
                 final int bottom = deco.getAbsoluteBottom();
+                /*
+                 * FIXME
+                 * 
+                 * Height and its use is a workaround for the issue where
+                 * coordinates of the deco are not calculated yet. This will
+                 * prevent a deco from being displayed when it's added to DOM
+                 */
+                final int height = bottom - top;
                 if (top < bodyTop || bottom > bodyBottom) {
                     final double topClip = Math.max(0.0D, bodyTop - top);
-                    final double bottomClip = decoHeight
+                    final double bottomClip = height
                             - Math.max(0.0D, bottom - bodyBottom);
                     // TODO [optimize] not sure how GWT compiles this
                     final String clip = new StringBuilder("rect(")
@@ -4903,6 +4911,8 @@ public class Escalator extends Widget implements RequiresResize,
             } else if (spacerExists(rowIndex)) {
                 removeSpacer(rowIndex);
             }
+
+            updateSpacerDecosVisibility();
         }
 
         /** Checks if a given element is a spacer element */
@@ -4994,8 +5004,6 @@ public class Escalator extends Widget implements RequiresResize,
                 spacerScrollerRegistration.removeHandler();
                 spacerScrollerRegistration = null;
             }
-
-            updateSpacerDecosVisibility();
         }
 
         public Map<Integer, SpacerImpl> getSpacers() {
@@ -5306,7 +5314,6 @@ public class Escalator extends Widget implements RequiresResize,
             initSpacerContent(spacer);
 
             body.sortDomElements();
-            updateSpacerDecosVisibility();
         }
 
         private void updateExistingSpacer(int rowIndex, double newHeight) {
