@@ -146,6 +146,18 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
         @include box-shadow(none);
       }
     }
+    
+    .v-datefield-button {
+      .v-ie8 & {
+        margin-left: 0px;
+      }
+    }
+      
+    .v-filterselect-button {
+      .v-ie8 & {
+        margin-left: 0px;
+      }
+    }
 
     .v-textfield-focus,
     .v-datefield .v-textfield-focus,
