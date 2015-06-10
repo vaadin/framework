@@ -271,7 +271,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Sets the position of the window on the screen using
      * {@link #setPositionX(int)} and {@link #setPositionY(int)}
      * 
-     * @since
+     * @since 7.5
      * @param x
      *            The new x coordinate for the window
      * @param y
