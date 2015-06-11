@@ -478,30 +478,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         // process default attributes
         super.readDesign(design, designContext);
 
-        // handle margins
-        if (design.hasAttr("margin")) {
-            setMargin(DesignAttributeHandler.readAttribute("margin",
-                    design.attributes(), Boolean.class));
-        } else {
-            boolean marginLeft = DesignAttributeHandler.readAttribute(
-                    "margin-left", design.attributes(), getMargin().hasLeft(),
-                    Boolean.class);
-
-            boolean marginRight = DesignAttributeHandler.readAttribute(
-                    "margin-right", design.attributes(),
-                    getMargin().hasRight(), Boolean.class);
-
-            boolean marginTop = DesignAttributeHandler.readAttribute(
-                    "margin-top", design.attributes(), getMargin().hasTop(),
-                    Boolean.class);
-
-            boolean marginBottom = DesignAttributeHandler.readAttribute(
-                    "margin-bottom", design.attributes(), getMargin()
-                            .hasBottom(), Boolean.class);
-
-            setMargin(new MarginInfo(marginTop, marginBottom, marginLeft,
-                    marginRight));
-        }
+        setMargin(readMargin(design, getMargin(), designContext));
 
         // handle children
         for (Element childComponent : design.children()) {
@@ -557,31 +534,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         AbstractOrderedLayout def = (AbstractOrderedLayout) designContext
                 .getDefaultInstance(this);
 
-        // handle margin
-        MarginInfo marginInfo = getMargin();
-
-        if (marginInfo.hasAll()) {
-            DesignAttributeHandler.writeAttribute("margin",
-                    design.attributes(), marginInfo.hasAll(), def.getMargin()
-                            .hasAll(), Boolean.class);
-        } else {
-
-            DesignAttributeHandler.writeAttribute("margin-left", design
-                    .attributes(), marginInfo.hasLeft(), def.getMargin()
-                    .hasLeft(), Boolean.class);
-
-            DesignAttributeHandler.writeAttribute("margin-right", design
-                    .attributes(), marginInfo.hasRight(), def.getMargin()
-                    .hasRight(), Boolean.class);
-
-            DesignAttributeHandler.writeAttribute("margin-top", design
-                    .attributes(), marginInfo.hasTop(), def.getMargin()
-                    .hasTop(), Boolean.class);
-
-            DesignAttributeHandler.writeAttribute("margin-bottom", design
-                    .attributes(), marginInfo.hasBottom(), def.getMargin()
-                    .hasBottom(), Boolean.class);
-        }
+        writeMargin(design, getMargin(), def.getMargin(), designContext);
 
         // handle children
         if (!designContext.shouldWriteChildren(this, def)) {

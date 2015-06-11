@@ -182,4 +182,10 @@ public class MarginInfo implements Serializable {
         return bitMask;
     }
 
+    @Override
+    public String toString() {
+        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", "
+                + hasBottom() + ", " + hasLeft() + ")";
+
+    }
 }
