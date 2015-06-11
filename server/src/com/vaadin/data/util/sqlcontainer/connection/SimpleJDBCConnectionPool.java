@@ -33,6 +33,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     private int initialConnections = 5;
     private int maxConnections = 20;
+    private Thread pingThread = null;
 
     private String driverName;
     private String connectionUri;
@@ -155,6 +156,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     @Override
     public void destroy() {
+        stopPing();
         for (Connection c : availableConnections) {
             try {
                 c.close();
@@ -172,7 +174,116 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void stopPing() {
+        if (pingThread != null) {
+            pingThread.interrupt();
+            try {
+                pingThread.join(5000);
+            } catch (InterruptedException e) {
+            }
+            pingThread = null;
+        }
+    }
+
+    /**
+     * Performs a trivial query on connections that have not been reserved. If
+     * an error occurs on any available connection, all connections will be
+     * reset by default. Subclasses can override onPingFailed() to modify this
+     * behavior.
+     *
+     * @throws SQLException
+     *             If an error occurs while <strong>resetting</strong> a
+     *             connection after a failed ping. This is not thrown for the
+     *             failed ping itself.
+     */
+    synchronized protected void ping() throws SQLException {
+        for (Connection cn : availableConnections) {
+            Statement st = null;
+            try {
+                st = cn.createStatement();
+                st.execute("select 1");
+            } catch (SQLException e) {
+                try {
+                    onPingFailed(e);
+                    break;
+                } catch (SQLException e1) {
+                    throw e1;
+                }
+
+            } finally {
+                try {
+                    st.close();
+                } catch (Exception e) {
+                }
+                try {
+                    if (cn.getAutoCommit() == false) {
+                        cn.rollback();
+                    }
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
+    /**
+     * Sends a trivial query to all available connections in the pool. If a
+     * query fails, onPingFailed() will be called.
+     *
+     * @since
+     * @param pingIntervalInSeconds
+     *            The frequency (in seconds) to send the ping query. Set to '0'
+     *            to disable the pink.
+     */
+    public void setPingInterval(final int pingIntervalInSeconds) {
+        stopPing();
+        if (pingIntervalInSeconds > 0) {
+            pingThread = new Thread(new Runnable() {
+                public void run() {
+
+                    while (true) {
+                        try {
+                            Thread.sleep(pingIntervalInSeconds * 1000);
+                        } catch (InterruptedException e) {
+                            return;
+                        }
+                        try {
+                            ping();
+                        } catch (SQLException e) {
+                            // e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            pingThread.start();
+        }
+    }
+
+    /**
+     * The default behavior is to recreate all connections in the available
+     * queue.
+     *
+     * @throws SQLException
+     */
+    synchronized void onPingFailed(SQLException exception) throws SQLException {
+        System.err.println(
+                "SQL Database ping failed. Recreating available connections");
+
+        for (Connection c : availableConnections) {
+            try {
+                c.close();
+            } catch (SQLException e) {
+                // No need to do anything
+            }
+        }
+        int size = availableConnections.size();
+        availableConnections.clear();
+        for (int i = 0; i < size; i++) {
+            availableConnections.add(createConnection());
+        }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         initialized = false;
         out.defaultWriteObject();
     }
