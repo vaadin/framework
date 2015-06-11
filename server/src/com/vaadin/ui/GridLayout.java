@@ -1317,6 +1317,8 @@ public class GridLayout extends AbstractLayout implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
 
+        setMargin(readMargin(design, getMargin(), designContext));
+
         // Prepare a 2D map for reading column contents
         Elements rowElements = design.getElementsByTag("row");
         List<Map<Integer, Component>> rows = new ArrayList<Map<Integer, Component>>();
@@ -1447,6 +1449,9 @@ public class GridLayout extends AbstractLayout implements
         super.writeDesign(design, designContext);
 
         GridLayout def = designContext.getDefaultInstance(this);
+
+        writeMargin(design, getMargin(), def.getMargin(), designContext);
+
         if (components.isEmpty()
                 || !designContext.shouldWriteChildren(this, def)) {
             return;

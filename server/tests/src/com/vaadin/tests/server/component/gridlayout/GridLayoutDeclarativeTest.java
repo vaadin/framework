@@ -18,13 +18,19 @@ package com.vaadin.tests.server.component.gridlayout;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class GridLayoutDeclarativeTest extends DeclarativeTestBase<GridLayout> {
+public class GridLayoutDeclarativeTest extends
+        DeclarativeMarginTestBase<GridLayout> {
+
+    @Test
+    public void testMargins() {
+        testMargins("v-grid-layout");
+    }
 
     @Test
     public void testSimpleGridLayout() {

@@ -16,20 +16,16 @@
 package com.vaadin.tests.server.component;
 
 import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.MarginHandler;
 
-@Ignore
-public abstract class DeclarativeMarginTest<L extends Layout & MarginHandler>
+public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler>
         extends DeclarativeTestBase<L> {
 
-    @Test
-    public void testMargins() {
+    protected void testMargins(String componentTag) {
 
         for (int i = 0; i < 16; ++i) {
             boolean top = (i & 1) == 1;
@@ -39,7 +35,7 @@ public abstract class DeclarativeMarginTest<L extends Layout & MarginHandler>
 
             MarginInfo m = new MarginInfo(top, right, bottom, left);
 
-            String design = getMarginTag(top, right, bottom, left);
+            String design = getMarginTag(componentTag, top, right, bottom, left);
 
             // The assertEquals machinery in DeclarativeTestBase uses bean
             // introspection and MarginInfo is not a proper bean. It ends up
@@ -51,9 +47,9 @@ public abstract class DeclarativeMarginTest<L extends Layout & MarginHandler>
         }
     }
 
-    private String getMarginTag(boolean top, boolean right, boolean bottom,
-            boolean left) {
-        String s = "<v-vertical-layout ";
+    private String getMarginTag(String componentTag, boolean top,
+            boolean right, boolean bottom, boolean left) {
+        String s = "<" + componentTag + " ";
 
         if (left && right && top && bottom) {
             s += "margin='true'";
