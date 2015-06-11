@@ -538,9 +538,8 @@ public class AutoScroller {
         final int endBorder = getBodyClientEnd();
         startBorder += getFrozenColumnsWidth();
 
-        final int scrollCompensation = getScrollCompensation();
-        startingBound = scrollCompensation + startBorder + scrollAreaPX;
-        endingBound = scrollCompensation + endBorder - scrollAreaPX;
+        startingBound = startBorder + scrollAreaPX;
+        endingBound = endBorder - scrollAreaPX;
         gradientArea = scrollAreaPX;
 
         // modify bounds if they're too tightly packed
@@ -551,18 +550,6 @@ public class AutoScroller {
             endingBound += adjustment / 2;
             gradientArea -= adjustment / 2;
         }
-    }
-
-    private int getScrollCompensation() {
-        Element cursor = grid.getElement();
-        int scroll = 0;
-        while (cursor != null) {
-            scroll -= scrollDirection == ScrollAxis.VERTICAL ? cursor
-                    .getScrollTop() : cursor.getScrollLeft();
-            cursor = cursor.getParentElement();
-        }
-
-        return scroll;
     }
 
     private void injectNativeHandler() {
@@ -588,15 +575,6 @@ public class AutoScroller {
         }
     }
 
-    private TableSectionElement getTbodyElement() {
-        TableElement table = getTableElement();
-        if (table != null) {
-            return table.getTBodies().getItem(0);
-        } else {
-            return null;
-        }
-    }
-
     private TableSectionElement getTheadElement() {
         TableElement table = getTableElement();
         if (table != null) {
@@ -615,47 +593,20 @@ public class AutoScroller {
         }
     }
 
-    /** Get the "top" of an element in relation to "client" coordinates. */
-    @SuppressWarnings("static-method")
-    private int getClientTop(final Element e) {
-        Element cursor = e;
-        int top = 0;
-        while (cursor != null) {
-            top += cursor.getOffsetTop();
-            cursor = cursor.getOffsetParent();
-        }
-        return top;
-    }
-
-    /** Get the "left" of an element in relation to "client" coordinates. */
-    @SuppressWarnings("static-method")
-    private int getClientLeft(final Element e) {
-        Element cursor = e;
-        int left = 0;
-        while (cursor != null) {
-            left += cursor.getOffsetLeft();
-            cursor = cursor.getOffsetParent();
-        }
-        return left;
-    }
-
     private int getBodyClientEnd() {
         if (scrollDirection == ScrollAxis.VERTICAL) {
-            return getClientTop(getTfootElement()) - 1;
+            return getTfootElement().getAbsoluteTop() - 1;
         } else {
-            TableSectionElement tbodyElement = getTbodyElement();
-            return getClientLeft(tbodyElement) + tbodyElement.getOffsetWidth()
-                    - 1;
+            return getTableElement().getAbsoluteRight();
         }
 
     }
 
     private int getBodyClientStart() {
         if (scrollDirection == ScrollAxis.VERTICAL) {
-            return getClientTop(grid.getElement())
-                    + getTheadElement().getOffsetHeight();
+            return getTheadElement().getAbsoluteBottom() + 1;
         } else {
-            return getClientLeft(getTbodyElement());
+            return getTableElement().getAbsoluteLeft();
         }
     }
 

@@ -3641,17 +3641,14 @@ public class Grid<T> extends ResizeComposite implements
             // scrolled to the right
             if (latestColumnDropIndex == visibleColumns
                     && rightBoundaryForDrag < dropMarkerLeft
-                    && dropMarkerLeft <= escalator.getHeader().getElement()
-                            .getOffsetWidth()) {
+                    && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
             }
 
             // Check if the drop marker shouldn't be shown at all
             else if (dropMarkerLeft < frozenColumnsWidth
-                    || dropMarkerLeft > Math
-                            .min(rightBoundaryForDrag, escalator.getHeader()
-                                    .getElement().getOffsetWidth())
-                    || dropMarkerLeft < 0) {
+                    || dropMarkerLeft > Math.min(rightBoundaryForDrag,
+                            escalator.getInnerWidth()) || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
             dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
@@ -3673,8 +3670,7 @@ public class Grid<T> extends ResizeComposite implements
 
             // Do not show the drag element beyond the grid
             final double sidebarBoundary = getSidebarBoundaryComparedTo(left);
-            final int gridBoundary = escalator.getHeader().getElement()
-                    .getOffsetWidth();
+            final double gridBoundary = escalator.getInnerWidth();
             final double rightBoundary = Math
                     .min(sidebarBoundary, gridBoundary);
 
