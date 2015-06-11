@@ -73,6 +73,7 @@ $select-button-negative-width : -16px;
 .#{$primaryStyleName}-search .#{$primaryStyleName}-button {
 	width: 0;
 	overflow: hidden;
+	margin-right: 0;
 	}
 
 .#{$primaryStyleName}-prompt .#{$primaryStyleName}-input {
