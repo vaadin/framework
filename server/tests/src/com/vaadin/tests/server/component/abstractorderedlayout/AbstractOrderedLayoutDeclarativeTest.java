@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.server.component.DeclarativeMarginTest;
+import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -35,10 +35,15 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd
  */
 public class AbstractOrderedLayoutDeclarativeTest extends
-        DeclarativeMarginTest<AbstractOrderedLayout> {
+        DeclarativeMarginTestBase<AbstractOrderedLayout> {
 
     private List<String> defaultAlignments = Arrays.asList(new String[] {
             ":top", ":left" });
+
+    @Test
+    public void testMargins() {
+        testMargins("v-vertical-layout");
+    }
 
     @Test
     public void testExpandRatio() {
