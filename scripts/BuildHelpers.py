@@ -6,7 +6,7 @@ import sys, argparse, subprocess, platform
 from xml.etree import ElementTree
 from os.path import join, isdir, isfile, basename, exists
 from os import listdir, getcwd, mkdir
-from shutil import copy
+from shutil import copy, rmtree
 from glob import glob
 
 class VersionObject(object):
@@ -89,6 +89,7 @@ def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, repoIds =
 def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 	if name is None:
 		name = artifactId
+	copiedWars = []
 	warFiles = glob(join(getcwd(), artifactId, "target", "*.war"))
 	warFiles.extend(glob(join(getcwd(), artifactId, "*", "target", "*.war")))
 	for warFile in warFiles:
@@ -97,7 +98,9 @@ def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 		else:
 			deployName = "%s-%d.war" % (name, warFiles.index(warFile))
 		print("Copying .war file %s as %s to result folder" % (basename(warFile), deployName))
-		copy(warFile, join(resultDir, "%s" % (deployName)))
+		copy(warFile, join(resultDir, deployName))
+		copiedWars.append(join(resultDir, deployName))
+	return copiedWars
 
 # Recursive pom.xml update script
 def updateRepositories(path, repoIds = None, repoUrl = repo):
@@ -158,3 +161,9 @@ def addRepo(repoNode, repoType, id, url):
 # Get a logfile for given artifact
 def getLogFile(artifact, resultDir = resultPath):
 	return open(join(resultDir, "%s.log" % (artifact)), 'w')
+
+def removeDir(subdir):
+	if '..' in subdir or '/' in subdir:
+		# Dangerous relative paths.
+		return
+	rmtree(join(getcwd(), subdir))
