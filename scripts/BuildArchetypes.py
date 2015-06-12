@@ -11,7 +11,8 @@
 #
 
 import subprocess
-from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, parseArgs, mavenCmd, updateRepositories
+from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir
+from DeployHelpers import deployWar
 
 ## DEFAULT VARIABLES ##
 
@@ -22,7 +23,7 @@ archetypeGroup = "com.vaadin"
 archetypes = [
 	"vaadin-archetype-widget", 
 	"vaadin-archetype-application", 
-	"vaadin-archetype-application-example", 
+	"vaadin-archetype-application-example",
 	"vaadin-archetype-application-multimodule"
 ]
 
@@ -59,11 +60,20 @@ def generateArchetype(archetype):
 
 ## DO THIS IF RUN AS A SCRIPT (not import) ##
 if __name__ == "__main__":
-	args = parseArgs()
+	args = getArgs()
 	for archetype in archetypes:
-		log = getLogFile(archetype)
-		artifactId = generateArchetype(archetype)
-		updateRepositories(artifactId)
-		mavenValidate(artifactId, logFile=log)	
-		copyWarFiles(artifactId, name=archetype)
-
+		try:
+			log = getLogFile(archetype)
+			artifactId = generateArchetype(archetype)
+			updateRepositories(artifactId)
+			mavenValidate(artifactId, logFile=log)	
+			warFiles = copyWarFiles(artifactId, name=archetype)
+			for war in warFiles:
+				try:
+					deployWar(war, "%s.war" % (archetype.split("-", 2)[2]))
+				except Exception as e:
+					print("War %s failed to deploy: %s" % (war, e))
+		except:
+			print("Archetype %s build failed" % (archetype))
+		removeDir(artifactId)
+		print("")
