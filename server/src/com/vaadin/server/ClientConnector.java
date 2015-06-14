@@ -256,10 +256,6 @@ public interface ClientConnector extends Connector {
      * client. Gives the connector an opportunity to set computed/dynamic state
      * values or to invoke last minute RPC methods depending on other component
      * features.
-     * <p>
-     * This method must not alter the component hierarchy in any way. Calling
-     * {@link #markAsDirty()} from this method will have no effect.
-     * </p>
      * 
      * @param initial
      *            <code>true</code> if the client-side connector will be created
