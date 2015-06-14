@@ -388,17 +388,15 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     /**
-     * Handles an exception that occurred when processing RPC calls or a file
-     * upload.
+     * Handles an exception related to a connector by invoking the appropriate
+     * error handler.
      * 
      * @deprecated As of 7.1. See #11411.
      * 
-     * @param ui
-     *            The UI where the exception occured
      * @param throwable
-     *            The exception
+     *            the exception to handle
      * @param connector
-     *            The Rpc target
+     *            the connector that the exception is related to
      */
     @Deprecated
     public void handleConnectorRelatedException(ClientConnector connector,
