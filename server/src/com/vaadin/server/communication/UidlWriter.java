@@ -109,7 +109,11 @@ public class UidlWriter implements Serializable {
                         .isClientSideInitialized(connector);
                 processedConnectors.add(connector);
 
-                connector.beforeClientResponse(!initialized);
+                try {
+                    connector.beforeClientResponse(!initialized);
+                } catch (RuntimeException e) {
+                    manager.handleConnectorRelatedException(connector, e);
+                }
             }
         }
 

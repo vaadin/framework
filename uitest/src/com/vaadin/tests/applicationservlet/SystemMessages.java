@@ -14,13 +14,15 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeSelect;
 
+import elemental.json.JsonObject;
+
 public class SystemMessages extends AbstractTestUI {
 
     public class MyButton extends Button {
         private boolean fail = false;
 
         @Override
-        public void beforeClientResponse(boolean initial) {
+        public JsonObject encodeState() {
             // Set the error message to contain the current locale.
             VaadinService.getCurrentRequest().setAttribute(
                     ApplicationRunnerServlet.CUSTOM_SYSTEM_MESSAGES_PROPERTY,
@@ -30,9 +32,10 @@ public class SystemMessages extends AbstractTestUI {
                             return "MessagesInfo locale: " + getLocale();
                         }
                     });
-            super.beforeClientResponse(initial);
             if (fail) {
                 throw new RuntimeException("Failed on purpose");
+            } else {
+                return super.encodeState();
             }
         }
     }
