@@ -11,12 +11,11 @@ except Exception as e:
 	sys.exit(1)
 from requests.auth import HTTPDigestAuth
 from os.path import join, expanduser, basename
+from BuildHelpers import parser, getArgs
 
-# .deploy-url in home folder
-deployUrlFile = join(expanduser("~"), ".deploy-url")
-
-# .deploy-credentials in home folder
-deployCredFile = join(expanduser("~"), ".deploy-credentials")
+parser.add_argument("--deployUrl", help="Wildfly management URL")
+parser.add_argument("--deployUser", help="Deployment user", default=None)
+parser.add_argument("--deployPass", help="Deployment password", default=None)
 
 # Helper for handling the full deployment
 # name should end with .war
@@ -50,7 +49,11 @@ def doDeploy(hash, name):
 
 # Helper for adding Content-Type to headers
 def doPostJson(**kwargs):
-	return requests.post(headers={"Content-Type" : "application/json"}, **kwargs)
+	r = requests.post(headers={"Content-Type" : "application/json"}, **kwargs)
+	# Wildfly gives code 500 when asking for a non-existent deployment
+	if r.status_code == requests.codes.ok or r.status_code == 500:
+		return r
+	r.raise_for_status()
 
 def doUploadWarFile(warFile):
 	# Upload request, just see the outcome
@@ -70,10 +73,10 @@ def removeDeployment(name):
 
 # Read credentials file and return a HTTPDigestAuth object
 def getAuth():
-	(deployUser, deployPass) = open(deployCredFile).read().strip().split(",")
-	return HTTPDigestAuth(deployUser, deployPass)
+	args = getArgs()
+	return HTTPDigestAuth(args.deployUser, args.deployPass)
 
 # Read the deploy url file and return the url
 def getUrl():
-	return open(deployUrlFile).read().strip()
-
+	return getArgs().deployUrl
+	
