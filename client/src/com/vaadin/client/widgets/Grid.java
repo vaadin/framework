@@ -2585,6 +2585,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /** @see Grid#autoColumnWidthsRecalculator */
     private class AutoColumnWidthsRecalculator {
+        private double lastCalculatedInnerWidth = -1;
 
         private final ScheduledCommand calculateCommand = new ScheduledCommand() {
 
@@ -2619,6 +2620,7 @@ public class Grid<T> extends ResizeComposite implements
                 } else {
                     calculate();
                 }
+                lastCalculatedInnerWidth = escalator.getInnerWidth();
             }
         };
 
@@ -7656,7 +7658,9 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             public void execute() {
-                recalculateColumnWidths();
+                if (escalator.getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
+                    recalculateColumnWidths();
+                }
             }
         });
     }
