@@ -70,19 +70,14 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     }
 
     @Test
-    public void testProgrammaticSidebarToggle() {
+    public void testProgrammaticSidebarOpen() {
         openTestURL();
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
 
         selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
 
-        Assert.assertEquals("Sidebar be open", 1,
-                countBySelector(".v-grid-sidebar-content"));
-
-        selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
-
-        Assert.assertEquals("Sidebar be closed", 0,
+        Assert.assertEquals("Sidebar should be open", 1,
                 countBySelector(".v-grid-sidebar-content"));
     }
 
@@ -122,6 +117,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
                 "Header (0,1)");
 
         selectMenuPath("Component", "Columns", "Column 2", "Hidable");
+        selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
 
         // Adding a new togglable column should have restored the expected order
         assertSidebarMenuItems("Header (0,0)", "Header (0,1)", "Header (0,2)",

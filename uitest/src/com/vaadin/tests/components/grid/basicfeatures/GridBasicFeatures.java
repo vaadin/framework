@@ -933,6 +933,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, null, c);
 
+            createClickAction("Change header caption", getColumnProperty(c),
+                    new Command<Grid, String>() {
+                        int count = 0;
+
+                        @Override
+                        public void execute(Grid grid, String value, Object data) {
+                            final String columnProperty = getColumnProperty((Integer) data);
+                            grid.getColumn(columnProperty).setHeaderCaption(
+                                    columnProperty + " header " + count++);
+                        }
+                    }, null, c);
+
             createCategory("Column " + c + " Width", getColumnProperty(c));
 
             createClickAction("Auto", "Column " + c + " Width",

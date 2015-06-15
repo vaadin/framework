@@ -48,6 +48,7 @@ import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
+
 import elemental.json.JsonValue;
 
 public class ConnectorBundle {
@@ -579,7 +580,7 @@ public class ConnectorBundle {
         frameworkHandledTypes.add(Set.class);
         frameworkHandledTypes.add(Byte.class);
         frameworkHandledTypes.add(Character.class);
-
+        frameworkHandledTypes.add(Void.class);
     }
 
     private boolean serializationHandledByFramework(JType setterType) {

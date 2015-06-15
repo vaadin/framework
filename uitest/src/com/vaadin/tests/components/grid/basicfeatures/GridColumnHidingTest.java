@@ -372,9 +372,10 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHidableColumnAPI(6);
         toggleHidableColumnAPI(0);
 
-        verifyColumnHidingTogglesOrder(0, 1, 3, 6);
-
+        // Selecting from the menu closes the sidebar
         clickSidebarOpenButton();
+
+        verifyColumnHidingTogglesOrder(0, 1, 3, 6);
 
         toggleHidableColumnAPI(2);
         toggleHidableColumnAPI(4);
@@ -611,6 +612,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         verifyColumnIsNotFrozen(1);
         verifyColumnIsNotFrozen(2);
 
+        getSidebarOpenButton().click();
         getColumnHidingToggle(2).click();
         verifyColumnIsFrozen(0);
         verifyColumnIsFrozen(1);
@@ -840,6 +842,84 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
                 .getDetails(1));
     }
 
+    @Test
+    public void testHideShowAllColumns() {
+        selectMenuPath("Component", "State", "Width", "1000px");
+        int colCount = 12;
+        for (int i = 0; i < colCount; i++) {
+            toggleHidableColumnAPI(i);
+        }
+        clickSidebarOpenButton();
+        for (int i = 0; i < colCount; i++) {
+            getColumnHidingToggle(i).click();
+        }
+
+        clickSidebarOpenButton();
+        // All columns hidden
+        assertEquals(0, getGridHeaderRowCells().size());
+        clickSidebarOpenButton();
+        for (int i = 0; i < colCount; i++) {
+            getColumnHidingToggle(i).click();
+        }
+
+        assertEquals(colCount, getGridHeaderRowCells().size());
+    }
+
+    @Test
+    public void testColumnHidingPopupClosedWhenClickingOutside() {
+        selectMenuPath("Component", "Columns", "Column 0", "Hidable");
+        getSidebarOpenButton().click();
+        verifySidebarOpened();
+        findElement(By.className("v-app")).click();
+        verifySidebarClosed();
+    }
+
+    @Test
+    public void hideScrollAndShow() {
+        toggleHidableColumnAPI(1);
+        toggleHideColumnAPI(1);
+
+        getGridElement().scrollToRow(500);
+        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
+                .getText());
+        Assert.assertEquals("(500, 2)", getGridElement().getCell(500, 1)
+                .getText());
+
+        toggleHideColumnAPI(1);
+
+        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
+                .getText());
+        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
+                .getText());
+    }
+
+    @Test
+    public void scrollHideAndShow() {
+        toggleHidableColumnAPI(0);
+        toggleHidableColumnAPI(1);
+
+        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
+                .getText());
+        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
+                .getText());
+
+        toggleHideColumnAPI(0);
+        toggleHideColumnAPI(1);
+
+        Assert.assertEquals("(500, 2)", getGridElement().getCell(500, 0)
+                .getText());
+        Assert.assertEquals("(500, 3)", getGridElement().getCell(500, 1)
+                .getText());
+
+        toggleHideColumnAPI(0);
+        toggleHideColumnAPI(1);
+
+        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
+                .getText());
+        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
+                .getText());
+    }
+
     private void loadSpannedCellsFixture() {
         selectMenuPath("Component", "State", "Width", "1000px");
         appendHeaderRow();
@@ -932,12 +1012,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     private void verifySidebarOpened() {
         WebElement sidebar = getSidebar();
-        assertTrue(sidebar.getAttribute("class").contains("opened"));
+        assertTrue(sidebar.getAttribute("class").contains("open"));
     }
 
     private void verifySidebarClosed() {
         WebElement sidebar = getSidebar();
-        assertFalse(sidebar.getAttribute("class").contains("opened"));
+        assertFalse(sidebar.getAttribute("class").contains("open"));
     }
 
     private void verifySidebarNotVisible() {

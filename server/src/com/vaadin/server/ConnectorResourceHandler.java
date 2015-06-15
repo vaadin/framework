@@ -30,10 +30,11 @@ import com.vaadin.util.CurrentInstance;
 
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
+    private static final String CONNECTOR_RESOURCE_PREFIX = "/"
+            + ApplicationConstants.APP_PATH + "/"
+            + ConnectorResource.CONNECTOR_PATH + "/";
     private static final Pattern CONNECTOR_RESOURCE_PATTERN = Pattern
-            .compile("^/?" + ApplicationConstants.APP_PATH + '/'
-                    + ConnectorResource.CONNECTOR_PATH + '/'
-                    + "(\\d+)/(\\d+)/(.*)");
+            .compile("^" + CONNECTOR_RESOURCE_PREFIX + "(\\d+)/(\\d+)/(.*)");
 
     private static Logger getLogger() {
         return Logger.getLogger(ConnectorResourceHandler.class.getName());
@@ -44,12 +45,18 @@ public class ConnectorResourceHandler implements RequestHandler {
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
         String requestPath = request.getPathInfo();
-        if (requestPath == null) {
+        if (requestPath == null
+                || !requestPath.startsWith(CONNECTOR_RESOURCE_PREFIX)) {
             return false;
         }
         Matcher matcher = CONNECTOR_RESOURCE_PATTERN.matcher(requestPath);
         if (!matcher.matches()) {
-            return false;
+            // This is a connector resource request based on the prefix but the
+            // pattern did not match
+            warnAboutInvalidURLEncoding(requestPath);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "Connector resource not found");
+            return true;
         }
         String uiId = matcher.group(1);
         String cid = matcher.group(2);
@@ -100,6 +107,25 @@ public class ConnectorResourceHandler implements RequestHandler {
         }
 
         return true;
+    }
+
+    private boolean loggedDecodingWarning = false;
+
+    private void warnAboutInvalidURLEncoding(String requestPath) {
+        if (requestPath.contains("\n") || requestPath.indexOf(0x85) != -1) {
+            // What, path info should not contain a new line or UTF-8 Next Line
+            // (NEL) character, but it does in
+            // Tomcat 7 with default configuration in some cases (URL is encoded
+            // by the browser as UTF-8 and decoded as ISO-8859-1 by Tomcat)
+
+            if (!loggedDecodingWarning) {
+                loggedDecodingWarning = true;
+                getLogger()
+                        .warning(
+                                "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
+                                        + requestPath + ")");
+            }
+        }
     }
 
     private static boolean error(VaadinRequest request,

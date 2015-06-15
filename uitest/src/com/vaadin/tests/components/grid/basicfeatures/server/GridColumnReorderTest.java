@@ -348,6 +348,31 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
                 + " was " + realLeft, Math.abs(expectedLeft - realLeft) < 5);
     }
 
+    @Test
+    public void testDropMarker_sidebarOpenButtonVisible_dropMarkerOnCorrectPosition() {
+        // using runo since there the sidebar opening button is wider than the
+        // scroll deco, and because using Valo has some TB issues
+        openTestURL("theme=runo");
+
+        selectMenuPath("Component", "Size", "Width", "100%");
+        selectMenuPath("Component", "Columns", "All columns hidable");
+        toggleColumnReordering();
+        scrollGridHorizontallyTo(100000);
+
+        new Actions(getDriver()).clickAndHold(getDefaultColumnHeader(10))
+                .moveByOffset(800, 0).build().perform();
+
+        WebElement dragDropMarker = findElement(By
+                .className("v-grid-drop-marker"));
+        WebElement sidebar = findElement(By.className("v-grid-sidebar"));
+
+        int dragDropMarkerX = dragDropMarker.getLocation().getX();
+        int sidebarX = sidebar.getLocation().getX();
+        assertTrue("Drop marker misplaced " + dragDropMarkerX
+                + " compared to sidebar open button " + sidebarX,
+                dragDropMarkerX <= sidebarX);
+    }
+
     private void toggleColumnReordering() {
         selectMenuPath(COLUMN_REORDERING_PATH);
     }

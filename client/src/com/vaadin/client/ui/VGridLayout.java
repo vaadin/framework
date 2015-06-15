@@ -143,8 +143,10 @@ public class VGridLayout extends ComplexPanel {
         if (!isUndefinedHeight()) {
             int usedSpace = calcRowUsedSpace();
             int[] actualExpandRatio = calcRowExpandRatio();
-            int availableSpace = LayoutManager.get(client).getInnerHeight(
-                    getElement());
+            // Round down to avoid problems with fractions (100.1px available ->
+            // can use 100, not 101)
+            int availableSpace = (int) LayoutManager.get(client)
+                    .getInnerHeightDouble(getElement());
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
@@ -223,8 +225,10 @@ public class VGridLayout extends ComplexPanel {
         if (!isUndefinedWidth()) {
             int usedSpace = calcColumnUsedSpace();
             int[] actualExpandRatio = calcColumnExpandRatio();
-            int availableSpace = LayoutManager.get(client).getInnerWidth(
-                    getElement());
+            // Round down to avoid problems with fractions (100.1px available ->
+            // can use 100, not 101)
+            int availableSpace = (int) LayoutManager.get(client)
+                    .getInnerWidthDouble(getElement());
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {

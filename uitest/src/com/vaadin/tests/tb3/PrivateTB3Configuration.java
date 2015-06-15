@@ -57,6 +57,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
+    private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
 
     static {
         if (propertiesFile.exists()) {
@@ -73,6 +74,10 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 if (properties.containsKey(FIREFOX_PATH)) {
                     System.setProperty(FIREFOX_PATH,
                             properties.getProperty(FIREFOX_PATH));
+                }
+                if (properties.containsKey(PHANTOMJS_PATH)) {
+                    System.setProperty(PHANTOMJS_PATH,
+                            properties.getProperty(PHANTOMJS_PATH));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -136,6 +141,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getBaseURL() {
+        if (isRunLocally()) {
+            return "http://localhost:8888";
+        }
         String url = getProperty(DEPLOYMENT_PROPERTY);
         if (url == null || url.trim().isEmpty()) {
             return super.getBaseURL();
@@ -145,10 +153,24 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
-        if (getRunLocallyBrowser() != null) {
+        if (isRunLocally()) {
             return "localhost";
         }
         return getConfiguredDeploymentHostname();
+    }
+
+    private boolean isRunLocally() {
+        if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+            return true;
+        }
+
+        if (properties.containsKey(ALLOW_RUN_LOCALLY_PROPERTY)
+                && properties.get(ALLOW_RUN_LOCALLY_PROPERTY).equals("true")
+                && getClass().getAnnotation(RunLocally.class) != null) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

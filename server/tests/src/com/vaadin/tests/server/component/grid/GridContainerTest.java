@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Grid;
 
 public class GridContainerTest {
 
@@ -42,5 +44,57 @@ public class GridContainerTest {
         container.addContainerProperty("x", String.class, null);
         container.addItem(0).getItemProperty("x").setValue("y");
         return container;
+    }
+
+    @Test
+    public void setColumnsOrder() {
+        Grid grid = new Grid();
+        IndexedContainer ic = new IndexedContainer();
+        ic.addContainerProperty("foo", String.class, "");
+        ic.addContainerProperty("baz", String.class, "");
+        ic.addContainerProperty("bar", String.class, "");
+        grid.setContainerDataSource(ic);
+        grid.setColumns("foo", "baz", "bar");
+
+        Assert.assertEquals("foo", grid.getColumns().get(0).getPropertyId());
+        Assert.assertEquals("baz", grid.getColumns().get(1).getPropertyId());
+        Assert.assertEquals("bar", grid.getColumns().get(2).getPropertyId());
+    }
+
+    @Test
+    public void addColumnNotInContainer() {
+        Grid grid = new Grid();
+        grid.setContainerDataSource(new IndexedContainer());
+        try {
+            grid.addColumn("notInContainer");
+            Assert.fail("Adding a property id not in the container should throw an exception");
+        } catch (IllegalStateException e) {
+            Assert.assertTrue(e.getMessage().contains("notInContainer"));
+            Assert.assertTrue(e.getMessage().contains(
+                    "does not exist in the container"));
+        }
+    }
+
+    @Test
+    public void setColumnsForPropertyIdNotInContainer() {
+        Grid grid = new Grid();
+        grid.setContainerDataSource(new IndexedContainer());
+        try {
+            grid.setColumns("notInContainer", "notThereEither");
+            Assert.fail("Setting columns for property ids not in the container should throw an exception");
+        } catch (IllegalStateException e) {
+            // addColumn is run in random order..
+            Assert.assertTrue(e.getMessage().contains("notInContainer")
+                    || e.getMessage().contains("notThereEither"));
+            Assert.assertTrue(e.getMessage().contains(
+                    "does not exist in the container"));
+        }
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void multipleAddColumnsForDefaultContainer() {
+        Grid grid = new Grid();
+        grid.addColumn("foo");
+        grid.addColumn("foo");
     }
 }

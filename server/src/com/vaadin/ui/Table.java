@@ -676,26 +676,6 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // Removes alignments, icons and headers from hidden columns
-        if (this.visibleColumns != null) {
-            boolean disabledHere = disableContentRefreshing();
-            try {
-                for (final Iterator<Object> i = this.visibleColumns.iterator(); i
-                        .hasNext();) {
-                    final Object col = i.next();
-                    if (!newVC.contains(col)) {
-                        setColumnHeader(col, null);
-                        setColumnAlignment(col, (Align) null);
-                        setColumnIcon(col, null);
-                    }
-                }
-            } finally {
-                if (disabledHere) {
-                    enableContentRefreshing(false);
-                }
-            }
-        }
-
         this.visibleColumns = newVC;
 
         // Assures visual refresh

@@ -89,10 +89,9 @@ public class TextFieldConnector extends AbstractFieldConnector implements
          * side value). <input> is updated only when it looses focus, so we
          * force updating if not focused. Lost focus issue appeared in (#15144)
          */
-        if (!(Util.getFocusedElement() == getWidget().getElement())
+        if (Util.getFocusedElement() != getWidget().getElement()
                 || !uidl.getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                || getWidget().valueBeforeEdit == null
-                || !text.equals(getWidget().valueBeforeEdit)) {
+                || getWidget().valueBeforeEdit == null) {
             getWidget().updateFieldContent(text);
         }
 

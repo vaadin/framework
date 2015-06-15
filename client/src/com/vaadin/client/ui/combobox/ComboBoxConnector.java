@@ -173,6 +173,12 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             // started.
             if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
                 performSelection(selectedKeys[0]);
+            } else if (!getWidget().waitingForFilteringResponse
+                    && uidl.hasAttribute("selectedCaption")) {
+                // scrolling to correct page is disabled, caption is passed as a
+                // special parameter
+                getWidget().tb.setText(uidl
+                        .getStringAttribute("selectedCaption"));
             } else {
                 resetSelection();
             }

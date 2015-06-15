@@ -75,8 +75,8 @@ public class JsonEncoder {
             return Json.create((String) value);
         } else if (value instanceof Boolean) {
             return Json.create((Boolean) value);
-        } else if (value instanceof Byte) {
-            return Json.create((Byte) value);
+        } else if (value instanceof Number) {
+            return Json.create(((Number) value).doubleValue());
         } else if (value instanceof Character) {
             return Json.create(String.valueOf(value));
         } else if (value instanceof Object[] && type == null) {

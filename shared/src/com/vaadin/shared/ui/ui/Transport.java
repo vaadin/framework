@@ -29,7 +29,10 @@ public enum Transport {
     WEBSOCKET("websocket"),
     /**
      * HTTP streaming
+     * 
+     * @deprecated Use the more reliable {@link Transport#LONG_POLLING} instead.
      */
+    @Deprecated
     STREAMING("streaming"),
     /**
      * HTTP long polling
@@ -47,11 +50,11 @@ public enum Transport {
     }
 
     /**
-    * Returns a Transport by its identifier. Returns null if no value is found
-    * for the given identifier.
-    *
-    * @since 7.3.10
-    */
+     * Returns a Transport by its identifier. Returns null if no value is found
+     * for the given identifier.
+     *
+     * @since 7.3.10
+     */
     public static Transport getByIdentifier(String identifier) {
         for (Transport t : values()) {
             if (t.getIdentifier().equals(identifier)) {

@@ -16,8 +16,10 @@
 package com.vaadin.shared.ui.checkbox;
 
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 
 public interface CheckBoxServerRpc extends ServerRpc {
+    @Delayed
     public void setChecked(boolean checked, MouseEventDetails mouseEventDetails);
 }

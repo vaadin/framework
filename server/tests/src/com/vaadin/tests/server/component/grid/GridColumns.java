@@ -338,4 +338,20 @@ public class GridColumns {
     public void testAddingColumnsWithSetColumnsNonDefaultContainer() {
         grid.setColumns("column1", "column2", "column50");
     }
+
+    @Test
+    public void testDefaultColumnHidingToggleCaption() {
+        Column firstColumn = grid.getColumns().get(0);
+        firstColumn.setHeaderCaption("headerCaption");
+        assertEquals(null, firstColumn.getHidingToggleCaption());
+    }
+
+    @Test
+    public void testOverriddenColumnHidingToggleCaption() {
+        Column firstColumn = grid.getColumns().get(0);
+        firstColumn.setHidingToggleCaption("hidingToggleCaption");
+        firstColumn.setHeaderCaption("headerCaption");
+        assertEquals("hidingToggleCaption",
+                firstColumn.getHidingToggleCaption());
+    }
 }

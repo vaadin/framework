@@ -43,9 +43,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.StyleConstants;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 import com.vaadin.shared.ui.Orientation;
@@ -125,14 +124,13 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     public VAbstractSplitPanel(Orientation orientation) {
         setElement(DOM.createDiv());
-        setStyleName(StyleConstants.UI_LAYOUT);
         switch (orientation) {
         case HORIZONTAL:
-            addStyleName(CLASSNAME + "-horizontal");
+            setStyleName(CLASSNAME + "-horizontal");
             break;
         case VERTICAL:
         default:
-            addStyleName(CLASSNAME + "-vertical");
+            setStyleName(CLASSNAME + "-vertical");
             break;
         }
         // size below will be overridden in update from uidl, initial size

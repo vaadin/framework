@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -2429,7 +2430,7 @@ public class Grid<T> extends ResizeComposite implements
                  * exist.
                  */
                 final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
-                final CheckBox checkBox = new CheckBox();
+                final CheckBox checkBox = GWT.create(CheckBox.class);
                 checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
                     @Override
@@ -3161,6 +3162,26 @@ public class Grid<T> extends ResizeComposite implements
 
         private final Grid<?> grid;
 
+        private NativePreviewHandler clickOutsideToCloseHandler = new NativePreviewHandler() {
+
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                if (event.getTypeInt() != Event.ONMOUSEDOWN) {
+                    return;
+                }
+
+                // Click outside the panel
+                EventTarget clickTarget = event.getNativeEvent()
+                        .getEventTarget();
+                if (!rootContainer.getElement().isOrHasChild(
+                        Element.as(clickTarget))) {
+                    close();
+                }
+            }
+        };
+
+        private HandlerRegistration clickOutsideToCloseHandlerRegistration;
+
         private Sidebar(Grid<?> grid) {
             this.grid = grid;
 
@@ -3250,9 +3271,11 @@ public class Grid<T> extends ResizeComposite implements
          */
         public void open() {
             if (!isOpen() && isInDOM()) {
-                addStyleName("opened");
+                addStyleName("open");
                 removeStyleName("closed");
                 rootContainer.add(content);
+                clickOutsideToCloseHandlerRegistration = Event
+                        .addNativePreviewHandler(clickOutsideToCloseHandler);
             }
             openCloseButton.setHeight("");
         }
@@ -3262,11 +3285,15 @@ public class Grid<T> extends ResizeComposite implements
          */
         public void close() {
             if (isOpen()) {
-                removeStyleName("opened");
+                removeStyleName("open");
                 addStyleName("closed");
                 content.removeFromParent();
                 // adjust open button to header height when closed
                 setHeightToHeaderCellHeight();
+                if (clickOutsideToCloseHandlerRegistration != null) {
+                    clickOutsideToCloseHandlerRegistration.removeHandler();
+                    clickOutsideToCloseHandlerRegistration = null;
+                }
             }
         }
 
@@ -3334,27 +3361,22 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void setHeightToHeaderCellHeight() {
-            try {
-                double height = WidgetUtil
-                        .getRequiredHeightBoundingClientRectDouble(grid.escalator
-                                .getHeader().getRowElement(0)
-                                .getFirstChildElement())
-                        - (WidgetUtil.measureVerticalBorder(getElement()) / 2);
-                openCloseButton.setHeight(height + "px");
-            } catch (NullPointerException npe) {
+            RowContainer header = grid.escalator.getHeader();
+            if (header.getRowCount() == 0
+                    || !header.getRowElement(0).hasChildNodes()) {
                 getLogger()
-                        .warning(
-                                "Got null header first row or first row cell when calculating sidebar button height");
-                openCloseButton.setHeight(grid.escalator.getHeader()
-                        .getDefaultRowHeight() + "px");
-            } catch (IndexOutOfBoundsException ioobe) {
-                // happens when escalator doesn't have any headers rendered yet.
-                getLogger()
-                        .warning(
-                                "No header cell available when calculating sidebar button height");
-                openCloseButton.setHeight(grid.escalator.getHeader()
-                        .getDefaultRowHeight() + "px");
+                        .info("No header cell available when calculating sidebar button height");
+                openCloseButton.setHeight(header.getDefaultRowHeight() + "px");
+
+                return;
             }
+
+            Element firstHeaderCell = header.getRowElement(0)
+                    .getFirstChildElement();
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(firstHeaderCell)
+                    - (WidgetUtil.measureVerticalBorder(getElement()) / 2);
+            openCloseButton.setHeight(height + "px");
         }
 
         private void updateVisibility() {
@@ -3569,6 +3591,10 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
+    private double lastTouchEventTime = 0;
+    private int lastTouchEventX = -1;
+    private int lastTouchEventY = -1;
+    private int lastTouchEventRow = -1;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -3637,6 +3663,9 @@ public class Grid<T> extends ResizeComposite implements
         /** Captures the value of the focused column before reordering */
         private int focusedColumnIndex;
 
+        /** Offset caused by the drag and drop marker width */
+        private double dropMarkerWidthOffset;
+
         private void initHeaderDragElementDOM() {
             if (table == null) {
                 tableHeader = DOM.createTHead();
@@ -3659,6 +3688,9 @@ public class Grid<T> extends ResizeComposite implements
             tableHeader.getStyle().setTop(topOffset, Unit.PX);
 
             getElement().appendChild(table);
+
+            dropMarkerWidthOffset = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(dropMarker) / 2;
         }
 
         @Override
@@ -3697,9 +3729,22 @@ public class Grid<T> extends ResizeComposite implements
             dropMarkerLeft += autoScrollX;
 
             final double frozenColumnsWidth = getFrozenColumnsWidth();
-            if (dropMarkerLeft < frozenColumnsWidth
-                    || dropMarkerLeft > escalator.getHeader().getElement()
-                            .getOffsetWidth() || dropMarkerLeft < 0) {
+            final double rightBoundaryForDrag = getSidebarBoundaryComparedTo(dropMarkerLeft);
+            final int visibleColumns = getVisibleColumns().size();
+
+            // First check if the drop marker should move left because of the
+            // sidebar opening button. this only the case if the grid is
+            // scrolled to the right
+            if (latestColumnDropIndex == visibleColumns
+                    && rightBoundaryForDrag < dropMarkerLeft
+                    && dropMarkerLeft <= escalator.getInnerWidth()) {
+                dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
+            }
+
+            // Check if the drop marker shouldn't be shown at all
+            else if (dropMarkerLeft < frozenColumnsWidth
+                    || dropMarkerLeft > Math.min(rightBoundaryForDrag,
+                            escalator.getInnerWidth()) || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
             dropMarker.getStyle().setLeft(dropMarkerLeft, Unit.PX);
@@ -3720,16 +3765,41 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             // Do not show the drag element beyond the grid
-            final int bodyOffsetWidth = getEscalator().getBody().getElement()
-                    .getOffsetWidth();
+            final double sidebarBoundary = getSidebarBoundaryComparedTo(left);
+            final double gridBoundary = escalator.getInnerWidth();
+            final double rightBoundary = Math
+                    .min(sidebarBoundary, gridBoundary);
+
             // Do not show on left of the frozen columns (even if scrolled)
             final int frozenColumnsWidth = (int) getFrozenColumnsWidth();
 
-            left = Math
-                    .max(frozenColumnsWidth, Math.min(left, bodyOffsetWidth));
+            left = Math.max(frozenColumnsWidth, Math.min(left, rightBoundary));
 
             left -= dragElement.getClientWidth() / 2;
             dragElement.getStyle().setLeft(left, Unit.PX);
+        }
+
+        private boolean isSidebarOnDraggedRow() {
+            return eventCell.getRowIndex() == 0 && getSidebar().isInDOM()
+                    && !getSidebar().isOpen();
+        }
+
+        /**
+         * Returns the sidebar left coordinate, in relation to the grid. Or
+         * Double.MAX_VALUE if it doesn't cause a boundary.
+         */
+        private double getSidebarBoundaryComparedTo(double left) {
+            if (isSidebarOnDraggedRow()) {
+                double absoluteLeft = left + getElement().getAbsoluteLeft();
+                double sidebarLeft = getSidebar().getElement()
+                        .getAbsoluteLeft();
+                double diff = absoluteLeft - sidebarLeft;
+
+                if (diff > 0) {
+                    return left - diff;
+                }
+            }
+            return Double.MAX_VALUE;
         }
 
         @Override
@@ -4486,8 +4556,8 @@ public class Grid<T> extends ResizeComposite implements
          * for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
          * <p>
-         * Defaults to <code>null</code>, when will use whatever is set with
-         * {@link #setHeaderCaption(String)}.
+         * The default value is <code>null</code>. In this case the header
+         * caption is used, see {@link #setHeaderCaption(String)}.
          * 
          * @since 7.5.0
          * @param hidingToggleCaption
@@ -5437,8 +5507,17 @@ public class Grid<T> extends ResizeComposite implements
         // Register this grid instance with the column
         ((Column<?, T>) column).setGrid(this);
 
-        // Add to escalator
-        escalator.getColumnConfiguration().insertColumns(index, 1);
+        // Grid knows about hidden columns, Escalator only knows about what is
+        // visible so column indexes do not match
+        if (!column.isHidden()) {
+            int escalatorIndex = index;
+            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
+                if (getColumn(existingColumn).isHidden()) {
+                    escalatorIndex--;
+                }
+            }
+            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
+        }
 
         // Reapply column width
         column.reapplyWidth();
@@ -6477,9 +6556,32 @@ public class Grid<T> extends ResizeComposite implements
         final int key = event.getKeyCode();
         final boolean editorIsActive = editor.getState() != Editor.State.INACTIVE;
 
-        final boolean openEvent = eventCell.isBody()
-                && (type == Event.ONDBLCLICK || (type == Event.ONKEYDOWN && key == Editor.KEYCODE_SHOW));
+        double now = Duration.currentTimeMillis();
+        int currentX = WidgetUtil.getTouchOrMouseClientX(event);
+        int currentY = WidgetUtil.getTouchOrMouseClientY(event);
 
+        final boolean validTouchOpenEvent = event.getTypeInt() == Event.ONTOUCHEND
+                && now - lastTouchEventTime < 500
+                && lastTouchEventRow == eventCell.getRowIndex()
+                && Math.abs(lastTouchEventX - currentX) < 20
+                && Math.abs(lastTouchEventY - currentY) < 20;
+
+        final boolean openEvent = eventCell.isBody()
+                && (event.getTypeInt() == Event.ONDBLCLICK
+                        || (event.getTypeInt() == Event.ONKEYDOWN && event
+                                .getKeyCode() == Editor.KEYCODE_SHOW) || validTouchOpenEvent);
+
+        if (event.getTypeInt() == Event.ONTOUCHSTART) {
+            lastTouchEventX = currentX;
+            lastTouchEventY = currentY;
+        }
+
+        if (event.getTypeInt() == Event.ONTOUCHEND) {
+            lastTouchEventTime = now;
+            lastTouchEventRow = eventCell.getRowIndex();
+        }
+
+        // TODO: Move on touch events
         final boolean moveEvent = eventCell.isBody() && type == Event.ONCLICK;
 
         final boolean closeEvent = type == Event.ONKEYDOWN
@@ -6489,6 +6591,7 @@ public class Grid<T> extends ResizeComposite implements
             editor.editRow(eventCell.getRowIndex(),
                     eventCell.getColumnIndexDOM());
             fireEvent(new EditorOpenEvent(eventCell));
+            event.preventDefault();
 
             return true;
 

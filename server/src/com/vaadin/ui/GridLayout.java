@@ -782,7 +782,14 @@ public class GridLayout extends AbstractLayout implements
                 }
             }
         }
-        // TODO forget expands for removed columns
+
+        // Forget expands for removed columns
+        if (columns < getColumns()) {
+            for (int i = columns - 1; i < getColumns(); i++) {
+                columnExpandRatio.remove(i);
+                getState().explicitColRatios.remove(i);
+            }
+        }
 
         getState().columns = columns;
     }
@@ -826,7 +833,13 @@ public class GridLayout extends AbstractLayout implements
                 }
             }
         }
-        // TODO forget expands for removed rows
+        // Forget expands for removed rows
+        if (rows < getRows()) {
+            for (int i = rows - 1; i < getRows(); i++) {
+                rowExpandRatio.remove(i);
+                getState().explicitRowRatios.remove(i);
+            }
+        }
 
         getState().rows = rows;
     }
@@ -1304,6 +1317,8 @@ public class GridLayout extends AbstractLayout implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
 
+        setMargin(readMargin(design, getMargin(), designContext));
+
         // Prepare a 2D map for reading column contents
         Elements rowElements = design.getElementsByTag("row");
         List<Map<Integer, Component>> rows = new ArrayList<Map<Integer, Component>>();
@@ -1434,6 +1449,9 @@ public class GridLayout extends AbstractLayout implements
         super.writeDesign(design, designContext);
 
         GridLayout def = designContext.getDefaultInstance(this);
+
+        writeMargin(design, getMargin(), def.getMargin(), designContext);
+
         if (components.isEmpty()
                 || !designContext.shouldWriteChildren(this, def)) {
             return;

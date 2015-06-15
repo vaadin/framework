@@ -184,12 +184,16 @@ public class GridEditorTest {
                 .getEditorField();
         field.setValue("New Name");
 
+        Property<?> datasource = field.getPropertyDataSource();
+
         grid.cancelEditor();
         assertFalse(grid.isEditorActive());
         assertNull(grid.getEditedItemId());
         assertFalse(field.isModified());
-        assertEquals(DEFAULT_NAME, field.getValue());
-        assertEquals(DEFAULT_NAME, field.getPropertyDataSource().getValue());
+        assertEquals("", field.getValue());
+        assertEquals(DEFAULT_NAME, datasource.getValue());
+        assertNull(field.getPropertyDataSource());
+        assertNull(grid.getEditorFieldGroup().getItemDataSource());
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -879,6 +879,7 @@ public class Escalator extends Widget implements RequiresResize,
                     .getCalculatedColumnsWidth(Range.between(
                             columnConfiguration.getFrozenColumnCount(),
                             columnConfiguration.getColumnCount()));
+            unfrozenPixels -= subpixelBrowserBugDetector.getActiveAdjustment();
             double frozenPixels = scrollContentWidth - unfrozenPixels;
             double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
             horizontalScrollbar.setOffsetSize(hScrollOffsetWidth);
@@ -1645,7 +1646,8 @@ public class Escalator extends Widget implements RequiresResize,
 
             for (int row = 0; row < getDomRowCount(); row++) {
                 final TableRowElement tr = getTrByVisualIndex(row);
-                paintInsertCells(tr, row, offset, numberOfColumns);
+                int logicalRowIndex = getLogicalRowIndex(tr);
+                paintInsertCells(tr, logicalRowIndex, offset, numberOfColumns);
             }
             reapplyRowWidths();
 
@@ -2127,6 +2129,11 @@ public class Escalator extends Widget implements RequiresResize,
          * @return the height of this table section
          */
         protected abstract double getHeightOfSection();
+
+        protected int getLogicalRowIndex(final TableRowElement tr) {
+            return tr.getSectionRowIndex();
+        };
+
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -3396,7 +3403,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
-        private int getLogicalRowIndex(final Element tr) {
+        @Override
+        protected int getLogicalRowIndex(final TableRowElement tr) {
             assert tr.getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
             return getTopRowLogicalIndex() + internalIndex;
@@ -3854,7 +3862,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             // Convert DOM coordinates to logical coordinates for rows
-            Element rowElement = cell.getElement().getParentElement();
+            TableRowElement rowElement = (TableRowElement) cell.getElement()
+                    .getParentElement();
             return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
                     cell.getElement());
         }
@@ -4138,7 +4147,8 @@ public class Escalator extends Widget implements RequiresResize,
          * @return the width of a row, in pixels
          */
         public double calculateRowWidth() {
-            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()));
+            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()))
+                    - subpixelBrowserBugDetector.getActiveAdjustment();
         }
 
         private void assertArgumentsAreValidAndWithinRange(final int index,
@@ -4435,7 +4445,7 @@ public class Escalator extends Widget implements RequiresResize,
 
     private class SubpixelBrowserBugDetector {
         private static final double SUBPIXEL_ADJUSTMENT = .1;
-        private boolean hasAlreadyBeenFixed = false;
+        private boolean fixActive = false;
 
         /**
          * This is a fix essentially for Firefox and how it handles subpixels.
@@ -4452,15 +4462,23 @@ public class Escalator extends Widget implements RequiresResize,
          * {@value #SUBPIXEL_ADJUSTMENT}px narrower.
          */
         public void checkAndFix() {
-            if (!hasAlreadyBeenFixed && hasSubpixelBrowserBug()) {
+            if (!fixActive && hasSubpixelBrowserBug()) {
                 fixSubpixelBrowserBug();
-                hasAlreadyBeenFixed = true;
+                fixActive = true;
+            }
+        }
+
+        private double getActiveAdjustment() {
+            if (fixActive) {
+                return -SUBPIXEL_ADJUSTMENT;
+            } else {
+                return 0.0;
             }
         }
 
         public void invalidateFix() {
             adjustBookkeepingPixels(SUBPIXEL_ADJUSTMENT);
-            hasAlreadyBeenFixed = false;
+            fixActive = false;
         }
 
         private boolean hasSubpixelBrowserBug() {
@@ -4837,9 +4855,17 @@ public class Escalator extends Widget implements RequiresResize,
                     final double bodyBottom, final double decoWidth) {
                 final int top = deco.getAbsoluteTop();
                 final int bottom = deco.getAbsoluteBottom();
+                /*
+                 * FIXME
+                 * 
+                 * Height and its use is a workaround for the issue where
+                 * coordinates of the deco are not calculated yet. This will
+                 * prevent a deco from being displayed when it's added to DOM
+                 */
+                final int height = bottom - top;
                 if (top < bodyTop || bottom > bodyBottom) {
                     final double topClip = Math.max(0.0D, bodyTop - top);
-                    final double bottomClip = decoHeight
+                    final double bottomClip = height
                             - Math.max(0.0D, bottom - bodyBottom);
                     // TODO [optimize] not sure how GWT compiles this
                     final String clip = new StringBuilder("rect(")
@@ -4895,6 +4921,8 @@ public class Escalator extends Widget implements RequiresResize,
             } else if (spacerExists(rowIndex)) {
                 removeSpacer(rowIndex);
             }
+
+            updateSpacerDecosVisibility();
         }
 
         /** Checks if a given element is a spacer element */

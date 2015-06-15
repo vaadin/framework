@@ -33,7 +33,8 @@
     <target name="copysrc" depends="dependencies">
         <delete dir="${result.deps}" />
 
-        <ivy:resolve transitive="false" type="jar" conf="build-provided" />
+        <ivy:resolve transitive="false" type="jar"
+            conf="build-provided" />
         <ivy:cachepath pathid="vaadin.jars" />
         <unjar dest="${result.deps}">
             <path refid="vaadin.jars" />
@@ -48,6 +49,7 @@
                 <include name="com/vaadin/client/Profiler.java" />
                 <include name="com/vaadin/client/StyleConstants.java" />
                 <include name="com/vaadin/client/WidgetUtil.java" />
+                <include name="com/vaadin/client/FocusUtil.java" />
                 <include name="com/vaadin/client/data/**/*.java" />
                 <include name="com/vaadin/client/widget/**/*.java" />
                 <include name="com/vaadin/client/Focusable.java" />
@@ -62,8 +64,7 @@
                 <include name="com/vaadin/shared/ui/grid/**/*.java" />
                 <include name="com/vaadin/shared/util/SharedUtil.java" />
                 <include name="com/vaadin/shared/VBrowserDetails.java" />
-                <include
-                    name="com/vaadin/shared/data/sort/SortDirection.java" />
+                <include name="com/vaadin/shared/data/sort/SortDirection.java" />
 
                 <include name="com/vaadin/sass/linker/*.java" />
 
@@ -109,7 +110,7 @@
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
         <antcall target="common.javadoc.jar">
-             <param name="src" value="${result.src}" />
+            <param name="src" value="${result.src}" />
         </antcall>
 
         <antcall target="common.publish-local" />

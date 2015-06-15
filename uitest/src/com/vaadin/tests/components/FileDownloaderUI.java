@@ -37,7 +37,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.tests.components.embedded.EmbeddedPdf;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -49,27 +48,18 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 
-public class FileDownloaderTest extends AbstractTestUI {
+public class FileDownloaderUI extends AbstractTestUIWithLog {
 
     private AbstractComponent firstDownloadComponent;
-    private Log log = new Log(5);
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(log);
-
         List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
         components.add(Button.class);
         components.add(NativeButton.class);
         components.add(CssLayout.class);
         components.add(Label.class);
 
-        // Resource resource = new ExternalResource(
-        // "https://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.beta1/vaadin-all-7.0.0.beta1.zip");
-        // addComponents(resource, components);
-        // resource = new ExternalResource(
-        // "https://vaadin.com/download/book-of-vaadin/current/pdf/book-of-vaadin.pdf");
-        // addComponents(resource, components);
         ConnectorResource resource;
         resource = new StreamResource(new StreamResource.StreamSource() {
 
@@ -105,12 +95,15 @@ public class FileDownloaderTest extends AbstractTestUI {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // resource = new DynamicConnectorResource(this, "requestImage.png");
-        // addComponents(resource, components);
-        // resource = new ThemeResource("favicon.ico");
-        // addComponents(resource, components);
         resource = new ClassResource(new EmbeddedPdf().getClass(), "test.pdf");
         addComponents("Class resource pdf", resource, components);
+
+        Button downloadUtf8File = new Button("Download UTF-8 named file");
+        FileDownloader fd = new FileDownloader(new ClassResource(
+                new EmbeddedPdf().getClass(), "åäö-日本語.pdf"));
+        fd.setOverrideContentType(false);
+        fd.extend(downloadUtf8File);
+        addComponent(downloadUtf8File);
 
         addComponent(new Button("Remove first download button",
                 new ClickListener() {
@@ -131,7 +124,7 @@ public class FileDownloaderTest extends AbstractTestUI {
                         FileDownloader e = (FileDownloader) firstDownloadComponent
                                 .getExtensions().iterator().next();
                         e.remove();
-                        log.log("FileDownload detached");
+                        log("FileDownload detached");
                     }
                 }));
     }
@@ -211,18 +204,6 @@ public class FileDownloaderTest extends AbstractTestUI {
         bi.getGraphics()
                 .drawChars(text.toCharArray(), 0, text.length(), 10, 20);
         return bi;
-    }
-
-    @Override
-    protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

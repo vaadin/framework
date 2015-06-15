@@ -80,6 +80,8 @@ public class RendererVisitor extends TypeVisitor {
         JType presentationType = getPresentationType(type, logger);
         bundle.setPresentationType(type, presentationType);
 
+        bundle.setNeedsSerialize(presentationType);
+
         logger.log(Type.DEBUG, "Presentation type of " + type + " is "
                 + presentationType);
     }

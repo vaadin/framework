@@ -271,7 +271,10 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
         WebElement focused = getFocusedElement();
 
-        if (BrowserUtil.isIE(getDesiredCapabilities())) {
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            assertEquals("Focus should be in html", "html",
+                    focused.getTagName());
+        } else if (BrowserUtil.isIE(getDesiredCapabilities())) {
             assertEquals("Focus should be nowhere", null, focused);
         } else {
             // GWT menubar loses focus after clicking a menuitem

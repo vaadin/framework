@@ -57,7 +57,6 @@ import com.vaadin.data.RpcDataProviderExtension.DetailComponentManager;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -2536,9 +2535,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private Converter<?, Object> converter;
 
         /**
-         * A check for allowing the {@link #Column(Grid, GridColumnState, Object)
-         * constructor} to call {@link #setConverter(Converter)} with a
-         * <code>null</code>, even if model and renderer aren't compatible.
+         * A check for allowing the
+         * {@link #Column(Grid, GridColumnState, Object) constructor} to call
+         * {@link #setConverter(Converter)} with a <code>null</code>, even if
+         * model and renderer aren't compatible.
          */
         private boolean isFirstConverterAssignment = true;
 
@@ -2598,7 +2598,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Sets the caption of the header.
+         * Sets the caption of the header. This caption is also used as the
+         * hiding toggle caption, unless it is explicitly set via
+         * {@link #setHidingToggleCaption(String)}.
          * 
          * @param caption
          *            the text to show in the caption
@@ -2610,6 +2612,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         public Column setHeaderCaption(String caption)
                 throws IllegalStateException {
             checkColumnIsAttached();
+
+            state.headerCaption = caption;
+
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
                 row.getCell(grid.getPropertyIdByColumnId(state.id)).setText(
@@ -2637,11 +2642,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * toggle for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
          * <p>
-         * By default, before triggering this setter, a user friendly version of
-         * the column's {@link #getPropertyId() property id} is used.
+         * The default value is <code>null</code>, and in that case the column's
+         * {@link #getHeaderCaption() header caption} is used.
          * <p>
-         * <em>NOTE:</em> setting this to <code>null</code> or empty string
-         * might cause the hiding toggle to not render correctly.
+         * <em>NOTE:</em> setting this to empty string might cause the hiding
+         * toggle to not render correctly.
          * 
          * @since 7.5.0
          * @param hidingToggleCaption
@@ -3302,9 +3307,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             DesignAttributeHandler.writeAttribute("hidden", attributes,
                     isHidden(), def.hidden, boolean.class);
             DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
-                    attributes, getHidingToggleCaption(),
-                    SharedUtil.propertyIdToHumanFriendly(getPropertyId()),
-                    String.class);
+                    attributes, getHidingToggleCaption(), null, String.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -3372,7 +3375,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * currently extends the AbstractExtension superclass, but this fact should
      * be regarded as an implementation detail and subject to change in a future
      * major or minor Vaadin revision.
-     *
+     * 
      * @param <T>
      *            the type this renderer knows how to present
      */
@@ -3445,7 +3448,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * is desired. For instance, a {@code Renderer<Date>} could first turn a
          * date value into a formatted string and return
          * {@code encode(dateString, String.class)}.
-         *
+         * 
          * @param value
          *            the value to be encoded
          * @param type
@@ -3460,7 +3463,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An abstract base class for server-side Grid extensions.
-     *
+     * 
      * @since 7.5
      */
     public static abstract class AbstractGridExtension extends
@@ -3475,7 +3478,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Constructs a new Grid extension and extends given Grid.
-         *
+         * 
          * @param grid
          *            a grid instance
          */
@@ -3977,7 +3980,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                boolean success = false;
+                Exception exception = null;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     if (!isEditorBuffered() || editedItemId == null) {
@@ -3986,12 +3989,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                     if (editedItemId.equals(id)) {
                         doEditItem();
-                        success = true;
                     }
                 } catch (Exception e) {
-                    handleError(e);
+                    exception = e;
                 }
-                getEditorRpc().confirmBind(success);
+
+                if (exception != null) {
+                    handleError(exception);
+                    doCancelEditor();
+                    getEditorRpc().confirmBind(false);
+                } else {
+                    doEditItem();
+                    getEditorRpc().confirmBind(true);
+                }
             }
 
             @Override
@@ -4248,8 +4258,18 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         if (datasource.getContainerPropertyIds().contains(propertyId)
                 && !columns.containsKey(propertyId)) {
             appendColumn(propertyId);
-        } else {
+        } else if (defaultContainer) {
             addColumnProperty(propertyId, String.class, "");
+        } else {
+            if (columns.containsKey(propertyId)) {
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId.toString()
+                        + "' already exists in this grid");
+            } else {
+                throw new IllegalStateException("Property id '"
+                        + propertyId.toString()
+                        + "' does not exist in the container");
+            }
         }
 
         // Inform the data provider of this new column.
@@ -4418,7 +4438,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         String humanFriendlyPropertyId = SharedUtil
                 .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
         column.setHeaderCaption(humanFriendlyPropertyId);
-        column.setHidingToggleCaption(humanFriendlyPropertyId);
 
         if (datasource instanceof Sortable
                 && ((Sortable) datasource).getSortableContainerPropertyIds()
@@ -4628,8 +4647,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isInfinite(double)
-     *             infinite}
+     *             if {@code rows} is {@link Double#isInfinite(double) infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
      */
@@ -5803,13 +5821,20 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
-        if (editor == null) {
-            editor = editorFieldGroup.buildAndBind(propertyId);
-        }
 
-        if (editor.getParent() != Grid.this) {
-            assert editor.getParent() == null;
-            editor.setParent(this);
+        try {
+            if (editor == null) {
+                editor = editorFieldGroup.buildAndBind(propertyId);
+            }
+        } finally {
+            if (editor == null) {
+                editor = editorFieldGroup.getField(propertyId);
+            }
+
+            if (editor != null && editor.getParent() != Grid.this) {
+                assert editor.getParent() == null;
+                editor.setParent(this);
+            }
         }
         return editor;
     }
@@ -5905,6 +5930,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     protected void doCancelEditor() {
         editedItemId = null;
         editorFieldGroup.discard();
+        editorFieldGroup.setItemDataSource(null);
     }
 
     void resetEditor() {

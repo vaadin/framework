@@ -52,6 +52,13 @@ public class CustomRendererTest extends MultiBrowserTest {
                 findDebugLabel().getText());
     }
 
+    @Test
+    public void testBeanRenderer() throws Exception {
+        openTestURL();
+
+        assertEquals("SimpleTestBean(42)", findGrid().getCell(0, 2).getText());
+    }
+
     private GridElement findGrid() {
         List<GridElement> elements = $(GridElement.class).all();
         return elements.get(0);

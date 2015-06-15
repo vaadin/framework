@@ -57,7 +57,7 @@ import com.google.apphosting.api.DeadlineExceededException;
  *              &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
  *              &lt;servlet-class&gt;com.vaadin.server.GAEApplicationServlet&lt;/servlet-class&gt;
  *              &lt;init-param&gt;
- *                      &lt;param-name&gt;application&lt;/param-name&gt;
+ *                      &lt;param-name&gt;UI&lt;/param-name&gt;
  *                      &lt;param-value&gt;com.vaadin.demo.HelloWorld&lt;/param-value&gt;
  *              &lt;/init-param&gt;
  *      &lt;/servlet&gt;
