@@ -15,7 +15,7 @@ try:
 except:
 	print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 	sys.exit(1)
-from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir
+from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs
 from DeployHelpers import deployWar
 
 # Validated demos. name -> git url
@@ -23,7 +23,6 @@ demos = {
 	"dashboard" : "https://github.com/vaadin/dashboard-demo.git",
 	"parking" : "https://github.com/vaadin/parking-demo.git",
 	"addressbook" : "https://github.com/vaadin/addressbook.git",
-	"confirmdialog" : "https://github.com/samie/Vaadin-ConfirmDialog.git",
 	"grid-gwt" : "https://github.com/vaadin/grid-gwt.git"
 }
 
@@ -31,6 +30,11 @@ def checkout(folder, url):
 	Repo.clone_from(url, folder)
 
 if __name__ == "__main__":
+	if getArgs().teamcity:
+		print("Add dependency jars from TeamCity here")
+	
+	demosFailed = False
+	
 	for demo in demos:
 		print("Validating demo %s" % (demo))
 		try:
@@ -43,8 +47,12 @@ if __name__ == "__main__":
 					deployWar(war)
 				except Exception as e:
 					print("War %s failed to deploy: %s" % (war, e))
+					demosFailed = True
 			print("%s demo validation succeeded!" % (demo))
-		except:
-			print("%s demo validation failed" % (demo))
+		except Exception as e:
+			print("%s demo validation failed: %s" % (demo, e))
+			demosFailed = True
 		removeDir(demo)
 		print("")
+	if demosFailed:
+		sys.exit(1)

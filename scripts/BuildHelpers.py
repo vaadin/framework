@@ -27,21 +27,19 @@ elif not isdir(resultPath):
 
 args = None
 
-# Parse command line arguments <version> <framework-repo-id> <archetype-repo-id> <plugin-repo-id>
+# Default argument parser
+parser = argparse.ArgumentParser(description="Automated staging validation")
+parser.add_argument("version", type=str, help="Vaadin version to use")
+parser.add_argument("--maven", help="Additional maven command line parameters", default=None)
+parser.add_argument("--teamcity", help="Use vaadin jars provided by teamcity", action="store_const", const=True, default=False)
+
+# Parse command line arguments <version>
 def parseArgs():
-	# Command line arguments for this script
-	parser = argparse.ArgumentParser(description="Automated staging validation")
-	parser.add_argument("version", type=str, help="Vaadin version to use")
-	parser.add_argument("framework", type=int, help="Framework repo id (comvaadin-XXXX)", nargs='?')
-	parser.add_argument("archetype", type=int, help="Archetype repo id (comvaadin-XXXX)", nargs='?')
-	parser.add_argument("plugin", type=int, help="Maven Plugin repo id (comvaadin-XXXX)", nargs='?')
-	
 	# If no args, give help
 	if len(sys.argv) == 1:
 		args = parser.parse_args(["-h"])
 	else:
 		args = parser.parse_args()
-	
 	return args
 
 # Function for determining the path for maven executable
@@ -81,6 +79,8 @@ def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, repoIds =
 	cmd = [mvnCmd]
 	if hasattr(repoIds, "version") and repoIds.version is not None:
 		cmd.append("-Dvaadin.version=%s" % (repoIds.version))
+	if hasattr(repoIds, "maven") and repoIds.maven is not None:
+		cmd.extend(repoIds.maven.split(" "))
 	cmd.extend(["clean", "package", "validate"])
 	print("executing: %s" % (" ".join(cmd)))
 	subprocess.check_call(cmd, cwd=join(getcwd(), artifactId), stdout=logFile)

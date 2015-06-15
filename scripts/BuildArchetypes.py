@@ -11,7 +11,7 @@
 #
 
 import subprocess
-from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir
+from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser
 from DeployHelpers import deployWar
 
 ## DEFAULT VARIABLES ##
@@ -50,6 +50,8 @@ def generateArchetype(archetype):
 	cmd.append("-DartifactId=%s" % (artifactId))
 	cmd.append("-Dversion=1.0-SNAPSHOT")
 	cmd.append("-DinteractiveMode=false")
+	if hasattr(args, "maven") and args.maven is not None:
+		cmd.extends(args.maven.split(" "))
 	
 	# Generate pom.xml
 	print("Generating pom.xml for archetype %s" % (archetype))
@@ -60,6 +62,14 @@ def generateArchetype(archetype):
 
 ## DO THIS IF RUN AS A SCRIPT (not import) ##
 if __name__ == "__main__":
+	# Add command line arguments for staging repos
+	parser.add_argument("framework", type=int, help="Framework repo id (comvaadin-XXXX)", nargs='?')
+	parser.add_argument("archetype", type=int, help="Archetype repo id (comvaadin-XXXX)", nargs='?')
+	parser.add_argument("plugin", type=int, help="Maven Plugin repo id (comvaadin-XXXX)", nargs='?')
+
+	archetypesFailed = False
+
+	# Parse the arguments
 	args = getArgs()
 	for archetype in archetypes:
 		try:
@@ -73,7 +83,11 @@ if __name__ == "__main__":
 					deployWar(war, "%s.war" % (archetype.split("-", 2)[2]))
 				except Exception as e:
 					print("War %s failed to deploy: %s" % (war, e))
+					archetypesFailed = True
 		except:
 			print("Archetype %s build failed" % (archetype))
+			archetypesFailed = True
 		removeDir(artifactId)
 		print("")
+	if archetypesFailed:
+		sys.exit(1)
