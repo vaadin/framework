@@ -22,8 +22,10 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridEditorCustomFieldTest extends MultiBrowserTest {
 
     @Test
