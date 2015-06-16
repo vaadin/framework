@@ -7,7 +7,7 @@
     <!-- Configuration -->
     <!-- ================================================================== -->
     <!-- Browsers to use for testing -->
-    <property name="browsers-windows" value="winxp-ie8,win7-ie9,win7-ie10,winxp-firefox17-esr,winxp-safari5,winxp-googlechrome21,winxp-opera12" />
+    <property name="browsers-windows" value="winxp-ie8,win7-ie9,win7-ie10,winxp-firefox17-esr,winxp-googlechrome21" />
     <property name="browsers-linux" value="linux-firefox3,linux-opera10,linux-googlechrome8" />
     <property name="browsers-mac" value="osx-firefox3,osx-opera10,osx-googlechrome8,osx-safari4,osx-safari5" />
 
