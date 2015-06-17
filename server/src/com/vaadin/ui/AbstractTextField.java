@@ -126,22 +126,25 @@ public abstract class AbstractTextField extends AbstractField<String> implements
             selectionPosition = -1;
         }
 
-        target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
-                getTextChangeEventMode().toString());
-        target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
-                getTextChangeTimeout());
-        if (lastKnownTextContent != null) {
-            /*
-             * The field has be repainted for some reason (e.g. caption, size,
-             * stylename), but the value has not been changed since the last
-             * text change event. Let the client side know about the value the
-             * server side knows. Client side may then ignore the actual value,
-             * depending on its state.
-             */
-            target.addAttribute(
-                    TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS,
-                    true);
+        if (hasListeners(TextChangeEvent.class)) {
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
+                    getTextChangeEventMode().toString());
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
+                    getTextChangeTimeout());
+            if (lastKnownTextContent != null) {
+                /*
+                 * The field has be repainted for some reason (e.g. caption,
+                 * size, stylename), but the value has not been changed since
+                 * the last text change event. Let the client side know about
+                 * the value the server side knows. Client side may then ignore
+                 * the actual value, depending on its state.
+                 */
+                target.addAttribute(
+                        TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS,
+                        true);
+            }
         }
+
     }
 
     @Override
