@@ -3533,6 +3533,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private final Footer footer = new Footer(this);
 
     private Object editedItemId = null;
+    private boolean editorActive = false;
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     private CellStyleGenerator cellStyleGenerator;
@@ -5691,7 +5692,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @return true iff the editor is open
      */
     public boolean isEditorActive() {
-        return editedItemId != null;
+        return editorActive;
     }
 
     private void checkColumnExists(Object propertyId) {
@@ -5765,6 +5766,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     .getPropertyId());
         }
 
+        editorActive = true;
         // Must ensure that all fields, recursively, are sent to the client
         // This is needed because the fields are hidden using isRendered
         for (Field<?> f : getEditorFields()) {
@@ -5816,6 +5818,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     protected void doCancelEditor() {
         editedItemId = null;
+        editorActive = false;
         editorFieldGroup.discard();
         editorFieldGroup.setItemDataSource(null);
     }
@@ -5833,6 +5836,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         editedItemId = null;
+        editorActive = false;
         editorFieldGroup = new CustomFieldGroup();
     }
 
