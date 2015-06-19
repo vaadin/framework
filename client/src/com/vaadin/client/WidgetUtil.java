@@ -553,10 +553,11 @@ public class WidgetUtil {
         double reqWidth = getRequiredWidthBoundingClientRectDouble(element);
         if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
             double csWidth = getRequiredWidthComputedStyleDouble(element);
-            if (csWidth > reqWidth && csWidth < (reqWidth + 1)) {
+            if (csWidth > reqWidth && csWidth <= (reqWidth + 1)) {
                 // IE9 rounds reqHeight to integers BUT sometimes reports wrong
                 // csHeight it seems, so we only use csHeight if it is within a
                 // rounding error
+
                 return csWidth;
             }
         }
@@ -602,10 +603,14 @@ public class WidgetUtil {
         double reqHeight = getRequiredHeightBoundingClientRectDouble(element);
         if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
             double csHeight = getRequiredHeightComputedStyleDouble(element);
-            if (csHeight > reqHeight && csHeight < (reqHeight + 1)) {
+            if (csHeight > reqHeight && csHeight <= (reqHeight + 1)) {
                 // IE9 rounds reqHeight to integers BUT sometimes reports wrong
                 // csHeight it seems, so we only use csHeight if it is within a
                 // rounding error
+
+                // Although sometimes it also happens that IE9 returns an
+                // incorrectly rounded down requiredHeight and a computed height
+                // which is exactly one larger, hence the "<="...
                 return csHeight;
             }
         }
