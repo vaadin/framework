@@ -37,6 +37,9 @@ import com.vaadin.server.DragAndDropService;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.communication.ConnectorHierarchyWriter;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -326,6 +329,13 @@ public class ConnectorTracker implements Serializable {
                             .isConnectorVisibleToClient(connector)) {
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);
+
+                assert isRemovalSentToClient(connector) : "Connector "
+                        + connector
+                        + " (id = "
+                        + connector.getConnectorId()
+                        + ") is no longer visible to the client, but no corresponding hierarchy change is being sent.";
+
                 if (getLogger().isLoggable(Level.FINE)) {
                     getLogger()
                             .log(Level.FINE,
@@ -336,6 +346,48 @@ public class ConnectorTracker implements Serializable {
         }
 
         cleanStreamVariables();
+    }
+
+    private boolean isRemovalSentToClient(ClientConnector connector) {
+        VaadinRequest request = VaadinService.getCurrentRequest();
+        if (request == null) {
+            // Probably run from a unit test without normal request handling
+            return true;
+        }
+
+        String attributeName = ConnectorHierarchyWriter.class.getName()
+                + ".hierarchyInfo";
+        Object hierarchyInfoObj = request.getAttribute(attributeName);
+        if (hierarchyInfoObj instanceof JsonObject) {
+            JsonObject hierachyInfo = (JsonObject) hierarchyInfoObj;
+
+            ClientConnector firstVisibleParent = findFirstVisibleParent(connector);
+            if (firstVisibleParent == null) {
+                // Connector is detached, not our business
+                return true;
+            }
+
+            if (!hierachyInfo.hasKey(firstVisibleParent.getConnectorId())) {
+                return false;
+            }
+        } else {
+            getLogger().warning(
+                    "Request attribute " + attributeName
+                            + " is not a JsonObject");
+        }
+
+        return true;
+    }
+
+    private ClientConnector findFirstVisibleParent(ClientConnector connector) {
+        while (connector != null) {
+            connector = connector.getParent();
+            if (LegacyCommunicationManager
+                    .isConnectorVisibleToClient(connector)) {
+                return connector;
+            }
+        }
+        return null;
     }
 
     private void removeUnregisteredConnectors() {

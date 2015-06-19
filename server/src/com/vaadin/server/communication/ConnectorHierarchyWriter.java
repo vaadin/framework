@@ -26,6 +26,8 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.PaintException;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 
 import elemental.json.Json;
@@ -87,6 +89,22 @@ public class ConnectorHierarchyWriter implements Serializable {
                 }
             }
         }
+        // Dummy assert just for conditionally storing away data that will be
+        // used by the real assert later on
+        assert storeSentHierarchy(hierarchyInfo);
+
         writer.write(JsonUtil.stringify(hierarchyInfo));
     }
+
+    private boolean storeSentHierarchy(JsonObject hierarchyInfo) {
+        VaadinRequest request = VaadinService.getCurrentRequest();
+        if (request != null) {
+            request.setAttribute(ConnectorHierarchyWriter.class.getName()
+                    + ".hierarchyInfo", hierarchyInfo);
+        }
+
+        // Always true, we're just setting up for another assert
+        return true;
+    }
+
 }

@@ -1120,12 +1120,36 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * "?debug" as exceptions are otherwise not shown as notifications.
      */
     protected void assertNoErrorNotifications() {
-        Assert.assertTrue(
-                "Debug window must be open to be able to see error notifications",
-                isDebugWindowOpen());
         Assert.assertFalse(
                 "Error notification with client side exception is shown",
-                isElementPresent(By.className("v-Notification-error")));
+                isNotificationPresent("error"));
+    }
+
+    /**
+     * Asserts that no system notifications are shown.
+     */
+    protected void assertNoSystemNotifications() {
+        Assert.assertFalse(
+                "Error notification with system error exception is shown",
+                isNotificationPresent("system"));
+    }
+
+    /**
+     * Asserts that a system notification is shown.
+     */
+    protected void assertSystemNotification() {
+        Assert.assertTrue(
+                "Error notification with system error exception is not shown",
+                isNotificationPresent("system"));
+    }
+
+    private boolean isNotificationPresent(String type) {
+        if ("error".equals(type)) {
+            Assert.assertTrue(
+                    "Debug window must be open to be able to see error notifications",
+                    isDebugWindowOpen());
+        }
+        return isElementPresent(By.className("v-Notification-" + type));
     }
 
     private boolean isDebugWindowOpen() {
