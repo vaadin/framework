@@ -5821,6 +5821,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editorActive = false;
         editorFieldGroup.discard();
         editorFieldGroup.setItemDataSource(null);
+
+        // Mark Grid as dirty so the client side gets to know that the editors
+        // are no longer attached
+        markAsDirty();
     }
 
     void resetEditor() {
