@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -42,8 +41,7 @@ public class DndEmptyTableTest extends MultiBrowserTest {
         Actions actions = new Actions(driver);
         actions.clickAndHold(source).moveToElement(target).release();
 
-        Assert.assertFalse(isElementPresent(By
-                .className("v-Notification-error")));
+        assertNoErrorNotifications();
     }
 
 }

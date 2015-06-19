@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.popupview;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -38,10 +37,7 @@ public class PopupViewWithExtensionTest extends MultiBrowserTest {
         WebElement view = driver.findElement(By.className("v-popupview"));
         view.click();
 
-        Assert.assertFalse(
-                "Popup view with extension should not throw an exception. "
-                        + "(Error notification window is shown).",
-                isElementPresent(By.className("v-Notification-error")));
+        assertNoErrorNotifications();
     }
 
 }
