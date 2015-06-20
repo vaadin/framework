@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -591,8 +592,8 @@ public class ConnectorTracker implements Serializable {
      * <p>
      * This method has a side-effect of incrementing the sync id by one (see
      * {@link #getCurrentSyncId()}), if {@link #isWritingResponse()} returns
-     * <code>false</code> and <code>writingResponse</code> is set to
-     * <code>true</code>.
+     * <code>true</code> and <code>writingResponse</code> is set to
+     * <code>false</code>.
      *
      * @param writingResponse
      *            the new response status.
@@ -616,7 +617,9 @@ public class ConnectorTracker implements Serializable {
          * the right hand side of the && is unnecessary here because of the
          * if-clause above, but rigorous coding is always rigorous coding.
          */
-        if (writingResponse && !this.writingResponse) {
+        if (!writingResponse && this.writingResponse) {
+            // Bump sync id when done writing - the client is not expected to
+            // know about anything happening after this moment.
             currentSyncId++;
         }
         this.writingResponse = writingResponse;
@@ -784,34 +787,25 @@ public class ConnectorTracker implements Serializable {
      */
     public boolean connectorWasPresentAsRequestWasSent(String connectorId,
             long lastSyncIdSeenByClient) {
-
         assert getConnector(connectorId) == null : "Connector " + connectorId
                 + " is still attached";
 
-        boolean clientRequestIsTooOld = lastSyncIdSeenByClient < currentSyncId
-                && lastSyncIdSeenByClient != -1;
-        if (clientRequestIsTooOld) {
-            /*
-             * The headMap call is present here because we're only interested in
-             * connectors removed "in the past" (i.e. the server has removed
-             * them before the client ever knew about that), since those are the
-             * ones that we choose to handle as a special case.
-             */
-            /*-
-             *   Server                          Client
-             * [#1 add table] ---------.
-             *                          \
-             * [push: #2 remove table]-. `--> [adding table, storing #1]
-             *                          \  .- [table from request #1 needs more data]
-             *                           \/
-             *                           /`-> [removing table, storing #2]
-             * [#1 < #2 - ignoring] <---´
-             */
-            for (Set<String> unregisteredConnectors : syncIdToUnregisteredConnectorIds
-                    .headMap(currentSyncId).values()) {
-                if (unregisteredConnectors.contains(connectorId)) {
-                    return true;
-                }
+        if (lastSyncIdSeenByClient == -1) {
+            // Ignore potential problems
+            return true;
+        }
+
+        /*
+         * Use non-inclusive tail map to find all connectors that were removed
+         * after the reported sync id was sent to the client.
+         */
+        NavigableMap<Integer, Set<String>> unregisteredAfter = syncIdToUnregisteredConnectorIds
+                .tailMap(Integer.valueOf((int) lastSyncIdSeenByClient), false);
+        for (Set<String> unregisteredIds : unregisteredAfter.values()) {
+            if (unregisteredIds.contains(connectorId)) {
+                // Removed with a higher sync id, so it was most likely present
+                // when this sync id was sent.
+                return true;
             }
         }
 
@@ -877,7 +871,7 @@ public class ConnectorTracker implements Serializable {
          * conflicts. In any case, it's better to clean up too little than too
          * much, especially as the data will hardly grow into the kilobytes.
          */
-        syncIdToUnregisteredConnectorIds.headMap(lastSyncIdSeenByClient)
+        syncIdToUnregisteredConnectorIds.headMap(lastSyncIdSeenByClient, true)
                 .clear();
     }
 }
