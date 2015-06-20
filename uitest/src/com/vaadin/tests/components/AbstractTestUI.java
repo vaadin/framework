@@ -205,4 +205,18 @@ public abstract class AbstractTestUI extends UI {
         return getSession().getBrowser();
     }
 
+    /**
+     * Execute the provided runnable on the UI thread as soon as the current
+     * request has been sent.
+     */
+    protected void runAfterResponse(final Runnable runnable) {
+        // Immediately start a thread that will start waiting for the session to
+        // get unlocked.
+        new Thread() {
+            @Override
+            public void run() {
+                accessSynchronously(runnable);
+            }
+        }.start();
+    }
 }
