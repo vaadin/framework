@@ -303,7 +303,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      */
     private double cache_rate = CACHE_RATE_DEFAULT;
     /**
-     * fraction of pageLenght which can be scrolled without making new request
+     * fraction of pageLength which can be scrolled without making new request
      */
     private double cache_react_rate = 0.75 * cache_rate;
 
@@ -1443,7 +1443,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
         } else {
-            // pagelenght is "0" meaning scrolling is turned off
+            // pagelength is "0" meaning scrolling is turned off
             pageLength = totalRows;
         }
 
