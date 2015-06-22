@@ -5,7 +5,8 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -15,14 +16,20 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 
-public class ItemClickEvents extends TestBase {
+public class ItemClickEvents extends AbstractTestUI {
 
-    Tree tree = new Tree();
-    Table table = new Table();
-    Log log = new Log(5);
+    private Tree tree;
+    private Table table;
+    private Log log;
 
     @Override
-    public void setup() {
+    @SuppressWarnings("unchecked")
+    protected void setup(VaadinRequest request) {
+
+        tree = new Tree();
+        table = new Table();
+        log = new Log(5);
+
         log.setId("log");
 
         HorizontalLayout ol = createHorizontalLayout(tree);
@@ -51,9 +58,11 @@ public class ItemClickEvents extends TestBase {
         tree.setParent("2. Child 1", "Root 2");
         tree.addItem("2. Child 2");
         tree.setParent("2. Child 2", "Root 2");
-        tree.addContainerProperty("icon", ExternalResource.class,
+        tree.addContainerProperty(
+                "icon",
+                ExternalResource.class,
                 new ExternalResource(
-                        "http://www.itmill.com/res/images/itmill_logo.gif"));
+                        "https://vaadin.com/vaadin-theme/images/vaadin-logo.png"));
 
         tree.addListener(new ItemClickListener() {
             @Override
@@ -104,6 +113,8 @@ public class ItemClickEvents extends TestBase {
 
         String modifiers = "";
         if (event.isAltKey()) {
+            // Most likely won't trigger on Linux due to WMs using alt + mouse
+            // button
             modifiers += "alt ";
         }
         if (event.isMetaKey()) {
@@ -145,7 +156,7 @@ public class ItemClickEvents extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Click events should always come trough no matter how the table is configured.";
     }
 
