@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.applicationservlet;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -30,21 +32,23 @@ public class NoApplicationClassTest extends MultiBrowserTest {
 
     @Test
     public void testInvalidApplicationClass() {
-        openTestURL();
+        driver.get(getBaseURL() + "/run/ClassThatIsNotPresent");
+
         String exceptionMessage = getDriver().findElement(By.xpath("//pre[2]"))
                 .getText();
-        Assert.assertTrue(exceptionMessage
-                .contains("ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent"));
+
+        assertThat(
+                exceptionMessage,
+                containsString("ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent"));
     }
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.CHROME
+        return Collections.singletonList(Browser.PHANTOMJS
                 .getDesiredCapabilities());
     }
 
     @Override
-    protected String getDeploymentPath() {
-        return "/run/ClassThatIsNotPresent";
+    protected void closeApplication() {
     }
 }
