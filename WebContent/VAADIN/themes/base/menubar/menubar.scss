@@ -56,7 +56,16 @@
 .#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:active {
 	opacity: .5;
 	filter: alpha(opacity=50);
+	
+	.v-ie8 & {
+		filter: none;
+		color: #999;
+		img {
+			filter: alpha(opacity=50);
+		}
+	}
 }
+
 .#{$primaryStyleName}-more-menuitem {
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
