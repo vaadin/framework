@@ -95,7 +95,7 @@ public class SelectAllRowsTest extends MultiBrowserTest {
         // Wait for scrolling to complete. Otherwise, clicking last row will
         // fail with Chrome
         try {
-            Thread.sleep(200);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
