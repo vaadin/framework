@@ -203,4 +203,37 @@ public class GridLayoutDeclarativeTest extends
         }
         return result;
     }
+
+    @Test
+    public void testNestedGridLayouts() {
+        String design = "<!DOCTYPE html>" + //
+                "<html>" + //
+                " <body> " + //
+                "  <v-grid-layout> " + //
+                "   <row> " + //
+                "    <column> " + //
+                "     <v-grid-layout> " + //
+                "      <row> " + //
+                "       <column> " + //
+                "        <v-button>" + //
+                "          Button " + //
+                "        </v-button> " + //
+                "       </column> " + //
+                "      </row> " + //
+                "     </v-grid-layout> " + //
+                "    </column> " + //
+                "   </row> " + //
+                "  </v-grid-layout>  " + //
+                " </body>" + //
+                "</html>";
+        GridLayout outer = new GridLayout();
+        GridLayout inner = new GridLayout();
+        Button b = new Button("Button");
+        b.setCaptionAsHtml(true);
+        inner.addComponent(b);
+        outer.addComponent(inner);
+        testRead(design, outer);
+        testWrite(design, outer);
+
+    }
 }
