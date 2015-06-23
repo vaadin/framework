@@ -1319,11 +1319,15 @@ public class GridLayout extends AbstractLayout implements
 
         setMargin(readMargin(design, getMargin(), designContext));
 
-        // Prepare a 2D map for reading column contents
-        Elements rowElements = design.getElementsByTag("row");
+        List<Element> rowElements = new ArrayList<Element>();
         List<Map<Integer, Component>> rows = new ArrayList<Map<Integer, Component>>();
-        for (int i = 0; i < rowElements.size(); ++i) {
-            rows.add(new HashMap<Integer, Component>());
+        // Prepare a 2D map for reading column contents
+        for (Element e : design.children()) {
+            if (e.tagName().equalsIgnoreCase("row")) {
+                rowElements.add(e);
+                rows.add(new HashMap<Integer, Component>());
+
+            }
         }
         setRows(Math.max(rows.size(), 1));
 
