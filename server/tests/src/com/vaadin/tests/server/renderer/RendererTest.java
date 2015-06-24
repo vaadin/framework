@@ -67,14 +67,14 @@ public class RendererTest {
 
         @Override
         public TestBean convertToModel(String value,
-                                       Class<? extends TestBean> targetType, Locale locale)
+                Class<? extends TestBean> targetType, Locale locale)
                 throws ConversionException {
             return null;
         }
 
         @Override
         public String convertToPresentation(TestBean value,
-                                            Class<? extends String> targetType, Locale locale)
+                Class<? extends String> targetType, Locale locale)
                 throws ConversionException {
             if (value instanceof ExtendedBean) {
                 return "ExtendedBean(" + value.i + ", "
@@ -227,21 +227,27 @@ public class RendererTest {
         assertEquals("", dateColumn.getRenderer().encode(null).asString());
         assertEquals("", buttonColumn.getRenderer().encode(null).asString());
     }
-    @Test
 
+    @Test
     public void testNullEncodingWithDefault() {
 
         textColumn.setRenderer(new TextRenderer("default value"));
         htmlColumn.setRenderer(new HtmlRenderer("default value"));
-        numberColumn.setRenderer(new NumberRenderer("%s", Locale.getDefault(), "default value"));
+        numberColumn.setRenderer(new NumberRenderer("%s", Locale.getDefault(),
+                "default value"));
         dateColumn.setRenderer(new DateRenderer("%s", "default value"));
         buttonColumn.setRenderer(new ButtonRenderer("default value"));
 
-        assertEquals("default value", textColumn.getRenderer().encode(null).asString());
-        assertEquals("default value", htmlColumn.getRenderer().encode(null).asString());
-        assertEquals("default value", numberColumn.getRenderer().encode(null).asString());
-        assertEquals("default value", dateColumn.getRenderer().encode(null).asString());
-        assertEquals("default value", buttonColumn.getRenderer().encode(null).asString());
+        assertEquals("default value", textColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", htmlColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", numberColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", dateColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", buttonColumn.getRenderer().encode(null)
+                .asString());
     }
 
     private TestConverter converter() {

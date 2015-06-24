@@ -26,8 +26,8 @@ public class TableColumnAlignmentsTest {
     @Test
     public void explicitColumnAlignments() {
         int properties = 5;
-        Table t = TableGeneratorTest
-                .createTableWithDefaultContainer(properties, 10);
+        Table t = TableGeneratorTest.createTableWithDefaultContainer(
+                properties, 10);
         Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 
@@ -122,8 +122,8 @@ public class TableColumnAlignmentsTest {
     @Test
     public void explicitColumnAlignmentOneByOne() {
         int properties = 5;
-        Table t = TableGeneratorTest
-                .createTableWithDefaultContainer(properties, 10);
+        Table t = TableGeneratorTest.createTableWithDefaultContainer(
+                properties, 10);
         Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 

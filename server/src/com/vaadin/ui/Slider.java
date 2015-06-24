@@ -285,7 +285,7 @@ public class Slider extends AbstractField<Double> {
         final int resolution = getResolution();
 
         double ratio = Math.pow(10, resolution);
-        if(v >= 0) {
+        if (v >= 0) {
             return Math.floor(v * ratio) / ratio;
         } else {
             return Math.ceil(v * ratio) / ratio;

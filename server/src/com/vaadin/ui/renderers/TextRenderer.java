@@ -35,6 +35,7 @@ public class TextRenderer extends AbstractRenderer<String> {
 
     /**
      * Creates a new text renderer
+     * 
      * @param nullRepresentation
      *            the textual representation of {@code null} value
      */

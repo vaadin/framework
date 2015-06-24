@@ -32,11 +32,11 @@ public class NullRenderersTest extends MultiBrowserTest {
         openTestURL();
 
         GridElement grid = findGridWithDefaults();
-        assertEquals("-- No Text --",  grid.getCell(0, 0).getText());
+        assertEquals("-- No Text --", grid.getCell(0, 0).getText());
         assertEquals("-- No Jokes --", grid.getCell(0, 1).getText());
-        assertEquals("-- Never --",    grid.getCell(0, 2).getText());
-        assertEquals("-- Nothing --",  grid.getCell(0, 3).getText());
-        assertEquals("-- No Control --",  grid.getCell(0, 5).getText());
+        assertEquals("-- Never --", grid.getCell(0, 2).getText());
+        assertEquals("-- Nothing --", grid.getCell(0, 3).getText());
+        assertEquals("-- No Control --", grid.getCell(0, 5).getText());
     }
 
     @Test

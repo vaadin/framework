@@ -26,17 +26,19 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     private void createTextField(int n) {
         TextField textField = new TextField("Value" + n);
         textField.setConverter(new StringToIntegerConverter());
-        textField.addValidator(new IntegerRangeValidator(getErrorMessage(n), 0, 100));
+        textField.addValidator(new IntegerRangeValidator(getErrorMessage(n), 0,
+                100));
         textField.setImmediate(true);
         textField.setValue("-5");
         addComponent(textField);
     }
 
     private String getErrorMessage(int n) {
-        if(n % 2 == 0) {
+        if (n % 2 == 0) {
             return "incorrect value" + n;
         } else {
-            return "super long long long long long long long long long long long error message " + n;
+            return "super long long long long long long long long long long long error message "
+                    + n;
         }
     }
 

@@ -19,7 +19,8 @@ public class MenuItemStyleRemovedTest extends MultiBrowserTest {
         $(ButtonElement.class).caption("Add styles").first().click();
 
         MenuBarElement menu = $(MenuBarElement.class).first();
-        List<WebElement> elements = menu.findElements(By.className("custom-menu-item"));
+        List<WebElement> elements = menu.findElements(By
+                .className("custom-menu-item"));
         Assert.assertEquals(2, elements.size());
 
         menu.clickItem("first");

@@ -177,7 +177,7 @@ public class VTooltip extends VOverlay {
 
                     int x = 0;
                     int y = 0;
-                    if(BrowserInfo.get().isTouchDevice()) {
+                    if (BrowserInfo.get().isTouchDevice()) {
                         setMaxWidth(Window.getClientWidth());
                         offsetWidth = getOffsetWidth();
                         offsetHeight = getOffsetHeight();
@@ -239,8 +239,8 @@ public class VTooltip extends VOverlay {
                 private int getFinalTouchX(int offsetWidth) {
                     int x = 0;
                     int widthNeeded = 10 + offsetWidth;
-                    int roomLeft = currentElement != null ?
-                            currentElement.getAbsoluteLeft() : EVENT_XY_POSITION_OUTSIDE;
+                    int roomLeft = currentElement != null ? currentElement
+                            .getAbsoluteLeft() : EVENT_XY_POSITION_OUTSIDE;
                     int viewPortWidth = Window.getClientWidth();
                     int roomRight = viewPortWidth - roomLeft;
                     if (roomRight > widthNeeded) {
@@ -249,7 +249,8 @@ public class VTooltip extends VOverlay {
                         x = roomLeft - offsetWidth;
                     }
                     if (x + offsetWidth - Window.getScrollLeft() > viewPortWidth) {
-                        x = viewPortWidth - offsetWidth + Window.getScrollLeft();
+                        x = viewPortWidth - offsetWidth
+                                + Window.getScrollLeft();
                     }
 
                     if (roomLeft != EVENT_XY_POSITION_OUTSIDE) {
@@ -316,17 +317,20 @@ public class VTooltip extends VOverlay {
                  */
                 private int getFinalTouchY(int offsetHeight) {
                     int y = 0;
-                    int heightNeeded = 10  + offsetHeight;
-                    int roomAbove = currentElement != null ?
-                            currentElement.getAbsoluteTop() + currentElement.getOffsetHeight()
+                    int heightNeeded = 10 + offsetHeight;
+                    int roomAbove = currentElement != null ? currentElement
+                            .getAbsoluteTop()
+                            + currentElement.getOffsetHeight()
                             : EVENT_XY_POSITION_OUTSIDE;
                     int roomBelow = Window.getClientHeight() - roomAbove;
 
                     if (roomBelow > heightNeeded) {
                         y = roomAbove;
                     } else {
-                        y = roomAbove - offsetHeight -
-                                (currentElement != null ? currentElement.getOffsetHeight() : 0);
+                        y = roomAbove
+                                - offsetHeight
+                                - (currentElement != null ? currentElement
+                                        .getOffsetHeight() : 0);
                     }
 
                     if (y + offsetHeight - Window.getScrollTop() > Window
@@ -354,7 +358,6 @@ public class VTooltip extends VOverlay {
             hide();
         }
     }
-
 
     /**
      * For assistive tooltips to work correctly we must have the tooltip visible
@@ -537,7 +540,7 @@ public class VTooltip extends VOverlay {
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
-           handleHideEvent();
+            handleHideEvent();
         }
 
         @Override

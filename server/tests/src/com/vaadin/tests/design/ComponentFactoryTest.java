@@ -117,7 +117,7 @@ public class ComponentFactoryTest {
         currentComponentFactory.set(new ComponentFactory() {
             @Override
             public Component createComponent(String fullyQualifiedClassName,
-                                             DesignContext context) {
+                    DesignContext context) {
                 classes.add(fullyQualifiedClassName);
                 return defaultFactory.createComponent(fullyQualifiedClassName,
                         context);
@@ -127,8 +127,10 @@ public class ComponentFactoryTest {
         DesignContext designContext = new DesignContext();
         designContext.getDefaultInstance(new DefaultInstanceTestComponent());
 
-        Assert.assertEquals("There should be one class requests", 1, classes.size());
-        Assert.assertEquals("First class should be DefaultInstanceTestComponent",
+        Assert.assertEquals("There should be one class requests", 1,
+                classes.size());
+        Assert.assertEquals(
+                "First class should be DefaultInstanceTestComponent",
                 DefaultInstanceTestComponent.class.getName(), classes.get(0));
     }
 

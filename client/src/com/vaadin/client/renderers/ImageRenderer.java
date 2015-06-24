@@ -42,8 +42,7 @@ public class ImageRenderer extends ClickableRenderer<String, Image> {
     public void render(RendererCellReference cell, String url, Image image) {
         if (url == null) {
             image.setUrl(TRANSPARENT_GIF_1PX);
-        }
-        else {
+        } else {
             image.setUrl(url);
         }
     }
