@@ -1647,8 +1647,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
-                actionMap.put(key + "_i", client.translateVaadinUri(action
-                        .getStringAttribute("icon")));
+                actionMap.put(key + "_i", action.getStringAttribute("icon"));
             } else {
                 actionMap.remove(key + "_i");
             }
@@ -1661,7 +1660,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     public String getActionIcon(String actionKey) {
-        return actionMap.get(actionKey + "_i");
+        return client.translateVaadinUri(actionMap.get(actionKey + "_i"));
     }
 
     private void updateHeader(String[] strings) {
