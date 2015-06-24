@@ -92,7 +92,7 @@ $v-notification-title-color: $v-focus-color !default;
     letter-spacing: 0;
   }
 
-  .#{$primary-stylename}-description {
+  .#{$primary-stylename}-description, .#{$primary-stylename}-details {
     margin: 0;
     display: inline-block;
     vertical-align: middle;
@@ -102,7 +102,8 @@ $v-notification-title-color: $v-focus-color !default;
     overflow: auto;
   }
 
-  .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description {
+  .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description,
+  .#{$primary-stylename}-caption ~ .#{$primary-stylename}-details {
     margin-left: round($v-font-size * 1.5);
   }
 
@@ -298,7 +299,7 @@ $v-notification-title-color: $v-focus-color !default;
   @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
   padding: round($v-unit-size/3) round($v-unit-size/2.5);
 
-  .#{$primary-style}-description {
+  .#{$primary-style}-description, .#{$primary-style}-details {
     max-width: 50em;
   }
 
@@ -348,7 +349,7 @@ $v-notification-title-color: $v-focus-color !default;
     vertical-align: middle;
   }
 
-  .#{$primary-style}-description {
+  .#{$primary-style}-description, .#{$primary-style}-details {
     color: #e6e6e6;
   }
 }

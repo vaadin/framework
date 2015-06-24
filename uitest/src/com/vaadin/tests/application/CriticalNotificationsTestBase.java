@@ -18,6 +18,8 @@ package com.vaadin.tests.application;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 public abstract class CriticalNotificationsTestBase extends
@@ -64,23 +66,13 @@ public abstract class CriticalNotificationsTestBase extends
     }
 
     @Test
-    public void authenticationError() throws Exception {
-        testCriticalNotification("Authentication error");
-    }
-
-    @Test
-    public void communicationError() throws Exception {
-        testCriticalNotification("Communication error");
-    }
-
-    @Test
     public void internalError() throws Exception {
         testCriticalNotification("Internal error");
     }
 
     @Test
-    public void cookiesDisabled() throws Exception {
-        testCriticalNotification("Cookies disabled");
+    public void internalErrorDetails() throws Exception {
+        testCriticalNotification("Internal error", true);
     }
 
     @Test
@@ -93,13 +85,27 @@ public abstract class CriticalNotificationsTestBase extends
         testCriticalNotification("Session expired");
     }
 
+    @Test
+    public void sessionExpiredDetails() throws Exception {
+        testCriticalNotification("Session expired", true);
+    }
+
     private void testCriticalNotification(String buttonCaption)
             throws Exception {
+        testCriticalNotification(buttonCaption, false);
+    }
+
+    private void testCriticalNotification(String buttonCaption,
+            boolean withDetails) throws Exception {
         openTestURL(); // "theme=" + getTheme());
+        if (withDetails) {
+            click($(CheckBoxElement.class).caption("Include details").first());
+        }
         $(ButtonElement.class).caption(buttonCaption).first().click();
         // Give the notification some time to animate
         sleep(1000);
-        compareScreen("notification");
+        compareScreen($(NotificationElement.class).first(),
+                "systemnotification");
     }
 
     @Override

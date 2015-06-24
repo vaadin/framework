@@ -65,6 +65,7 @@ public class VNotification extends VOverlay {
 
     public static final String CAPTION = "caption";
     public static final String DESCRIPTION = "description";
+    public static final String DETAILS = "details";
 
     /**
      * Position that is only accessible for assistive devices, invisible for
@@ -597,4 +598,85 @@ public class VNotification extends VOverlay {
             DOM.addEventPreview(notification);
         }
     }
+
+    /**
+     * Shows an error notification and redirects the user to the given URL when
+     * she clicks on the notification.
+     * 
+     * If both message and caption are null, redirects the user to the url
+     * immediately
+     * 
+     * @param connection
+     *            A reference to the ApplicationConnection
+     * @param caption
+     *            The caption for the error or null to exclude the caption
+     * @param message
+     *            The message for the error or null to exclude the message
+     * @param details
+     *            A details message or null to exclude the details
+     * @param url
+     *            A url to redirect to after the user clicks the error
+     *            notification
+     */
+    public static void showError(ApplicationConnection connection,
+            String caption, String message, String details, String url) {
+
+        StringBuilder html = new StringBuilder();
+        if (caption != null) {
+            html.append("<h1 class='");
+            html.append(getDependentStyle(connection, CAPTION));
+            html.append("'>");
+            html.append(caption);
+            html.append("</h1>");
+        }
+        if (message != null) {
+            html.append("<p class='");
+            html.append(getDependentStyle(connection, DESCRIPTION));
+            html.append("'>");
+            html.append(message);
+            html.append("</p>");
+        }
+
+        if (html.length() > 0) {
+
+            // Add error description
+            if (details != null) {
+                html.append("<p class='");
+                html.append(getDependentStyle(connection, DETAILS));
+                html.append("'>");
+                html.append("<i style=\"font-size:0.7em\">");
+                html.append(details);
+                html.append("</i></p>");
+            }
+
+            VNotification n = VNotification.createNotification(1000 * 60 * 45,
+                    connection.getUIConnector().getWidget());
+            n.addEventListener(new NotificationRedirect(url));
+            n.show(html.toString(), VNotification.CENTERED_TOP,
+                    VNotification.STYLE_SYSTEM);
+        } else {
+            ApplicationConnection.redirect(url);
+        }
+    }
+
+    /**
+     * Listens for Notification hide event, and redirects. Used for system
+     * messages, such as session expired.
+     * 
+     */
+    private static class NotificationRedirect implements
+            VNotification.EventListener {
+        String url;
+
+        NotificationRedirect(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void notificationHidden(HideEvent event) {
+            ApplicationConnection.redirect(url);
+        }
+
+    }
+
 }
