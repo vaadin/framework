@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.Sizeable;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -10,10 +11,10 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class SplitPanelWithMinimumAndMaximum extends TestBase {
+public class SplitPanelWithMinimumAndMaximum extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         TabSheet tabs = new TabSheet();
 
         VerticalLayout horizontalSplitsLayout = new VerticalLayout();
@@ -325,7 +326,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "SplitPanel could have setMaxSplitPosition and setMinSplitPosition methods as a way to set maximum and minimum limits for the split position. This is not a very critical feature but could be useful in some situations.";
     }
 
