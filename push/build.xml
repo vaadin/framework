@@ -26,7 +26,9 @@
     <union id="jar.includes">
         <fileset dir="${result.dir}/js">
             <include name="VAADIN/vaadinPush.js" />
+            <include name="VAADIN/vaadinPush.js.gz" />
             <include name="VAADIN/vaadinPush.debug.js" />
+            <include name="VAADIN/vaadinPush.debug.js.gz" />
         </fileset>
     </union>
 
@@ -77,6 +79,10 @@
             <arg file="${vaadinPush.js}" />
             <arg file="${vaadinPush.debug.js}" />
         </java>
+        
+        <!-- Gzipped versions -->
+        <gzip src="${vaadinPush.js}" destfile="${vaadinPush.js}.gz" />
+        <gzip src="${vaadinPush.debug.js}" destfile="${vaadinPush.debug.js}.gz" />
     </target>
 
     <target name="jar" depends="vaadinPush.js">
