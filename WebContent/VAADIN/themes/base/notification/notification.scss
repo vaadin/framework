@@ -11,7 +11,8 @@
 	filter: alpha(opacity=90);
 }
 .#{$primaryStyleName}-caption,
-.#{$primaryStyleName}-description {
+.#{$primaryStyleName}-description,
+.#{$primaryStyleName}-details {
 	display: inline;
 	margin: 0 0.5em 0 0;
 }

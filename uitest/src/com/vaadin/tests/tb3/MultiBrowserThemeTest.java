@@ -17,7 +17,10 @@ package com.vaadin.tests.tb3;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Test which uses theme returned by {@link #getTheme()} for running the test
@@ -27,9 +30,21 @@ public abstract class MultiBrowserThemeTest extends MultiBrowserTest {
     protected abstract String getTheme();
 
     @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
+
+    @Override
     protected void openTestURL(Class<?> uiClass, String... parameters) {
         Set<String> params = new HashSet<String>(Arrays.asList(parameters));
         params.add("theme=" + getTheme());
         super.openTestURL(uiClass, params.toArray(new String[params.size()]));
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsersToTest = getBrowsersExcludingPhantomJS();
+        browsersToTest.add(PHANTOMJS2());
+        return browsersToTest;
     }
 }
