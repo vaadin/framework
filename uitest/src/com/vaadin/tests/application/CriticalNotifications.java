@@ -26,15 +26,20 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 
 public class CriticalNotifications extends AbstractTestUI {
 
     private SystemMessages systemMessages;
+    private CheckBox includeDetails;
 
     @Override
     protected void setup(VaadinRequest request) {
         systemMessages = VaadinService.getCurrent().getSystemMessages(
                 getLocale(), request);
+
+        includeDetails = new CheckBox("Include details");
+        addComponent(includeDetails);
 
         Button sessionExpired = new Button("Session expired");
         addComponent(sessionExpired);
@@ -43,7 +48,8 @@ public class CriticalNotifications extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 showCriticalNotification(
                         systemMessages.getSessionExpiredCaption(),
-                        systemMessages.getSessionExpiredMessage(), null,
+                        systemMessages.getSessionExpiredMessage(),
+                        getDetailsMessage(),
                         systemMessages.getSessionExpiredURL());
 
             }
@@ -56,7 +62,8 @@ public class CriticalNotifications extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 showCriticalNotification(
                         systemMessages.getAuthenticationErrorCaption(),
-                        systemMessages.getAuthenticationErrorMessage(), null,
+                        systemMessages.getAuthenticationErrorMessage(),
+                        getDetailsMessage(),
                         systemMessages.getAuthenticationErrorURL());
 
             }
@@ -69,7 +76,8 @@ public class CriticalNotifications extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 showCriticalNotification(
                         systemMessages.getCommunicationErrorCaption(),
-                        systemMessages.getCommunicationErrorMessage(), null,
+                        systemMessages.getCommunicationErrorMessage(),
+                        getDetailsMessage(),
                         systemMessages.getCommunicationErrorURL());
 
             }
@@ -82,7 +90,8 @@ public class CriticalNotifications extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 showCriticalNotification(
                         systemMessages.getInternalErrorCaption(),
-                        systemMessages.getInternalErrorMessage(), null,
+                        systemMessages.getInternalErrorMessage(),
+                        getDetailsMessage(),
                         systemMessages.getInternalErrorURL());
 
             }
@@ -95,7 +104,8 @@ public class CriticalNotifications extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 showCriticalNotification(
                         systemMessages.getCookiesDisabledCaption(),
-                        systemMessages.getCookiesDisabledMessage(), null,
+                        systemMessages.getCookiesDisabledMessage(),
+                        getDetailsMessage(),
                         systemMessages.getCookiesDisabledURL());
 
             }
@@ -110,6 +120,14 @@ public class CriticalNotifications extends AbstractTestUI {
 
             }
         });
+    }
+
+    protected String getDetailsMessage() {
+        if (includeDetails.getValue()) {
+            return "Some details for the error";
+        } else {
+            return null;
+        }
     }
 
     protected void showCriticalNotification(String caption, String message,

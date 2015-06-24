@@ -1574,8 +1574,8 @@ public abstract class VaadinService implements Serializable {
             JsonObject appError = Json.createObject();
             putValueOrJsonNull(appError, "caption", caption);
             putValueOrJsonNull(appError, "url", url);
-            putValueOrJsonNull(appError, "message",
-                    createCriticalNotificationMessage(message, details));
+            putValueOrJsonNull(appError, "message", message);
+            putValueOrJsonNull(appError, "details", details);
 
             JsonObject meta = Json.createObject();
             meta.put("appError", appError);
@@ -1593,17 +1593,6 @@ public abstract class VaadinService implements Serializable {
         }
 
         return "for(;;);[" + returnString + "]";
-    }
-
-    private static String createCriticalNotificationMessage(String message,
-            String details) {
-        if (message == null) {
-            return details;
-        } else if (details != null) {
-            return message + "<br/><br/>" + details;
-        }
-
-        return message;
     }
 
     private static void putValueOrJsonNull(JsonObject json, String key,
