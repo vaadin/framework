@@ -66,11 +66,10 @@ public class NotificationStyleTest extends MultiBrowserTest {
         WebElement description = notification.findElement(By
                 .className("v-Notification-description"));
         String display = description.getCssValue("display");
-        String displayP2 = notification.findElement(
-                By.className("tested-p")).getCssValue("display");
+        String displayP2 = notification.findElement(By.className("tested-p"))
+                .getCssValue("display");
         Assert.assertNotEquals("Styles for notification defined 'p' tag "
-                + "and custom HTML tag are the same", display,
-                displayP2);
+                + "and custom HTML tag are the same", display, displayP2);
     }
 
     private ExpectedCondition<Boolean> notificationPresentCondition() {

@@ -534,8 +534,7 @@ public class GridBasicClientFeaturesWidget extends
                 public void onContextMenu(ContextMenuEvent event) {
                     event.preventDefault();
                     final String location;
-                    EventCellReference<?> cellRef = grid
-                            .getEventCell();
+                    EventCellReference<?> cellRef = grid.getEventCell();
                     if (cellRef.isHeader()) {
                         location = "header";
                     } else if (cellRef.isBody()) {

@@ -48,8 +48,8 @@ public abstract class AbstractListenerMethodsTestBase extends TestCase {
                         System.out.println("package " + packageName + ";");
 
                         System.out.println("import "
-                                + AbstractListenerMethodsTestBase.class.getName()
-                                + ";");
+                                + AbstractListenerMethodsTestBase.class
+                                        .getName() + ";");
                         System.out.println("import " + c.getName() + ";");
                         System.out.println("public class "
                                 + c.getSimpleName()

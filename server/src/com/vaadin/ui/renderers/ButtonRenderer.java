@@ -45,7 +45,8 @@ public class ButtonRenderer extends ClickableRenderer<String> {
      * @param nullRepresentation
      *            the textual representation of {@code null} value
      */
-    public ButtonRenderer(RendererClickListener listener, String nullRepresentation) {
+    public ButtonRenderer(RendererClickListener listener,
+            String nullRepresentation) {
         this(nullRepresentation);
         addClickListener(listener);
     }

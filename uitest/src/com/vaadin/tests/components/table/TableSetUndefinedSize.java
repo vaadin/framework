@@ -36,24 +36,27 @@ public class TableSetUndefinedSize extends AbstractTestUI {
     private HorizontalLayout createWidthButtons(final Table table) {
         HorizontalLayout layout = new HorizontalLayout();
 
-        layout.addComponent(new Button("width 500px", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setWidth("500px");
-            }
-        }));
-        layout.addComponent(new Button("width 100%", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setWidth("100%");
-            }
-        }));
-        layout.addComponent(new Button("undefined width", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setWidthUndefined();
-            }
-        }));
+        layout.addComponent(new Button("width 500px",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setWidth("500px");
+                    }
+                }));
+        layout.addComponent(new Button("width 100%",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setWidth("100%");
+                    }
+                }));
+        layout.addComponent(new Button("undefined width",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setWidthUndefined();
+                    }
+                }));
 
         return layout;
     }
@@ -61,30 +64,34 @@ public class TableSetUndefinedSize extends AbstractTestUI {
     private HorizontalLayout createHeigthButtons(final Table table) {
         HorizontalLayout layout = new HorizontalLayout();
 
-        layout.addComponent(new Button("height 200px", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setHeight("200px");
-            }
-        }));
-        layout.addComponent(new Button("height 300px", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setHeight("300px");
-            }
-        }));
-        layout.addComponent(new Button("height 100%", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setHeight("100%");
-            }
-        }));
-        layout.addComponent(new Button("undefined height", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setHeightUndefined();
-            }
-        }));
+        layout.addComponent(new Button("height 200px",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setHeight("200px");
+                    }
+                }));
+        layout.addComponent(new Button("height 300px",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setHeight("300px");
+                    }
+                }));
+        layout.addComponent(new Button("height 100%",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setHeight("100%");
+                    }
+                }));
+        layout.addComponent(new Button("undefined height",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        table.setHeightUndefined();
+                    }
+                }));
 
         return layout;
     }
@@ -96,7 +103,7 @@ public class TableSetUndefinedSize extends AbstractTestUI {
         table.addContainerProperty("column 2", String.class, "column 2 value");
         table.addContainerProperty("column 3", String.class, "column 3 value");
 
-        for(int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             table.addItem();
         }
 
