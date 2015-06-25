@@ -29,6 +29,8 @@ import java.util.Random;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
@@ -48,6 +50,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
@@ -132,6 +135,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         @Override
         public void itemClick(ItemClickEvent event) {
             grid.editItem(event.getItemId());
+        }
+    };
+
+    private ValueChangeListener reactiveValueChanger = new ValueChangeListener() {
+        @Override
+        @SuppressWarnings("unchecked")
+        public void valueChange(ValueChangeEvent event) {
+            Object id = grid.getEditedItemId();
+            grid.getContainerDataSource().getContainerProperty(id, "Column 2")
+                    .setValue("Modified");
         }
     };
 
@@ -660,6 +673,25 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             c.removeItemClickListener(editorOpeningItemClickListener);
                         } else {
                             c.addItemClickListener(editorOpeningItemClickListener);
+                        }
+                    }
+
+                });
+        createBooleanAction("ReactiveValueChanger", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        Field<?> targetField = grid.getEditorFieldGroup()
+                                .getField("Column 0");
+                        if (targetField != null) {
+                            if (!value) {
+                                targetField
+                                        .removeValueChangeListener(reactiveValueChanger);
+                            } else {
+                                targetField
+                                        .addValueChangeListener(reactiveValueChanger);
+                            }
                         }
                     }
 

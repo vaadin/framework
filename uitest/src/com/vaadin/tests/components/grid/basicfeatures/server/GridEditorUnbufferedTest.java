@@ -176,4 +176,22 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         assertEquals("Editor should edit row 100", "(100, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));
     }
+
+    @Test
+    public void testExternalValueChangePassesToEditor() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertEditorOpen();
+
+        selectMenuPath("Component", "State", "ReactiveValueChanger");
+
+        getEditorWidgets().get(0).click();
+        getEditorWidgets().get(0).sendKeys("changing value");
+
+        // Focus another field to cause the value to be sent to the server
+        getEditorWidgets().get(2).click();
+
+        assertEquals("Value of Column 2 in the editor was not changed",
+                "Modified", getEditorWidgets().get(2).getAttribute("value"));
+    }
+
 }
