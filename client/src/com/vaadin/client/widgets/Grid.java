@@ -1115,6 +1115,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
+        private static final String CURRENTLY_EDITING_CLASS_NAME = "editing";
 
         protected enum State {
             INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
@@ -1542,6 +1543,7 @@ public class Grid<T> extends ResizeComposite implements
 
             TableRowElement tr = grid.getEscalator().getBody()
                     .getRowElement(rowIndex);
+            tr.addClassName(CURRENTLY_EDITING_CLASS_NAME);
 
             scrollHandler = grid.addScrollHandler(new ScrollHandler() {
                 @Override
@@ -1647,7 +1649,6 @@ public class Grid<T> extends ResizeComposite implements
             if (editorOverlay.getParentElement() == null) {
                 return;
             }
-
             for (Widget w : columnToWidget.values()) {
                 setParent(w, null);
             }
@@ -1655,6 +1656,10 @@ public class Grid<T> extends ResizeComposite implements
 
             detachWidget(saveButton);
             detachWidget(cancelButton);
+
+            TableRowElement tr = grid.getEscalator().getBody()
+                    .getRowElement(rowIndex);
+            tr.removeClassName(CURRENTLY_EDITING_CLASS_NAME);
 
             editorOverlay.removeAllChildren();
             cellWrapper.removeAllChildren();

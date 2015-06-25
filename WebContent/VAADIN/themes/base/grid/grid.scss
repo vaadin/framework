@@ -189,6 +189,14 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   }
 
   // Rows
+  .#{$primaryStyleName}-row.editing {
+    > td {
+      background: $v-grid-editor-background-color;
+    }
+    &.#{$primaryStyleName}-row-selected > .v-grid-cell {
+      border-left: $v-grid-border;
+    }
+  }	
 
   .#{$primaryStyleName}-row > td,
   .#{$primaryStyleName}-editor-cells > div {
@@ -348,6 +356,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       @include box-sizing(border-box);
       vertical-align: middle;
       background: $v-grid-editor-background-color;
+
+      &.not-editable {
+        visibility: hidden;
+      }
 
       &:first-child {
         border-left: none;
