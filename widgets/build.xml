@@ -49,7 +49,7 @@
                 <include name="com/vaadin/client/Profiler.java" />
                 <include name="com/vaadin/client/StyleConstants.java" />
                 <include name="com/vaadin/client/WidgetUtil.java" />
-                <include name="com/vaadin/client/FocusUtil.java" />
+                <include name="com/vaadin/client/ui/FocusUtil.java" />
                 <include name="com/vaadin/client/data/**/*.java" />
                 <include name="com/vaadin/client/widget/**/*.java" />
                 <include name="com/vaadin/client/Focusable.java" />

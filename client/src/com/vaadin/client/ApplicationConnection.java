@@ -1768,7 +1768,8 @@ public class ApplicationConnection implements HasHandlers {
                     if (meta.containsKey("appError")) {
                         ValueMap error = meta.getValueMap("appError");
 
-                        showError(null, error.getString("caption"),
+                        showError(error.getString("details"),
+                                error.getString("caption"),
                                 error.getString("message"),
                                 error.getString("url"));
 

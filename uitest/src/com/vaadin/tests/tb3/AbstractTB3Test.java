@@ -1065,4 +1065,21 @@ public abstract class AbstractTB3Test extends ParallelTest {
         Assert.assertFalse("Element is present", isElementPresent(by));
     }
 
+    /**
+     * Asserts that no error notifications are shown. Requires the use of
+     * "?debug" as exceptions are otherwise not shown as notifications.
+     */
+    protected void assertNoErrorNotifications() {
+        Assert.assertTrue(
+                "Debug window must be open to be able to see error notifications",
+                isDebugWindowOpen());
+        Assert.assertFalse(
+                "Error notification with client side exception is shown",
+                isElementPresent(By.className("v-Notification-error")));
+    }
+
+    private boolean isDebugWindowOpen() {
+        return isElementPresent(By.className("v-debugwindow"));
+    }
+
 }

@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,22 +83,44 @@ public class UidlWriter implements Serializable {
         // to write out
         service.runPendingAccessTasks(session);
 
-        ArrayList<ClientConnector> dirtyVisibleConnectors = ui
-                .getConnectorTracker().getDirtyVisibleConnectors();
+        Set<ClientConnector> processedConnectors = new HashSet<ClientConnector>();
+
         LegacyCommunicationManager manager = session.getCommunicationManager();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
 
+        while (true) {
+            ArrayList<ClientConnector> connectorsToProcess = new ArrayList<ClientConnector>();
+            for (ClientConnector c : uiConnectorTracker.getDirtyConnectors()) {
+                if (!processedConnectors.contains(c)
+                        && LegacyCommunicationManager
+                                .isConnectorVisibleToClient(c)) {
+                    connectorsToProcess.add(c);
+                }
+            }
+
+            if (connectorsToProcess.isEmpty()) {
+                break;
+            }
+
+            for (ClientConnector connector : connectorsToProcess) {
+                boolean initialized = uiConnectorTracker
+                        .isClientSideInitialized(connector);
+                processedConnectors.add(connector);
+
+                try {
+                    connector.beforeClientResponse(!initialized);
+                } catch (RuntimeException e) {
+                    manager.handleConnectorRelatedException(connector, e);
+                }
+            }
+        }
+
         getLogger().log(
                 Level.FINE,
-                "Found " + dirtyVisibleConnectors.size()
+                "Found " + processedConnectors.size()
                         + " dirty connectors to paint");
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            boolean initialized = uiConnectorTracker
-                    .isClientSideInitialized(connector);
-            connector.beforeClientResponse(!initialized);
-        }
 
         uiConnectorTracker.setWritingResponse(true);
         try {
@@ -292,7 +316,7 @@ public class UidlWriter implements Serializable {
 
             session.getDragAndDropService().printJSONResponse(writer);
 
-            for (ClientConnector connector : dirtyVisibleConnectors) {
+            for (ClientConnector connector : processedConnectors) {
                 uiConnectorTracker.markClientSideInitialized(connector);
             }
 

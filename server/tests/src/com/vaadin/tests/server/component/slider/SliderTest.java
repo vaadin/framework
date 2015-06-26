@@ -88,7 +88,7 @@ public class SliderTest {
 
     @Test
     public void valuesGreaterThanIntMaxValueCanBeUsed() {
-        double minValue = (double)Integer.MAX_VALUE + 1;
+        double minValue = (double) Integer.MAX_VALUE + 1;
 
         Slider s = new Slider(minValue, minValue + 1, 0);
 

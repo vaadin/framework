@@ -7,7 +7,8 @@ import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.ComboBox;
 
-public class AbstractSelectListenersTest extends AbstractListenerMethodsTestBase {
+public class AbstractSelectListenersTest extends
+        AbstractListenerMethodsTestBase {
     public void testItemSetChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(ComboBox.class, ItemSetChangeEvent.class,
                 ItemSetChangeListener.class);

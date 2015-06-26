@@ -28,7 +28,8 @@ public class HtmlRenderer extends AbstractRenderer<String> {
     /**
      * Creates a new HTML renderer.
      *
-     * @param nullRepresentation the html representation of {@code null} value
+     * @param nullRepresentation
+     *            the html representation of {@code null} value
      */
     public HtmlRenderer(String nullRepresentation) {
         super(String.class, nullRepresentation);

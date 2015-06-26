@@ -79,6 +79,7 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Client side implementation of the Select component.
@@ -98,7 +99,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         private final String key;
         private final String caption;
-        private String iconUri;
+        private String untranslatedIconUri;
 
         /**
          * Constructor
@@ -110,8 +111,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             key = uidl.getStringAttribute("key");
             caption = uidl.getStringAttribute("caption");
             if (uidl.hasAttribute("icon")) {
-                iconUri = client.translateVaadinUri(uidl
-                        .getStringAttribute("icon"));
+                untranslatedIconUri = uidl.getStringAttribute("icon");
             }
         }
 
@@ -124,7 +124,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
-            final Icon icon = client.getIcon(iconUri);
+            final Icon icon = client.getIcon(client
+                    .translateVaadinUri(untranslatedIconUri));
             if (icon != null) {
                 sb.append(icon.getElement().getString());
             }
@@ -164,7 +165,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @return
          */
         public String getIconUri() {
-            return iconUri;
+            return client.translateVaadinUri(untranslatedIconUri);
         }
 
         /**
@@ -190,8 +191,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     || (caption != null && !caption.equals(other.caption))) {
                 return false;
             }
-            if ((iconUri == null && other.iconUri != null)
-                    || (iconUri != null && !iconUri.equals(other.iconUri))) {
+            if (!SharedUtil.equals(untranslatedIconUri,
+                    other.untranslatedIconUri)) {
                 return false;
             }
             return true;

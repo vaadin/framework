@@ -104,6 +104,9 @@
             <jvmarg value="-Djava.awt.headless=true" />
         </java>
 
+        <!-- Compress theme to serve using gzip -->
+        <gzip src="${theme.result.dir}/${theme}/styles.css"
+            destfile="${theme.result.dir}/${theme}/styles.css.gz" />
     </target>
 
 

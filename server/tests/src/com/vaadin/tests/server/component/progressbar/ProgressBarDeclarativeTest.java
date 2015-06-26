@@ -29,7 +29,7 @@ public class ProgressBarDeclarativeTest extends
         DeclarativeTestBase<ProgressBar> {
 
     public String getBasicDesign() {
-        return "<v-progress-bar value=0.5 indeterminate='true'>";
+        return "<v-progress-bar value=0.5 indeterminate=''>";
 
     }
 

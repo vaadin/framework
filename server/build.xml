@@ -22,9 +22,17 @@
         <fileset dir="${vaadin.basedir}/WebContent">
             <include name="VAADIN/vaadinBootstrap.js" />
         </fileset>
+        <fileset dir="${result.dir}">
+            <include name="VAADIN/*" />
+        </fileset>
     </union>
 
-    <target name="jar">
+    <target name="compress-files">
+        <mkdir dir="${result.dir}/VAADIN" />
+        <gzip src="${vaadin.basedir}/WebContent/VAADIN/vaadinBootstrap.js"
+            destfile="${result.dir}/VAADIN/vaadinBootstrap.js.gz" />
+    </target>
+    <target name="jar" depends="compress-files">
         <property name="server.osgi.import"
             value="javax.servlet;version=&quot;2.4.0&quot;,javax.servlet.http;version=&quot;2.4.0&quot;,javax.validation;version=&quot;1.0.0.GA&quot;;resolution:=optional,org.jsoup;version=&quot;1.6.3&quot;,org.jsoup.parser;version=&quot;1.6.3&quot;,org.jsoup.nodes;version=&quot;1.6.3&quot;,org.jsoup.helper;version=&quot;1.6.3&quot;,org.jsoup.safety;version=&quot;1.6.3&quot;,org.jsoup.select;version=&quot;1.6.3&quot;" />
         <property name="server.osgi.require"

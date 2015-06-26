@@ -23,8 +23,10 @@ import org.openqa.selenium.Dimension;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+@TestCategory("grid")
 public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
 
     private GridElement grid;

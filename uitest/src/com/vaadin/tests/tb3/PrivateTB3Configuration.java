@@ -97,7 +97,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         super.setup();
     }
 
-    private static DesiredCapabilities getRunLocallyCapabilities() {
+    protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
             return factory.create(Browser.valueOf(properties.getProperty(
@@ -159,7 +159,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         return getConfiguredDeploymentHostname();
     }
 
-    private boolean isRunLocally() {
+    protected boolean isRunLocally() {
         if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
             return true;
         }

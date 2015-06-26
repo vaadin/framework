@@ -1170,16 +1170,16 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         // first try the full shorthands
         if (widthFull && heightFull) {
-            attributes.put("size-full", "true");
+            attributes.put("size-full", "");
         } else if (widthAuto && heightAuto) {
-            attributes.put("size-auto", "true");
+            attributes.put("size-auto", "");
         } else {
             // handle width
             if (!hasEqualWidth(defaultInstance)) {
                 if (widthFull) {
-                    attributes.put("width-full", "true");
+                    attributes.put("width-full", "");
                 } else if (widthAuto) {
-                    attributes.put("width-auto", "true");
+                    attributes.put("width-auto", "");
                 } else {
                     String widthString = DesignAttributeHandler.getFormatter()
                             .format(getWidth()) + getWidthUnits().getSymbol();
@@ -1190,9 +1190,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
             if (!hasEqualHeight(defaultInstance)) {
                 // handle height
                 if (heightFull) {
-                    attributes.put("height-full", "true");
+                    attributes.put("height-full", "");
                 } else if (heightAuto) {
-                    attributes.put("height-auto", "true");
+                    attributes.put("height-auto", "");
                 } else {
                     String heightString = DesignAttributeHandler.getFormatter()
                             .format(getHeight()) + getHeightUnits().getSymbol();

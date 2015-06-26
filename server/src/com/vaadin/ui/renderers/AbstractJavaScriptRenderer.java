@@ -105,7 +105,8 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
-    protected AbstractJavaScriptRenderer(Class<T> presentationType, String nullRepresentation) {
+    protected AbstractJavaScriptRenderer(Class<T> presentationType,
+            String nullRepresentation) {
         super(presentationType, nullRepresentation);
     }
 

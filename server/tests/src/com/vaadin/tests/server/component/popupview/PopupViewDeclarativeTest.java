@@ -48,7 +48,7 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
         component.setHideOnMouseOut(true);
         component.setPopupVisible(true);
         // hide-on-mouse-out is true by default. not seen in design
-        String design = "<v-popup-view popup-visible='true'>" //
+        String design = "<v-popup-view popup-visible=''>" //
                 + "Click <u>here</u> to open"
                 + "<popup-content>"
                 + new DesignContext().createElement(verticalLayout)

@@ -38,9 +38,7 @@ public class ReadOnlyOptionGroupTest extends MultiBrowserTest {
         WebElement checkboxInput = checkbox.findElement(By.tagName("input"));
         checkboxInput.click();
 
-        Assert.assertFalse("There is a client side exception after unset "
-                + "readonly mode for option group",
-                isElementPresent(By.className("v-Notification-error")));
+        assertNoErrorNotifications();
 
         Assert.assertFalse("Radio button in option group is still disabled "
                 + "after unset reaonly",

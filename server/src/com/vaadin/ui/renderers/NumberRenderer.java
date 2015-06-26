@@ -69,7 +69,7 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * @param nullRepresentation
      *            the textual representation of {@code null} value
      * @throws IllegalArgumentException
-     *            if {@code numberFormat} is {@code null}
+     *             if {@code numberFormat} is {@code null}
      */
     public NumberRenderer(NumberFormat numberFormat, String nullRepresentation)
             throws IllegalArgumentException {
@@ -112,8 +112,10 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * @throws IllegalArgumentException
      *             if {@code locale} is {@code null}
      */
-    public NumberRenderer(String formatString, Locale locale) throws IllegalArgumentException {
-        this(formatString, locale, "");  //This will call #toString() during formatting
+    public NumberRenderer(String formatString, Locale locale)
+            throws IllegalArgumentException {
+        this(formatString, locale, ""); // This will call #toString() during
+                                        // formatting
     }
 
     /**
@@ -122,8 +124,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * The renderer is configured to render with the given format string in the
      * default locale.
      *
-     * @param
-     *            formatString the format string with which to format the number
+     * @param formatString
+     *            the format string with which to format the number
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
      * @see <a
@@ -150,7 +152,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
      *      String Syntax</a>
      */
-    public NumberRenderer(String formatString, Locale locale, String nullRepresentation) {
+    public NumberRenderer(String formatString, Locale locale,
+            String nullRepresentation) {
         super(Number.class, nullRepresentation);
 
         if (formatString == null) {

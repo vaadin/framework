@@ -129,11 +129,37 @@ public class ComputedStyle {
         
     }-*/;
 
+    /**
+     * Retrieves the given computed property as an integer
+     *
+     * Returns 0 if the property cannot be converted to an integer
+     * 
+     * @param name
+     *            the property to retrieve
+     * @return the integer value of the property or 0
+     */
     public final int getIntProperty(String name) {
         Profiler.enter("ComputedStyle.getIntProperty");
         String value = getProperty(name);
         int result = parseIntNative(value);
         Profiler.leave("ComputedStyle.getIntProperty");
+        return result;
+    }
+
+    /**
+     * Retrieves the given computed property as a double
+     *
+     * Returns NaN if the property cannot be converted to a double
+     * 
+     * @param name
+     *            the property to retrieve
+     * @return the double value of the property
+     */
+    public final int getDoubleProperty(String name) {
+        Profiler.enter("ComputedStyle.getDoubleProperty");
+        String value = getProperty(name);
+        int result = parseDoubleNative(value);
+        Profiler.leave("ComputedStyle.getDoubleProperty");
         return result;
     }
 
@@ -174,6 +200,26 @@ public class ComputedStyle {
         border[2] = getIntProperty("borderBottomWidth");
         border[3] = getIntProperty("borderLeftWidth");
         return border;
+    }
+
+    /**
+     * Returns the current width from the DOM.
+     * 
+     * @since
+     * @return the computed width
+     */
+    public double getWidth() {
+        return getDoubleProperty("width");
+    }
+
+    /**
+     * Returns the current height from the DOM.
+     * 
+     * @since
+     * @return the computed height
+     */
+    public double getHeight() {
+        return getDoubleProperty("height");
     }
 
     /**
@@ -219,6 +265,19 @@ public class ComputedStyle {
             return 0;
         else
             return number;
+    }-*/;
+
+    /**
+     * Takes a String value e.g. "12.3px" and parses that to a double, 12.3.
+     * 
+     * @param String
+     *            a value starting with a number
+     * @return the value from the string before any non-numeric characters or
+     *         NaN if the value cannot be parsed as a number
+     */
+    private static native int parseDoubleNative(final String value)
+    /*-{
+        return parseFloat(value);
     }-*/;
 
 }
