@@ -3248,7 +3248,6 @@ public class Grid<T> extends ResizeComposite implements
                 clickOutsideToCloseHandlerRegistration = Event
                         .addNativePreviewHandler(clickOutsideToCloseHandler);
             }
-            openCloseButton.setHeight("");
         }
 
         /**

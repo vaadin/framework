@@ -30,20 +30,19 @@
   
   // Sidebar
   .#{$primaryStyleName}-sidebar.v-contextmenu {
-    &.open {
-      .#{$primaryStyleName}-sidebar-button {
-        &:after {
-          font-size: 22px;
-        }
-      }
-    }
-        
+
     .#{$primaryStyleName}-sidebar-content {
       background-color: transparent;
       
       .gwt-MenuBar {
         border: none;
       }
+    }
+
+    .v-on:before, .v-off:before {
+      content: none;
+      font-size: 0;
+      margin-right: 0;
     }
   }
 
