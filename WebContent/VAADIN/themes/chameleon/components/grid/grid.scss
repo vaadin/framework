@@ -1,0 +1,12 @@
+@mixin chameleon-grid($primaryStyleName: v-grid) {
+
+  // Sidebar
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+
+    .v-on:before, .v-off:before {
+      content: none;
+      font-size: 0;
+      margin-right: 0;
+    }
+  }
+}
