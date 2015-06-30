@@ -1816,20 +1816,23 @@ public class Escalator extends Widget implements RequiresResize,
         public void reapplyColumnWidths() {
             Element row = root.getFirstChildElement();
             while (row != null) {
-                Element cell = row.getFirstChildElement();
-                int columnIndex = 0;
-                while (cell != null) {
-                    final double width = getCalculatedColumnWidthWithColspan(
-                            cell, columnIndex);
+                // Only handle non-spacer rows
+                if (!body.spacerContainer.isSpacer(row)) {
+                    Element cell = row.getFirstChildElement();
+                    int columnIndex = 0;
+                    while (cell != null) {
+                        final double width = getCalculatedColumnWidthWithColspan(
+                                cell, columnIndex);
 
-                    /*
-                     * TODO Should Escalator implement ProvidesResize at some
-                     * point, this is where we need to do that.
-                     */
-                    cell.getStyle().setWidth(width, Unit.PX);
+                        /*
+                         * TODO Should Escalator implement ProvidesResize at
+                         * some point, this is where we need to do that.
+                         */
+                        cell.getStyle().setWidth(width, Unit.PX);
 
-                    cell = cell.getNextSiblingElement();
-                    columnIndex++;
+                        cell = cell.getNextSiblingElement();
+                        columnIndex++;
+                    }
                 }
                 row = row.getNextSiblingElement();
             }
@@ -4795,7 +4798,7 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /** Checks if a given element is a spacer element */
-        public boolean isSpacer(TableRowElement focusedRow) {
+        public boolean isSpacer(Element row) {
 
             /*
              * If this needs optimization, we could do a more heuristic check
@@ -4804,7 +4807,7 @@ public class Escalator extends Widget implements RequiresResize,
              */
 
             for (SpacerImpl spacer : rowIndexToSpacer.values()) {
-                if (spacer.getRootElement().equals(focusedRow)) {
+                if (spacer.getRootElement().equals(row)) {
                     return true;
                 }
             }
