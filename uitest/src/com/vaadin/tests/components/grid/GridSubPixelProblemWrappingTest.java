@@ -15,27 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> l = super.getBrowsersToTest();
-        // Currently broken because of #18214
-        l.remove(Browser.IE9.getDesiredCapabilities());
-        return l;
-    }
 
     @Test
     public void addedRowShouldNotWrap() {
