@@ -6560,23 +6560,22 @@ public class Grid<T> extends ResizeComposite implements
         int currentX = WidgetUtil.getTouchOrMouseClientX(event);
         int currentY = WidgetUtil.getTouchOrMouseClientY(event);
 
-        final boolean validTouchOpenEvent = event.getTypeInt() == Event.ONTOUCHEND
+        final boolean validTouchOpenEvent = type == Event.ONTOUCHEND
                 && now - lastTouchEventTime < 500
                 && lastTouchEventRow == eventCell.getRowIndex()
                 && Math.abs(lastTouchEventX - currentX) < 20
                 && Math.abs(lastTouchEventY - currentY) < 20;
 
         final boolean openEvent = eventCell.isBody()
-                && (event.getTypeInt() == Event.ONDBLCLICK
-                        || (event.getTypeInt() == Event.ONKEYDOWN && event
-                                .getKeyCode() == Editor.KEYCODE_SHOW) || validTouchOpenEvent);
+                && (type == Event.ONDBLCLICK
+                        || (type == Event.ONKEYDOWN && key == Editor.KEYCODE_SHOW) || validTouchOpenEvent);
 
-        if (event.getTypeInt() == Event.ONTOUCHSTART) {
+        if (type == Event.ONTOUCHSTART) {
             lastTouchEventX = currentX;
             lastTouchEventY = currentY;
         }
 
-        if (event.getTypeInt() == Event.ONTOUCHEND) {
+        if (type == Event.ONTOUCHEND) {
             lastTouchEventTime = now;
             lastTouchEventRow = eventCell.getRowIndex();
         }
