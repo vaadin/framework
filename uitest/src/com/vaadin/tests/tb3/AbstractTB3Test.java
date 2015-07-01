@@ -114,6 +114,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
 
+    protected static DesiredCapabilities PHANTOMJS2() {
+        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory().create(
+                Browser.PHANTOMJS, "2");
+        // Hack for the test cluster
+        phantomjs2
+                .setCapability("phantomjs.binary.path", "/usr/bin/phantomjs2");
+        return phantomjs2;
+    }
+
     private boolean debug = false;
 
     private boolean push = false;
@@ -956,7 +965,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected void click(CheckBoxElement checkbox) {
-        checkbox.findElement(By.xpath("input")).click();
+        WebElement cb = checkbox.findElement(By.xpath("input"));
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            testBenchElement(cb).click(0, 0);
+        } else {
+            cb.click();
+        }
     }
 
     protected boolean isLoadingIndicatorVisible() {

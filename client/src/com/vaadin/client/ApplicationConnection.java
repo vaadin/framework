@@ -90,7 +90,6 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VNotification;
-import com.vaadin.client.ui.VNotification.HideEvent;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
@@ -1233,7 +1232,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the communication error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      * @param statusCode
      *            The status code returned for the request
      * 
@@ -1247,7 +1246,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the authentication error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      */
     protected void showAuthenticationError(String details) {
         getLogger().severe("Authentication error: " + details);
@@ -1258,7 +1257,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the session expiration notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      */
     public void showSessionExpiredError(String details) {
         getLogger().severe("Session expired: " + details);
@@ -1269,59 +1268,13 @@ public class ApplicationConnection implements HasHandlers {
      * Shows an error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      * @param message
      *            An ErrorMessage describing the error.
      */
     protected void showError(String details, ErrorMessage message) {
-        showError(details, message.getCaption(), message.getMessage(),
-                message.getUrl());
-    }
-
-    /**
-     * Shows the error notification.
-     * 
-     * @param details
-     *            Optional details for debugging.
-     */
-    private void showError(String details, String caption, String message,
-            String url) {
-
-        StringBuilder html = new StringBuilder();
-        if (caption != null) {
-            html.append("<h1 class='");
-            html.append(VNotification.getDependentStyle(this,
-                    VNotification.CAPTION));
-            html.append("'>");
-            html.append(caption);
-            html.append("</h1>");
-        }
-        if (message != null) {
-            html.append("<p class='");
-            html.append(VNotification.getDependentStyle(this,
-                    VNotification.DESCRIPTION));
-            html.append("'>");
-            html.append(message);
-            html.append("</p>");
-        }
-
-        if (html.length() > 0) {
-
-            // Add error description
-            if (details != null) {
-                html.append("<p><i style=\"font-size:0.7em\">");
-                html.append(details);
-                html.append("</i></p>");
-            }
-
-            VNotification n = VNotification.createNotification(1000 * 60 * 45,
-                    uIConnector.getWidget());
-            n.addEventListener(new NotificationRedirect(url));
-            n.show(html.toString(), VNotification.CENTERED_TOP,
-                    VNotification.STYLE_SYSTEM);
-        } else {
-            redirect(url);
-        }
+        VNotification.showError(this, message.getCaption(),
+                message.getMessage(), details, message.getUrl());
     }
 
     protected void startRequest() {
@@ -1768,9 +1721,10 @@ public class ApplicationConnection implements HasHandlers {
                     if (meta.containsKey("appError")) {
                         ValueMap error = meta.getValueMap("appError");
 
-                        showError(error.getString("details"),
+                        VNotification.showError(ApplicationConnection.this,
                                 error.getString("caption"),
                                 error.getString("message"),
+                                error.getString("details"),
                                 error.getString("url"));
 
                         setApplicationRunning(false);
@@ -2746,7 +2700,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     // Redirect browser, null reloads current page
-    private static native void redirect(String url)
+    public static native void redirect(String url)
     /*-{
     	if (url) {
     		$wnd.location = url;
@@ -3363,25 +3317,6 @@ public class ApplicationConnection implements HasHandlers {
     public String getThemeUri() {
         return configuration.getVaadinDirUrl() + "themes/"
                 + getUIConnector().getActiveTheme();
-    }
-
-    /**
-     * Listens for Notification hide event, and redirects. Used for system
-     * messages, such as session expired.
-     * 
-     */
-    private class NotificationRedirect implements VNotification.EventListener {
-        String url;
-
-        NotificationRedirect(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void notificationHidden(HideEvent event) {
-            redirect(url);
-        }
-
     }
 
     /* Extended title handling */

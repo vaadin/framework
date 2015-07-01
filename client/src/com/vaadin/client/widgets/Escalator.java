@@ -803,7 +803,24 @@ public class Escalator extends Widget implements RequiresResize,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-                
+
+                // Delta mode 0 is in pixels; we don't need to do anything...
+
+                // A delta mode of 1 means we're scrolling by lines instead of pixels
+                // We need to scale the number of lines by the default line height
+                if(e.deltaMode === 1) {
+                    var brc = esc.@com.vaadin.client.widgets.Escalator::body;
+                    deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
+                }
+
+                // Other delta modes aren't supported
+                if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
+                    var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
+
+                    // Print warning message
+                    esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
+                }
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
@@ -1799,20 +1816,23 @@ public class Escalator extends Widget implements RequiresResize,
         public void reapplyColumnWidths() {
             Element row = root.getFirstChildElement();
             while (row != null) {
-                Element cell = row.getFirstChildElement();
-                int columnIndex = 0;
-                while (cell != null) {
-                    final double width = getCalculatedColumnWidthWithColspan(
-                            cell, columnIndex);
+                // Only handle non-spacer rows
+                if (!body.spacerContainer.isSpacer(row)) {
+                    Element cell = row.getFirstChildElement();
+                    int columnIndex = 0;
+                    while (cell != null) {
+                        final double width = getCalculatedColumnWidthWithColspan(
+                                cell, columnIndex);
 
-                    /*
-                     * TODO Should Escalator implement ProvidesResize at some
-                     * point, this is where we need to do that.
-                     */
-                    cell.getStyle().setWidth(width, Unit.PX);
+                        /*
+                         * TODO Should Escalator implement ProvidesResize at
+                         * some point, this is where we need to do that.
+                         */
+                        cell.getStyle().setWidth(width, Unit.PX);
 
-                    cell = cell.getNextSiblingElement();
-                    columnIndex++;
+                        cell = cell.getNextSiblingElement();
+                        columnIndex++;
+                    }
                 }
                 row = row.getNextSiblingElement();
             }
@@ -4778,7 +4798,7 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /** Checks if a given element is a spacer element */
-        public boolean isSpacer(TableRowElement focusedRow) {
+        public boolean isSpacer(Element row) {
 
             /*
              * If this needs optimization, we could do a more heuristic check
@@ -4787,7 +4807,7 @@ public class Escalator extends Widget implements RequiresResize,
              */
 
             for (SpacerImpl spacer : rowIndexToSpacer.values()) {
-                if (spacer.getRootElement().equals(focusedRow)) {
+                if (spacer.getRootElement().equals(row)) {
                     return true;
                 }
             }
@@ -6699,5 +6719,9 @@ public class Escalator extends Widget implements RequiresResize,
 
     private String getSubPartNameSpacer(Element subElement) {
         return body.spacerContainer.getSubPartName(subElement);
+    }
+
+    private void logWarning(String message) {
+        getLogger().warning(message);
     }
 }

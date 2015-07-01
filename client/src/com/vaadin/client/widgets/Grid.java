@@ -2242,6 +2242,41 @@ public class Grid<T> extends ResizeComposite implements
                         return;
                     }
                     break;
+                case KeyCodes.KEY_HOME:
+                    if (newContainer.getRowCount() > 0) {
+                        newRow = 0;
+                    }
+                    break;
+                case KeyCodes.KEY_END:
+                    if (newContainer.getRowCount() > 0) {
+                        newRow = newContainer.getRowCount() - 1;
+                    }
+                    break;
+                case KeyCodes.KEY_PAGEDOWN:
+                case KeyCodes.KEY_PAGEUP:
+                    if (newContainer.getRowCount() > 0) {
+                        boolean down = event.getKeyCode() == KeyCodes.KEY_PAGEDOWN;
+                        // If there is a visible focused cell, scroll by one
+                        // page from its position. Otherwise, use the first or
+                        // the last visible row as the scroll start position.
+                        // This avoids jumping when using both keyboard and the
+                        // scroll bar for scrolling.
+                        int firstVisible = getFirstVisibleRowIndex();
+                        int lastVisible = getLastVisibleRowIndex();
+                        if (newRow < firstVisible || newRow > lastVisible) {
+                            newRow = down ? lastVisible : firstVisible;
+                        }
+                        // Scroll by a little less than the visible area to
+                        // account for the possibility that the top and the
+                        // bottom row are only partially visible.
+                        int moveFocusBy = Math.max(1, lastVisible
+                                - firstVisible - 1);
+                        moveFocusBy *= down ? 1 : -1;
+                        newRow += moveFocusBy;
+                        newRow = Math.max(0, Math.min(
+                                newContainer.getRowCount() - 1, newRow));
+                    }
+                    break;
                 default:
                     return;
                 }
@@ -2646,6 +2681,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /** @see Grid#autoColumnWidthsRecalculator */
     private class AutoColumnWidthsRecalculator {
+        private double lastCalculatedInnerWidth = -1;
 
         private final ScheduledCommand calculateCommand = new ScheduledCommand() {
 
@@ -2680,6 +2716,7 @@ public class Grid<T> extends ResizeComposite implements
                 } else {
                     calculate();
                 }
+                lastCalculatedInnerWidth = escalator.getInnerWidth();
             }
         };
 
@@ -6492,10 +6529,6 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            if (handleNavigationEvent(event, container)) {
-                return;
-            }
-
             if (handleCellFocusEvent(event, container)) {
                 return;
             }
@@ -6648,56 +6681,6 @@ public class Grid<T> extends ResizeComposite implements
             cellFocusHandler.handleNavigationEvent(event, eventCell);
         }
         return false;
-    }
-
-    private boolean handleNavigationEvent(Event event, RowContainer unused) {
-        if (!event.getType().equals(BrowserEvents.KEYDOWN)) {
-            // Only handle key downs
-            return false;
-        }
-
-        int newRow = -1;
-        RowContainer container = escalator.getBody();
-        switch (event.getKeyCode()) {
-        case KeyCodes.KEY_HOME:
-            if (container.getRowCount() > 0) {
-                newRow = 0;
-            }
-            break;
-        case KeyCodes.KEY_END:
-            if (container.getRowCount() > 0) {
-                newRow = container.getRowCount() - 1;
-            }
-            break;
-        case KeyCodes.KEY_PAGEUP: {
-            Range range = escalator.getVisibleRowRange();
-            if (!range.isEmpty()) {
-                int firstIndex = getFirstVisibleRowIndex();
-                newRow = firstIndex - range.length();
-                if (newRow < 0) {
-                    newRow = 0;
-                }
-            }
-            break;
-        }
-        case KeyCodes.KEY_PAGEDOWN: {
-            Range range = escalator.getVisibleRowRange();
-            if (!range.isEmpty()) {
-                int lastIndex = getLastVisibleRowIndex();
-                newRow = lastIndex + range.length();
-                if (newRow >= container.getRowCount()) {
-                    newRow = container.getRowCount() - 1;
-                }
-            }
-            break;
-        }
-        default:
-            return false;
-        }
-
-        scrollToRow(newRow);
-
-        return true;
     }
 
     private boolean handleHeaderCellDragStartEvent(Event event,
@@ -7807,7 +7790,10 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             public void execute() {
-                recalculateColumnWidths();
+                if (escalator.getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
+                    recalculateColumnWidths();
+                }
+
                 // Vertical resizing could make editor positioning invalid so it
                 // needs to be recalculated on resize
                 if (isEditorActive()) {

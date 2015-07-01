@@ -55,6 +55,8 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
 
     @Override
     public DesiredCapabilities create(Browser browser, String version) {
-        return create(browser);
+        DesiredCapabilities capabilities = create(browser);
+        capabilities.setVersion(version);
+        return capabilities;
     }
 }
