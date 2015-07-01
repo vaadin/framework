@@ -270,13 +270,17 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             controls.addComponent(new Label("width"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "width")));
-            controls.addComponent(new CheckBox("%",
-                    new MethodProperty<Boolean>(this, "widthPercents")));
+            CheckBox widthPercentsCheckBox = new CheckBox("%",
+                    new MethodProperty<Boolean>(this, "widthPercents"));
+            widthPercentsCheckBox.setImmediate(true);
+            controls.addComponent(widthPercentsCheckBox);
             controls.addComponent(new Label("height"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "height")));
-            controls.addComponent(new CheckBox("%",
-                    new MethodProperty<Boolean>(this, "heightPercents")));
+            CheckBox heightPercentsCheckBox = new CheckBox("%",
+                    new MethodProperty<Boolean>(this, "heightPercents"));
+            heightPercentsCheckBox.setImmediate(true);
+            controls.addComponent(heightPercentsCheckBox);
             controls.addComponent(marginLeft);
             controls.addComponent(marginRight);
             controls.addComponent(marginTop);
