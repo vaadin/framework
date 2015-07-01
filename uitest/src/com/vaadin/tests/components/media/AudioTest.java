@@ -50,15 +50,19 @@ public class AudioTest extends TestBase {
 
         CheckBox checkBox = new CheckBox("Show controls",
                 new MethodProperty<Boolean>(audio, "showControls"));
+        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("HtmlContentAllowed",
                 new MethodProperty<Boolean>(audio, "htmlContentAllowed"));
+        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("muted", new MethodProperty<Boolean>(audio,
                 "muted"));
+        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("autoplay", new MethodProperty<Boolean>(audio,
                 "autoplay"));
+        checkBox.setImmediate(true);
         addComponent(checkBox);
 
         Button b = new Button("Change", new Button.ClickListener() {
