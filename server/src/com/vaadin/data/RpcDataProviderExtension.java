@@ -927,6 +927,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     listener.removeListener();
                 }
 
+                // Wipe clean all details.
+                HashSet<Object> detailItemIds = new HashSet<Object>(
+                        detailComponentManager.visibleDetailsComponents
+                                .keySet());
+                for (Object itemId : detailItemIds) {
+                    detailComponentManager.destroyDetails(itemId);
+                }
+
                 listeners.clear();
                 activeRowHandler.activeRange = Range.withLength(0, 0);
 

@@ -5972,6 +5972,12 @@ public class Grid<T> extends ResizeComposite implements
                 RowContainer body = escalator.getBody();
                 int oldSize = body.getRowCount();
 
+                // Hide all details.
+                Set<Integer> oldDetails = new HashSet<Integer>(visibleDetails);
+                for (int i : oldDetails) {
+                    setDetailsVisible(i, false);
+                }
+
                 if (newSize > oldSize) {
                     body.insertRows(oldSize, newSize - oldSize);
                     cellFocusHandler.rowsAddedToBody(Range.withLength(oldSize,
