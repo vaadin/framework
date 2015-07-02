@@ -52,6 +52,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellDescriptionGenerator;
 import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
@@ -68,6 +69,7 @@ import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.MultiSelectionModel;
+import com.vaadin.ui.Grid.RowDescriptionGenerator;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -127,6 +129,27 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             log("Item " + (event.isDoubleClick() ? "double " : "")
                     + "click on " + event.getPropertyId() + ", item "
                     + event.getItemId());
+        }
+    };
+
+    private RowDescriptionGenerator rowDescriptionGenerator = new RowDescriptionGenerator() {
+
+        @Override
+        public String getDescription(RowReference row) {
+            return "Row tooltip for row " + row.getItemId();
+        }
+    };
+
+    private CellDescriptionGenerator cellDescriptionGenerator = new CellDescriptionGenerator() {
+
+        @Override
+        public String getDescription(CellReference cell) {
+            if ("Column 0".equals(cell.getPropertyId())) {
+                return "Cell tooltip for row " + cell.getItemId()
+                        + ", column 0";
+            } else {
+                return null;
+            }
         }
     };
 
@@ -629,6 +652,25 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
+        createBooleanAction("Row description generator", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.setRowDescriptionGenerator(value ? rowDescriptionGenerator
+                                : null);
+                    }
+                });
+
+        createBooleanAction("Cell description generator", "State", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.setCellDescriptionGenerator(value ? cellDescriptionGenerator
+                                : null);
+                    }
+                });
+
         LinkedHashMap<String, Integer> frozenOptions = new LinkedHashMap<String, Integer>();
         for (int i = -1; i <= COLUMNS; i++) {
             frozenOptions.put(String.valueOf(i), Integer.valueOf(i));
@@ -673,6 +715,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
 
                 });
+
         createBooleanAction("EditorOpeningItemClickListener", "State", false,
                 new Command<Grid, Boolean>() {
 

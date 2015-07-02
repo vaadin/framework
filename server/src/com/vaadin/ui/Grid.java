@@ -1514,39 +1514,88 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Callback interface for generating custom style names for data rows
+     * A callback interface for generating custom style names for Grid rows.
      * 
      * @see Grid#setRowStyleGenerator(RowStyleGenerator)
      */
     public interface RowStyleGenerator extends Serializable {
 
         /**
-         * Called by Grid to generate a style name for a row
+         * Called by Grid to generate a style name for a row.
          * 
-         * @param rowReference
-         *            The row to generate a style for
+         * @param row
+         *            the row to generate a style for
          * @return the style name to add to this row, or {@code null} to not set
          *         any style
          */
-        public String getStyle(RowReference rowReference);
+        public String getStyle(RowReference row);
     }
 
     /**
-     * Callback interface for generating custom style names for cells
+     * A callback interface for generating custom style names for Grid cells.
      * 
      * @see Grid#setCellStyleGenerator(CellStyleGenerator)
      */
     public interface CellStyleGenerator extends Serializable {
 
         /**
-         * Called by Grid to generate a style name for a column
+         * Called by Grid to generate a style name for a column.
          * 
-         * @param cellReference
-         *            The cell to generate a style for
+         * @param cell
+         *            the cell to generate a style for
          * @return the style name to add to this cell, or {@code null} to not
          *         set any style
          */
-        public String getStyle(CellReference cellReference);
+        public String getStyle(CellReference cell);
+    }
+
+    /**
+     * A callback interface for generating optional descriptions (tooltips) for
+     * Grid rows. If a description is generated for a row, it is used for all
+     * the cells in the row for which a {@link CellDescriptionGenerator cell
+     * description} is not generated.
+     *
+     * @see Grid#setRowDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public interface RowDescriptionGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a description (tooltip) for a row. The
+         * description may contain HTML which is rendered directly; if this is
+         * not desired the returned string must be escaped by the implementing
+         * method.
+         * 
+         * @param row
+         *            the row to generate a description for
+         * @return the row description or {@code null} for no description
+         */
+        public String getDescription(RowReference row);
+    }
+
+    /**
+     * A callback interface for generating optional descriptions (tooltips) for
+     * Grid cells. If a cell has both a {@link RowDescriptionGenerator row
+     * description} and a cell description, the latter has precedence.
+     * 
+     * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public interface CellDescriptionGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a description (tooltip) for a cell. The
+         * description may contain HTML which is rendered directly; if this is
+         * not desired the returned string must be escaped by the implementing
+         * method.
+         * 
+         * @param cell
+         *            the cell to generate a description for
+         * @return the cell description or {@code null} for no description
+         */
+        public String getDescription(CellReference cell);
     }
 
     /**
@@ -1555,51 +1604,83 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     private class RowDataGenerator implements DataGenerator {
 
+        private void put(String key, String value, JsonObject object) {
+            if (value != null && !value.isEmpty()) {
+                object.put(key, value);
+            }
+        }
+
         @Override
         public void generateData(Object itemId, Item item, JsonObject rowData) {
-            RowReference r = new RowReference(Grid.this);
-            r.set(itemId);
+            RowReference row = new RowReference(Grid.this);
+            row.set(itemId);
 
             if (rowStyleGenerator != null) {
-                String style = rowStyleGenerator.getStyle(r);
-                if (style != null && !style.isEmpty()) {
-                    rowData.put(GridState.JSONKEY_ROWSTYLE, style);
-                }
+                String style = rowStyleGenerator.getStyle(row);
+                put(GridState.JSONKEY_ROWSTYLE, style, rowData);
+            }
+
+            if (rowDescriptionGenerator != null) {
+                String description = rowDescriptionGenerator
+                        .getDescription(row);
+                put(GridState.JSONKEY_ROWDESCRIPTION, description, rowData);
+
             }
 
             JsonObject cellStyles = Json.createObject();
             JsonObject cellData = Json.createObject();
+            JsonObject cellDescriptions = Json.createObject();
+
+            CellReference cell = new CellReference(row);
+
             for (Column column : getColumns()) {
-                Object propertyId = column.getPropertyId();
-                String columnId = columnKeys.key(propertyId);
+                cell.set(column.getPropertyId());
 
-                cellData.put(columnId, getRendererData(column, item));
+                writeData(cell, cellData);
+                writeStyles(cell, cellStyles);
+                writeDescriptions(cell, cellDescriptions);
+            }
 
-                if (cellStyleGenerator != null) {
-                    CellReference c = new CellReference(r);
-                    c.set(propertyId);
-
-                    String style = cellStyleGenerator.getStyle(c);
-                    if (style != null && !style.isEmpty()) {
-                        cellStyles.put(columnId, style);
-                    }
-                }
+            if (cellDescriptionGenerator != null
+                    && cellDescriptions.keys().length > 0) {
+                rowData.put(GridState.JSONKEY_CELLDESCRIPTION, cellDescriptions);
             }
 
             if (cellStyleGenerator != null && cellStyles.keys().length > 0) {
                 rowData.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
             }
+
             rowData.put(GridState.JSONKEY_DATA, cellData);
         }
 
-        private JsonValue getRendererData(Column column, Item item) {
+        private void writeStyles(CellReference cell, JsonObject styles) {
+            if (cellStyleGenerator != null) {
+                String style = cellStyleGenerator.getStyle(cell);
+                put(columnKeys.key(cell.getPropertyId()), style, styles);
+            }
+        }
+
+        private void writeDescriptions(CellReference cell,
+                JsonObject descriptions) {
+            if (cellDescriptionGenerator != null) {
+                String description = cellDescriptionGenerator
+                        .getDescription(cell);
+                put(columnKeys.key(cell.getPropertyId()), description,
+                        descriptions);
+            }
+        }
+
+        private void writeData(CellReference cell, JsonObject data) {
+            Column column = getColumn(cell.getPropertyId());
             Converter<?, ?> converter = column.getConverter();
-            Object propertyId = column.getPropertyId();
-            Object modelValue = item.getItemProperty(propertyId).getValue();
             Renderer<?> renderer = column.getRenderer();
 
-            return AbstractRenderer.encodeValue(modelValue, renderer,
-                    converter, getLocale());
+            Item item = cell.getItem();
+            Object modelValue = item.getItemProperty(cell.getPropertyId())
+                    .getValue();
+
+            data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
+                    .encodeValue(modelValue, renderer, converter, getLocale()));
         }
     }
 
@@ -3781,6 +3862,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
 
+    private CellDescriptionGenerator cellDescriptionGenerator;
+    private RowDescriptionGenerator rowDescriptionGenerator;
+
     /**
      * <code>true</code> if Grid is using the internal IndexedContainer created
      * in Grid() constructor, or <code>false</code> if the user has set their
@@ -5757,6 +5841,73 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     EditorClientRpc getEditorRpc() {
         return getRpcProxy(EditorClientRpc.class);
+    }
+
+    /**
+     * Sets the {@code CellDescriptionGenerator} instance for generating
+     * optional descriptions (tooltips) for individual Grid cells. If a
+     * {@link RowDescriptionGenerator} is also set, the row description it
+     * generates is displayed for cells for which {@code generator} returns
+     * null.
+     * 
+     * @param generator
+     *            the description generator to use or {@code null} to remove a
+     *            previously set generator if any
+     * 
+     * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
+     * 
+     * @since
+     */
+    public void setCellDescriptionGenerator(CellDescriptionGenerator generator) {
+        cellDescriptionGenerator = generator;
+        getState().hasDescriptions = (generator != null || rowDescriptionGenerator != null);
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Returns the {@code CellDescriptionGenerator} instance used to generate
+     * descriptions (tooltips) for Grid cells.
+     * 
+     * @return the description generator or {@code null} if no generator is set
+     * 
+     * @since
+     */
+    public CellDescriptionGenerator getCellDescriptionGenerator() {
+        return cellDescriptionGenerator;
+    }
+
+    /**
+     * Sets the {@code RowDescriptionGenerator} instance for generating optional
+     * descriptions (tooltips) for Grid rows. If a
+     * {@link CellDescriptionGenerator} is also set, the row description
+     * generated by {@code generator} is used for cells for which the cell
+     * description generator returns null.
+     * 
+     * 
+     * @param generator
+     *            the description generator to use or {@code null} to remove a
+     *            previously set generator if any
+     * 
+     * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
+        rowDescriptionGenerator = generator;
+        getState().hasDescriptions = (generator != null || cellDescriptionGenerator != null);
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Returns the {@code RowDescriptionGenerator} instance used to generate
+     * descriptions (tooltips) for Grid rows
+     * 
+     * @return the description generator or {@code} null if no generator is set
+     * 
+     * @since
+     */
+    public RowDescriptionGenerator getRowDescriptionGenerator() {
+        return rowDescriptionGenerator;
     }
 
     /**

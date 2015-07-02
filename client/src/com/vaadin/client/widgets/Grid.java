@@ -8173,4 +8173,26 @@ public class Grid<T> extends ResizeComposite implements
     public EventCellReference<T> getEventCell() {
         return eventCell;
     }
+
+    /**
+     * Returns a CellReference for the cell to which the given element belongs
+     * to.
+     * 
+     * @since
+     * @param element
+     *            Element to find from the cell's content.
+     * @return CellReference or <code>null</code> if cell was not found.
+     */
+    public CellReference<T> getCellReference(Element element) {
+        RowContainer container = getEscalator().findRowContainer(element);
+        if (container != null) {
+            Cell cell = container.getCell(element);
+            if (cell != null) {
+                EventCellReference<T> cellRef = new EventCellReference<T>(this);
+                cellRef.set(cell, getSectionFromContainer(container));
+                return cellRef;
+            }
+        }
+        return null;
+    }
 }

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,6 +39,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
@@ -1455,5 +1457,43 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     public DetailsListener getDetailsListener() {
         return detailsListener;
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        return getState().hasDescriptions || super.hasTooltip();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        CellReference<JsonObject> cell = getWidget().getCellReference(element);
+
+        if (cell != null) {
+            JsonObject row = cell.getRow();
+            if (row == null) {
+                return null;
+            }
+
+            Column<?, JsonObject> column = cell.getColumn();
+            if (!(column instanceof CustomGridColumn)) {
+                // Selection checkbox column
+                return null;
+            }
+            CustomGridColumn c = (CustomGridColumn) column;
+
+            JsonObject cellDescriptions = row
+                    .getObject(GridState.JSONKEY_CELLDESCRIPTION);
+
+            if (cellDescriptions != null && cellDescriptions.hasKey(c.id)) {
+                return new TooltipInfo(cellDescriptions.getString(c.id));
+            } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
+                return new TooltipInfo(
+                        row.getString(GridState.JSONKEY_ROWDESCRIPTION));
+            } else {
+                return null;
+            }
+        }
+
+        return super.getTooltipInfo(element);
     }
 }

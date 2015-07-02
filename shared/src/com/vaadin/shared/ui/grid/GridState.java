@@ -103,6 +103,20 @@ public class GridState extends TabIndexState {
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
+     * The key in which a row's description can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_ROWDESCRIPTION = "rd";
+
+    /**
+     * The key in which a cell's description can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_CELLDESCRIPTION = "cd";
+
+    /**
      * The key that tells whether details are visible for the row.
      * 
      * @since 7.5.0
@@ -159,6 +173,9 @@ public class GridState extends TabIndexState {
     /** Buffered editor mode */
     @DelegateToWidget
     public boolean editorBuffered = true;
+
+    /** Whether rows and/or cells have generated descriptions (tooltips) */
+    public boolean hasDescriptions;
 
     /** The caption for the save button in the editor */
     @DelegateToWidget
