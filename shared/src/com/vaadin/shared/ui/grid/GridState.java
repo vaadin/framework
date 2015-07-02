@@ -160,11 +160,6 @@ public class GridState extends TabIndexState {
     @DelegateToWidget
     public boolean editorBuffered = true;
 
-    /** Whether row data might contain generated row styles */
-    public boolean hasRowStyleGenerator;
-    /** Whether row data might contain generated cell styles */
-    public boolean hasCellStyleGenerator;
-
     /** The caption for the save button in the editor */
     @DelegateToWidget
     public String editorSaveCaption = GridConstants.DEFAULT_SAVE_CAPTION;

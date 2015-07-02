@@ -38,7 +38,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
@@ -119,8 +118,8 @@ import elemental.json.JsonValue;
 public class GridConnector extends AbstractHasComponentsConnector implements
         SimpleManagedLayout, DeferredWorker {
 
-    private static final class CustomCellStyleGenerator implements
-            CellStyleGenerator<JsonObject> {
+    private static final class CustomStyleGenerator implements
+            CellStyleGenerator<JsonObject>, RowStyleGenerator<JsonObject> {
         @Override
         public String getStyle(CellReference<JsonObject> cellReference) {
             JsonObject row = cellReference.getRow();
@@ -146,10 +145,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-    }
-
-    private static final class CustomRowStyleGenerator implements
-            RowStyleGenerator<JsonObject> {
         @Override
         public String getStyle(RowReference<JsonObject> rowReference) {
             JsonObject row = rowReference.getRow();
@@ -159,7 +154,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 return null;
             }
         }
-
     }
 
     /**
@@ -734,6 +728,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private String lastKnownTheme = null;
 
     private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
+    private final CustomStyleGenerator styleGenerator = new CustomStyleGenerator();
 
     private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher(
             getRpcProxy(GridServerRpc.class));
@@ -872,6 +867,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
+
+        /* Style Generators */
+        getWidget().setCellStyleGenerator(styleGenerator);
+        getWidget().setRowStyleGenerator(styleGenerator);
 
         getWidget().addSortHandler(new SortHandler<JsonObject>() {
             @Override
@@ -1286,24 +1285,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             selectionModel = model;
             getWidget().setSelectionModel(model);
             selectedKeys.clear();
-        }
-    }
-
-    @OnStateChange("hasCellStyleGenerator")
-    private void onCellStyleGeneratorChange() {
-        if (getState().hasCellStyleGenerator) {
-            getWidget().setCellStyleGenerator(new CustomCellStyleGenerator());
-        } else {
-            getWidget().setCellStyleGenerator(null);
-        }
-    }
-
-    @OnStateChange("hasRowStyleGenerator")
-    private void onRowStyleGeneratorChange() {
-        if (getState().hasRowStyleGenerator) {
-            getWidget().setRowStyleGenerator(new CustomRowStyleGenerator());
-        } else {
-            getWidget().setRowStyleGenerator(null);
         }
     }
 

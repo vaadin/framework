@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -52,6 +53,7 @@ import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.DataGenerator;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
@@ -1545,6 +1547,60 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *         set any style
          */
         public String getStyle(CellReference cellReference);
+    }
+
+    /**
+     * Class for generating all row and cell related data for the essential
+     * parts of Grid.
+     */
+    private class RowDataGenerator implements DataGenerator {
+
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            RowReference r = new RowReference(Grid.this);
+            r.set(itemId);
+
+            if (rowStyleGenerator != null) {
+                String style = rowStyleGenerator.getStyle(r);
+                if (style != null && !style.isEmpty()) {
+                    rowData.put(GridState.JSONKEY_ROWSTYLE, style);
+                }
+            }
+
+            JsonObject cellStyles = Json.createObject();
+            JsonObject cellData = Json.createObject();
+            for (Column column : getColumns()) {
+                Object propertyId = column.getPropertyId();
+                String columnId = columnKeys.key(propertyId);
+
+                cellData.put(columnId, getRendererData(column, item));
+
+                if (cellStyleGenerator != null) {
+                    CellReference c = new CellReference(r);
+                    c.set(propertyId);
+
+                    String style = cellStyleGenerator.getStyle(c);
+                    if (style != null && !style.isEmpty()) {
+                        cellStyles.put(columnId, style);
+                    }
+                }
+            }
+
+            if (cellStyleGenerator != null && cellStyles.keys().length > 0) {
+                rowData.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
+            }
+            rowData.put(GridState.JSONKEY_DATA, cellData);
+        }
+
+        private JsonValue getRendererData(Column column, Item item) {
+            Converter<?, ?> converter = column.getConverter();
+            Object propertyId = column.getPropertyId();
+            Object modelValue = item.getItemProperty(propertyId).getValue();
+            Renderer<?> renderer = column.getRenderer();
+
+            return AbstractRenderer.encodeValue(modelValue, renderer,
+                    converter, getLocale());
+        }
     }
 
     /**
@@ -3462,10 +3518,67 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             return JsonCodec.encode(value, null, type,
                     getUI().getConnectorTracker()).getEncodedValue();
         }
+
+        /**
+         * Converts and encodes the given data model property value using the
+         * given converter and renderer. This method is public only for testing
+         * purposes.
+         * 
+         * @param renderer
+         *            the renderer to use
+         * @param converter
+         *            the converter to use
+         * @param modelValue
+         *            the value to convert and encode
+         * @param locale
+         *            the locale to use in conversion
+         * @return an encoded value ready to be sent to the client
+         */
+        public static <T> JsonValue encodeValue(Object modelValue,
+                Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
+            Class<T> presentationType = renderer.getPresentationType();
+            T presentationValue;
+
+            if (converter == null) {
+                try {
+                    presentationValue = presentationType.cast(modelValue);
+                } catch (ClassCastException e) {
+                    if (presentationType == String.class) {
+                        // If there is no converter, just fallback to using
+                        // toString(). modelValue can't be null as
+                        // Class.cast(null) will always succeed
+                        presentationValue = (T) modelValue.toString();
+                    } else {
+                        throw new Converter.ConversionException(
+                                "Unable to convert value of type "
+                                        + modelValue.getClass().getName()
+                                        + " to presentation type "
+                                        + presentationType.getName()
+                                        + ". No converter is set and the types are not compatible.");
+                    }
+                }
+            } else {
+                assert presentationType.isAssignableFrom(converter
+                        .getPresentationType());
+                @SuppressWarnings("unchecked")
+                Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
+                presentationValue = safeConverter
+                        .convertToPresentation(modelValue,
+                                safeConverter.getPresentationType(), locale);
+            }
+
+            JsonValue encodedValue = renderer.encode(presentationValue);
+
+            return encodedValue;
+        }
     }
 
     /**
      * An abstract base class for server-side Grid extensions.
+     * <p>
+     * Note: If the extension is an instance of {@link DataGenerator} it will
+     * automatically register itself to {@link RpcDataProviderExtension} of
+     * extended Grid. On remove this registration is automatically removed.
      * 
      * @since 7.5
      */
@@ -3488,6 +3601,26 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         public AbstractGridExtension(Grid grid) {
             super();
             extend(grid);
+        }
+
+        @Override
+        protected void extend(AbstractClientConnector target) {
+            super.extend(target);
+
+            if (this instanceof DataGenerator) {
+                getParentGrid().datasourceExtension
+                        .addDataGenerator((DataGenerator) this);
+            }
+        }
+
+        @Override
+        public void remove() {
+            if (this instanceof DataGenerator) {
+                getParentGrid().datasourceExtension
+                        .removeDataGenerator((DataGenerator) this);
+            }
+
+            super.remove();
         }
 
         /**
@@ -3531,9 +3664,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             if (getParent() instanceof Grid) {
                 Grid grid = (Grid) getParent();
                 return grid;
+            } else if (getParent() == null) {
+                throw new IllegalStateException(
+                        "Renderer is not attached to any parent");
             } else {
                 throw new IllegalStateException(
-                        "Renderers can be used only with Grid");
+                        "Renderers can be used only with Grid. Extended "
+                                + getParent().getClass().getSimpleName()
+                                + " instead");
             }
         }
     }
@@ -4153,7 +4291,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         datasourceExtension = new RpcDataProviderExtension(container);
-        datasourceExtension.extend(this, columnKeys);
+        datasourceExtension.extend(this);
+        datasourceExtension.addDataGenerator(new RowDataGenerator());
 
         detailComponentManager = datasourceExtension
                 .getDetailComponentManager();
@@ -5620,8 +5759,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        getState().hasCellStyleGenerator = (cellStyleGenerator != null);
-
         datasourceExtension.refreshCache();
     }
 
@@ -5644,8 +5781,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public void setRowStyleGenerator(RowStyleGenerator rowStyleGenerator) {
         this.rowStyleGenerator = rowStyleGenerator;
-        getState().hasRowStyleGenerator = (rowStyleGenerator != null);
-
         datasourceExtension.refreshCache();
     }
 
