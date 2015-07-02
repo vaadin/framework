@@ -8124,7 +8124,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Sets the buffered editor mode.
      * 
-     * @since
+     * @since 7.6
      * @param editorUnbuffered
      *            <code>true</code> to enable buffered editor,
      *            <code>false</code> to disable it
@@ -8136,7 +8136,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Gets the buffered editor mode.
      * 
-     * @since
+     * @since 7.6
      * @return <code>true</code> if buffered editor is enabled,
      *         <code>false</code> otherwise
      */

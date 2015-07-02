@@ -32,7 +32,7 @@ import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
  * to transmit received events to the server. Events are only handled if there
  * is a corresponding listener on the server side.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class ConnectorFocusAndBlurHandler implements StateChangeHandler,

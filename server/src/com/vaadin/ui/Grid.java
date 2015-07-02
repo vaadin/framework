@@ -6115,7 +6115,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Sets the buffered editor mode. The default mode is buffered (
      * <code>true</code>).
      * 
-     * @since
+     * @since 7.6
      * @param editorBuffered
      *            <code>true</code> to enable buffered editor,
      *            <code>false</code> to disable it
@@ -6136,7 +6136,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Gets the buffered editor mode.
      * 
-     * @since
+     * @since 7.6
      * @return <code>true</code> if buffered editor is enabled,
      *         <code>false</code> otherwise
      */

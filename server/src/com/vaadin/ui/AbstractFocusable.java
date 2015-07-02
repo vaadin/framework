@@ -29,7 +29,7 @@ import com.vaadin.ui.Component.Focusable;
  * An abstract base class for focusable components. Includes API for setting the
  * tab index, programmatic focusing, and adding focus and blur listeners.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public abstract class AbstractFocusable extends AbstractComponent implements
