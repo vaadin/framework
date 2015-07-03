@@ -80,6 +80,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
@@ -1265,6 +1266,7 @@ public class Grid<T> extends ResizeComposite implements
         private double originalTop;
         /** Original scroll position of grid when editor was opened */
         private double originalScrollTop;
+        private RowHandle<T> pinnedRowHandle;
 
         public Editor() {
             saveButton = new Button();
@@ -1626,6 +1628,50 @@ public class Grid<T> extends ResizeComposite implements
                     }
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
+                    cell.addClassName(tr.getCells().getItem(i).getClassName());
+                    // If the focused stylename is present it should not be
+                    // inherited by the editor cell as it is not useful in the
+                    // editor and would look broken without additional style
+                    // rules. This is a bit of a hack.
+                    cell.removeClassName(grid.cellFocusStyleName);
+
+                    if (column == grid.selectionColumn) {
+                        // Duplicate selection column CheckBox
+
+                        pinnedRowHandle = grid.getDataSource().getHandle(
+                                grid.getDataSource().getRow(rowIndex));
+                        pinnedRowHandle.pin();
+
+                        // We need to duplicate the selection CheckBox for the
+                        // editor overlay since the original one is hidden by
+                        // the overlay
+                        final CheckBox checkBox = GWT.create(CheckBox.class);
+                        checkBox.setValue(grid.isSelected(pinnedRowHandle
+                                .getRow()));
+                        checkBox.sinkEvents(Event.ONCLICK);
+
+                        checkBox.addClickHandler(new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                T row = pinnedRowHandle.getRow();
+                                if (grid.isSelected(row)) {
+                                    grid.deselect(row);
+                                } else {
+                                    grid.select(row);
+                                }
+                            }
+                        });
+                        attachWidget(checkBox, cell);
+                        columnToWidget.put(column, checkBox);
+
+                        // Only enable CheckBox in non-buffered mode
+                        checkBox.setEnabled(!isBuffered());
+
+                    } else if (!(column.getRenderer() instanceof WidgetRenderer)) {
+                        // Copy non-widget content directly
+                        cell.setInnerHTML(tr.getCells().getItem(i)
+                                .getInnerHTML());
+                    }
                 }
             }
 
@@ -1695,6 +1741,11 @@ public class Grid<T> extends ResizeComposite implements
         protected void hideOverlay() {
             if (editorOverlay.getParentElement() == null) {
                 return;
+            }
+
+            if (pinnedRowHandle != null) {
+                pinnedRowHandle.unpin();
+                pinnedRowHandle = null;
             }
 
             for (Widget w : columnToWidget.values()) {

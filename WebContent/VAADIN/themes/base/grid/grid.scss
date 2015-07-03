@@ -396,6 +396,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         min-width: 100%;
         max-width: 100%;
       }
+      
+      &.not-editable.#{$primaryStyleName}-cell {
+        float: none;
+      }
     }
 
     .error::before {

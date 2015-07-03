@@ -197,13 +197,16 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         GridEditorElement editor = getGridElement().getEditor();
         assertFalse("Uneditable column should not have an editor widget",
                 editor.isEditable(3));
-        assertEquals(
-                "Not editable cell did not contain correct classname",
-                "not-editable",
-                editor.findElements(By.className("v-grid-editor-cells")).get(1)
-                        .findElements(By.xpath("./div")).get(3)
-                        .getAttribute("class"));
 
+        String classNames = editor
+                .findElements(By.className("v-grid-editor-cells")).get(1)
+                .findElements(By.xpath("./div")).get(3).getAttribute("class");
+
+        assertTrue("Noneditable cell should contain not-editable classname",
+                classNames.contains("not-editable"));
+
+        assertTrue("Noneditable cell should contain v-grid-cell classname",
+                classNames.contains("v-grid-cell"));
     }
 
     @Test

@@ -6150,6 +6150,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Opens the editor interface for the provided item. Scrolls the Grid to
      * bring the item to view if it is not already visible.
      * 
+     * Note that any cell content rendered by a WidgetRenderer will not be
+     * visible in the editor row.
+     * 
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
