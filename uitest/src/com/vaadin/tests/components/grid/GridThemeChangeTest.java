@@ -22,8 +22,10 @@ import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridThemeChangeTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
