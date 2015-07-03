@@ -15,20 +15,23 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.tests.minitutorials.v7_5.ShowingExtraDataForRows;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
+
+import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.minitutorials.v7_5.ShowingExtraDataForRows;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for "Grid detail row outline overflows" (#17826)
  *
  * @author Vaadin Ltd
  */
+@TestCategory("grid")
 public class GridSpacerDecoClipTest extends MultiBrowserTest {
 
     private static final String SPACER_CSS_CLASS_DECO = "v-grid-spacer-deco";
@@ -88,7 +91,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
     }
 
     private TestBenchElement getSpacerDeco(int index) {
-        SearchContext context = this.getContext();
+        SearchContext context = getContext();
         return (TestBenchElement) context.findElements(
                 By.className(SPACER_CSS_CLASS_DECO)).get(index);
     }

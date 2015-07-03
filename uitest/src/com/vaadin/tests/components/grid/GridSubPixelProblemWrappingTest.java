@@ -21,8 +21,10 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
 
     @Test

@@ -25,8 +25,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridWidthIncreaseTest extends MultiBrowserTest {
 
     private static int INCREASE_COUNT = 3;

@@ -24,8 +24,10 @@ import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridCellFocusOnResetSizeTest extends MultiBrowserTest {
 
     @ServerClass("com.vaadin.tests.widgetset.server.TestWidgetComponent")
