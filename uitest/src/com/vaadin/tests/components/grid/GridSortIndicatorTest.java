@@ -20,8 +20,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridSortIndicatorTest extends MultiBrowserTest {
 
     @Test
