@@ -57,20 +57,6 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testNonEditableCellDoesNotBlockContents() {
-        selectMenuPath(EDIT_ITEM_5);
-        assertEditorOpen();
-
-        WebElement editorCellContainer = getEditor().findElement(
-                By.className("v-grid-editor-cells"));
-        WebElement nonEditableDiv = editorCellContainer.findElements(
-                By.tagName("div")).get(3);
-
-        assertEquals("Non editable div was not hidden", "hidden",
-                nonEditableDiv.getCssValue("visibility"));
-    }
-
-    @Test
     public void testProgrammaticOpeningClosing() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
