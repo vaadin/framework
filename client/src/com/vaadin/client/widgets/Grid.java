@@ -6809,6 +6809,9 @@ public class Grid<T> extends ResizeComposite implements
         selectionModel.setGrid(this);
         setSelectColumnRenderer(this.selectionModel
                 .getSelectionColumnRenderer());
+
+        // Refresh rendered rows to update selection, if it has changed
+        refreshBody();
     }
 
     /**

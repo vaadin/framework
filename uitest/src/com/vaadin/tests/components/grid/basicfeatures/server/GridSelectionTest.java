@@ -319,6 +319,22 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
                 .isSelected());
     }
 
+    @Test
+    public void testChangeSelectionModelUpdatesUI() {
+        openTestURL();
+
+        setSelectionModelSingle();
+
+        getGridElement().getCell(5, 1).click();
+        assertTrue("Row should be selected after clicking", getRow(5)
+                .isSelected());
+
+        setSelectionModelNone();
+        assertFalse(
+                "Row should not be selected after changing selection model",
+                getRow(5).isSelected());
+    }
+
     private void setSelectionModelMulti() {
         selectMenuPath("Component", "State", "Selection mode", "multi");
     }
