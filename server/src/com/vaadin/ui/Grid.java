@@ -82,6 +82,7 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.VaadinSession;
@@ -94,13 +95,16 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.selection.MultiSelectionModelServerRpc;
+import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
+import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
+import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -111,7 +115,6 @@ import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
-import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
@@ -710,8 +713,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * The server-side interface that controls Grid's selection state.
+     * SelectionModel should extend {@link AbstractGridExtension}.
      */
-    public interface SelectionModel extends Serializable {
+    public interface SelectionModel extends Serializable, Extension {
         /**
          * Checks whether an item is selected or not.
          * 
@@ -730,6 +734,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Injects the current {@link Grid} instance into the SelectionModel.
+         * This method should usually call the extend method of
+         * {@link AbstractExtension}.
          * <p>
          * <em>Note:</em> This method should not be called manually.
          * 
@@ -971,10 +977,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A base class for SelectionModels that contains some of the logic that is
      * reusable.
      */
-    public static abstract class AbstractSelectionModel implements
-            SelectionModel {
+    public static abstract class AbstractSelectionModel extends
+            AbstractGridExtension implements SelectionModel, DataGenerator {
         protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
-        protected Grid grid = null;
 
         @Override
         public boolean isSelected(final Object itemId) {
@@ -988,7 +993,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public void setGrid(final Grid grid) {
-            this.grid = grid;
+            if (grid != null) {
+                extend(grid);
+            }
         }
 
         /**
@@ -1002,7 +1009,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         protected void checkItemIdExists(Object itemId)
                 throws IllegalArgumentException {
-            if (!grid.getContainerDataSource().containsId(itemId)) {
+            if (!getParentGrid().getContainerDataSource().containsId(itemId)) {
                 throw new IllegalArgumentException("Given item id (" + itemId
                         + ") does not exist in the container");
             }
@@ -1044,7 +1051,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected void fireSelectionEvent(
                 final Collection<Object> oldSelection,
                 final Collection<Object> newSelection) {
-            grid.fireSelectionEvent(oldSelection, newSelection);
+            getParentGrid().fireSelectionEvent(oldSelection, newSelection);
+        }
+
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            if (isSelected(itemId)) {
+                rowData.put(GridState.JSONKEY_SELECTED, true);
+            }
+        }
+
+        @Override
+        protected Object getItemId(String rowKey) {
+            return rowKey != null ? super.getItemId(rowKey) : null;
         }
     }
 
@@ -1053,8 +1072,25 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static class SingleSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Single {
+
+        @Override
+        protected void extend(AbstractClientConnector target) {
+            super.extend(target);
+            registerRpc(new SingleSelectionModelServerRpc() {
+
+                @Override
+                public void select(String rowKey) {
+                    SingleSelectionModel.this.select(getItemId(rowKey), false);
+                }
+            });
+        }
+
         @Override
         public boolean select(final Object itemId) {
+            return select(itemId, true);
+        }
+
+        protected boolean select(final Object itemId, boolean refresh) {
             if (itemId == null) {
                 return deselect(getSelectedRow());
             }
@@ -1066,7 +1102,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             if (modified) {
                 final Collection<Object> deselected;
                 if (selectedRow != null) {
-                    deselectInternal(selectedRow, false);
+                    deselectInternal(selectedRow, false, true);
                     deselected = Collections.singleton(selectedRow);
                 } else {
                     deselected = Collections.emptySet();
@@ -1075,19 +1111,28 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 fireSelectionEvent(deselected, selection);
             }
 
+            if (refresh) {
+                refreshRow(itemId);
+            }
+
             return modified;
         }
 
         private boolean deselect(final Object itemId) {
-            return deselectInternal(itemId, true);
+            return deselectInternal(itemId, true, true);
         }
 
         private boolean deselectInternal(final Object itemId,
-                boolean fireEventIfNeeded) {
+                boolean fireEventIfNeeded, boolean refresh) {
             final boolean modified = selection.remove(itemId);
-            if (fireEventIfNeeded && modified) {
-                fireSelectionEvent(Collections.singleton(itemId),
-                        Collections.emptySet());
+            if (modified) {
+                if (refresh) {
+                    refreshRow(itemId);
+                }
+                if (fireEventIfNeeded) {
+                    fireSelectionEvent(Collections.singleton(itemId),
+                            Collections.emptySet());
+                }
             }
             return modified;
         }
@@ -1113,23 +1158,25 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public void setDeselectAllowed(boolean deselectAllowed) {
-            grid.getState().singleSelectDeselectAllowed = deselectAllowed;
+            getState().deselectAllowed = deselectAllowed;
         }
 
         @Override
         public boolean isDeselectAllowed() {
-            return grid.getState(false).singleSelectDeselectAllowed;
+            return getState().deselectAllowed;
+        }
+
+        @Override
+        protected SingleSelectionModelState getState() {
+            return (SingleSelectionModelState) super.getState();
         }
     }
 
     /**
      * A default implementation for a {@link SelectionModel.None}
      */
-    public static class NoSelectionModel implements SelectionModel.None {
-        @Override
-        public void setGrid(final Grid grid) {
-            // NOOP, not needed for anything
-        }
+    public static class NoSelectionModel extends AbstractSelectionModel
+            implements SelectionModel.None {
 
         @Override
         public boolean isSelected(final Object itemId) {
@@ -1167,7 +1214,40 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private int selectionLimit = DEFAULT_MAX_SELECTIONS;
 
-        private boolean allSelected;
+        @Override
+        protected void extend(AbstractClientConnector target) {
+            super.extend(target);
+            registerRpc(new MultiSelectionModelServerRpc() {
+
+                @Override
+                public void select(List<String> rowKeys) {
+                    List<Object> items = new ArrayList<Object>();
+                    for (String rowKey : rowKeys) {
+                        items.add(getItemId(rowKey));
+                    }
+                    MultiSelectionModel.this.select(items, false);
+                }
+
+                @Override
+                public void deselect(List<String> rowKeys) {
+                    List<Object> items = new ArrayList<Object>();
+                    for (String rowKey : rowKeys) {
+                        items.add(getItemId(rowKey));
+                    }
+                    MultiSelectionModel.this.deselect(items, false);
+                }
+
+                @Override
+                public void selectAll() {
+                    MultiSelectionModel.this.selectAll(false);
+                }
+
+                @Override
+                public void deselectAll() {
+                    MultiSelectionModel.this.deselectAll(false);
+                }
+            });
+        }
 
         @Override
         public boolean select(final Object... itemIds)
@@ -1190,6 +1270,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         @Override
         public boolean select(final Collection<?> itemIds)
                 throws IllegalArgumentException {
+            return select(itemIds, true);
+        }
+
+        protected boolean select(final Collection<?> itemIds, boolean refresh) {
             if (itemIds == null) {
                 throw new IllegalArgumentException("itemIds may not be null");
             }
@@ -1216,6 +1300,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             updateAllSelectedState();
+
+            if (refresh) {
+                for (Object itemId : itemIds) {
+                    refreshRow(itemId);
+                }
+            }
 
             return selectionWillChange;
         }
@@ -1270,6 +1360,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         @Override
         public boolean deselect(final Collection<?> itemIds)
                 throws IllegalArgumentException {
+            return deselect(itemIds, true);
+        }
+
+        protected boolean deselect(final Collection<?> itemIds, boolean refresh) {
             if (itemIds == null) {
                 throw new IllegalArgumentException("itemIds may not be null");
             }
@@ -1285,15 +1379,25 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             updateAllSelectedState();
 
+            if (refresh) {
+                for (Object itemId : itemIds) {
+                    refreshRow(itemId);
+                }
+            }
+
             return hasCommonElements;
         }
 
         @Override
         public boolean selectAll() {
+            return selectAll(true);
+        }
+
+        protected boolean selectAll(boolean refresh) {
             // select will fire the event
-            final Indexed container = grid.getContainerDataSource();
+            final Indexed container = getParentGrid().getContainerDataSource();
             if (container != null) {
-                return select(container.getItemIds());
+                return select(container.getItemIds(), refresh);
             } else if (selection.isEmpty()) {
                 return false;
             } else {
@@ -1302,14 +1406,18 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                  * but I guess the only theoretically correct course of
                  * action...
                  */
-                return deselectAll();
+                return deselectAll(false);
             }
         }
 
         @Override
         public boolean deselectAll() {
+            return deselectAll(true);
+        }
+
+        protected boolean deselectAll(boolean refresh) {
             // deselect will fire the event
-            return deselect(getSelectedRows());
+            return deselect(getSelectedRows(), refresh);
         }
 
         /**
@@ -1382,10 +1490,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         private void updateAllSelectedState() {
-            if (allSelected != selection.size() >= selectionLimit) {
-                allSelected = selection.size() >= selectionLimit;
-                grid.getRpcProxy(GridClientRpc.class).setSelectAll(allSelected);
+            if (getState().allSelected != selection.size() >= selectionLimit) {
+                getState().allSelected = selection.size() >= selectionLimit;
             }
+        }
+
+        @Override
+        protected MultiSelectionModelState getState() {
+            return (MultiSelectionModelState) super.getState();
         }
     }
 
@@ -1571,7 +1683,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Grid rows. If a description is generated for a row, it is used for all
      * the cells in the row for which a {@link CellDescriptionGenerator cell
      * description} is not generated.
-     *
+     * 
      * @see Grid#setRowDescriptionGenerator(CellDescriptionGenerator)
      * 
      * @since 7.6
@@ -3783,6 +3895,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                                 + " instead");
             }
         }
+
+        /**
+         * Resends the row data for given item id to the client.
+         * 
+         * @since
+         * @param itemId
+         *            row to refresh
+         */
+        protected void refreshRow(Object itemId) {
+            getParentGrid().datasourceExtension.updateRowData(itemId);
+        }
     }
 
     /**
@@ -3982,115 +4105,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     private void initGrid() {
         setSelectionMode(getDefaultSelectionMode());
-        addSelectionListener(new SelectionListener() {
-            @Override
-            public void select(SelectionEvent event) {
-                if (applyingSelectionFromClient) {
-                    /*
-                     * Avoid sending changes back to the client if they
-                     * originated from the client. Instead, the RPC handler is
-                     * responsible for keeping track of the resulting selection
-                     * state and notifying the client if it doens't match the
-                     * expectation.
-                     */
-                    return;
-                }
-
-                /*
-                 * The rows are pinned here to ensure that the client gets the
-                 * correct key from server when the selected row is first
-                 * loaded.
-                 * 
-                 * Once the client has gotten info that it is supposed to select
-                 * a row, it will pin the data from the client side as well and
-                 * it will be unpinned once it gets deselected. Nothing on the
-                 * server side should ever unpin anything from KeyMapper.
-                 * Pinning is mostly a client feature and is only used when
-                 * selecting something from the server side.
-                 */
-                for (Object addedItemId : event.getAdded()) {
-                    if (!getKeyMapper().isPinned(addedItemId)) {
-                        getKeyMapper().pin(addedItemId);
-                    }
-                }
-
-                getState().selectedKeys = getKeyMapper().getKeys(
-                        getSelectedRows());
-            }
-        });
 
         registerRpc(new GridServerRpc() {
-
-            @Override
-            public void select(List<String> selection) {
-                Collection<Object> receivedSelection = getKeyMapper()
-                        .getItemIds(selection);
-
-                applyingSelectionFromClient = true;
-                try {
-                    SelectionModel selectionModel = getSelectionModel();
-                    if (selectionModel instanceof SelectionModel.Single
-                            && selection.size() <= 1) {
-                        Object select = null;
-                        if (selection.size() == 1) {
-                            select = getKeyMapper().getItemId(selection.get(0));
-                        }
-                        ((SelectionModel.Single) selectionModel).select(select);
-                    } else if (selectionModel instanceof SelectionModel.Multi) {
-                        ((SelectionModel.Multi) selectionModel)
-                                .setSelected(receivedSelection);
-                    } else {
-                        throw new IllegalStateException("SelectionModel "
-                                + selectionModel.getClass().getSimpleName()
-                                + " does not support selecting the given "
-                                + selection.size() + " items.");
-                    }
-                } finally {
-                    applyingSelectionFromClient = false;
-                }
-
-                Collection<Object> actualSelection = getSelectedRows();
-
-                // Make sure all selected rows are pinned
-                for (Object itemId : actualSelection) {
-                    if (!getKeyMapper().isPinned(itemId)) {
-                        getKeyMapper().pin(itemId);
-                    }
-                }
-
-                // Don't mark as dirty since this might be the expected state
-                getState(false).selectedKeys = getKeyMapper().getKeys(
-                        actualSelection);
-
-                JsonObject diffState = getUI().getConnectorTracker()
-                        .getDiffState(Grid.this);
-
-                final String diffstateKey = "selectedKeys";
-
-                assert diffState.hasKey(diffstateKey) : "Field name has changed";
-
-                if (receivedSelection.equals(actualSelection)) {
-                    /*
-                     * We ended up with the same selection state that the client
-                     * sent us. There's nothing to send back to the client, just
-                     * update the diffstate so subsequent changes will be
-                     * detected.
-                     */
-                    JsonArray diffSelected = Json.createArray();
-                    for (String rowKey : getState(false).selectedKeys) {
-                        diffSelected.set(diffSelected.length(), rowKey);
-                    }
-                    diffState.put(diffstateKey, diffSelected);
-                } else {
-                    /*
-                     * Actual selection is not what the client expects. Make
-                     * sure the client gets a state change event by clearing the
-                     * diffstate and marking as dirty
-                     */
-                    diffState.remove(diffstateKey);
-                    markAsDirty();
-                }
-            }
 
             @Override
             public void sort(String[] columnIds, SortDirection[] directions,
@@ -4118,13 +4134,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     diffState.remove("sortDirs");
                     markAsDirty();
                 }
-            }
-
-            @Override
-            public void selectAll() {
-                assert getSelectionModel() instanceof SelectionModel.Multi : "Not a multi selection model!";
-
-                ((SelectionModel.Multi) getSelectionModel()).selectAll();
             }
 
             @Override
@@ -5019,25 +5028,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         if (this.selectionModel != selectionModel) {
             // this.selectionModel is null on init
             if (this.selectionModel != null) {
-                this.selectionModel.reset();
-                this.selectionModel.setGrid(null);
+                this.selectionModel.remove();
             }
 
             this.selectionModel = selectionModel;
-            this.selectionModel.setGrid(this);
-            this.selectionModel.reset();
-
-            if (selectionModel.getClass().equals(SingleSelectionModel.class)) {
-                getState().selectionMode = SharedSelectionMode.SINGLE;
-            } else if (selectionModel.getClass().equals(
-                    MultiSelectionModel.class)) {
-                getState().selectionMode = SharedSelectionMode.MULTI;
-            } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
-                getState().selectionMode = SharedSelectionMode.NONE;
-            } else {
-                throw new UnsupportedOperationException("Grid currently "
-                        + "supports only its own bundled selection models");
-            }
+            selectionModel.setGrid(this);
         }
     }
 

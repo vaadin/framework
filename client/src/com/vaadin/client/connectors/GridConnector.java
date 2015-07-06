@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,7 +35,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -48,8 +46,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
-import com.vaadin.client.data.DataSource.RowHandle;
-import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
@@ -72,15 +68,6 @@ import com.vaadin.client.widget.grid.events.EditorMoveEvent;
 import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
-import com.vaadin.client.widget.grid.events.SelectAllEvent;
-import com.vaadin.client.widget.grid.events.SelectAllHandler;
-import com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel;
-import com.vaadin.client.widget.grid.selection.SelectionEvent;
-import com.vaadin.client.widget.grid.selection.SelectionHandler;
-import com.vaadin.client.widget.grid.selection.SelectionModel;
-import com.vaadin.client.widget.grid.selection.SelectionModelMulti;
-import com.vaadin.client.widget.grid.selection.SelectionModelNone;
-import com.vaadin.client.widget.grid.selection.SelectionModelSingle;
 import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
@@ -99,7 +86,6 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
@@ -584,18 +570,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
-    private AbstractRowHandleSelectionModel<JsonObject> selectionModel;
-    private Set<String> selectedKeys = new LinkedHashSet<String>();
     private List<String> columnOrder = new ArrayList<String>();
-
-    /**
-     * {@link #selectionUpdatedFromState} is set to true when
-     * {@link #updateSelectionFromState()} makes changes to selection. This flag
-     * tells the {@code internalSelectionChangeHandler} to not send same data
-     * straight back to server. Said listener sets it back to false when
-     * handling that event.
-     */
-    private boolean selectionUpdatedFromState;
 
     /**
      * {@link #columnsUpdatedFromState} is set to true when
@@ -607,29 +582,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private boolean columnsUpdatedFromState;
 
     private RpcDataSource dataSource;
-
-    private SelectionHandler<JsonObject> internalSelectionChangeHandler = new SelectionHandler<JsonObject>() {
-        @Override
-        public void onSelect(SelectionEvent<JsonObject> event) {
-            if (event.isBatchedSelection()) {
-                return;
-            }
-            if (!selectionUpdatedFromState) {
-                for (JsonObject row : event.getRemoved()) {
-                    selectedKeys.remove(dataSource.getRowKey(row));
-                }
-
-                for (JsonObject row : event.getAdded()) {
-                    selectedKeys.add(dataSource.getRowKey(row));
-                }
-
-                getRpcProxy(GridServerRpc.class).select(
-                        new ArrayList<String>(selectedKeys));
-            } else {
-                selectionUpdatedFromState = false;
-            }
-        }
-    };
 
     /* Used to track Grid editor columns with validation errors */
     private final Map<Column<?, JsonObject>, String> columnToErrorMessage = new HashMap<Column<?, JsonObject>, String>();
@@ -744,29 +696,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
             }
-
-            @Override
-            public void setSelectAll(boolean allSelected) {
-                if (selectionModel instanceof SelectionModel.Multi
-                        && selectionModel.getSelectionColumnRenderer() != null) {
-                    final Widget widget;
-                    try {
-                        HeaderRow defaultHeaderRow = getWidget()
-                                .getDefaultHeaderRow();
-                        if (defaultHeaderRow != null) {
-                            widget = defaultHeaderRow.getCell(
-                                    getWidget().getColumn(0)).getWidget();
-                            ((CheckBox) widget).setValue(allSelected, false);
-                        }
-                    } catch (Exception e) {
-                        getLogger().warning(
-                                "Problems finding select all checkbox.");
-                    }
-                }
-            }
         });
-
-        getWidget().addSelectionHandler(internalSelectionChangeHandler);
 
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
@@ -798,15 +728,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             directions, event.isUserOriginated());
                 }
             }
-        });
-
-        getWidget().addSelectAllHandler(new SelectAllHandler<JsonObject>() {
-
-            @Override
-            public void onSelectAll(SelectAllEvent<JsonObject> event) {
-                getRpcProxy(GridServerRpc.class).selectAll();
-            }
-
         });
 
         getWidget().setEditorHandler(editorHandler);
@@ -884,19 +805,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             updateFooterFromState(getState().footer);
         }
 
-        // Selection
-        if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
-            onSelectionModeChange();
-            updateSelectDeselectAllowed();
-        } else if (stateChangeEvent
-                .hasPropertyChanged("singleSelectDeselectAllowed")) {
-            updateSelectDeselectAllowed();
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
-            updateSelectionFromState();
-        }
-
         // Sorting
         if (stateChangeEvent.hasPropertyChanged("sortColumns")
                 || stateChangeEvent.hasPropertyChanged("sortDirs")) {
@@ -920,14 +828,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         } else if (!lastKnownTheme.equals(activeTheme)) {
             getWidget().resetSizesFromDom();
             lastKnownTheme = activeTheme;
-        }
-    }
-
-    private void updateSelectDeselectAllowed() {
-        SelectionModel<JsonObject> model = getWidget().getSelectionModel();
-        if (model instanceof SelectionModel.Single<?>) {
-            ((SelectionModel.Single<?>) model)
-                    .setDeselectAllowed(getState().singleSelectDeselectAllowed);
         }
     }
 
@@ -1103,20 +1003,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     /**
-     * If we have a selection column renderer, we need to offset the index by
-     * one when referring to the column index in the widget.
-     */
-    private int getWidgetColumnIndex(final int columnIndex) {
-        Renderer<Boolean> selectionColumnRenderer = getWidget()
-                .getSelectionModel().getSelectionColumnRenderer();
-        int widgetColumnIndex = columnIndex;
-        if (selectionColumnRenderer != null) {
-            widgetColumnIndex++;
-        }
-        return widgetColumnIndex;
-    }
-
-    /**
      * Updates the column values from a state
      * 
      * @param column
@@ -1178,63 +1064,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().setDataSource(this.dataSource);
     }
 
-    private void onSelectionModeChange() {
-        SharedSelectionMode mode = getState().selectionMode;
-        if (mode == null) {
-            getLogger().fine("ignored mode change");
-            return;
-        }
-
-        AbstractRowHandleSelectionModel<JsonObject> model = createSelectionModel(mode);
-        if (selectionModel == null
-                || !model.getClass().equals(selectionModel.getClass())) {
-            selectionModel = model;
-            getWidget().setSelectionModel(model);
-            selectedKeys.clear();
-        }
-    }
-
-    private void updateSelectionFromState() {
-        boolean changed = false;
-
-        List<String> stateKeys = getState().selectedKeys;
-
-        // find new deselections
-        for (String key : selectedKeys) {
-            if (!stateKeys.contains(key)) {
-                changed = true;
-                deselectByHandle(dataSource.getHandleByKey(key));
-            }
-        }
-
-        // find new selections
-        for (String key : stateKeys) {
-            if (!selectedKeys.contains(key)) {
-                changed = true;
-                selectByHandle(dataSource.getHandleByKey(key));
-            }
-        }
-
-        /*
-         * A defensive copy in case the collection in the state is mutated
-         * instead of re-assigned.
-         */
-        selectedKeys = new LinkedHashSet<String>(stateKeys);
-
-        /*
-         * We need to fire this event so that Grid is able to re-render the
-         * selection changes (if applicable).
-         */
-        if (changed) {
-            // At least for now there's no way to send the selected and/or
-            // deselected row data. Some data is only stored as keys
-            selectionUpdatedFromState = true;
-            getWidget().fireEvent(
-                    new SelectionEvent<JsonObject>(getWidget(),
-                            (List<JsonObject>) null, null, false));
-        }
-    }
-
     private void onSortStateChange() {
         List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 
@@ -1252,41 +1081,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
     }
-
-    @SuppressWarnings("static-method")
-    private AbstractRowHandleSelectionModel<JsonObject> createSelectionModel(
-            SharedSelectionMode mode) {
-        switch (mode) {
-        case SINGLE:
-            return new SelectionModelSingle<JsonObject>();
-        case MULTI:
-            return new SelectionModelMulti<JsonObject>();
-        case NONE:
-            return new SelectionModelNone<JsonObject>();
-        default:
-            throw new IllegalStateException("unexpected mode value: " + mode);
-        }
-    }
-
-    /**
-     * A workaround method for accessing the protected method
-     * {@code AbstractRowHandleSelectionModel.selectByHandle}
-     */
-    private native void selectByHandle(RowHandle<JsonObject> handle)
-    /*-{
-        var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
-        model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
-    }-*/;
-
-    /**
-     * A workaround method for accessing the protected method
-     * {@code AbstractRowHandleSelectionModel.deselectByHandle}
-     */
-    private native void deselectByHandle(RowHandle<JsonObject> handle)
-    /*-{
-        var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
-        model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
-    }-*/;
 
     /**
      * Gets the row key for a row object.
@@ -1312,7 +1106,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void updateCaption(ComponentConnector connector) {
         // TODO Auto-generated method stub
-
     }
 
     @Override

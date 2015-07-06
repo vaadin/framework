@@ -29,10 +29,6 @@ import com.vaadin.shared.data.sort.SortDirection;
  */
 public interface GridServerRpc extends ServerRpc {
 
-    void select(List<String> newSelection);
-
-    void selectAll();
-
     void sort(String[] columnIds, SortDirection[] directions,
             boolean userOriginated);
 

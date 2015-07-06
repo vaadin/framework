@@ -99,8 +99,10 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                 }
 
                 @Override
-                public void updateRowData(JsonObject row) {
-                    RpcDataSource.this.updateRowData(row);
+                public void updateRowData(JsonArray rowArray) {
+                    for (int i = 0; i < rowArray.length(); ++i) {
+                        RpcDataSource.this.updateRowData(rowArray.getObject(i));
+                    }
                 }
             });
         }

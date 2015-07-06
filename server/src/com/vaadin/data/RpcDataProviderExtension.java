@@ -744,15 +744,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             // Send current rows again if needed.
             if (refreshCache) {
-                for (Object itemId : activeItemHandler.getActiveItemIds()) {
-                    internalUpdateRowData(itemId);
-                }
+                updatedItemIds.addAll(activeItemHandler.getActiveItemIds());
             }
         }
 
-        for (Object itemId : updatedItemIds) {
-            internalUpdateRowData(itemId);
-        }
+        internalUpdateRows(updatedItemIds);
 
         // Clear all changes.
         rowChanges.clear();
@@ -913,11 +909,20 @@ public class RpcDataProviderExtension extends AbstractExtension {
         updatedItemIds.add(itemId);
     }
 
-    private void internalUpdateRowData(Object itemId) {
-        if (activeItemHandler.getActiveItemIds().contains(itemId)) {
-            JsonObject row = getRowData(getGrid().getColumns(), itemId);
-            rpc.updateRowData(row);
+    private void internalUpdateRows(Set<Object> itemIds) {
+        if (itemIds.isEmpty()) {
+            return;
         }
+
+        JsonArray rowData = Json.createArray();
+        int i = 0;
+        for (Object itemId : itemIds) {
+            if (activeItemHandler.getActiveItemIds().contains(itemId)) {
+                JsonObject row = getRowData(getGrid().getColumns(), itemId);
+                rowData.set(i++, row);
+            }
+        }
+        rpc.updateRowData(rowData);
     }
 
     /**

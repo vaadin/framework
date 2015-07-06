@@ -5287,7 +5287,7 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
             for (FlyweightCell cell : cellsToDetach) {
-                Renderer renderer = findRenderer(cell);
+                Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(cell.getElement()
@@ -5317,7 +5317,7 @@ public class Grid<T> extends ResizeComposite implements
             // any more
             rowReference.set(rowIndex, null, row.getElement());
             for (FlyweightCell cell : detachedCells) {
-                Renderer renderer = findRenderer(cell);
+                Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
                         Column<?, T> column = getVisibleColumn(cell.getColumn());
@@ -7233,12 +7233,12 @@ public class Grid<T> extends ResizeComposite implements
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    @SuppressWarnings("unchecked")
     public boolean select(T row) {
         if (selectionModel instanceof SelectionModel.Single<?>) {
             return ((SelectionModel.Single<T>) selectionModel).select(row);
         } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel).select(row);
+            return ((SelectionModel.Multi<T>) selectionModel)
+                    .select(Collections.singleton(row));
         } else {
             throw new IllegalStateException("Unsupported selection model");
         }
@@ -7258,12 +7258,12 @@ public class Grid<T> extends ResizeComposite implements
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    @SuppressWarnings("unchecked")
     public boolean deselect(T row) {
         if (selectionModel instanceof SelectionModel.Single<?>) {
             return ((SelectionModel.Single<T>) selectionModel).deselect(row);
         } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel).deselect(row);
+            return ((SelectionModel.Multi<T>) selectionModel)
+                    .deselect(Collections.singleton(row));
         } else {
             throw new IllegalStateException("Unsupported selection model");
         }

@@ -129,6 +129,13 @@ public class GridState extends TabIndexState {
     public static final String JSONKEY_DETAILS_VISIBLE = "dv";
 
     /**
+     * The key that tells whether row is selected.
+     * 
+     * @since
+     */
+    public static final String JSONKEY_SELECTED = "s";
+
+    /**
      * Columns in grid.
      */
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
@@ -152,14 +159,6 @@ public class GridState extends TabIndexState {
     /** The mode by which Grid defines its height. */
     @DelegateToWidget
     public HeightMode heightMode = HeightMode.CSS;
-
-    // instantiated just to avoid NPEs
-    public List<String> selectedKeys = new ArrayList<String>();
-
-    public SharedSelectionMode selectionMode;
-
-    /** Whether single select mode can be cleared through the UI */
-    public boolean singleSelectDeselectAllowed = true;
 
     /** Keys of the currently sorted columns */
     public String[] sortColumns = new String[0];

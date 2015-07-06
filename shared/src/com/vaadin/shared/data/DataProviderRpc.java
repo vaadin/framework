@@ -20,7 +20,6 @@ import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 
 import elemental.json.JsonArray;
-import elemental.json.JsonObject;
 
 /**
  * RPC interface used for pushing container data to the client.
@@ -94,13 +93,14 @@ public interface DataProviderRpc extends ClientRpc {
     public void resetDataAndSize(int size);
 
     /**
-     * Informs the client that a row has updated. The client-side DataSource
-     * will map the given data to correct index if it should be in the cache.
+     * Informs the client that rows have been updated. The client-side
+     * DataSource will map the given data to correct index if it should be in
+     * the cache.
      * 
      * @since 7.6
-     * @param row
-     *            the updated row data
+     * @param rowArray
+     *            array of updated rows
      */
     @NoLayout
-    public void updateRowData(JsonObject row);
+    public void updateRowData(JsonArray rowArray);
 }
