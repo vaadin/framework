@@ -1028,6 +1028,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         for (RowState rowState : state.rows) {
             HeaderRow row = getWidget().appendHeaderRow();
 
+            if (rowState.defaultRow) {
+                getWidget().setDefaultHeaderRow(row);
+            }
+
             for (CellState cellState : rowState.cells) {
                 CustomGridColumn column = columnIdToColumn
                         .get(cellState.columnId);
@@ -1047,10 +1051,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 // Set state to be the same as first in group.
                 updateHeaderCellFromState(row.join(columns), cellState);
-            }
-
-            if (rowState.defaultRow) {
-                getWidget().setDefaultHeaderRow(row);
             }
 
             row.setStyleName(rowState.styleName);

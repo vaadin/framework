@@ -271,6 +271,20 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testSelectAllCheckboxWithHeaderOperations() {
+        openTestURL();
+
+        setSelectionModelMulti();
+        selectMenuPath("Component", "Header", "Prepend row");
+        selectMenuPath("Component", "Header", "Append row");
+
+        GridCellElement header = getGridElement().getHeaderCell(1, 0);
+        assertTrue("Multi Selection Model should have select all checkbox",
+                header.isElementPresent(By.tagName("input")));
+
+    }
+
+    @Test
     public void testToggleDeselectAllowed() {
         openTestURL();
 
