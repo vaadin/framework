@@ -6022,10 +6022,14 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        validateScrollDestination(destination, padding);
-        verifyValidRowIndex(rowIndex);
-
-        scroller.scrollToRow(rowIndex, destination, padding);
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                validateScrollDestination(destination, padding);
+                verifyValidRowIndex(rowIndex);
+                scroller.scrollToRow(rowIndex, destination, padding);
+            }
+        });
     }
 
     private void verifyValidRowIndex(final int rowIndex) {
@@ -6086,55 +6090,62 @@ public class Escalator extends Widget implements RequiresResize,
      *             {@code destination == null}; or if {@code rowIndex == -1} and
      *             there is no spacer open at that index.
      */
-    public void scrollToRowAndSpacer(int rowIndex,
-            ScrollDestination destination, int padding)
+    public void scrollToRowAndSpacer(final int rowIndex,
+            final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        validateScrollDestination(destination, padding);
-        if (rowIndex != -1) {
-            verifyValidRowIndex(rowIndex);
-        }
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                validateScrollDestination(destination, padding);
+                if (rowIndex != -1) {
+                    verifyValidRowIndex(rowIndex);
+                }
 
-        // row range
-        final Range rowRange;
-        if (rowIndex != -1) {
-            int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
-            int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
-            rowRange = Range.withLength(rowTop, rowHeight);
-        } else {
-            rowRange = Range.withLength(0, 0);
-        }
+                // row range
+                final Range rowRange;
+                if (rowIndex != -1) {
+                    int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
+                    int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
+                    rowRange = Range.withLength(rowTop, rowHeight);
+                } else {
+                    rowRange = Range.withLength(0, 0);
+                }
 
-        // get spacer
-        final SpacerContainer.SpacerImpl spacer = body.spacerContainer
-                .getSpacer(rowIndex);
+                // get spacer
+                final SpacerContainer.SpacerImpl spacer = body.spacerContainer
+                        .getSpacer(rowIndex);
 
-        if (rowIndex == -1 && spacer == null) {
-            throw new IllegalArgumentException("Cannot scroll to row index "
-                    + "-1, as there is no spacer open at that index.");
-        }
+                if (rowIndex == -1 && spacer == null) {
+                    throw new IllegalArgumentException(
+                            "Cannot scroll to row index "
+                                    + "-1, as there is no spacer open at that index.");
+                }
 
-        // make into target range
-        final Range targetRange;
-        if (spacer != null) {
-            final int spacerTop = (int) Math.floor(spacer.getTop());
-            final int spacerHeight = (int) Math.ceil(spacer.getHeight());
-            Range spacerRange = Range.withLength(spacerTop, spacerHeight);
+                // make into target range
+                final Range targetRange;
+                if (spacer != null) {
+                    final int spacerTop = (int) Math.floor(spacer.getTop());
+                    final int spacerHeight = (int) Math.ceil(spacer.getHeight());
+                    Range spacerRange = Range.withLength(spacerTop,
+                            spacerHeight);
 
-            targetRange = rowRange.combineWith(spacerRange);
-        } else {
-            targetRange = rowRange;
-        }
+                    targetRange = rowRange.combineWith(spacerRange);
+                } else {
+                    targetRange = rowRange;
+                }
 
-        // get params
-        int targetStart = targetRange.getStart();
-        int targetEnd = targetRange.getEnd();
-        double viewportStart = getScrollTop();
-        double viewportEnd = viewportStart + body.getHeightOfSection();
+                // get params
+                int targetStart = targetRange.getStart();
+                int targetEnd = targetRange.getEnd();
+                double viewportStart = getScrollTop();
+                double viewportEnd = viewportStart + body.getHeightOfSection();
 
-        double scrollPos = getScrollPos(destination, targetStart, targetEnd,
-                viewportStart, viewportEnd, padding);
+                double scrollPos = getScrollPos(destination, targetStart,
+                        targetEnd, viewportStart, viewportEnd, padding);
 
-        setScrollTop(scrollPos);
+                setScrollTop(scrollPos);
+            }
+        });
     }
 
     private static void validateScrollDestination(
