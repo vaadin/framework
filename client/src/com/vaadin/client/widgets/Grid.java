@@ -861,6 +861,7 @@ public class Grid<T> extends ResizeComposite implements
             if (row != null) {
                 row.setDefault(true);
             }
+
             defaultRow = row;
             requestSectionRefresh();
         }
@@ -911,6 +912,16 @@ public class Grid<T> extends ResizeComposite implements
                     BrowserEvents.TOUCHMOVE, BrowserEvents.TOUCHEND,
                     BrowserEvents.TOUCHCANCEL, BrowserEvents.CLICK);
         }
+
+        @Override
+        protected void addColumn(Column<?, ?> column) {
+            super.addColumn(column);
+
+            // Add default content for new columns.
+            if (defaultRow != null) {
+                column.setDefaultHeaderContent(defaultRow.getCell(column));
+            }
+        }
     }
 
     /**
@@ -923,6 +934,11 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void setDefault(boolean isDefault) {
             this.isDefault = isDefault;
+            if (isDefault) {
+                for (Column<?, ?> column : getSection().grid.getColumns()) {
+                    column.setDefaultHeaderContent(getCell(column));
+                }
+            }
         }
 
         public boolean isDefault() {
@@ -2341,8 +2357,6 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         void initDone() {
-            addSelectAllToDefaultHeader();
-
             setWidth(-1);
 
             setEditable(false);
@@ -2350,62 +2364,52 @@ public class Grid<T> extends ResizeComposite implements
             initDone = true;
         }
 
-        protected void addSelectAllToDefaultHeader() {
-            if (getSelectionModel() instanceof SelectionModel.Multi
-                    && header.getDefaultRow() != null) {
-                // If selection cell already contains a widget do not
-                // create a new CheckBox
-                HeaderCell selectionCell = header.getDefaultRow().getCell(this);
-                if (selectionCell.getType().equals(GridStaticCellType.WIDGET)
-                        && selectionCell.getWidget() instanceof CheckBox) {
-                    return;
+        @Override
+        protected void setDefaultHeaderContent(HeaderCell selectionCell) {
+            /*
+             * TODO: Currently the select all check box is shown when multi
+             * selection is in use. This might result in malfunctions if no
+             * SelectAllHandlers are present.
+             * 
+             * Later on this could be fixed so that it check such handlers
+             * exist.
+             */
+            final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
+            final CheckBox checkBox = GWT.create(CheckBox.class);
+            checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                @Override
+                public void onValueChange(ValueChangeEvent<Boolean> event) {
+                    if (event.getValue()) {
+                        fireEvent(new SelectAllEvent<T>(model));
+                        selected = true;
+                    } else {
+                        model.deselectAll();
+                        selected = false;
+                    }
                 }
-                /*
-                 * TODO: Currently the select all check box is shown when multi
-                 * selection is in use. This might result in malfunctions if no
-                 * SelectAllHandlers are present.
-                 * 
-                 * Later on this could be fixed so that it check such handlers
-                 * exist.
-                 */
-                final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
-                final CheckBox checkBox = GWT.create(CheckBox.class);
-                checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-
-                    @Override
-                    public void onValueChange(ValueChangeEvent<Boolean> event) {
-                        if (event.getValue()) {
-                            fireEvent(new SelectAllEvent<T>(model));
-                            selected = true;
-                        } else {
-                            model.deselectAll();
-                            selected = false;
-                        }
+            });
+            checkBox.setValue(selected);
+            selectionCell.setWidget(checkBox);
+            // Select all with space when "select all" cell is active
+            addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
+                @Override
+                public void onKeyUp(GridKeyUpEvent event) {
+                    if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+                        return;
                     }
-                });
-                checkBox.setValue(selected);
-                selectionCell.setWidget(checkBox);
-                // Select all with space when "select all" cell is active
-                addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
-                    @Override
-                    public void onKeyUp(GridKeyUpEvent event) {
-                        if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
-                            return;
-                        }
-                        HeaderRow targetHeaderRow = getHeader().getRow(
-                                event.getFocusedCell().getRowIndex());
-                        if (!targetHeaderRow.isDefault()) {
-                            return;
-                        }
-                        if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
-                            // Send events to ensure row selection state is
-                            // updated
-                            checkBox.setValue(!checkBox.getValue(), true);
-                        }
+                    HeaderRow targetHeaderRow = getHeader().getRow(
+                            event.getFocusedCell().getRowIndex());
+                    if (!targetHeaderRow.isDefault()) {
+                        return;
                     }
-                });
-
-            }
+                    if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
+                        // Send events to ensure row selection state is
+                        // updated
+                        checkBox.setValue(!checkBox.getValue(), true);
+                    }
+                }
+            });
         }
 
         @Override
@@ -4204,7 +4208,6 @@ public class Grid<T> extends ResizeComposite implements
             this.grid = grid;
             if (this.grid != null) {
                 this.grid.recalculateColumnWidths();
-                updateHeader();
             }
         }
 
@@ -4742,6 +4745,17 @@ public class Grid<T> extends ResizeComposite implements
                  */
             }
         }
+
+        /**
+         * Resets the default header cell contents to column header captions.
+         * 
+         * @since
+         * @param cell
+         *            default header cell for this column
+         */
+        protected void setDefaultHeaderContent(HeaderCell cell) {
+            cell.setText(headerCaption);
+        }
     }
 
     protected class BodyUpdater implements EscalatorUpdater {
@@ -4995,35 +5009,29 @@ public class Grid<T> extends ResizeComposite implements
                 final StaticSection.StaticCell metadata = staticRow
                         .getCell(columns.get(cell.getColumn()));
 
-                boolean updateCellData = true;
                 // Decorate default row with sorting indicators
                 if (staticRow instanceof HeaderRow) {
                     addSortingIndicatorsToHeaderRow((HeaderRow) staticRow, cell);
-
-                    if (isHeaderSelectionColumn(row, cell)) {
-                        updateCellData = false;
-                    }
                 }
 
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
 
                 TableCellElement element = cell.getElement();
-                if (updateCellData) {
-                    switch (metadata.getType()) {
-                    case TEXT:
-                        element.setInnerText(metadata.getText());
-                        break;
-                    case HTML:
-                        element.setInnerHTML(metadata.getHtml());
-                        break;
-                    case WIDGET:
-                        preDetach(row, Arrays.asList(cell));
-                        element.setInnerHTML("");
-                        postAttach(row, Arrays.asList(cell));
-                        break;
-                    }
+                switch (metadata.getType()) {
+                case TEXT:
+                    element.setInnerText(metadata.getText());
+                    break;
+                case HTML:
+                    element.setInnerHTML(metadata.getHtml());
+                    break;
+                case WIDGET:
+                    preDetach(row, Arrays.asList(cell));
+                    element.setInnerHTML("");
+                    postAttach(row, Arrays.asList(cell));
+                    break;
                 }
+
                 setCustomStyleName(element, metadata.getStyleName());
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);
@@ -5082,27 +5090,6 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
-            // Add select all checkbox if needed on rebuild.
-            for (FlyweightCell cell : cellsToAttach) {
-                if (isHeaderSelectionColumn(row, cell)) {
-                    selectionColumn.addSelectAllToDefaultHeader();
-                }
-            }
-        }
-
-        /**
-         * Check if selectionColumn in the default header row
-         */
-        private boolean isHeaderSelectionColumn(Row row, FlyweightCell cell) {
-            return selectionColumn != null && isDefaultHeaderRow(row)
-                    && getColumn(cell.getColumn()).equals(selectionColumn);
-        }
-
-        /**
-         * Row is the default header row.
-         */
-        private boolean isDefaultHeaderRow(Row row) {
-            return section.getRow(row.getRow()).equals(header.getDefaultRow());
         }
 
         @Override
@@ -5731,6 +5718,9 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Sets the default row of the header. The default row is a special header
      * row providing a user interface for sorting columns.
+     * <p>
+     * Note: Setting the default header row will reset all cell contents to
+     * Column defaults.
      * 
      * @param row
      *            the new default row, or null for no default row
