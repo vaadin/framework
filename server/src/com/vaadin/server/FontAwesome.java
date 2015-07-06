@@ -538,7 +538,7 @@ public enum FontAwesome implements FontIcon {
     YOUTUBE_PLAY(0XF16A), //
     YOUTUBE_SQUARE(0XF166);
 
-    private static final String fontFamily = "FontAwesome";
+    public static final String FONT_FAMILY = "FontAwesome";
     private int codepoint;
 
     FontAwesome(int codepoint) {
@@ -563,7 +563,7 @@ public enum FontAwesome implements FontIcon {
      */
     @Override
     public String getFontFamily() {
-        return fontFamily;
+        return FontAwesome.FONT_FAMILY;
     }
 
     /*
@@ -578,8 +578,25 @@ public enum FontAwesome implements FontIcon {
 
     @Override
     public String getHtml() {
-        return "<span class=\"v-icon\" style=\"font-family: " + fontFamily
-                + ";\">&#x" + Integer.toHexString(codepoint) + ";</span>";
+        return GenericFontIcon.getHtml(FontAwesome.FONT_FAMILY, codepoint);
+    }
+
+    /**
+     * Finds an instance of FontAwesome with given codepoint
+     * 
+     * @since 7.5.0
+     * @param codepoint
+     * @return FontAwesome instance with a specific codepoint or null if there
+     *         isn't any
+     */
+    public static FontAwesome fromCodepoint(final int codepoint) {
+        for (FontAwesome f : values()) {
+            if (f.getCodepoint() == codepoint) {
+                return f;
+            }
+        }
+        throw new IllegalArgumentException("Codepoint " + codepoint
+                + " not found in FontAwesome");
     }
 
 }

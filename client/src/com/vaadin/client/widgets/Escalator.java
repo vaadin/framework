@@ -803,7 +803,24 @@ public class Escalator extends Widget implements RequiresResize,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-                
+
+                // Delta mode 0 is in pixels; we don't need to do anything...
+
+                // A delta mode of 1 means we're scrolling by lines instead of pixels
+                // We need to scale the number of lines by the default line height
+                if(e.deltaMode === 1) {
+                    var brc = esc.@com.vaadin.client.widgets.Escalator::body;
+                    deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
+                }
+
+                // Other delta modes aren't supported
+                if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
+                    var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
+
+                    // Print warning message
+                    esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
+                }
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
@@ -821,7 +838,6 @@ public class Escalator extends Widget implements RequiresResize,
             double scrollContentHeight = body.calculateTotalRowHeight()
                     + body.spacerContainer.getSpacerHeightsSum();
             double scrollContentWidth = columnConfiguration.calculateRowWidth();
-
             double tableWrapperHeight = heightOfEscalator;
             double tableWrapperWidth = widthOfEscalator;
 
@@ -1345,6 +1361,22 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         /**
+         * This method calculates the current row count directly from the DOM.
+         * <p>
+         * While Escalator is stable, this value should equal to
+         * {@link #getRowCount()}, but while row counts are being updated, these
+         * two values might differ for a short while.
+         * <p>
+         * Any extra content, such as spacers for the body, should not be
+         * included in this count.
+         * 
+         * @since 7.5.0
+         * 
+         * @return the actual DOM count of rows
+         */
+        public abstract int getDomRowCount();
+
+        /**
          * {@inheritDoc}
          * <p>
          * <em>Implementation detail:</em> This method does no DOM modifications
@@ -1603,7 +1635,7 @@ public class Escalator extends Widget implements RequiresResize,
 
         protected void paintRemoveColumns(final int offset,
                 final int numberOfColumns) {
-            for (int i = 0; i < root.getChildCount(); i++) {
+            for (int i = 0; i < getDomRowCount(); i++) {
                 TableRowElement row = getTrByVisualIndex(i);
                 flyweightRow.setup(row, i,
                         columnConfiguration.getCalculatedColumnWidths());
@@ -1627,9 +1659,10 @@ public class Escalator extends Widget implements RequiresResize,
         protected void paintInsertColumns(final int offset,
                 final int numberOfColumns, boolean frozen) {
 
-            for (int row = 0; row < root.getChildCount(); row++) {
+            for (int row = 0; row < getDomRowCount(); row++) {
                 final TableRowElement tr = getTrByVisualIndex(row);
-                paintInsertCells(tr, row, offset, numberOfColumns);
+                int logicalRowIndex = getLogicalRowIndex(tr);
+                paintInsertCells(tr, logicalRowIndex, offset, numberOfColumns);
             }
             reapplyRowWidths();
 
@@ -1741,6 +1774,8 @@ public class Escalator extends Widget implements RequiresResize,
          * In practice, this applies for all header and footer rows. For body
          * rows, it applies for all rows except spacer rows.
          * 
+         * @since 7.5.0
+         * 
          * @param tr
          *            the row element to check for if it is or has elements that
          *            can be frozen
@@ -1781,20 +1816,23 @@ public class Escalator extends Widget implements RequiresResize,
         public void reapplyColumnWidths() {
             Element row = root.getFirstChildElement();
             while (row != null) {
-                Element cell = row.getFirstChildElement();
-                int columnIndex = 0;
-                while (cell != null) {
-                    final double width = getCalculatedColumnWidthWithColspan(
-                            cell, columnIndex);
+                // Only handle non-spacer rows
+                if (!body.spacerContainer.isSpacer(row)) {
+                    Element cell = row.getFirstChildElement();
+                    int columnIndex = 0;
+                    while (cell != null) {
+                        final double width = getCalculatedColumnWidthWithColspan(
+                                cell, columnIndex);
 
-                    /*
-                     * TODO Should Escalator implement ProvidesResize at some
-                     * point, this is where we need to do that.
-                     */
-                    cell.getStyle().setWidth(width, Unit.PX);
+                        /*
+                         * TODO Should Escalator implement ProvidesResize at
+                         * some point, this is where we need to do that.
+                         */
+                        cell.getStyle().setWidth(width, Unit.PX);
 
-                    cell = cell.getNextSiblingElement();
-                    columnIndex++;
+                        cell = cell.getNextSiblingElement();
+                        columnIndex++;
+                    }
                 }
                 row = row.getNextSiblingElement();
             }
@@ -2065,7 +2103,6 @@ public class Escalator extends Widget implements RequiresResize,
                 rowElement.insertBefore(cellClone, cellOriginal);
                 double requiredWidth = WidgetUtil
                         .getRequiredWidthBoundingClientRectDouble(cellClone);
-
                 if (BrowserInfo.get().isIE()) {
                     /*
                      * IE browsers have some issues with subpixels. Occasionally
@@ -2104,9 +2141,16 @@ public class Escalator extends Widget implements RequiresResize,
          * Note that {@link Escalator#getBody() the body} will calculate its
          * height, while the others will return a precomputed value.
          * 
+         * @since 7.5.0
+         * 
          * @return the height of this table section
          */
         protected abstract double getHeightOfSection();
+
+        protected int getLogicalRowIndex(final TableRowElement tr) {
+            return tr.getSectionRowIndex();
+        };
+
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -2117,6 +2161,11 @@ public class Escalator extends Widget implements RequiresResize,
 
         public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
+        }
+
+        @Override
+        public int getDomRowCount() {
+            return root.getChildCount();
         }
 
         @Override
@@ -2697,7 +2746,7 @@ public class Escalator extends Widget implements RequiresResize,
                 if (rowsStillNeeded > 0) {
                     final Range unupdatedVisual = convertToVisual(Range
                             .withLength(unupdatedLogicalStart, rowsStillNeeded));
-                    final int end = getEscalatorRowCount();
+                    final int end = getDomRowCount();
                     final int start = end - unupdatedVisual.length();
                     final int visualTargetIndex = unupdatedLogicalStart
                             - visualOffset;
@@ -2755,11 +2804,10 @@ public class Escalator extends Widget implements RequiresResize,
             assert visualTargetIndex >= 0 : "Visual target must be 0 or greater (was "
                     + visualTargetIndex + ")";
 
-            assert visualTargetIndex <= getEscalatorRowCount() : "Visual target "
+            assert visualTargetIndex <= getDomRowCount() : "Visual target "
                     + "must not be greater than the number of escalator rows (was "
-                    + visualTargetIndex
-                    + ", escalator rows "
-                    + getEscalatorRowCount() + ")";
+                    + visualTargetIndex + ", escalator rows "
+                    + getDomRowCount() + ")";
 
             assert logicalTargetIndex + visualSourceRange.length() <= getRowCount() : "Logical "
                     + "target leads to rows outside of the data range ("
@@ -2910,7 +2958,7 @@ public class Escalator extends Widget implements RequiresResize,
                 final int index, final int numberOfRows) {
 
             final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
-                    - getEscalatorRowCount();
+                    - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
 
@@ -3036,7 +3084,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             // ranges evaluated, let's do things.
             if (!removedVisualInside.isEmpty()) {
-                int escalatorRowCount = body.getEscalatorRowCount();
+                int escalatorRowCount = body.getDomRowCount();
 
                 /*
                  * remember: the rows have already been subtracted from the row
@@ -3372,7 +3420,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
-        private int getLogicalRowIndex(final Element tr) {
+        @Override
+        protected int getLogicalRowIndex(final TableRowElement tr) {
             assert tr.getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
             return getTopRowLogicalIndex() + internalIndex;
@@ -3830,7 +3879,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             // Convert DOM coordinates to logical coordinates for rows
-            Element rowElement = cell.getElement().getParentElement();
+            TableRowElement rowElement = (TableRowElement) cell.getElement()
+                    .getParentElement();
             return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
                     cell.getElement());
         }
@@ -3899,17 +3949,8 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
-        /**
-         * This method calculates the current escalator row count directly from
-         * the DOM.
-         * <p>
-         * While Escalator is stable, this value should equal to
-         * {@link #visualRowOrder}.size(), but while row counts are being
-         * updated, these two values might differ for a short while.
-         * 
-         * @return the actual DOM count of escalator rows
-         */
-        public int getEscalatorRowCount() {
+        @Override
+        public int getDomRowCount() {
             return root.getChildCount()
                     - spacerContainer.getSpacersInDom().size();
         }
@@ -4154,8 +4195,6 @@ public class Escalator extends Widget implements RequiresResize,
          */
         @Override
         public void insertColumns(final int index, final int numberOfColumns) {
-            subpixelBrowserBugDetector.invalidateFix();
-
             // Validate
             if (index < 0 || index > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given index(" + index
@@ -4308,11 +4347,10 @@ public class Escalator extends Widget implements RequiresResize,
                 int index = entry.getKey().intValue();
                 double width = entry.getValue().doubleValue();
 
-                if (index == getColumnCount() - 1) {
-                    subpixelBrowserBugDetector.invalidateFix();
-                }
-
                 checkValidColumnIndex(index);
+
+                // Not all browsers will accept any fractional size..
+                width = WidgetUtil.roundSizeDown(width);
                 columns.get(index).setWidth(width);
 
             }
@@ -4321,8 +4359,6 @@ public class Escalator extends Widget implements RequiresResize,
             header.reapplyColumnWidths();
             body.reapplyColumnWidths();
             footer.reapplyColumnWidths();
-
-            subpixelBrowserBugDetector.checkAndFix();
 
             recalculateElementSizes();
         }
@@ -4415,137 +4451,6 @@ public class Escalator extends Widget implements RequiresResize,
             header.refreshColumns(index, numberOfColumns);
             body.refreshColumns(index, numberOfColumns);
             footer.refreshColumns(index, numberOfColumns);
-        }
-    }
-
-    private class SubpixelBrowserBugDetector {
-        private static final double SUBPIXEL_ADJUSTMENT = .1;
-        private boolean hasAlreadyBeenFixed = false;
-
-        /**
-         * This is a fix essentially for Firefox and how it handles subpixels.
-         * <p>
-         * Even if an element has {@code style="width: 1000.12px"}, the bounding
-         * box's width in Firefox is usually nothing of that sort. It's actually
-         * 1000.11669921875 (in version 35.0.1). That's not even close, when
-         * talking about floating point precision. Other browsers handle the
-         * subpixels way better
-         * <p>
-         * In any case, we need to fix that. And that's fixed by simply checking
-         * if the sum of the width of all the cells is larger than the width of
-         * the row. If it is, we <i>hack</i> the last column
-         * {@value #SUBPIXEL_ADJUSTMENT}px narrower.
-         */
-        public void checkAndFix() {
-            if (!hasAlreadyBeenFixed && hasSubpixelBrowserBug()) {
-                fixSubpixelBrowserBug();
-                hasAlreadyBeenFixed = true;
-            }
-        }
-
-        public void invalidateFix() {
-            adjustBookkeepingPixels(SUBPIXEL_ADJUSTMENT);
-            hasAlreadyBeenFixed = false;
-        }
-
-        private boolean hasSubpixelBrowserBug() {
-            final RowContainer rowContainer;
-            if (header.getRowCount() > 0) {
-                rowContainer = header;
-            } else if (body.getRowCount() > 0) {
-                rowContainer = body;
-            } else if (footer.getRowCount() > 0) {
-                rowContainer = footer;
-            } else {
-                return false;
-            }
-
-            double sumOfCellWidths = 0;
-            TableRowElement tr = rowContainer.getElement().getRows().getItem(0);
-
-            if (tr == null) {
-                /*
-                 * for some weird reason, the row might be null at this point in
-                 * (some?) webkit browsers.
-                 */
-                return false;
-            }
-
-            NodeList<TableCellElement> cells = tr.getCells();
-            assert cells != null : "cells was null, why is it null?";
-
-            for (int i = 0; i < cells.getLength(); i++) {
-                TableCellElement cell = cells.getItem(i);
-                if (!cell.getStyle().getDisplay()
-                        .equals(Display.NONE.getCssName())) {
-                    sumOfCellWidths += WidgetUtil.getBoundingClientRect(cell)
-                            .getWidth();
-                }
-            }
-
-            double rowWidth = WidgetUtil.getBoundingClientRect(tr).getWidth();
-            return sumOfCellWidths >= rowWidth;
-        }
-
-        private void fixSubpixelBrowserBug() {
-            assert columnConfiguration.getColumnCount() > 0 : "Why are we running this code if there are no columns?";
-
-            adjustBookkeepingPixels(-SUBPIXEL_ADJUSTMENT);
-
-            fixSubpixelBrowserBugFor(header);
-            fixSubpixelBrowserBugFor(body);
-            fixSubpixelBrowserBugFor(footer);
-        }
-
-        private void adjustBookkeepingPixels(double adjustment) {
-            int lastColumnIndex = columnConfiguration.columns.size() - 1;
-            if (lastColumnIndex < 0) {
-                return;
-            }
-
-            columnConfiguration.columns.get(lastColumnIndex).calculatedWidth += adjustment;
-            if (columnConfiguration.widthsArray != null) {
-                columnConfiguration.widthsArray[lastColumnIndex] += adjustment;
-            }
-        }
-
-        /**
-         * Adjust the last non-spanned cell by {@link #SUBPIXEL_ADJUSTMENT} (
-         * {@value #SUBPIXEL_ADJUSTMENT}px).
-         * <p>
-         * We'll do this brute-force, by individually measuring and shrinking
-         * the last non-spanned cell. Brute-force, since each row might be
-         * spanned differently - we can't simply pick one index and one width,
-         * and mass-apply that to everything :(
-         */
-        private void fixSubpixelBrowserBugFor(RowContainer rowContainer) {
-            if (rowContainer.getRowCount() == 0) {
-                return;
-            }
-
-            NodeList<TableRowElement> rows = rowContainer.getElement()
-                    .getRows();
-            for (int i = 0; i < rows.getLength(); i++) {
-
-                NodeList<TableCellElement> cells = rows.getItem(i).getCells();
-                TableCellElement lastNonspannedCell = null;
-                for (int j = cells.getLength() - 1; j >= 0; j--) {
-                    TableCellElement cell = cells.getItem(j);
-                    if (!cell.getStyle().getDisplay()
-                            .equals(Display.NONE.getCssName())) {
-                        lastNonspannedCell = cell;
-                        break;
-                    }
-                }
-
-                assert lastNonspannedCell != null : "all cells were \"display: none\" on row "
-                        + i + " in " + rowContainer.getElement().getTagName();
-
-                double cellWidth = WidgetUtil.getBoundingClientRect(
-                        lastNonspannedCell).getWidth();
-                double newWidth = cellWidth - SUBPIXEL_ADJUSTMENT;
-                lastNonspannedCell.getStyle().setWidth(newWidth, Unit.PX);
-            }
         }
     }
 
@@ -4822,9 +4727,17 @@ public class Escalator extends Widget implements RequiresResize,
                     final double bodyBottom, final double decoWidth) {
                 final int top = deco.getAbsoluteTop();
                 final int bottom = deco.getAbsoluteBottom();
+                /*
+                 * FIXME
+                 * 
+                 * Height and its use is a workaround for the issue where
+                 * coordinates of the deco are not calculated yet. This will
+                 * prevent a deco from being displayed when it's added to DOM
+                 */
+                final int height = bottom - top;
                 if (top < bodyTop || bottom > bodyBottom) {
                     final double topClip = Math.max(0.0D, bodyTop - top);
-                    final double bottomClip = decoHeight
+                    final double bottomClip = height
                             - Math.max(0.0D, bottom - bodyBottom);
                     // TODO [optimize] not sure how GWT compiles this
                     final String clip = new StringBuilder("rect(")
@@ -4880,10 +4793,12 @@ public class Escalator extends Widget implements RequiresResize,
             } else if (spacerExists(rowIndex)) {
                 removeSpacer(rowIndex);
             }
+
+            updateSpacerDecosVisibility();
         }
 
         /** Checks if a given element is a spacer element */
-        public boolean isSpacer(TableRowElement focusedRow) {
+        public boolean isSpacer(Element row) {
 
             /*
              * If this needs optimization, we could do a more heuristic check
@@ -4892,7 +4807,7 @@ public class Escalator extends Widget implements RequiresResize,
              */
 
             for (SpacerImpl spacer : rowIndexToSpacer.values()) {
-                if (spacer.getRootElement().equals(focusedRow)) {
+                if (spacer.getRootElement().equals(row)) {
                     return true;
                 }
             }
@@ -5456,6 +5371,12 @@ public class Escalator extends Widget implements RequiresResize,
         }
     }
 
+    /**
+     * Utility class for parsing and storing SubPart request string attributes
+     * for Grid and Escalator.
+     * 
+     * @since 7.5.0
+     */
     public static class SubPartArguments {
         private String type;
         private int[] indices;
@@ -5597,8 +5518,6 @@ public class Escalator extends Widget implements RequiresResize,
             layoutIsScheduled = false;
         }
     };
-
-    private final SubpixelBrowserBugDetector subpixelBrowserBugDetector = new SubpixelBrowserBugDetector();
 
     private final ElementPositionBookkeeper positions = new ElementPositionBookkeeper();
 
@@ -5814,7 +5733,7 @@ public class Escalator extends Widget implements RequiresResize,
          * updated correctly. Since it isn't, we'll simply and brutally rip out
          * the DOM elements (in an elegant way, of course).
          */
-        int rowsToRemove = body.getEscalatorRowCount();
+        int rowsToRemove = body.getDomRowCount();
         for (int i = 0; i < rowsToRemove; i++) {
             int index = rowsToRemove - i - 1;
             TableRowElement tr = bodyElem.getRows().getItem(index);
@@ -6121,7 +6040,7 @@ public class Escalator extends Widget implements RequiresResize,
      * visible and there is at least {@literal padding} pixesl to the given
      * scroll destination.
      * 
-     * @since
+     * @since 7.5.0
      * @param spacerIndex
      *            the row index of the spacer to scroll to
      * @param destination
@@ -6149,7 +6068,7 @@ public class Escalator extends Widget implements RequiresResize,
      * If a spacer is not open at that index, this method behaves like
      * {@link #scrollToRow(int, ScrollDestination, int)}
      * 
-     * @since
+     * @since 7.5.0
      * @param rowIndex
      *            the index of the logical row to scroll to. -1 takes the
      *            topmost spacer into account as well.
@@ -6638,7 +6557,7 @@ public class Escalator extends Widget implements RequiresResize,
     @Override
     @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        SubPartArguments args = parseSubPartArguments(subPart);
+        SubPartArguments args = SubPartArguments.create(subPart);
 
         Element tableStructureElement = getSubPartElementTableStructure(args);
         if (tableStructureElement != null) {
@@ -6802,7 +6721,7 @@ public class Escalator extends Widget implements RequiresResize,
         return body.spacerContainer.getSubPartName(subElement);
     }
 
-    public static SubPartArguments parseSubPartArguments(String subPart) {
-        return SubPartArguments.create(subPart);
+    private void logWarning(String message) {
+        getLogger().warning(message);
     }
 }

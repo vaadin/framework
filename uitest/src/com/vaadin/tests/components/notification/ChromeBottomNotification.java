@@ -12,8 +12,7 @@ public class ChromeBottomNotification extends AbstractTestUI {
         addButton("Show notification", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Notification notification = new Notification(
-                        "Hello world",
+                Notification notification = new Notification("Hello world",
                         Notification.Type.ERROR_MESSAGE);
                 notification.setPosition(Position.BOTTOM_CENTER);
                 notification.show(getPage());

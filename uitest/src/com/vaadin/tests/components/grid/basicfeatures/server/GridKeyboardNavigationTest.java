@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -192,30 +193,40 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
 
         selectMenuPath("Component", "Size", "HeightMode Row");
 
-        getGridElement().getCell(5, 2).click();
+        getGridElement().getCell(9, 2).click();
+        new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
+        assertTrue("Row 17 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(17, 2)']")));
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
-        assertTrue("Row 20 did not become visible",
-                isElementPresent(By.xpath("//td[text() = '(20, 2)']")));
+        assertTrue("Row 25 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(25, 2)']")));
+        checkFocusedCell(29, 2, 4);
 
-        new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
-        assertTrue("Row 30 did not become visible",
-                isElementPresent(By.xpath("//td[text() = '(30, 2)']")));
-
-        assertTrue("Originally focused cell is no longer focused",
-                getGridElement().getCell(5, 2).isFocused());
-
-        getGridElement().getCell(50, 2).click();
+        getGridElement().getCell(41, 2).click();
+        new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
+        assertTrue("Row 33 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(33, 2)']")));
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
-        assertTrue("Row 31 did not become visible",
-                isElementPresent(By.xpath("//td[text() = '(31, 2)']")));
+        assertTrue("Row 25 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(25, 2)']")));
+        checkFocusedCell(21, 2, 4);
+    }
 
-        new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
-        assertTrue("Row 21 did not become visible",
-                isElementPresent(By.xpath("//td[text() = '(21, 2)']")));
-
-        assertTrue("Originally focused cell is no longer focused",
-                getGridElement().getCell(50, 2).isFocused());
+    private void checkFocusedCell(int row, int column, int rowTolerance) {
+        WebElement focusedCell = getGridElement().findElement(
+                By.className("v-grid-cell-focused"));
+        String cellContents = focusedCell.getText();
+        String[] rowAndCol = cellContents.replaceAll("[()\\s]", "").split(",");
+        int focusedRow = Integer.parseInt(rowAndCol[0].trim());
+        int focusedColumn = Integer.parseInt(rowAndCol[1].trim());
+        // rowTolerance is the maximal allowed difference from the expected
+        // focused row. It is required because scrolling using page up/down
+        // may not move the position by exactly the visible height of the grid.
+        assertTrue("The wrong cell is focused. Expected (" + row + "," + column
+                + "), was " + cellContents,
+                column == focusedColumn
+                        && Math.abs(row - focusedRow) <= rowTolerance);
     }
 }

@@ -26,6 +26,7 @@ import static com.vaadin.tools.CvalChecker.deleteCache;
 import static com.vaadin.tools.CvalChecker.parseJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -198,6 +199,7 @@ public class CvalCheckerTest {
             Assert.fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
+            assertTrue(expected.getMessage().contains("is not valid"));
         }
         Assert.assertFalse(cacheExists(productNameCval));
 

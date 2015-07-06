@@ -9,7 +9,8 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.TextField;
 
-public class AbstractTextFieldListenersTest extends AbstractListenerMethodsTestBase {
+public class AbstractTextFieldListenersTest extends
+        AbstractListenerMethodsTestBase {
     public void testTextChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(TextField.class, TextChangeEvent.class,
                 TextChangeListener.class);

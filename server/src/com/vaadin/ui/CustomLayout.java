@@ -74,6 +74,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * for setting the appropriate fields. Either
      * {@link #setTemplateName(String)}, that makes layout fetch the template
      * from theme, or {@link #setTemplateContents(String)}.
+     * 
+     * @since 7.5.0
      */
     public CustomLayout() {
         setWidth(100, Unit.PERCENTAGE);

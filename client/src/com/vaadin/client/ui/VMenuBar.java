@@ -914,8 +914,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
             String currentStyles = super.getStyleName();
             List<String> customStyles = new ArrayList<String>();
-            for(String style : currentStyles.split(" ")) {
-                if(!style.isEmpty() && !style.startsWith(primaryStyleName)) {
+            for (String style : currentStyles.split(" ")) {
+                if (!style.isEmpty() && !style.startsWith(primaryStyleName)) {
                     customStyles.add(style);
                 }
             }

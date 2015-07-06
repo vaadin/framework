@@ -160,11 +160,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     public void setFeedbackValue(double value) {
-        String currentValue = "" + value;
-        if (resolution == 0) {
-            currentValue = "" + new Double(value).intValue();
-        }
-        feedback.setText(currentValue);
+        feedback.setText(String.valueOf(value));
     }
 
     private void updateFeedbackPosition() {
@@ -218,8 +214,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                     public void execute() {
                         final Element p = getElement();
                         if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)
-                                || propertyNotNullOrEmpty(styleAttribute,
-                                        p)) {
+                                || propertyNotNullOrEmpty(styleAttribute, p)) {
                             if (isVertical()) {
                                 setHeight();
                             } else {

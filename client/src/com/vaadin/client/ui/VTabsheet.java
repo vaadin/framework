@@ -909,7 +909,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
         deco = DOM.createDiv();
 
-        addStyleDependentName("loading"); // Indicate initial progress
         tb.setStyleName(CLASSNAME + "-tabs");
         DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
@@ -1102,7 +1101,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     private boolean isScrollerHidden() {
-        return scroller.getStyle().getDisplay().equals(Display.NONE.getCssName());
+        return scroller.getStyle().getDisplay()
+                .equals(Display.NONE.getCssName());
     }
 
     private boolean isIndexSkippingHiddenTabs() {
@@ -1125,16 +1125,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             // Should not set tabs visible if they are scrolled out of view
             tab.setVisible(false);
         } else {
-            //When the tab was hidden and then turned visible again
-            //and there is space for it, it should be in view (#17096) (#17333)
+            // When the tab was hidden and then turned visible again
+            // and there is space for it, it should be in view (#17096) (#17333)
             if (isTabSetVisibleBeforeScroller(tabState, index, tab)) {
                 scrollerIndex = index;
                 tab.setVisible(true);
                 tab.setStyleNames(false, true);
 
-                //scroll to the currently selected tab if it got clipped
-                //after making another tab visible
-                if(isClippedTabs()) {
+                // scroll to the currently selected tab if it got clipped
+                // after making another tab visible
+                if (isClippedTabs()) {
                     scrollIntoView(getActiveTab());
                 }
             } else {
@@ -1150,16 +1150,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     /**
-     * Checks whether the tab has been set to visible and the scroller is at the first visible tab.
-     * That means that the scroller has to be adjusted so that the tab is visible again.
+     * Checks whether the tab has been set to visible and the scroller is at the
+     * first visible tab. That means that the scroller has to be adjusted so
+     * that the tab is visible again.
      */
-    private boolean isTabSetVisibleBeforeScroller(TabState tabState, int index, Tab tab) {
+    private boolean isTabSetVisibleBeforeScroller(TabState tabState, int index,
+            Tab tab) {
         return isIndexSkippingHiddenTabs() && isScrollerAtFirstVisibleTab()
-                && hasTabChangedVisibility(tabState, tab) && scrolledOutOfView(index);
+                && hasTabChangedVisibility(tabState, tab)
+                && scrolledOutOfView(index);
     }
 
     /**
-     * Checks whether the tab is visible on server but is not visible on client yet.
+     * Checks whether the tab is visible on server but is not visible on client
+     * yet.
      */
     private boolean hasTabChangedVisibility(TabState tabState, Tab tab) {
         return !tab.isVisible() && tabState.visible;

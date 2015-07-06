@@ -39,6 +39,14 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
+    /**
+     * Prefix used for theme resource URLs
+     * 
+     * @see com.vaadin.server.ThemeResource
+     * @since 7.5.0
+     */
+    public static final String THEME_PROTOCOL_PREFIX = "theme://";
+
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
     @Deprecated
@@ -128,5 +136,10 @@ public class ApplicationConstants implements Serializable {
      * Default value to use in case the security protection is disabled.
      */
     public static final String CSRF_TOKEN_DEFAULT_VALUE = "init";
+
+    /**
+     * The name of the parameter used for re-synchronizing.
+     */
+    public static final String RESYNCHRONIZE_ID = "resynchronize";
 
 }

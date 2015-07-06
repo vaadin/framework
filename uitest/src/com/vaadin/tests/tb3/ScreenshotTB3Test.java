@@ -30,6 +30,8 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.Parameters;
@@ -119,6 +121,11 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * @throws IOException
      */
     protected void compareScreen(String identifier) throws IOException {
+        compareScreen(null, identifier);
+    }
+
+    protected void compareScreen(WebElement element, String identifier)
+            throws IOException {
         if (identifier == null || identifier.isEmpty()) {
             throw new IllegalArgumentException("Empty identifier not supported");
         }
@@ -129,7 +136,17 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         List<File> failedReferenceFiles = new ArrayList<File>();
 
         for (File referenceFile : referenceFiles) {
-            if (testBench(driver).compareScreen(referenceFile)) {
+            boolean match = false;
+            if (element == null) {
+                // Full screen
+                match = testBench(driver).compareScreen(referenceFile);
+            } else {
+                // Only the element
+                match = customTestBench(driver).compareScreen(element,
+                        referenceFile,
+                        BrowserUtil.isIE8(getDesiredCapabilities()));
+            }
+            if (match) {
                 // There might be failure files because of retries in TestBench.
                 deleteFailureFiles(getErrorFileFromReference(referenceFile));
                 break;
@@ -178,6 +195,16 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             enableAutoswitch(new File(errorPng.getParentFile(),
                     errorPng.getName() + ".html"));
         }
+    }
+
+    private CustomTestBenchCommandExecutor customTestBench = null;
+
+    private CustomTestBenchCommandExecutor customTestBench(WebDriver driver) {
+        if (customTestBench == null) {
+            customTestBench = new CustomTestBenchCommandExecutor(driver);
+        }
+
+        return customTestBench;
     }
 
     private void enableAutoswitch(File htmlFile) throws FileNotFoundException,

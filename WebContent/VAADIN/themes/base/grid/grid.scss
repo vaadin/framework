@@ -125,7 +125,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       border-radius: 0;
     }
 
-    &.opened {
+    &.open {
       .#{$primaryStyleName}-sidebar-button {
         width: 100%;
  
@@ -137,11 +137,11 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       }
     }
 
-    .v-ie &.opened .#{$primaryStyleName}-sidebar-button {
+    .v-ie &.open .#{$primaryStyleName}-sidebar-button {
       vertical-align: middle;
     }
 
-    .v-ie8 &.opened .#{$primaryStyleName}-sidebar-button:after {
+    .v-ie8 &.open .#{$primaryStyleName}-sidebar-button:after {
       display: inline;
     }
 
@@ -366,6 +366,18 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         min-height: 100%;
         max-height: 100%;
       }
+      
+      .v-datefield-button {
+        .v-ie8 & {
+          margin-left: -30px;
+        }
+      }
+      
+      .v-filterselect-button {
+        .v-ie8 & {
+          margin-left: -27px;
+        }
+      }
 
       .v-select,
       .v-select-select {
@@ -437,9 +449,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   }
 
   .#{$primaryStyleName}-spacer {
-    left: $v-grid-details-marker-width - $v-grid-border-size;
+    // using padding since left is used with some position functions in escalator
+    padding-left: $v-grid-details-marker-width - $v-grid-border-size;
   }
-  
+
   .#{$primaryStyleName}-spacer > td {
     display: block;
     padding: 0;

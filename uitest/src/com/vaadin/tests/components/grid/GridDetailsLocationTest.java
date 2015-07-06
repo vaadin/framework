@@ -28,7 +28,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
@@ -36,7 +35,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -194,6 +193,11 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
         WebElement detailsDecoElement = getDetailsDecoElement(visibleIndexOfDeco);
         GridRowElement rowElement = getGrid().getRow(row);
 
+        int diff = 0;
+        if (isIE8() || BrowserUtil.isIE(getDesiredCapabilities(), 9)) {
+            diff = 1;
+        }
+
         Assert.assertEquals(
                 "Details deco top position does not match row top pos",
                 rowElement.getLocation().getY(), detailsDecoElement
@@ -203,7 +207,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 detailsElement.getLocation().getY()
                         + detailsElement.getSize().getHeight(),
                 detailsDecoElement.getLocation().getY()
-                        + detailsDecoElement.getSize().getHeight());
+                        + detailsDecoElement.getSize().getHeight() + diff);
     }
 
     private void verifyLocation(Param param) {
@@ -295,13 +299,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     private boolean isIE8() {
-        DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
-        DesiredCapabilities ie8Capabilities = Browser.IE8
-                .getDesiredCapabilities();
-        return desiredCapabilities.getBrowserName().equals(
-                ie8Capabilities.getBrowserName())
-                && desiredCapabilities.getVersion().equals(
-                        ie8Capabilities.getVersion());
+        return BrowserUtil.isIE8(getDesiredCapabilities());
     }
 
     @SuppressWarnings("boxing")
@@ -312,7 +310,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     private void clickValo(CheckBoxElement checkBoxElement) {
-        checkBoxElement.findElement(By.tagName("label")).click();
+        checkBoxElement.click(5, 5);
     }
 
     private Object executeScript(String string, Object... param) {

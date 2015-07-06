@@ -1198,6 +1198,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         column.setSortable(state.sortable);
 
+        column.setHeaderCaption(state.headerCaption);
+
         column.setHidden(state.hidden);
         column.setHidable(state.hidable);
         column.setHidingToggleCaption(state.hidingToggleCaption);
@@ -1415,6 +1417,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 || lazyDetailsScrollAdjuster.isWorkPending();
     }
 
+    /**
+     * Gets the listener used by this connector for tracking when row detail
+     * visibility changes.
+     * 
+     * @since 7.5.0
+     * @return the used details listener
+     */
     public DetailsListener getDetailsListener() {
         return detailsListener;
     }

@@ -16,6 +16,7 @@
 package com.vaadin.ui.renderers;
 
 import com.vaadin.ui.Grid.AbstractRenderer;
+import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting simple plain-text string values.
@@ -29,6 +30,21 @@ public class TextRenderer extends AbstractRenderer<String> {
      * Creates a new text renderer
      */
     public TextRenderer() {
-        super(String.class);
+        this("");
+    }
+
+    /**
+     * Creates a new text renderer
+     * 
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
+     */
+    public TextRenderer(String nullRepresentation) {
+        super(String.class, nullRepresentation);
+    }
+
+    @Override
+    public String getNullRepresentation() {
+        return super.getNullRepresentation();
     }
 }

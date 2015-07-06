@@ -42,9 +42,11 @@ public class ImageRendererConnector extends ClickableRendererConnector<String> {
 
     @Override
     public String decode(JsonValue value) {
-        return ((URLReference) JsonDecoder.decodeValue(
+        URLReference reference = (URLReference) JsonDecoder.decodeValue(
                 TypeDataStore.getType(URLReference.class), value, null,
-                getConnection())).getURL();
+                getConnection());
+
+        return reference != null ? reference.getURL() : null;
     }
 
     @Override

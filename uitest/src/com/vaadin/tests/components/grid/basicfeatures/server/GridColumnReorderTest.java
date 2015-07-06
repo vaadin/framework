@@ -22,8 +22,12 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 /**
@@ -318,6 +322,55 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         assertColumnHeaderOrder(1, 2, 0, 3);
+    }
+
+    @Test
+    public void testColumnReordering_bigWidth_dragElementPositionCorrect() {
+        openTestURL();
+        toggleColumnReordering();
+        selectMenuPath("Component", "Size", "Width", "900px");
+        assertColumnHeaderOrder(0, 1, 2, 3);
+
+        GridCellElement draggedHeaderCell = getGridElement()
+                .getHeaderCell(0, 1);
+        final int xOffset = 500;
+        new Actions(getDriver()).moveToElement(draggedHeaderCell, 5, 5)
+                .clickAndHold().moveByOffset(xOffset, 0).build().perform();
+
+        WebElement floatingDragElement = findElement(By
+                .className("dragged-column-header"));
+
+        int expectedLeft = draggedHeaderCell.getLocation().getX() + xOffset + 5
+                - (floatingDragElement.getSize().getWidth() / 2);
+        int realLeft = floatingDragElement.getLocation().getX();
+
+        assertTrue("Dragged element location wrong, expected " + expectedLeft
+                + " was " + realLeft, Math.abs(expectedLeft - realLeft) < 5);
+    }
+
+    @Test
+    public void testDropMarker_sidebarOpenButtonVisible_dropMarkerOnCorrectPosition() {
+        // using runo since there the sidebar opening button is wider than the
+        // scroll deco, and because using Valo has some TB issues
+        openTestURL("theme=runo");
+
+        selectMenuPath("Component", "Size", "Width", "100%");
+        selectMenuPath("Component", "Columns", "All columns hidable");
+        toggleColumnReordering();
+        scrollGridHorizontallyTo(100000);
+
+        new Actions(getDriver()).clickAndHold(getDefaultColumnHeader(10))
+                .moveByOffset(800, 0).build().perform();
+
+        WebElement dragDropMarker = findElement(By
+                .className("v-grid-drop-marker"));
+        WebElement sidebar = findElement(By.className("v-grid-sidebar"));
+
+        int dragDropMarkerX = dragDropMarker.getLocation().getX();
+        int sidebarX = sidebar.getLocation().getX();
+        assertTrue("Drop marker misplaced " + dragDropMarkerX
+                + " compared to sidebar open button " + sidebarX,
+                dragDropMarkerX <= sidebarX);
     }
 
     private void toggleColumnReordering() {

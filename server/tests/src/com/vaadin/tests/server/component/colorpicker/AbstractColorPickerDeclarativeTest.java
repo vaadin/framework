@@ -29,7 +29,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testAllAbstractColorPickerFeatures() {
-        String design = "<v-color-picker color='#fafafa' default-caption-enabled='true' position='100,100'"
+        String design = "<v-color-picker color='#fafafa' default-caption-enabled='' position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         ColorPicker colorPicker = new ColorPicker();
@@ -58,7 +58,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testAllAbstractColorPickerAreaFeatures() {
-        String design = "<v-color-picker-area color='#fafafa' default-caption-enabled='true' position='100,100'"
+        String design = "<v-color-picker-area color='#fafafa' default-caption-enabled='' position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         AbstractColorPicker colorPicker = new ColorPickerArea();

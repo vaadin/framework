@@ -34,6 +34,8 @@ import java.util.Locale;
  * {@link String} for token types. Other constructors allow to configure
  * delimiter and token types.
  * 
+ * @since 7.5.0
+ * 
  * @author Vaadin Ltd
  */
 public class StringToCollectionConverter implements

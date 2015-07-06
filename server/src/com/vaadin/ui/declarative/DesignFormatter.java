@@ -94,7 +94,11 @@ public class DesignFormatter implements Serializable {
             public String convertToPresentation(Boolean value,
                     Class<? extends String> targetType, Locale locale)
                     throws Converter.ConversionException {
-                return String.valueOf(value.booleanValue());
+                if (value.booleanValue()) {
+                    return "";
+                } else {
+                    return "false";
+                }
             }
 
             @Override
@@ -325,9 +329,8 @@ public class DesignFormatter implements Serializable {
             // component.
             return (Converter<String, T>) stringObjectConverter;
         }
-        if (sourceType.isEnum()) {
-            return (Converter<String, T>) stringEnumConverter;
-        } else if (converterMap.containsKey(sourceType)) {
+
+        if (converterMap.containsKey(sourceType)) {
             return ((Converter<String, T>) converterMap.get(sourceType));
         } else if (!strict) {
             for (Class<?> supported : converterMap.keySet()) {
@@ -335,6 +338,10 @@ public class DesignFormatter implements Serializable {
                     return ((Converter<String, T>) converterMap.get(supported));
                 }
             }
+        }
+
+        if (sourceType.isEnum()) {
+            return (Converter<String, T>) stringEnumConverter;
         }
         return null;
     }

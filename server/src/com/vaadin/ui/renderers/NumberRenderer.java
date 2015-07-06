@@ -24,7 +24,7 @@ import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting number values.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -35,7 +35,7 @@ public class NumberRenderer extends AbstractRenderer<Number> {
 
     /**
      * Creates a new number renderer.
-     * <p>
+     * <p/>
      * The renderer is configured to render with the number's natural string
      * representation in the default locale.
      */
@@ -45,18 +45,35 @@ public class NumberRenderer extends AbstractRenderer<Number> {
 
     /**
      * Creates a new number renderer.
-     * <p>
+     * <p/>
      * The renderer is configured to render the number as defined with the given
      * number format.
-     * 
+     *
      * @param numberFormat
      *            the number format with which to display numbers
      * @throws IllegalArgumentException
      *             if {@code numberFormat} is {@code null}
      */
-    public NumberRenderer(NumberFormat numberFormat)
+    public NumberRenderer(NumberFormat numberFormat) {
+        this(numberFormat, "");
+    }
+
+    /**
+     * Creates a new number renderer.
+     * <p/>
+     * The renderer is configured to render the number as defined with the given
+     * number format.
+     *
+     * @param numberFormat
+     *            the number format with which to display numbers
+     * @param nullRepresentation
+     *            the textual representation of {@code null} value
+     * @throws IllegalArgumentException
+     *             if {@code numberFormat} is {@code null}
+     */
+    public NumberRenderer(NumberFormat numberFormat, String nullRepresentation)
             throws IllegalArgumentException {
-        super(Number.class);
+        super(Number.class, nullRepresentation);
 
         if (numberFormat == null) {
             throw new IllegalArgumentException("Number format may not be null");
@@ -69,10 +86,10 @@ public class NumberRenderer extends AbstractRenderer<Number> {
 
     /**
      * Creates a new number renderer.
-     * <p>
+     * <p/>
      * The renderer is configured to render with the number's natural string
      * representation in the given locale.
-     * 
+     *
      * @param locale
      *            the locale in which to display numbers
      * @throws IllegalArgumentException
@@ -84,10 +101,29 @@ public class NumberRenderer extends AbstractRenderer<Number> {
 
     /**
      * Creates a new number renderer.
-     * <p>
+     * <p/>
+     * The renderer is configured to render with the number's natural string
+     * representation in the given locale.
+     *
+     * @param formatString
+     *            the format string with which to format the number
+     * @param locale
+     *            the locale in which to display numbers
+     * @throws IllegalArgumentException
+     *             if {@code locale} is {@code null}
+     */
+    public NumberRenderer(String formatString, Locale locale)
+            throws IllegalArgumentException {
+        this(formatString, locale, ""); // This will call #toString() during
+                                        // formatting
+    }
+
+    /**
+     * Creates a new number renderer.
+     * <p/>
      * The renderer is configured to render with the given format string in the
      * default locale.
-     * 
+     *
      * @param formatString
      *            the format string with which to format the number
      * @throws IllegalArgumentException
@@ -97,15 +133,15 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *      String Syntax</a>
      */
     public NumberRenderer(String formatString) throws IllegalArgumentException {
-        this(formatString, Locale.getDefault());
+        this(formatString, Locale.getDefault(), "");
     }
 
     /**
      * Creates a new number renderer.
-     * <p>
+     * <p/>
      * The renderer is configured to render with the given format string in the
      * given locale.
-     * 
+     *
      * @param formatString
      *            the format string with which to format the number
      * @param locale
@@ -116,8 +152,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
      *      String Syntax</a>
      */
-    public NumberRenderer(String formatString, Locale locale) {
-        super(Number.class);
+    public NumberRenderer(String formatString, Locale locale,
+            String nullRepresentation) {
+        super(Number.class, nullRepresentation);
 
         if (formatString == null) {
             throw new IllegalArgumentException("Format string may not be null");
@@ -135,7 +172,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     @Override
     public JsonValue encode(Number value) {
         String stringValue;
-        if (formatString != null && locale != null) {
+        if (value == null) {
+            stringValue = getNullRepresentation();
+        } else if (formatString != null && locale != null) {
             stringValue = String.format(locale, formatString, value);
         } else if (numberFormat != null) {
             stringValue = numberFormat.format(value);
@@ -159,5 +198,10 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         }
 
         return String.format("%s [%s]", getClass().getSimpleName(), fieldInfo);
+    }
+
+    @Override
+    public String getNullRepresentation() {
+        return super.getNullRepresentation();
     }
 }

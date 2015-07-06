@@ -103,7 +103,12 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
     }
 
     protected ClickableRenderer(Class<T> presentationType) {
-        super(presentationType);
+        this(presentationType, null);
+    }
+
+    protected ClickableRenderer(Class<T> presentationType,
+            String nullRepresentation) {
+        super(presentationType, nullRepresentation);
         registerRpc(new RendererClickRpc() {
             @Override
             public void click(String rowKey, String columnId,

@@ -88,7 +88,8 @@ public class BrowserInfo {
         } else if (browserDetails.isIE()) {
             touchDevice = detectIETouchDevice();
         } else {
-            //PhantomJS pretends to be a touch device which breaks some UI tests
+            // PhantomJS pretends to be a touch device which breaks some UI
+            // tests
             touchDevice = !browserDetails.isPhantomJS() && detectTouchDevice();
         }
     }

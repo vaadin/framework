@@ -19,7 +19,7 @@ public class FixedNotificationElement extends NotificationElement {
 
     @Override
     public void close() {
-        click();
+        click(5, 5);
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
         wait.until(ExpectedConditions.not(ExpectedConditions
                 .presenceOfAllElementsLocatedBy(By.className("v-Notification"))));

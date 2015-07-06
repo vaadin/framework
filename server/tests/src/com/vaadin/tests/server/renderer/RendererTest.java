@@ -15,15 +15,6 @@
  */
 package com.vaadin.tests.server.renderer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
-import java.util.Locale;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.util.IndexedContainer;
@@ -34,9 +25,21 @@ import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.DateRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
-
 import elemental.json.JsonValue;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Date;
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class RendererTest {
 
@@ -94,101 +97,157 @@ public class RendererTest {
 
     private Grid grid;
 
-    private Column foo;
-    private Column bar;
-    private Column baz;
-    private Column bah;
+    private Column intColumn;
+    private Column textColumn;
+    private Column beanColumn;
+    private Column htmlColumn;
+    private Column numberColumn;
+    private Column dateColumn;
+    private Column extendedBeanColumn;
+    private Column buttonColumn;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
         IndexedContainer c = new IndexedContainer();
 
-        c.addContainerProperty("foo", Integer.class, 0);
-        c.addContainerProperty("bar", String.class, "");
-        c.addContainerProperty("baz", TestBean.class, null);
-        c.addContainerProperty("bah", ExtendedBean.class, null);
+        c.addContainerProperty("int", Integer.class, 0);
+        c.addContainerProperty("text", String.class, "");
+        c.addContainerProperty("html", String.class, "");
+        c.addContainerProperty("number", Number.class, null);
+        c.addContainerProperty("date", Date.class, null);
+        c.addContainerProperty("bean", TestBean.class, null);
+        c.addContainerProperty("button", String.class, null);
+        c.addContainerProperty("extendedBean", ExtendedBean.class, null);
 
         Object id = c.addItem();
         Item item = c.getItem(id);
-        item.getItemProperty("foo").setValue(123);
-        item.getItemProperty("bar").setValue("321");
-        item.getItemProperty("baz").setValue(new TestBean());
-        item.getItemProperty("bah").setValue(new ExtendedBean());
+        item.getItemProperty("int").setValue(123);
+        item.getItemProperty("text").setValue("321");
+        item.getItemProperty("html").setValue("<b>html</b>");
+        item.getItemProperty("number").setValue(3.14);
+        item.getItemProperty("date").setValue(new Date(123456789));
+        item.getItemProperty("bean").setValue(new TestBean());
+        item.getItemProperty("extendedBean").setValue(new ExtendedBean());
 
         grid = new TestGrid(c);
 
-        foo = grid.getColumn("foo");
-        bar = grid.getColumn("bar");
-        baz = grid.getColumn("baz");
-        bah = grid.getColumn("bah");
+        intColumn = grid.getColumn("int");
+        textColumn = grid.getColumn("text");
+        htmlColumn = grid.getColumn("html");
+        numberColumn = grid.getColumn("number");
+        dateColumn = grid.getColumn("date");
+        beanColumn = grid.getColumn("bean");
+        extendedBeanColumn = grid.getColumn("extendedBean");
+        buttonColumn = grid.getColumn("button");
+
     }
 
     @Test
     public void testDefaultRendererAndConverter() throws Exception {
-        assertSame(TextRenderer.class, foo.getRenderer().getClass());
-        assertSame(StringToIntegerConverter.class, foo.getConverter()
+        assertSame(TextRenderer.class, intColumn.getRenderer().getClass());
+        assertSame(StringToIntegerConverter.class, intColumn.getConverter()
                 .getClass());
 
-        assertSame(TextRenderer.class, bar.getRenderer().getClass());
+        assertSame(TextRenderer.class, textColumn.getRenderer().getClass());
         // String->String; converter not needed
-        assertNull(bar.getConverter());
+        assertNull(textColumn.getConverter());
 
-        assertSame(TextRenderer.class, baz.getRenderer().getClass());
+        assertSame(TextRenderer.class, beanColumn.getRenderer().getClass());
         // MyBean->String; converter not found
-        assertNull(baz.getConverter());
+        assertNull(beanColumn.getConverter());
     }
 
     @Test
     public void testFindCompatibleConverter() throws Exception {
-        foo.setRenderer(renderer());
-        assertSame(StringToIntegerConverter.class, foo.getConverter()
+        intColumn.setRenderer(renderer());
+        assertSame(StringToIntegerConverter.class, intColumn.getConverter()
                 .getClass());
 
-        bar.setRenderer(renderer());
-        assertNull(bar.getConverter());
+        textColumn.setRenderer(renderer());
+        assertNull(textColumn.getConverter());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCannotFindConverter() {
-        baz.setRenderer(renderer());
+        beanColumn.setRenderer(renderer());
     }
 
     @Test
     public void testExplicitConverter() throws Exception {
-        baz.setRenderer(renderer(), converter());
-        bah.setRenderer(renderer(), converter());
+        beanColumn.setRenderer(renderer(), converter());
+        extendedBeanColumn.setRenderer(renderer(), converter());
     }
 
     @Test
     public void testEncoding() throws Exception {
-        assertEquals("42", render(foo, 42).asString());
-        foo.setRenderer(renderer());
-        assertEquals("renderer(42)", render(foo, 42).asString());
+        assertEquals("42", render(intColumn, 42).asString());
+        intColumn.setRenderer(renderer());
+        assertEquals("renderer(42)", render(intColumn, 42).asString());
 
-        assertEquals("2.72", render(bar, "2.72").asString());
-        bar.setRenderer(new TestRenderer());
-        assertEquals("renderer(2.72)", render(bar, "2.72").asString());
+        assertEquals("2.72", render(textColumn, "2.72").asString());
+        textColumn.setRenderer(new TestRenderer());
+        assertEquals("renderer(2.72)", render(textColumn, "2.72").asString());
     }
 
     @Test
     public void testEncodingWithoutConverter() throws Exception {
-        assertEquals("TestBean [42]", render(baz, new TestBean()).asString());
+        assertEquals("TestBean [42]", render(beanColumn, new TestBean())
+                .asString());
     }
 
     @Test
     public void testBeanEncoding() throws Exception {
-        baz.setRenderer(renderer(), converter());
-        bah.setRenderer(renderer(), converter());
+        beanColumn.setRenderer(renderer(), converter());
+        extendedBeanColumn.setRenderer(renderer(), converter());
 
-        assertEquals("renderer(TestBean(42))", render(baz, new TestBean())
+        assertEquals("renderer(TestBean(42))",
+                render(beanColumn, new TestBean()).asString());
+        assertEquals("renderer(ExtendedBean(42, 3.14))",
+                render(beanColumn, new ExtendedBean()).asString());
+
+        assertEquals("renderer(ExtendedBean(42, 3.14))",
+                render(extendedBeanColumn, new ExtendedBean()).asString());
+    }
+
+    @Test
+    public void testNullEncoding() {
+
+        textColumn.setRenderer(new TextRenderer());
+        htmlColumn.setRenderer(new HtmlRenderer());
+        numberColumn.setRenderer(new NumberRenderer());
+        dateColumn.setRenderer(new DateRenderer());
+        buttonColumn.setRenderer(new ButtonRenderer());
+
+        assertEquals("", textColumn.getRenderer().encode(null).asString());
+        assertEquals("", htmlColumn.getRenderer().encode(null).asString());
+        assertEquals("", numberColumn.getRenderer().encode(null).asString());
+        assertEquals("", dateColumn.getRenderer().encode(null).asString());
+        assertEquals("", buttonColumn.getRenderer().encode(null).asString());
+    }
+
+    @Test
+    public void testNullEncodingWithDefault() {
+
+        textColumn.setRenderer(new TextRenderer("default value"));
+        htmlColumn.setRenderer(new HtmlRenderer("default value"));
+        numberColumn.setRenderer(new NumberRenderer("%s", Locale.getDefault(),
+                "default value"));
+        dateColumn.setRenderer(new DateRenderer("%s", "default value"));
+        buttonColumn.setRenderer(new ButtonRenderer("default value"));
+
+        assertEquals("default value", textColumn.getRenderer().encode(null)
                 .asString());
-        assertEquals("renderer(ExtendedBean(42, 3.14))",
-                render(baz, new ExtendedBean()).asString());
-
-        assertEquals("renderer(ExtendedBean(42, 3.14))",
-                render(bah, new ExtendedBean()).asString());
+        assertEquals("default value", htmlColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", numberColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", dateColumn.getRenderer().encode(null)
+                .asString());
+        assertEquals("default value", buttonColumn.getRenderer().encode(null)
+                .asString());
     }
 
     private TestConverter converter() {

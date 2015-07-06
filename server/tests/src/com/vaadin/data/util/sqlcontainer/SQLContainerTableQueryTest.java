@@ -29,9 +29,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.data.util.sqlcontainer.query.ValidatingSimpleJDBCConnectionPool;
 
 public class SQLContainerTableQueryTest {
 
@@ -51,7 +51,7 @@ public class SQLContainerTableQueryTest {
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(
+            connectionPool = new ValidatingSimpleJDBCConnectionPool(
                     SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
@@ -99,7 +99,7 @@ public class SQLContainerTableQueryTest {
         assertTrue(container.removeItem(container.lastItemId()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = SQLException.class)
     public void itemWithNonExistingVersionColumnCannotBeRemoved()
             throws SQLException {
         query.setVersionColumn("version");

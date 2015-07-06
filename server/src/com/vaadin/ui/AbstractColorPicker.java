@@ -284,7 +284,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the style for the popup window
      * 
-     * @since
+     * @since 7.5.0
      * @return popup window style
      */
     public PopupStyle getPopupStyle() {
@@ -312,7 +312,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the visibility of the RGB Tab
      * 
-     * @since
+     * @since 7.5.0
      * @return visibility of the RGB tab
      */
     public boolean getRGBVisibility() {
@@ -339,7 +339,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the visibility of the HSV Tab
      * 
-     * @since
+     * @since 7.5.0
      * @return visibility of the HSV tab
      */
     public boolean getHSVVisibility() {
@@ -366,7 +366,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the visibility of the Swatches Tab
      * 
-     * @since
+     * @since 7.5.0
      * @return visibility of the swatches tab
      */
     public boolean getSwatchesVisibility() {
@@ -389,7 +389,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the visibility of the Color History
      * 
-     * @since
+     * @since 7.5.0
      * @return visibility of color history
      */
     public boolean getHistoryVisibility() {
@@ -412,7 +412,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Gets the visibility of CSS color code text field
      * 
-     * @since
+     * @since 7.5.0
      * @return visibility of css color code text field
      */
     public boolean getTextfieldVisibility() {

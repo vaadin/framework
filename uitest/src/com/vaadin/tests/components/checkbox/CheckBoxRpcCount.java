@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.checkbox;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
@@ -46,6 +48,14 @@ public class CheckBoxRpcCount extends AbstractTestUI {
                 });
             }
         };
+        cb.addValueChangeListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                // Adding an empty ValueChangeListener just to ensure that
+                // immediate mode is set to true
+            }
+        });
         addComponent(cb);
     }
 

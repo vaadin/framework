@@ -528,7 +528,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Interface for listening for {@link SplitPositionChangeEvent}s fired by a
      * SplitPanel.
      * 
-     * @since
+     * @since 7.5.0
      */
     public interface SplitPositionChangeListener extends ConnectorEventListener {
 
@@ -548,7 +548,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Event that indicates a change in SplitPanel's splitter position.
      * 
-     * @since
+     * @since 7.5.0
      */
     public static class SplitPositionChangeEvent extends Component.Event {
 
@@ -603,7 +603,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Register a listener to handle {@link SplitPositionChangeEvent}s.
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            {@link SplitPositionChangeListener} to be registered.
      */
@@ -616,7 +616,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Removes a {@link SplitPositionChangeListener}.
      * 
-     * @since
+     * @since 7.5.0
      * @param listener
      *            SplitPositionChangeListener to be removed.
      */

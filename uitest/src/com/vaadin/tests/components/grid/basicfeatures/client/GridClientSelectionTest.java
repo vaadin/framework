@@ -195,28 +195,4 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
                 isRowSelected(1));
     }
 
-    private boolean isRowSelected(int index) {
-        boolean selected = getGridElement().getRow(index).isSelected();
-        return selected;
-    }
-
-    private void setSelectionModelMulti() {
-        setSelectionModel("multi");
-    }
-
-    private void setSelectionModelSingle(boolean deselectAllowed) {
-        String mode = "single";
-        if (!deselectAllowed) {
-            mode += " (no deselect)";
-        }
-        setSelectionModel(mode);
-    }
-
-    private void setSelectionModelNone() {
-        setSelectionModel("none");
-    }
-
-    private void setSelectionModel(String model) {
-        selectMenuPath("Component", "State", "Selection mode", model);
-    }
 }

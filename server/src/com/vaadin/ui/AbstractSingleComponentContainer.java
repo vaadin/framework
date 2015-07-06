@@ -298,7 +298,9 @@ public abstract class AbstractSingleComponentContainer extends
      * contains multiple child elements, a DesignException is thrown. This
      * method should be overridden by subclasses whose design may contain
      * non-content child elements.
-     *
+     * 
+     * @since 7.5.0
+     * 
      * @param children
      *            the child elements of the design that is being read
      * @param context

@@ -21,7 +21,6 @@ import java.io.Serializable;
 /**
  * Describes the margin settings for each edge of a Component.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class MarginInfo implements Serializable {
@@ -116,6 +115,8 @@ public class MarginInfo implements Serializable {
     /**
      * Checks if this MarginInfo object has margins on all edges enabled.
      * 
+     * @since 7.5.0
+     * 
      * @return true if all edges have margins enabled
      */
     public boolean hasAll() {
@@ -181,4 +182,10 @@ public class MarginInfo implements Serializable {
         return bitMask;
     }
 
+    @Override
+    public String toString() {
+        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", "
+                + hasBottom() + ", " + hasLeft() + ")";
+
+    }
 }

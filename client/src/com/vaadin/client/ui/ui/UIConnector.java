@@ -810,6 +810,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 serverConnector);
     }
 
+    /**
+     * Sends a request to the server to print a design to the console for the
+     * given component.
+     * 
+     * @since 7.5
+     * @param connector
+     *            the component connector to output a declarative design for
+     */
+    public void showServerDesign(ServerConnector connector) {
+        getRpcProxy(DebugWindowServerRpc.class).showServerDesign(connector);
+    }
+
     @OnStateChange("theme")
     void onThemeChange() {
         final String oldTheme = activeTheme;
@@ -993,6 +1005,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     activeTheme);
         }
 
+        String oldThemeBase = getConnection().translateVaadinUri("theme://");
+
         activeTheme = newTheme;
 
         if (newTheme != null) {
@@ -1001,10 +1015,59 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     activeTheme);
 
             updateVaadinFavicon(newTheme);
+
         }
 
         forceStateChangeRecursively(UIConnector.this);
+        // UIDL has no stored URL which we can repaint so we do some find and
+        // replace magic...
+        String newThemeBase = getConnection().translateVaadinUri("theme://");
+        replaceThemeAttribute(oldThemeBase, newThemeBase);
+
         getLayoutManager().forceLayout();
+    }
+
+    /**
+     * Finds all attributes where theme:// urls have possibly been used and
+     * replaces any old theme url with a new one
+     * 
+     * @param oldPrefix
+     *            The start of the old theme URL
+     * @param newPrefix
+     *            The start of the new theme URL
+     */
+    private void replaceThemeAttribute(String oldPrefix, String newPrefix) {
+        // Images
+        replaceThemeAttribute("src", oldPrefix, newPrefix);
+        // Embedded flash
+        replaceThemeAttribute("value", oldPrefix, newPrefix);
+        replaceThemeAttribute("movie", oldPrefix, newPrefix);
+    }
+
+    /**
+     * Finds any attribute of the given type where theme:// urls have possibly
+     * been used and replaces any old theme url with a new one
+     * 
+     * @param attributeName
+     *            The name of the attribute, e.g. "src"
+     * @param oldPrefix
+     *            The start of the old theme URL
+     * @param newPrefix
+     *            The start of the new theme URL
+     */
+    private void replaceThemeAttribute(String attributeName, String oldPrefix,
+            String newPrefix) {
+        // Find all "attributeName=" which start with "oldPrefix" using e.g.
+        // [^src='http://oldpath']
+        NodeList<Element> elements = querySelectorAll("[" + attributeName
+                + "^='" + oldPrefix + "']");
+        for (int i = 0; i < elements.getLength(); i++) {
+            Element element = elements.getItem(i);
+            element.setAttribute(
+                    attributeName,
+                    element.getAttribute(attributeName).replace(oldPrefix,
+                            newPrefix));
+        }
     }
 
     /**
@@ -1061,5 +1124,4 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     private static Logger getLogger() {
         return Logger.getLogger(UIConnector.class.getName());
     }
-
 }

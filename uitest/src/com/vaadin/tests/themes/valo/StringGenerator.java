@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import com.vaadin.shared.util.SharedUtil;
+
 public class StringGenerator {
     static String[] strings = new String[] { "lorem", "ipsum", "dolor", "sit",
             "amet", "consectetur", "quid", "securi", "etiam", "tamquam", "eu",
@@ -25,8 +27,8 @@ public class StringGenerator {
         if (++stringCount >= strings.length) {
             stringCount = 0;
         }
-        return capitalize ? strings[stringCount].substring(0, 1).toUpperCase()
-                + strings[stringCount].substring(1) : strings[stringCount];
+        return capitalize ? SharedUtil.capitalize(strings[stringCount])
+                : strings[stringCount];
     }
 
 }

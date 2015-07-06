@@ -303,7 +303,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      */
     private double cache_rate = CACHE_RATE_DEFAULT;
     /**
-     * fraction of pageLenght which can be scrolled without making new request
+     * fraction of pageLength which can be scrolled without making new request
      */
     private double cache_react_rate = 0.75 * cache_rate;
 
@@ -1443,7 +1443,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
         } else {
-            // pagelenght is "0" meaning scrolling is turned off
+            // pagelength is "0" meaning scrolling is turned off
             pageLength = totalRows;
         }
 
@@ -1647,8 +1647,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
-                actionMap.put(key + "_i", client.translateVaadinUri(action
-                        .getStringAttribute("icon")));
+                actionMap.put(key + "_i", action.getStringAttribute("icon"));
             } else {
                 actionMap.remove(key + "_i");
             }
@@ -1661,7 +1660,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     public String getActionIcon(String actionKey) {
-        return actionMap.get(actionKey + "_i");
+        return client.translateVaadinUri(actionMap.get(actionKey + "_i"));
     }
 
     private void updateHeader(String[] strings) {
@@ -3659,16 +3658,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // Do a more thorough update if a column is resized from
                         // the server *after* the header has been properly
                         // initialized
-                        final int colIx = getColIndexByKey(c.cid);
                         final int newWidth = width;
-                        Scheduler.get().scheduleDeferred(
-                                new ScheduledCommand() {
+                        Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
-                                    @Override
-                                    public void execute() {
-                                        setColWidth(colIx, newWidth, true);
-                                    }
-                                });
+                            @Override
+                            public void execute() {
+                                final int colIx = getColIndexByKey(cid);
+                                setColWidth(colIx, newWidth, true);
+                            }
+                        });
                         refreshContentWidths = true;
                     } else {
                         // get min width with no indent or padding
@@ -3710,7 +3708,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             if (refreshContentWidths) {
                 // Recalculate the column sizings if any column has changed
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
                     @Override
                     public void execute() {

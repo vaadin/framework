@@ -1246,7 +1246,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * Sets tqhe icon for an item.
+     * Sets the icon for an item.
      * 
      * @param itemId
      *            the id of the item to be assigned an icon.
@@ -2217,7 +2217,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Hierarchical select components should override this method to recursively
      * recursively read any child items as well.
      * 
-     * @since
+     * @since 7.5.0
      * @param child
      *            a child element representing the item
      * @param selected
@@ -2276,7 +2276,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Writes the data source items to a design. Hierarchical select components
      * should override this method to only write the root items.
      * 
-     * @since
+     * @since 7.5.0
      * @param design
      *            the element into which to insert the items
      * @param context
@@ -2292,7 +2292,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Writes a data source Item to a design. Hierarchical select components
      * should override this method to recursively write any child items as well.
      * 
-     * @since
+     * @since 7.5.0
      * @param design
      *            the element into which to insert the item
      * @param itemId

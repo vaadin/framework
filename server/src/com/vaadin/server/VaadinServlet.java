@@ -871,14 +871,18 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         if (allowServePrecompressedResource(request, urlStr)) {
             // try to serve a precompressed version if available
-            URL url = new URL(urlStr + ".gz");
-            connection = url.openConnection();
             try {
+                connection = new URL(urlStr + ".gz").openConnection();
                 is = connection.getInputStream();
                 // set gzip headers
                 response.setHeader("Content-Encoding", "gzip");
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 // NOP: will be still tried with non gzipped version
+            } catch (Exception e) {
+                getLogger().log(
+                        Level.FINE,
+                        "Unexpected exception looking for gzipped version of resource "
+                                + urlStr, e);
             }
         }
         if (is == null) {
@@ -923,7 +927,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * request indicates that the client accepts gzip compressed responses and
      * the filename extension of the requested resource is .js, .css, or .html.
      * 
-     * @since
+     * @since 7.5.0
      * 
      * @param request
      *            the request for the resource

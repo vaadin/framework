@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public abstract class AbstractTestUIWithLog extends AbstractTestUI {
 
-    protected Log log = new Log(5);
+    protected Log log = new Log(getLogSize());
 
     @Override
     public void init(VaadinRequest request) {
@@ -31,6 +31,10 @@ public abstract class AbstractTestUIWithLog extends AbstractTestUI {
 
     protected void log(String message) {
         log.log(message);
+    }
+
+    protected int getLogSize() {
+        return 5;
     }
 
 }

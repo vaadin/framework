@@ -18,13 +18,19 @@ package com.vaadin.tests.server.component.gridlayout;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class GridLayoutDeclarativeTest extends DeclarativeTestBase<GridLayout> {
+public class GridLayoutDeclarativeTest extends
+        DeclarativeMarginTestBase<GridLayout> {
+
+    @Test
+    public void testMargins() {
+        testMargins("v-grid-layout");
+    }
 
     @Test
     public void testSimpleGridLayout() {
@@ -196,5 +202,38 @@ public class GridLayoutDeclarativeTest extends DeclarativeTestBase<GridLayout> {
                     - result.getColumnExpandRatio(col)) < 0.00001);
         }
         return result;
+    }
+
+    @Test
+    public void testNestedGridLayouts() {
+        String design = "<!DOCTYPE html>" + //
+                "<html>" + //
+                " <body> " + //
+                "  <v-grid-layout> " + //
+                "   <row> " + //
+                "    <column> " + //
+                "     <v-grid-layout> " + //
+                "      <row> " + //
+                "       <column> " + //
+                "        <v-button>" + //
+                "          Button " + //
+                "        </v-button> " + //
+                "       </column> " + //
+                "      </row> " + //
+                "     </v-grid-layout> " + //
+                "    </column> " + //
+                "   </row> " + //
+                "  </v-grid-layout>  " + //
+                " </body>" + //
+                "</html>";
+        GridLayout outer = new GridLayout();
+        GridLayout inner = new GridLayout();
+        Button b = new Button("Button");
+        b.setCaptionAsHtml(true);
+        inner.addComponent(b);
+        outer.addComponent(inner);
+        testRead(design, outer);
+        testWrite(design, outer);
+
     }
 }

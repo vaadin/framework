@@ -103,7 +103,9 @@ public class GridState extends AbstractComponentState {
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
-     * The key that tells whether details are visible for the row
+     * The key that tells whether details are visible for the row.
+     * 
+     * @since 7.5.0
      * 
      * @see com.vaadin.ui.Grid#setDetailsGenerator(com.vaadin.ui.Grid.DetailsGenerator)
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)

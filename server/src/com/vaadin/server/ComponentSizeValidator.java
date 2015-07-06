@@ -415,7 +415,7 @@ public class ComponentSizeValidator implements Serializable {
             // main window, valid situation
             return true;
         }
-        if (parent.getHeight() < 0) {
+        if (isEffectiveUndefinedHeight(component)) {
             // Undefined height
             if (parent instanceof Window) {
                 // Sub window with undefined size has a min-height
@@ -513,10 +513,7 @@ public class ComponentSizeValidator implements Serializable {
             // Sub window with undefined size has a min-width
             return true;
         }
-
-        if (parent.getWidth() < 0) {
-            // Undefined width
-
+        if (isEffectiveUndefinedWidth(parent)) {
             if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                 boolean horizontal = true;
@@ -589,6 +586,52 @@ public class ComponentSizeValidator implements Serializable {
             return true;
         }
 
+    }
+
+    /**
+     * Checks if this component will be rendered with undefined width, either
+     * because it has been set to undefined wide or because the parent forces it
+     * to be (100% inside undefined)
+     * 
+     */
+    private static boolean isEffectiveUndefinedWidth(Component parent) {
+        if (parent == null) {
+            return false;
+        } else if (parent.getWidth() < 0) {
+            if (parent instanceof Window) {
+                // Window has some weird haxxors to support 100% children when
+                // window is -1
+                return false;
+            }
+
+            return true;
+        } else if (parent.getWidthUnits() == Unit.PERCENTAGE) {
+            return isEffectiveUndefinedWidth(parent.getParent());
+        }
+        return false;
+    }
+
+    /**
+     * Checks if this component will be rendered with undefined Height, either
+     * because it has been set to undefined wide or because the parent forces it
+     * to be (100% inside undefined)
+     * 
+     */
+    private static boolean isEffectiveUndefinedHeight(Component parent) {
+        if (parent == null) {
+            return false;
+        } else if (parent.getHeight() < 0) {
+            if (parent instanceof Window) {
+                // Window has some weird haxxors to support 100% children when
+                // window is -1
+                return false;
+            }
+
+            return true;
+        } else if (parent.getHeightUnits() == Unit.PERCENTAGE) {
+            return isEffectiveUndefinedHeight(parent.getParent());
+        }
+        return false;
     }
 
     private static boolean hasNonRelativeWidthComponent(Form form) {

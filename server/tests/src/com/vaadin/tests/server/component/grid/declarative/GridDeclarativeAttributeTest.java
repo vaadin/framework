@@ -37,8 +37,8 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
     @Test
     public void testBasicAttributes() {
 
-        String design = "<v-grid editable='true' rows=20 frozen-columns=-1 "
-                + "editor-save-caption='Tallenna' editor-cancel-caption='Peruuta' column-reordering-allowed=true>";
+        String design = "<v-grid editable='' rows=20 frozen-columns=-1 "
+                + "editor-save-caption='Tallenna' editor-cancel-caption='Peruuta' column-reordering-allowed=''>";
 
         Grid grid = new Grid();
         grid.setEditorEnabled(true);

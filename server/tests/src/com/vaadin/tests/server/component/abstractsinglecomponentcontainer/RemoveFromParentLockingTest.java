@@ -102,6 +102,8 @@ public class RemoveFromParentLockingTest {
                     "Cannot remove from parent when the session is not locked."
                             + " Furthermore, there is another locked session, indicating that the component might be about to be moved from one session to another.",
                     e.getMessage());
+        } finally {
+            VaadinSession.setCurrent(null);
         }
     }
 
@@ -119,6 +121,8 @@ public class RemoveFromParentLockingTest {
             notLockedComponent.addComponent(lockedComponent);
         } catch (AssertionError e) {
             // All is fine, don't care about the exact wording in this case
+        } finally {
+            VaadinSession.setCurrent(null);
         }
     }
 

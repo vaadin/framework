@@ -1,12 +1,16 @@
 package com.vaadin.tests.components.menubar;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.MenuBar;
 
 public class MenuItemStyleRemoved extends AbstractTestUI {
+
+    protected static final String MENUITEM_CLASS = "v-menubar-menuitem";
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -23,10 +27,17 @@ public class MenuItemStyleRemoved extends AbstractTestUI {
         addButton("Add styles", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                String method = "getElementsByClassName('" + MENUITEM_CLASS
+                        + "')";
+                WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+                if (webBrowser.isIE()
+                        && webBrowser.getBrowserMajorVersion() == 8) {
+                    method = "querySelectorAll('." + MENUITEM_CLASS + "')";
+                }
                 JavaScript.getCurrent().execute(
-                        "var x=document.getElementsByClassName('v-menubar-menuitem');" +
-                        " var i; for(i=0; i < x.length; i++)" +
-                        " {x[i].className += ' custom-menu-item'};");
+                        "var x=document." + method + ";"
+                                + " var i; for(i=0; i < x.length; i++)"
+                                + " {x[i].className += ' custom-menu-item'};");
             }
         });
     }

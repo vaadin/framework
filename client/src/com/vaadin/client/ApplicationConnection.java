@@ -63,6 +63,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -89,7 +90,6 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VNotification;
-import com.vaadin.client.ui.VNotification.HideEvent;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
@@ -863,7 +863,11 @@ public class ApplicationConnection implements HasHandlers {
                 + ApplicationConstants.UIDL_PATH + '/');
 
         if (extraParams != null && extraParams.length() > 0) {
-            uri = SharedUtil.addGetParameters(uri, extraParams);
+            if (extraParams.equals(getRepaintAllParameters())) {
+                payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
+            } else {
+                uri = SharedUtil.addGetParameters(uri, extraParams);
+            }
         }
         uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
                 + "=" + configuration.getUIId());
@@ -1229,7 +1233,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the communication error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      * @param statusCode
      *            The status code returned for the request
      * 
@@ -1243,7 +1247,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the authentication error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      */
     protected void showAuthenticationError(String details) {
         getLogger().severe("Authentication error: " + details);
@@ -1254,7 +1258,7 @@ public class ApplicationConnection implements HasHandlers {
      * Shows the session expiration notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      */
     public void showSessionExpiredError(String details) {
         getLogger().severe("Session expired: " + details);
@@ -1265,53 +1269,13 @@ public class ApplicationConnection implements HasHandlers {
      * Shows an error notification.
      * 
      * @param details
-     *            Optional details for debugging.
+     *            Optional details.
      * @param message
      *            An ErrorMessage describing the error.
      */
     protected void showError(String details, ErrorMessage message) {
-        showError(details, message.getCaption(), message.getMessage(),
-                message.getUrl());
-    }
-
-    /**
-     * Shows the error notification.
-     * 
-     * @param details
-     *            Optional details for debugging.
-     */
-    private void showError(String details, String caption, String message,
-            String url) {
-
-        StringBuilder html = new StringBuilder();
-        if (caption != null) {
-            html.append("<h1>");
-            html.append(caption);
-            html.append("</h1>");
-        }
-        if (message != null) {
-            html.append("<p>");
-            html.append(message);
-            html.append("</p>");
-        }
-
-        if (html.length() > 0) {
-
-            // Add error description
-            if (details != null) {
-                html.append("<p><i style=\"font-size:0.7em\">");
-                html.append(details);
-                html.append("</i></p>");
-            }
-
-            VNotification n = VNotification.createNotification(1000 * 60 * 45,
-                    uIConnector.getWidget());
-            n.addEventListener(new NotificationRedirect(url));
-            n.show(html.toString(), VNotification.CENTERED_TOP,
-                    VNotification.STYLE_SYSTEM);
-        } else {
-            redirect(url);
-        }
+        VNotification.showError(this, message.getCaption(),
+                message.getMessage(), details, message.getUrl());
     }
 
     protected void startRequest() {
@@ -1544,10 +1508,27 @@ public class ApplicationConnection implements HasHandlers {
              * e.g. critical server-side notifications
              */
             if (syncId != -1) {
-                assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
-                        + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+                if (lastSeenServerSyncId == UNDEFINED_SYNC_ID
+                        || syncId == (lastSeenServerSyncId + 1)) {
+                    lastSeenServerSyncId = syncId;
+                } else {
+                    getLogger().warning(
+                            "Expected sync id: " + (lastSeenServerSyncId + 1)
+                                    + ", received: " + syncId
+                                    + ". Resynchronizing from server.");
+                    lastSeenServerSyncId = syncId;
 
-                lastSeenServerSyncId = syncId;
+                    // Copied from below...
+                    ValueMap meta = json.getValueMap("meta");
+                    if (meta == null || !meta.containsKey("async")) {
+                        // End the request if the received message was a
+                        // response, not sent asynchronously
+                        endRequest();
+                    }
+                    resumeResponseHandling(lock);
+                    repaintAll();
+                    return;
+                }
             }
         } else {
             syncId = -1;
@@ -1741,8 +1722,10 @@ public class ApplicationConnection implements HasHandlers {
                     if (meta.containsKey("appError")) {
                         ValueMap error = meta.getValueMap("appError");
 
-                        showError(null, error.getString("caption"),
+                        VNotification.showError(ApplicationConnection.this,
+                                error.getString("caption"),
                                 error.getString("message"),
+                                error.getString("details"),
                                 error.getString("url"));
 
                         setApplicationRunning(false);
@@ -2718,7 +2701,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     // Redirect browser, null reloads current page
-    private static native void redirect(String url)
+    public static native void redirect(String url)
     /*-{
     	if (url) {
     		$wnd.location = url;
@@ -3335,25 +3318,6 @@ public class ApplicationConnection implements HasHandlers {
     public String getThemeUri() {
         return configuration.getVaadinDirUrl() + "themes/"
                 + getUIConnector().getActiveTheme();
-    }
-
-    /**
-     * Listens for Notification hide event, and redirects. Used for system
-     * messages, such as session expired.
-     * 
-     */
-    private class NotificationRedirect implements VNotification.EventListener {
-        String url;
-
-        NotificationRedirect(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void notificationHidden(HideEvent event) {
-            redirect(url);
-        }
-
     }
 
     /* Extended title handling */

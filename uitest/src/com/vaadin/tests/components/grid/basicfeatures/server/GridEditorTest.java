@@ -95,6 +95,20 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testMouseOpeningClosing() {
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorOpen();
+
+        getCancelButton().click();
+        assertEditorClosed();
+
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
+        getGridElement().getCell(4, 0).doubleClick();
+        assertEditorClosed();
+    }
+
+    @Test
     public void testKeyboardOpeningClosing() {
 
         getGridElement().getCell(4, 0).click();
@@ -230,11 +244,11 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertFalse("Exception should not exist",
                 isElementPresent(NotificationElement.class));
         assertEquals("There should be no editor error message", null,
-                editor.getErrorMessage());
+                getGridElement().getEditor().getErrorMessage());
     }
 
     @Test
-    public void testNoScrollAfterEditByAPI() {
+    public void testNoScrollAfterProgrammaticOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         selectMenuPath(EDIT_ITEM_5);
@@ -245,7 +259,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByMouse() {
+    public void testNoScrollAfterMouseOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -257,7 +271,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByKeyboard() {
+    public void testNoScrollAfterKeyboardOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -294,12 +308,63 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testFocusOnMouseOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.doubleClick();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testFocusOnKeyboardOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testNoFocusOnProgrammaticOpen() {
+
+        selectMenuPath(EDIT_ITEM_5);
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("Focus should remain in the menu", "menu",
+                focused.getAttribute("id"));
+    }
+
+    @Override
+    protected WebElement getFocusedElement() {
+        return (WebElement) executeScript("return document.activeElement;");
+    }
+
+    @Test
     public void testUneditableColumn() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
 
+        GridEditorElement editor = getGridElement().getEditor();
         assertFalse("Uneditable column should not have an editor widget",
-                getGridElement().getEditor().isEditable(3));
+                editor.isEditable(3));
+        assertEquals(
+                "Not editable cell did not contain correct classname",
+                "not-editable",
+                editor.findElement(By.className("v-grid-editor-cells"))
+                        .findElements(By.xpath("./div")).get(3)
+                        .getAttribute("class"));
+
     }
 
     private WebElement getSaveButton() {

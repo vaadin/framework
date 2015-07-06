@@ -11,13 +11,12 @@
 }
 
 .v-ie9 &, .v-ie10 & {
-	.#{$primaryStyleName} H1 {
-	/* Fix for #6793 */
-	font-weight: bold;
+	.#{$primaryStyleName}-caption {
+		/* Fix for #6793 */
+		font-weight: bold;
 	}
 }
-	
-.#{$primaryStyleName} p {
+.#{$primaryStyleName}-description {
 	line-height: 1.3;
 }
 .#{$primaryStyleName}-warning {
@@ -35,11 +34,11 @@
 	border: 2px solid #585b5c;
 	padding: 0.8em 0.9em;
 }
-.#{$primaryStyleName}-tray h1 {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-caption {
 	font-size: 14px;
 	line-height: 18px;
 }
-.#{$primaryStyleName}-tray p {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-description {
 	font-size: 12px;
 	font-weight: normal;
 }

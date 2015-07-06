@@ -303,6 +303,9 @@
         <antcall target="compile-theme">
             <param name="theme" value="tests-valo-light" />
         </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="tests-valo-disabled-animations" />
+        </antcall>
 
     </target>
     <target name="compile-theme" depends="copy-theme">

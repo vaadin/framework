@@ -15,9 +15,7 @@
  */
 package com.vaadin.tests.components.accordion;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -36,8 +34,7 @@ public class AccordionRemoveComponentTest extends MultiBrowserTest {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertFalse(
-                "Error notification with client side exception is shown",
-                isElementPresent(By.className("v-Notification-error")));
+        assertNoErrorNotifications();
     }
+
 }

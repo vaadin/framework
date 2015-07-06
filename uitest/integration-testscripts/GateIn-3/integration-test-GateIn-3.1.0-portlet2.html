@@ -181,13 +181,13 @@
 <!--Start of actual portlet test-->
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/span</td>
+	<td>//div[contains(@class,'PORTLET-FRAGMENT')]/div[contains(@class,'v-app')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>//div[2]/div/div/div/span</td>
+	<td>assertTextPresent</td>
 	<td>Test of ApplicationResources with full path</td>
+	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>

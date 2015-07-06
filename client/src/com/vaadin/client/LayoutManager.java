@@ -946,7 +946,35 @@ public class LayoutManager {
      * given element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * <p>
+     * The value returned by this method is always rounded up. To get the exact
+     * outer width, use {@link #getOuterHeightDouble(Element)}
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured outer height (including margins, paddings and
+     *         borders) of the element in pixels.
+     */
+    public final int getOuterHeight(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return (int) Math.ceil(getMeasuredSize(element, nullSize)
+                .getOuterHeight());
+    }
+
+    /**
+     * Gets the outer height (including margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -960,7 +988,7 @@ public class LayoutManager {
      * @return the measured outer height (including margins, paddings and
      *         borders) of the element in pixels.
      */
-    public final int getOuterHeight(Element element) {
+    public final double getOuterHeightDouble(Element element) {
         assert needsMeasure(element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getOuterHeight();
     }
@@ -970,7 +998,35 @@ public class LayoutManager {
      * given element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * <p>
+     * The value returned by this method is always rounded up. To get the exact
+     * outer width, use {@link #getOuterWidthDouble(Element)}
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured outer width (including margins, paddings and
+     *         borders) of the element in pixels.
+     */
+    public final int getOuterWidth(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return (int) Math.ceil(getMeasuredSize(element, nullSize)
+                .getOuterWidth());
+    }
+
+    /**
+     * Gets the outer width (including margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -984,7 +1040,7 @@ public class LayoutManager {
      * @return the measured outer width (including margins, paddings and
      *         borders) of the element in pixels.
      */
-    public final int getOuterWidth(Element element) {
+    public final double getOuterWidthDouble(Element element) {
         assert needsMeasure(element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getOuterWidth();
     }
@@ -994,7 +1050,35 @@ public class LayoutManager {
      * given element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * <p>
+     * The value returned by this method is always rounded up. To get the exact
+     * outer width, use {@link #getInnerHeightDouble(Element)}
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured inner height (excluding margins, paddings and
+     *         borders) of the element in pixels.
+     */
+    public final int getInnerHeight(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return (int) Math.ceil(getMeasuredSize(element, nullSize)
+                .getInnerHeight());
+    }
+
+    /**
+     * Gets the inner height (excluding margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1008,7 +1092,7 @@ public class LayoutManager {
      * @return the measured inner height (excluding margins, paddings and
      *         borders) of the element in pixels.
      */
-    public final int getInnerHeight(Element element) {
+    public final double getInnerHeightDouble(Element element) {
         assert needsMeasure(element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getInnerHeight();
     }
@@ -1018,7 +1102,35 @@ public class LayoutManager {
      * given element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * <p>
+     * The value returned by this method is always rounded up. To get the exact
+     * outer width, use {@link #getOuterHeightDouble(Element)}
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured inner width (excluding margins, paddings and
+     *         borders) of the element in pixels.
+     */
+    public final int getInnerWidth(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return (int) Math.ceil(getMeasuredSize(element, nullSize)
+                .getInnerWidth());
+    }
+
+    /**
+     * Gets the inner width (excluding margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1032,7 +1144,7 @@ public class LayoutManager {
      * @return the measured inner width (excluding margins, paddings and
      *         borders) of the element in pixels.
      */
-    public final int getInnerWidth(Element element) {
+    public final double getInnerWidthDouble(Element element) {
         assert needsMeasure(element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getInnerWidth();
     }
@@ -1042,7 +1154,7 @@ public class LayoutManager {
      * provided that it has been measured. These elements are guaranteed to be
      * measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1067,7 +1179,7 @@ public class LayoutManager {
      * element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1092,7 +1204,7 @@ public class LayoutManager {
      * provided that it has been measured. These elements are guaranteed to be
      * measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1116,7 +1228,7 @@ public class LayoutManager {
      * Gets the top border of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1139,7 +1251,7 @@ public class LayoutManager {
      * Gets the left border of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1162,7 +1274,7 @@ public class LayoutManager {
      * Gets the bottom border of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1185,7 +1297,7 @@ public class LayoutManager {
      * Gets the right border of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1209,7 +1321,7 @@ public class LayoutManager {
      * element, provided that it has been measured. These elements are
      * guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1233,7 +1345,7 @@ public class LayoutManager {
      * Gets the top padding of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1256,7 +1368,7 @@ public class LayoutManager {
      * Gets the left padding of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1279,7 +1391,7 @@ public class LayoutManager {
      * Gets the bottom padding of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1302,7 +1414,7 @@ public class LayoutManager {
      * Gets the right padding of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1325,7 +1437,7 @@ public class LayoutManager {
      * Gets the top margin of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1348,7 +1460,7 @@ public class LayoutManager {
      * Gets the right margin of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1371,7 +1483,7 @@ public class LayoutManager {
      * Gets the bottom margin of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1394,7 +1506,7 @@ public class LayoutManager {
      * Gets the left margin of the given element, provided that it has been
      * measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1417,7 +1529,7 @@ public class LayoutManager {
      * Gets the combined top & bottom margin of the given element, provided that
      * they have been measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
@@ -1439,7 +1551,7 @@ public class LayoutManager {
      * Gets the combined left & right margin of the given element, provided that
      * they have been measured. These elements are guaranteed to be measured:
      * <ul>
-     * <li>ManagedLayotus and their child Connectors
+     * <li>ManagedLayouts and their child Connectors
      * <li>Elements for which there is at least one ElementResizeListener
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency

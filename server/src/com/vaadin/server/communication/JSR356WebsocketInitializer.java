@@ -44,7 +44,7 @@ import com.vaadin.server.VaadinServlet;
  * older servers (unless added to web.xml), but these servers do not support JSR
  * 356 websockets either.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 @WebListener

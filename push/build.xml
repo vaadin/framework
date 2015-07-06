@@ -18,7 +18,7 @@
         location="${result.dir}/js/VAADIN/vaadinPush.debug.js" />
 
     <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
-    <property name="atmosphere.runtime.version" value="2.2.4.vaadin8" />
+    <property name="atmosphere.runtime.version" value="2.2.7.vaadin1" />
     <property name="jquery.js" location="lib/jquery/jquery-1.11.0.js" />
 
     <path id="classpath.compile.custom" />
@@ -26,7 +26,9 @@
     <union id="jar.includes">
         <fileset dir="${result.dir}/js">
             <include name="VAADIN/vaadinPush.js" />
+            <include name="VAADIN/vaadinPush.js.gz" />
             <include name="VAADIN/vaadinPush.debug.js" />
+            <include name="VAADIN/vaadinPush.debug.js.gz" />
         </fileset>
     </union>
 
@@ -77,6 +79,10 @@
             <arg file="${vaadinPush.js}" />
             <arg file="${vaadinPush.debug.js}" />
         </java>
+        
+        <!-- Gzipped versions -->
+        <gzip src="${vaadinPush.js}" destfile="${vaadinPush.js}.gz" />
+        <gzip src="${vaadinPush.debug.js}" destfile="${vaadinPush.debug.js}.gz" />
     </target>
 
     <target name="jar" depends="vaadinPush.js">

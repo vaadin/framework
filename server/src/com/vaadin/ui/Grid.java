@@ -794,7 +794,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Marks an item as selected.
              * 
-             * @param itemIds
+             * @param itemId
              *            the itemId to mark as selected; <code>null</code> for
              *            deselect
              * @return <code>true</code> if the selection state changed.
@@ -1631,7 +1631,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Writes the declarative design to the given table row element.
              * 
-             * @since
+             * @since 7.5.0
              * @param trElement
              *            Element to write design to
              * @param designContext
@@ -1665,7 +1665,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Reads the declarative design from the given table row element.
              * 
-             * @since
+             * @since 7.5.0
              * @param trElement
              *            Element to read design from
              * @param designContext
@@ -1867,7 +1867,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Writes the declarative design to the given table cell element.
              * 
-             * @since
+             * @since 7.5.0
              * @param cellElement
              *            Element to write design to
              * @param designContext
@@ -1894,7 +1894,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             /**
              * Reads the declarative design from the given table cell element.
              * 
-             * @since
+             * @since 7.5.0
              * @param cellElement
              *            Element to read design from
              * @param designContext
@@ -1944,7 +1944,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Removes the row at the given position.
          * 
-         * @param index
+         * @param rowIndex
          *            the position of the row
          * 
          * @throws IllegalArgumentException
@@ -2147,7 +2147,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Writes the declarative design to the given table section element.
          * 
-         * @since
+         * @since 7.5.0
          * @param tableSectionElement
          *            Element to write design to
          * @param designContext
@@ -2164,7 +2164,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Writes the declarative design from the given table section element.
          * 
-         * @since
+         * @since 7.5.0
          * @param tableSectionElement
          *            Element to read design from
          * @param designContext
@@ -2441,9 +2441,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         private Converter<?, Object> converter;
 
         /**
-         * A check for allowing the {@link #Column(Grid, GridColumnState)
-         * constructor} to call {@link #setConverter(Converter)} with a
-         * <code>null</code>, even if model and renderer aren't compatible.
+         * A check for allowing the
+         * {@link #Column(Grid, GridColumnState, Object) constructor} to call
+         * {@link #setConverter(Converter)} with a <code>null</code>, even if
+         * model and renderer aren't compatible.
          */
         private boolean isFirstConverterAssignment = true;
 
@@ -2503,7 +2504,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         /**
-         * Sets the caption of the header.
+         * Sets the caption of the header. This caption is also used as the
+         * hiding toggle caption, unless it is explicitly set via
+         * {@link #setHidingToggleCaption(String)}.
          * 
          * @param caption
          *            the text to show in the caption
@@ -2515,6 +2518,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setHeaderCaption(String caption)
                 throws IllegalStateException {
             checkColumnIsAttached();
+
+            state.headerCaption = caption;
+
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
                 row.getCell(grid.getPropertyIdByColumnId(state.id)).setText(
@@ -2526,7 +2532,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Gets the caption of the hiding toggle for this column.
          * 
-         * @since
+         * @since 7.5.0
          * @see #setHidingToggleCaption(String)
          * @return the caption for the hiding toggle for this column
          * @throws IllegalStateException
@@ -2542,13 +2548,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * toggle for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
          * <p>
-         * By default, before triggering this setter, a user friendly version of
-         * the column's {@link #getPropertyId() property id} is used.
+         * The default value is <code>null</code>, and in that case the column's
+         * {@link #getHeaderCaption() header caption} is used.
          * <p>
-         * <em>NOTE:</em> setting this to <code>null</code> or empty string
-         * might cause the hiding toggle to not render correctly.
+         * <em>NOTE:</em> setting this to empty string might cause the hiding
+         * toggle to not render correctly.
          * 
-         * @since
+         * @since 7.5.0
          * @param hidingToggleCaption
          *            the text to show in the column hiding toggle
          * @return the column itself
@@ -3101,7 +3107,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * 
          * @throws IllegalArgumentException
          *             if there is no column for the provided property id
-         * @throws BindException
+         * @throws FieldGroup.BindException
          *             if no field has been configured and there is a problem
          *             building or binding
          */
@@ -3175,14 +3181,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return getState().hidable;
         }
 
-        /*
+        /**
          * Writes the design attributes for this column into given element.
          * 
-         * @since
+         * @since 7.5.0
          * 
-         * @param design Element to write attributes into
+         * @param design
+         *            Element to write attributes into
          * 
-         * @param designContext the design context
+         * @param designContext
+         *            the design context
          */
         protected void writeDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
@@ -3205,9 +3213,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             DesignAttributeHandler.writeAttribute("hidden", attributes,
                     isHidden(), def.hidden, boolean.class);
             DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
-                    attributes, getHidingToggleCaption(),
-                    SharedUtil.propertyIdToHumanFriendly(getPropertyId()),
-                    String.class);
+                    attributes, getHidingToggleCaption(), null, String.class);
             DesignAttributeHandler.writeAttribute("property-id", attributes,
                     getPropertyId(), null, Object.class);
         }
@@ -3215,7 +3221,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Reads the design attributes for this column from given element.
          * 
-         * @since
+         * @since 7.5.0
          * @param design
          *            Element to read attributes from
          * @param designContext
@@ -3270,22 +3276,30 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * An abstract base class for server-side Grid renderers.
-     * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. This class
+     * An abstract base class for server-side
+     * {@link com.vaadin.ui.renderers.Renderer Grid renderers}. This class
      * currently extends the AbstractExtension superclass, but this fact should
      * be regarded as an implementation detail and subject to change in a future
      * major or minor Vaadin revision.
-     * 
+     *
      * @param <T>
      *            the type this renderer knows how to present
      */
-    public static abstract class AbstractRenderer<T> extends AbstractExtension
-            implements Renderer<T> {
+    public static abstract class AbstractRenderer<T> extends
+            AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
 
-        protected AbstractRenderer(Class<T> presentationType) {
+        private final String nullRepresentation;
+
+        protected AbstractRenderer(Class<T> presentationType,
+                String nullRepresentation) {
             this.presentationType = presentationType;
+            this.nullRepresentation = nullRepresentation;
+        }
+
+        protected AbstractRenderer(Class<T> presentationType) {
+            this(presentationType, null);
         }
 
         /**
@@ -3315,7 +3329,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         @Override
         public JsonValue encode(T value) {
-            return encode(value, getPresentationType());
+            if (value == null) {
+                return encode(getNullRepresentation(), String.class);
+            } else {
+                return encode(value, getPresentationType());
+            }
+        }
+
+        /**
+         * Null representation for the renderer
+         * 
+         * @return a textual representation of {@code null}
+         */
+        protected String getNullRepresentation() {
+            return nullRepresentation;
         }
 
         /**
@@ -3327,7 +3354,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * is desired. For instance, a {@code Renderer<Date>} could first turn a
          * date value into a formatted string and return
          * {@code encode(dateString, String.class)}.
-         * 
+         *
          * @param value
          *            the value to be encoded
          * @param type
@@ -3337,6 +3364,33 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         protected <U> JsonValue encode(U value, Class<U> type) {
             return JsonCodec.encode(value, null, type,
                     getUI().getConnectorTracker()).getEncodedValue();
+        }
+    }
+
+    /**
+     * An abstract base class for server-side Grid extensions.
+     *
+     * @since 7.5
+     */
+    public static abstract class AbstractGridExtension extends
+            AbstractExtension {
+
+        /**
+         * Constructs a new Grid extension.
+         */
+        public AbstractGridExtension() {
+            super();
+        }
+
+        /**
+         * Constructs a new Grid extension and extends given Grid.
+         *
+         * @param grid
+         *            a grid instance
+         */
+        public AbstractGridExtension(Grid grid) {
+            super();
+            extend(grid);
         }
 
         /**
@@ -3479,6 +3533,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private final Footer footer = new Footer(this);
 
     private Object editedItemId = null;
+    private boolean editorActive = false;
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     private CellStyleGenerator cellStyleGenerator;
@@ -3489,7 +3544,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * in Grid() constructor, or <code>false</code> if the user has set their
      * own Container.
      * 
-     * @see #setContainerDataSource()
+     * @see #setContainerDataSource(Indexed)
      * @see #Grid()
      */
     private boolean defaultContainer = true;
@@ -3814,7 +3869,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                boolean success = false;
+                Exception exception = null;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     if (editedItemId == null) {
@@ -3822,13 +3877,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     }
 
                     if (editedItemId.equals(id)) {
-                        success = true;
                         doEditItem();
                     }
                 } catch (Exception e) {
-                    handleError(e);
+                    exception = e;
                 }
-                getEditorRpc().confirmBind(success);
+
+                if (exception != null) {
+                    handleError(exception);
+                    doCancelEditor();
+                    getEditorRpc().confirmBind(false);
+                } else {
+                    doEditItem();
+                    getEditorRpc().confirmBind(true);
+                }
             }
 
             @Override
@@ -4085,8 +4147,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         if (datasource.getContainerPropertyIds().contains(propertyId)
                 && !columns.containsKey(propertyId)) {
             appendColumn(propertyId);
-        } else {
+        } else if (defaultContainer) {
             addColumnProperty(propertyId, String.class, "");
+        } else {
+            if (columns.containsKey(propertyId)) {
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId.toString()
+                        + "' already exists in this grid");
+            } else {
+                throw new IllegalStateException("Property id '"
+                        + propertyId.toString()
+                        + "' does not exist in the container");
+            }
         }
 
         // Inform the data provider of this new column.
@@ -4255,7 +4327,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         String humanFriendlyPropertyId = SharedUtil
                 .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
         column.setHeaderCaption(humanFriendlyPropertyId);
-        column.setHidingToggleCaption(humanFriendlyPropertyId);
 
         if (datasource instanceof Sortable
                 && ((Sortable) datasource).getSortableContainerPropertyIds()
@@ -4302,6 +4373,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * property id is not in propertyIds are removed. Similarly, a column is
      * added for any property id in propertyIds that has no corresponding column
      * in this Grid.
+     * 
+     * @since 7.5.0
      * 
      * @param propertyIds
      *            properties in the desired column order
@@ -4463,8 +4536,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isInifinite(double)
-     *             infinite}
+     *             if {@code rows} is {@link Double#isInfinite(double) infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
      */
@@ -4709,7 +4781,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
      * 
-     * @param itemIds
+     * @param itemId
      *            the itemId to mark as selected
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId already was selected
@@ -4802,10 +4874,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * {@link SelectionModel SelectionModels} would be able to inform Grid of
      * these events.
      * 
-     * @param addedSelections
-     *            the selections that were added by this event
-     * @param removedSelections
-     *            the selections that were removed by this event
+     * @param newSelection
+     *            the selection that was added by this event
+     * @param oldSelection
+     *            the selection that was removed by this event
      */
     public void fireSelectionEvent(Collection<Object> oldSelection,
             Collection<Object> newSelection) {
@@ -5185,7 +5257,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes the row at the given position from the header section.
      * 
-     * @param index
+     * @param rowIndex
      *            the position of the row
      * 
      * @throws IllegalArgumentException
@@ -5332,7 +5404,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Removes the row at the given position from the footer section.
      * 
-     * @param index
+     * @param rowIndex
      *            the position of the row
      * 
      * @throws IllegalArgumentException
@@ -5367,7 +5439,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     @Override
     public Iterator<Component> iterator() {
-        List<Component> componentList = new ArrayList<Component>();
+        // This is a hash set to avoid adding header/footer components inside
+        // merged cells multiple times
+        LinkedHashSet<Component> componentList = new LinkedHashSet<Component>();
 
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
@@ -5618,7 +5692,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @return true iff the editor is open
      */
     public boolean isEditorActive() {
-        return editedItemId != null;
+        return editorActive;
     }
 
     private void checkColumnExists(Object propertyId) {
@@ -5636,13 +5710,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
-        if (editor == null) {
-            editor = editorFieldGroup.buildAndBind(propertyId);
-        }
 
-        if (editor.getParent() != Grid.this) {
-            assert editor.getParent() == null;
-            editor.setParent(this);
+        try {
+            if (editor == null) {
+                editor = editorFieldGroup.buildAndBind(propertyId);
+            }
+        } finally {
+            if (editor == null) {
+                editor = editorFieldGroup.getField(propertyId);
+            }
+
+            if (editor != null && editor.getParent() != Grid.this) {
+                assert editor.getParent() == null;
+                editor.setParent(this);
+            }
         }
         return editor;
     }
@@ -5684,6 +5765,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             column.getState().editorConnector = getEditorField(column
                     .getPropertyId());
         }
+
+        editorActive = true;
+        // Must ensure that all fields, recursively, are sent to the client
+        // This is needed because the fields are hidden using isRendered
+        for (Field<?> f : getEditorFields()) {
+            f.markAsDirtyRecursive();
+        }
+
     }
 
     private void setEditorField(Object propertyId, Field<?> field) {
@@ -5729,7 +5818,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     protected void doCancelEditor() {
         editedItemId = null;
+        editorActive = false;
         editorFieldGroup.discard();
+        editorFieldGroup.setItemDataSource(null);
     }
 
     void resetEditor() {
@@ -5745,6 +5836,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         editedItemId = null;
+        editorActive = false;
         editorFieldGroup = new CustomFieldGroup();
     }
 
@@ -6007,7 +6099,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         return datasourceExtension.isDetailsVisible(itemId);
     }
 
-    protected SelectionMode getDefaultSelectionMode() {
+    private static SelectionMode getDefaultSelectionMode() {
         return SelectionMode.SINGLE;
     }
 

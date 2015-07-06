@@ -21,7 +21,7 @@ import com.vaadin.ui.Label;
 
 public class RowAwareRenderer extends AbstractRenderer<Void> {
     public RowAwareRenderer(final Label debugLabel) {
-        super(Void.class);
+        super(Void.class, "");
         registerRpc(new RowAwareRendererRpc() {
             @Override
             public void clicky(String key) {

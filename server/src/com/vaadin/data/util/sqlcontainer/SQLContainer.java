@@ -1012,9 +1012,15 @@ public class SQLContainer implements Container, Container.Filterable,
             queryDelegate.beginTransaction();
             /* Perform buffered deletions */
             for (RowItem item : removedItems.values()) {
-                if (!queryDelegate.removeRow(item)) {
+                try {
+                    if (!queryDelegate.removeRow(item)) {
+                        throw new SQLException(
+                                "Removal failed for row with ID: "
+                                        + item.getId());
+                    }
+                } catch (IllegalArgumentException e) {
                     throw new SQLException("Removal failed for row with ID: "
-                            + item.getId());
+                            + item.getId(), e);
                 }
             }
             /* Perform buffered modifications */
@@ -1273,7 +1279,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Fetches a page from the data source based on the values of pageLenght and
+     * Fetches a page from the data source based on the values of pageLength and
      * currentOffset. Also updates the set of primary keys, used in
      * identification of RowItems.
      */

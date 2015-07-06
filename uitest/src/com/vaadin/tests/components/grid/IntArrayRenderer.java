@@ -19,6 +19,6 @@ import com.vaadin.ui.Grid.AbstractRenderer;
 
 public class IntArrayRenderer extends AbstractRenderer<int[]> {
     public IntArrayRenderer() {
-        super(int[].class);
+        super(int[].class, "");
     }
 }

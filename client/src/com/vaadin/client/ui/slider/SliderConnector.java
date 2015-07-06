@@ -89,7 +89,6 @@ public class SliderConnector extends AbstractFieldConnector implements
         getWidget().setMaxValue(getState().maxValue);
         getWidget().setResolution(getState().resolution);
         getWidget().setValue(getState().value, false);
-        getWidget().setFeedbackValue(getState().value);
 
         getWidget().buildBase();
         getWidget().setTabIndex(getState().tabIndex);

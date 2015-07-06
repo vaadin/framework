@@ -66,8 +66,68 @@ public class HierarchySection implements Section {
             "Show used connectors and how to optimize widgetset");
     private final Button showHierarchy = new DebugButton(Icon.HIERARCHY,
             "Show the connector hierarchy tree");
+    private final Button generateDesign = new DebugButton(Icon.SHOW_DESIGN,
+            "Generate a declarative design for the given component sub tree");
 
     private HandlerRegistration highlightModeRegistration = null;
+
+    public interface FindHandler {
+
+        /**
+         * Called when the user hovers over a connector, which is highlighted.
+         * Also called when hovering outside the tree, e.g. over the debug
+         * console, but in this case the connector is null
+         * 
+         * @param connector
+         */
+        void onHover(ComponentConnector connector);
+
+        /**
+         * Called when the user clicks on a highlighted connector.
+         * 
+         * @param connector
+         */
+        void onSelected(ComponentConnector connector);
+
+    }
+
+    private FindHandler inspectComponent = new FindHandler() {
+
+        @Override
+        public void onHover(ComponentConnector connector) {
+            if (connector == null) {
+                infoPanel.clear();
+            } else {
+                printState(connector, false);
+            }
+        }
+
+        @Override
+        public void onSelected(ComponentConnector connector) {
+            stopFind();
+            printState(connector, true);
+        }
+
+    };
+    private FindHandler showComponentDesign = new FindHandler() {
+
+        @Override
+        public void onHover(ComponentConnector connector) {
+            Highlight.showOnly(connector);
+        }
+
+        @Override
+        public void onSelected(ComponentConnector connector) {
+            stopFind();
+            connector.getConnection().getUIConnector()
+                    .showServerDesign(connector);
+            content.setWidget(new HTML(
+                    "Design file for component sent to server log"));
+        }
+
+    };
+
+    private FindHandler activeFindHandler;
 
     public HierarchySection() {
         controls.add(showHierarchy);
@@ -84,7 +144,7 @@ public class HierarchySection implements Section {
         find.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                toggleFind();
+                toggleFind(inspectComponent);
             }
         });
 
@@ -104,6 +164,17 @@ public class HierarchySection implements Section {
             @Override
             public void onClick(ClickEvent event) {
                 generateWidgetset();
+            }
+        });
+
+        controls.add(generateDesign);
+        generateDesign.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
+        generateDesign.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                content.setWidget(new HTML(
+                        "Select a layout or component to generate the declarative design"));
+                toggleFind(showComponentDesign);
             }
         });
 
@@ -132,7 +203,8 @@ public class HierarchySection implements Section {
                 + showHierarchy.getTitle() + "<br/>" + find.getHTML() + " "
                 + find.getTitle() + "<br/>" + analyze.getHTML() + " "
                 + analyze.getTitle() + "<br/>" + generateWS.getHTML() + " "
-                + generateWS.getTitle() + "<br/>");
+                + generateWS.getTitle() + "<br/>" + generateDesign.getHTML()
+                + " " + generateDesign.getTitle() + "<br/>");
         info.setStyleName(VDebugWindow.STYLENAME + "-info");
         helpPanel.add(info);
     }
@@ -189,33 +261,62 @@ public class HierarchySection implements Section {
         // NOP
     }
 
-    private boolean isFindMode() {
-        return (highlightModeRegistration != null);
+    private boolean isFindMode(FindHandler handler) {
+        return activeFindHandler == handler;
     }
 
-    private void toggleFind() {
+    private boolean isFindMode() {
+        return (activeFindHandler != null);
+    }
+
+    private void toggleFind(FindHandler handler) {
+        if (isFindMode()) {
+            // Currently finding something
+            if (isFindMode(handler)) {
+                // Toggle off, stop finding
+                stopFind();
+                return;
+            } else {
+                // Stop finding something else, start finding this
+                stopFind();
+                startFind(handler);
+            }
+        } else {
+            // Not currently finding anything
+            startFind(handler);
+        }
+    }
+
+    private void startFind(FindHandler handler) {
         if (isFindMode()) {
             stopFind();
-        } else {
-            startFind();
         }
-    }
-
-    private void startFind() {
         Highlight.hideAll();
-        if (!isFindMode()) {
-            highlightModeRegistration = Event
-                    .addNativePreviewHandler(highlightModeHandler);
+
+        highlightModeRegistration = Event
+                .addNativePreviewHandler(highlightModeHandler);
+        activeFindHandler = handler;
+        if (handler == inspectComponent) {
             find.addStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
+        } else if (handler == showComponentDesign) {
+            generateDesign.addStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
         }
+
     }
 
+    /**
+     * Stop any current find operation, regardless of the handler
+     */
     private void stopFind() {
-        if (isFindMode()) {
-            highlightModeRegistration.removeHandler();
-            highlightModeRegistration = null;
-            find.removeStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
+        if (!isFindMode()) {
+            return;
         }
+
+        highlightModeRegistration.removeHandler();
+        highlightModeRegistration = null;
+        find.removeStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
+        generateDesign.removeStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
+        activeFindHandler = null;
     }
 
     private void printState(ServerConnector connector, boolean serverDebug) {
@@ -244,7 +345,9 @@ public class HierarchySection implements Section {
                 Element eventTarget = WidgetUtil.getElementFromPoint(event
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
+
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
+                    // Do not prevent using debug window controls
                     infoPanel.clear();
                     return;
                 }
@@ -258,21 +361,21 @@ public class HierarchySection implements Section {
                                 RootPanel.get(), eventTarget);
                     }
                     if (connector != null) {
-                        printState(connector, false);
+                        activeFindHandler.onHover(connector);
                         event.cancel();
                         event.consume();
                         event.getNativeEvent().stopPropagation();
                         return;
                     }
                 }
-                infoPanel.clear();
+                // Not over any connector
+                activeFindHandler.onHover(null);
             }
             if (event.getTypeInt() == Event.ONCLICK) {
                 Highlight.hideAll();
                 event.cancel();
                 event.consume();
                 event.getNativeEvent().stopPropagation();
-                stopFind();
                 Element eventTarget = WidgetUtil.getElementFromPoint(event
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
@@ -286,10 +389,12 @@ public class HierarchySection implements Section {
                     }
 
                     if (connector != null) {
-                        printState(connector, true);
+                        activeFindHandler.onSelected(connector);
                         return;
                     }
                 }
+                // Click on something else -> stop find operation
+                stopFind();
             }
             event.cancel();
         }

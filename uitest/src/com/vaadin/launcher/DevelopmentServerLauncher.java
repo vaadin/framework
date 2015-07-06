@@ -49,6 +49,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.util.Scanner;
+import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -74,6 +75,8 @@ public class DevelopmentServerLauncher {
      */
     public static void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
+        System.setProperty("org.eclipse.jetty.util.log.class",
+                JavaUtilLog.class.getName());
 
         assertAssertionsEnabled();
 

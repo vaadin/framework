@@ -389,6 +389,7 @@ public class WidgetUtil {
     }
 
     private static int detectedScrollbarSize = -1;
+    private static int detectedSubPixelRoundingFactor = -1;
 
     public static int getNativeScrollbarSize() {
         if (detectedScrollbarSize < 0) {
@@ -541,6 +542,30 @@ public class WidgetUtil {
     }
 
     /**
+     * Gets the border-box width for the given element, i.e. element width +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box width for the element
+     */
+    public static double getRequiredWidthDouble(
+            com.google.gwt.dom.client.Element element) {
+        double reqWidth = getRequiredWidthBoundingClientRectDouble(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            double csWidth = getRequiredWidthComputedStyleDouble(element);
+            if (csWidth > reqWidth && csWidth <= (reqWidth + 1)) {
+                // IE9 rounds reqHeight to integers BUT sometimes reports wrong
+                // csHeight it seems, so we only use csHeight if it is within a
+                // rounding error
+
+                return csWidth;
+            }
+        }
+        return reqWidth;
+    }
+
+    /**
      * Gets the border-box height for the given element, i.e. element height +
      * border + padding. Always rounds up to nearest integer.
      * 
@@ -561,6 +586,33 @@ public class WidgetUtil {
                 // in GridLayouts produces senseless values (see e.g.
                 // ThemeTestUI with Runo).
                 return csSize;
+            }
+        }
+        return reqHeight;
+    }
+
+    /**
+     * Gets the border-box height for the given element, i.e. element height +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box height for the element
+     */
+    public static double getRequiredHeightDouble(
+            com.google.gwt.dom.client.Element element) {
+        double reqHeight = getRequiredHeightBoundingClientRectDouble(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            double csHeight = getRequiredHeightComputedStyleDouble(element);
+            if (csHeight > reqHeight && csHeight <= (reqHeight + 1)) {
+                // IE9 rounds reqHeight to integers BUT sometimes reports wrong
+                // csHeight it seems, so we only use csHeight if it is within a
+                // rounding error
+
+                // Although sometimes it also happens that IE9 returns an
+                // incorrectly rounded down requiredHeight and a computed height
+                // which is exactly one larger, hence the "<="...
+                return csHeight;
             }
         }
         return reqHeight;
@@ -605,44 +657,44 @@ public class WidgetUtil {
         }
     }-*/;
 
-    public static native int getRequiredHeightComputedStyle(
+    public static int getRequiredHeightComputedStyle(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getRequiredHeightComputedStyleDouble(element));
+    }
+
+    public static native double getRequiredHeightComputedStyleDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
          if(heightPx == 'auto'){
-             // Fallback for when IE reports auto
-             heightPx = @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+             // Fallback for inline elements
+             return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
-         var borderTopPx = cs.borderTop;
-         var borderBottomPx = cs.borderBottom;
-         var paddingTopPx = cs.paddingTop;
-         var paddingBottomPx = cs.paddingBottom;
-
-         var height = heightPx.substring(0,heightPx.length-2);
-         var border = borderTopPx.substring(0,borderTopPx.length-2)+borderBottomPx.substring(0,borderBottomPx.length-2);
-         var padding = paddingTopPx.substring(0,paddingTopPx.length-2)+paddingBottomPx.substring(0,paddingBottomPx.length-2);
-         return Math.ceil(height+border+padding);
+         var height = parseFloat(heightPx); // Will automatically skip "px" suffix
+         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
+         var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
+         return height+border+padding;
      }-*/;
 
-    public static native int getRequiredWidthComputedStyle(
+    public static int getRequiredWidthComputedStyle(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getRequiredWidthComputedStyleDouble(element));
+    }
+
+    public static native int getRequiredWidthComputedStyleDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
          if(widthPx == 'auto'){
-             // Fallback for when IE reports auto
-             widthPx = @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+             // Fallback for inline elements
+             return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
-         var borderLeftPx = cs.borderLeft;
-         var borderRightPx = cs.borderRight;
-         var paddingLeftPx = cs.paddingLeft;
-         var paddingRightPx = cs.paddingRight;
-
-         var width = widthPx.substring(0,widthPx.length-2);
-         var border = borderLeftPx.substring(0,borderLeftPx.length-2)+borderRightPx.substring(0,borderRightPx.length-2);
-         var padding = paddingLeftPx.substring(0,paddingLeftPx.length-2)+paddingRightPx.substring(0,paddingRightPx.length-2);
-         return Math.ceil(width+border+padding);
+         var width = parseFloat(widthPx); // Will automatically skip "px" suffix
+         var border = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth); // Will automatically skip "px" suffix
+         var padding = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight); // Will automatically skip "px" suffix
+         return width+border+padding;
      }-*/;
 
     /**
@@ -1465,7 +1517,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top border thickness
@@ -1480,7 +1532,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the bottom border thickness
@@ -1496,7 +1548,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top and bottom border thickness
@@ -1512,7 +1564,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the left border thickness
@@ -1527,7 +1579,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the right border thickness
@@ -1542,7 +1594,7 @@ public class WidgetUtil {
      * The value is determined using computed style when available and
      * calculated otherwise.
      * 
-     * @since
+     * @since 7.5.0
      * @param element
      *            the element to measure
      * @return the top border thickness
@@ -1579,4 +1631,134 @@ public class WidgetUtil {
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
+
+    /**
+     * Rounds the given size up to a value which the browser will accept.
+     * 
+     * Safari/WebKit uses 1/64th of a pixel to enable using integer math
+     * (http://trac.webkit.org/wiki/LayoutUnit).
+     * 
+     * Firefox uses 1/60th of a pixel because it is divisible by three
+     * (https://bugzilla.mozilla.org/show_bug.cgi?id=1070940)
+     * 
+     * @since
+     * @param size
+     *            the value to round
+     * @return the rounded value
+     */
+    public static double roundSizeUp(double size) {
+        return roundSize(size, true);
+    }
+
+    /**
+     * Rounds the given size down to a value which the browser will accept.
+     * 
+     * Safari/WebKit uses 1/64th of a pixel to enable using integer math
+     * (http://trac.webkit.org/wiki/LayoutUnit).
+     * 
+     * Firefox uses 1/60th of a pixel because it is divisible by three
+     * (https://bugzilla.mozilla.org/show_bug.cgi?id=1070940)
+     * 
+     * IE9+ uses 1/100th of a pixel
+     * 
+     * @since
+     * @param size
+     *            the value to round
+     * @return the rounded value
+     */
+    public static double roundSizeDown(double size) {
+        return roundSize(size, false);
+    }
+
+    private static double roundSize(double size, boolean roundUp) {
+        if (BrowserInfo.get().isIE8()) {
+            if (roundUp) {
+                return Math.ceil(size);
+            } else {
+                return (int) size;
+            }
+        }
+
+        double factor = getSubPixelRoundingFactor();
+        if (factor < 0 || size < 0) {
+            return size;
+        }
+
+        if (roundUp) {
+            return roundSizeUp(size, factor);
+        } else {
+            return roundSizeDown(size, factor);
+        }
+    }
+
+    /**
+     * Returns the factor used by browsers to round subpixel values
+     * 
+     * @since
+     * @return the factor N used by the browser when storing subpixels as X+Y/N
+     */
+    private static double getSubPixelRoundingFactor() {
+        // Detects how the browser does subpixel rounding
+        // Currently Firefox uses 1/60th pixels
+        // and Safari uses 1/64th pixels
+        // IE 1/100th pixels
+        if (detectedSubPixelRoundingFactor != -1) {
+            return detectedSubPixelRoundingFactor;
+        }
+
+        double probeSize = 0.999999;
+        DivElement div = Document.get().createDivElement();
+        Document.get().getBody().appendChild(div);
+        div.getStyle().setHeight(probeSize, Unit.PX);
+        ComputedStyle computedStyle = new ComputedStyle(div);
+        double computedHeight = computedStyle.getHeight();
+
+        if (computedHeight < probeSize) {
+            // Rounded down by browser, all browsers but Firefox do this
+            // today
+            detectedSubPixelRoundingFactor = (int) Math
+                    .round(1.0 / (1.0 - computedHeight));
+        } else {
+            // Rounded up / to nearest by browser
+            probeSize = 1;
+
+            while (computedStyle.getHeight() != 0.0) {
+                computedHeight = computedStyle.getHeight();
+                probeSize /= 2.0;
+                div.getStyle().setHeight(probeSize, Unit.PX);
+            }
+
+            detectedSubPixelRoundingFactor = (int) Math
+                    .round(1.0 / computedHeight);
+        }
+
+        div.removeFromParent();
+        return detectedSubPixelRoundingFactor;
+    }
+
+    private static double roundSizeUp(double size, double divisor) {
+        // In: 12.51, 60.0
+
+        // 12
+        double integerPart = (int) size;
+
+        // (12.51 - 12) * 60 = 30.6
+        double nrFractions = (size - integerPart) * divisor;
+
+        // 12 + ceil(30.6) / 60 = 12 + 31/60 = 12.51666
+        return integerPart + (Math.ceil(nrFractions)) / divisor;
+    }
+
+    private static double roundSizeDown(double size, double divisor) {
+        // In: 12.51, 60.0
+
+        // 12
+        double integerPart = (int) size;
+
+        // (12.51 - 12) * 60 = 30.6
+        double nrFractions = (size - integerPart) * divisor;
+
+        // 12 + int(30.6) / 60 = 12 + 30/60 = 12.5
+        return integerPart + ((int) nrFractions) / divisor;
+    }
 }

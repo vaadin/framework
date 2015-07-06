@@ -97,8 +97,10 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         desiredCapabilities.setCapability("project", "Vaadin Framework");
         desiredCapabilities.setCapability("build", String.format("%s / %s",
                 getDeploymentHostname(), Calendar.getInstance().getTime()));
-        desiredCapabilities.setCapability("name", String.format("%s.%s",
-                getClass().getCanonicalName(), testName.getMethodName()));
+        desiredCapabilities.setCapability(
+                "name",
+                String.format("%s.%s", getClass().getCanonicalName(),
+                        testName.getMethodName()));
 
         super.setDesiredCapabilities(desiredCapabilities);
     }

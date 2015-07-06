@@ -29,10 +29,6 @@ public class ComplexPerson {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public Integer getAge() {
         return age;
     }
@@ -97,7 +93,7 @@ public class ComplexPerson {
     public static ComplexPerson create(Random r) {
         ComplexPerson cp = new ComplexPerson();
         cp.setFirstName(TestDataGenerator.getFirstName(r));
-        cp.setLastName(TestDataGenerator.getLastName(r));
+        cp.lastName = TestDataGenerator.getLastName(r);
         cp.setAlive(r.nextBoolean());
         cp.setBirthDate(TestDataGenerator.getBirthDate(r));
         cp.setAge((int) ((new Date(2014 - 1900, 1, 1).getTime() - cp

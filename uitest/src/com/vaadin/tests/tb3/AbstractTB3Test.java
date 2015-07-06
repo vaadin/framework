@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -40,9 +39,12 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -111,6 +113,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Timeout used by the TB grid
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
+
+    protected static DesiredCapabilities PHANTOMJS2() {
+        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory().create(
+                Browser.PHANTOMJS, "2");
+        // Hack for the test cluster
+        phantomjs2
+                .setCapability("phantomjs.binary.path", "/usr/bin/phantomjs2");
+        return phantomjs2;
+    }
 
     private boolean debug = false;
 
@@ -954,7 +965,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected void click(CheckBoxElement checkbox) {
-        checkbox.findElement(By.xpath("input")).click();
+        WebElement cb = checkbox.findElement(By.xpath("input"));
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            testBenchElement(cb).click(0, 0);
+        } else {
+            cb.click();
+        }
     }
 
     protected boolean isLoadingIndicatorVisible() {
@@ -976,4 +992,108 @@ public abstract class AbstractTB3Test extends ParallelTest {
             }
         });
     }
+
+    /**
+     * Selects a menu item. By default, this will click on the menu item.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     */
+    protected void selectMenu(String menuCaption) {
+        selectMenu(menuCaption, true);
+    }
+
+    /**
+     * Selects a menu item.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     * @param click
+     *            <code>true</code> if should click the menu item;
+     *            <code>false</code> if not
+     */
+    protected void selectMenu(String menuCaption, boolean click) {
+        WebElement menuElement = getMenuElement(menuCaption);
+        Dimension size = menuElement.getSize();
+        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
+                size.height / 2).perform();
+        if (click) {
+            new Actions(getDriver()).click().perform();
+        }
+    }
+
+    /**
+     * Finds the menu item from the DOM based on menu item caption.
+     * 
+     * @param menuCaption
+     *            caption of the menu item
+     * @return the found menu item
+     * @throws NoSuchElementException
+     *             if menu item is not found
+     */
+    protected WebElement getMenuElement(String menuCaption)
+            throws NoSuchElementException {
+        return getDriver().findElement(
+                By.xpath("//span[text() = '" + menuCaption + "']"));
+    }
+
+    /**
+     * Selects a submenu described by a path of menus from the first MenuBar in
+     * the UI.
+     * 
+     * @param menuCaptions
+     *            array of menu captions
+     */
+    protected void selectMenuPath(String... menuCaptions) {
+        selectMenu(menuCaptions[0], true);
+
+        // Move to the menu item opened below the menu bar.
+        new Actions(getDriver()).moveByOffset(0,
+                getMenuElement(menuCaptions[0]).getSize().getHeight())
+                .perform();
+
+        for (int i = 1; i < menuCaptions.length - 1; i++) {
+            selectMenu(menuCaptions[i]);
+            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+        }
+        selectMenu(menuCaptions[menuCaptions.length - 1], true);
+    }
+
+    /**
+     * Asserts that an element is present
+     * 
+     * @param by
+     *            the locatore for the element
+     */
+    protected void assertElementPresent(By by) {
+        Assert.assertTrue("Element is not present", isElementPresent(by));
+    }
+
+    /**
+     * Asserts that an element is not present
+     * 
+     * @param by
+     *            the locatore for the element
+     */
+    protected void assertElementNotPresent(By by) {
+        Assert.assertFalse("Element is present", isElementPresent(by));
+    }
+
+    /**
+     * Asserts that no error notifications are shown. Requires the use of
+     * "?debug" as exceptions are otherwise not shown as notifications.
+     */
+    protected void assertNoErrorNotifications() {
+        Assert.assertTrue(
+                "Debug window must be open to be able to see error notifications",
+                isDebugWindowOpen());
+        Assert.assertFalse(
+                "Error notification with client side exception is shown",
+                isElementPresent(By.className("v-Notification-error")));
+    }
+
+    private boolean isDebugWindowOpen() {
+        return isElementPresent(By.className("v-debugwindow"));
+    }
+
 }

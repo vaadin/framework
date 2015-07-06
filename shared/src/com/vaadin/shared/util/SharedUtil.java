@@ -149,11 +149,12 @@ public class SharedUtil implements Serializable {
             sb.append(parts[i]);
             sb.append(separator);
         }
-        return sb.substring(0, sb.length() - 1);
+        return sb.substring(0, sb.length() - separator.length());
     }
 
     /**
-     * Capitalizes the first character in the given string
+     * Capitalizes the first character in the given string in a way suitable for
+     * use in code (methods, properties etc)
      * 
      * @since 7.4
      * @param string
@@ -237,6 +238,31 @@ public class SharedUtil implements Serializable {
         }
 
         return uri;
+    }
+
+    /**
+     * Converts a dash ("-") separated string into camelCase.
+     * <p>
+     * Examples:
+     * <p>
+     * {@literal foo} becomes {@literal foo} {@literal foo-bar} becomes
+     * {@literal fooBar} {@literal foo--bar} becomes {@literal fooBar}
+     * 
+     * @since 7.5
+     * @param dashSeparated
+     *            The dash separated string to convert
+     * @return a camelCase version of the input string
+     */
+    public static String dashSeparatedToCamelCase(String dashSeparated) {
+        if (dashSeparated == null) {
+            return null;
+        }
+        String[] parts = dashSeparated.split("-");
+        for (int i = 1; i < parts.length; i++) {
+            parts[i] = capitalize(parts[i]);
+        }
+
+        return join(parts, "");
     }
 
 }

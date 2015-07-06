@@ -118,4 +118,26 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     private void selectCellStyleNameGenerator(String name) {
         selectMenuPath("Component", "State", "Cell style generator", name);
     }
+
+    @Test
+    public void testEmptyStringStyleGenerator() {
+        setDebug(true);
+        openTestURL();
+        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_EMPTY);
+        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_EMPTY);
+
+        assertFalse("Error notification was present",
+                isElementPresent(NotificationElement.class));
+    }
+
+    @Test
+    public void testNullStringStyleGenerator() {
+        setDebug(true);
+        openTestURL();
+        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_NULL);
+        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_NULL);
+
+        assertFalse("Error notification was present",
+                isElementPresent(NotificationElement.class));
+    }
 }

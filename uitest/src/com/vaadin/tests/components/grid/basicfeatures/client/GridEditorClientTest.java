@@ -33,7 +33,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
@@ -71,6 +73,22 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     public void testVerticalScrollLocking() {
         selectMenuPath(EDIT_ROW_5);
         getGridElement().getCell(200, 0);
+    }
+
+    @Test
+    public void testMouseOpeningClosing() {
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertNotNull(getEditor());
+
+        getCancelButton().click();
+        assertNull(getEditor());
+
+        // Disable editor
+        selectMenuPath("Component", "Editor", "Enabled");
+
+        getGridElement().getCell(4, 0).doubleClick();
+        assertNull(getEditor());
     }
 
     @Test
@@ -217,6 +235,52 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
                 "Syntethic fail of editor in column 2. "
                         + "This message is so long that it doesn't fit into its box",
                 editor.getErrorMessage());
+    }
+
+    @Test
+    public void testFocusOnMouseOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.doubleClick();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testFocusOnKeyboardOpen() {
+
+        GridCellElement cell = getGridElement().getCell(4, 2);
+
+        cell.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        WebElement focused = getFocusedElement();
+
+        assertEquals("", "input", focused.getTagName());
+        assertEquals("", cell.getText(), focused.getAttribute("value"));
+    }
+
+    @Test
+    public void testNoFocusOnProgrammaticOpen() {
+
+        selectMenuPath(EDIT_ROW_5);
+
+        WebElement focused = getFocusedElement();
+
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            assertEquals("Focus should be in html", "html",
+                    focused.getTagName());
+        } else if (BrowserUtil.isIE(getDesiredCapabilities())) {
+            assertEquals("Focus should be nowhere", null, focused);
+        } else {
+            // GWT menubar loses focus after clicking a menuitem
+            assertEquals("Focus should be in body", "body",
+                    focused.getTagName());
+        }
     }
 
     protected WebElement getSaveButton() {

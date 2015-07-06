@@ -138,7 +138,8 @@ public class ParseLayoutTest {
         return Design.read(in, null);
     }
 
-    private ByteArrayOutputStream serializeDesign(DesignContext context) throws IOException {
+    private ByteArrayOutputStream serializeDesign(DesignContext context)
+            throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Design.write(context, out);
 
@@ -192,7 +193,8 @@ public class ParseLayoutTest {
         assertThat(hlayout.getComponent(0).getCaption(), is("FooBar"));
         assertThat(hlayout.getComponent(1).getCaption(), is("Native click me"));
         assertThat(hlayout.getComponent(2).getCaption(), is("Another button"));
-        assertThat(hlayout.getComponent(3).getCaption(), is("Yet another button"));
+        assertThat(hlayout.getComponent(3).getCaption(),
+                is("Yet another button"));
         assertThat(hlayout.getComponent(4).getCaption(), is("Click me"));
         assertThat(hlayout.getComponent(4).getWidth(), is(150f));
 

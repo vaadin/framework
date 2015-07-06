@@ -243,6 +243,34 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
+    /**
+     * Adds or removes a style name. Multiple styles can be specified as a
+     * space-separated list of style names.
+     * 
+     * If the {@code add} parameter is true, the style name is added to the
+     * component. If the {@code add} parameter is false, the style name is
+     * removed from the component.
+     * <p>
+     * Functionally this is equivalent to using {@link #addStyleName(String)} or
+     * {@link #removeStyleName(String)}
+     * 
+     * @since 7.5
+     * @param style
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     * @see #addStyleName(String)
+     * @see #removeStyleName(String)
+     */
+    public void setStyleName(String style, boolean add) {
+        if (add) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
+
     /*
      * Get's the component's caption. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
@@ -405,6 +433,26 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
+    /**
+     * Returns the explicitly set immediate value.
+     * 
+     * @return the explicitly set immediate value or null if
+     *         {@link #setImmediate(boolean)} has not been explicitly invoked
+     */
+    protected Boolean getExplicitImmediateValue() {
+        return explicitImmediateValue;
+    }
+
+    /**
+     * Returns the immediate mode of the component.
+     * <p>
+     * Certain operations such as adding a value change listener will set the
+     * component into immediate mode if {@link #setImmediate(boolean)} has not
+     * been explicitly called with false.
+     * 
+     * @return true if the component is in immediate mode (explicitly or
+     *         implicitly set), false if the component if not in immediate mode
+     */
     public boolean isImmediate() {
         if (explicitImmediateValue != null) {
             return explicitImmediateValue;
@@ -1027,7 +1075,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Toggles responsiveness of this component.
      * 
-     * @since
+     * @since 7.5.0
      * @param responsive
      *            boolean enables responsiveness, false disables
      */
@@ -1052,7 +1100,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns true if the component is responsive
      * 
-     * @since
+     * @since 7.5.0
      * @return true if the component is responsive
      */
     public boolean isResponsive() {
@@ -1122,16 +1170,16 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         // first try the full shorthands
         if (widthFull && heightFull) {
-            attributes.put("size-full", "true");
+            attributes.put("size-full", "");
         } else if (widthAuto && heightAuto) {
-            attributes.put("size-auto", "true");
+            attributes.put("size-auto", "");
         } else {
             // handle width
             if (!hasEqualWidth(defaultInstance)) {
                 if (widthFull) {
-                    attributes.put("width-full", "true");
+                    attributes.put("width-full", "");
                 } else if (widthAuto) {
-                    attributes.put("width-auto", "true");
+                    attributes.put("width-auto", "");
                 } else {
                     String widthString = DesignAttributeHandler.getFormatter()
                             .format(getWidth()) + getWidthUnits().getSymbol();
@@ -1142,9 +1190,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
             if (!hasEqualHeight(defaultInstance)) {
                 // handle height
                 if (heightFull) {
-                    attributes.put("height-full", "true");
+                    attributes.put("height-full", "");
                 } else if (heightAuto) {
-                    attributes.put("height-auto", "true");
+                    attributes.put("height-auto", "");
                 } else {
                     String heightString = DesignAttributeHandler.getFormatter()
                             .format(getHeight()) + getHeightUnits().getSymbol();

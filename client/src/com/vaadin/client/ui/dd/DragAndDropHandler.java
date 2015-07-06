@@ -33,7 +33,7 @@ import com.vaadin.client.widgets.Grid;
  * The showing of the dragged element, drag hints and reacting to drop/cancel is
  * delegated to {@link DragAndDropCallback} implementation.
  * 
- * @since
+ * @since 7.5.0
  * @author Vaadin Ltd
  */
 public class DragAndDropHandler {

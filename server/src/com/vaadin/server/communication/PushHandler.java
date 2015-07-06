@@ -473,7 +473,7 @@ public class PushHandler {
     /**
      * Called when a new push connection is requested to be opened by the client
      * 
-     * @since
+     * @since 7.5.0
      * @param resource
      *            The related atmosphere resources
      */
@@ -484,7 +484,7 @@ public class PushHandler {
     /**
      * Called when a message is received through the push connection
      * 
-     * @since
+     * @since 7.5.0
      * @param resource
      *            The related atmosphere resources
      */

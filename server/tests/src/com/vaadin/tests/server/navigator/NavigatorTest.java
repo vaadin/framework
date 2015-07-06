@@ -712,4 +712,21 @@ public class NavigatorTest extends TestCase {
         navigator.addView("view", view);
         navigator.navigateTo("view");
     }
+
+    public void testNullViewProvider() {
+        IMocksControl control = EasyMock.createControl();
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
+        ViewDisplay display = control.createMock(ViewDisplay.class);
+
+        // create navigator to test
+        Navigator navigator = createNavigator(manager, display);
+
+        try {
+            navigator.addProvider(null);
+            fail("Should not be allowed to add a null view provider");
+        } catch (IllegalArgumentException e) {
+            // Expected
+        }
+    }
 }

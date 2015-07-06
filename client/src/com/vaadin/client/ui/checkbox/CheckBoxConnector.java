@@ -158,6 +158,9 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                             .getElement());
             getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
                     details);
+            if (getState().immediate) {
+                getConnection().sendPendingVariableChanges();
+            }
         }
     }
 }
