@@ -141,6 +141,16 @@ public class StringToCollectionConverterTest {
         Assert.assertEquals("Z,Y", presentation);
     }
 
+    @Test
+    public void convertToModel_singleItem() {
+        StringToCollectionConverter converter = new StringToCollectionConverter();
+        Collection<?> model = converter.convertToModel("a", List.class, null);
+        Iterator<?> iterator = model.iterator();
+        Assert.assertEquals("Incorrect fist token", "a", iterator.next());
+        Assert.assertFalse("More than one item detected after conversation",
+                iterator.hasNext());
+    }
+
     public enum TestEnum {
         X, Y, Z;
     }
