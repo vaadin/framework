@@ -240,6 +240,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
+    protected void openTestURL() {
+        openTestURL(new String[0]);
+    }
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
+     */
     protected void openTestURL(String... parameters) {
         openTestURL(getUIClass(), parameters);
     }
