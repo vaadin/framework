@@ -49,6 +49,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -80,10 +81,17 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     public enum ItemCaptionMode {
         /**
-         * Item caption mode: Item's ID's <code>String</code> representation is
-         * used as caption.
+         * Item caption mode: Item's ID converted to a String using
+         * {@link VaadinSession#getConverterFactory()} is used as caption.
          */
         ID,
+        /**
+         * Item caption mode: Item's ID's <code>String</code> representation is
+         * used as caption.
+         * 
+         * @since
+         */
+        ID_TOSTRING,
         /**
          * Item caption mode: Item's <code>String</code> representation is used
          * as caption.
@@ -97,8 +105,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         INDEX,
         /**
          * Item caption mode: If an Item has a caption it's used, if not, Item's
-         * ID's <code>String</code> representation is used as caption. <b>This
-         * is the default</b>.
+         * ID converted to a String using
+         * {@link VaadinSession#getConverterFactory()} is used as caption.
+         * <b>This is the default</b>.
          */
         EXPLICIT_DEFAULTS_ID,
         /**
@@ -1190,7 +1199,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         case ID:
             caption = idToCaption(itemId);
             break;
-
+        case ID_TOSTRING:
+            caption = itemId.toString();
+            break;
         case INDEX:
             if (items instanceof Container.Indexed) {
                 caption = String.valueOf(((Container.Indexed) items)
@@ -1297,27 +1308,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Sets the item caption mode.
      * 
+     * See {@link ItemCaptionMode} for a description of the modes.
      * <p>
-     * The mode can be one of the following ones:
-     * <ul>
-     * <li><code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> : Items
-     * Id-objects <code>toString</code> is used as item caption. If caption is
-     * explicitly specified, it overrides the id-caption.
-     * <li><code>ITEM_CAPTION_MODE_ID</code> : Items Id-objects
-     * <code>toString</code> is used as item caption.</li>
-     * <li><code>ITEM_CAPTION_MODE_ITEM</code> : Item-objects
-     * <code>toString</code> is used as item caption.</li>
-     * <li><code>ITEM_CAPTION_MODE_INDEX</code> : The index of the item is used
-     * as item caption. The index mode can only be used with the containers
-     * implementing <code>Container.Indexed</code> interface.</li>
-     * <li><code>ITEM_CAPTION_MODE_EXPLICIT</code> : The item captions must be
-     * explicitly specified.</li>
-     * <li><code>ITEM_CAPTION_MODE_PROPERTY</code> : The item captions are read
-     * from property, that must be specified with
-     * <code>setItemCaptionPropertyId</code>.</li>
-     * </ul>
-     * The <code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> is the default
-     * mode.
+     * {@link ItemCaptionMode#EXPLICIT_DEFAULTS_ID} is the default mode.
      * </p>
      * 
      * @param mode
