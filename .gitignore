@@ -53,6 +53,8 @@
 
 WebContent/VAADIN/vaadinPush.js
 WebContent/VAADIN/vaadinPush.debug.js
+WebContent/VAADIN/vaadinPush.js.gz
+WebContent/VAADIN/vaadinPush.debug.js.gz
 
 # /WebContent/WEB-INF/
 /WebContent/WEB-INF/classes
