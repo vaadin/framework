@@ -31,7 +31,7 @@ args = None
 parser = argparse.ArgumentParser(description="Automated staging validation")
 parser.add_argument("version", type=str, help="Vaadin version to use")
 parser.add_argument("--maven", help="Additional maven command line parameters", default=None)
-parser.add_argument("--teamcity", help="Use vaadin jars provided by teamcity", action="store_const", const=True, default=False)
+parser.add_argument("--artifactPath", help="Path to local folder with Vaadin artifacts", default=None)
 
 # Parse command line arguments <version>
 def parseArgs():
@@ -167,3 +167,10 @@ def removeDir(subdir):
 		# Dangerous relative paths.
 		return
 	rmtree(join(getcwd(), subdir))
+
+def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdout):
+	cmd = [mvnCmd, "install:install-file"]
+	cmd.append("-Dfile=%s" % (jarFile if jarFile is not None else pomFile))
+	cmd.append("-DpomFile=%s" % (pomFile))
+	print("executing: %s" % (" ".join(cmd)))
+	subprocess.check_call(cmd, stdout=logFile)	
