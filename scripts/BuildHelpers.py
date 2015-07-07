@@ -77,7 +77,7 @@ def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, repoIds =
 	if hasattr(repoIds, "version") and repoIds.version is not None:
 		cmd.append("-Dvaadin.version=%s" % (repoIds.version))
 	if hasattr(repoIds, "maven") and repoIds.maven is not None:
-		cmd.extend(repoIds.maven.split(" "))
+		cmd.extend(repoIds.maven.strip('"').split(" "))
 	cmd.extend(["clean", "package", "validate"])
 	print("executing: %s" % (" ".join(cmd)))
 	subprocess.check_call(cmd, cwd=join(resultPath, artifactId), stdout=logFile)
