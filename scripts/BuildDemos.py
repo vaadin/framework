@@ -9,14 +9,16 @@
 # pip install requests
 # Deploy depends on .deployUrl and .deployCredentials files in home folder
 
-import sys
+import sys, os
 try:
 	from git import Repo
 except:
 	print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 	sys.exit(1)
-from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs
+from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall
 from DeployHelpers import deployWar
+from os.path import join, isfile
+from fnmatch import fnmatch
 
 # Validated demos. name -> git url
 demos = {
@@ -30,8 +32,19 @@ def checkout(folder, url):
 	Repo.clone_from(url, folder)
 
 if __name__ == "__main__":
-	if getArgs().teamcity:
-		print("Add dependency jars from TeamCity here")
+	if hasattr(getArgs(), "artifactPath") and getArgs().artifactPath is not None:
+		basePath = getArgs().artifactPath
+		poms = []
+		for root, dirs, files in os.walk(basePath):
+			for name in files:
+				if fnmatch(name, "*.pom"):
+					poms.append(join(root, name))
+		for pom in poms:
+			jarFile = pom.replace(".pom", ".jar")
+			if isfile(jarFile):
+				mavenInstall(pom, jarFile)
+			else:
+				mavenInstall(pom)
 	
 	demosFailed = False
 	
