@@ -28,11 +28,11 @@ public class VSplitPanelVertical extends VAbstractSplitPanel {
 
     @Override
     protected void startResize() {
-        if (isWidgetFullHeight(getFirstWidget())) {
+        if (getFirstWidget() != null && isWidgetFullHeight(getFirstWidget())) {
             getFirstContainer().getStyle().setOverflow(Overflow.HIDDEN);
         }
 
-        if (isWidgetFullHeight(getSecondWidget())) {
+        if (getSecondWidget() != null && isWidgetFullHeight(getSecondWidget())) {
             getSecondContainer().getStyle().setOverflow(Overflow.HIDDEN);
         }
     }
