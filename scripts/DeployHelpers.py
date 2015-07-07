@@ -21,7 +21,7 @@ parser.add_argument("--deployPass", help="Deployment password", default=None)
 # name should end with .war
 def deployWar(warFile, name=None):
 	if name is None:
-		name = basename(warFile)
+		name = basename(warFile).replace('.war', "-%s.war" % (getArgs().version.split('-')[0]))
 
 	print("Deploying to context %s" % (name[:-4]))
 	# Undeploy/Remove old version if needed

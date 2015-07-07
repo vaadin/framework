@@ -15,7 +15,7 @@ try:
 except:
 	print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 	sys.exit(1)
-from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall
+from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath
 from DeployHelpers import deployWar
 from os.path import join, isfile
 from fnmatch import fnmatch
@@ -29,7 +29,7 @@ demos = {
 }
 
 def checkout(folder, url):
-	Repo.clone_from(url, folder)
+	Repo.clone_from(url, join(resultPath, folder))
 
 if __name__ == "__main__":
 	if hasattr(getArgs(), "artifactPath") and getArgs().artifactPath is not None:

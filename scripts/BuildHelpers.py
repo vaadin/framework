@@ -5,19 +5,16 @@
 import sys, argparse, subprocess, platform
 from xml.etree import ElementTree
 from os.path import join, isdir, isfile, basename, exists
-from os import listdir, getcwd, mkdir
+from os import listdir, mkdir
 from shutil import copy, rmtree
 from glob import glob
-
-class VersionObject(object):
-	pass
 
 # Staging repo base url
 repo = "http://oss.sonatype.org/content/repositories/comvaadin-%d"
 
 # Directory where the resulting war files are stored
 # TODO: deploy results
-resultPath = "result"
+resultPath = join("result", "demos")
 
 if not exists(resultPath):
 	mkdir(resultPath)
@@ -83,15 +80,15 @@ def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, repoIds =
 		cmd.extend(repoIds.maven.split(" "))
 	cmd.extend(["clean", "package", "validate"])
 	print("executing: %s" % (" ".join(cmd)))
-	subprocess.check_call(cmd, cwd=join(getcwd(), artifactId), stdout=logFile)
+	subprocess.check_call(cmd, cwd=join(resultPath, artifactId), stdout=logFile)
 
 # Collect .war files to given folder with given naming
 def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 	if name is None:
 		name = artifactId
 	copiedWars = []
-	warFiles = glob(join(getcwd(), artifactId, "target", "*.war"))
-	warFiles.extend(glob(join(getcwd(), artifactId, "*", "target", "*.war")))
+	warFiles = glob(join(resultDir, artifactId, "target", "*.war"))
+	warFiles.extend(glob(join(resultDir, artifactId, "*", "target", "*.war")))
 	for warFile in warFiles:
 		if len(warFiles) == 1:
 			deployName = "%s.war" % (name)
@@ -166,7 +163,7 @@ def removeDir(subdir):
 	if '..' in subdir or '/' in subdir:
 		# Dangerous relative paths.
 		return
-	rmtree(join(getcwd(), subdir))
+	rmtree(join(resultPath, subdir))
 
 def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdout):
 	cmd = [mvnCmd, "install:install-file"]
