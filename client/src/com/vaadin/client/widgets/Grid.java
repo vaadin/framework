@@ -7648,6 +7648,15 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     @Override
+    protected void onDetach() {
+        for (int row : visibleDetails) {
+            setDetailsVisible(row, false);
+        }
+
+        super.onDetach();
+    }
+
+    @Override
     public void onResize() {
         super.onResize();
         /*
