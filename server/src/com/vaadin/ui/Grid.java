@@ -45,6 +45,9 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
@@ -3608,6 +3611,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
     };
 
+    private final ItemSetChangeListener editorClosingItemSetListener = new ItemSetChangeListener() {
+        @Override
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            cancelEditor();
+        }
+    };
+
     private RpcDataProviderExtension datasourceExtension;
 
     /**
@@ -4111,9 +4121,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             removeExtension(datasourceExtension);
         }
 
-        datasource = container;
-
         resetEditor();
+
+        datasource = container;
 
         //
         // Adjust sort order
@@ -4161,6 +4171,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             ((PropertySetChangeNotifier) datasource)
                     .addPropertySetChangeListener(propertyListener);
         }
+
         /*
          * activeRowHandler will be updated by the client-side request that
          * occurs on container change - no need to actively re-insert any
@@ -5886,6 +5897,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             f.markAsDirtyRecursive();
         }
 
+        if (datasource instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) datasource)
+                    .addItemSetChangeListener(editorClosingItemSetListener);
+        }
     }
 
     private void setEditorField(Object propertyId, Field<?> field) {
@@ -5934,6 +5949,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorActive = false;
         editorFieldGroup.discard();
         editorFieldGroup.setItemDataSource(null);
+        if (datasource instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) datasource)
+                    .removeItemSetChangeListener(editorClosingItemSetListener);
+        }
     }
 
     void resetEditor() {

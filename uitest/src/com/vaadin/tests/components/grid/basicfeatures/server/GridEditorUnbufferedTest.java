@@ -194,4 +194,12 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
                 "Modified", getEditorWidgets().get(2).getAttribute("value"));
     }
 
+    @Test
+    public void testEditorClosedOnUserSort() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        getGridElement().getHeaderCell(0, 0).click();
+
+        assertEditorClosed();
+    }
 }

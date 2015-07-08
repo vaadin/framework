@@ -6627,7 +6627,7 @@ public class Grid<T> extends ResizeComposite implements
 
             return true;
 
-        } else if (editorIsActive && moveEvent) {
+        } else if (editorIsActive && !editor.isBuffered() && moveEvent) {
             cellFocusHandler.setCellFocus(eventCell);
 
             editor.editRow(eventCell.getRowIndex(),
@@ -6644,7 +6644,8 @@ public class Grid<T> extends ResizeComposite implements
             return true;
         }
 
-        return editorIsActive;
+        // Swallow events if editor is open and buffered (modal)
+        return editor.isBuffered() && editorIsActive;
     }
 
     private boolean handleRendererEvent(Event event, RowContainer container) {

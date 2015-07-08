@@ -230,4 +230,14 @@ public class GridEditorBufferedTest extends GridEditorTest {
         assertEquals("Editor should still edit row 5", "(5, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));
     }
+
+    @Test
+    public void testUserSortDisabled() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        getGridElement().getHeaderCell(0, 0).click();
+
+        assertEditorOpen();
+        assertEquals("(2, 0)", getGridElement().getCell(2, 0).getText());
+    }
 }

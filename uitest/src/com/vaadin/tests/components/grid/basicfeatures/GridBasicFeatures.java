@@ -387,46 +387,54 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     private void addFilterActions() {
-        createClickAction("Column 1 starts with \"(23\"", "Filter",
-                new Command<Grid, Void>() {
+        createBooleanAction("Column 1 starts with \"(23\"", "Filter", false,
+                new Command<Grid, Boolean>() {
+                    Filter filter = new Filter() {
+                        @Override
+                        public boolean passesFilter(Object itemId, Item item) {
+                            return item.getItemProperty("Column 1").getValue()
+                                    .toString().startsWith("(23");
+                        }
+
+                        @Override
+                        public boolean appliesToProperty(Object propertyId) {
+                            return propertyId.equals("Column 1");
+                        }
+                    };
+
                     @Override
-                    public void execute(Grid grid, Void value, Object data) {
-                        ds.addContainerFilter(new Filter() {
-
-                            @Override
-                            public boolean passesFilter(Object itemId, Item item)
-                                    throws UnsupportedOperationException {
-                                return item.getItemProperty("Column 1")
-                                        .getValue().toString()
-                                        .startsWith("(23");
-                            }
-
-                            @Override
-                            public boolean appliesToProperty(Object propertyId) {
-                                return propertyId.equals("Column 1");
-                            }
-                        });
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        if (value) {
+                            ds.addContainerFilter(filter);
+                        } else {
+                            ds.removeContainerFilter(filter);
+                        }
                     }
-                }, null);
+                });
 
-        createClickAction("Add impassable filter", "Filter",
-                new Command<Grid, Void>() {
+        createBooleanAction("Impassable filter", "Filter", false,
+                new Command<Grid, Boolean>() {
+                    Filter filter = new Filter() {
+                        @Override
+                        public boolean passesFilter(Object itemId, Item item) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean appliesToProperty(Object propertyId) {
+                            return true;
+                        }
+                    };
+
                     @Override
-                    public void execute(Grid c, Void value, Object data) {
-                        ds.addContainerFilter(new Filter() {
-                            @Override
-                            public boolean passesFilter(Object itemId, Item item)
-                                    throws UnsupportedOperationException {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean appliesToProperty(Object propertyId) {
-                                return true;
-                            }
-                        });
+                    public void execute(Grid c, Boolean value, Object data) {
+                        if (value) {
+                            ds.addContainerFilter(filter);
+                        } else {
+                            ds.removeContainerFilter(filter);
+                        }
                     }
-                }, null);
+                });
     }
 
     protected void createGridActions() {

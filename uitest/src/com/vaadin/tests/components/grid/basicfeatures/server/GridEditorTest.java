@@ -269,6 +269,24 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
                 editorPos == editor.getLocation().getY());
     }
 
+    @Test
+    public void testEditorClosedOnSort() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        selectMenuPath("Component", "State", "Sort by column", "Column 0, ASC");
+
+        assertEditorClosed();
+    }
+
+    @Test
+    public void testEditorClosedOnFilter() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
+
+        assertEditorClosed();
+    }
+
     protected WebElement getSaveButton() {
         return getDriver().findElement(BY_EDITOR_SAVE);
     }
