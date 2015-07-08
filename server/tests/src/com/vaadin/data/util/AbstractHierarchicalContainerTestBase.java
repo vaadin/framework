@@ -253,4 +253,33 @@ public abstract class AbstractHierarchicalContainerTestBase extends
         }
     }
 
+    protected void testRemoveHierarchicalWrapperSubtree(
+            Container.Hierarchical container) {
+        initializeContainer(container);
+
+        // remove root item
+        removeItemRecursively(container, "org");
+
+        int packages = 21 + 3 - 3;
+        int expectedSize = sampleData.length + packages - 1;
+
+        validateContainer(container, "com", "com.vaadin.util.SerializerHelper",
+                "com.vaadin.server.ApplicationResource", "blah", true,
+                expectedSize);
+
+        // rootItemIds
+        Collection<?> rootIds = container.rootItemIds();
+        assertEquals(1, rootIds.size());
+    }
+
+    private void removeItemRecursively(Container.Hierarchical container,
+            Object itemId) {
+        if (container instanceof ContainerHierarchicalWrapper) {
+            ((ContainerHierarchicalWrapper) container)
+                    .removeItemRecursively("org");
+        } else {
+            HierarchicalContainer.removeItemRecursively(container, itemId);
+        }
+    }
+
 }

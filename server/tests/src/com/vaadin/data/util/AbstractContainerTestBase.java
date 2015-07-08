@@ -11,6 +11,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.Ordered;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -161,54 +162,54 @@ public abstract class AbstractContainerTestBase extends TestCase {
         validateContainer(container, sampleData[0],
                 sampleData[sampleData.length - 1], sampleData[10], "abc", true,
                 sampleData.length);
+
+        validateRemovingItems(container);
+    }
+
+    protected void validateRemovingItems(Container container) {
+        int sizeBeforeRemoving = container.size();
+
+        List<Object> itemIdList = new ArrayList<Object>(container.getItemIds());
+        // There should be at least four items in the list
+        Object first = itemIdList.get(0);
+        Object middle = itemIdList.get(2);
+        Object last = itemIdList.get(itemIdList.size() - 1);
+
+        container.removeItem(first);
+        container.removeItem(middle); // Middle now that first has been removed
+        container.removeItem(last);
+
+        assertEquals(sizeBeforeRemoving - 3, container.size());
+
+        container.removeAllItems();
+
+        assertEquals(0, container.size());
     }
 
     protected void testContainerOrdered(Container.Ordered container) {
+        // addItem with empty container
         Object id = container.addItem();
-        assertNotNull(id);
+        assertOrderedContents(container, id);
         Item item = container.getItem(id);
         assertNotNull(item);
 
-        assertEquals(id, container.firstItemId());
-        assertEquals(id, container.lastItemId());
-
-        // isFirstId
-        assertTrue(container.isFirstId(id));
-        assertTrue(container.isFirstId(container.firstItemId()));
-        // isLastId
-        assertTrue(container.isLastId(id));
-        assertTrue(container.isLastId(container.lastItemId()));
+        // addItemAfter with empty container
+        container.removeAllItems();
+        assertOrderedContents(container);
+        id = container.addItemAfter(null);
+        assertOrderedContents(container, id);
+        item = container.getItem(id);
+        assertNotNull(item);
 
         // Add a new item before the first
         // addItemAfter
         Object newFirstId = container.addItemAfter(null);
-        assertNotNull(newFirstId);
-        assertNotNull(container.getItem(newFirstId));
-
-        // isFirstId
-        assertTrue(container.isFirstId(newFirstId));
-        assertTrue(container.isFirstId(container.firstItemId()));
-        // isLastId
-        assertTrue(container.isLastId(id));
-        assertTrue(container.isLastId(container.lastItemId()));
-
-        // nextItemId
-        assertEquals(id, container.nextItemId(newFirstId));
-        assertNull(container.nextItemId(id));
-        assertNull(container.nextItemId("not-in-container"));
-
-        // prevItemId
-        assertEquals(newFirstId, container.prevItemId(id));
-        assertNull(container.prevItemId(newFirstId));
-        assertNull(container.prevItemId("not-in-container"));
+        assertOrderedContents(container, newFirstId, id);
 
         // addItemAfter(Object)
         Object newSecondItemId = container.addItemAfter(newFirstId);
         // order is now: newFirstId, newSecondItemId, id
-        assertNotNull(newSecondItemId);
-        assertNotNull(container.getItem(newSecondItemId));
-        assertEquals(id, container.nextItemId(newSecondItemId));
-        assertEquals(newFirstId, container.prevItemId(newSecondItemId));
+        assertOrderedContents(container, newFirstId, newSecondItemId, id);
 
         // addItemAfter(Object,Object)
         String fourthId = "id of the fourth item";
@@ -216,8 +217,8 @@ public abstract class AbstractContainerTestBase extends TestCase {
         // order is now: newFirstId, fourthId, newSecondItemId, id
         assertNotNull(fourth);
         assertEquals(fourth, container.getItem(fourthId));
-        assertEquals(newSecondItemId, container.nextItemId(fourthId));
-        assertEquals(newFirstId, container.prevItemId(fourthId));
+        assertOrderedContents(container, newFirstId, fourthId, newSecondItemId,
+                id);
 
         // addItemAfter(Object,Object)
         Object fifthId = new Object();
@@ -225,8 +226,86 @@ public abstract class AbstractContainerTestBase extends TestCase {
         // order is now: fifthId, newFirstId, fourthId, newSecondItemId, id
         assertNotNull(fifth);
         assertEquals(fifth, container.getItem(fifthId));
-        assertEquals(newFirstId, container.nextItemId(fifthId));
-        assertNull(container.prevItemId(fifthId));
+        assertOrderedContents(container, fifthId, newFirstId, fourthId,
+                newSecondItemId, id);
+
+        // addItemAfter(Object,Object)
+        Object sixthId = new Object();
+        Item sixth = container.addItemAfter(id, sixthId);
+        // order is now: fifthId, newFirstId, fourthId, newSecondItemId, id,
+        // sixthId
+        assertNotNull(sixth);
+        assertEquals(sixth, container.getItem(sixthId));
+        assertOrderedContents(container, fifthId, newFirstId, fourthId,
+                newSecondItemId, id, sixthId);
+
+        // Test order after removing first item 'fifthId'
+        container.removeItem(fifthId);
+        // order is now: newFirstId, fourthId, newSecondItemId, id, sixthId
+        assertOrderedContents(container, newFirstId, fourthId, newSecondItemId,
+                id, sixthId);
+
+        // Test order after removing last item 'sixthId'
+        container.removeItem(sixthId);
+        // order is now: newFirstId, fourthId, newSecondItemId, id
+        assertOrderedContents(container, newFirstId, fourthId, newSecondItemId,
+                id);
+
+        // Test order after removing item from the middle 'fourthId'
+        container.removeItem(fourthId);
+        // order is now: newFirstId, newSecondItemId, id
+        assertOrderedContents(container, newFirstId, newSecondItemId, id);
+
+        // Delete remaining items
+        container.removeItem(newFirstId);
+        container.removeItem(newSecondItemId);
+        container.removeItem(id);
+        assertOrderedContents(container);
+
+        Object finalItem = container.addItem();
+        assertOrderedContents(container, finalItem);
+    }
+
+    private void assertOrderedContents(Ordered container, Object... ids) {
+        assertEquals(ids.length, container.size());
+        for (int i = 0; i < ids.length - 1; i++) {
+            assertNotNull("The item id should not be null", ids[i]);
+        }
+        if (ids.length == 0) {
+            assertNull("The first id is wrong", container.firstItemId());
+            assertNull("The last id is wrong", container.lastItemId());
+            return;
+        }
+
+        assertEquals("The first id is wrong", ids[0], container.firstItemId());
+        assertEquals("The last id is wrong", ids[ids.length - 1],
+                container.lastItemId());
+
+        // isFirstId & isLastId
+        assertTrue(container.isFirstId(container.firstItemId()));
+        assertTrue(container.isLastId(container.lastItemId()));
+
+        // nextId
+        Object ref = container.firstItemId();
+        for (int i = 1; i < ids.length; i++) {
+            Object next = container.nextItemId(ref);
+            assertEquals("The id after " + ref + " is wrong", ids[i], next);
+            ref = next;
+        }
+        assertNull("The last id should not have a next id",
+                container.nextItemId(ids[ids.length - 1]));
+        assertNull(container.nextItemId("not-in-container"));
+
+        // prevId
+        ref = container.lastItemId();
+        for (int i = ids.length - 2; i >= 0; i--) {
+            Object prev = container.prevItemId(ref);
+            assertEquals("The id before " + ref + " is wrong", ids[i], prev);
+            ref = prev;
+        }
+        assertNull("The first id should not have a prev id",
+                container.prevItemId(ids[0]));
+        assertNull(container.prevItemId("not-in-container"));
 
     }
 

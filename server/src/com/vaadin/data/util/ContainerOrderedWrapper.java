@@ -51,12 +51,14 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private final Container container;
 
     /**
-     * Ordering information, ie. the mapping from Item ID to the next item ID
+     * Ordering information, ie. the mapping from Item ID to the next item ID.
+     * The last item id should not be present
      */
     private Hashtable<Object, Object> next;
 
     /**
-     * Reverse ordering information for convenience and performance reasons.
+     * Reverse ordering information for convenience and performance reasons. The
+     * first item id should not be present
      */
     private Hashtable<Object, Object> prev;
 
@@ -124,13 +126,21 @@ public class ContainerOrderedWrapper implements Container.Ordered,
                 first = nid;
             }
             if (last.equals(id)) {
-                first = pid;
+                last = pid;
             }
             if (nid != null) {
-                prev.put(nid, pid);
+                if (pid == null) {
+                    prev.remove(nid);
+                } else {
+                    prev.put(nid, pid);
+                }
             }
             if (pid != null) {
-                next.put(pid, nid);
+                if (nid == null) {
+                    next.remove(pid);
+                } else {
+                    next.put(pid, nid);
+                }
             }
             next.remove(id);
             prev.remove(id);
@@ -200,7 +210,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             final Collection<?> ids = container.getItemIds();
 
             // Recreates ordering if some parts of it are missing
-            if (next == null || first == null || last == null || prev != null) {
+            if (next == null || first == null || last == null || prev == null) {
                 first = null;
                 last = null;
                 next = new Hashtable<Object, Object>();
@@ -219,7 +229,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             // Adds missing items
             for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
                 final Object id = i.next();
-                if (!next.containsKey(id)) {
+                if (!next.containsKey(id) && last != id) {
                     addToOrderWrapper(id);
                 }
             }
