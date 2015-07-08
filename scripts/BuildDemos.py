@@ -10,13 +10,6 @@
 # Deploy depends on .deployUrl and .deployCredentials files in home folder
 
 import sys, os
-try:
-	from git import Repo
-except:
-	print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
-	sys.exit(1)
-from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath
-from DeployHelpers import deployWar
 from os.path import join, isfile
 from fnmatch import fnmatch
 
@@ -32,6 +25,16 @@ def checkout(folder, url):
 	Repo.clone_from(url, join(resultPath, folder))
 
 if __name__ == "__main__":
+	# Do imports.	
+	try:
+		from git import Repo
+	except:
+		print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
+		sys.exit(1)
+	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath
+	from DeployHelpers import deployWar
+
+
 	if hasattr(getArgs(), "artifactPath") and getArgs().artifactPath is not None:
 		basePath = getArgs().artifactPath
 		poms = []
