@@ -11,7 +11,7 @@
 #
 
 import subprocess
-from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser
+from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
 from DeployHelpers import deployWar
 
 ## DEFAULT VARIABLES ##
@@ -55,7 +55,7 @@ def generateArchetype(archetype):
 	
 	# Generate pom.xml
 	print("Generating pom.xml for archetype %s" % (archetype))
-	subprocess.check_call(cmd, stdout=log)
+	subprocess.check_call(cmd, cwd=resultPath, stdout=log)
 	
 	# Return the artifactId so we know the name in the future
 	return artifactId

@@ -20,12 +20,14 @@ content = """<html>
 <tr><td><a href="https://dev.vaadin.com/query?status=pending-release&milestone=">Pending-release tickets without milestone</a></td></tr>
 <tr><td><a href="apidiff/changes.html">API Diff</a></td></tr>
 <tr><td><a href="release-notes/release-notes.html">Release Notes</a></td></tr>
+<tr><td>Try demos<ul>
 """.format(version=args.version)
 
 for demo in demos:
-	content += "<tr><td><a href='{url}/{demoName}-{version}'>{demoName}</a></td></tr>\n".format(url=args.deployUrl, demoName=demo, version=args.version)
+	content += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>\n".format(url=args.deployUrl, demoName=demo, version=args.version)
 
-content += """<tr><td><a href="{url}">Build result page (See test results, pin and tag build and dependencies)</a></td></tr>
+content += """</ul></td></tr>
+<tr><td><a href="{url}">Build result page (See test results, pin and tag build and dependencies)</a></td></tr>
 </table>
 </body>
 </html>""".format(url=args.buildResultUrl)
