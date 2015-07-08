@@ -10,8 +10,8 @@
 # python BuildArchetypes.py version fw-repo-id archetype-repo-id plugin-repo-id
 #
 
-import subprocess
-from BuildHelpers import mavenValidate, copyWarFiles, repo, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
+import subprocess, sys
+from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
 from DeployHelpers import deployWar
 
 ## DEFAULT VARIABLES ##
@@ -36,9 +36,7 @@ args = None
 ## BUILDING METHODS ##
 
 # Generates and modifies a maven pom file
-def generateArchetype(archetype):
-	artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
-
+def generateArchetype(archetype, artifactId):
 	# Generate the required command line for archetype generation
 	cmd = [mavenCmd, "archetype:generate"]
 	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
@@ -51,41 +49,44 @@ def generateArchetype(archetype):
 	cmd.append("-Dversion=1.0-SNAPSHOT")
 	cmd.append("-DinteractiveMode=false")
 	if hasattr(args, "maven") and args.maven is not None:
-		cmd.extends(args.maven.split(" "))
+		cmd.extend(args.maven.strip('"').split(" "))
 	
 	# Generate pom.xml
 	print("Generating pom.xml for archetype %s" % (archetype))
 	subprocess.check_call(cmd, cwd=resultPath, stdout=log)
 	
-	# Return the artifactId so we know the name in the future
-	return artifactId
-
 ## DO THIS IF RUN AS A SCRIPT (not import) ##
 if __name__ == "__main__":
 	# Add command line arguments for staging repos
 	parser.add_argument("framework", type=int, help="Framework repo id (comvaadin-XXXX)", nargs='?')
 	parser.add_argument("archetype", type=int, help="Archetype repo id (comvaadin-XXXX)", nargs='?')
 	parser.add_argument("plugin", type=int, help="Maven Plugin repo id (comvaadin-XXXX)", nargs='?')
+	parser.add_argument("--repo", type=str, help="Staging repository template", required=True)
 
 	archetypesFailed = False
 
 	# Parse the arguments
 	args = getArgs()
+
+	if hasattr(args, "artifactPath") and args.artifactPath is not None:
+		raise Exception("Archetype validation build does not support artifactPath")
+
 	for archetype in archetypes:
+		artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
 		try:
 			log = getLogFile(archetype)
-			artifactId = generateArchetype(archetype)
+			generateArchetype(archetype, artifactId)
 			updateRepositories(artifactId)
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:
 				try:
-					deployWar(war, "%s.war" % (archetype.split("-", 2)[2]))
+					deployWar(war, "%s-%s.war" % (archetype.split("-", 2)[2], args.version))
 				except Exception as e:
 					print("War %s failed to deploy: %s" % (war, e))
 					archetypesFailed = True
-		except:
-			print("Archetype %s build failed" % (archetype))
+		except Exception as e:
+			print("Archetype %s build failed" % (archetype, e))
 			archetypesFailed = True
 		removeDir(artifactId)
 		print("")

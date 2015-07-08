@@ -26,9 +26,11 @@ args = None
 
 # Default argument parser
 parser = argparse.ArgumentParser(description="Automated staging validation")
-parser.add_argument("version", type=str, help="Vaadin version to use")
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument("--version", help="Vaadin version to use")
+group.add_argument("--artifactPath", help="Path to local folder with Vaadin artifacts")
+
 parser.add_argument("--maven", help="Additional maven command line parameters", default=None)
-parser.add_argument("--artifactPath", help="Path to local folder with Vaadin artifacts", default=None)
 
 # Parse command line arguments <version>
 def parseArgs():
@@ -99,6 +101,16 @@ def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 		copiedWars.append(join(resultDir, deployName))
 	return copiedWars
 
+def readPomFile(pomFile):
+	# pom.xml namespace workaround
+	root = ElementTree.parse(pomFile).getroot()
+	nameSpace = root.tag[1:root.tag.index('}')]
+	print("Using namespace: %s" % (nameSpace))
+	ElementTree.register_namespace('', nameSpace)
+
+	# Read the pom.xml correctly
+	return ElementTree.parse(pomFile), nameSpace 
+
 # Recursive pom.xml update script
 def updateRepositories(path, repoIds = None, repoUrl = repo):
 	# If versions are not supplied, parse arguments
@@ -108,13 +120,8 @@ def updateRepositories(path, repoIds = None, repoUrl = repo):
 	# Read pom.xml
 	pomXml = join(path, "pom.xml")
 	if isfile(pomXml):
-		# pom.xml namespace workaround
-		root = ElementTree.parse(pomXml).getroot()
-		nameSpace = root.tag[1:root.tag.index('}')]
-		ElementTree.register_namespace('', nameSpace)
-		
 		# Read the pom.xml correctly
-		tree = ElementTree.parse(pomXml)
+		tree, nameSpace = readPomFile(pomXml)
 		
 		# NameSpace needed for finding the repositories node
 		repoNode = tree.getroot().find("{%s}repositories" % (nameSpace))
