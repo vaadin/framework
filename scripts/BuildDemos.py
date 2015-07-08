@@ -12,6 +12,7 @@
 import sys, os
 from os.path import join, isfile
 from fnmatch import fnmatch
+from xml.etree.ElementTree import ElementTree
 
 # Validated demos. name -> git url
 demos = {
@@ -31,11 +32,11 @@ if __name__ == "__main__":
 	except:
 		print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 		sys.exit(1)
-	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath
+	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile
 	from DeployHelpers import deployWar
 
-
 	if hasattr(getArgs(), "artifactPath") and getArgs().artifactPath is not None:
+		version = False
 		basePath = getArgs().artifactPath
 		poms = []
 		for root, dirs, files in os.walk(basePath):
@@ -48,7 +49,10 @@ if __name__ == "__main__":
 				mavenInstall(pom, jarFile)
 			else:
 				mavenInstall(pom)
-	
+			if "vaadin-server" in pom:
+				pomXml, nameSpace = readPomFile(pom)
+				for version in pomXml.getroot().findall("./{%s}version" % (nameSpace)):
+					getArgs().version = version.text
 	demosFailed = False
 	
 	for demo in demos:
