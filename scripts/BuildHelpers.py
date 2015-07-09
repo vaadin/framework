@@ -5,7 +5,7 @@
 import sys, argparse, subprocess, platform
 from xml.etree import ElementTree
 from os.path import join, isdir, isfile, basename, exists
-from os import listdir, mkdir
+from os import listdir, makedirs
 from shutil import copy, rmtree
 from glob import glob
 
@@ -17,7 +17,7 @@ repo = "http://oss.sonatype.org/content/repositories/comvaadin-%d"
 resultPath = join("result", "demos")
 
 if not exists(resultPath):
-	mkdir(resultPath)
+	makedirs(resultPath)
 elif not isdir(resultPath):
 	print("Result path is not a directory.")
 	sys.exit(1)
