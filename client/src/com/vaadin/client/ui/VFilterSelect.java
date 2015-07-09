@@ -417,7 +417,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 selectPrevPage();
 
             } else {
-                selectItem(menu.getItems().get(menu.getItems().size() - 1));
+                if(!menu.getItems().isEmpty()) {
+                    selectLastItem();
+                }
             }
         }
 
