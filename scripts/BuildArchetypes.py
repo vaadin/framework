@@ -13,6 +13,7 @@
 import subprocess, sys
 from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
 from DeployHelpers import deployWar
+from os.path import join
 
 ## DEFAULT VARIABLES ##
 
@@ -76,7 +77,7 @@ if __name__ == "__main__":
 		try:
 			log = getLogFile(archetype)
 			generateArchetype(archetype, artifactId, args.repo)
-			updateRepositories(artifactId)
+			updateRepositories(join(resultPath, artifactId))
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:
@@ -86,9 +87,9 @@ if __name__ == "__main__":
 					print("War %s failed to deploy: %s" % (war, e))
 					archetypesFailed = True
 		except Exception as e:
-			print("Archetype %s build failed" % (archetype, e))
+			print("Archetype %s build failed:" % (archetype), e)
 			archetypesFailed = True
-		removeDir(artifactId)
+#		removeDir(artifactId)
 		print("")
 	if archetypesFailed:
 		sys.exit(1)

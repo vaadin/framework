@@ -105,7 +105,6 @@ def readPomFile(pomFile):
 	# pom.xml namespace workaround
 	root = ElementTree.parse(pomFile).getroot()
 	nameSpace = root.tag[1:root.tag.index('}')]
-	print("Using namespace: %s" % (nameSpace))
 	ElementTree.register_namespace('', nameSpace)
 
 	# Read the pom.xml correctly
