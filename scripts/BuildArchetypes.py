@@ -36,7 +36,7 @@ args = None
 ## BUILDING METHODS ##
 
 # Generates and modifies a maven pom file
-def generateArchetype(archetype, artifactId):
+def generateArchetype(archetype, artifactId, repo):
 	# Generate the required command line for archetype generation
 	cmd = [mavenCmd, "archetype:generate"]
 	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 		artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
 		try:
 			log = getLogFile(archetype)
-			generateArchetype(archetype, artifactId)
+			generateArchetype(archetype, artifactId, args.repo)
 			updateRepositories(artifactId)
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
