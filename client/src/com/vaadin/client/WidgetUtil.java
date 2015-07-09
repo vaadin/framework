@@ -1641,7 +1641,7 @@ public class WidgetUtil {
      * Firefox uses 1/60th of a pixel because it is divisible by three
      * (https://bugzilla.mozilla.org/show_bug.cgi?id=1070940)
      * 
-     * @since
+     * @since 7.5.1
      * @param size
      *            the value to round
      * @return the rounded value
@@ -1661,7 +1661,7 @@ public class WidgetUtil {
      * 
      * IE9+ uses 1/100th of a pixel
      * 
-     * @since
+     * @since 7.5.1
      * @param size
      *            the value to round
      * @return the rounded value
@@ -1694,7 +1694,7 @@ public class WidgetUtil {
     /**
      * Returns the factor used by browsers to round subpixel values
      * 
-     * @since
+     * @since 7.5.1
      * @return the factor N used by the browser when storing subpixels as X+Y/N
      */
     private static double getSubPixelRoundingFactor() {
