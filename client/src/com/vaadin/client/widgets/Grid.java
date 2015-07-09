@@ -4749,7 +4749,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Resets the default header cell contents to column header captions.
          * 
-         * @since
+         * @since 7.5.1
          * @param cell
          *            default header cell for this column
          */

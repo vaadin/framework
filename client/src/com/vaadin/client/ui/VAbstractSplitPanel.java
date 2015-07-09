@@ -606,21 +606,21 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /**
      * Called when starting drag resize
      * 
-     * @since
+     * @since 7.5.1
      */
     abstract protected void startResize();
 
     /**
      * Called when stopping drag resize
      * 
-     * @since
+     * @since 7.5.1
      */
     abstract protected void stopResize();
 
     /**
      * Gets the first container
      * 
-     * @since
+     * @since 7.5.1
      * @return the firstContainer
      */
     protected Element getFirstContainer() {
@@ -630,7 +630,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /**
      * Gets the second container
      * 
-     * @since
+     * @since 7.5.1
      * @return the secondContainer
      */
     protected Element getSecondContainer() {

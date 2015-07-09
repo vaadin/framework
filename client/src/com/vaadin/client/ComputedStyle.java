@@ -131,7 +131,7 @@ public class ComputedStyle {
 
     /**
      * Retrieves the given computed property as an integer
-     *
+     * 
      * Returns 0 if the property cannot be converted to an integer
      * 
      * @param name
@@ -148,7 +148,7 @@ public class ComputedStyle {
 
     /**
      * Retrieves the given computed property as a double
-     *
+     * 
      * Returns NaN if the property cannot be converted to a double
      * 
      * @param name
@@ -205,7 +205,7 @@ public class ComputedStyle {
     /**
      * Returns the current width from the DOM.
      * 
-     * @since
+     * @since 7.5.1
      * @return the computed width
      */
     public double getWidth() {
@@ -215,7 +215,7 @@ public class ComputedStyle {
     /**
      * Returns the current height from the DOM.
      * 
-     * @since
+     * @since 7.5.1
      * @return the computed height
      */
     public double getHeight() {
