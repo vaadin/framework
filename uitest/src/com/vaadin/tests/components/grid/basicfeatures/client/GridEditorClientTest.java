@@ -134,10 +134,12 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void testWithSelectionColumn() throws Exception {
         selectMenuPath("Component", "State", "Selection mode", "multi");
+        selectMenuPath("Component", "State", "Frozen column count",
+                "-1 columns");
         selectMenuPath(EDIT_ROW_5);
 
-        WebElement editorCells = findElement(By
-                .className("v-grid-editor-cells"));
+        WebElement editorCells = findElements(
+                By.className("v-grid-editor-cells")).get(1);
         List<WebElement> selectorDivs = editorCells.findElements(By
                 .cssSelector("div"));
 

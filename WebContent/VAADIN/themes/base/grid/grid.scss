@@ -199,6 +199,12 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       border-left: none;
     }
   }
+  
+  .#{$primaryStyleName}-editor-cells.frozen > div {
+    @include box-shadow(1px 0 2px rgba(0,0,0,.1));
+    border-right: $v-grid-cell-vertical-border;
+    border-left: none;
+  }
 
   .#{$primaryStyleName}-row-stripe > td {
     background-color: $v-grid-row-stripe-background-color;
@@ -342,6 +348,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   .#{$primaryStyleName}-editor-cells {
     position: relative;
     white-space: nowrap;
+    
+    &.frozen {
+      z-index: 2;
+    }
 
     > div {
       display: inline-block;
