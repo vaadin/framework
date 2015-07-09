@@ -2377,6 +2377,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean initDone = false;
         private boolean selected = false;
+        private CheckBox selectAllCheckBox;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2401,41 +2402,55 @@ public class Grid<T> extends ResizeComposite implements
              * exist.
              */
             final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
-            final CheckBox checkBox = GWT.create(CheckBox.class);
-            checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-                @Override
-                public void onValueChange(ValueChangeEvent<Boolean> event) {
-                    if (event.getValue()) {
-                        fireEvent(new SelectAllEvent<T>(model));
-                        selected = true;
-                    } else {
-                        model.deselectAll();
-                        selected = false;
+            if (selectAllCheckBox == null) {
+                selectAllCheckBox = GWT.create(CheckBox.class);
+                selectAllCheckBox
+                        .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                            @Override
+                            public void onValueChange(
+                                    ValueChangeEvent<Boolean> event) {
+                                if (event.getValue()) {
+                                    fireEvent(new SelectAllEvent<T>(model));
+                                    selected = true;
+                                } else {
+                                    model.deselectAll();
+                                    selected = false;
+                                }
+                            }
+                        });
+                selectAllCheckBox.setValue(selected);
+
+                // Select all with space when "select all" cell is active
+                addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
+                    @Override
+                    public void onKeyUp(GridKeyUpEvent event) {
+                        if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+                            return;
+                        }
+                        HeaderRow targetHeaderRow = getHeader().getRow(
+                                event.getFocusedCell().getRowIndex());
+                        if (!targetHeaderRow.isDefault()) {
+                            return;
+                        }
+                        if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
+                            // Send events to ensure state is updated
+                            selectAllCheckBox.setValue(
+                                    !selectAllCheckBox.getValue(), true);
+                        }
+                    }
+                });
+            } else {
+                for (HeaderRow row : header.getRows()) {
+                    if (row.getCell(this).getType() == GridStaticCellType.WIDGET) {
+                        // Detach from old header.
+                        row.getCell(this).setText("");
                     }
                 }
-            });
-            checkBox.setValue(selected);
-            selectionCell.setWidget(checkBox);
-            // Select all with space when "select all" cell is active
-            addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
-                @Override
-                public void onKeyUp(GridKeyUpEvent event) {
-                    if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
-                        return;
-                    }
-                    HeaderRow targetHeaderRow = getHeader().getRow(
-                            event.getFocusedCell().getRowIndex());
-                    if (!targetHeaderRow.isDefault()) {
-                        return;
-                    }
-                    if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
-                        // Send events to ensure row selection state is
-                        // updated
-                        checkBox.setValue(!checkBox.getValue(), true);
-                    }
-                }
-            });
+            }
+
+            selectionCell.setWidget(selectAllCheckBox);
         }
 
         @Override
@@ -2497,7 +2512,6 @@ public class Grid<T> extends ResizeComposite implements
             super.setEditable(editable);
             return this;
         }
-
     }
 
     /**

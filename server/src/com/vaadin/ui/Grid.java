@@ -1068,6 +1068,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         private int selectionLimit = DEFAULT_MAX_SELECTIONS;
 
+        private boolean allSelected;
+
         @Override
         public boolean select(final Object... itemIds)
                 throws IllegalArgumentException {
@@ -1113,6 +1115,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 }
                 fireSelectionEvent(oldSelection, selection);
             }
+
+            updateAllSelectedState();
+
             return selectionWillChange;
         }
 
@@ -1178,6 +1183,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 selection.removeAll(itemIds);
                 fireSelectionEvent(oldSelection, selection);
             }
+
+            updateAllSelectedState();
+
             return hasCommonElements;
         }
 
@@ -1258,6 +1266,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 fireSelectionEvent(oldSelection, selection);
             }
 
+            updateAllSelectedState();
+
             return changed;
         }
 
@@ -1269,6 +1279,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             } else {
                 throw new IllegalArgumentException(
                         "Vararg array of itemIds may not be null");
+            }
+        }
+
+        private void updateAllSelectedState() {
+            if (allSelected != selection.size() >= selectionLimit) {
+                allSelected = selection.size() >= selectionLimit;
+                grid.getRpcProxy(GridClientRpc.class).setSelectAll(allSelected);
             }
         }
     }
