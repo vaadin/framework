@@ -35,7 +35,7 @@ public class GridDetailsDetach extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final VerticalLayout layout = new VerticalLayout();
+        VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
 
         Button button = new Button("Test");
@@ -43,18 +43,29 @@ public class GridDetailsDetach extends AbstractTestUI {
         layout.setExpandRatio(button, 0f);
 
         currentGrid = generateGrid();
-        layout.addComponent(currentGrid);
-        layout.setExpandRatio(currentGrid, 1f);
+        final VerticalLayout gridContainer = new VerticalLayout();
+        gridContainer.addComponent(currentGrid);
 
         button.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Grid newGrid = generateGrid();
-                layout.replaceComponent(currentGrid, newGrid);
-                currentGrid = newGrid;
+                gridContainer.replaceComponent(currentGrid, new Label("Foo"));
             }
         });
+
+        layout.addComponent(new Button("Reattach Grid",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        gridContainer.removeAllComponents();
+                        gridContainer.addComponent(currentGrid);
+                    }
+                }));
+
+        layout.addComponent(gridContainer);
+        layout.setExpandRatio(gridContainer, 1f);
 
         addComponent(layout);
     }

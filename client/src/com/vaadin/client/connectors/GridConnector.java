@@ -735,13 +735,20 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
-        public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
-            if (hasDetailsOpen(row)) {
-                getWidget().setDetailsVisible(rowIndex, true);
-                detailsConnectorFetcher.schedule();
-            } else {
-                getWidget().setDetailsVisible(rowIndex, false);
-            }
+        public void reapplyDetailsVisibility(final int rowIndex,
+                final JsonObject row) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (hasDetailsOpen(row)) {
+                        getWidget().setDetailsVisible(rowIndex, true);
+                        detailsConnectorFetcher.schedule();
+                    } else {
+                        getWidget().setDetailsVisible(rowIndex, false);
+                    }
+                }
+            });
         }
 
         private boolean hasDetailsOpen(JsonObject row) {
@@ -909,6 +916,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getLayoutManager().registerDependency(this, getWidget().getElement());
 
         layout();
+    }
+
+    @Override
+    public void onUnregister() {
+        customDetailsGenerator.indexToDetailsMap.clear();
+
+        super.onUnregister();
     }
 
     @Override

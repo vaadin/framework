@@ -7649,7 +7649,8 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     protected void onDetach() {
-        for (int row : visibleDetails) {
+        Set<Integer> details = new HashSet<Integer>(visibleDetails);
+        for (int row : details) {
             setDetailsVisible(row, false);
         }
 
