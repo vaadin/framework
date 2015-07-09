@@ -1475,4 +1475,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public DetailComponentManager getDetailComponentManager() {
         return detailComponentManager;
     }
+
+    @Override
+    public void detach() {
+        for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
+            detailComponentManager.destroyDetails(itemId);
+        }
+
+        super.detach();
+    }
 }
