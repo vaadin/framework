@@ -131,7 +131,9 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
                 } catch (CommitException e) {
                     msg = "Commit failed: " + e.getMessage();
                 }
-                Notification.show(msg);
+                Notification notification = new Notification(msg);
+                notification.setDelayMsec(Notification.DELAY_FOREVER);
+                notification.show(getPage());
                 log(msg);
 
             }
