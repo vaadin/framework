@@ -19,20 +19,43 @@ package com.vaadin.data.util.converter;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link Boolean} and back.
- * The String representation is given by Boolean.toString().
- * <p>
- * Leading and trailing white spaces are ignored when converting from a String.
- * </p>
- * 
+ * A converter that converts from {@link String} to {@link Boolean} and back. The String representation is given by
+ * {@link Boolean#toString()} or provided in constructor {@link #StringToBooleanConverter(String, String)}.
+ * <p> Leading and trailing white spaces are ignored when converting from a String. </p>
+ * <p> For language-dependent representation, subclasses should overwrite {@link #getFalseString(Locale)} and {@link #getTrueString(Locale)}</p>
+ *
  * @author Vaadin Ltd
  * @since 7.0
  */
 public class StringToBooleanConverter implements Converter<String, Boolean> {
 
+    private final String trueString;
+
+    private final String falseString;
+
+    /**
+     * Creates converter with default string representations - "true" and "false"
+     *
+     */
+    public StringToBooleanConverter() {
+        this(Boolean.TRUE.toString(), Boolean.FALSE.toString());
+    }
+
+    /**
+     * Creates converter with custom string representation.
+     *
+     * @since
+     * @param falseString string representation for <code>false</code>
+     * @param trueString string representation for <code>true</code>
+     */
+    public StringToBooleanConverter(String trueString, String falseString) {
+        this.trueString = trueString;
+        this.falseString = falseString;
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.lang.Class, java.util.Locale)
@@ -59,26 +82,26 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
-     * Gets the string representation for true. Default is "true".
-     * 
+     * Gets the string representation for true. Default is "true", if not set in constructor.
+     *
      * @return the string representation for true
      */
     protected String getTrueString() {
-        return Boolean.TRUE.toString();
+        return trueString;
     }
 
     /**
-     * Gets the string representation for false. Default is "false".
-     * 
+     * Gets the string representation for false. Default is "false", if not set in constructor.
+     *
      * @return the string representation for false
      */
     protected String getFalseString() {
-        return Boolean.FALSE.toString();
+        return falseString;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.lang.Class, java.util.Locale)
@@ -91,15 +114,39 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
             return null;
         }
         if (value) {
-            return getTrueString();
+            return getTrueString(locale);
         } else {
-            return getFalseString();
+            return getFalseString(locale);
         }
+    }
+
+    /**
+     * Gets the locale-depended string representation for false.
+     * Default is locale-independent value provided by {@link #getFalseString()}
+     *
+     * @since
+     * @param locale to be used
+     * @return the string representation for false
+     */
+    protected String getFalseString(Locale locale) {
+        return getFalseString();
+    }
+
+    /**
+     * Gets the locale-depended string representation for true.
+     * Default is locale-independent value provided by {@link #getTrueString()}
+     *
+     * @since
+     * @param locale to be used
+     * @return the string representation for true
+     */
+    protected String getTrueString(Locale locale) {
+        return getTrueString();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override
@@ -109,7 +156,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
     @Override
