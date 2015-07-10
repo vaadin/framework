@@ -1,7 +1,7 @@
 #coding=UTF-8
 
 from BuildDemos import demos
-import argparse
+import argparse, subprocess
 
 parser = argparse.ArgumentParser(description="Build report generator")
 parser.add_argument("version", type=str, help="Vaadin version that was just built")
@@ -20,8 +20,20 @@ content = """<html>
 <tr><td><a href="https://dev.vaadin.com/query?status=pending-release&milestone=">Pending-release tickets without milestone</a></td></tr>
 <tr><td><a href="apidiff/changes.html">API Diff</a></td></tr>
 <tr><td><a href="release-notes/release-notes.html">Release Notes</a></td></tr>
-<tr><td>Try demos<ul>
 """.format(version=args.version)
+
+try:
+	p1 = subprocess.Popen(['find', '.', '-name', '*.java'], stdout=subprocess.PIPE)
+	p2 = subprocess.Popen(['xargs', 'egrep', '@since ?$'], stdin=p1.stdout, stdout=subprocess.PIPE)
+	missing = subprocess.check_output(['grep', '-v', 'tests'], stdin=p2.stdout)
+	content += "<tr><td>Empty @since:<br>\n<pre>%s</pre></td></tr>\n" % (missing)
+except subprocess.CalledProcessError as e:
+	if e.returncode == 1:
+		content += "<tr><td>No empty @since</td></tr>\n"
+	else:
+		raise e
+
+content += "<tr><td>Try demos<ul>"
 
 for demo in demos:
 	content += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>\n".format(url=args.deployUrl, demoName=demo, version=args.version)
