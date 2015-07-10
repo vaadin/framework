@@ -11,8 +11,6 @@
 #
 
 import subprocess, sys
-from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
-from DeployHelpers import deployWar
 from os.path import join
 
 ## DEFAULT VARIABLES ##
@@ -55,9 +53,15 @@ def generateArchetype(archetype, artifactId, repo):
 	# Generate pom.xml
 	print("Generating pom.xml for archetype %s" % (archetype))
 	subprocess.check_call(cmd, cwd=resultPath, stdout=log)
+
+def getDeploymentContext(archetype, version):
+	return "%s-%s" % (archetype.split("-", 2)[2], version)
 	
 ## DO THIS IF RUN AS A SCRIPT (not import) ##
 if __name__ == "__main__":
+	from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
+	from DeployHelpers import deployWar
+
 	# Add command line arguments for staging repos
 	parser.add_argument("framework", type=int, help="Framework repo id (comvaadin-XXXX)", nargs='?')
 	parser.add_argument("archetype", type=int, help="Archetype repo id (comvaadin-XXXX)", nargs='?')
@@ -82,7 +86,7 @@ if __name__ == "__main__":
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:
 				try:
-					deployWar(war, "%s-%s.war" % (archetype.split("-", 2)[2], args.version))
+					deployWar(war, "%s.war" % (getDeploymentContext(archetype, args.version)))
 				except Exception as e:
 					print("War %s failed to deploy: %s" % (war, e))
 					archetypesFailed = True
