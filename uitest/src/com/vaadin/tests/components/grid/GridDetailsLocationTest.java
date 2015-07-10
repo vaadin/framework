@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -311,10 +310,6 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
 
     private void clickValo(CheckBoxElement checkBoxElement) {
         checkBoxElement.click(5, 5);
-    }
-
-    private Object executeScript(String string, Object... param) {
-        return ((JavascriptExecutor) getDriver()).executeScript(string, param);
     }
 
     private void scrollAndToggle(int row) {
