@@ -4129,28 +4129,37 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                Exception exception = null;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
-                    if (!isEditorBuffered() || editedItemId == null) {
-                        editedItemId = id;
-                    }
 
-                    if (editedItemId.equals(id)) {
-                        doEditItem();
+                    final boolean opening = editedItemId == null;
+
+                    final boolean moving = !opening && !editedItemId.equals(id);
+
+                    final boolean allowMove = !isEditorBuffered()
+                            && getEditorFieldGroup().isValid();
+
+                    if (opening || !moving || allowMove) {
+                        doBind(id);
+                    } else {
+                        failBind(null);
                     }
                 } catch (Exception e) {
-                    exception = e;
+                    failBind(e);
                 }
+            }
 
-                if (exception != null) {
-                    handleError(exception);
-                    doCancelEditor();
-                    getEditorRpc().confirmBind(false);
-                } else {
-                    doEditItem();
-                    getEditorRpc().confirmBind(true);
+            private void doBind(Object id) {
+                editedItemId = id;
+                doEditItem();
+                getEditorRpc().confirmBind(true);
+            }
+
+            private void failBind(Exception e) {
+                if (e != null) {
+                    handleError(e);
                 }
+                getEditorRpc().confirmBind(false);
             }
 
             @Override
@@ -6004,7 +6013,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         if (!isEditorEnabled()) {
             throw new IllegalStateException("Item editor is not enabled");
         } else if (isEditorBuffered() && editedItemId != null) {
-            throw new IllegalStateException("Editing item + " + itemId
+            throw new IllegalStateException("Editing item " + itemId
                     + " failed. Item editor is already editing item "
                     + editedItemId);
         } else if (!getContainerDataSource().containsId(itemId)) {

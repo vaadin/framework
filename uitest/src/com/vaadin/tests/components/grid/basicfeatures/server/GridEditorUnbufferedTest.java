@@ -72,14 +72,32 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
         String firstFieldValue = getEditorWidgets().get(0)
                 .getAttribute("value");
-        assertTrue("Editor is not at correct row index (5)",
-                "(5, 0)".equals(firstFieldValue));
+        assertEquals("Editor should be at row 5", "(5, 0)", firstFieldValue);
 
         getGridElement().getCell(10, 0).click();
         firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
 
-        assertTrue("Editor is not at correct row index (10)",
-                "(10, 0)".equals(firstFieldValue));
+        assertEquals("Editor should be at row 10", "(10, 0)", firstFieldValue);
+    }
+
+    @Test
+    public void testValidationErrorPreventsMove() {
+        // Because of "out of view" issues, we need to move this for easy access
+        selectMenuPath("Component", "Columns", "Column 7", "Column 7 Width",
+                "50px");
+        for (int i = 0; i < 6; ++i) {
+            selectMenuPath("Component", "Columns", "Column 7", "Move left");
+        }
+
+        selectMenuPath(EDIT_ITEM_5);
+
+        getEditorWidgets().get(1).click();
+        getEditorWidgets().get(1).sendKeys("not a number");
+
+        getGridElement().getCell(10, 0).click();
+
+        assertEquals("Editor should not move from row 5", "(5, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
     }
 
     @Test
@@ -96,7 +114,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testScrollAfterEditByAPI() {
+    public void testScrollEnabledOnProgrammaticOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         selectMenuPath(EDIT_ITEM_5);
@@ -108,7 +126,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testScrollAfterEditByMouse() {
+    public void testScrollEnabledOnMouseOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -121,7 +139,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testScrollAfterEditByKeyboard() {
+    public void testScrollEnabledOnKeyboardOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);

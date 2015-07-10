@@ -298,6 +298,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new NumberRenderer(new DecimalFormat("0,000.00",
                             DecimalFormatSymbols.getInstance(new Locale("fi",
                                     "FI")))));
+
             grid.getColumn(getColumnProperty(col++)).setRenderer(
                     new DateRenderer(new SimpleDateFormat("dd.MM.yy HH:mm")));
             grid.getColumn(getColumnProperty(col++)).setRenderer(

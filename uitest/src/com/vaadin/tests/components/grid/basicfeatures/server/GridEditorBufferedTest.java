@@ -163,7 +163,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByAPI() {
+    public void testScrollDisabledOnProgrammaticOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         selectMenuPath(EDIT_ITEM_5);
@@ -175,7 +175,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByMouse() {
+    public void testScrollDisabledOnMouseOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -188,7 +188,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testNoScrollAfterEditByKeyboard() {
+    public void testScrollDisabledOnKeyboardOpen() {
         int originalScrollPos = getGridVerticalScrollPos();
 
         GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
@@ -216,7 +216,28 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testProgrammaticOpeningWhenOpen() {
+    public void testMouseOpeningDisabledWhenOpen() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        getGridElement().getCell(4, 0).doubleClick();
+
+        assertEquals("Editor should still edit row 5", "(5, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
+    }
+
+    @Test
+    public void testKeyboardOpeningDisabledWhenOpen() {
+        selectMenuPath(EDIT_ITEM_5);
+
+        new Actions(getDriver()).click(getGridElement().getCell(4, 0))
+                .sendKeys(Keys.ENTER).perform();
+
+        assertEquals("Editor should still edit row 5", "(5, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
+    }
+
+    @Test
+    public void testProgrammaticOpeningDisabledWhenOpen() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
         assertEquals("Editor should edit row 5", "(5, 0)", getEditorWidgets()
@@ -232,7 +253,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testUserSortDisabled() {
+    public void testUserSortDisabledWhenOpen() {
         selectMenuPath(EDIT_ITEM_5);
 
         getGridElement().getHeaderCell(0, 0).click();

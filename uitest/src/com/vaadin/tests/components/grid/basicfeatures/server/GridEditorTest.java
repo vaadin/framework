@@ -123,7 +123,6 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     protected void assertEditorOpen() {
-        assertNotNull("Editor is supposed to be open", getEditor());
         assertEquals("Unexpected number of widgets",
                 GridBasicFeatures.EDITABLE_COLUMNS, getEditorWidgets().size());
     }
@@ -133,7 +132,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     protected List<WebElement> getEditorWidgets() {
-        assertNotNull(getEditor());
+        assertNotNull("Editor is supposed to be open", getEditor());
         return getEditor().findElements(By.className("v-textfield"));
 
     }
