@@ -43,12 +43,16 @@ public class UIState extends TabIndexState {
         notificationConfigurations.put("humanized",
                 new NotificationTypeConfiguration("Info: ", null,
                         NotificationRole.ALERT));
+
+        // We use alert instead of status for all notifications because
+        // (at least) Jaws 16 and earlier fail to announce any role=status
+        // message in Chrome/Firefox
         notificationConfigurations.put("tray",
                 new NotificationTypeConfiguration("Status: ", null,
-                        NotificationRole.STATUS));
+                        NotificationRole.ALERT));
         notificationConfigurations.put("assistive",
                 new NotificationTypeConfiguration("Note: ", null,
-                        NotificationRole.STATUS));
+                        NotificationRole.ALERT));
     }
     /**
      * State related to the Page class.
