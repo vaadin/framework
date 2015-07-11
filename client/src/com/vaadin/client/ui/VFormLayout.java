@@ -22,7 +22,6 @@ import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -327,22 +326,6 @@ public class VFormLayout extends SimplePanel {
                     requiredFieldIndicator = null;
                 }
             }
-
-            // Workaround for IE weirdness, sometimes returns bad height in some
-            // circumstances when Caption is empty. See #1444
-            // IE7 bugs more often. I wonder what happens when IE8 arrives...
-            // FIXME: This could be unnecessary for IE8+
-            if (BrowserInfo.get().isIE()) {
-                if (isEmpty) {
-                    setHeight("0px");
-                    getElement().getStyle().setOverflow(Overflow.HIDDEN);
-                } else {
-                    setHeight("");
-                    getElement().getStyle().clearOverflow();
-                }
-
-            }
-
         }
 
         /**
