@@ -612,7 +612,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 menuFirstChild.getStyle().setWidth(100, Unit.PCT);
             }
 
-            if (BrowserInfo.get().isIE()) {
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 11) {
                 // Must take margin,border,padding manually into account for
                 // menu element as we measure the element child and set width to
                 // the element parent
