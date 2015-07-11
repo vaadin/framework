@@ -24,7 +24,7 @@ for archetype in archetypes:
 
 content += """</ul></td></tr>
 <tr><td><a href="{repoUrl}">Staging repository</a></td></tr>
-<tr><td>Eclipse Ivy Settings:<br><pre>"""
+<tr><td>Eclipse Ivy Settings:<br><pre>""".format(repoUrl=args.stagingRepo)
 content += cgi.escape("""	<ibiblio name="vaadin-staging" usepoms="true" m2compatible="true" 
 		root="{repoUrl}" />""".format(repoUrl=args.stagingRepo))
 content += """</pre>
