@@ -5,6 +5,7 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Label;
 
 public class EmbeddedClickListenerRelativeCoordinates extends TestBase {
 
@@ -12,17 +13,21 @@ public class EmbeddedClickListenerRelativeCoordinates extends TestBase {
     protected void setup() {
         Embedded e = new Embedded("Embedded caption", new ThemeResource(
                 "../runo/icons/64/ok.png"));
+        final Label xLabel = new Label();
+        xLabel.setId("x");
+        final Label yLabel = new Label();
+        yLabel.setId("y");
         e.addListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {
-                getMainWindow()
-                        .showNotification(
-                                "" + event.getRelativeX() + ", "
-                                        + event.getRelativeY());
+                xLabel.setValue("" + event.getRelativeX());
+                yLabel.setValue("" + event.getRelativeY());
             }
         });
         addComponent(e);
+        addComponent(xLabel);
+        addComponent(yLabel);
     }
 
     @Override
