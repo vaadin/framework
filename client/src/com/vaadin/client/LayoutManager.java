@@ -1807,4 +1807,25 @@ public class LayoutManager {
         return Logger.getLogger(LayoutManager.class.getName());
     }
 
+    /**
+     * Checks if there is something waiting for a layout to take place.
+     * 
+     * @since
+     * @return true if there are connectors waiting for measurement or layout,
+     *         false otherwise
+     */
+    public boolean isLayoutNeeded() {
+        if (!needsHorizontalLayout.isEmpty() || !needsVerticalLayout.isEmpty()) {
+            return true;
+        }
+        if (!needsMeasure.isEmpty()) {
+            return true;
+        }
+
+        if (everythingNeedsMeasure) {
+            return true;
+        }
+
+        return false;
+    }
 }

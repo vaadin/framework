@@ -17,6 +17,7 @@ package com.vaadin.client.ui.layout;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.client.ApplicationConnection;
@@ -500,6 +501,12 @@ public class LayoutDependencyTree {
             if (connector == null) {
                 connector = (ComponentConnector) ConnectorMap.get(connection)
                         .getConnector(connectorId);
+                if (connector == null) {
+                    getLogger().warning(
+                            "No connector found for id " + connectorId
+                                    + " while creating LayoutDependency");
+                    return null;
+                }
             }
             dependency = new LayoutDependency(connector, direction);
             dependencies.put(connectorId, dependency);
@@ -531,7 +538,12 @@ public class LayoutDependencyTree {
 
     public void setNeedsHorizontalLayout(String connectorId, boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, HORIZONTAL);
-        dependency.setNeedsLayout(needsLayout);
+        if (dependency != null) {
+            dependency.setNeedsLayout(needsLayout);
+        } else {
+            getLogger().warning(
+                    "No dependency found in setNeedsHorizontalLayout");
+        }
     }
 
     /**
@@ -549,7 +561,13 @@ public class LayoutDependencyTree {
 
     public void setNeedsVerticalLayout(String connectorId, boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, VERTICAL);
-        dependency.setNeedsLayout(needsLayout);
+        if (dependency != null) {
+            dependency.setNeedsLayout(needsLayout);
+        } else {
+            getLogger()
+                    .warning("No dependency found in setNeedsVerticalLayout");
+        }
+
     }
 
     public void markAsHorizontallyLayouted(ManagedLayout layout) {
@@ -736,4 +754,9 @@ public class LayoutDependencyTree {
         }
         return dependency.scrollingBoundary;
     }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(LayoutDependencyTree.class.getName());
+    }
+
 }
