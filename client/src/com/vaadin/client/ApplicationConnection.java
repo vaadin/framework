@@ -63,7 +63,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -1693,18 +1692,20 @@ public class ApplicationConnection implements HasHandlers {
 
                 updatingState = false;
 
-                if (!onlyNoLayoutUpdates) {
-                    Profiler.enter("Layout processing");
-                    try {
-                        LayoutManager layoutManager = getLayoutManager();
+                Profiler.enter("Layout processing");
+                try {
+                    LayoutManager layoutManager = getLayoutManager();
+                    if (!onlyNoLayoutUpdates) {
                         layoutManager.setEverythingNeedsMeasure();
-                        layoutManager.layoutNow();
-                    } catch (final Throwable e) {
-                        getLogger().log(Level.SEVERE,
-                                "Error processing layouts", e);
                     }
-                    Profiler.leave("Layout processing");
+                    if (layoutManager.isLayoutNeeded()) {
+                        layoutManager.layoutNow();
+                    }
+                } catch (final Throwable e) {
+                    getLogger()
+                            .log(Level.SEVERE, "Error processing layouts", e);
                 }
+                Profiler.leave("Layout processing");
 
                 if (ApplicationConfiguration.isDebugMode()) {
                     Profiler.enter("Dumping state changes to the console");
