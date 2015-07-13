@@ -189,7 +189,11 @@ public class SuperDevMode {
         if (serverUrl == null || "".equals(serverUrl)) {
             serverUrl = "http://localhost:9876/";
         } else {
-            serverUrl = "http://" + serverUrl + "/";
+            if (serverUrl.contains(":")) {
+                serverUrl = "http://" + serverUrl + "/";
+            } else {
+                serverUrl = "http://" + serverUrl + ":9876/";
+            }
         }
 
         if (hasSession(SKIP_RECOMPILE)) {
