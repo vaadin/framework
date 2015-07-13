@@ -7,7 +7,7 @@
 # Python3 is required as this script uses some Python3 specific features.
 # Might work with Python2, haven't tested.
 #
-# python BuildArchetypes.py version fw-repo-id archetype-repo-id plugin-repo-id
+# python BuildArchetypes.py version --repo staging-repo-url
 #
 
 import subprocess, sys
@@ -41,8 +41,8 @@ def generateArchetype(archetype, artifactId, repo):
 	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
 	cmd.append("-DarchetypeArtifactId=%s" % (archetype))
 	cmd.append("-DarchetypeVersion=%s" % (args.version))
-	if hasattr(args, "archetype") and args.archetype != None:
-		cmd.append("-DarchetypeRepository=%s" % (repo % (args.archetype)))
+	if hasattr(args, "repo") and args.repo != None:
+		cmd.append("-DarchetypeRepository=%s" % repo)
 	cmd.append("-DgroupId=%s" % (group))
 	cmd.append("-DartifactId=%s" % (artifactId))
 	cmd.append("-Dversion=1.0-SNAPSHOT")
@@ -63,10 +63,7 @@ if __name__ == "__main__":
 	from DeployHelpers import deployWar
 
 	# Add command line arguments for staging repos
-	parser.add_argument("framework", type=int, help="Framework repo id (comvaadin-XXXX)", nargs='?')
-	parser.add_argument("archetype", type=int, help="Archetype repo id (comvaadin-XXXX)", nargs='?')
-	parser.add_argument("plugin", type=int, help="Maven Plugin repo id (comvaadin-XXXX)", nargs='?')
-	parser.add_argument("--repo", type=str, help="Staging repository template", required=True)
+	parser.add_argument("--repo", type=str, help="Staging repository URL", required=True)
 
 	archetypesFailed = False
 
@@ -81,7 +78,7 @@ if __name__ == "__main__":
 		try:
 			log = getLogFile(archetype)
 			generateArchetype(archetype, artifactId, args.repo)
-			updateRepositories(join(resultPath, artifactId))
+			updateRepositories(join(resultPath, artifactId), args.repo)
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:

@@ -9,9 +9,6 @@ from os import listdir, makedirs
 from shutil import copy, rmtree
 from glob import glob
 
-# Staging repo base url
-repo = "http://oss.sonatype.org/content/repositories/comvaadin-%d"
-
 # Directory where the resulting war files are stored
 # TODO: deploy results
 resultPath = join("result", "demos")
@@ -70,16 +67,17 @@ def getArgs():
 	return args
 
 # Maven Package and Validation
-def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, repoIds = None):
-	if repoIds is None:
-		repoIds = getArgs()
+def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, version = None, mavenParams = None):
+	if version is None:
+		version = getArgs().version
+	if mavenParams is None:
+		mavenParams = getArgs().maven
 
 	print("Do maven clean package validate")
 	cmd = [mvnCmd]
-	if hasattr(repoIds, "version") and repoIds.version is not None:
-		cmd.append("-Dvaadin.version=%s" % (repoIds.version))
-	if hasattr(repoIds, "maven") and repoIds.maven is not None:
-		cmd.extend(repoIds.maven.strip('"').split(" "))
+	cmd.append("-Dvaadin.version=%s" % (version))
+	if mavenParams is not None:
+		cmd.extend(mavenParams.strip('"').split(" "))
 	cmd.extend(["clean", "package", "validate"])
 	print("executing: %s" % (" ".join(cmd)))
 	subprocess.check_call(cmd, cwd=join(resultPath, artifactId), stdout=logFile)
@@ -111,10 +109,10 @@ def readPomFile(pomFile):
 	return ElementTree.parse(pomFile), nameSpace 
 
 # Recursive pom.xml update script
-def updateRepositories(path, repoIds = None, repoUrl = repo):
+def updateRepositories(path, repoUrl = None, version = None):
 	# If versions are not supplied, parse arguments
-	if repoIds is None:
-		repoIds = getArgs()
+	if version is None:
+		version = getArgs().version
 	
 	# Read pom.xml
 	pomXml = join(path, "pom.xml")
@@ -130,9 +128,8 @@ def updateRepositories(path, repoIds = None, repoUrl = repo):
 	if repoNode is not None:
 		print("Add staging repositories to " + pomXml)
 		
-		if hasattr(repoIds, "framework") and repoIds.framework is not None:
-			# Add framework staging repository
-			addRepo(repoNode, "repository", "vaadin-%s-staging" % (repoIds.version), repoUrl % (repoIds.framework))
+		# Add framework staging repository
+		addRepo(repoNode, "repository", "vaadin-%s-staging" % (version), repoUrl)
 		
 		# Find the correct pluginRepositories node
 		pluginRepo = tree.getroot().find("{%s}pluginRepositories" % (nameSpace))
@@ -140,9 +137,8 @@ def updateRepositories(path, repoIds = None, repoUrl = repo):
 			# Add pluginRepositories node if needed
 			pluginRepo = ElementTree.SubElement(tree.getroot(), "pluginRepositories")
 		
-		if hasattr(repoIds, "plugin") and repoIds.plugin is not None:
-			# Add plugin staging repository
-			addRepo(pluginRepo, "pluginRepository", "vaadin-%s-plugin-staging" % (repoIds.version), repoUrl % (repoIds.plugin))
+		# Add plugin staging repository
+		addRepo(pluginRepo, "pluginRepository", "vaadin-%s-plugin-staging" % (version), repoUrl)
 		
 		# Overwrite the modified pom.xml
 		tree.write(pomXml, encoding='UTF-8')
@@ -151,7 +147,7 @@ def updateRepositories(path, repoIds = None, repoUrl = repo):
 	for i in listdir(path):
 		file = join(path, i)
 		if isdir(file):
-			updateRepositories(join(path, i), repoIds, repoUrl)
+			updateRepositories(join(path, i), repoUrl, version)
 
 # Add a repository of repoType to given repoNode with id and URL
 def addRepo(repoNode, repoType, id, url):
