@@ -155,9 +155,7 @@ public class StringToCollectionConverter implements
             previous = index + delimiter.length();
             index = value.indexOf(delimiter, previous);
         }
-        if (result.size() > 0) {
-            collectToken(value.substring(previous), result, converter, locale);
-        }
+        collectToken(value.substring(previous), result, converter, locale);
         return result;
     }
 

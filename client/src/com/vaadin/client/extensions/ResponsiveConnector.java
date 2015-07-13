@@ -84,6 +84,10 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         getLogger().log(Level.SEVERE, message);
     }
 
+    private static void warning(String message) {
+        getLogger().warning(message);
+    }
+
     @Override
     protected void extend(ServerConnector target) {
         this.target = (AbstractComponentConnector) target;
@@ -204,10 +208,17 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         var IE = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()();
         var IE8 = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE8()();
 
-        if (sheet.cssRules) {
-            theRules = sheet.cssRules
-        } else if (sheet.rules) {
-            theRules = sheet.rules
+        try {
+            if (sheet.cssRules) {
+                    theRules = sheet.cssRules
+            } else if (sheet.rules) {
+                theRules = sheet.rules
+            }
+        } catch (e) {
+            // FF spews if trying to access rules for cross domain styles
+            @ResponsiveConnector::warning(*)("Can't process styles from " + sheet.href +
+                ", probably because of cross domain issues: " + e);
+            return;
         }
 
         // Special import handling for IE8

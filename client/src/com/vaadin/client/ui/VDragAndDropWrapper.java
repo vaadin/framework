@@ -472,6 +472,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         /*-{
 
             this.setRequestHeader('Content-Type', 'multipart/form-data');
+            // Seems like IE10 will loose the file if we don't keep a reference to it...
+            this.fileBeingUploaded = file;
+
             this.send(file);
         }-*/;
 

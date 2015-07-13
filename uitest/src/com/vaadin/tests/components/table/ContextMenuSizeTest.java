@@ -27,7 +27,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -39,10 +38,7 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // context menu doesn't work in phantom JS and works weirdly with IE8
-        // and selenium.
-        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
-                Browser.FIREFOX, Browser.CHROME);
+        return getBrowsersSupportingContextMenu();
     }
 
     @Override

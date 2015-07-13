@@ -103,11 +103,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public Widget getWidget() {
         if (widget == null) {
-            Profiler.enter("AbstractComponentConnector.createWidget for "
-                    + getClass().getSimpleName());
+            if (Profiler.isEnabled()) {
+                Profiler.enter("AbstractComponentConnector.createWidget for "
+                        + getClass().getSimpleName());
+            }
             widget = createWidget();
-            Profiler.leave("AbstractComponentConnector.createWidget for "
-                    + getClass().getSimpleName());
+            if (Profiler.isEnabled()) {
+                Profiler.leave("AbstractComponentConnector.createWidget for "
+                        + getClass().getSimpleName());
+            }
         }
 
         return widget;

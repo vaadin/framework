@@ -80,6 +80,13 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                 Browser.IE11);
     }
 
+    protected List<DesiredCapabilities> getBrowsersSupportingContextMenu() {
+        // context menu doesn't work in phantom JS and works weirdly with IE8
+        // and selenium.
+        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
+                Browser.FIREFOX, Browser.CHROME);
+    }
+
     @Override
     public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
         if (BrowserUtil.isIE(desiredCapabilities)) {

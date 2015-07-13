@@ -240,50 +240,6 @@ public class CustomizedSystemMessages extends SystemMessages implements
     }
 
     /**
-     * Sets the URL to go to when the client is out-of-sync.
-     * 
-     * @param outOfSyncURL
-     *            the URL to go to, or null to reload current
-     */
-    public void setOutOfSyncURL(String outOfSyncURL) {
-        this.outOfSyncURL = outOfSyncURL;
-    }
-
-    /**
-     * Enables or disables the notification. If disabled, the set URL (or
-     * current) is loaded directly.
-     * 
-     * @param outOfSyncNotificationEnabled
-     *            true = enabled, false = disabled
-     */
-    public void setOutOfSyncNotificationEnabled(
-            boolean outOfSyncNotificationEnabled) {
-        this.outOfSyncNotificationEnabled = outOfSyncNotificationEnabled;
-    }
-
-    /**
-     * Sets the caption of the notification. Set to null for no caption. If both
-     * caption and message is null, the notification is disabled;
-     * 
-     * @param outOfSyncCaption
-     *            the caption
-     */
-    public void setOutOfSyncCaption(String outOfSyncCaption) {
-        this.outOfSyncCaption = outOfSyncCaption;
-    }
-
-    /**
-     * Sets the message of the notification. Set to null for no message. If both
-     * caption and message is null, the notification is disabled;
-     * 
-     * @param outOfSyncMessage
-     *            the message
-     */
-    public void setOutOfSyncMessage(String outOfSyncMessage) {
-        this.outOfSyncMessage = outOfSyncMessage;
-    }
-
-    /**
      * Sets the URL to redirect to when the browser has cookies disabled.
      * 
      * @param cookiesDisabledURL

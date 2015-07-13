@@ -195,4 +195,17 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
                 isRowSelected(1));
     }
 
+    @Test
+    public void testChangeSelectionModelUpdatesUI() {
+        openTestURL();
+
+        setSelectionModelSingle(true);
+        getGridElement().getCell(5, 1).click();
+        assertTrue("Row 5 should be selected after clicking", isRowSelected(5));
+        setSelectionModelNone();
+        assertFalse(
+                "Row 5 should not be selected after changing selection model",
+                isRowSelected(5));
+
+    }
 }

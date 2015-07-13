@@ -6084,10 +6084,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorActive = false;
         editorFieldGroup.discard();
         editorFieldGroup.setItemDataSource(null);
+
         if (datasource instanceof ItemSetChangeNotifier) {
             ((ItemSetChangeNotifier) datasource)
                     .removeItemSetChangeListener(editorClosingItemSetListener);
         }
+
+        // Mark Grid as dirty so the client side gets to know that the editors
+        // are no longer attached
+        markAsDirty();
     }
 
     void resetEditor() {

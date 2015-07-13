@@ -735,13 +735,20 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
-        public void reapplyDetailsVisibility(int rowIndex, JsonObject row) {
-            if (hasDetailsOpen(row)) {
-                getWidget().setDetailsVisible(rowIndex, true);
-                detailsConnectorFetcher.schedule();
-            } else {
-                getWidget().setDetailsVisible(rowIndex, false);
-            }
+        public void reapplyDetailsVisibility(final int rowIndex,
+                final JsonObject row) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (hasDetailsOpen(row)) {
+                        getWidget().setDetailsVisible(rowIndex, true);
+                        detailsConnectorFetcher.schedule();
+                    } else {
+                        getWidget().setDetailsVisible(rowIndex, false);
+                    }
+                }
+            });
         }
 
         private boolean hasDetailsOpen(JsonObject row) {
@@ -945,6 +952,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
+    public void onUnregister() {
+        customDetailsGenerator.indexToDetailsMap.clear();
+
+        super.onUnregister();
+    }
+
+    @Override
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
@@ -1061,6 +1075,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         for (RowState rowState : state.rows) {
             HeaderRow row = getWidget().appendHeaderRow();
 
+            if (rowState.defaultRow) {
+                getWidget().setDefaultHeaderRow(row);
+            }
+
             for (CellState cellState : rowState.cells) {
                 CustomGridColumn column = columnIdToColumn
                         .get(cellState.columnId);
@@ -1080,10 +1098,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 // Set state to be the same as first in group.
                 updateHeaderCellFromState(row.join(columns), cellState);
-            }
-
-            if (rowState.defaultRow) {
-                getWidget().setDefaultHeaderRow(row);
             }
 
             row.setStyleName(rowState.styleName);

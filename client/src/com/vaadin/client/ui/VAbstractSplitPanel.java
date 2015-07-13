@@ -49,7 +49,7 @@ import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 import com.vaadin.shared.ui.Orientation;
 
-public class VAbstractSplitPanel extends ComplexPanel {
+public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean enabled = false;
 
@@ -571,6 +571,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
             break;
         case Event.ONCLICK:
+            stopResize();
             resizing = false;
             break;
         }
@@ -590,6 +591,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
         final Element trg = event.getEventTarget().cast();
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
+            startResize();
             resizing = true;
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
@@ -599,6 +601,40 @@ public class VAbstractSplitPanel extends ComplexPanel {
             event.stopPropagation();
             event.preventDefault();
         }
+    }
+
+    /**
+     * Called when starting drag resize
+     * 
+     * @since 7.5.1
+     */
+    abstract protected void startResize();
+
+    /**
+     * Called when stopping drag resize
+     * 
+     * @since 7.5.1
+     */
+    abstract protected void stopResize();
+
+    /**
+     * Gets the first container
+     * 
+     * @since 7.5.1
+     * @return the firstContainer
+     */
+    protected Element getFirstContainer() {
+        return firstContainer;
+    }
+
+    /**
+     * Gets the second container
+     * 
+     * @since 7.5.1
+     * @return the secondContainer
+     */
+    protected Element getSecondContainer() {
+        return secondContainer;
     }
 
     public void onMouseMove(Event event) {
@@ -685,6 +721,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
     public void onMouseUp(Event event) {
         DOM.releaseCapture(getElement());
         hideDraggingCurtain();
+        stopResize();
         resizing = false;
         if (!WidgetUtil.isTouchEvent(event)) {
             onMouseMove(event);
