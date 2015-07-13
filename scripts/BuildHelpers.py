@@ -113,7 +113,7 @@ def updateRepositories(path, repoUrl = None, version = None):
 	# If versions are not supplied, parse arguments
 	if version is None:
 		version = getArgs().version
-	
+
 	# Read pom.xml
 	pomXml = join(path, "pom.xml")
 	if isfile(pomXml):

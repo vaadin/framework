@@ -32,12 +32,16 @@ if __name__ == "__main__":
 	except:
 		print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 		sys.exit(1)
-	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile
+	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser
 	from DeployHelpers import deployWar
 
-	if hasattr(getArgs(), "artifactPath") and getArgs().artifactPath is not None:
+	# Add command line arguments for staging repos
+	parser.add_argument("--repo", type=str, help="Staging repository URL", default=None)
+
+	args = getArgs()
+	if hasattr(args, "artifactPath") and args.artifactPath is not None:
 		version = False
-		basePath = getArgs().artifactPath
+		basePath = args.artifactPath
 		poms = []
 		for root, dirs, files in os.walk(basePath):
 			for name in files:
@@ -52,14 +56,15 @@ if __name__ == "__main__":
 			if "vaadin-server" in pom:
 				pomXml, nameSpace = readPomFile(pom)
 				for version in pomXml.getroot().findall("./{%s}version" % (nameSpace)):
-					getArgs().version = version.text
+					args.version = version.text
 	demosFailed = False
 	
 	for demo in demos:
 		print("Validating demo %s" % (demo))
 		try:
 			checkout(demo, demos[demo])
-			updateRepositories(demo)
+			if hasattr(args, "repo") and args.repo is not None:
+				updateRepositories(join(resultPath, demo), args.repo)
 			mavenValidate(demo, logFile=getLogFile(demo))
 			resultWars = copyWarFiles(demo)
 			for war in resultWars:
