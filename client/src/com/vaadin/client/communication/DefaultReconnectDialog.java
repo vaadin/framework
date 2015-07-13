@@ -82,4 +82,9 @@ public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog 
         setOwner(connection.getUIConnector().getWidget());
         show();
     }
+
+    @Override
+    public void setPopupPosition(int left, int top) {
+        // Don't set inline styles for position, handle it in the theme
+    }
 }

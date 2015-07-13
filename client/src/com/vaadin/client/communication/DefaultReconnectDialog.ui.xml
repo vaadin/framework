@@ -3,9 +3,9 @@
 
 	<g:HTMLPanel>
 
+		<div class="spinner" />
 		<g:Label ui:field="label" styleName="text"
 			text="Server connection lost, trying to reconnect..." />
-		<div class="spinner" />
 	</g:HTMLPanel>
 
 </ui:UiBinder>
