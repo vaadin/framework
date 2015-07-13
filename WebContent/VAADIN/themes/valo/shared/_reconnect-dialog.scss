@@ -1,8 +1,8 @@
 @mixin valo-reconnect-dialog {
   .v-reconnect-dialog {
     color: white;
-    @include valo-notification-bar-style;
-    @include valo-notification-system-style;
+    @include valo-notification-bar-style("v-reconnect-dialog");
+    @include valo-notification-system-style("v-reconnect-dialog");
     text-align: center;
     .spinner {
       @include valo-spinner;
