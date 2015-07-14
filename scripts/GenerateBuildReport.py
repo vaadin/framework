@@ -33,13 +33,7 @@ except subprocess.CalledProcessError as e:
 	else:
 		raise e
 
-content += "<tr><td>Try demos<ul>"
-
-for demo in demos:
-	content += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>\n".format(url=args.deployUrl, demoName=demo, version=args.version)
-
-content += """</ul></td></tr>
-<tr><td><a href="{url}">Build result page (See test results, pin and tag build and dependencies)</a></td></tr>
+content += """<tr><td><a href="{url}">Build result page (See test results, pin and tag build and dependencies)</a></td></tr>
 </table>
 </body>
 </html>""".format(url=args.buildResultUrl)
