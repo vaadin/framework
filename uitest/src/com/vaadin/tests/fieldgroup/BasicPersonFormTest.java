@@ -31,7 +31,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     private static final String BEAN_VALUES = "Person [firstName=John, lastName=Doe, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]";
-    private int logCounter = 0;
+    private int logCounter;
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        logCounter = 0;
+    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -169,5 +176,4 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
         assertSelectedSex(Sex.MALE);
         assertDeceasedValue("NAAAAAH");
     }
-
 }
