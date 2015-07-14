@@ -27,6 +27,8 @@
     <modules>
         <module organisation="com.vaadin" name="vaadin-testbench"
             resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-parent"
+            resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-testbench-core"
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-testbench-api"

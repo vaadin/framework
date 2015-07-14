@@ -78,15 +78,19 @@
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-websocket"
-            rev="&jetty.version;" conf="ide, jetty-run->default">
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
             rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-util"
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="&jetty.version;" conf="ide, jetty-run->default">
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
 
@@ -104,7 +108,7 @@
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build,ide -> default" />
         <dependency org="com.vaadin" name="vaadin-testbench"
-            rev="4.0.2" conf="build-provided,ide -> default" />
+            rev="4.0.3" conf="build-provided,ide -> default" />
         <!-- This should be removed once tests have been updated to use lang3 -->
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build,ide -> default" />
@@ -114,7 +118,6 @@
 
         <dependency org="com.vaadin" name="vaadin-buildhelpers"
             rev="${vaadin.version}" conf="compile-theme->build" />
-
         <dependency org="org.eclipse.jgit" name="org.eclipse.jgit"
             rev="3.5.1.201410131835-r" conf="ide,build->default">
             <exclude org="org.apache.httpcomponents"></exclude>
