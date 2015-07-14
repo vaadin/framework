@@ -194,29 +194,29 @@ public class ValoThemeUI extends UI {
 
     Component buildTestMenu() {
         CssLayout menu = new CssLayout();
-        menu.addStyleName("large-icons");
+        menu.addStyleName(ValoTheme.MENU_PART_LARGE_ICONS);
 
         Label logo = new Label("Va");
         logo.setSizeUndefined();
-        logo.setPrimaryStyleName("valo-menu-logo");
+        logo.setPrimaryStyleName(ValoTheme.MENU_LOGO);
         menu.addComponent(logo);
 
         Button b = new Button(
                 "Reference <span class=\"valo-menu-badge\">3</span>");
         b.setIcon(FontAwesome.TH_LIST);
-        b.setPrimaryStyleName("valo-menu-item");
+        b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
         b.addStyleName("selected");
         b.setHtmlContentAllowed(true);
         menu.addComponent(b);
 
         b = new Button("API");
         b.setIcon(FontAwesome.BOOK);
-        b.setPrimaryStyleName("valo-menu-item");
+        b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
         menu.addComponent(b);
 
         b = new Button("Examples <span class=\"valo-menu-badge\">12</span>");
         b.setIcon(FontAwesome.TABLE);
-        b.setPrimaryStyleName("valo-menu-item");
+        b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
         b.setHtmlContentAllowed(true);
         menu.addComponent(b);
 
@@ -250,7 +250,7 @@ public class ValoThemeUI extends UI {
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
         top.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        top.addStyleName("valo-menu-title");
+        top.addStyleName(ValoTheme.MENU_TITLE);
         menu.addComponent(top);
         menu.addComponent(createThemeSelect());
 
@@ -297,8 +297,8 @@ public class ValoThemeUI extends UI {
         for (final Entry<String, String> item : menuItems.entrySet()) {
             if (item.getKey().equals("labels")) {
                 label = new Label("Components", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
+                label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+                label.addStyleName(ValoTheme.LABEL_H4);
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
@@ -308,8 +308,8 @@ public class ValoThemeUI extends UI {
                         + "</span>");
                 count = 0;
                 label = new Label("Containers", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
+                label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+                label.addStyleName(ValoTheme.LABEL_H4);
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
@@ -319,8 +319,8 @@ public class ValoThemeUI extends UI {
                         + "</span>");
                 count = 0;
                 label = new Label("Other", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
+                label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+                label.addStyleName(ValoTheme.LABEL_H4);
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
@@ -335,7 +335,7 @@ public class ValoThemeUI extends UI {
                         + " <span class=\"valo-menu-badge\">123</span>");
             }
             b.setHtmlContentAllowed(true);
-            b.setPrimaryStyleName("valo-menu-item");
+            b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
             b.setIcon(testIcon.get());
             menuItemsLayout.addComponent(b);
             count++;

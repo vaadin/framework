@@ -27,17 +27,18 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class Panels extends VerticalLayout implements View {
     public Panels() {
         setMargin(true);
 
         Label h1 = new Label("Panels & Layout panels");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
         TestIcon testIcon = new TestIcon(60);
@@ -74,33 +75,33 @@ public class Panels extends VerticalLayout implements View {
 
         panel = new Panel("Borderless style");
         panel.setIcon(testIcon.get());
-        panel.addStyleName("borderless");
+        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
         panel.setContent(panelContent());
         row.addComponent(panel);
 
         panel = new Panel("Borderless + scroll divider");
         panel.setIcon(testIcon.get());
-        panel.addStyleName("borderless");
-        panel.addStyleName("scroll-divider");
+        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+        panel.addStyleName(ValoTheme.PANEL_SCROLL_INDICATOR);
         panel.setContent(panelContentScroll());
         panel.setHeight("17em");
         row.addComponent(panel);
 
         panel = new Panel("Well style");
         panel.setIcon(testIcon.get());
-        panel.addStyleName("well");
+        panel.addStyleName(ValoTheme.PANEL_WELL);
         panel.setContent(panelContent());
         row.addComponent(panel);
 
         CssLayout layout = new CssLayout();
         layout.setIcon(testIcon.get());
         layout.setCaption("Panel style layout");
-        layout.addStyleName("card");
+        layout.addStyleName(ValoTheme.LAYOUT_CARD);
         layout.addComponent(panelContent());
         row.addComponent(layout);
 
         layout = new CssLayout();
-        layout.addStyleName("card");
+        layout.addStyleName(ValoTheme.LAYOUT_CARD);
         row.addComponent(layout);
         HorizontalLayout panelCaption = new HorizontalLayout();
         panelCaption.addStyleName("v-panel-caption");
@@ -112,13 +113,13 @@ public class Panels extends VerticalLayout implements View {
 
         Button action = new Button();
         action.setIcon(FontAwesome.PENCIL);
-        action.addStyleName("borderless-colored");
-        action.addStyleName("small");
-        action.addStyleName("icon-only");
+        action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        action.addStyleName(ValoTheme.BUTTON_SMALL);
+        action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         panelCaption.addComponent(action);
         MenuBar dropdown = new MenuBar();
-        dropdown.addStyleName("borderless");
-        dropdown.addStyleName("small");
+        dropdown.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        dropdown.addStyleName(ValoTheme.MENUBAR_SMALL);
         MenuItem addItem = dropdown.addItem("", FontAwesome.CHEVRON_DOWN, null);
         addItem.setStyleName("icon-only");
         addItem.addItem("Settings", null);
@@ -134,7 +135,7 @@ public class Panels extends VerticalLayout implements View {
         layout = new CssLayout();
         layout.setIcon(testIcon.get());
         layout.setCaption("Well style layout");
-        layout.addStyleName("well");
+        layout.addStyleName(ValoTheme.LAYOUT_WELL);
         layout.addComponent(panelContent());
         row.addComponent(layout);
     }

@@ -25,6 +25,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * 
@@ -39,11 +40,11 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         setMargin(true);
 
         Label h1 = new Label("Buttons");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -55,30 +56,30 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         row.addComponent(button);
 
         button = new Button("Primary");
-        button.addStyleName("primary");
+        button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         row.addComponent(button);
 
         button = new Button("Friendly");
-        button.addStyleName("friendly");
+        button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         row.addComponent(button);
 
         button = new Button("Danger");
-        button.addStyleName("danger");
+        button.addStyleName(ValoTheme.BUTTON_DANGER);
         row.addComponent(button);
 
         TestIcon testIcon = new TestIcon(10);
         button = new Button("Small");
-        button.addStyleName("small");
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.setIcon(testIcon.get());
         row.addComponent(button);
 
         button = new Button("Large");
-        button.addStyleName("large");
+        button.addStyleName(ValoTheme.BUTTON_LARGE);
         button.setIcon(testIcon.get());
         row.addComponent(button);
 
         button = new Button("Top");
-        button.addStyleName("icon-align-top");
+        button.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
         button.setIcon(testIcon.get());
         row.addComponent(button);
 
@@ -87,7 +88,7 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         row.addComponent(button);
 
         button = new Button("Image icon");
-        button.addStyleName("icon-align-right");
+        button.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
         button.setIcon(testIcon.get(true));
         row.addComponent(button);
 
@@ -97,36 +98,36 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         button = new Button();
         button.setIcon(testIcon.get());
-        button.addStyleName("icon-only");
+        button.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         row.addComponent(button);
 
         button = new Button("Borderless");
         button.setIcon(testIcon.get());
-        button.addStyleName("borderless");
+        button.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         row.addComponent(button);
 
         button = new Button("Borderless, colored");
         button.setIcon(testIcon.get());
-        button.addStyleName("borderless-colored");
+        button.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         row.addComponent(button);
 
         button = new Button("Quiet");
         button.setIcon(testIcon.get());
-        button.addStyleName("quiet");
+        button.addStyleName(ValoTheme.BUTTON_QUIET);
         row.addComponent(button);
 
         button = new Button("Link style");
         button.setIcon(testIcon.get());
-        button.addStyleName("link");
+        button.addStyleName(ValoTheme.BUTTON_LINK);
         row.addComponent(button);
 
         button = new Button("Icon on right");
         button.setIcon(testIcon.get());
-        button.addStyleName("icon-align-right");
+        button.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
         row.addComponent(button);
 
         CssLayout group = new CssLayout();
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
         button = new Button("One");
@@ -137,22 +138,22 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         group.addComponent(button);
 
         button = new Button("Tiny");
-        button.addStyleName("tiny");
+        button.addStyleName(ValoTheme.BUTTON_TINY);
         row.addComponent(button);
 
         button = new Button("Huge");
-        button.addStyleName("huge");
+        button.addStyleName(ValoTheme.BUTTON_HUGE);
         row.addComponent(button);
 
         NativeButton nbutton = new NativeButton("Native");
         row.addComponent(nbutton);
 
         h1 = new Label("Links");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -167,16 +168,16 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         row.addComponent(link);
 
         link = new Link("Small", new ExternalResource("https://vaadin.com"));
-        link.addStyleName("small");
+        link.addStyleName(ValoTheme.LINK_SMALL);
         row.addComponent(link);
 
         link = new Link("Large", new ExternalResource("https://vaadin.com"));
-        link.addStyleName("large");
+        link.addStyleName(ValoTheme.LINK_LARGE);
         row.addComponent(link);
 
         link = new Link(null, new ExternalResource("https://vaadin.com"));
         link.setIcon(testIcon.get());
-        link.addStyleName("large");
+        link.addStyleName(ValoTheme.LINK_LARGE);
         row.addComponent(link);
 
         link = new Link("Disabled", new ExternalResource("https://vaadin.com"));

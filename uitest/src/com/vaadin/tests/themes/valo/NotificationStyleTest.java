@@ -27,6 +27,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Test for H1 and P elements styles in Notifications.
@@ -45,7 +46,8 @@ public class NotificationStyleTest extends MultiBrowserTest {
         waitUntil(notificationPresentCondition(), 2);
 
         WebElement notification = findElement(By.className("v-Notification"));
-        List<WebElement> headers = notification.findElements(By.tagName("h1"));
+        List<WebElement> headers = notification.findElements(By
+                .tagName(ValoTheme.LABEL_H1));
         String textAlign = headers.get(0).getCssValue("text-align");
         String textAlignInnerHeader = headers.get(1).getCssValue("text-align");
         Assert.assertNotEquals("Styles for notification defined h1 tag "

@@ -25,6 +25,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class MenuBars extends VerticalLayout implements View {
     public MenuBars() {
@@ -32,7 +33,7 @@ public class MenuBars extends VerticalLayout implements View {
         setSpacing(true);
 
         Label h1 = new Label("Menu Bars");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         MenuBar menuBar = getMenuBar();
@@ -41,37 +42,37 @@ public class MenuBars extends VerticalLayout implements View {
 
         menuBar = getMenuBar();
         menuBar.setCaption("Small style");
-        menuBar.addStyleName("small");
+        menuBar.addStyleName(ValoTheme.MENUBAR_SMALL);
         addComponent(menuBar);
 
         menuBar = getMenuBar();
         menuBar.setCaption("Borderless style");
-        menuBar.addStyleName("borderless");
+        menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         addComponent(menuBar);
 
         menuBar = getMenuBar();
         menuBar.setCaption("Small borderless style");
-        menuBar.addStyleName("borderless");
-        menuBar.addStyleName("small");
+        menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        menuBar.addStyleName(ValoTheme.MENUBAR_SMALL);
         addComponent(menuBar);
 
         Label h2 = new Label("Drop Down Button");
-        h2.addStyleName("h2");
+        h2.addStyleName(ValoTheme.LABEL_H2);
         addComponent(h2);
 
         HorizontalLayout wrap = new HorizontalLayout();
-        wrap.addStyleName("wrapping");
+        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         wrap.setSpacing(true);
         addComponent(wrap);
 
         wrap.addComponent(getMenuButton("Normal", false));
 
         MenuBar split = getMenuButton("Small", false);
-        split.addStyleName("small");
+        split.addStyleName(ValoTheme.MENUBAR_SMALL);
         wrap.addComponent(split);
 
         split = getMenuButton("Borderless", false);
-        split.addStyleName("borderless");
+        split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         wrap.addComponent(split);
 
         split = getMenuButton("Themed", false);
@@ -80,26 +81,26 @@ public class MenuBars extends VerticalLayout implements View {
 
         split = getMenuButton("Small", false);
         split.addStyleName("color1");
-        split.addStyleName("small");
+        split.addStyleName(ValoTheme.MENUBAR_SMALL);
         wrap.addComponent(split);
 
         h2 = new Label("Split Button");
-        h2.addStyleName("h2");
+        h2.addStyleName(ValoTheme.LABEL_H2);
         addComponent(h2);
 
         wrap = new HorizontalLayout();
-        wrap.addStyleName("wrapping");
+        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         wrap.setSpacing(true);
         addComponent(wrap);
 
         wrap.addComponent(getMenuButton("Normal", true));
 
         split = getMenuButton("Small", true);
-        split.addStyleName("small");
+        split.addStyleName(ValoTheme.MENUBAR_SMALL);
         wrap.addComponent(split);
 
         split = getMenuButton("Borderless", true);
-        split.addStyleName("borderless");
+        split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         wrap.addComponent(split);
 
         split = getMenuButton("Themed", true);
@@ -108,7 +109,7 @@ public class MenuBars extends VerticalLayout implements View {
 
         split = getMenuButton("Small", true);
         split.addStyleName("color1");
-        split.addStyleName("small");
+        split.addStyleName(ValoTheme.MENUBAR_SMALL);
         wrap.addComponent(split);
     }
 

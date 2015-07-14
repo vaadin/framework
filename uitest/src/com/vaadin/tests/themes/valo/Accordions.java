@@ -21,13 +21,14 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class Accordions extends VerticalLayout implements View {
     public Accordions() {
         setMargin(true);
 
         Label h1 = new Label("Accordions");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
@@ -38,7 +39,7 @@ public class Accordions extends VerticalLayout implements View {
         row.addComponent(getAccordion("Normal"));
 
         Accordion ac = getAccordion("Borderless");
-        ac.addStyleName("borderless");
+        ac.addStyleName(ValoTheme.ACCORDION_BORDERLESS);
         row.addComponent(ac);
 
     }

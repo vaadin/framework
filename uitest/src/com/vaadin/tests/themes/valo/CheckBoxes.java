@@ -23,17 +23,18 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class CheckBoxes extends VerticalLayout implements View {
     public CheckBoxes() {
         setMargin(true);
 
         Label h1 = new Label("Check Boxes");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -72,11 +73,11 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(check);
 
         check = new CheckBox("Small", true);
-        check.addStyleName("small");
+        check.addStyleName(ValoTheme.CHECKBOX_SMALL);
         row.addComponent(check);
 
         check = new CheckBox("Large", true);
-        check.addStyleName("large");
+        check.addStyleName(ValoTheme.CHECKBOX_LARGE);
         row.addComponent(check);
 
         check = new CheckBox("Disabled", true);
@@ -90,11 +91,11 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(check);
 
         h1 = new Label("Option Groups");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -124,7 +125,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(options);
 
         options = new OptionGroup("Choose one, small");
-        options.addStyleName("small");
+        options.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
         options.setMultiSelect(false);
         options.addItem("Option One");
         options.addItem("Option Two");
@@ -136,7 +137,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(options);
 
         options = new OptionGroup("Choose many, small");
-        options.addStyleName("small");
+        options.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
         options.setMultiSelect(true);
         options.addItem("Option One");
         options.addItem("Option Two");
@@ -148,7 +149,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(options);
 
         options = new OptionGroup("Choose one, large");
-        options.addStyleName("large");
+        options.addStyleName(ValoTheme.OPTIONGROUP_LARGE);
         options.setMultiSelect(false);
         options.addItem("Option One");
         options.addItem("Option Two");
@@ -160,7 +161,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(options);
 
         options = new OptionGroup("Choose many, large");
-        options.addStyleName("large");
+        options.addStyleName(ValoTheme.OPTIONGROUP_LARGE);
         options.setMultiSelect(true);
         options.addItem("Option One");
         options.addItem("Option Two");
@@ -172,7 +173,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         row.addComponent(options);
 
         options = new OptionGroup("Horizontal items");
-        options.addStyleName("horizontal");
+        options.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         options.addItem("Option One");
         two = options.addItem("Option Two, with a longer caption");
         options.addItem("Option Three");
@@ -185,7 +186,7 @@ public class CheckBoxes extends VerticalLayout implements View {
         options = new OptionGroup("Horizontal items, explicit width");
         options.setMultiSelect(true);
         options.setWidth("500px");
-        options.addStyleName("horizontal");
+        options.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         options.addItem("Option One");
         two = options.addItem("Option Two, with a longer caption");
         options.addItem("Option Three");

@@ -28,6 +28,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class Tabsheets extends VerticalLayout implements View {
 
@@ -37,12 +38,12 @@ public class Tabsheets extends VerticalLayout implements View {
         setMargin(true);
 
         Label h1 = new Label("Tabs");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout wrap = new HorizontalLayout();
         wrap.setSpacing(true);
-        wrap.addStyleName("wrapping");
+        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         addComponent(wrap);
 
         final CheckBox closable = new CheckBox("Closable");
@@ -66,12 +67,12 @@ public class Tabsheets extends VerticalLayout implements View {
         wrap.addComponent(disable);
 
         Label h3 = new Label("Additional Styles");
-        h3.addStyleName("h3");
+        h3.addStyleName(ValoTheme.LABEL_H3);
         addComponent(h3);
 
         wrap = new HorizontalLayout();
         wrap.setSpacing(true);
-        wrap.addStyleName("wrapping");
+        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         wrap.setMargin(new MarginInfo(false, false, true, false));
         addComponent(wrap);
 

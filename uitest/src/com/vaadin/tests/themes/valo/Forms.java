@@ -36,6 +36,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * 
@@ -48,18 +49,18 @@ public class Forms extends VerticalLayout implements View {
         setMargin(true);
 
         Label title = new Label("Forms");
-        title.addStyleName("h1");
+        title.addStyleName(ValoTheme.LABEL_H1);
         addComponent(title);
 
         final FormLayout form = new FormLayout();
         form.setMargin(false);
         form.setWidth("800px");
-        form.addStyleName("light");
+        form.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
         addComponent(form);
 
         Label section = new Label("Personal Info");
-        section.addStyleName("h2");
-        section.addStyleName("colored");
+        section.addStyleName(ValoTheme.LABEL_H2);
+        section.addStyleName(ValoTheme.LABEL_COLORED);
         form.addComponent(section);
         StringGenerator sg = new StringGenerator();
 
@@ -81,12 +82,12 @@ public class Forms extends VerticalLayout implements View {
         sex.addItem("Female");
         sex.addItem("Male");
         sex.select("Male");
-        sex.addStyleName("horizontal");
+        sex.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         form.addComponent(sex);
 
         section = new Label("Contact Info");
-        section.addStyleName("h3");
-        section.addStyleName("colored");
+        section.addStyleName(ValoTheme.LABEL_H3);
+        section.addStyleName(ValoTheme.LABEL_COLORED);
         form.addComponent(section);
 
         TextField email = new TextField("Email");
@@ -120,14 +121,14 @@ public class Forms extends VerticalLayout implements View {
         period.addItem("Montly");
         period.setNullSelectionAllowed(false);
         period.select("Weekly");
-        period.addStyleName("small");
+        period.addStyleName(ValoTheme.COMBOBOX_SMALL);
         period.setWidth("10em");
         wrap.addComponent(period);
         form.addComponent(wrap);
 
         section = new Label("Additional Info");
-        section.addStyleName("h4");
-        section.addStyleName("colored");
+        section.addStyleName(ValoTheme.LABEL_H4);
+        section.addStyleName(ValoTheme.LABEL_COLORED);
         form.addComponent(section);
 
         TextField website = new TextField("Website");
@@ -156,15 +157,15 @@ public class Forms extends VerticalLayout implements View {
                 if (readOnly) {
                     bio.setReadOnly(false);
                     form.setReadOnly(false);
-                    form.removeStyleName("light");
+                    form.removeStyleName(ValoTheme.FORMLAYOUT_LIGHT);
                     event.getButton().setCaption("Save");
-                    event.getButton().addStyleName("primary");
+                    event.getButton().addStyleName(ValoTheme.BUTTON_PRIMARY);
                 } else {
                     bio.setReadOnly(true);
                     form.setReadOnly(true);
-                    form.addStyleName("light");
+                    form.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
                     event.getButton().setCaption("Edit");
-                    event.getButton().removeStyleName("primary");
+                    event.getButton().removeStyleName(ValoTheme.BUTTON_PRIMARY);
                 }
             }
         });
@@ -177,7 +178,7 @@ public class Forms extends VerticalLayout implements View {
         footer.addComponent(edit);
 
         Label lastModified = new Label("Last modified by you a minute ago");
-        lastModified.addStyleName("light");
+        lastModified.addStyleName(ValoTheme.LABEL_LIGHT);
         footer.addComponent(lastModified);
     }
 

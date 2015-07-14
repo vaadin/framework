@@ -42,6 +42,7 @@ import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class Tables extends VerticalLayout implements View {
 
@@ -72,11 +73,11 @@ public class Tables extends VerticalLayout implements View {
         setSpacing(true);
 
         Label h1 = new Label("Tables");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout wrap = new HorizontalLayout();
-        wrap.addStyleName("wrapping");
+        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         wrap.setSpacing(true);
         addComponent(wrap);
 
@@ -189,9 +190,9 @@ public class Tables extends VerticalLayout implements View {
                         Object columnId) {
                     TextField tf = new TextField();
                     tf.setInputPrompt("Type here…");
-                    // tf.addStyleName("compact");
+                    // tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
-                        tf.addStyleName("borderless");
+                        tf.addStyleName(ValoTheme.TABLE_BORDERLESS);
                     }
                     return tf;
                 }
@@ -203,9 +204,9 @@ public class Tables extends VerticalLayout implements View {
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
                     DateField tf = new DateField();
-                    tf.addStyleName("compact");
+                    tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
-                        tf.addStyleName("borderless");
+                        tf.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
                     }
                     return tf;
                 }
@@ -218,9 +219,9 @@ public class Tables extends VerticalLayout implements View {
                         Object columnId) {
                     ComboBox tf = new ComboBox();
                     tf.setInputPrompt("Select");
-                    tf.addStyleName("compact");
+                    tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
-                        tf.addStyleName("borderless");
+                        tf.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
                     }
                     return tf;
                 }
@@ -232,7 +233,7 @@ public class Tables extends VerticalLayout implements View {
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
                     Button b = new Button("Button");
-                    b.addStyleName("small");
+                    b.addStyleName(ValoTheme.BUTTON_SMALL);
                     return b;
                 }
             });
@@ -244,7 +245,7 @@ public class Tables extends VerticalLayout implements View {
                         Object columnId) {
                     Label label = new Label("Label component");
                     label.setSizeUndefined();
-                    label.addStyleName("bold");
+                    label.addStyleName(ValoTheme.LABEL_BOLD);
                     return label;
                 }
             });
@@ -267,7 +268,7 @@ public class Tables extends VerticalLayout implements View {
                     OptionGroup op = new OptionGroup();
                     op.addItem("Male");
                     op.addItem("Female");
-                    op.addStyleName("horizontal");
+                    op.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
                     return op;
                 }
             });
@@ -321,45 +322,45 @@ public class Tables extends VerticalLayout implements View {
                 expandRatios ? 1.0f : 0);
 
         if (!stripes) {
-            table.addStyleName("no-stripes");
+            table.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         } else {
-            table.removeStyleName("no-stripes");
+            table.removeStyleName(ValoTheme.TABLE_NO_STRIPES);
         }
 
         if (!verticalLines) {
-            table.addStyleName("no-vertical-lines");
+            table.addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
         } else {
-            table.removeStyleName("no-vertical-lines");
+            table.removeStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
         }
 
         if (!horizontalLines) {
-            table.addStyleName("no-horizontal-lines");
+            table.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
         } else {
-            table.removeStyleName("no-horizontal-lines");
+            table.removeStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
         }
 
         if (borderless) {
-            table.addStyleName("borderless");
+            table.addStyleName(ValoTheme.TABLE_BORDERLESS);
         } else {
-            table.removeStyleName("borderless");
+            table.removeStyleName(ValoTheme.TABLE_BORDERLESS);
         }
 
         if (!headers) {
-            table.addStyleName("no-header");
+            table.addStyleName(ValoTheme.TABLE_NO_HEADER);
         } else {
-            table.removeStyleName("no-header");
+            table.removeStyleName(ValoTheme.TABLE_NO_HEADER);
         }
 
         if (compact) {
-            table.addStyleName("compact");
+            table.addStyleName(ValoTheme.TABLE_COMPACT);
         } else {
-            table.removeStyleName("compact");
+            table.removeStyleName(ValoTheme.TABLE_COMPACT);
         }
 
         if (small) {
-            table.addStyleName("small");
+            table.addStyleName(ValoTheme.TABLE_SMALL);
         } else {
-            table.removeStyleName("small");
+            table.removeStyleName(ValoTheme.TABLE_SMALL);
         }
 
         if (!rowIndex && !rowCaption && rowIcon) {

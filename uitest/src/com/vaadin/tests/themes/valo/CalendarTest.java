@@ -286,7 +286,7 @@ public class CalendarTest extends GridLayout implements View {
         hl.addComponent(captionLabel);
 
         CssLayout group = new CssLayout();
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         group.addComponent(dayButton);
         group.addComponent(weekButton);
         group.addComponent(monthButton);
@@ -922,7 +922,7 @@ public class CalendarTest extends GridLayout implements View {
         scheduleEventPopup.setModal(true);
         scheduleEventPopup.center();
 
-        scheduleEventFieldLayout.addStyleName("light");
+        scheduleEventFieldLayout.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
         scheduleEventFieldLayout.setMargin(false);
         layout.addComponent(scheduleEventFieldLayout);
 
@@ -939,7 +939,7 @@ public class CalendarTest extends GridLayout implements View {
                 }
             }
         });
-        applyEventButton.addStyleName("primary");
+        applyEventButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
         Button cancel = new Button("Cancel", new ClickListener() {
 
             private static final long serialVersionUID = 1L;
@@ -958,7 +958,7 @@ public class CalendarTest extends GridLayout implements View {
                 deleteCalendarEvent();
             }
         });
-        deleteEventButton.addStyleName("borderless");
+        deleteEventButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         scheduleEventPopup.addCloseListener(new Window.CloseListener() {
 
             private static final long serialVersionUID = 1L;
@@ -970,7 +970,7 @@ public class CalendarTest extends GridLayout implements View {
         });
 
         HorizontalLayout buttons = new HorizontalLayout();
-        buttons.addStyleName("v-window-bottom-toolbar");
+        buttons.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         buttons.setWidth("100%");
         buttons.setSpacing(true);
         buttons.addComponent(deleteEventButton);
