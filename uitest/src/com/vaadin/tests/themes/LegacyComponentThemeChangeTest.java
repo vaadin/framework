@@ -122,8 +122,22 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
 
         // The other image should change with the theme
         WebElement themeImage = $(MenuBarElement.class).first().findElement(
-                By.xpath(".//span[text()='seletedtheme']/img"));
+                By.xpath(".//span[text()='selectedtheme']/img"));
         assertAttributePrefix(themeImage, "src", theme);
+
+        WebElement subMenuItem = $(MenuBarElement.class).first().findElement(
+                By.xpath(".//span[text()='sub menu']"));
+        subMenuItem.click();
+
+        WebElement subMenu = findElement(By.className("v-menubar-popup"));
+        WebElement subMenuRuno = subMenu.findElement(By
+                .xpath(".//span[text()='runo']/img"));
+        String subMenuRunoImageSrc = subMenuRuno.getAttribute("src");
+        Assert.assertEquals(getThemeURL("runo") + "icons/16/ok.png",
+                subMenuRunoImageSrc);
+        WebElement subMenuThemeImage = subMenu.findElement(By
+                .xpath(".//span[text()='selectedtheme']/img"));
+        assertAttributePrefix(subMenuThemeImage, "src", theme);
     }
 
     private void assertAttributePrefix(WebElement element, String attribute,

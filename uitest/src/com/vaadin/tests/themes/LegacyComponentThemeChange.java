@@ -29,6 +29,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -60,7 +61,10 @@ public class LegacyComponentThemeChange extends AbstractTestUIWithLog {
         ThemeResource varyingIcon = new ThemeResource("menubar-theme-icon.png");
         MenuBar bar = new MenuBar();
         bar.addItem("runo", alwaysTheSameIconImage, null);
-        bar.addItem("seletedtheme", varyingIcon, null);
+        bar.addItem("selectedtheme", varyingIcon, null);
+        MenuItem sub = bar.addItem("sub menu", null);
+        sub.addItem("runo", alwaysTheSameIconImage, null);
+        sub.addItem("selectedtheme", varyingIcon, null);
 
         vl.addComponent(bar);
 
