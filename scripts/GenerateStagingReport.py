@@ -17,7 +17,12 @@ content = """<html>
 <table>
 """
 
-content += "<tr><td>Try archetype demos<ul>"
+content += "<tr><td>Try demos<ul>"
+
+for demo in demos:
+	content += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>\n".format(url=args.deployUrl, demoName=demo, version=args.version)
+
+content += "</ul></td></tr>\n<tr><td>Try archetype demos<ul>"
 
 for archetype in archetypes:
 	content += "<li><a href='{url}/{context}'>{demo}</a></li>\n".format(url=args.deployUrl, demo=archetype, context=getDeploymentContext(archetype, args.version))
