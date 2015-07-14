@@ -25,17 +25,18 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class ComboBoxes extends VerticalLayout implements View {
     public ComboBoxes() {
         setMargin(true);
 
         Label h1 = new Label("Combo Boxes");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -52,7 +53,7 @@ public class ComboBoxes extends VerticalLayout implements View {
 
         CssLayout group = new CssLayout();
         group.setCaption("Grouped with a Button");
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
         combo = new ComboBox();
@@ -104,7 +105,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setNullSelectionAllowed(false);
         combo.select("Option One");
         combo.setComponentError(new UserError("Fix it, now!"));
-        combo.addStyleName("borderless");
+        combo.addStyleName(ValoTheme.COMBOBOX_BORDERLESS);
         row.addComponent(combo);
 
         combo = new ComboBox("Disabled");
@@ -144,7 +145,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setContainerDataSource(ValoThemeUI.generateContainer(200, false));
         combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
         combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
-        combo.addStyleName("small");
+        combo.addStyleName(ValoTheme.COMBOBOX_SMALL);
         row.addComponent(combo);
 
         combo = new ComboBox("Large");
@@ -152,7 +153,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setContainerDataSource(ValoThemeUI.generateContainer(200, false));
         combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
         combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
-        combo.addStyleName("large");
+        combo.addStyleName(ValoTheme.COMBOBOX_LARGE);
         row.addComponent(combo);
 
         combo = new ComboBox("Borderless");
@@ -160,7 +161,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.addItem("Option One");
         combo.addItem("Option Two");
         combo.addItem("Option Three");
-        combo.addStyleName("borderless");
+        combo.addStyleName(ValoTheme.COMBOBOX_BORDERLESS);
         row.addComponent(combo);
 
         combo = new ComboBox("Tiny");
@@ -168,7 +169,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setContainerDataSource(ValoThemeUI.generateContainer(200, false));
         combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
         combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
-        combo.addStyleName("tiny");
+        combo.addStyleName(ValoTheme.COMBOBOX_TINY);
         row.addComponent(combo);
 
         combo = new ComboBox("Huge");
@@ -176,7 +177,7 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setContainerDataSource(ValoThemeUI.generateContainer(200, false));
         combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
         combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
-        combo.addStyleName("huge");
+        combo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         row.addComponent(combo);
     }
 

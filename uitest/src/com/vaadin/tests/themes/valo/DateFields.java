@@ -35,17 +35,18 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class DateFields extends VerticalLayout implements View {
     public DateFields() {
         setMargin(true);
 
         Label h1 = new Label("Date Fields");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -61,12 +62,12 @@ public class DateFields extends VerticalLayout implements View {
         date = new DateField("Error, borderless");
         setDate(date);
         date.setComponentError(new UserError("Fix it, now!"));
-        date.addStyleName("borderless");
+        date.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
         row.addComponent(date);
 
         CssLayout group = new CssLayout();
         group.setCaption("Grouped with a Button");
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
         final DateField date2 = new DateField();
@@ -143,19 +144,19 @@ public class DateFields extends VerticalLayout implements View {
         date = new DateField("Small");
         setDate(date);
         date.setResolution(Resolution.DAY);
-        date.addStyleName("small");
+        date.addStyleName(ValoTheme.DATEFIELD_SMALL);
         row.addComponent(date);
 
         date = new DateField("Large");
         setDate(date);
         date.setResolution(Resolution.DAY);
-        date.addStyleName("large");
+        date.addStyleName(ValoTheme.DATEFIELD_LARGE);
         row.addComponent(date);
 
         date = new DateField("Borderless");
         setDate(date);
         date.setResolution(Resolution.DAY);
-        date.addStyleName("borderless");
+        date.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
         row.addComponent(date);
 
         date = new DateField("Week numbers");
@@ -179,13 +180,13 @@ public class DateFields extends VerticalLayout implements View {
         date = new DateField("Tiny");
         setDate(date);
         date.setResolution(Resolution.DAY);
-        date.addStyleName("tiny");
+        date.addStyleName(ValoTheme.DATEFIELD_TINY);
         row.addComponent(date);
 
         date = new DateField("Huge");
         setDate(date);
         date.setResolution(Resolution.DAY);
-        date.addStyleName("huge");
+        date.addStyleName(ValoTheme.DATEFIELD_HUGE);
         row.addComponent(date);
 
         date = new InlineDateField("Date picker");

@@ -23,17 +23,18 @@ import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class ColorPickers extends VerticalLayout implements View {
     public ColorPickers() {
         setMargin(true);
 
         Label h1 = new Label("Color Pickers");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 

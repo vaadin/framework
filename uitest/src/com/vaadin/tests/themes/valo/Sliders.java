@@ -23,17 +23,18 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class Sliders extends VerticalLayout implements View {
     public Sliders() {
         setMargin(true);
 
         Label h1 = new Label("Sliders");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -67,7 +68,7 @@ public class Sliders extends VerticalLayout implements View {
         slider = new Slider("No indicator");
         slider.setValue(50.0);
         slider.setWidth("200px");
-        slider.addStyleName("no-indicator");
+        slider.addStyleName(ValoTheme.SLIDER_NO_INDICATOR);
         row.addComponent(slider);
 
         slider = new Slider("With ticks (not in IE8 & IE9)");
@@ -119,7 +120,7 @@ public class Sliders extends VerticalLayout implements View {
         slider = new Slider("No indicator");
         slider.setValue(50.0);
         slider.setHeight("200px");
-        slider.addStyleName("no-indicator");
+        slider.addStyleName(ValoTheme.SLIDER_NO_INDICATOR);
         slider.setOrientation(SliderOrientation.VERTICAL);
         row.addComponent(slider);
 
@@ -137,11 +138,11 @@ public class Sliders extends VerticalLayout implements View {
         row.addComponent(slider);
 
         h1 = new Label("Progress Bars");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -154,7 +155,7 @@ public class Sliders extends VerticalLayout implements View {
         pb2 = new ProgressBar();
         pb2.setCaption("Point style");
         pb2.setWidth("300px");
-        pb2.addStyleName("point");
+        pb2.addStyleName(ValoTheme.PROGRESSBAR_POINT);
         // pb2.setValue(0.6f);
         row.addComponent(pb2);
 

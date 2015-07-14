@@ -28,6 +28,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class TextFields extends VerticalLayout implements View {
     private TestIcon testIcon = new TestIcon(140);
@@ -36,11 +37,11 @@ public class TextFields extends VerticalLayout implements View {
         setMargin(true);
 
         Label h1 = new Label("Text Fields");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -72,7 +73,7 @@ public class TextFields extends VerticalLayout implements View {
         tf = new TextField("Error, borderless");
         tf.setValue("Something’s wrong");
         tf.setComponentError(new UserError("Fix it, now!"));
-        tf.addStyleName("borderless");
+        tf.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
         row.addComponent(tf);
 
         tf = new TextField("Read-only");
@@ -83,121 +84,121 @@ public class TextFields extends VerticalLayout implements View {
 
         tf = new TextField("Small");
         tf.setValue("Field value");
-        tf.addStyleName("small");
+        tf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         row.addComponent(tf);
 
         tf = new TextField("Large");
         tf.setValue("Field value");
-        tf.addStyleName("large");
+        tf.addStyleName(ValoTheme.TEXTFIELD_LARGE);
         tf.setIcon(testIcon.get(true));
         row.addComponent(tf);
 
         tf = new TextField("Icon inside");
         tf.setInputPrompt("Ooh, an icon");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Large, Icon inside");
         tf.setInputPrompt("Ooh, an icon");
-        tf.addStyleName("large");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_LARGE);
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Small, Icon inside");
         tf.setInputPrompt("Ooh, an icon");
-        tf.addStyleName("small");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("16px supported by default");
         tf.setInputPrompt("Image icon");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get(true, 16));
         row.addComponent(tf);
 
         tf = new TextField();
         tf.setValue("Font, no caption");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField();
         tf.setValue("Image, no caption");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get(true, 16));
         row.addComponent(tf);
 
         CssLayout group = new CssLayout();
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
         tf = new TextField();
         tf.setInputPrompt("Grouped with a button");
-        tf.addStyleName("inline-icon");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         tf.setWidth("260px");
         group.addComponent(tf);
 
         Button button = new Button("Do It");
-        // button.addStyleName("primary");
+        // button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         group.addComponent(button);
 
         tf = new TextField("Borderless");
         tf.setInputPrompt("Write here…");
-        tf.addStyleName("inline-icon");
-        tf.addStyleName("borderless");
+        tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        tf.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Right-aligned");
         tf.setValue("1,234");
-        tf.addStyleName("align-right");
+        tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
         row.addComponent(tf);
 
         tf = new TextField("Centered");
         tf.setInputPrompt("Guess what?");
-        tf.addStyleName("align-center");
+        tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         row.addComponent(tf);
 
         PasswordField pwf = new PasswordField("Password");
         pwf.setInputPrompt("Secret words");
-        pwf.addStyleName("inline-icon");
+        pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, right-aligned");
         pwf.setInputPrompt("Secret words");
-        pwf.addStyleName("inline-icon");
-        pwf.addStyleName("align-right");
+        pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, centered");
         pwf.setInputPrompt("Secret words");
-        pwf.addStyleName("inline-icon");
-        pwf.addStyleName("align-center");
+        pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         tf = new TextField("Tiny");
         tf.setValue("Field value");
-        tf.addStyleName("tiny");
+        tf.addStyleName(ValoTheme.TEXTFIELD_TINY);
         row.addComponent(tf);
 
         tf = new TextField("Huge");
         tf.setValue("Field value");
-        tf.addStyleName("huge");
+        tf.addStyleName(ValoTheme.TEXTFIELD_HUGE);
         row.addComponent(tf);
 
         h1 = new Label("Text Areas");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 
@@ -228,37 +229,37 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(ta);
 
         ta = new TextArea("Small");
-        ta.addStyleName("small");
+        ta.addStyleName(ValoTheme.TEXTAREA_SMALL);
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Large");
-        ta.addStyleName("large");
+        ta.addStyleName(ValoTheme.TEXTAREA_LARGE);
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Borderless");
-        ta.addStyleName("borderless");
+        ta.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Right-aligned");
-        ta.addStyleName("align-right");
+        ta.addStyleName(ValoTheme.TEXTAREA_ALIGN_RIGHT);
         ta.setValue("Field value, spanning multiple lines of text");
         row.addComponent(ta);
 
         ta = new TextArea("Centered");
-        ta.addStyleName("align-center");
+        ta.addStyleName(ValoTheme.TEXTAREA_ALIGN_CENTER);
         ta.setValue("Field value, spanning multiple lines of text");
         row.addComponent(ta);
 
         ta = new TextArea("Tiny");
-        ta.addStyleName("tiny");
+        ta.addStyleName(ValoTheme.TEXTAREA_TINY);
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Huge");
-        ta.addStyleName("huge");
+        ta.addStyleName(ValoTheme.TEXTAREA_HUGE);
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 

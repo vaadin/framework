@@ -19,6 +19,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class ValoMenuLayout extends HorizontalLayout {
     public ValoMenuLayout() {
         setSizeFull();
 
-        menuArea.setPrimaryStyleName("valo-menu");
+        menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
 
         contentArea.setPrimaryStyleName("valo-content");
         contentArea.addStyleName("v-scrollable");
@@ -49,7 +50,7 @@ public class ValoMenuLayout extends HorizontalLayout {
     }
 
     public void addMenu(Component menu) {
-        menu.addStyleName("valo-menu-part");
+        menu.addStyleName(ValoTheme.MENU_PART);
         menuArea.addComponent(menu);
     }
 
