@@ -20,13 +20,13 @@ import org.junit.Assert;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
@@ -82,7 +82,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected void closeNotification() {
-        $(NotificationElement.class).first().close();
+        $(FixedNotificationElement.class).first().close();
     }
 
     protected CheckBoxElement getPostCommitFailsCheckBox() {
