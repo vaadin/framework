@@ -50,6 +50,7 @@ import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -1175,5 +1176,23 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
 
         return ((Number) executeScript(script, e)).intValue();
+    }
+
+    protected void assertElementsEquals(WebElement expectedElement,
+            WebElement actualElement) {
+        while (expectedElement instanceof WrapsElement) {
+            expectedElement = ((WrapsElement) expectedElement)
+                    .getWrappedElement();
+        }
+        while (actualElement instanceof WrapsElement) {
+            actualElement = ((WrapsElement) actualElement).getWrappedElement();
+        }
+
+        Assert.assertEquals(expectedElement, actualElement);
+    }
+
+    protected WebElement getActiveElement() {
+        return (WebElement) executeScript("return document.activeElement;");
+
     }
 }
