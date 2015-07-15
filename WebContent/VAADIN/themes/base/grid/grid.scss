@@ -108,6 +108,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       outline: none;
       padding: 0 4px;
       text-align: right;
+      line-height: 1;
 
       &::-moz-focus-inner {
         border: 0;
@@ -128,10 +129,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     &.open {
       .#{$primaryStyleName}-sidebar-button {
         width: 100%;
- 
+
         &:after {
-          content: "\00d7";
-          font-size: 16px;
+          content: "\f0c9";
+          font-size: $v-grid-header-font-size;
           line-height: 1;
         }
       }
@@ -142,11 +143,12 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     }
 
     .v-ie8 &.open .#{$primaryStyleName}-sidebar-button:after {
+      vertical-align: middle;
+      text-align: center;
       display: inline;
     }
 
     .#{$primaryStyleName}-sidebar-content {
-      border-top: $v-grid-border;
       padding: 4px 0;
 
       .gwt-MenuBar {
@@ -198,6 +200,12 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     &:first-child {
       border-left: none;
     }
+  }
+  
+  .#{$primaryStyleName}-editor-cells.frozen > div {
+    @include box-shadow(1px 0 2px rgba(0,0,0,.1));
+    border-right: $v-grid-cell-vertical-border;
+    border-left: none;
   }
 
   .#{$primaryStyleName}-row-stripe > td {
@@ -342,6 +350,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   .#{$primaryStyleName}-editor-cells {
     position: relative;
     white-space: nowrap;
+    
+    &.frozen {
+      z-index: 2;
+    }
 
     > div {
       display: inline-block;

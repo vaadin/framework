@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -1185,10 +1186,11 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
         JClassType[] types = serverConnectorType.getSubtypes();
 
-        Map<String, JClassType> mappings = new HashMap<String, JClassType>();
+        Map<String, JClassType> mappings = new TreeMap<String, JClassType>();
 
         // Keep track of what has happened to avoid logging intermediate state
-        Map<JClassType, List<JClassType>> replaced = new HashMap<JClassType, List<JClassType>>();
+        Map<JClassType, List<JClassType>> replaced = new TreeMap<JClassType, List<JClassType>>(
+                ConnectorBundle.jClassComparator);
 
         for (JClassType type : types) {
             Connect connectAnnotation = type.getAnnotation(Connect.class);

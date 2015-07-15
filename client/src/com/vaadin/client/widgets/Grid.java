@@ -1141,6 +1141,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
         private DivElement cellWrapper = DivElement.as(DOM.createDiv());
+        private DivElement frozenCellWrapper = DivElement.as(DOM.createDiv());
+
         private DivElement messageAndButtonsWrapper = DivElement.as(DOM
                 .createDiv());
 
@@ -1581,15 +1583,31 @@ public class Grid<T> extends ResizeComposite implements
             });
 
             gridElement.appendChild(editorOverlay);
+            editorOverlay.appendChild(frozenCellWrapper);
             editorOverlay.appendChild(cellWrapper);
             editorOverlay.appendChild(messageAndButtonsWrapper);
 
+            int frozenColumns = grid.getVisibleFrozenColumnCount();
+            double frozenColumnsWidth = 0;
+            double cellHeight = 0;
+
             for (int i = 0; i < tr.getCells().getLength(); i++) {
                 Element cell = createCell(tr.getCells().getItem(i));
-
-                cellWrapper.appendChild(cell);
+                cellHeight = Math.max(cellHeight, WidgetUtil
+                        .getRequiredHeightBoundingClientRectDouble(tr
+                                .getCells().getItem(i)));
 
                 Column<?, T> column = grid.getVisibleColumn(i);
+
+                if (i < frozenColumns) {
+                    frozenCellWrapper.appendChild(cell);
+                    frozenColumnsWidth += WidgetUtil
+                            .getRequiredWidthBoundingClientRectDouble(tr
+                                    .getCells().getItem(i));
+                } else {
+                    cellWrapper.appendChild(cell);
+                }
+
                 if (column.isEditable()) {
                     Widget editor = getHandler().getWidget(column);
 
@@ -1610,6 +1628,10 @@ public class Grid<T> extends ResizeComposite implements
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
                 }
             }
+
+            setBounds(frozenCellWrapper, 0, 0, frozenColumnsWidth, 0);
+            setBounds(cellWrapper, frozenColumnsWidth, 0, tr.getOffsetWidth()
+                    - frozenColumnsWidth, cellHeight);
 
             // Only add these elements once
             if (!messageAndButtonsWrapper.isOrHasChild(messageWrapper)) {
@@ -1685,6 +1707,7 @@ public class Grid<T> extends ResizeComposite implements
 
             editorOverlay.removeAllChildren();
             cellWrapper.removeAllChildren();
+            frozenCellWrapper.removeAllChildren();
             editorOverlay.removeFromParent();
 
             scrollHandler.removeHandler();
@@ -1697,6 +1720,7 @@ public class Grid<T> extends ResizeComposite implements
                 editorOverlay.removeClassName(styleName);
 
                 cellWrapper.removeClassName(styleName + "-cells");
+                frozenCellWrapper.removeClassName(styleName + "-cells");
                 messageAndButtonsWrapper.removeClassName(styleName + "-footer");
 
                 messageWrapper.removeClassName(styleName + "-message");
@@ -1709,6 +1733,7 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.setClassName(styleName);
 
             cellWrapper.setClassName(styleName + "-cells");
+            frozenCellWrapper.setClassName(styleName + "-cells frozen");
             messageAndButtonsWrapper.setClassName(styleName + "-footer");
 
             messageWrapper.setClassName(styleName + "-message");
@@ -1759,7 +1784,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
-            cellWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
+            cellWrapper.getStyle().setLeft(
+                    frozenCellWrapper.getOffsetWidth() - scrollLeft, Unit.PX);
         }
 
         /**
@@ -3329,7 +3355,6 @@ public class Grid<T> extends ResizeComposite implements
                 clickOutsideToCloseHandlerRegistration = Event
                         .addNativePreviewHandler(clickOutsideToCloseHandler);
             }
-            openCloseButton.setHeight("");
         }
 
         /**
@@ -6171,7 +6196,12 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private void updateFrozenColumns() {
-        int numberOfColumns = frozenColumnCount;
+        escalator.getColumnConfiguration().setFrozenColumnCount(
+                getVisibleFrozenColumnCount());
+    }
+
+    private int getVisibleFrozenColumnCount() {
+        int numberOfColumns = getFrozenColumnCount();
 
         // for the escalator the hidden columns are not in the frozen column
         // count, but for grid they are. thus need to convert the index
@@ -6186,9 +6216,7 @@ public class Grid<T> extends ResizeComposite implements
         } else if (selectionColumn != null) {
             numberOfColumns++;
         }
-
-        escalator.getColumnConfiguration()
-                .setFrozenColumnCount(numberOfColumns);
+        return numberOfColumns;
     }
 
     /**

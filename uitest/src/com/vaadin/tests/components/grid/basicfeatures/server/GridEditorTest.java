@@ -200,7 +200,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         assertEquals(
                 "Not editable cell did not contain correct classname",
                 "not-editable",
-                editor.findElement(By.className("v-grid-editor-cells"))
+                editor.findElements(By.className("v-grid-editor-cells")).get(1)
                         .findElements(By.xpath("./div")).get(3)
                         .getAttribute("class"));
 

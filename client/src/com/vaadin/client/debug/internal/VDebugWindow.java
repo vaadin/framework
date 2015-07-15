@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -698,22 +700,32 @@ public final class VDebugWindow extends VOverlay {
     public void init() {
 
         show();
-        readStoredState();
 
-        Window.addResizeHandler(new com.google.gwt.event.logical.shared.ResizeHandler() {
-
-            Timer t = new Timer() {
-                @Override
-                public void run() {
-                    applyPositionAndSize();
-                }
-            };
-
+        /*
+         * Finalize initialization when all entry points have had the chance to
+         * e.g. register new sections.
+         */
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
             @Override
-            public void onResize(ResizeEvent event) {
-                t.cancel();
-                // TODO less
-                t.schedule(1000);
+            public void execute() {
+                readStoredState();
+
+                Window.addResizeHandler(new com.google.gwt.event.logical.shared.ResizeHandler() {
+
+                    Timer t = new Timer() {
+                        @Override
+                        public void run() {
+                            applyPositionAndSize();
+                        }
+                    };
+
+                    @Override
+                    public void onResize(ResizeEvent event) {
+                        t.cancel();
+                        // TODO less
+                        t.schedule(1000);
+                    }
+                });
             }
         });
     }

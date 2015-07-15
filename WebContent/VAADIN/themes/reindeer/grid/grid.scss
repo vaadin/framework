@@ -40,6 +40,12 @@
     .#{$primaryStyleName}-sidebar-content {
       background-color: #f8f8f9;
     }
+
+    .v-on:before, .v-off:before {
+      content: none;
+      font-size: 0;
+      margin-right: 0;
+    }
   }
 
   // Sort indicators

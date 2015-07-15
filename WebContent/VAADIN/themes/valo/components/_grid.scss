@@ -203,9 +203,6 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
   // Sidebar
   .#{$primary-stylename}-sidebar.v-contextmenu {
     &.open {
-      .#{$primary-stylename}-sidebar-button:after {
-        font-size: 20px;
-      }
 
       .#{$primary-stylename}-sidebar-content {
         margin: 0 0 2px;

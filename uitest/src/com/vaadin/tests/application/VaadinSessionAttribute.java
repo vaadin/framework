@@ -35,9 +35,13 @@ public class VaadinSessionAttribute extends AbstractTestUI {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Notification.show(getSession().getAttribute(ATTR_NAME)
-                                + " & "
-                                + getSession().getAttribute(Integer.class));
+                        Notification notification = new Notification(
+                                getSession().getAttribute(ATTR_NAME)
+                                        + " & "
+                                        + getSession().getAttribute(
+                                                Integer.class));
+                        notification.setDelayMsec(Notification.DELAY_FOREVER);
+                        notification.show(getPage());
                     }
                 }));
     }

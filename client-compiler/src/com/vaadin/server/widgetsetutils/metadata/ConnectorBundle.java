@@ -19,12 +19,16 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
@@ -37,7 +41,6 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
@@ -54,6 +57,22 @@ import elemental.json.JsonValue;
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
 
+    public static final Comparator<JClassType> jClassComparator = new Comparator<JClassType>() {
+        @Override
+        public int compare(JClassType o1, JClassType o2) {
+            return o1.getQualifiedSourceName().compareTo(
+                    o2.getQualifiedSourceName());
+        }
+    };
+
+    public static final Comparator<JMethod> jMethodComparator = new Comparator<JMethod>() {
+        @Override
+        public int compare(JMethod o1, JMethod o2) {
+            return o1.getReadableDeclaration().compareTo(
+                    o2.getReadableDeclaration());
+        }
+    };
+
     private final String name;
     private final ConnectorBundle previousBundle;
     private final Collection<TypeVisitor> visitors;
@@ -61,24 +80,42 @@ public class ConnectorBundle {
 
     private final Set<JType> hasSerializeSupport = new HashSet<JType>();
     private final Set<JType> needsSerializeSupport = new HashSet<JType>();
-    private final Map<JType, GeneratedSerializer> serializers = new HashMap<JType, GeneratedSerializer>();
-    private final Map<JClassType, JType> presentationTypes = new HashMap<JClassType, JType>();
 
-    private final Set<JClassType> needsSuperClass = new HashSet<JClassType>();
-    private final Set<JClassType> needsGwtConstructor = new HashSet<JClassType>();
+    private final Map<JType, GeneratedSerializer> serializers = new TreeMap<JType, GeneratedSerializer>(
+            new Comparator<JType>() {
+                @Override
+                public int compare(JType o1, JType o2) {
+                    return o1.toString().compareTo(o2.toString());
+                }
+            });
+
+    private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new TreeMap<JClassType, Map<JMethod, Set<MethodAttribute>>>(
+            jClassComparator);
+    private final Set<JClassType> needsSuperClass = new TreeSet<JClassType>(
+            jClassComparator);
+    private final Set<JClassType> needsGwtConstructor = new TreeSet<JClassType>(
+            jClassComparator);
     private final Set<JClassType> visitedTypes = new HashSet<JClassType>();
-    private final Set<JClassType> needsProxySupport = new HashSet<JClassType>();
 
-    private final Map<JClassType, Set<String>> identifiers = new HashMap<JClassType, Set<String>>();
-    private final Map<JClassType, Set<JMethod>> needsReturnType = new HashMap<JClassType, Set<JMethod>>();
-    private final Map<JClassType, Set<JMethod>> needsInvoker = new HashMap<JClassType, Set<JMethod>>();
-    private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
-    private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
+    private final Set<JClassType> needsProxySupport = new TreeSet<JClassType>(
+            jClassComparator);
 
-    private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new HashMap<JClassType, Map<JMethod, Set<MethodAttribute>>>();
+    private final Map<JClassType, JType> presentationTypes = new TreeMap<JClassType, JType>(
+            jClassComparator);
+    private final Map<JClassType, Set<String>> identifiers = new TreeMap<JClassType, Set<String>>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsReturnType = new TreeMap<JClassType, Set<JMethod>>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsInvoker = new TreeMap<JClassType, Set<JMethod>>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsParamTypes = new TreeMap<JClassType, Set<JMethod>>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsOnStateChange = new TreeMap<JClassType, Set<JMethod>>(
+            jClassComparator);
 
-    private final Set<Property> needsProperty = new HashSet<Property>();
-    private final Map<JClassType, Set<Property>> needsDelegateToWidget = new HashMap<JClassType, Set<Property>>();
+    private final Set<Property> needsProperty = new TreeSet<Property>();
+    private final Map<JClassType, Set<Property>> needsDelegateToWidget = new TreeMap<JClassType, Set<Property>>(
+            jClassComparator);
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
             Collection<TypeVisitor> visitors,
@@ -369,7 +406,7 @@ public class ConnectorBundle {
     }
 
     public Collection<Property> getProperties(JClassType type) {
-        HashSet<Property> properties = new HashSet<Property>();
+        Set<Property> properties = new TreeSet<Property>();
 
         properties.addAll(MethodProperty.findProperties(type));
         properties.addAll(FieldProperty.findProperties(type));
@@ -463,10 +500,19 @@ public class ConnectorBundle {
         }
     }
 
-    private <K, V> void addMapping(Map<K, Set<V>> map, K key, V value) {
-        Set<V> set = map.get(key);
+    private <K> void addMapping(Map<K, Set<String>> map, K key, String value) {
+        Set<String> set = map.get(key);
         if (set == null) {
-            set = new HashSet<V>();
+            set = new TreeSet<String>();
+            map.put(key, set);
+        }
+        set.add(value);
+    }
+
+    private <K> void addMapping(Map<K, Set<JMethod>> map, K key, JMethod value) {
+        Set<JMethod> set = map.get(key);
+        if (set == null) {
+            set = new TreeSet<JMethod>(jMethodComparator);
             map.put(key, set);
         }
         set.add(value);
@@ -533,11 +579,26 @@ public class ConnectorBundle {
             Map<JMethod, Set<MethodAttribute>> typeData = methodAttributes
                     .get(type);
             if (typeData == null) {
-                typeData = new HashMap<JMethod, Set<MethodAttribute>>();
+                typeData = new TreeMap<JMethod, Set<MethodAttribute>>(
+                        jMethodComparator);
                 methodAttributes.put(type, typeData);
             }
 
-            addMapping(typeData, method, methodAttribute);
+            Map<JMethod, Set<MethodAttribute>> methods = methodAttributes
+                    .get(type);
+            if (methods == null) {
+                methods = new TreeMap<JMethod, Set<MethodAttribute>>(
+                        jMethodComparator);
+                methodAttributes.put(type, methods);
+            }
+
+            Set<MethodAttribute> attributes = methods.get(method);
+            if (attributes == null) {
+                attributes = new TreeSet<MethodAttribute>();
+                methods.put(method, attributes);
+            }
+
+            attributes.add(methodAttribute);
         }
     }
 
@@ -564,7 +625,7 @@ public class ConnectorBundle {
         }
     }
 
-    private static Set<Class<?>> frameworkHandledTypes = new HashSet<Class<?>>();
+    private static Set<Class<?>> frameworkHandledTypes = new LinkedHashSet<Class<?>>();
     {
         frameworkHandledTypes.add(String.class);
         frameworkHandledTypes.add(Boolean.class);
@@ -611,7 +672,9 @@ public class ConnectorBundle {
 
     public void setNeedsDelegateToWidget(Property property, JClassType type) {
         if (!isNeedsDelegateToWidget(type)) {
-            needsDelegateToWidget.put(type, Sets.newHashSet(property));
+            TreeSet<Property> set = new TreeSet<Property>();
+            set.add(property);
+            needsDelegateToWidget.put(type, set);
         } else if (!needsDelegateToWidget.get(type).contains(property)) {
             needsDelegateToWidget.get(type).add(property);
         }

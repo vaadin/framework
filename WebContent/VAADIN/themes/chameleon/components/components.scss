@@ -1,6 +1,7 @@
 @import "accordion/accordion.scss";
 @import "button/button.scss";
 @import "colorpicker/colorpicker.scss";
+@import "grid/grid.scss";
 @import "label/label.scss";
 @import "menubar/menubar.scss";
 @import "notification/notification.scss";
@@ -24,6 +25,7 @@
 	@include chameleon-accordion;
 	@include chameleon-button;
 	@include chameleon-colorpicker;
+	@include chameleon-grid;
 	@include chameleon-label;
 	@include chameleon-menubar;
 	@include chameleon-notification;

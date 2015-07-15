@@ -1,55 +1,48 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.vaadin.tests.components;
 
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Notification;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class OutOfSyncTest extends AbstractTestUI {
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    @Override
-    protected void setup(VaadinRequest request) {
-        Button b = new Button("Click me after 1s to be out of sync");
-        b.addClickListener(new ClickListener() {
+public class OutOfSyncTest extends MultiBrowserTest {
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show("This code will never be reached");
-            }
-        });
-        setContent(b);
-        Thread t = new Thread(new Runnable() {
+    @Test
+    public void testClientResync() throws InterruptedException {
+        openTestURL();
 
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // Remove button but prevent repaint -> causes out of sync
-                // issues
-                getSession().lock();
-                try {
-                    setContent(null);
-                    getConnectorTracker().markClean(OutOfSyncTest.this);
-                } finally {
-                    getSession().unlock();
-                }
-            }
-        });
-        t.start();
-    }
+        // Wait for server to get rid of the Button
+        sleep(1000);
 
-    @Override
-    protected String getTestDescription() {
-        return "Click the button after 1s when it has been removed server side (causing synchronization problems)";
-    }
+        // On the first round-trip after the component has been removed, the
+        // server assumes the client will remove the button. How ever (to force
+        // it to be out of sync) the test UI calls markClean() on the Button to
+        // make it not update with the response.
+        $(ButtonElement.class).first().click();
+        Assert.assertTrue(
+                "Button should not have disappeared on the first click.",
+                $(ButtonElement.class).exists());
 
-    @Override
-    protected Integer getTicketNumber() {
-        return 10780;
+        // Truly out of sync, full resync is forced.
+        $(ButtonElement.class).first().click();
+        Assert.assertFalse("Button should disappear with the second click.",
+                $(ButtonElement.class).exists());
     }
 
 }
