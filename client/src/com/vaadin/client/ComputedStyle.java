@@ -280,4 +280,55 @@ public class ComputedStyle {
         return parseFloat(value);
     }-*/;
 
+    /**
+     * Returns the sum of the top and bottom border width
+     * 
+     * @since
+     * @return the sum of the top and bottom border
+     */
+    public double getBorderHeight() {
+        double borderHeight = getDoubleProperty("borderTopWidth");
+        borderHeight += getDoubleProperty("borderBottomWidth");
+
+        return borderHeight;
+    }
+
+    /**
+     * Returns the sum of the left and right border width
+     * 
+     * @since
+     * @return the sum of the left and right border
+     */
+    public double getBorderWidth() {
+        double borderWidth = getDoubleProperty("borderLeftWidth");
+        borderWidth += getDoubleProperty("borderRightWidth");
+
+        return borderWidth;
+    }
+
+    /**
+     * Returns the sum of the top and bottom padding
+     * 
+     * @since
+     * @return the sum of the top and bottom padding
+     */
+    public double getPaddingHeight() {
+        double paddingHeight = getDoubleProperty("paddingTop");
+        paddingHeight += getDoubleProperty("paddingBottom");
+
+        return paddingHeight;
+    }
+
+    /**
+     * Returns the sum of the top and bottom padding
+     * 
+     * @since
+     * @return the sum of the left and right padding
+     */
+    public double getPaddingWidth() {
+        double paddingWidth = getDoubleProperty("paddingLeft");
+        paddingWidth += getDoubleProperty("paddingRight");
+
+        return paddingWidth;
+    }
 }
