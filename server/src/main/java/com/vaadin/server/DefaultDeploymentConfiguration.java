@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.AbstractTextField;
 
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
@@ -97,6 +98,17 @@ public class DefaultDeploymentConfiguration extends
         checkLegacyPropertyToString();
         checkSyncIdCheck();
         checkSendUrlsAsParameters();
+        checkNullRepresentationLegacyMode();
+    }
+
+    private void checkNullRepresentationLegacyMode() {
+        final boolean legacyMode = getApplicationOrSystemProperty(
+                "com.vaadin.nullrepresentationlegacymode",
+                Boolean.toString(false)).equals("true");
+        if (legacyMode) {
+            AbstractTextField.setNullRepresentationDefault("null");
+        }
+
     }
 
     private void checkLegacyPropertyToString() {

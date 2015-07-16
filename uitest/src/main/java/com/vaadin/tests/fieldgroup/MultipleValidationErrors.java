@@ -1,5 +1,7 @@
 package com.vaadin.tests.fieldgroup;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
@@ -7,10 +9,10 @@ import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import org.apache.commons.lang.StringEscapeUtils;
 
 public class MultipleValidationErrors extends AbstractTestUI {
 
@@ -25,8 +27,14 @@ public class MultipleValidationErrors extends AbstractTestUI {
                 new PersonBeanWithValidationAnnotations());
         final FieldGroup fieldGroup = new FieldGroup(item);
 
+        // use old default that this test depends on
+        AbstractTextField.setNullRepresentationDefault("null");
+
         bindTextField(item, fieldGroup, "First Name", "firstName");
         bindTextField(item, fieldGroup, "Last Name", "lastName");
+
+        // Revert to new
+        AbstractTextField.setNullRepresentationDefault("");
 
         final Label validationErrors = new Label();
         validationErrors.setId("validationErrors");

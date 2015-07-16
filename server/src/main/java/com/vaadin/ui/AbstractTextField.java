@@ -41,10 +41,13 @@ import com.vaadin.ui.declarative.DesignContext;
 public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
 
+    private static String nullRepresentationDefault = "";
+
     /**
      * Null representation.
      */
-    private String nullRepresentation = "null";
+    private String nullRepresentation = nullRepresentationDefault;
+
     /**
      * Is setting to null from non-null value allowed by setting with null
      * representation .
@@ -808,6 +811,38 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("maxlength", attr,
                 getMaxLength(), def.getMaxLength(), Integer.class);
+    }
+
+    /**
+     * @since 7.6
+     * @return the default value used for nullRepresentation
+     */
+    public static String getNullRepresentationDefault() {
+        return nullRepresentationDefault;
+    }
+
+    /**
+     * A static helper to define the default value used for nullRepresentation.
+     * <p>
+     * In 7.6 the infamous default value "null" for
+     * AbstractTextField.nullRepresentation was changed to "", which may cause
+     * unexpected issues in certain applications that don't tackle null values.
+     * If there are several places in your application that depend on the old
+     * default, this method can be used to put new AbstractTextField instances
+     * into backwards compatibility mode by defining the default value as
+     * "null". The "legacy mode" can also be forced by setting system property
+     * "com.vaadin.nullrepresentationlegacymode" (before AbstractTextField class
+     * is loaded by your class loader).
+     * 
+     * @since 7.6
+     * @param nullRepresentationString
+     *            the value that will be used as a default for
+     *            {@link AbstractTextField#getNullRepresentation()} in new
+     *            instances
+     */
+    public static void setNullRepresentationDefault(
+            String nullRepresentationString) {
+        AbstractTextField.nullRepresentationDefault = nullRepresentationString;
     }
 
 }
