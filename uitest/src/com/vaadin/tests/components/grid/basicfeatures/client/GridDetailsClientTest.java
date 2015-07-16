@@ -35,8 +35,8 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.ElementQuery;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
@@ -112,12 +112,12 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void errorUpdaterShowsErrorNotification() {
         assertFalse("No notifications should've been at the start",
-                $(NotificationElement.class).exists());
+                $(FixedNotificationElement.class).exists());
 
         toggleDetailsFor(1);
         selectMenuPath(SET_FAULTY_GENERATOR);
 
-        ElementQuery<NotificationElement> notification = $(NotificationElement.class);
+        ElementQuery<FixedNotificationElement> notification = $(FixedNotificationElement.class);
         assertTrue("Was expecting an error notification here",
                 notification.exists());
         notification.first().close();
@@ -131,7 +131,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(1);
 
         selectMenuPath(SET_FAULTY_GENERATOR);
-        $(NotificationElement.class).first().close();
+        $(FixedNotificationElement.class).first().close();
         selectMenuPath(SET_GENERATOR);
 
         assertNotEquals(
