@@ -179,7 +179,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
                 @Override
                 public void execute() {
-                    Util.notifyParentOfSizeChange(VTree.this, true);
+                    doLayout();
                 }
 
             });
@@ -969,7 +969,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             open = state;
 
             if (!rendering) {
-                Util.notifyParentOfSizeChange(VTree.this, false);
+                doLayout();
             }
         }
 
@@ -2238,5 +2238,16 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public void bindAriaCaption(
             com.google.gwt.user.client.Element captionElement) {
         AriaHelper.bindCaption(body, captionElement);
+    }
+
+    /**
+     * Tell LayoutManager that a layout is needed later for this VTree
+     */
+    private void doLayout() {
+        // IE8 needs a hack to measure the tree again after update
+        WidgetUtil.forceIE8Redraw(getElement());
+
+        // This calls LayoutManager setNeedsMeasure and layoutNow
+        Util.notifyParentOfSizeChange(this, false);
     }
 }
