@@ -19,13 +19,13 @@ package com.vaadin.client.connectors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -38,6 +38,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
@@ -79,10 +80,8 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
-import com.vaadin.shared.Connector;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -420,255 +419,107 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
-    private static class CustomDetailsGenerator implements DetailsGenerator {
+    private class CustomDetailsGenerator implements DetailsGenerator {
 
-        private final Map<Integer, ComponentConnector> indexToDetailsMap = new HashMap<Integer, ComponentConnector>();
+        private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
+        private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
 
         @Override
-        @SuppressWarnings("boxing")
         public Widget getDetails(int rowIndex) {
-            ComponentConnector componentConnector = indexToDetailsMap
-                    .get(rowIndex);
-            if (componentConnector != null) {
-                return componentConnector.getWidget();
-            } else {
+            JsonObject row = getWidget().getDataSource().getRow(rowIndex);
+
+            if (!row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                    || row.getString(GridState.JSONKEY_DETAILS_VISIBLE)
+                            .isEmpty()) {
                 return null;
             }
+
+            String id = row.getString(GridState.JSONKEY_DETAILS_VISIBLE);
+            ComponentConnector componentConnector = idToDetailsMap.get(id);
+            idToRowIndex.put(id, rowIndex);
+
+            return componentConnector.getWidget();
         }
 
-        public void setDetailsConnectorChanges(
-                Set<DetailsConnectorChange> changes) {
-            /*
-             * To avoid overwriting connectors while moving them about, we'll
-             * take all the affected connectors, first all remove those that are
-             * removed or moved, then we add back those that are moved or added.
-             */
-
-            /* Remove moved/removed connectors from bookkeeping */
-            for (DetailsConnectorChange change : changes) {
-                Integer oldIndex = change.getOldIndex();
-                Connector removedConnector = indexToDetailsMap.remove(oldIndex);
-
-                Connector connector = change.getConnector();
-                assert removedConnector == null || connector == null
-                        || removedConnector.equals(connector) : "Index "
-                        + oldIndex + " points to " + removedConnector
-                        + " while " + connector + " was expected";
-            }
-
-            /* Add moved/added connectors to bookkeeping */
-            for (DetailsConnectorChange change : changes) {
-                Integer newIndex = change.getNewIndex();
-                ComponentConnector connector = (ComponentConnector) change
-                        .getConnector();
-
-                if (connector != null) {
-                    assert newIndex != null : "An existing connector has a missing new index.";
-
-                    ComponentConnector prevConnector = indexToDetailsMap.put(
-                            newIndex, connector);
-
-                    assert prevConnector == null : "Connector collision at index "
-                            + newIndex
-                            + " between old "
-                            + prevConnector
-                            + " and new " + connector;
+        public void updateConnectorHierarchy(List<ServerConnector> children) {
+            Set<String> connectorIds = new HashSet<String>();
+            for (ServerConnector child : children) {
+                if (child instanceof ComponentConnector) {
+                    connectorIds.add(child.getConnectorId());
+                    idToDetailsMap.put(child.getConnectorId(),
+                            (ComponentConnector) child);
                 }
             }
-        }
-    }
 
-    @SuppressWarnings("boxing")
-    private static class DetailsConnectorFetcher implements DeferredWorker {
-
-        private static final int FETCH_TIMEOUT_MS = 5000;
-
-        public interface Listener {
-            void fetchHasBeenScheduled(int id);
-
-            void fetchHasReturned(int id);
-        }
-
-        /** A flag making sure that we don't call scheduleFinally many times. */
-        private boolean fetcherHasBeenCalled = false;
-
-        /** A rolling counter for unique values. */
-        private int detailsFetchCounter = 0;
-
-        /** A collection that tracks the amount of requests currently underway. */
-        private Set<Integer> pendingFetches = new HashSet<Integer>(5);
-
-        private final ScheduledCommand lazyDetailsFetcher = new ScheduledCommand() {
-            @Override
-            public void execute() {
-                int currentFetchId = detailsFetchCounter++;
-                pendingFetches.add(currentFetchId);
-                rpc.sendDetailsComponents(currentFetchId);
-                fetcherHasBeenCalled = false;
-
-                if (listener != null) {
-                    listener.fetchHasBeenScheduled(currentFetchId);
+            Set<String> removedDetails = new HashSet<String>();
+            for (Entry<String, ComponentConnector> entry : idToDetailsMap
+                    .entrySet()) {
+                ComponentConnector connector = entry.getValue();
+                String id = connector.getConnectorId();
+                if (!connectorIds.contains(id)) {
+                    removedDetails.add(entry.getKey());
+                    if (idToRowIndex.containsKey(id)) {
+                        getWidget().setDetailsVisible(idToRowIndex.get(id),
+                                false);
+                    }
                 }
-
-                assert assertRequestDoesNotTimeout(currentFetchId);
-            }
-        };
-
-        private DetailsConnectorFetcher.Listener listener = null;
-
-        private final GridServerRpc rpc;
-
-        public DetailsConnectorFetcher(GridServerRpc rpc) {
-            assert rpc != null : "RPC was null";
-            this.rpc = rpc;
-        }
-
-        public void schedule() {
-            if (!fetcherHasBeenCalled) {
-                Scheduler.get().scheduleFinally(lazyDetailsFetcher);
-                fetcherHasBeenCalled = true;
-            }
-        }
-
-        public void responseReceived(int fetchId) {
-
-            if (fetchId < 0) {
-                /* Ignore negative fetchIds (they're pushed, not fetched) */
-                return;
             }
 
-            boolean success = pendingFetches.remove(fetchId);
-            assert success : "Received a response with an unidentified fetch id";
-
-            if (listener != null) {
-                listener.fetchHasReturned(fetchId);
+            for (String id : removedDetails) {
+                idToDetailsMap.remove(id);
+                idToRowIndex.remove(id);
             }
-        }
-
-        @Override
-        public boolean isWorkPending() {
-            return fetcherHasBeenCalled || !pendingFetches.isEmpty();
-        }
-
-        private boolean assertRequestDoesNotTimeout(final int fetchId) {
-            /*
-             * This method will not be compiled without asserts enabled. This
-             * only makes sure that any request does not time out.
-             * 
-             * TODO Should this be an explicit check? Is it worth the overhead?
-             */
-            new Timer() {
-                @Override
-                public void run() {
-                    assert !pendingFetches.contains(fetchId) : "Fetch id "
-                            + fetchId + " timed out.";
-                }
-            }.schedule(FETCH_TIMEOUT_MS);
-            return true;
-        }
-
-        public void setListener(DetailsConnectorFetcher.Listener listener) {
-            // if more are needed, feel free to convert this into a collection.
-            this.listener = listener;
         }
     }
 
     /**
-     * The functionality that makes sure that the scroll position is still kept
-     * up-to-date even if more details are being fetched lazily.
+     * Class for handling scrolling issues with open details.
+     * 
+     * @since
+     * @author Vaadin Ltd
      */
-    private class LazyDetailsScrollAdjuster implements DeferredWorker {
+    private class LazyDetailsScroller implements DeferredWorker {
 
-        private static final int SCROLL_TO_END_ID = -2;
-        private static final int NO_SCROLL_SCHEDULED = -1;
+        /* Timer value tested to work in our test cluster with slow IE8s. */
+        private static final int DISABLE_LAZY_SCROLL_TIMEOUT = 1500;
 
-        private class ScrollStopChecker implements DeferredWorker {
-            private final ScheduledCommand checkCommand = new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    isScheduled = false;
-                    if (queuedFetches.isEmpty()) {
-                        currentRow = NO_SCROLL_SCHEDULED;
-                        destination = null;
-                    }
-                }
-            };
-
-            private boolean isScheduled = false;
-
-            public void schedule() {
-                if (isScheduled) {
-                    return;
-                }
-                Scheduler.get().scheduleDeferred(checkCommand);
-                isScheduled = true;
-            }
-
+        /*
+         * Cancels details opening scroll after timeout. Avoids any unexpected
+         * scrolls via details opening.
+         */
+        private Timer disableScroller = new Timer() {
             @Override
-            public boolean isWorkPending() {
-                return isScheduled;
-            }
-        }
-
-        private DetailsConnectorFetcher.Listener fetcherListener = new DetailsConnectorFetcher.Listener() {
-            @Override
-            @SuppressWarnings("boxing")
-            public void fetchHasBeenScheduled(int id) {
-                if (currentRow != NO_SCROLL_SCHEDULED) {
-                    queuedFetches.add(id);
-                }
-            }
-
-            @Override
-            @SuppressWarnings("boxing")
-            public void fetchHasReturned(int id) {
-                if (currentRow == NO_SCROLL_SCHEDULED
-                        || queuedFetches.isEmpty()) {
-                    return;
-                }
-
-                queuedFetches.remove(id);
-                if (currentRow == SCROLL_TO_END_ID) {
-                    getWidget().scrollToEnd();
-                } else {
-                    getWidget().scrollToRow(currentRow, destination);
-                }
-
-                /*
-                 * Schedule a deferred call whether we should stop adjusting for
-                 * scrolling.
-                 * 
-                 * This is done deferredly just because we can't be absolutely
-                 * certain whether this most recent scrolling won't cascade into
-                 * further lazy details loading (perhaps deferredly).
-                 */
-                scrollStopChecker.schedule();
+            public void run() {
+                targetRow = -1;
             }
         };
 
-        private int currentRow = NO_SCROLL_SCHEDULED;
-        private final Set<Integer> queuedFetches = new HashSet<Integer>();
-        private final ScrollStopChecker scrollStopChecker = new ScrollStopChecker();
-        private ScrollDestination destination;
+        private Integer targetRow = -1;
+        private ScrollDestination destination = null;
 
-        public LazyDetailsScrollAdjuster() {
-            detailsConnectorFetcher.setListener(fetcherListener);
+        public void scrollToRow(Integer row, ScrollDestination dest) {
+            targetRow = row;
+            destination = dest;
+            disableScroller.schedule(DISABLE_LAZY_SCROLL_TIMEOUT);
         }
 
-        public void adjustForEnd() {
-            currentRow = SCROLL_TO_END_ID;
-        }
-
-        public void adjustFor(int row, ScrollDestination destination) {
-            currentRow = row;
-            this.destination = destination;
+        /**
+         * Inform LazyDetailsScroller that a details row has opened on a row.
+         * 
+         * @since
+         * @param rowIndex
+         *            index of row with details now open
+         */
+        public void detailsOpened(int rowIndex) {
+            if (targetRow == rowIndex) {
+                getWidget().scrollToRow(targetRow, destination);
+                disableScroller.run();
+            }
         }
 
         @Override
         public boolean isWorkPending() {
-            return currentRow != NO_SCROLL_SCHEDULED
-                    || !queuedFetches.isEmpty()
-                    || scrollStopChecker.isWorkPending();
+            return disableScroller.isRunning();
         }
     }
 
@@ -730,39 +581,46 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
 
-    private final DetailsConnectorFetcher detailsConnectorFetcher = new DetailsConnectorFetcher(
-            getRpcProxy(GridServerRpc.class));
-
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
         public void reapplyDetailsVisibility(final int rowIndex,
                 final JsonObject row) {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
-                @Override
-                public void execute() {
-                    if (hasDetailsOpen(row)) {
-                        getWidget().setDetailsVisible(rowIndex, true);
-                        detailsConnectorFetcher.schedule();
-                    } else {
+            if (hasDetailsOpen(row)) {
+                // Command for opening details row.
+                ScheduledCommand openDetails = new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        // Re-apply to force redraw.
                         getWidget().setDetailsVisible(rowIndex, false);
+                        getWidget().setDetailsVisible(rowIndex, true);
+                        lazyDetailsScroller.detailsOpened(rowIndex);
                     }
+                };
+
+                if (initialChange) {
+                    Scheduler.get().scheduleDeferred(openDetails);
+                } else {
+                    Scheduler.get().scheduleFinally(openDetails);
                 }
-            });
+            } else {
+                getWidget().setDetailsVisible(rowIndex, false);
+            }
         }
 
         private boolean hasDetailsOpen(JsonObject row) {
             return row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
-                    && row.getBoolean(GridState.JSONKEY_DETAILS_VISIBLE);
-        }
-
-        @Override
-        public void closeDetails(int rowIndex) {
-            getWidget().setDetailsVisible(rowIndex, false);
+                    && row.getString(GridState.JSONKEY_DETAILS_VISIBLE) != null;
         }
     };
 
-    private final LazyDetailsScrollAdjuster lazyDetailsScrollAdjuster = new LazyDetailsScrollAdjuster();
+    private final LazyDetailsScroller lazyDetailsScroller = new LazyDetailsScroller();
+
+    /*
+     * Initially details need to behave a bit differently to allow some
+     * escalator magic.
+     */
+    private boolean initialChange;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -797,11 +655,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
             @Override
             public void scrollToEnd() {
-                lazyDetailsScrollAdjuster.adjustForEnd();
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
                         getWidget().scrollToEnd();
+                        // Scrolls further if details opens.
+                        lazyDetailsScroller.scrollToRow(dataSource.size() - 1,
+                                ScrollDestination.END);
                     }
                 });
             }
@@ -809,11 +669,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void scrollToRow(final int row,
                     final ScrollDestination destination) {
-                lazyDetailsScrollAdjuster.adjustFor(row, destination);
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
                         getWidget().scrollToRow(row, destination);
+                        // Scrolls a bit further if details opens.
+                        lazyDetailsScroller.scrollToRow(row, destination);
                     }
                 });
             }
@@ -821,51 +682,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
-            }
-
-            @Override
-            @SuppressWarnings("boxing")
-            public void setDetailsConnectorChanges(
-                    Set<DetailsConnectorChange> connectorChanges, int fetchId) {
-                customDetailsGenerator
-                        .setDetailsConnectorChanges(connectorChanges);
-
-                List<DetailsConnectorChange> removedFirst = new ArrayList<DetailsConnectorChange>(
-                        connectorChanges);
-                Collections.sort(removedFirst,
-                        DetailsConnectorChange.REMOVED_FIRST_COMPARATOR);
-
-                // refresh moved/added details rows
-                for (DetailsConnectorChange change : removedFirst) {
-                    Integer oldIndex = change.getOldIndex();
-                    Integer newIndex = change.getNewIndex();
-
-                    assert oldIndex == null || oldIndex >= 0 : "Got an "
-                            + "invalid old index: " + oldIndex
-                            + " (connector: " + change.getConnector() + ")";
-                    assert newIndex == null || newIndex >= 0 : "Got an "
-                            + "invalid new index: " + newIndex
-                            + " (connector: " + change.getConnector() + ")";
-
-                    if (oldIndex != null) {
-                        /* Close the old/removed index */
-                        getWidget().setDetailsVisible(oldIndex, false);
-
-                        if (change.isShouldStillBeVisible()) {
-                            getWidget().setDetailsVisible(oldIndex, true);
-                        }
-                    }
-
-                    if (newIndex != null) {
-                        /*
-                         * Since the component was lazy loaded, we need to
-                         * refresh the details by toggling it.
-                         */
-                        getWidget().setDetailsVisible(newIndex, false);
-                        getWidget().setDetailsVisible(newIndex, true);
-                    }
-                }
-                detailsConnectorFetcher.responseReceived(fetchId);
             }
         });
 
@@ -919,15 +735,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
-    public void onUnregister() {
-        customDetailsGenerator.indexToDetailsMap.clear();
-
-        super.onUnregister();
-    }
-
-    @Override
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
+
+        initialChange = stateChangeEvent.isInitialStateChange();
 
         // Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
@@ -1411,6 +1222,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+        customDetailsGenerator.updateConnectorHierarchy(getChildren());
     }
 
     public String getColumnId(Grid.Column<?, ?> column) {
@@ -1427,8 +1239,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     @Override
     public boolean isWorkPending() {
-        return detailsConnectorFetcher.isWorkPending()
-                || lazyDetailsScrollAdjuster.isWorkPending();
+        return lazyDetailsScroller.isWorkPending();
     }
 
     /**
