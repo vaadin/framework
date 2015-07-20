@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -49,11 +48,9 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.ui.grid.DetailsConnectorChange;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
@@ -119,16 +116,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             for (Object itemId : itemsRemoved) {
-                detailComponentManager.destroyDetails(itemId);
                 itemIdToKey.remove(itemId);
             }
 
             for (Object itemId : itemSet) {
                 itemIdToKey.put(itemId, getKey(itemId));
-                if (visibleDetails.contains(itemId)) {
-                    detailComponentManager.createDetails(itemId,
-                            indexOf(itemId));
-                }
             }
         }
 
@@ -620,34 +612,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
         private final Map<Object, Component> visibleDetailsComponents = Maps
                 .newHashMap();
 
-        /** A lookup map for which row contains which details component. */
-        private BiMap<Integer, Component> rowIndexToDetails = HashBiMap
-                .create();
-
-        /**
-         * A copy of {@link #rowIndexToDetails} from its last stable state. Used
-         * for creating a diff against {@link #rowIndexToDetails}.
-         * 
-         * @see #getAndResetConnectorChanges()
-         */
-        private BiMap<Integer, Component> prevRowIndexToDetails = HashBiMap
-                .create();
-
-        /**
-         * A set keeping track on components that have been created, but not
-         * attached. They should be attached at some later point in time.
-         * <p>
-         * This isn't strictly requried, but it's a handy explicit log. You
-         * could find out the same thing by taking out all the other components
-         * and checking whether Grid is their parent or not.
-         */
-        private final Set<Component> unattachedComponents = Sets.newHashSet();
-
         /**
          * Keeps tabs on all the details that did not get a component during
          * {@link #createDetails(Object, int)}.
          */
-        private final Map<Object, Integer> emptyDetails = Maps.newHashMap();
+        private final Set<Object> emptyDetails = Sets.newHashSet();
 
         private Grid grid;
 
@@ -661,19 +630,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
          *            the item id for which to create the details component.
          *            Assumed not <code>null</code> and that a component is not
          *            currently present for this item previously
-         * @param rowIndex
-         *            the row index for {@code itemId}
          * @throws IllegalStateException
          *             if the current details generator provides a component
          *             that was manually attached, or if the same instance has
          *             already been provided
          */
-        public void createDetails(Object itemId, int rowIndex)
-                throws IllegalStateException {
+        public void createDetails(Object itemId) throws IllegalStateException {
             assert itemId != null : "itemId was null";
-            Integer newRowIndex = Integer.valueOf(rowIndex);
 
-            if (visibleDetailsComponents.containsKey(itemId)) {
+            if (visibleDetailsComponents.containsKey(itemId)
+                    || emptyDetails.contains(itemId)) {
                 // Don't overwrite existing components
                 return;
             }
@@ -684,58 +650,26 @@ public class RpcDataProviderExtension extends AbstractExtension {
             DetailsGenerator detailsGenerator = grid.getDetailsGenerator();
             Component details = detailsGenerator.getDetails(rowReference);
             if (details != null) {
-                String generatorName = detailsGenerator.getClass().getName();
                 if (details.getParent() != null) {
-                    throw new IllegalStateException(generatorName
+                    String name = detailsGenerator.getClass().getName();
+                    throw new IllegalStateException(name
                             + " generated a details component that already "
-                            + "was attached. (itemId: " + itemId + ", row: "
-                            + rowIndex + ", component: " + details);
-                }
-
-                if (rowIndexToDetails.containsValue(details)) {
-                    throw new IllegalStateException(generatorName
-                            + " provided a details component that already "
-                            + "exists in Grid. (itemId: " + itemId + ", row: "
-                            + rowIndex + ", component: " + details);
+                            + "was attached. (itemId: " + itemId
+                            + ", component: " + details + ")");
                 }
 
                 visibleDetailsComponents.put(itemId, details);
-                rowIndexToDetails.put(newRowIndex, details);
-                unattachedComponents.add(details);
 
-                assert !emptyDetails.containsKey(itemId) : "Bookeeping thinks "
+                details.setParent(grid);
+                grid.markAsDirty();
+
+                assert !emptyDetails.contains(itemId) : "Bookeeping thinks "
                         + "itemId is empty even though we just created a "
                         + "component for it (" + itemId + ")";
             } else {
-                assert assertItemIdHasNotMovedAndNothingIsOverwritten(itemId,
-                        newRowIndex);
-                emptyDetails.put(itemId, newRowIndex);
+                emptyDetails.add(itemId);
             }
 
-            /*
-             * Don't attach the components here. It's done by
-             * GridServerRpc.sendDetailsComponents in a separate roundtrip.
-             */
-        }
-
-        private boolean assertItemIdHasNotMovedAndNothingIsOverwritten(
-                Object itemId, Integer newRowIndex) {
-
-            Integer oldRowIndex = emptyDetails.get(itemId);
-            if (!SharedUtil.equals(oldRowIndex, newRowIndex)) {
-
-                assert !emptyDetails.containsKey(itemId) : "Unexpected "
-                        + "change of empty details row index for itemId "
-                        + itemId + " from " + oldRowIndex + " to "
-                        + newRowIndex;
-
-                assert !emptyDetails.containsValue(newRowIndex) : "Bookkeeping"
-                        + " already had another itemId for this empty index "
-                        + "(index: " + newRowIndex + ", new itemId: " + itemId
-                        + ")";
-            }
-
-            return true;
         }
 
         /**
@@ -756,8 +690,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 return;
             }
 
-            rowIndexToDetails.inverse().remove(removedComponent);
-
             removedComponent.setParent(null);
             grid.markAsDirty();
         }
@@ -773,81 +705,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public Collection<Component> getComponents() {
             Set<Component> components = new HashSet<Component>(
                     visibleDetailsComponents.values());
-            components.removeAll(unattachedComponents);
             return components;
         }
 
-        /**
-         * Gets information on how the connectors have changed.
-         * <p>
-         * This method only returns the changes that have been made between two
-         * calls of this method. I.e. Calling this method once will reset the
-         * state for the next state.
-         * <p>
-         * Used internally by the Grid object.
-         * 
-         * @return information on how the connectors have changed
-         */
-        public Set<DetailsConnectorChange> getAndResetConnectorChanges() {
-            Set<DetailsConnectorChange> changes = new HashSet<DetailsConnectorChange>();
-
-            // populate diff with added/changed
-            for (Entry<Integer, Component> entry : rowIndexToDetails.entrySet()) {
-                Component component = entry.getValue();
-                assert component != null : "rowIndexToDetails contains a null component";
-
-                Integer newIndex = entry.getKey();
-                Integer oldIndex = prevRowIndexToDetails.inverse().get(
-                        component);
-
-                /*
-                 * only attach components. Detaching already happened in
-                 * destroyDetails.
-                 */
-                if (newIndex != null && oldIndex == null) {
-                    assert unattachedComponents.contains(component) : "unattachedComponents does not contain component for index "
-                            + newIndex + " (" + component + ")";
-                    component.setParent(grid);
-                    unattachedComponents.remove(component);
-                }
-
-                if (!SharedUtil.equals(oldIndex, newIndex)) {
-                    changes.add(new DetailsConnectorChange(component, oldIndex,
-                            newIndex, emptyDetails.containsKey(component)));
-                }
-            }
-
-            // populate diff with removed
-            for (Entry<Integer, Component> entry : prevRowIndexToDetails
-                    .entrySet()) {
-                Integer oldIndex = entry.getKey();
-                Component component = entry.getValue();
-                Integer newIndex = rowIndexToDetails.inverse().get(component);
-                if (newIndex == null) {
-                    changes.add(new DetailsConnectorChange(null, oldIndex,
-                            null, emptyDetails.containsValue(oldIndex)));
-                }
-            }
-
-            // reset diff map
-            prevRowIndexToDetails = HashBiMap.create(rowIndexToDetails);
-
-            return changes;
-        }
-
         public void refresh(Object itemId) {
-            Component component = visibleDetailsComponents.get(itemId);
-            Integer rowIndex = null;
-            if (component != null) {
-                rowIndex = rowIndexToDetails.inverse().get(component);
-                destroyDetails(itemId);
-            } else {
-                rowIndex = emptyDetails.remove(itemId);
-            }
-
-            assert rowIndex != null : "Given itemId does not map to an "
-                    + "existing detail row (" + itemId + ")";
-            createDetails(itemId, rowIndex.intValue());
+            destroyDetails(itemId);
+            createDetails(itemId);
         }
 
         void setGrid(Grid grid) {
@@ -927,16 +790,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     listener.removeListener();
                 }
 
-                // Wipe clean all details.
-                HashSet<Object> detailItemIds = new HashSet<Object>(
-                        detailComponentManager.visibleDetailsComponents
-                                .keySet());
-                for (Object itemId : detailItemIds) {
-                    detailComponentManager.destroyDetails(itemId);
-                }
-
                 listeners.clear();
                 activeRowHandler.activeRange = Range.withLength(0, 0);
+
+                for (Object itemId : visibleDetails) {
+                    detailComponentManager.destroyDetails(itemId);
+                }
 
                 /* Mark as dirty to push changes in beforeClientResponse */
                 bareItemSetTriggeredSizeChange = true;
@@ -1118,7 +977,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
         rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
 
         if (visibleDetails.contains(itemId)) {
-            rowObject.put(GridState.JSONKEY_DETAILS_VISIBLE, true);
+            // Double check to be sure details component exists.
+            detailComponentManager.createDetails(itemId);
+            Component detailsComponent = detailComponentManager.visibleDetailsComponents
+                    .get(itemId);
+            rowObject.put(
+                    GridState.JSONKEY_DETAILS_VISIBLE,
+                    (detailsComponent != null ? detailsComponent
+                            .getConnectorId() : ""));
         }
 
         rowReference.set(itemId);
@@ -1254,15 +1120,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private void internalUpdateRowData(Object itemId) {
         int index = container.indexOfId(itemId);
-        if (index >= 0) {
+        if (activeRowHandler.activeRange.contains(index)) {
             JsonValue row = getRowData(getGrid().getColumns(), itemId);
             JsonArray rowArray = Json.createArray();
             rowArray.set(0, row);
             rpc.setRowData(index, rowArray);
-
-            if (isDetailsVisible(itemId)) {
-                detailComponentManager.createDetails(itemId, index);
-            }
         }
     }
 
@@ -1399,37 +1261,21 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            hide
      */
     public void setDetailsVisible(Object itemId, boolean visible) {
-        final boolean modified;
-
         if (visible) {
-            modified = visibleDetails.add(itemId);
+            visibleDetails.add(itemId);
 
             /*
-             * We don't want to create the component here, since the component
-             * might be out of view, and thus we don't know where the details
-             * should end up on the client side. This is also a great thing to
-             * optimize away, so that in case a lot of things would be opened at
-             * once, a huge chunk of data doesn't get sent over immediately.
+             * This might be an issue with a huge number of open rows, but as of
+             * now this works in most of the cases.
              */
-
+            detailComponentManager.createDetails(itemId);
         } else {
-            modified = visibleDetails.remove(itemId);
+            visibleDetails.remove(itemId);
 
-            /*
-             * Here we can try to destroy the component no matter what. The
-             * component has been removed and should be detached from the
-             * component hierarchy. The details row will be closed on the client
-             * side automatically.
-             */
             detailComponentManager.destroyDetails(itemId);
         }
 
-        int rowIndex = indexOf(itemId);
-        boolean modifiedRowIsActive = activeRowHandler.activeRange
-                .contains(rowIndex);
-        if (modified && modifiedRowIsActive) {
-            updateRowData(itemId);
-        }
+        updateRowData(itemId);
     }
 
     /**
@@ -1454,16 +1300,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public void refreshDetails() {
         for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
             detailComponentManager.refresh(itemId);
+            updateRowData(itemId);
         }
-    }
-
-    private int indexOf(Object itemId) {
-        /*
-         * It would be great if we could optimize this method away, since the
-         * normal usage of Grid doesn't need any indices to be known. It was
-         * already optimized away once, maybe we can do away with these as well.
-         */
-        return container.indexOfId(itemId);
     }
 
     /**
@@ -1474,14 +1312,5 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * */
     public DetailComponentManager getDetailComponentManager() {
         return detailComponentManager;
-    }
-
-    @Override
-    public void detach() {
-        for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
-            detailComponentManager.destroyDetails(itemId);
-        }
-
-        super.detach();
     }
 }

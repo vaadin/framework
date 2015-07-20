@@ -3281,7 +3281,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * currently extends the AbstractExtension superclass, but this fact should
      * be regarded as an implementation detail and subject to change in a future
      * major or minor Vaadin revision.
-     *
+     * 
      * @param <T>
      *            the type this renderer knows how to present
      */
@@ -3354,7 +3354,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * is desired. For instance, a {@code Renderer<Date>} could first turn a
          * date value into a formatted string and return
          * {@code encode(dateString, String.class)}.
-         *
+         * 
          * @param value
          *            the value to be encoded
          * @param type
@@ -3369,7 +3369,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * An abstract base class for server-side Grid extensions.
-     *
+     * 
      * @since 7.5
      */
     public static abstract class AbstractGridExtension extends
@@ -3384,7 +3384,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
         /**
          * Constructs a new Grid extension and extends given Grid.
-         *
+         * 
          * @param grid
          *            a grid instance
          */
@@ -3855,13 +3855,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     fireColumnVisibilityChangeEvent(column, hidden,
                             userOriginated);
                 }
-            }
-
-            @Override
-            public void sendDetailsComponents(int fetchId) {
-                getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
-                        detailComponentManager.getAndResetConnectorChanges(),
-                        fetchId);
             }
         });
 
@@ -6063,8 +6056,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         this.detailsGenerator = detailsGenerator;
 
         datasourceExtension.refreshDetails();
-        getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
-                detailComponentManager.getAndResetConnectorChanges(), -1);
     }
 
     /**
