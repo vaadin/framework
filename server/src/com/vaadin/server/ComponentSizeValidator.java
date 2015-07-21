@@ -598,12 +598,6 @@ public class ComponentSizeValidator implements Serializable {
         if (parent == null) {
             return false;
         } else if (parent.getWidth() < 0) {
-            if (parent instanceof Window) {
-                // Window has some weird haxxors to support 100% children when
-                // window is -1
-                return false;
-            }
-
             return true;
         } else if (parent.getWidthUnits() == Unit.PERCENTAGE) {
             return isEffectiveUndefinedWidth(parent.getParent());
@@ -621,12 +615,6 @@ public class ComponentSizeValidator implements Serializable {
         if (parent == null) {
             return false;
         } else if (parent.getHeight() < 0) {
-            if (parent instanceof Window) {
-                // Window has some weird haxxors to support 100% children when
-                // window is -1
-                return false;
-            }
-
             return true;
         } else if (parent.getHeightUnits() == Unit.PERCENTAGE) {
             return isEffectiveUndefinedHeight(parent.getParent());
