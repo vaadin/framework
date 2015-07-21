@@ -72,8 +72,6 @@ public class SelectAllConstantViewport extends AbstractTestUIWithLog {
         layout.addComponent(table);
         layout.setSizeFull();
         addComponent(layout);
-        getContent().setSizeFull();
-        getLayout().setSizeFull();
     }
 
     /*
