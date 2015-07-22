@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -98,31 +99,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         private DataProviderKeyMapper() {
             // private implementation
-        }
-
-        /**
-         * Sets the currently active rows. This will purge any unpinned rows
-         * from cache.
-         * 
-         * @param itemIds
-         *            collection of itemIds to map to row keys
-         */
-        void setActiveRows(Collection<?> itemIds) {
-            Set<Object> itemSet = new HashSet<Object>(itemIds);
-            Set<Object> itemsRemoved = new HashSet<Object>();
-            for (Object itemId : itemIdToKey.keySet()) {
-                if (!itemSet.contains(itemId) && !isPinned(itemId)) {
-                    itemsRemoved.add(itemId);
-                }
-            }
-
-            for (Object itemId : itemsRemoved) {
-                itemIdToKey.remove(itemId);
-            }
-
-            for (Object itemId : itemSet) {
-                itemIdToKey.put(itemId, getKey(itemId));
-            }
         }
 
         private String nextKey() {
@@ -273,246 +249,91 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public boolean isPinned(Object itemId) {
             return pinnedItemIds.contains(itemId);
         }
+
+        /**
+         * Removes all inactive item id to key mapping from the key mapper.
+         * 
+         * @since
+         */
+        public void dropInactiveItems() {
+            Collection<Object> active = activeItemHandler.getActiveItemIds();
+            Iterator<Object> itemIter = itemIdToKey.keySet().iterator();
+            while (itemIter.hasNext()) {
+                Object itemId = itemIter.next();
+                if (!active.contains(itemId) && !isPinned(itemId)) {
+                    itemIter.remove();
+                }
+            }
+        }
     }
 
     /**
-     * A helper class that handles the client-side Escalator logic relating to
-     * making sure that whatever is currently visible to the user, is properly
-     * initialized and otherwise handled on the server side (as far as
-     * required).
-     * <p>
-     * This bookeeping includes, but is not limited to:
-     * <ul>
-     * <li>listening to the currently visible {@link com.vaadin.data.Property
-     * Properties'} value changes on the server side and sending those back to
-     * the client; and
-     * <li>attaching and detaching {@link com.vaadin.ui.Component Components}
-     * from the Vaadin Component hierarchy.
-     * </ul>
+     * Class for keeping track of current items and ValueChangeListeners.
+     * 
+     * @since
      */
-    private class ActiveRowHandler implements Serializable {
-        /**
-         * A map from index to the value change listener used for all of column
-         * properties
-         */
-        private final Map<Integer, GridValueChangeListener> valueChangeListeners = new HashMap<Integer, GridValueChangeListener>();
+    private class ActiveItemHandler implements Serializable {
+
+        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
+        private final Set<Object> droppedItems = new HashSet<Object>();
 
         /**
-         * The currently active range. Practically, it's the range of row
-         * indices being cached currently.
-         */
-        private Range activeRange = Range.withLength(0, 0);
-
-        /**
-         * A hook for making sure that appropriate data is "active". All other
-         * rows should be "inactive".
-         * <p>
-         * "Active" can mean different things in different contexts. For
-         * example, only the Properties in the active range need
-         * ValueChangeListeners. Also, whenever a row with a Component becomes
-         * active, it needs to be attached (and conversely, when inactive, it
-         * needs to be detached).
+         * Registers ValueChangeListeners for given items ids.
          * 
-         * @param firstActiveRow
-         *            the first active row
-         * @param activeRowCount
-         *            the number of active rows
+         * @param itemIds
+         *            collection of new active item ids
          */
-        public void setActiveRows(Range newActiveRange) {
-
-            // TODO [[Components]] attach and detach components
-
-            /*-
-             *  Example
-             * 
-             *  New Range:       [3, 4, 5, 6, 7]
-             *  Old Range: [1, 2, 3, 4, 5]
-             *  Result:    [1, 2][3, 4, 5]      []
-             */
-            final Range[] depractionPartition = activeRange
-                    .partitionWith(newActiveRange);
-            removeValueChangeListeners(depractionPartition[0]);
-            removeValueChangeListeners(depractionPartition[2]);
-
-            /*-
-             *  Example
-             *  
-             *  Old Range: [1, 2, 3, 4, 5]
-             *  New Range:       [3, 4, 5, 6, 7]
-             *  Result:    []    [3, 4, 5][6, 7]
-             */
-            final Range[] activationPartition = newActiveRange
-                    .partitionWith(activeRange);
-            addValueChangeListeners(activationPartition[0]);
-            addValueChangeListeners(activationPartition[2]);
-
-            activeRange = newActiveRange;
-
-            assert valueChangeListeners.size() == newActiveRange.length() : "Value change listeners not set up correctly!";
-        }
-
-        private void addValueChangeListeners(Range range) {
-            for (Integer i = range.getStart(); i < range.getEnd(); i++) {
-
-                final Object itemId = container.getIdByIndex(i);
-                final Item item = container.getItem(itemId);
-
-                assert valueChangeListeners.get(i) == null : "Overwriting existing listener";
-
-                GridValueChangeListener listener = new GridValueChangeListener(
-                        itemId, item);
-                valueChangeListeners.put(i, listener);
-            }
-        }
-
-        private void removeValueChangeListeners(Range range) {
-            for (Integer i = range.getStart(); i < range.getEnd(); i++) {
-                final GridValueChangeListener listener = valueChangeListeners
-                        .remove(i);
-
-                assert listener != null : "Trying to remove nonexisting listener";
-
-                listener.removeListener();
-            }
-        }
-
-        /**
-         * Manages removed columns in active rows.
-         * <p>
-         * This method does <em>not</em> send data again to the client.
-         * 
-         * @param removedColumns
-         *            the columns that have been removed from the grid
-         */
-        public void columnsRemoved(Collection<Column> removedColumns) {
-            if (removedColumns.isEmpty()) {
-                return;
-            }
-
-            for (GridValueChangeListener listener : valueChangeListeners
-                    .values()) {
-                listener.removeColumns(removedColumns);
-            }
-        }
-
-        /**
-         * Manages added columns in active rows.
-         * <p>
-         * This method sends the data for the changed rows to client side.
-         * 
-         * @param addedColumns
-         *            the columns that have been added to the grid
-         */
-        public void columnsAdded(Collection<Column> addedColumns) {
-            if (addedColumns.isEmpty()) {
-                return;
-            }
-
-            for (GridValueChangeListener listener : valueChangeListeners
-                    .values()) {
-                listener.addColumns(addedColumns);
-            }
-        }
-
-        /**
-         * Handles the insertion of rows.
-         * <p>
-         * This method's responsibilities are to:
-         * <ul>
-         * <li>shift the internal bookkeeping by <code>count</code> if the
-         * insertion happens above currently active range
-         * <li>ignore rows inserted below the currently active range
-         * <li>shift (and deactivate) rows pushed out of view
-         * <li>activate rows that are inserted in the current viewport
-         * </ul>
-         * 
-         * @param firstIndex
-         *            the index of the first inserted rows
-         * @param count
-         *            the number of rows inserted at <code>firstIndex</code>
-         */
-        public void insertRows(int firstIndex, int count) {
-            if (firstIndex < activeRange.getStart()) {
-                moveListeners(activeRange, count);
-                activeRange = activeRange.offsetBy(count);
-            } else if (firstIndex < activeRange.getEnd()) {
-                int end = activeRange.getEnd();
-                // Move rows from first added index by count
-                Range movedRange = Range.between(firstIndex, end);
-                moveListeners(movedRange, count);
-                // Remove excess listeners from extra rows
-                removeValueChangeListeners(Range.withLength(end, count));
-                // Add listeners for new rows
-                final Range freshRange = Range.withLength(firstIndex, count);
-                addValueChangeListeners(freshRange);
-            } else {
-                // out of view, noop
-            }
-        }
-
-        /**
-         * Handles the removal of rows.
-         * <p>
-         * This method's responsibilities are to:
-         * <ul>
-         * <li>shift the internal bookkeeping by <code>count</code> if the
-         * removal happens above currently active range
-         * <li>ignore rows removed below the currently active range
-         * </ul>
-         * 
-         * @param firstIndex
-         *            the index of the first removed rows
-         * @param count
-         *            the number of rows removed at <code>firstIndex</code>
-         */
-        public void removeRows(int firstIndex, int count) {
-            Range removed = Range.withLength(firstIndex, count);
-            if (removed.intersects(activeRange)) {
-                final Range[] deprecated = activeRange.partitionWith(removed);
-                // Remove the listeners that are no longer existing
-                removeValueChangeListeners(deprecated[1]);
-
-                // Move remaining listeners to fill the listener map correctly
-                moveListeners(deprecated[2], -deprecated[1].length());
-                activeRange = Range.withLength(activeRange.getStart(),
-                        activeRange.length() - deprecated[1].length());
-
-            } else {
-                if (removed.getEnd() < activeRange.getStart()) {
-                    /* firstIndex < lastIndex < start */
-                    moveListeners(activeRange, -count);
-                    activeRange = activeRange.offsetBy(-count);
+        public void addActiveItems(Collection<?> itemIds) {
+            for (Object itemId : itemIds) {
+                if (!activeItemMap.containsKey(itemId)) {
+                    activeItemMap.put(itemId, new GridValueChangeListener(
+                            itemId, container.getItem(itemId)));
                 }
-                /* else: end <= firstIndex, no need to do anything */
+            }
+
+            // Remove still active rows that were "dropped"
+            droppedItems.removeAll(itemIds);
+            dropListeners(droppedItems);
+            droppedItems.clear();
+        }
+
+        /**
+         * Marks given item id as dropped. Dropped items are cleared when adding
+         * new active items.
+         * 
+         * @param itemId
+         *            dropped item id
+         */
+        public void dropActiveItem(Object itemId) {
+            if (activeItemMap.containsKey(itemId)) {
+                droppedItems.add(itemId);
+            }
+        }
+
+        private void dropListeners(Collection<Object> itemIds) {
+            for (Object itemId : droppedItems) {
+                assert activeItemMap.containsKey(itemId) : "Item ID should exist in the activeItemMap";
+
+                activeItemMap.remove(itemId).removeListener();
             }
         }
 
         /**
-         * Moves value change listeners in map with given index range by count
+         * Gets a collection copy of currently active item ids.
+         * 
+         * @return collection of item ids
          */
-        private void moveListeners(Range movedRange, int diff) {
-            if (diff < 0) {
-                for (Integer i = movedRange.getStart(); i < movedRange.getEnd(); ++i) {
-                    moveListener(i, i + diff);
-                }
-            } else if (diff > 0) {
-                for (Integer i = movedRange.getEnd() - 1; i >= movedRange
-                        .getStart(); --i) {
-                    moveListener(i, i + diff);
-                }
-            } else {
-                // diff == 0 should not happen. If it does, should be no-op
-                return;
-            }
+        public Collection<Object> getActiveItemIds() {
+            return new HashSet<Object>(activeItemMap.keySet());
         }
 
-        private void moveListener(Integer oldIndex, Integer newIndex) {
-            assert valueChangeListeners.get(newIndex) == null : "Overwriting existing listener";
-
-            GridValueChangeListener listener = valueChangeListeners
-                    .remove(oldIndex);
-            assert listener != null : "Moving nonexisting listener.";
-            valueChangeListeners.put(newIndex, listener);
+        /**
+         * Gets a collection copy of currently active ValueChangeListeners.
+         * 
+         * @return collection of value change listeners
+         */
+        public Collection<GridValueChangeListener> getValueChangeListeners() {
+            return new HashSet<GridValueChangeListener>(activeItemMap.values());
         }
     }
 
@@ -724,8 +545,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private final Indexed container;
 
-    private final ActiveRowHandler activeRowHandler = new ActiveRowHandler();
-
     private DataProviderRpc rpc;
 
     private final ItemSetChangeListener itemListener = new ItemSetChangeListener() {
@@ -786,14 +605,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * taking all the corner cases into account.
                  */
 
-                Map<Integer, GridValueChangeListener> listeners = activeRowHandler.valueChangeListeners;
-                for (GridValueChangeListener listener : listeners.values()) {
-                    listener.removeListener();
-                }
-
-                listeners.clear();
-                activeRowHandler.activeRange = Range.withLength(0, 0);
-
                 for (Object itemId : visibleDetails) {
                     detailComponentManager.destroyDetails(itemId);
                 }
@@ -834,6 +645,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private Set<Object> visibleDetails = new HashSet<Object>();
 
     private final DetailComponentManager detailComponentManager = new DetailComponentManager();
+    private final ActiveItemHandler activeItemHandler = new ActiveItemHandler();
 
     /**
      * Creates a new data provider using the given container.
@@ -849,7 +661,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
             @Override
             public void requestRows(int firstRow, int numberOfRows,
                     int firstCachedRowIndex, int cacheSize) {
-
                 pushRowData(firstRow, numberOfRows, firstCachedRowIndex,
                         cacheSize);
             }
@@ -866,6 +677,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 } else {
                     keyMapper.unpin(itemId);
                 }
+            }
+
+            @Override
+            public void dropRow(String rowKey) {
+                activeItemHandler.dropActiveItem(keyMapper.getItemId(rowKey));
             }
         });
 
@@ -905,10 +721,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             // Send current rows again if needed.
             if (refreshCache) {
-                int firstRow = activeRowHandler.activeRange.getStart();
-                int numberOfRows = activeRowHandler.activeRange.length();
-
-                pushRowData(firstRow, numberOfRows, firstRow, numberOfRows);
+                for (Object itemId : activeItemHandler.getActiveItemIds()) {
+                    internalUpdateRowData(itemId);
+                }
             }
         }
 
@@ -936,7 +751,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         List<?> itemIds = container.getItemIds(fullRange.getStart(),
                 fullRange.length());
-        keyMapper.setActiveRows(itemIds);
 
         JsonArray rows = Json.createArray();
 
@@ -948,14 +762,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         for (int i = 0; i < newRange.length() && i + diff < itemIds.size(); ++i) {
             Object itemId = itemIds.get(i + diff);
+
             rows.set(i, getRowData(getGrid().getColumns(), itemId));
         }
         rpc.setRowData(firstRowToPush, rows);
 
-        activeRowHandler.setActiveRows(fullRange);
+        activeItemHandler.addActiveItems(itemIds);
+        keyMapper.dropInactiveItems();
     }
 
-    private JsonValue getRowData(Collection<Column> columns, Object itemId) {
+    private JsonObject getRowData(Collection<Column> columns, Object itemId) {
         Item item = container.getItem(itemId);
 
         JsonObject rowData = Json.createObject();
@@ -1072,8 +888,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 rpc.insertRowData(index, count);
             }
         });
-
-        activeRowHandler.insertRows(index, count);
     }
 
     /**
@@ -1098,8 +912,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 rpc.removeRowData(index, count);
             }
         });
-
-        activeRowHandler.removeRows(index, count);
     }
 
     /**
@@ -1120,12 +932,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     private void internalUpdateRowData(Object itemId) {
-        int index = container.indexOfId(itemId);
-        if (activeRowHandler.activeRange.contains(index)) {
-            JsonValue row = getRowData(getGrid().getColumns(), itemId);
-            JsonArray rowArray = Json.createArray();
-            rowArray.set(0, row);
-            rpc.setRowData(index, rowArray);
+        if (activeItemHandler.getActiveItemIds().contains(itemId)) {
+            JsonObject row = getRowData(getGrid().getColumns(), itemId);
+            rpc.updateRowData(row);
         }
     }
 
@@ -1143,9 +952,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public void setParent(ClientConnector parent) {
         if (parent == null) {
             // We're being detached, release various listeners
-
-            activeRowHandler
-                    .removeValueChangeListeners(activeRowHandler.activeRange);
+            activeItemHandler.dropListeners(activeItemHandler
+                    .getActiveItemIds());
 
             if (container instanceof ItemSetChangeNotifier) {
                 ((ItemSetChangeNotifier) container)
@@ -1171,7 +979,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            a list of removed columns
      */
     public void columnsRemoved(List<Column> removedColumns) {
-        activeRowHandler.columnsRemoved(removedColumns);
+        for (GridValueChangeListener l : activeItemHandler
+                .getValueChangeListeners()) {
+            l.removeColumns(removedColumns);
+        }
+
+        // No need to resend unchanged data. Client will remember the old
+        // columns until next set of rows is sent.
     }
 
     /**
@@ -1181,7 +995,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            a list of added columns
      */
     public void columnsAdded(List<Column> addedColumns) {
-        activeRowHandler.columnsAdded(addedColumns);
+        for (GridValueChangeListener l : activeItemHandler
+                .getValueChangeListeners()) {
+            l.addColumns(addedColumns);
+        }
+
+        // Resend all rows to contain new data.
+        refreshCache();
     }
 
     public DataProviderKeyMapper getKeyMapper() {

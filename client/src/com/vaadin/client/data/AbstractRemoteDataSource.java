@@ -330,16 +330,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private void dropFromCache(Range range) {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
+            // Called before dropping from cache, so we can actually do
+            // something with the data before the drop.
+            onDropFromCache(i);
+
             T removed = indexToRowMap.remove(Integer.valueOf(i));
             keyToIndexMap.remove(getRowKey(removed));
-
-            onDropFromCache(i);
         }
     }
 
     /**
-     * A hook that can be overridden to do something whenever a row is dropped
-     * from the cache.
+     * A hook that can be overridden to do something whenever a row is about to
+     * be dropped from the cache.
      * 
      * @since 7.5.0
      * @param rowIndex
@@ -730,6 +732,14 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         cached = Range.withLength(0, 0);
         if (dataChangeHandler != null) {
             dataChangeHandler.resetDataAndSize(newSize);
+        }
+    }
+
+    protected int indexOfKey(Object rowKey) {
+        if (!keyToIndexMap.containsKey(rowKey)) {
+            return -1;
+        } else {
+            return keyToIndexMap.get(rowKey);
         }
     }
 }
