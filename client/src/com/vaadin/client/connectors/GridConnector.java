@@ -475,8 +475,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     /**
      * Class for handling scrolling issues with open details.
      * 
-     * @since
-     * @author Vaadin Ltd
+     * @since 7.5.2
      */
     private class LazyDetailsScroller implements DeferredWorker {
 
@@ -506,7 +505,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         /**
          * Inform LazyDetailsScroller that a details row has opened on a row.
          * 
-         * @since
          * @param rowIndex
          *            index of row with details now open
          */
