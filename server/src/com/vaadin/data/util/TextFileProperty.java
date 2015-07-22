@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Property implementation for wrapping a text file.
@@ -128,6 +131,11 @@ public class TextFileProperty extends AbstractProperty<String> {
      * 
      * @see com.vaadin.data.Property#setValue(java.lang.Object)
      */
+    /**
+     * 
+     * @throws RuntimeException
+     *             on IOException or other unlikely issues
+     */
     @Override
     public void setValue(String newValue) throws ReadOnlyException {
         if (isReadOnly()) {
@@ -137,19 +145,40 @@ public class TextFileProperty extends AbstractProperty<String> {
             return;
         }
 
+        BufferedWriter w = null;
         try {
-            FileOutputStream fos = new FileOutputStream(file);
+            // create a temp file to contain the new value
+            File tfile = new File(file.getAbsoluteFile().getParentFile(), "."
+                    + file.getName());
+            if (tfile.exists()) {
+                throw new RuntimeException(
+                        "text file may already be being written to.");
+            }
+            FileOutputStream fos = new FileOutputStream(tfile);
             OutputStreamWriter osw = charset == null ? new OutputStreamWriter(
                     fos) : new OutputStreamWriter(fos, charset);
-            BufferedWriter w = new BufferedWriter(osw);
-            w.append(newValue.toString());
+            w = new BufferedWriter(osw);
+            w.write(newValue.toString());
             w.flush();
             w.close();
-            osw.close();
-            fos.close();
+            // move the file containing the new value into place, overwriting
+            // the old file and old value.
+            Path ret = Files.move(tfile.toPath(), file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+            if (ret == null) {
+                throw new RuntimeException("write failed");
+            }
             fireValueChange();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (w != null) {
+                try {
+                    w.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
         }
     }
 
