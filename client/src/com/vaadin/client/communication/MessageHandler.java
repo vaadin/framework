@@ -1122,142 +1122,42 @@ public class MessageHandler {
                 ConnectorHierarchyUpdateResult result = new ConnectorHierarchyUpdateResult();
 
                 getLogger().info(" * Updating connector hierarchy");
-                if (!json.containsKey("hierarchy")) {
-                    return result;
-                }
 
                 Profiler.enter("updateConnectorHierarchy");
 
                 FastStringSet maybeDetached = FastStringSet.create();
+                FastStringSet hasHierarchy = FastStringSet.create();
 
-                ValueMap hierarchies = json.getValueMap("hierarchy");
-                JsArrayString hierarchyKeys = hierarchies.getKeyArray();
-                for (int i = 0; i < hierarchyKeys.length(); i++) {
-                    try {
-                        Profiler.enter("updateConnectorHierarchy hierarchy entry");
-
+                // Process regular hierarchy data
+                if (json.containsKey("hierarchy")) {
+                    ValueMap hierarchies = json.getValueMap("hierarchy");
+                    JsArrayString hierarchyKeys = hierarchies.getKeyArray();
+                    for (int i = 0; i < hierarchyKeys.length(); i++) {
                         String connectorId = hierarchyKeys.get(i);
-                        ServerConnector parentConnector = getConnectorMap()
-                                .getConnector(connectorId);
                         JsArrayString childConnectorIds = hierarchies
                                 .getJSStringArray(connectorId);
-                        int childConnectorSize = childConnectorIds.length();
+                        hasHierarchy.add(connectorId);
 
-                        Profiler.enter("updateConnectorHierarchy find new connectors");
+                        updateConnectorHierarchy(connectorId,
+                                childConnectorIds, maybeDetached, result);
+                    }
+                }
 
-                        List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
-                        List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
-                        for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
-                            String childConnectorId = childConnectorIds
-                                    .get(connectorIndex);
-                            ServerConnector childConnector = getConnectorMap()
-                                    .getConnector(childConnectorId);
-                            if (childConnector == null) {
-                                getLogger()
-                                        .severe("Hierarchy claims that "
-                                                + childConnectorId
-                                                + " is a child for "
-                                                + connectorId
-                                                + " ("
-                                                + parentConnector.getClass()
-                                                        .getName()
-                                                + ") but no connector with id "
-                                                + childConnectorId
-                                                + " has been registered. "
-                                                + "More information might be available in the server-side log if assertions are enabled");
-                                continue;
-                            }
-                            newChildren.add(childConnector);
-                            if (childConnector instanceof ComponentConnector) {
-                                newComponents
-                                        .add((ComponentConnector) childConnector);
-                            } else if (!(childConnector instanceof AbstractExtensionConnector)) {
-                                throw new IllegalStateException(
-                                        Util.getConnectorString(childConnector)
-                                                + " is not a ComponentConnector nor an AbstractExtensionConnector");
-                            }
-                            if (childConnector.getParent() != parentConnector) {
-                                childConnector.setParent(parentConnector);
-                                result.parentChangedIds.add(childConnectorId);
-                                // Not detached even if previously removed from
-                                // parent
-                                maybeDetached.remove(childConnectorId);
-                            }
+                // Assume empty hierarchy for connectors with state updates but
+                // no hierarchy data
+                if (json.containsKey("state")) {
+                    JsArrayString stateKeys = json.getValueMap("state")
+                            .getKeyArray();
+
+                    JsArrayString emptyArray = JavaScriptObject.createArray()
+                            .cast();
+
+                    for (int i = 0; i < stateKeys.length(); i++) {
+                        String connectorId = stateKeys.get(i);
+                        if (!hasHierarchy.contains(connectorId)) {
+                            updateConnectorHierarchy(connectorId, emptyArray,
+                                    maybeDetached, result);
                         }
-
-                        Profiler.leave("updateConnectorHierarchy find new connectors");
-
-                        // TODO This check should be done on the server side in
-                        // the future so the hierarchy update is only sent when
-                        // something actually has changed
-                        List<ServerConnector> oldChildren = parentConnector
-                                .getChildren();
-                        boolean actuallyChanged = !Util.collectionsEquals(
-                                oldChildren, newChildren);
-
-                        if (!actuallyChanged) {
-                            continue;
-                        }
-
-                        Profiler.enter("updateConnectorHierarchy handle HasComponentsConnector");
-
-                        if (parentConnector instanceof HasComponentsConnector) {
-                            HasComponentsConnector ccc = (HasComponentsConnector) parentConnector;
-                            List<ComponentConnector> oldComponents = ccc
-                                    .getChildComponents();
-                            if (!Util.collectionsEquals(oldComponents,
-                                    newComponents)) {
-                                // Fire change event if the hierarchy has
-                                // changed
-                                ConnectorHierarchyChangeEvent event = GWT
-                                        .create(ConnectorHierarchyChangeEvent.class);
-                                event.setOldChildren(oldComponents);
-                                event.setConnector(parentConnector);
-                                ccc.setChildComponents(newComponents);
-                                result.events.add(event);
-                            }
-                        } else if (!newComponents.isEmpty()) {
-                            getLogger()
-                                    .severe("Hierachy claims "
-                                            + Util.getConnectorString(parentConnector)
-                                            + " has component children even though it isn't a HasComponentsConnector");
-                        }
-
-                        Profiler.leave("updateConnectorHierarchy handle HasComponentsConnector");
-
-                        Profiler.enter("updateConnectorHierarchy setChildren");
-                        parentConnector.setChildren(newChildren);
-                        Profiler.leave("updateConnectorHierarchy setChildren");
-
-                        Profiler.enter("updateConnectorHierarchy find removed children");
-
-                        /*
-                         * Find children removed from this parent and mark for
-                         * removal unless they are already attached to some
-                         * other parent.
-                         */
-                        for (ServerConnector oldChild : oldChildren) {
-                            if (oldChild.getParent() != parentConnector) {
-                                // Ignore if moved to some other connector
-                                continue;
-                            }
-
-                            if (!newChildren.contains(oldChild)) {
-                                /*
-                                 * Consider child detached for now, will be
-                                 * cleared if it is later on added to some other
-                                 * parent.
-                                 */
-                                maybeDetached.add(oldChild.getConnectorId());
-                            }
-                        }
-
-                        Profiler.leave("updateConnectorHierarchy find removed children");
-                    } catch (final Throwable e) {
-                        getLogger().log(Level.SEVERE,
-                                "Error updating connector hierarchy", e);
-                    } finally {
-                        Profiler.leave("updateConnectorHierarchy hierarchy entry");
                     }
                 }
 
@@ -1285,6 +1185,149 @@ public class MessageHandler {
 
                 return result;
 
+            }
+
+            /**
+             * Updates the hierarchy for a connector
+             * 
+             * @since
+             * @param connectorId
+             *            the id of the connector to update
+             * @param childConnectorIds
+             *            array of child connector ids
+             * @param maybeDetached
+             *            set of connectors that are maybe detached
+             * @param result
+             *            the hierarchy update result
+             */
+            private void updateConnectorHierarchy(String connectorId,
+                    JsArrayString childConnectorIds,
+                    FastStringSet maybeDetached,
+                    ConnectorHierarchyUpdateResult result) {
+                try {
+                    Profiler.enter("updateConnectorHierarchy hierarchy entry");
+
+                    ConnectorMap connectorMap = getConnectorMap();
+
+                    ServerConnector parentConnector = connectorMap
+                            .getConnector(connectorId);
+                    int childConnectorSize = childConnectorIds.length();
+
+                    Profiler.enter("updateConnectorHierarchy find new connectors");
+
+                    List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
+                    List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
+                    for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
+                        String childConnectorId = childConnectorIds
+                                .get(connectorIndex);
+                        ServerConnector childConnector = connectorMap
+                                .getConnector(childConnectorId);
+                        if (childConnector == null) {
+                            getLogger()
+                                    .severe("Hierarchy claims that "
+                                            + childConnectorId
+                                            + " is a child for "
+                                            + connectorId
+                                            + " ("
+                                            + parentConnector.getClass()
+                                                    .getName()
+                                            + ") but no connector with id "
+                                            + childConnectorId
+                                            + " has been registered. "
+                                            + "More information might be available in the server-side log if assertions are enabled");
+                            continue;
+                        }
+                        newChildren.add(childConnector);
+                        if (childConnector instanceof ComponentConnector) {
+                            newComponents
+                                    .add((ComponentConnector) childConnector);
+                        } else if (!(childConnector instanceof AbstractExtensionConnector)) {
+                            throw new IllegalStateException(
+                                    Util.getConnectorString(childConnector)
+                                            + " is not a ComponentConnector nor an AbstractExtensionConnector");
+                        }
+                        if (childConnector.getParent() != parentConnector) {
+                            childConnector.setParent(parentConnector);
+                            result.parentChangedIds.add(childConnectorId);
+                            // Not detached even if previously removed from
+                            // parent
+                            maybeDetached.remove(childConnectorId);
+                        }
+                    }
+
+                    Profiler.leave("updateConnectorHierarchy find new connectors");
+
+                    // TODO This check should be done on the server side in
+                    // the future so the hierarchy update is only sent when
+                    // something actually has changed
+                    List<ServerConnector> oldChildren = parentConnector
+                            .getChildren();
+                    boolean actuallyChanged = !Util.collectionsEquals(
+                            oldChildren, newChildren);
+
+                    if (!actuallyChanged) {
+                        return;
+                    }
+
+                    Profiler.enter("updateConnectorHierarchy handle HasComponentsConnector");
+
+                    if (parentConnector instanceof HasComponentsConnector) {
+                        HasComponentsConnector ccc = (HasComponentsConnector) parentConnector;
+                        List<ComponentConnector> oldComponents = ccc
+                                .getChildComponents();
+                        if (!Util.collectionsEquals(oldComponents,
+                                newComponents)) {
+                            // Fire change event if the hierarchy has
+                            // changed
+                            ConnectorHierarchyChangeEvent event = GWT
+                                    .create(ConnectorHierarchyChangeEvent.class);
+                            event.setOldChildren(oldComponents);
+                            event.setConnector(parentConnector);
+                            ccc.setChildComponents(newComponents);
+                            result.events.add(event);
+                        }
+                    } else if (!newComponents.isEmpty()) {
+                        getLogger()
+                                .severe("Hierachy claims "
+                                        + Util.getConnectorString(parentConnector)
+                                        + " has component children even though it isn't a HasComponentsConnector");
+                    }
+
+                    Profiler.leave("updateConnectorHierarchy handle HasComponentsConnector");
+
+                    Profiler.enter("updateConnectorHierarchy setChildren");
+                    parentConnector.setChildren(newChildren);
+                    Profiler.leave("updateConnectorHierarchy setChildren");
+
+                    Profiler.enter("updateConnectorHierarchy find removed children");
+
+                    /*
+                     * Find children removed from this parent and mark for
+                     * removal unless they are already attached to some other
+                     * parent.
+                     */
+                    for (ServerConnector oldChild : oldChildren) {
+                        if (oldChild.getParent() != parentConnector) {
+                            // Ignore if moved to some other connector
+                            continue;
+                        }
+
+                        if (!newChildren.contains(oldChild)) {
+                            /*
+                             * Consider child detached for now, will be cleared
+                             * if it is later on added to some other parent.
+                             */
+                            maybeDetached.add(oldChild.getConnectorId());
+                        }
+                    }
+
+                    Profiler.leave("updateConnectorHierarchy find removed children");
+                } catch (final Throwable e) {
+                    getLogger().log(Level.SEVERE,
+                            "Error updating connector hierarchy", e);
+                } finally {
+                    Profiler.leave("updateConnectorHierarchy hierarchy entry");
+                }
             }
 
             private void recursivelyDetach(ServerConnector connector,

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Set;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
@@ -49,10 +50,13 @@ public class ConnectorHierarchyWriter implements Serializable {
      *            The {@link UI} whose hierarchy to write.
      * @param writer
      *            The {@link Writer} used to write the JSON.
+     * @param stateUpdateConnectors
+     *            connector ids with state changes
      * @throws IOException
      *             If the serialization fails.
      */
-    public void write(UI ui, Writer writer) throws IOException {
+    public void write(UI ui, Writer writer, Set<String> stateUpdateConnectors)
+            throws IOException {
 
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
@@ -69,13 +73,18 @@ public class ConnectorHierarchyWriter implements Serializable {
                     children.set(children.length(), child.getConnectorId());
                 }
             }
-            try {
-                hierarchyInfo.put(connectorId, children);
-            } catch (JsonException e) {
-                throw new PaintException(
-                        "Failed to send hierarchy information about "
-                                + connectorId + " to the client: "
-                                + e.getMessage(), e);
+
+            // Omit for leaf nodes with state changes
+            if (children.length() > 0
+                    || !stateUpdateConnectors.contains(connectorId)) {
+                try {
+                    hierarchyInfo.put(connectorId, children);
+                } catch (JsonException e) {
+                    throw new PaintException(
+                            "Failed to send hierarchy information about "
+                                    + connectorId + " to the client: "
+                                    + e.getMessage(), e);
+                }
             }
         }
         writer.write(JsonUtil.stringify(hierarchyInfo));

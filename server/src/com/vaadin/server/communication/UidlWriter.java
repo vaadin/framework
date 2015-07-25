@@ -159,7 +159,8 @@ public class UidlWriter implements Serializable {
             // processing.
 
             writer.write("\"state\":");
-            new SharedStateWriter().write(ui, writer);
+            Set<String> stateUpdateConnectors = new SharedStateWriter().write(
+                    ui, writer);
             writer.write(", "); // close states
 
             // TODO This should be optimized. The type only needs to be
@@ -179,7 +180,8 @@ public class UidlWriter implements Serializable {
             // child to 0 children)
 
             writer.write("\"hierarchy\":");
-            new ConnectorHierarchyWriter().write(ui, writer);
+            new ConnectorHierarchyWriter().write(ui, writer,
+                    stateUpdateConnectors);
             writer.write(", "); // close hierarchy
 
             // send server to client RPC calls for components in the UI, in call

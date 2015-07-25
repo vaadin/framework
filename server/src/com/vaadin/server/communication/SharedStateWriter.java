@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
@@ -47,31 +49,36 @@ public class SharedStateWriter implements Serializable {
      *            The UI whose state changes should be written.
      * @param writer
      *            The writer to use.
+     * @return a set of connector ids with state changes
      * @throws IOException
      *             If the serialization fails.
      */
-    public void write(UI ui, Writer writer) throws IOException {
+    public Set<String> write(UI ui, Writer writer) throws IOException {
 
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
+        Set<String> writtenConnectors = new HashSet<String>();
         JsonObject sharedStates = Json.createObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // encode and send shared state
+            String connectorId = connector.getConnectorId();
             try {
                 JsonObject stateJson = connector.encodeState();
 
                 if (stateJson != null && stateJson.keys().length != 0) {
-                    sharedStates.put(connector.getConnectorId(), stateJson);
+                    sharedStates.put(connectorId, stateJson);
+                    writtenConnectors.add(connectorId);
                 }
             } catch (JsonException e) {
                 throw new PaintException(
                         "Failed to serialize shared state for connector "
                                 + connector.getClass().getName() + " ("
-                                + connector.getConnectorId() + "): "
-                                + e.getMessage(), e);
+                                + connectorId + "): " + e.getMessage(), e);
             }
         }
         writer.write(JsonUtil.stringify(sharedStates));
+
+        return writtenConnectors;
     }
 }
