@@ -155,10 +155,10 @@ public class ComputedStyle {
      *            the property to retrieve
      * @return the double value of the property
      */
-    public final int getDoubleProperty(String name) {
+    public final double getDoubleProperty(String name) {
         Profiler.enter("ComputedStyle.getDoubleProperty");
         String value = getProperty(name);
-        int result = parseDoubleNative(value);
+        double result = parseDoubleNative(value);
         Profiler.leave("ComputedStyle.getDoubleProperty");
         return result;
     }
@@ -275,7 +275,7 @@ public class ComputedStyle {
      * @return the value from the string before any non-numeric characters or
      *         NaN if the value cannot be parsed as a number
      */
-    private static native int parseDoubleNative(final String value)
+    private static native double parseDoubleNative(final String value)
     /*-{
         return parseFloat(value);
     }-*/;
