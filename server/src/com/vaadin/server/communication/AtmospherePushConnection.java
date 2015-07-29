@@ -26,7 +26,9 @@ import java.io.Writer;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
@@ -352,4 +354,32 @@ public class AtmospherePushConnection implements PushConnection {
     private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
+
+    /**
+     * Internal method used for reconfiguring loggers to show all Atmosphere log
+     * messages in the console.
+     * 
+     * @since
+     */
+    public static void enableAtmosphereDebugLogging() {
+        Level level = Level.FINEST;
+
+        Logger atmosphereLogger = Logger.getLogger("org.atmosphere");
+        if (atmosphereLogger.getLevel() == level) {
+            // Already enabled
+            return;
+        }
+
+        atmosphereLogger.setLevel(level);
+
+        // Without this logging, we will have a ClassCircularityError
+        LogRecord record = new LogRecord(Level.INFO,
+                "Enabling Atmosphere debug logging");
+        atmosphereLogger.log(record);
+
+        ConsoleHandler ch = new ConsoleHandler();
+        ch.setLevel(Level.ALL);
+        atmosphereLogger.addHandler(ch);
+    }
+
 }
