@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;
+
 /**
  * Horizontal layout
  * 
@@ -46,6 +48,11 @@ public class HorizontalLayout extends AbstractOrderedLayout {
     public HorizontalLayout(Component... children) {
         this();
         addComponents(children);
+    }
+
+    @Override
+    protected HorizontalLayoutState getState() {
+        return (HorizontalLayoutState) super.getState();
     }
 
 }
