@@ -30,6 +30,7 @@ public class BrowserInfo {
 
     private static final String BROWSER_OPERA = "op";
     private static final String BROWSER_IE = "ie";
+    private static final String BROWSER_EDGE = "edge";
     private static final String BROWSER_FIREFOX = "ff";
     private static final String BROWSER_SAFARI = "sa";
 
@@ -171,6 +172,13 @@ public class BrowserInfo {
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_TRIDENT;
+            } else if (browserDetails.isEdge()) {
+                browserIdentifier = BROWSER_EDGE;
+                majorVersionClass = browserIdentifier
+                        + getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = "";
             } else if (browserDetails.isOpera()) {
                 browserIdentifier = BROWSER_OPERA;
                 majorVersionClass = browserIdentifier
@@ -225,6 +233,10 @@ public class BrowserInfo {
         return browserDetails.isIE();
     }
 
+    public boolean isEdge() {
+        return browserDetails.isEdge();
+    }
+
     public boolean isFirefox() {
         return browserDetails.isFirefox();
     }
@@ -243,6 +255,10 @@ public class BrowserInfo {
 
     public boolean isIE10() {
         return isIE() && getBrowserMajorVersion() == 10;
+    }
+
+    public boolean isIE11() {
+        return isIE() && getBrowserMajorVersion() == 11;
     }
 
     public boolean isChrome() {
