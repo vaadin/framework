@@ -224,16 +224,16 @@ public class VTextArea extends VTextField implements DragImageModifier {
 
     protected boolean browserSupportsMaxLengthAttribute() {
         BrowserInfo info = BrowserInfo.get();
-        if (info.isFirefox() && info.isBrowserVersionNewerOrEqual(4, 0)) {
+        if (info.isFirefox()) {
             return true;
         }
-        if (info.isSafari() && info.isBrowserVersionNewerOrEqual(5, 0)) {
+        if (info.isSafari()) {
             return true;
         }
-        if (info.isIE() && info.isBrowserVersionNewerOrEqual(10, 0)) {
+        if (info.isIE10() || info.isIE11() || info.isEdge()) {
             return true;
         }
-        if (info.isAndroid() && info.isBrowserVersionNewerOrEqual(2, 3)) {
+        if (info.isAndroid()) {
             return true;
         }
         return false;

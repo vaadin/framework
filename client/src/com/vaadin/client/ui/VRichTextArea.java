@@ -322,7 +322,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
             if ("<br>".equals(result)) {
                 result = "";
             }
-        } else if (browser.isWebkit()) {
+        } else if (browser.isWebkit() || browser.isEdge()) {
             if ("<br>".equals(result) || "<div><br></div>".equals(result)) {
                 result = "";
             }

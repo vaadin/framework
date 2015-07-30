@@ -762,11 +762,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         modalityCurtain.removeFromParent();
 
-        if (BrowserInfo.get().isIE()) {
-            // IE leaks memory in certain cases unless we release the reference
-            // (#9197)
-            modalityCurtain = null;
-        }
+        // IE leaks memory in certain cases unless we release the reference
+        // (#9197)
+        modalityCurtain = null;
     }
 
     /*
