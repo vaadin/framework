@@ -2767,17 +2767,33 @@ public class Escalator extends Widget implements RequiresResize,
                     // move the surrounding rows to their correct places.
                     double rowTop = (unupdatedLogicalStart + (end - start))
                             * getDefaultRowHeight();
-                    final ListIterator<TableRowElement> i = visualRowOrder
-                            .listIterator(visualTargetIndex + (end - start));
 
-                    int logicalRowIndexCursor = unupdatedLogicalStart;
-                    while (i.hasNext()) {
-                        rowTop += spacerContainer
-                                .getSpacerHeight(logicalRowIndexCursor++);
+                    // TODO: Get rid of this try/catch block by fixing the
+                    // underlying issue. The reason for this erroneous behavior
+                    // might be that Escalator actually works 'by mistake', and
+                    // the order of operations is, in fact, wrong.
+                    try {
+                        final ListIterator<TableRowElement> i = visualRowOrder
+                                .listIterator(visualTargetIndex + (end - start));
 
-                        final TableRowElement tr = i.next();
-                        setRowPosition(tr, 0, rowTop);
-                        rowTop += getDefaultRowHeight();
+                        int logicalRowIndexCursor = unupdatedLogicalStart;
+                        while (i.hasNext()) {
+                            rowTop += spacerContainer
+                                    .getSpacerHeight(logicalRowIndexCursor++);
+
+                            final TableRowElement tr = i.next();
+                            setRowPosition(tr, 0, rowTop);
+                            rowTop += getDefaultRowHeight();
+                        }
+                    } catch (Exception e) {
+                        Logger logger = getLogger();
+                        logger.warning("Ignored out-of-bounds row element access");
+                        logger.warning("Escalator state: start=" + start
+                                + ", end=" + end + ", visualTargetIndex="
+                                + visualTargetIndex
+                                + ", visualRowOrder.size()="
+                                + visualRowOrder.size());
+                        logger.warning(e.toString());
                     }
                 }
 
