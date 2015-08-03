@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.JavaScriptConnectorHelper;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.shared.ui.Connect;
@@ -33,6 +34,11 @@ public final class JavaScriptComponentConnector extends
             getWidget().showNoInitFound(attemptedNames);
         }
     };
+
+    @Override
+    protected Widget createWidget() {
+        return new JavaScriptWidget(helper.getTagName());
+    }
 
     @Override
     public JavaScriptWidget getWidget() {
