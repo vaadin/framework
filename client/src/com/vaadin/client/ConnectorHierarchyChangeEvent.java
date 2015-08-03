@@ -41,7 +41,6 @@ public class ConnectorHierarchyChangeEvent extends
     public static final Type<ConnectorHierarchyChangeHandler> TYPE = new Type<ConnectorHierarchyChangeHandler>();
 
     List<ComponentConnector> oldChildren;
-    private HasComponentsConnector parent;
 
     public ConnectorHierarchyChangeEvent() {
     }
@@ -73,18 +72,16 @@ public class ConnectorHierarchyChangeEvent extends
      *         changed. Never returns null.
      */
     public HasComponentsConnector getParent() {
-        return parent;
+        return (HasComponentsConnector) getConnector();
     }
 
-    /**
-     * Sets the {@link HasComponentsConnector} for which this event occurred.
-     * 
-     * @param The
-     *            {@link HasComponentsConnector} whose child collection has
-     *            changed.
-     */
-    public void setParent(HasComponentsConnector parent) {
-        this.parent = parent;
+    @Override
+    public void setConnector(ServerConnector connector) {
+        assert connector instanceof HasComponentsConnector : "A ConnectorHierarchyChangeEvent "
+                + "can only occur for connectors implementing HasComponentsConnector. "
+                + connector.getClass().getName() + " does not";
+
+        super.setConnector(connector);
     }
 
     public interface ConnectorHierarchyChangeHandler extends Serializable,
