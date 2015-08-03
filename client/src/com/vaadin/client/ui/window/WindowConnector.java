@@ -356,10 +356,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         if (state.modal != window.vaadinModality) {
             window.setVaadinModality(!window.vaadinModality);
         }
-        if (!window.isAttached()) {
-            window.setVisible(false); // hide until possible centering
-            window.show();
-        }
         boolean resizeable = state.resizable
                 && state.windowMode == WindowMode.NORMAL;
         window.setResizable(resizeable);
