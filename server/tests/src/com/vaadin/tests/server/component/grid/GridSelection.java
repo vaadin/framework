@@ -283,6 +283,79 @@ public class GridSelection {
     }
 
     @Test
+    public void gridDeselectAllMultiAllSelected() {
+        grid.setSelectionMode(SelectionMode.MULTI);
+        final SelectionModel.Multi select = (SelectionModel.Multi) grid
+                .getSelectionModel();
+        select.selectAll();
+        mockListener.clearEvent();
+
+        assertTrue(grid.deselectAll());
+        assertEquals("removed size", 10, mockListener.getRemoved().size());
+        assertEquals("added size", 0, mockListener.getAdded().size());
+        assertTrue("itemId1Present",
+                mockListener.getRemoved().contains(itemId1Present));
+        assertTrue("itemId2Present",
+                mockListener.getRemoved().contains(itemId2Present));
+        assertTrue("selectedRows is empty", grid.getSelectedRows().isEmpty());
+
+    }
+
+    @Test
+    public void gridDeselectAllMultiOneSelected() {
+        grid.setSelectionMode(SelectionMode.MULTI);
+        final SelectionModel.Multi select = (SelectionModel.Multi) grid
+                .getSelectionModel();
+        select.select(itemId2Present);
+        mockListener.clearEvent();
+
+        assertTrue(grid.deselectAll());
+        assertEquals("removed size", 1, mockListener.getRemoved().size());
+        assertEquals("added size", 0, mockListener.getAdded().size());
+        assertFalse("itemId1Present",
+                mockListener.getRemoved().contains(itemId1Present));
+        assertTrue("itemId2Present",
+                mockListener.getRemoved().contains(itemId2Present));
+        assertTrue("selectedRows is empty", grid.getSelectedRows().isEmpty());
+
+    }
+
+    @Test
+    public void gridDeselectAllSingleNoneSelected() {
+        grid.setSelectionMode(SelectionMode.SINGLE);
+        assertFalse(grid.deselectAll());
+        assertTrue("selectedRows is empty", grid.getSelectedRows().isEmpty());
+    }
+
+    @Test
+    public void gridDeselectAllSingleOneSelected() {
+        grid.setSelectionMode(SelectionMode.SINGLE);
+        final SelectionModel.Single select = (SelectionModel.Single) grid
+                .getSelectionModel();
+        select.select(itemId2Present);
+        mockListener.clearEvent();
+
+        assertTrue(grid.deselectAll());
+        assertEquals("removed size", 1, mockListener.getRemoved().size());
+        assertEquals("added size", 0, mockListener.getAdded().size());
+        assertFalse("itemId1Present",
+                mockListener.getRemoved().contains(itemId1Present));
+        assertTrue("itemId2Present",
+                mockListener.getRemoved().contains(itemId2Present));
+        assertTrue("selectedRows is empty", grid.getSelectedRows().isEmpty());
+
+    }
+
+    @Test
+    public void gridDeselectAllMultiNoneSelected() {
+        grid.setSelectionMode(SelectionMode.MULTI);
+
+        assertFalse(grid.deselectAll());
+        assertTrue("selectedRows is empty", grid.getSelectedRows().isEmpty());
+
+    }
+
+    @Test
     public void reselectionDeselectsPreviousSingle() {
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.select(itemId1Present);

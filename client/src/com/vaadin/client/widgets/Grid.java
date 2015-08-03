@@ -151,6 +151,7 @@ import com.vaadin.client.widget.grid.selection.SelectionEvent;
 import com.vaadin.client.widget.grid.selection.SelectionHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi;
+import com.vaadin.client.widget.grid.selection.SelectionModel.Single;
 import com.vaadin.client.widget.grid.selection.SelectionModelMulti;
 import com.vaadin.client.widget.grid.selection.SelectionModelNone;
 import com.vaadin.client.widget.grid.selection.SelectionModelSingle;
@@ -7508,6 +7509,31 @@ public class Grid<T> extends ResizeComposite implements
         } else if (selectionModel instanceof SelectionModel.Multi<?>) {
             return ((SelectionModel.Multi<T>) selectionModel)
                     .deselect(Collections.singleton(row));
+        } else {
+            throw new IllegalStateException("Unsupported selection model");
+        }
+    }
+
+    /**
+     * Deselect all rows using the current selection model.
+     * 
+     * @param row
+     *            a row object
+     * @return <code>true</code> iff the current selection changed
+     * @throws IllegalStateException
+     *             if the current selection model is not an instance of
+     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     */
+    public boolean deselectAll() {
+        if (selectionModel instanceof SelectionModel.Single<?>) {
+            Single<T> single = ((SelectionModel.Single<T>) selectionModel);
+            if (single.getSelectedRow() != null) {
+                return single.deselect(single.getSelectedRow());
+            } else {
+                return false;
+            }
+        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
+            return ((SelectionModel.Multi<T>) selectionModel).deselectAll();
         } else {
             throw new IllegalStateException("Unsupported selection model");
         }

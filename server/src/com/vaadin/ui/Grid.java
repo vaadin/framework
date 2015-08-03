@@ -5280,6 +5280,47 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
+     * Marks all items as unselected.
+     * <p>
+     * This method is a shorthand that delegates to the
+     * {@link #getSelectionModel() selection model}. Only
+     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
+     * supported.
+     * 
+     * @return <code>true</code> if the selection state changed,
+     *         <code>false</code> if the itemId was already selected
+     * @throws IllegalStateException
+     *             if the deselection was illegal. One such reason might be that
+     *             the implementation requires one or more items to be selected
+     *             at all times.
+     * @throws IllegalStateException
+     *             if the selection model does not implement
+     *             {@code SelectionModel.Single} or {code SelectionModel.Multi}
+     */
+    public boolean deselectAll() throws IllegalStateException {
+        if (selectionModel instanceof SelectionModel.Single) {
+            if (getSelectedRow() != null) {
+                return deselect(getSelectedRow());
+            }
+            return false;
+        } else if (selectionModel instanceof SelectionModel.Multi) {
+            return ((SelectionModel.Multi) selectionModel).deselectAll();
+        } else if (selectionModel instanceof SelectionModel.None) {
+            throw new IllegalStateException("Cannot deselect all rows"
+                    + ": Grid selection is disabled "
+                    + "(the current selection model is "
+                    + selectionModel.getClass().getName() + ").");
+        } else {
+            throw new IllegalStateException("Cannot deselect all rows:"
+                    + " Grid selection model does not implement "
+                    + SelectionModel.Single.class.getName() + " or "
+                    + SelectionModel.Multi.class.getName()
+                    + "(the current model is "
+                    + selectionModel.getClass().getName() + ").");
+        }
+    }
+
+    /**
      * Fires a selection change event.
      * <p>
      * <strong>Note:</strong> This is not a method that should be called by
