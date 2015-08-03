@@ -40,9 +40,12 @@ import elemental.json.JsonValue;
  * <code>com_example_MyComponent</code> has not been defined.
  * <p>
  * JavaScript components have a very simple GWT widget (
- * {@link com.vaadin.client.ui.JavaScriptWidget} ) just consisting of a
- * <code>div</code> element to which the JavaScript code should initialize its
- * own user interface.
+ * {@link com.vaadin.client.ui.JavaScriptWidget} ) just consisting of a single
+ * element (a <code>div</code> by default) to which the JavaScript code should
+ * initialize its own user interface. The tag can be overridden by defining a
+ * string named <code>com_example_MyComponent.tag</code>. If no tag has been
+ * defined, a tag defined in a super class will be located in the same manner as
+ * with the init function.
  * <p>
  * The initialization function will be called with <code>this</code> pointing to
  * a connector wrapper object providing integration to Vaadin. Please note that
