@@ -77,7 +77,7 @@ public class PushRequestHandler implements RequestHandler,
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();
 
-        pushHandler = new PushHandler(service);
+        pushHandler = createPushHandler(service);
 
         atmosphere = getPreInitializedAtmosphere(vaadinServletConfig);
         if (atmosphere == null) {
@@ -100,7 +100,12 @@ public class PushRequestHandler implements RequestHandler,
                     "Using pre-initialized Atmosphere for servlet "
                             + vaadinServletConfig.getServletName());
         }
-
+        pushHandler
+                .setLongPollingSuspendTimeout(atmosphere
+                        .getAtmosphereConfig()
+                        .getInitParameter(
+                                com.vaadin.server.Constants.SERVLET_PARAMETER_PUSH_SUSPEND_TIMEOUT_LONGPOLLING,
+                                -1));
         for (AtmosphereHandlerWrapper handlerWrapper : atmosphere
                 .getAtmosphereHandlers().values()) {
             AtmosphereHandler handler = handlerWrapper.atmosphereHandler;
@@ -111,6 +116,22 @@ public class PushRequestHandler implements RequestHandler,
             }
 
         }
+    }
+
+    /**
+     * Creates a push handler for this request handler.
+     * <p>
+     * Create your own request handler and override this method if you want to
+     * customize the {@link PushHandler}, e.g. to dynamically decide the suspend
+     * timeout.
+     * 
+     * @since
+     * @param service
+     *            the vaadin service
+     * @return the push handler to use for this service
+     */
+    protected PushHandler createPushHandler(VaadinServletService service) {
+        return new PushHandler(service);
     }
 
     private static final Logger getLogger() {

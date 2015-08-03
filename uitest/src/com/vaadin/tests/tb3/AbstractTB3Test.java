@@ -381,7 +381,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * @return
      */
     public WebElement vaadinElementById(String id) {
-        return driver.findElement(vaadinLocatorById(id));
+        return driver.findElement(By.id(id));
     }
 
     /**

@@ -55,6 +55,8 @@ import elemental.json.JsonException;
  */
 public class PushHandler {
 
+    private int longPollingSuspendTimeout = -1;
+
     /**
      * Callback interface used internally to process an event with the
      * corresponding UI properly locked.
@@ -107,7 +109,7 @@ public class PushHandler {
                 return;
             }
 
-            resource.suspend();
+            suspend(resource);
 
             AtmospherePushConnection connection = getConnectionForUI(ui);
             assert (connection != null);
@@ -171,6 +173,21 @@ public class PushHandler {
 
     public PushHandler(VaadinServletService service) {
         this.service = service;
+    }
+
+    /**
+     * Suspends the given resource
+     * 
+     * @since
+     * @param resource
+     *            the resource to suspend
+     */
+    protected void suspend(AtmosphereResource resource) {
+        if (resource.transport() == TRANSPORT.LONG_POLLING) {
+            resource.suspend(getLongPollingSuspendTimeout());
+        } else {
+            resource.suspend(-1);
+        }
     }
 
     /**
@@ -493,4 +510,26 @@ public class PushHandler {
                 resource.transport() == TRANSPORT.WEBSOCKET);
     }
 
+    /**
+     * Sets the timeout used for suspend calls when using long polling.
+     * 
+     * If you are using a proxy with a defined idle timeout, set the suspend
+     * timeout to a value smaller than the proxy timeout so that the server is
+     * aware of a reconnect taking place.
+     * 
+     * @param suspendTimeout
+     *            the timeout to use for suspended AtmosphereResources
+     */
+    public void setLongPollingSuspendTimeout(int longPollingSuspendTimeout) {
+        this.longPollingSuspendTimeout = longPollingSuspendTimeout;
+    }
+
+    /**
+     * Gets the timeout used for suspend calls when using long polling.
+     * 
+     * @return the timeout to use for suspended AtmosphereResources
+     */
+    public int getLongPollingSuspendTimeout() {
+        return longPollingSuspendTimeout;
+    }
 }
