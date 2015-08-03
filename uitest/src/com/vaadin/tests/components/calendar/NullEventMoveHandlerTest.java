@@ -3,6 +3,7 @@ package com.vaadin.tests.components.calendar;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,9 +24,23 @@ public class NullEventMoveHandlerTest extends DndActionsTest {
     }
 
     @Test
+    public void eventIsClickableWhenNotMovableInMonthView() {
+        getEvent().click();
+        Assert.assertEquals("1. Clicked on foo", getLogRow(0));
+    }
+
+    @Test
     public void eventIsNotMovableInWeekView() {
         openWeekView();
         assertEventCannotBeMoved();
+    }
+
+    @Test
+    public void eventIsClickableWhenNotMovableInWeekView() {
+        openWeekView();
+        getEvent().findElement(By.className("v-calendar-event-caption"))
+                .click();
+        Assert.assertEquals("1. Clicked on foo", getLogRow(0));
     }
 
     private void assertEventCannotBeMoved() {
