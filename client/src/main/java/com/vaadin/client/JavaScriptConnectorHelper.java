@@ -53,6 +53,7 @@ public class JavaScriptConnectorHelper {
     private int tag;
 
     private String initFunctionName;
+    private String tagName;
 
     public JavaScriptConnectorHelper(ServerConnector connector) {
         this.connector = connector;
@@ -153,14 +154,8 @@ public class JavaScriptConnectorHelper {
     }
 
     protected boolean initJavaScript() {
-        ApplicationConfiguration conf = connector.getConnection()
-                .getConfiguration();
-        ArrayList<String> attemptedNames = new ArrayList<>();
-        Integer tag = Integer.valueOf(this.tag);
-        while (tag != null) {
-            String serverSideClassName = conf.getServerSideClassNameForTag(tag);
-            String initFunctionName = serverSideClassName.replaceAll("\\.",
-                    "_");
+        ArrayList<String> initFunctionNames = getPotentialInitFunctionNames();
+        for (String initFunctionName : initFunctionNames) {
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
                 getLogger().info("JavaScript connector initialized using "
                         + initFunctionName);
@@ -169,12 +164,10 @@ public class JavaScriptConnectorHelper {
             } else {
                 getLogger().warning("No JavaScript function " + initFunctionName
                         + " found");
-                attemptedNames.add(initFunctionName);
-                tag = conf.getParentTag(tag.intValue());
             }
         }
         getLogger().info("No JavaScript init for connector found");
-        showInitProblem(attemptedNames);
+        showInitProblem(initFunctionNames);
         return false;
     }
 
@@ -408,7 +401,7 @@ public class JavaScriptConnectorHelper {
                 delete state[key];
             }
         }
-
+    
         for(var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
@@ -504,6 +497,44 @@ public class JavaScriptConnectorHelper {
     public String getInitFunctionName() {
         return initFunctionName;
     }
+
+    private ArrayList<String> getPotentialInitFunctionNames() {
+        ApplicationConfiguration conf = connector.getConnection()
+                .getConfiguration();
+        ArrayList<String> initFunctionNames = new ArrayList<String>();
+        Integer tag = Integer.valueOf(this.tag);
+        while (tag != null) {
+            String initFunctionName = conf.getServerSideClassNameForTag(tag);
+            initFunctionName = initFunctionName.replaceAll("\\.", "_");
+            initFunctionNames.add(initFunctionName);
+            tag = conf.getParentTag(tag);
+        }
+        return initFunctionNames;
+    }
+
+    public String getTagName() {
+        if (tagName != null) {
+            return tagName;
+        }
+        for (String initFunctionName : getPotentialInitFunctionNames()) {
+            tagName = getTagJs(initFunctionName);
+            if (tagName != null) {
+                return tagName;
+            }
+        }
+        // No tagName found, use default
+        tagName = "div";
+        return tagName;
+    }
+
+    private static native String getTagJs(String initFunctionName)
+    /*-{
+        if ($wnd[initFunctionName] && typeof $wnd[initFunctionName].tag == 'string') {
+            return $wnd[initFunctionName].tag;
+        } else {
+            return null;
+        }
+    }-*/;
 
     private static Logger getLogger() {
         return Logger.getLogger(JavaScriptConnectorHelper.class.getName());

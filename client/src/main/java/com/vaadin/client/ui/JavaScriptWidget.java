@@ -21,8 +21,22 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Widget;
 
 public class JavaScriptWidget extends Widget {
+
+    /**
+     * Creats a JavaScriptWidget based on a &lt;div&gt; element
+     */
     public JavaScriptWidget() {
-        setElement(Document.get().createDivElement());
+        this("div");
+    }
+
+    /**
+     * Creates a JavaScriptWidget based on an element with the given tag
+     * 
+     * @param tagName
+     *            the tag to use for the element
+     */
+    public JavaScriptWidget(String tagName) {
+        setElement(Document.get().createElement(tagName));
     }
 
     public void showNoInitFound(ArrayList<String> attemptedNames) {
