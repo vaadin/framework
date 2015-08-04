@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
@@ -1238,7 +1239,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     safeConverter.getPresentationType(), locale);
         }
 
-        JsonValue encodedValue = renderer.encode(presentationValue);
+        JsonValue encodedValue;
+        try {
+            encodedValue = renderer.encode(presentationValue);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Unable to encode data", e);
+            encodedValue = renderer.encode(null);
+        }
 
         return encodedValue;
     }
