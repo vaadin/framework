@@ -60,7 +60,7 @@ public interface GridClientRpc extends ClientRpc {
      * Informs the Grid that all items have been selected or not selected on the
      * server side.
      * 
-     * @since
+     * @since 7.5.3
      * @param allSelected
      *            <code>true</code> to check the select all checkbox,
      *            <code>false</code> to uncheck it.

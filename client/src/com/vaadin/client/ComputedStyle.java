@@ -283,7 +283,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the top and bottom border width
      * 
-     * @since
+     * @since 7.5.3
      * @return the sum of the top and bottom border
      */
     public double getBorderHeight() {
@@ -296,7 +296,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the left and right border width
      * 
-     * @since
+     * @since 7.5.3
      * @return the sum of the left and right border
      */
     public double getBorderWidth() {
@@ -309,7 +309,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the top and bottom padding
      * 
-     * @since
+     * @since 7.5.3
      * @return the sum of the top and bottom padding
      */
     public double getPaddingHeight() {
@@ -322,7 +322,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the top and bottom padding
      * 
-     * @since
+     * @since 7.5.3
      * @return the sum of the left and right padding
      */
     public double getPaddingWidth() {
