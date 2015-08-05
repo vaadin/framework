@@ -1475,6 +1475,9 @@ public class Escalator extends Widget implements RequiresResize,
                         cellElem.addClassName("frozen");
                         position.set(cellElem, scroller.lastScrollLeft, 0);
                     }
+                    if (columnConfiguration.frozenColumns > 0 && col == columnConfiguration.frozenColumns - 1) {
+                        cellElem.addClassName("last-frozen");
+                    }
                 }
 
                 referenceRow = paintInsertRow(referenceRow, tr, row);
@@ -1732,6 +1735,14 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         public void setColumnFrozen(int column, boolean frozen) {
+            toggleFrozenColumnClass(column, frozen, "frozen");
+
+            if (frozen) {
+                updateFreezePosition(column, scroller.lastScrollLeft);
+            }
+        }
+
+        private void toggleFrozenColumnClass(int column, boolean frozen, String className) {
             final NodeList<TableRowElement> childRows = root.getRows();
 
             for (int row = 0; row < childRows.getLength(); row++) {
@@ -1742,16 +1753,16 @@ public class Escalator extends Widget implements RequiresResize,
 
                 TableCellElement cell = tr.getCells().getItem(column);
                 if (frozen) {
-                    cell.addClassName("frozen");
+                    cell.addClassName(className);
                 } else {
-                    cell.removeClassName("frozen");
+                    cell.removeClassName(className);
                     position.reset(cell);
                 }
             }
+        }
 
-            if (frozen) {
-                updateFreezePosition(column, scroller.lastScrollLeft);
-            }
+        public void setColumnLastFrozen(int column, boolean lastFrozen) {
+            toggleFrozenColumnClass(column, lastFrozen, "last-frozen");
         }
 
         public void updateFreezePosition(int column, double scrollLeft) {
@@ -4307,6 +4318,17 @@ public class Escalator extends Widget implements RequiresResize,
                 } else {
                     firstAffectedCol = count;
                     firstUnaffectedCol = oldCount;
+                }
+
+                if (oldCount > 0) {
+                    header.setColumnLastFrozen(oldCount - 1, false);
+                    body.setColumnLastFrozen(oldCount - 1, false);
+                    footer.setColumnLastFrozen(oldCount - 1, false);
+                }
+                if (count > 0) {
+                    header.setColumnLastFrozen(count - 1, true);
+                    body.setColumnLastFrozen(count - 1, true);
+                    footer.setColumnLastFrozen(count - 1, true);
                 }
 
                 for (int col = firstAffectedCol; col < firstUnaffectedCol; col++) {
