@@ -203,7 +203,7 @@ public class DesignFormatterTest {
         ShortcutAction action = new ShortcutAction("&^d");
         String formatted = formatter.format(action);
         // note the space here - it separates key combination from caption
-        assertEquals("alt-ctrl-d d", formatted);
+        assertEquals("ctrl-alt-d d", formatted);
 
         ShortcutAction result = formatter
                 .parse(formatted, ShortcutAction.class);
@@ -215,7 +215,7 @@ public class DesignFormatterTest {
         ShortcutAction action = new ShortcutAction(null, KeyCode.D, new int[] {
                 ModifierKey.ALT, ModifierKey.CTRL });
         String formatted = formatter.format(action);
-        assertEquals("alt-ctrl-d", formatted);
+        assertEquals("ctrl-alt-d", formatted);
 
         ShortcutAction result = formatter
                 .parse(formatted, ShortcutAction.class);

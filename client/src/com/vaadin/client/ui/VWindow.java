@@ -44,8 +44,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -79,8 +77,7 @@ import com.vaadin.shared.ui.window.WindowRole;
  * @author Vaadin Ltd
  */
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
-        ScrollHandler, KeyDownHandler, KeyUpHandler, FocusHandler, BlurHandler,
-        Focusable {
+        ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -221,7 +218,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         constructDOM();
         contentPanel.addScrollHandler(this);
         contentPanel.addKeyDownHandler(this);
-        contentPanel.addKeyUpHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
     }
@@ -1340,13 +1336,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
             return;
-        }
-    }
-
-    @Override
-    public void onKeyUp(KeyUpEvent event) {
-        if (isClosable() && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-            onCloseClick();
         }
     }
 

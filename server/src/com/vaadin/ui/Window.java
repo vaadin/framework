@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ import com.vaadin.util.ReflectTools;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 public class Window extends Panel implements FocusNotifier, BlurNotifier,
         LegacyComponent {
 
@@ -100,6 +101,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             }
         }
     };
+
+    /**
+     * Holds registered CloseShortcut instances for query and later removal
+     */
+    private List<CloseShortcut> closeShortcuts = new ArrayList<CloseShortcut>(4);
 
     /**
      * Creates a new, empty window
@@ -130,6 +136,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         super(caption, content);
         registerRpc(rpc);
         setSizeUndefined();
+        setCloseShortcut(KeyCode.ESCAPE);
     }
 
     /* ********************************************************************* */
@@ -828,14 +835,22 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
     }
 
-    /*
-     * Actions
-     */
-    protected CloseShortcut closeShortcut;
-
     /**
-     * Makes is possible to close the window by pressing the given
-     * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * This is the old way of adding a keyboard shortcut to close a
+     * {@link Window} - to preserve compatibility with existing code under the
+     * new functionality, this method now first removes all registered close
+     * shortcuts, then adds the default ESCAPE shortcut key, and then attempts
+     * to add the shortcut provided as parameters to this method. This method,
+     * and its companion {@link #removeCloseShortcut()}, are now considered
+     * deprecated, as their main function is to preserve exact backwards
+     * compatibility with old code. For all new code, use the new keyboard
+     * shortcuts API: {@link #addCloseShortcut(int,int...)},
+     * {@link #removeCloseShortcut(int,int...)},
+     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)}
+     * and {@link #getCloseShortcuts()}.
+     * <p>
+     * Original description: Makes it possible to close the window by pressing
+     * the given {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
      * Note that this shortcut only reacts while the window has focus, closing
      * itself - if you want to close a window from a UI, use
      * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
@@ -843,26 +858,134 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
-     *            the (optional) modifiers for invoking the shortcut, null for
-     *            none
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
+     * 
+     * @deprecated Use {@link #addCloseShortcut(int, int...)} instead.
      */
+    @Deprecated
     public void setCloseShortcut(int keyCode, int... modifiers) {
-        if (closeShortcut != null) {
-            removeAction(closeShortcut);
-        }
-        closeShortcut = new CloseShortcut(this, keyCode, modifiers);
-        addAction(closeShortcut);
+        removeCloseShortcut();
+        addCloseShortcut(keyCode, modifiers);
     }
 
     /**
-     * Removes the keyboard shortcut previously set with
-     * {@link #setCloseShortcut(int, int...)}.
+     * Removes all keyboard shortcuts previously set with
+     * {@link #setCloseShortcut(int, int...)} and
+     * {@link #addCloseShortcut(int, int...)}, then adds the default
+     * {@link KeyCode#ESCAPE} shortcut.
+     * <p>
+     * This is the old way of removing the (single) keyboard close shortcut, and
+     * is retained only for exact backwards compatibility. For all new code, use
+     * the new keyboard shortcuts API: {@link #addCloseShortcut(int,int...)},
+     * {@link #removeCloseShortcut(int,int...)},
+     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)}
+     * and {@link #getCloseShortcuts()}.
+     * 
+     * @deprecated Use {@link #removeCloseShortcut(int, int...)} instead.
      */
+    @Deprecated
     public void removeCloseShortcut() {
-        if (closeShortcut != null) {
-            removeAction(closeShortcut);
-            closeShortcut = null;
+        for (int i = 0; i < closeShortcuts.size(); ++i) {
+            CloseShortcut sc = closeShortcuts.get(i);
+            removeAction(sc);
         }
+        closeShortcuts.clear();
+        addCloseShortcut(KeyCode.ESCAPE);
+    }
+
+    /**
+     * Adds a close shortcut - pressing this key while holding down all (if any)
+     * modifiers specified while this Window is in focus will close the Window.
+     * 
+     * @since
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
+     */
+    public void addCloseShortcut(int keyCode, int... modifiers) {
+
+        // Ignore attempts to re-add existing shortcuts
+        if (hasCloseShortcut(keyCode, modifiers)) {
+            return;
+        }
+
+        // Actually add the shortcut
+        CloseShortcut shortcut = new CloseShortcut(this, keyCode, modifiers);
+        addAction(shortcut);
+        closeShortcuts.add(shortcut);
+    }
+
+    /**
+     * Removes a close shortcut previously added with
+     * {@link #addCloseShortcut(int, int...)}.
+     * 
+     * @since
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
+     */
+    public void removeCloseShortcut(int keyCode, int... modifiers) {
+        for (CloseShortcut shortcut : closeShortcuts) {
+            if (shortcut.equals(keyCode, modifiers)) {
+                removeAction(shortcut);
+                closeShortcuts.remove(shortcut);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Removes all close shortcuts. This includes the default ESCAPE shortcut.
+     * It is up to the user to add back any and all keyboard close shortcuts
+     * they may require. For more fine-grained control over shortcuts, use
+     * {@link #removeCloseShortcut(int, int...)}.
+     * 
+     * @since
+     */
+    public void removeAllCloseShortcuts() {
+        for (CloseShortcut shortcut : closeShortcuts) {
+            removeAction(shortcut);
+        }
+        closeShortcuts.clear();
+    }
+
+    /**
+     * Checks if a close window shortcut key has already been registered.
+     * 
+     * @since
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
+     * @return true, if an exactly matching shortcut has been registered.
+     */
+    public boolean hasCloseShortcut(int keyCode, int... modifiers) {
+        for (CloseShortcut shortcut : closeShortcuts) {
+            if (shortcut.equals(keyCode, modifiers)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns an unmodifiable collection of {@link CloseShortcut} objects
+     * currently registered with this {@link Window}. This method is provided
+     * mainly so that users can implement their own serialization routines. To
+     * check if a certain combination of keys has been registered as a close
+     * shortcut, use the {@link #hasCloseShortcut(int, int...)} method instead.
+     * 
+     * @since
+     * @return an unmodifiable Collection of CloseShortcut objects.
+     */
+    public Collection<CloseShortcut> getCloseShortcuts() {
+        return Collections.unmodifiableCollection(closeShortcuts);
     }
 
     /**
@@ -929,6 +1052,25 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         @Override
         public void handleAction(Object sender, Object target) {
             window.close();
+        }
+
+        public boolean equals(int keyCode, int... modifiers) {
+            if (keyCode != getKeyCode()) {
+                return false;
+            }
+
+            if (getModifiers() != null) {
+                int[] mods = null;
+                if (modifiers != null) {
+                    // Modifiers provided by the parent ShortcutAction class
+                    // are guaranteed to be sorted. We still need to sort
+                    // the modifiers passed in as argument.
+                    mods = Arrays.copyOf(modifiers, modifiers.length);
+                    Arrays.sort(mods);
+                }
+                return Arrays.equals(mods, getModifiers());
+            }
+            return true;
         }
     }
 
@@ -1244,11 +1386,26 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             setPositionX(Integer.parseInt(position[0]));
             setPositionY(Integer.parseInt(position[1]));
         }
+
+        // Parse shortcuts if defined, otherwise rely on default behavior
         if (design.hasAttr("close-shortcut")) {
-            ShortcutAction shortcut = DesignAttributeHandler
-                    .readAttribute("close-shortcut", design.attributes(),
-                            ShortcutAction.class);
-            setCloseShortcut(shortcut.getKeyCode(), shortcut.getModifiers());
+
+            // Parse shortcuts
+            String[] shortcutStrings = DesignAttributeHandler.readAttribute(
+                    "close-shortcut", design.attributes(), String.class).split(
+                    "\\s+");
+
+            removeAllCloseShortcuts();
+
+            for (String part : shortcutStrings) {
+                if (!part.isEmpty()) {
+                    ShortcutAction shortcut = DesignAttributeHandler
+                            .getFormatter().parse(part.trim(),
+                                    ShortcutAction.class);
+                    addCloseShortcut(shortcut.getKeyCode(),
+                            shortcut.getModifiers());
+                }
+            }
         }
     }
 
@@ -1302,19 +1459,24 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         DesignAttributeHandler.writeAttribute("position", design.attributes(),
                 getPosition(), def.getPosition(), String.class);
 
-        CloseShortcut shortcut = getCloseShortcut();
-        if (shortcut != null) {
-            // TODO What if several close shortcuts??
+        // Process keyboard shortcuts
+        if (closeShortcuts.size() == 1 && hasCloseShortcut(KeyCode.ESCAPE)) {
+            // By default, we won't write anything if we're relying on default
+            // shortcut behavior
+        } else {
+            // Dump all close shortcuts to a string...
+            String attrString = "";
 
-            CloseShortcut defShortcut = def.getCloseShortcut();
-            if (defShortcut == null
-                    || shortcut.getKeyCode() != defShortcut.getKeyCode()
-                    || !Arrays.equals(shortcut.getModifiers(),
-                            defShortcut.getModifiers())) {
-                DesignAttributeHandler.writeAttribute("close-shortcut",
-                        design.attributes(), shortcut, null,
-                        CloseShortcut.class);
+            // TODO: add canonical support for array data in XML attributes
+            for (CloseShortcut shortcut : closeShortcuts) {
+                String shortcutString = DesignAttributeHandler.getFormatter()
+                        .format(shortcut, CloseShortcut.class);
+                attrString += shortcutString + " ";
             }
+
+            // Write everything except the last "," to the design
+            DesignAttributeHandler.writeAttribute("close-shortcut",
+                    design.attributes(), attrString.trim(), null, String.class);
         }
 
         for (Component c : getAssistiveDescription()) {
@@ -1326,10 +1488,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     private String getPosition() {
         return getPositionX() + "," + getPositionY();
-    }
-
-    private CloseShortcut getCloseShortcut() {
-        return closeShortcut;
     }
 
     @Override
