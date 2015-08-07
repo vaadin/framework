@@ -38,6 +38,40 @@ content += """</pre>
 <tr><td><a href="https://dev.vaadin.com/milestone/Vaadin {version}">Trac Milestone</a></td></tr>
 <tr><td><a href="https://dev.vaadin.com/admin/ticket/versions">Add version {version} to Trac</td></tr>
 <tr><td><a href="{url}">Staging result page (See test results, pin and tag build and dependencies)</a></td></tr>
+<tr><td>Commands to tag all repositories (warning: do not run as a single script but set variables and check before any push commands - this has not been tested yet and the change IDs are missing)</td></tr>
+<tr><td><pre>
+VERSION={version}
+
+GERRIT_USER=[fill in your gerrit username]
+FRAMEWORK_REVISION=[fill in framework revision]
+SCREENSHOTS_REVISION=[fill in screenshot repository revision]
+ARCHETYPES_REVISION=[fill in maven-integration repository revision]
+PLUGIN_REVISION=[fill in maven plug-in repository revision]
+
+git clone ssh://$GERRIT_USER@dev.vaadin.com:29418/vaadin
+cd vaadin
+git tag -a -m"$VERSION" $VERSION $FRAMEWORK_REVISION
+git push --tags
+cd ..
+
+git clone ssh://$GERRIT_USER@dev.vaadin.com:29418/vaadin-screenshots
+cd vaadin-screenshots
+git tag -a -m"$VERSION" $VERSION $SCREENSHOTS_REVISION
+git push --tags
+cd ..
+
+git clone ssh://$GERRIT_USER@dev.vaadin.com:29418/maven-integration
+cd maven-integration
+git tag -a -m"$VERSION" $VERSION $ARCHETYPES_REVISION
+git push --tags
+cd ..
+
+git clone ssh://$GERRIT_USER@dev.vaadin.com:29418/maven-plugin
+cd maven-plugin
+git tag -a -m"$VERSION" $VERSION $PLUGIN_REVISION
+git push --tags
+cd ..
+</pre></td></tr>
 </table>
 </body>
 </html>""".format(url=args.buildResultUrl, repoUrl=args.stagingRepo, version=args.version)
