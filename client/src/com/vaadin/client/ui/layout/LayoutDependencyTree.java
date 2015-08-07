@@ -248,7 +248,8 @@ public class LayoutDependencyTree {
             if (connector instanceof HasComponentsConnector) {
                 HasComponentsConnector container = (HasComponentsConnector) connector;
                 for (ComponentConnector child : container.getChildComponents()) {
-                    if (isRelativeInDirection(child, direction)) {
+                    if (!Util.shouldSkipMeasurementOfConnector(child, connector)
+                            && isRelativeInDirection(child, direction)) {
                         resized.push(child.getConnectorId());
                     }
                 }

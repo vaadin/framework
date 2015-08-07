@@ -712,7 +712,8 @@ public class LayoutManager {
                     .createArray().cast();
             for (int i = 0; i < size; i++) {
                 ComponentConnector candidate = allConnectors.get(i);
-                if (needsMeasure(candidate.getWidget().getElement())) {
+                if (!Util.shouldSkipMeasurementOfConnector(candidate)
+                        && needsMeasure(candidate.getWidget().getElement())) {
                     connectors.add(candidate);
                 }
             }

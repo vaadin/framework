@@ -100,7 +100,7 @@ import com.vaadin.util.ReflectTools;
 @SuppressWarnings({ "deprecation" })
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickNotifier, DragSource,
-        DropTarget, HasComponents {
+        DropTarget, HasComponents, HasChildMeasurementHint {
 
     private transient Logger logger = null;
 
@@ -356,6 +356,11 @@ public class Table extends AbstractSelect implements Action.Container,
     private static final String ROW_HEADER_COLUMN_KEY = "0";
     private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new UniqueSerializable() {
     };
+
+    /**
+     * How layout manager should behave when measuring Table's child components
+     */
+    private ChildMeasurementHint childMeasurementHint = ChildMeasurementHint.MEASURE_ALWAYS;
 
     /* Private table extensions to Select */
 
@@ -3542,6 +3547,7 @@ public class Table extends AbstractSelect implements Action.Container,
         paintTabIndex(target);
         paintDragMode(target);
         paintSelectMode(target);
+        paintTableChildLayoutMeasureMode(target);
 
         if (cacheRate != CACHE_RATE_DEFAULT) {
             target.addAttribute("cr", cacheRate);
@@ -3880,6 +3886,11 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnExpandRatios.containsKey(columnId)) {
             target.addAttribute("er", getColumnExpandRatio(columnId));
         }
+    }
+
+    private void paintTableChildLayoutMeasureMode(PaintTarget target)
+            throws PaintException {
+        target.addAttribute("measurehint", getChildMeasurementHint().ordinal());
     }
 
     /**
@@ -6466,5 +6477,19 @@ public class Table extends AbstractSelect implements Action.Container,
             logger = Logger.getLogger(Table.class.getName());
         }
         return logger;
+    }
+
+    @Override
+    public void setChildMeasurementHint(ChildMeasurementHint hint) {
+        if (hint == null) {
+            childMeasurementHint = ChildMeasurementHint.MEASURE_ALWAYS;
+        } else {
+            childMeasurementHint = hint;
+        }
+    }
+
+    @Override
+    public ChildMeasurementHint getChildMeasurementHint() {
+        return childMeasurementHint;
     }
 }

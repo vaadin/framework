@@ -84,6 +84,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.HasChildMeasurementHintConnector.ChildMeasurementHint;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
@@ -699,6 +700,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private int multiselectmode;
 
+    /**
+     * Hint for how to handle measurement of child components
+     */
+    private ChildMeasurementHint childMeasurementHint = ChildMeasurementHint.MEASURE_ALWAYS;
+
     /** For internal use only. May be removed or replaced in the future. */
     public int tabIndex;
 
@@ -1237,11 +1243,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         scrollBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
                 uidl.getIntAttribute("rows"));
         scrollBodyPanel.add(scrollBody);
-
-        // New body starts scrolled to the left, make sure the header and footer
-        // are also scrolled to the left
-        tHead.setHorizontalScrollPosition(0);
-        tFoot.setHorizontalScrollPosition(0);
 
         initialContentReceived = true;
         sizeNeedsInit = true;
@@ -2620,8 +2621,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         @Override
         public void run() {
 
-            if (client.getMessageSender().hasActiveRequest()
-                    || navKeyDown) {
+            if (client.getMessageSender().hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
                 VConsole.log("Postponed rowfetch");
                 schedule(250);
@@ -8331,5 +8331,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private static Logger getLogger() {
         return Logger.getLogger(VScrollTable.class.getName());
+    }
+
+    public ChildMeasurementHint getChildMeasurementHint() {
+        return childMeasurementHint;
+    }
+
+    public void setChildMeasurementHint(ChildMeasurementHint hint) {
+        childMeasurementHint = hint;
     }
 }

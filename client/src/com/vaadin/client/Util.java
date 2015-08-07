@@ -33,8 +33,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.HasChildMeasurementHintConnector.ChildMeasurementHint;
 import com.vaadin.client.RenderInformation.FloatSize;
+import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -1185,6 +1189,83 @@ public class Util {
     /*-{
         return +(Math.round(num + "e+" + exp)  + "e-" + exp);
     }-*/;
+
+    /**
+     * Test if we can can skip measuring this connector. We can skip the
+     * measurement if its parent is a ChildMeasureHintConnector and has an
+     * appropriate mode set.
+     *
+     * For internal use only. May be removed or replaced in the future.
+     */
+    public static boolean shouldSkipMeasurementOfConnector(
+            ComponentConnector candidate, ComponentConnector parent) {
+        Profiler.enter("skipMeasureDueLayoutHint");
+        boolean skip = false;
+
+        if (parent instanceof HasChildMeasurementHintConnector) {
+            ChildMeasurementHint measureMode = ((HasChildMeasurementHintConnector) parent)
+                    .getChildMeasurementHint();
+
+            if (measureMode == ChildMeasurementHint.MEASURE_NEVER) {
+                skip = true;
+            } else if (measureMode == ChildMeasurementHint.MEASURE_IF_NEEDED) {
+                skip = canWeSkipChildMeasurement(candidate);
+            }
+        }
+        Profiler.leave("skipMeasureDueLayoutHint");
+        return skip;
+    }
+
+    /**
+     * Test if we can can skip measuring this connector. We can skip the
+     * measurement if its parent is a ChildMeasureHintConnector and has an
+     * appropriate mode set.
+     *
+     * This version of the method tries to recursively locate such a parent.
+     * 
+     * For internal use only. May be removed or replaced in the future.
+     */
+    public static boolean shouldSkipMeasurementOfConnector(
+            ComponentConnector candidate) {
+        Profiler.enter("skipMeasureDueLayoutHint");
+        boolean skip = false;
+
+        HasChildMeasurementHintConnector parent = getPossibleChildMeasurementHintParentConnector(candidate);
+
+        if (parent != null) {
+            ChildMeasurementHint measureMode = parent.getChildMeasurementHint();
+
+            if (measureMode == ChildMeasurementHint.MEASURE_NEVER) {
+                skip = true;
+            } else if (measureMode == ChildMeasurementHint.MEASURE_IF_NEEDED) {
+                skip = canWeSkipChildMeasurement(candidate);
+            }
+        }
+        Profiler.leave("skipMeasureDueLayoutHint");
+        return skip;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    private static boolean canWeSkipChildMeasurement(ComponentConnector child) {
+        // common cases when child measuring is possibly needed
+        if (child instanceof ElementResizeListener
+                || child instanceof ManagedLayout
+                || child instanceof AbstractLayoutConnector) {
+            return false;
+        }
+        return true;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    private static HasChildMeasurementHintConnector getPossibleChildMeasurementHintParentConnector(
+            ComponentConnector candidate) {
+        ServerConnector parent = candidate.getParent();
+        if (parent != null
+                && parent instanceof HasChildMeasurementHintConnector) {
+            return (HasChildMeasurementHintConnector) parent;
+        }
+        return null;
+    }
 
     private static Logger getLogger() {
         return Logger.getLogger(Util.class.getName());
