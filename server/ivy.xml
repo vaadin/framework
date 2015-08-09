@@ -36,7 +36,7 @@
 
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.2.1" conf="build-provided,ide,test -> default" />
+            rev="1.7.7" conf="build-provided,ide,test -> default" />
 
         <!-- Bean Validation API -->
         <dependency org="javax.validation" name="validation-api"
