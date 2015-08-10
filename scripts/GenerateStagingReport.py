@@ -9,6 +9,7 @@ parser.add_argument("version", type=str, help="Vaadin version that was just buil
 parser.add_argument("deployUrl", type=str, help="Base url of the deployment server")
 parser.add_argument("buildResultUrl", type=str, help="URL for the build result page")
 parser.add_argument("stagingRepo", type=str, help="URL for the staging repository")
+parser.add_argument("tbapiUrl", type=str, help="URL for the TestBench API build")
 
 args = parser.parse_args()
 
@@ -35,7 +36,8 @@ content += cgi.escape("""	<ibiblio name="vaadin-staging" usepoms="true" m2compat
 		root="{repoUrl}" />""".format(repoUrl=args.stagingRepo))
 content += """</pre>
 </td></tr>
-<tr><td><a href="https://dev.vaadin.com/milestone/Vaadin {version}">Trac Milestone</a></td></tr>
+<tr><td><a href="https://dev.vaadin.com/milestone/Vaadin {version}">Close Trac Milestone</a></td></tr>
+<tr><td><a href="https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&col=id&col=summary&col=component&col=milestone&col=status&col=type">Verify pending release tickets still have milestone {version}</a></td></tr>
 <tr><td><a href="https://dev.vaadin.com/admin/ticket/versions">Add version {version} to Trac</td></tr>
 <tr><td><a href="{url}">Staging result page (See test results, pin and tag build and dependencies)</a></td></tr>
 <tr><td>Commands to tag all repositories (warning: do not run as a single script but set variables and check before any push commands - this has not been tested yet and the change IDs are missing)</td></tr>
@@ -72,9 +74,10 @@ git tag -a -m"$VERSION" $VERSION $PLUGIN_REVISION
 git push --tags
 cd ..
 </pre></td></tr>
+<tr><td><a href="{tbapi}">Build and publish TestBench API for version {version} if proceeding</a></td></tr>
 </table>
 </body>
-</html>""".format(url=args.buildResultUrl, repoUrl=args.stagingRepo, version=args.version)
+</html>""".format(url=args.buildResultUrl, repoUrl=args.stagingRepo, version=args.version, tbapi=args.tbapiUrl)
 
 f = open("result/report.html", 'w')
 f.write(content)
