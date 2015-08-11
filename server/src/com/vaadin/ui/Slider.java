@@ -381,7 +381,7 @@ public class Slider extends AbstractField<Double> {
     public void writeDesign(Element design, DesignContext context) {
         super.writeDesign(design, context);
         if (getOrientation() == SliderOrientation.VERTICAL) {
-            design.attr("vertical", "");
+            design.attr("vertical", true);
         }
         Slider defaultSlider = context.getDefaultInstance(this);
         DesignAttributeHandler.writeAttribute(this, "value",

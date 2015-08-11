@@ -29,8 +29,7 @@ public class ProgressBarDeclarativeTest extends
         DeclarativeTestBase<ProgressBar> {
 
     public String getBasicDesign() {
-        return "<vaadin-progress-bar value=0.5 indeterminate=''>";
-
+        return "<vaadin-progress-bar value=0.5 indeterminate>";
     }
 
     public ProgressBar getBasicExpected() {
@@ -62,7 +61,7 @@ public class ProgressBarDeclarativeTest extends
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-progress-bar readonly value=0.5 indeterminate=''>";
+        String design = "<vaadin-progress-bar readonly value=0.5 indeterminate>";
         ProgressBar progressBar = new ProgressBar();
         progressBar.setIndeterminate(true);
         progressBar.setValue(0.5f);

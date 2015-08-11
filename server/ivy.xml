@@ -60,7 +60,7 @@
         </dependency>
 
         <!-- Jsoup for BootstrapHandler -->
-        <dependency org="org.jsoup" name="jsoup" rev="1.8.1"
+        <dependency org="org.jsoup" name="jsoup" rev="1.8.3"
             conf="build,ide,test -> default" />
 
         <!-- TESTING DEPENDENCIES -->

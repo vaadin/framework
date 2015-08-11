@@ -6312,9 +6312,9 @@ public class Table extends AbstractSelect implements Action.Container,
             col.attr("property-id", id.toString());
 
             if (getColumnAlignment(id) == Align.CENTER) {
-                col.attr("center", "");
+                col.attr("center", true);
             } else if (getColumnAlignment(id) == Align.RIGHT) {
-                col.attr("right", "");
+                col.attr("right", true);
             }
 
             DesignAttributeHandler.writeAttribute("width", col.attributes(),

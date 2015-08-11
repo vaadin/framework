@@ -38,13 +38,13 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
 
     @Test
     public void testEmptyPlainText() {
-        String design = "<vaadin-button plain-text=''></vaadin-button>";
+        String design = "<vaadin-button plain-text></vaadin-button>";
         testButtonAndNativeButton(design, false, "");
     }
 
     @Test
     public void testPlainTextCaption() {
-        String design = "<vaadin-button plain-text=''>Click</vaadin-button>";
+        String design = "<vaadin-button plain-text>Click</vaadin-button>";
         testButtonAndNativeButton(design, false, "Click");
     }
 
@@ -137,7 +137,7 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
 
     @Test
     public void testAttributes() {
-        String design = "<vaadin-button tabindex=3 plain-text='' icon-alt=OK "
+        String design = "<vaadin-button tabindex=3 plain-text icon-alt=OK "
                 + "click-shortcut=shift-ctrl-o></vaadin-button>";
         Button b = new Button("");
         b.setTabIndex(3);

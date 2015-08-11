@@ -952,12 +952,12 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         // in many cases there seems to be an empty more menu item
         if (getMoreMenuItem() != null && !getMoreMenuItem().getText().isEmpty()) {
             Element moreMenu = createMenuElement(getMoreMenuItem());
-            moreMenu.attr("more", "");
+            moreMenu.attr("more", true);
             design.appendChild(moreMenu);
         }
 
         if (!htmlContentAllowed) {
-            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, true);
         }
     }
 

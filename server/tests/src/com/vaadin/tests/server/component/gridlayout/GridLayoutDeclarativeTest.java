@@ -22,10 +22,13 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -258,5 +261,28 @@ public class GridLayoutDeclarativeTest extends
         GridLayout readLayout = (GridLayout) component;
 
         Assert.assertEquals(layout.getRows(), readLayout.getRows());
+    }
+
+    @Test
+    public void testGridLayoutAlignments() {
+        String design = "<vaadin-grid-layout><row>" //
+                + "<column><vaadin-label :middle>0</label></column>"//
+                + "<column><vaadin-label :right>1</label>"//
+                + "</row><row>" //
+                + "<column><vaadin-label :bottom :center>2</label></column>"//
+                + "<column><vaadin-label :middle :center>3</label>" //
+                + "</row></vaadin-grid-layout>";
+        GridLayout gl = new GridLayout(2, 2);
+
+        Alignment[] alignments = { Alignment.MIDDLE_LEFT, Alignment.TOP_RIGHT,
+                Alignment.BOTTOM_CENTER, Alignment.MIDDLE_CENTER };
+        for (int i = 0; i < 4; i++) {
+            Label child = new Label("" + i, ContentMode.HTML);
+            gl.addComponent(child);
+            gl.setComponentAlignment(child, alignments[i]);
+        }
+
+        testWrite(design, gl);
+        testRead(design, gl);
     }
 }

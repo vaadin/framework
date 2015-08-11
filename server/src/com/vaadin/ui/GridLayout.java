@@ -1512,14 +1512,14 @@ public class GridLayout extends AbstractLayout implements
 
                     Alignment alignment = getComponentAlignment(child);
                     if (alignment.isMiddle()) {
-                        childElement.attr(":middle", "");
+                        childElement.attr(":middle", true);
                     } else if (alignment.isBottom()) {
-                        childElement.attr(":bottom", "");
+                        childElement.attr(":bottom", true);
                     }
                     if (alignment.isCenter()) {
-                        childElement.attr(":center", "");
+                        childElement.attr(":center", true);
                     } else if (alignment.isRight()) {
-                        childElement.attr(":right", "");
+                        childElement.attr(":right", true);
                     }
 
                     col.appendChild(childElement);

@@ -1453,7 +1453,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         Window def = context.getDefaultInstance(this);
 
         if (getState().centered) {
-            design.attr("center", "");
+            design.attr("center", true);
         }
 
         DesignAttributeHandler.writeAttribute("position", design.attributes(),
@@ -1481,7 +1481,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         for (Component c : getAssistiveDescription()) {
             Element child = context.createElement(c).attr(
-                    ":assistive-description", "");
+                    ":assistive-description", true);
             design.appendChild(child);
         }
     }

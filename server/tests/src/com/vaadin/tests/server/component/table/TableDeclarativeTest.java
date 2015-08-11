@@ -40,10 +40,10 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
         String design = "<"
                 + getTag()
-                + " page-length=30 cache-rate=3 selectable='' editable='' "
+                + " page-length=30 cache-rate=3 selectable editable "
                 + "sortable=false sort-ascending=false sort-container-property-id=foo "
                 + "drag-mode=row multi-select-mode=simple column-header-mode=id row-header-mode=id "
-                + "column-reordering-allowed='' column-collapsing-allowed='' />";
+                + "column-reordering-allowed column-collapsing-allowed />";
 
         Table table = getTable();
         table.setPageLength(30);
@@ -71,12 +71,12 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
     public void testColumns() {
         String design = "<"
                 + getTag()
-                + " column-collapsing-allowed=''>" //
+                + " column-collapsing-allowed>" //
                 + "  <table>" //
                 + "    <colgroup>"
                 + "      <col property-id='foo' width=300>"
                 + "      <col property-id='bar' center expand=1 collapsible=false>"
-                + "      <col property-id='baz' right expand=2 collapsed=''>"
+                + "      <col property-id='baz' right expand=2 collapsed>"
                 + "    </colgroup>" //
                 + "  </table>";
 

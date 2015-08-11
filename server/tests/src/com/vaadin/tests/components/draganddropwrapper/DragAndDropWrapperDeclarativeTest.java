@@ -56,7 +56,8 @@ public class DragAndDropWrapperDeclarativeTest extends
         String input = "<vaadin-drag-and-drop-wrapper drag-start-mode='component_other'>"
                 + new DesignContext().createElement(okButton)
                 + new DesignContext().createElement(dragImage).attr(
-                        ":drag-image", "") + "</vaadin-drag-and-drop-wrapper>";
+                        ":drag-image", true)
+                + "</vaadin-drag-and-drop-wrapper>";
         DragAndDropWrapper wrapper = new DragAndDropWrapper(okButton);
         wrapper.setDragStartMode(DragStartMode.COMPONENT_OTHER);
         wrapper.setDragImageComponent(dragImage);

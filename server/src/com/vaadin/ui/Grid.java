@@ -2226,8 +2226,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     DesignContext designContext) {
                 switch (cellState.type) {
                 case TEXT:
-                    DesignAttributeHandler.writeAttribute("plain-text",
-                            cellElement.attributes(), "", null, String.class);
+                    cellElement.attr("plain-text", true);
                     cellElement.appendText(getText());
                     break;
                 case HTML:

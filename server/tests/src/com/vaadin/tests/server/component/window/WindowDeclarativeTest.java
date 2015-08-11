@@ -50,10 +50,10 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     public void testFeatures() {
 
         String design = "<vaadin-window position='100,100' window-mode='maximized' "
-                + "center modal='' resizable=false resize-lazy='' closable=false draggable=false "
+                + "center modal resizable=false resize-lazy closable=false draggable=false "
                 + "close-shortcut='ctrl-alt-escape' "
                 + "assistive-prefix='Hello' assistive-postfix='World' assistive-role='alertdialog' "
-                + "tab-stop-enabled='' "
+                + "tab-stop-enabled "
                 + "tab-stop-top-assistive-text='Do not move above the window' "
                 + "tab-stop-bottom-assistive-text='End of window'>"
                 + "</vaadin-window>";
@@ -169,9 +169,11 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         Label assistive2 = new Label("More assistive text");
 
         String design = "<vaadin-window>"
-                + createElement(assistive1).attr(":assistive-description", "")
+                + createElement(assistive1)
+                        .attr(":assistive-description", true)
                 + createElement(new Button("OK"))
-                + createElement(assistive2).attr(":assistive-description", "");
+                + createElement(assistive2)
+                        .attr(":assistive-description", true);
 
         Window expected = new Window();
         expected.setContent(new Button("OK"));
@@ -179,9 +181,12 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
         testRead(design, expected);
 
-        String written = "<vaadin-window>" + createElement(new Button("OK"))
-                + createElement(assistive1).attr(":assistive-description", "")
-                + createElement(assistive2).attr(":assistive-description", "");
+        String written = "<vaadin-window>"
+                + createElement(new Button("OK"))
+                + createElement(assistive1)
+                        .attr(":assistive-description", true)
+                + createElement(assistive2)
+                        .attr(":assistive-description", true);
 
         testWrite(written, expected);
     }

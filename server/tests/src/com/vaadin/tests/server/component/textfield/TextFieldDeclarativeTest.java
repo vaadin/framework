@@ -47,7 +47,7 @@ public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-text-field readonly=\"\" value=\"test value\"/>";
+        String design = "<vaadin-text-field readonly value=\"test value\"/>";
         TextField tf = new TextField();
         tf.setValue("test value");
         tf.setReadOnly(true);

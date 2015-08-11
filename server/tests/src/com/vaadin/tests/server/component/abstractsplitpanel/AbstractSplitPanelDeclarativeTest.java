@@ -38,8 +38,8 @@ public class AbstractSplitPanelDeclarativeTest extends
     @Test
     public void testWithBothChildren() {
         String design = "<vaadin-horizontal-split-panel split-position=20.5% "
-                + "min-split-position=20% max-split-position=50px locked='' "
-                + "reversed=\"\"> <vaadin-table /> <vaadin-vertical-layout />"
+                + "min-split-position=20% max-split-position=50px locked "
+                + "reversed> <vaadin-table /> <vaadin-vertical-layout />"
                 + "</vaadin-horizontal-split-panel>";
         AbstractSplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(20.5f, Unit.PERCENTAGE, true);

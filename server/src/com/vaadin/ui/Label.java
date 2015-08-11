@@ -629,7 +629,7 @@ public class Label extends AbstractComponent implements Property<String>,
         }
         // plain-text (default is html)
         if (getContentMode() == ContentMode.TEXT) {
-            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, true);
             design.html(DesignFormatter.encodeForTextNode(getValue()));
         }
     }

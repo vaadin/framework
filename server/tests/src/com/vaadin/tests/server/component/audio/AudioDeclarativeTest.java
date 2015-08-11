@@ -43,7 +43,7 @@ public class AudioDeclarativeTest extends DeclarativeTestBase<Audio> {
 
     @Test
     public void testAudioMultipleSources() {
-        String design = "<vaadin-audio muted='' show-controls='false'>"
+        String design = "<vaadin-audio muted show-controls='false'>"
                 + "some <b>text</b>" //
                 + "<source href='http://foo.pl' />"
                 + "<source href='https://bar.pl' />" //

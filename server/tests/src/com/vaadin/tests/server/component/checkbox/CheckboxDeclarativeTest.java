@@ -38,7 +38,7 @@ public class CheckboxDeclarativeTest extends DeclarativeTestBase<CheckBox> {
 
     @Test
     public void testUnchecked() {
-        String design = "<vaadin-check-box checked='' />";
+        String design = "<vaadin-check-box checked />";
         CheckBox checkBox = new CheckBox();
         checkBox.setValue(true);
         testRead(design, checkBox);
@@ -47,7 +47,7 @@ public class CheckboxDeclarativeTest extends DeclarativeTestBase<CheckBox> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-check-box readonly checked='' />";
+        String design = "<vaadin-check-box readonly checked />";
         CheckBox checkBox = new CheckBox();
         checkBox.setValue(true);
         checkBox.setReadOnly(true);

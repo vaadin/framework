@@ -33,7 +33,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
     @Test
     public void testAttributes() {
-        String design = "<vaadin-tree-table animations-enabled=''>";
+        String design = "<vaadin-tree-table animations-enabled>";
         TreeTable table = getTable();
         table.setAnimationsEnabled(true);
 

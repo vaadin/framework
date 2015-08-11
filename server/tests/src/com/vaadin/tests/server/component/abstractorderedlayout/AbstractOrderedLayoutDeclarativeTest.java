@@ -76,23 +76,31 @@ public class AbstractOrderedLayoutDeclarativeTest extends
     private String getDesign(float expandRatio, String... alignments) {
         String result = "<vaadin-vertical-layout caption=test-layout>";
         result += "<vaadin-label caption=test-label ";
-        String ratioString = expandRatio == 1.0f ? "\"\"" : String
+        String ratioString = expandRatio == 1.0f ? null : String
                 .valueOf(expandRatio);
         if (expandRatio != 0) {
-            result += ":expand=" + ratioString;
+            if (ratioString == null) {
+                result += ":expand";
+            } else {
+                result += ":expand=" + ratioString;
+            }
         }
         for (String alignment : alignments) {
             if (!defaultAlignments.contains(alignment)) {
-                result += " " + alignment + "=\"\"";
+                result += " " + alignment;
             }
         }
         result += "></vaadin-label><vaadin-button ";
         if (expandRatio != 0) {
-            result += ":expand=" + ratioString;
+            if (ratioString == null) {
+                result += ":expand";
+            } else {
+                result += ":expand=" + ratioString;
+            }
         }
         for (String alignment : alignments) {
             if (!defaultAlignments.contains(alignment)) {
-                result += " " + alignment + "=\"\"";
+                result += " " + alignment;
             }
         }
         result += "></vaadin-button></vaadin-vertical-layout>";

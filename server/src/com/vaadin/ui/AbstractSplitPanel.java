@@ -735,7 +735,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                     + getMaxSplitPositionUnit());
         }
         if (getSplitterState().positionReversed) {
-            design.attr("reversed", "");
+            design.attr("reversed", true);
         }
         // handle child components
         if (!designContext.shouldWriteChildren(this, def)) {
@@ -750,7 +750,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (secondComponent != null) {
             Element childElement = designContext.createElement(secondComponent);
             if (firstComponent == null) {
-                childElement.attr(":second", "");
+                childElement.attr(":second", true);
             }
             design.appendChild(childElement);
         }

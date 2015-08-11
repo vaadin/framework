@@ -111,7 +111,7 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<vaadin-option-group html-content-allowed=''>"
+                "<vaadin-option-group html-content-allowed>"
                 + "<option item-id=\"foo\"><b>True</b></option>"
                 + "<option item-id=\"bar\"><font color='red'>False</font></option>"
                 + "<option>baz</option>"

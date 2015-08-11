@@ -547,19 +547,19 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             // handle alignment
             Alignment alignment = getComponentAlignment(child);
             if (alignment.isMiddle()) {
-                childElement.attr(":middle", "");
+                childElement.attr(":middle", true);
             } else if (alignment.isBottom()) {
-                childElement.attr(":bottom", "");
+                childElement.attr(":bottom", true);
             }
             if (alignment.isCenter()) {
-                childElement.attr(":center", "");
+                childElement.attr(":center", true);
             } else if (alignment.isRight()) {
-                childElement.attr(":right", "");
+                childElement.attr(":right", true);
             }
             // handle expand ratio
             float expandRatio = getExpandRatio(child);
             if (expandRatio == 1.0f) {
-                childElement.attr(":expand", "");
+                childElement.attr(":expand", true);
             } else if (expandRatio > 0) {
                 childElement.attr(":expand", DesignAttributeHandler
                         .getFormatter().format(expandRatio));

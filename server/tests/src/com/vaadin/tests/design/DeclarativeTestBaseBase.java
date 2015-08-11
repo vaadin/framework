@@ -21,10 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.BooleanAttribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -184,16 +186,23 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
      * include close tags
      */
     private String elementToHtml(Element producedElem, StringBuilder sb) {
+        HashSet<String> booleanAttributes = new HashSet<String>();
         ArrayList<String> names = new ArrayList<String>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
+            if (a instanceof BooleanAttribute) {
+                booleanAttributes.add(a.getKey());
+            }
         }
         Collections.sort(names);
 
         sb.append("<" + producedElem.tagName() + "");
         for (String attrName : names) {
-            sb.append(" ").append(attrName).append("=").append("\'")
-                    .append(producedElem.attr(attrName)).append("\'");
+            sb.append(" ").append(attrName);
+            if (!booleanAttributes.contains(attrName)) {
+                sb.append("=").append("\'").append(producedElem.attr(attrName))
+                        .append("\'");
+            }
         }
         sb.append(">");
         for (Node child : producedElem.childNodes()) {

@@ -117,8 +117,10 @@ public class DesignAttributeHandler implements Serializable {
                 success = true;
             }
         } catch (Exception e) {
-            getLogger().log(Level.WARNING,
-                    "Failed to set attribute " + attribute, e);
+            getLogger().log(
+                    Level.WARNING,
+                    "Failed to set value \"" + value + "\" to attribute "
+                            + attribute, e);
         }
         if (!success) {
             getLogger().info(
@@ -191,6 +193,7 @@ public class DesignAttributeHandler implements Serializable {
      * @param defaultInstance
      *            the default instance for comparing default values
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
             Attributes attr, Object defaultInstance) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
@@ -202,12 +205,8 @@ public class DesignAttributeHandler implements Serializable {
                 // compare the value with default value
                 Object value = getter.invoke(component);
                 Object defaultValue = getter.invoke(defaultInstance);
-                // if the values are not equal, write the data
-                if (!SharedUtil.equals(value, defaultValue)) {
-                    String attributeValue = toAttributeValue(
-                            getter.getReturnType(), value);
-                    attr.put(attribute, attributeValue);
-                }
+                writeAttribute(attribute, attr, value, defaultValue,
+                        (Class) getter.getReturnType());
             } catch (Exception e) {
                 getLogger()
                         .log(Level.SEVERE,
@@ -240,7 +239,12 @@ public class DesignAttributeHandler implements Serializable {
         }
         if (!SharedUtil.equals(value, defaultValue)) {
             String attributeValue = toAttributeValue(inputType, value);
-            attributes.put(attribute, attributeValue);
+            if ("".equals(attributeValue)
+                    && (inputType == boolean.class || inputType == Boolean.class)) {
+                attributes.put(attribute, true);
+            } else {
+                attributes.put(attribute, attributeValue);
+            }
         }
     }
 

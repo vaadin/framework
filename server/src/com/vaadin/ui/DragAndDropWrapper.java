@@ -491,7 +491,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         if (getDragStartMode() == DragStartMode.COMPONENT_OTHER) {
             Element child = designContext
                     .createElement(getDragImageComponent());
-            child.attr(":drag-image", "");
+            child.attr(":drag-image", true);
             design.appendChild(child);
         }
     }

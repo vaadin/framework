@@ -30,7 +30,7 @@ public class PasswordFieldDeclarativeTest extends
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-password-field readonly=\"\" value=\"test value\"/>";
+        String design = "<vaadin-password-field readonly value=\"test value\"/>";
         PasswordField tf = new PasswordField();
         tf.setValue("test value");
         tf.setReadOnly(true);

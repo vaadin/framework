@@ -33,9 +33,9 @@ public class AbstractFieldDeclarativeTest extends
 
     @Test
     public void testPlainText() {
-        String design = "<vaadin-text-field buffered='' validation-visible='false' invalid-committed=''"
-                + " invalid-allowed='false' required='' required-error='This is a required field'"
-                + " conversion-error='Input {0} cannot be parsed' tabindex=3 readonly=''/>";
+        String design = "<vaadin-text-field buffered validation-visible='false' invalid-committed"
+                + " invalid-allowed='false' required required-error='This is a required field'"
+                + " conversion-error='Input {0} cannot be parsed' tabindex=3 readonly/>";
         AbstractField tf = new TextField();
         tf.setBuffered(true);
         tf.setBuffered(true);
@@ -51,7 +51,7 @@ public class AbstractFieldDeclarativeTest extends
         testWrite(design, tf);
 
         // Test with readonly=false
-        design = design.replace("readonly=''", "");
+        design = design.replace("readonly", "");
         tf.setReadOnly(false);
         testRead(design, tf);
         testWrite(design, tf);

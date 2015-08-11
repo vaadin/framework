@@ -43,7 +43,7 @@ public class AbstractSelectDeclarativeTest extends
         DeclarativeTestBase<AbstractSelect> {
 
     public String getDesignSingleSelectNewItemsAllowed() {
-        return "<vaadin-combo-box new-items-allowed='' item-caption-mode='icon_only'"
+        return "<vaadin-combo-box new-items-allowed item-caption-mode='icon_only'"
                 + " null-selection-item-id='nullIid'/>";
 
     }
@@ -58,7 +58,7 @@ public class AbstractSelectDeclarativeTest extends
     }
 
     public String getDesignMultiSelect() {
-        return "<vaadin-list-select multi-select='' null-selection-allowed='false' new-items-allowed='' item-caption-mode='property' />";
+        return "<vaadin-list-select multi-select null-selection-allowed='false' new-items-allowed item-caption-mode='property' />";
     }
 
     public AbstractSelect getExpectedMultiSelect() {
@@ -208,19 +208,19 @@ public class AbstractSelectDeclarativeTest extends
 
     private Element createDesignWithAttributesSingleSelect() {
         Attributes attributes = new Attributes();
-        attributes.put("new-items-allowed", "");
+        attributes.put("new-items-allowed", true);
         attributes.put("multi-select", "false");
         attributes.put("item-caption-mode", "property");
         attributes.put("item-caption-property-id", "name");
         attributes.put("item-icon-property-id", "icon");
-        attributes.put("null-selection-allowed", "");
+        attributes.put("null-selection-allowed", true);
         attributes.put("null-selection-item-id", "No items selected");
         return new Element(Tag.valueOf("vaadin-combo-box"), "", attributes);
     }
 
     private Element createDesignWithAttributesMultiSelect() {
         Attributes attributes = new Attributes();
-        attributes.put("multi-select", "");
+        attributes.put("multi-select", true);
         attributes.put("item-caption-mode", "EXPLICIT");
         attributes.put("null-selection-allowed", "false");
         return new Element(Tag.valueOf("vaadin-list-select"), "", attributes);

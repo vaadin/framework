@@ -35,15 +35,12 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>"
                 + "</colgroup>"
                 + "<thead>"
-                + "   <tr default=''>"
-                + "     <th plain-text=''>Column1</th>"
-                + "     <th plain-text=''>Column2</th>"
-                + "     <th plain-text=''>Column3</tr>"
+                + "   <tr default><th plain-text>Column1<th plain-text>Column2<th plain-text>Column3</tr>"
                 + "</thead>"
                 + "</table></vaadin-grid>";
         //@formatter:on
@@ -61,12 +58,11 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>"
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>" + "</colgroup>"
                 + "<thead>"
-                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>"
+                + "   <tr default><th>Column1<th>Column2<th>Column3</tr>"
                 + "</thead>"
                 + "</table></vaadin-grid>";
         //@formatter:on
@@ -89,12 +85,11 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" 
-                + "<thead />" 
+                + "   <col sortable property-id='Column1'>"
+                + "</colgroup>"
+                + "<thead />"
                 + "</table></vaadin-grid>";
         //@formatter:on
-
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.removeHeaderRow(grid.getDefaultHeaderRow());
@@ -108,18 +103,17 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" 
-                + "<thead>" 
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>"
+                + "</colgroup>"
+                + "<thead>"
                 + "   <tr><th colspan=3>Baz</tr>"
-                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>" 
-                + "   <tr><th>Foo<th colspan=2>Bar</tr>" 
-                + "</thead>" 
+                + "   <tr default><th>Column1<th>Column2<th>Column3</tr>"
+                + "   <tr><th>Foo<th colspan=2>Bar</tr>"
+                + "</thead>"
                 + "</table></vaadin-grid>";
         //@formatter:on
-
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -145,17 +139,16 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" 
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>"
+                + "</colgroup>"
                 + "<thead />" // No headers read or written
-                + "<tfoot>" 
-                + "   <tr><td plain-text=''>Column1<td plain-text=''>Column2<td plain-text=''>Column3</tr>" 
-                + "</tfoot>" 
+                + "<tfoot>"
+                + "   <tr><td plain-text>Column1<td plain-text>Column2<td plain-text>Column3</tr>"
+                + "</tfoot>"
                 + "</table></vaadin-grid>";
         //@formatter:on
-
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -177,10 +170,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>" 
-                + "</colgroup>" 
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>" + "</colgroup>"
                 + "<thead />" // No headers read or written
                 + "<tfoot>" 
                 + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
@@ -209,12 +201,12 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" 
+                + "   <col sortable property-id='Column1'>"
+                + "   <col sortable property-id='Column2'>"
+                + "   <col sortable property-id='Column3'>"
+                + "</colgroup>"
                 + "<thead />" // No headers read or written.
-                + "<tfoot>" 
+                + "<tfoot>"
                 + "   <tr><td colspan=3>Baz</tr>"
                 + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
                 + "   <tr><td>Foo<td colspan=2>Bar</tr>" 
@@ -249,14 +241,13 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" 
-                + "<thead>" 
-                + "<tr default=''><th><vaadin-label><b>Foo</b></vaadin-label></tr>"
+                + "   <col sortable property-id='Column1'>"
+                + "</colgroup>"
+                + "<thead>"
+                + "<tr default><th><vaadin-label><b>Foo</b></vaadin-label></tr>"
                 + "</thead>"
                 + "</table></vaadin-grid>";
-      //@formatter:on
-
+        //@formatter:on
         Label component = new Label("<b>Foo</b>");
         component.setContentMode(ContentMode.HTML);
 
@@ -273,8 +264,8 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" 
+                + "   <col sortable property-id='Column1'>"
+                + "</colgroup>"
                 + "<thead />" // No headers read or written
                 + "<tfoot>" 
                 + "<tr><td><vaadin-label><b>Foo</b></vaadin-label></tr>"

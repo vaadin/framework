@@ -22,7 +22,6 @@ import java.util.Collection;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
@@ -635,7 +634,7 @@ public class Button extends AbstractFocusable implements
         }
         // plain-text (default is html)
         if (!isHtmlContentAllowed()) {
-            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, true);
             // encode HTML entities
             if (content != null) {
                 design.html(DesignFormatter.encodeForTextNode(content));

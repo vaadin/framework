@@ -28,9 +28,7 @@ public class AbstractComponentSetResponsiveTest extends
         Label label = new Label();
         label.setContentMode(ContentMode.HTML);
         label.setResponsive(true);
-
-        String design = "<vaadin-label responsive='' />";
-
+        String design = "<vaadin-label responsive />";
         testWrite(design, label);
         testRead(design, label);
     }
