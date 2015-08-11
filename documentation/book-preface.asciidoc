@@ -1,0 +1,12 @@
+---
+title: Preface
+order: 3
+layout: page
+---
+
+== Preface
+
+This book provides an overview of the Vaadin Framework and covers the most
+important topics that you might encounter while developing applications with it.
+A more detailed documentation of the individual classes, interfaces, and methods
+is given in the Vaadin API Reference.
