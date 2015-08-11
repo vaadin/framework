@@ -56,6 +56,8 @@ import com.vaadin.client.widgets.Grid;
 public class MultiSelectionRenderer<T> extends
         ClickableRenderer<Boolean, CheckBox> {
 
+    private static final String SELECTION_CHECKBOX_CLASSNAME = "-selection-checkbox";
+
     /** The size of the autoscroll area, both top and bottom. */
     private static final int SCROLL_AREA_GRADIENT_PX = 100;
 
@@ -591,6 +593,8 @@ public class MultiSelectionRenderer<T> extends
     @Override
     public CheckBox createWidget() {
         final CheckBox checkBox = GWT.create(CheckBox.class);
+        checkBox.setStylePrimaryName(grid.getStylePrimaryName()
+                + SELECTION_CHECKBOX_CLASSNAME);
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
         // Sink events

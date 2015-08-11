@@ -338,6 +338,24 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testSelectionCheckBoxesHaveStyleNames() {
+        openTestURL();
+
+        setSelectionModelMulti();
+
+        assertTrue(
+                "Selection column CheckBox should have the proper style name set",
+                getGridElement().getCell(0, 0).findElement(By.tagName("span"))
+                        .getAttribute("class")
+                        .contains("v-grid-selection-checkbox"));
+
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+        assertTrue("Select all CheckBox should have the proper style name set",
+                header.findElement(By.tagName("span")).getAttribute("class")
+                        .contains("v-grid-select-all-checkbox"));
+    }
+
+    @Test
     public void testServerSideSelectTogglesSelectAllCheckBox() {
         openTestURL();
 
