@@ -209,6 +209,8 @@ public class Grid<T> extends ResizeComposite implements
         HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets,
         HasEnabled {
 
+    private static final String SELECT_ALL_CHECKBOX_CLASSNAME = "-select-all-checkbox";
+
     /**
      * Enum describing different sections of Grid.
      */
@@ -2405,6 +2407,8 @@ public class Grid<T> extends ResizeComposite implements
 
             if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
+                selectAllCheckBox.setStylePrimaryName(getStylePrimaryName()
+                        + SELECT_ALL_CHECKBOX_CLASSNAME);
                 selectAllCheckBox
                         .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
