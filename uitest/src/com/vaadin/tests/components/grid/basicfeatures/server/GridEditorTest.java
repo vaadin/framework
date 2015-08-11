@@ -365,6 +365,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
                         .findElements(By.xpath("./div")).get(3)
                         .getAttribute("class"));
 
+        assertNoErrorNotifications();
     }
 
     private WebElement getSaveButton() {

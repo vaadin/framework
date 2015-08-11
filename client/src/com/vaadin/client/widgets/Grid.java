@@ -6745,11 +6745,21 @@ public class Grid<T> extends ResizeComposite implements
 
         if (args.getIndicesLength() == 0) {
             return editor.editorOverlay;
-        } else if (args.getIndicesLength() == 1
-                && args.getIndex(0) < columns.size()) {
-            escalator
-                    .scrollToColumn(args.getIndex(0), ScrollDestination.ANY, 0);
-            return editor.getWidget(columns.get(args.getIndex(0))).getElement();
+        } else if (args.getIndicesLength() == 1) {
+            int index = args.getIndex(0);
+            if (index >= columns.size()) {
+                return null;
+            }
+
+            escalator.scrollToColumn(index, ScrollDestination.ANY, 0);
+            Widget widget = editor.getWidget(columns.get(index));
+
+            if (widget != null) {
+                return widget.getElement();
+            }
+
+            // No widget for the column.
+            return null;
         }
 
         return null;
