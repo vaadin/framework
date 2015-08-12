@@ -50,6 +50,9 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -1157,11 +1160,12 @@ public class Grid<T> extends ResizeComposite implements
         private DivElement message = DivElement.as(DOM.createDiv());
 
         private Map<Column<?, T>, Widget> columnToWidget = new HashMap<Column<?, T>, Widget>();
+        private List<HandlerRegistration> focusHandlers = new ArrayList<HandlerRegistration>();
 
         private boolean enabled = false;
         private State state = State.INACTIVE;
         private int rowIndex = -1;
-        private int columnIndex = -1;
+        private int focusedColumnIndex = -1;
         private String styleName = null;
 
         /*
@@ -1363,7 +1367,8 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
 
-            this.columnIndex = columnIndex;
+            this.rowIndex = rowIndex;
+            this.focusedColumnIndex = columnIndex;
             state = State.ACTIVATING;
 
             if (grid.getEscalator().getVisibleRowRange().contains(rowIndex)) {
@@ -1410,7 +1415,7 @@ public class Grid<T> extends ResizeComposite implements
             hideOverlay();
             state = State.INACTIVE;
             rowIndex = -1;
-            columnIndex = -1;
+            focusedColumnIndex = -1;
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
             updateSelectionCheckboxesAsNeeded(true);
             grid.fireEvent(new EditorCloseEvent(grid.eventCell));
@@ -1620,7 +1625,28 @@ public class Grid<T> extends ResizeComposite implements
                         attachWidget(editor, cell);
                     }
 
-                    if (i == columnIndex) {
+                    final int currentColumnIndex = i;
+                    if (editor instanceof HasFocusHandlers) {
+                        // Use a proper focus handler if available
+                        focusHandlers.add(((HasFocusHandlers) editor)
+                                .addFocusHandler(new FocusHandler() {
+                                    @Override
+                                    public void onFocus(FocusEvent event) {
+                                        focusedColumnIndex = currentColumnIndex;
+                                    }
+                                }));
+                    } else {
+                        // Try sniffing for DOM focus events
+                        focusHandlers.add(editor.addDomHandler(
+                                new FocusHandler() {
+                                    @Override
+                                    public void onFocus(FocusEvent event) {
+                                        focusedColumnIndex = currentColumnIndex;
+                                    }
+                                }, FocusEvent.getType()));
+                    }
+
+                    if (i == focusedColumnIndex) {
                         if (editor instanceof Focusable) {
                             ((Focusable) editor).focus();
                         } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
@@ -1750,6 +1776,11 @@ public class Grid<T> extends ResizeComposite implements
                 pinnedRowHandle = null;
             }
 
+            for (HandlerRegistration r : focusHandlers) {
+                r.removeHandler();
+            }
+            focusHandlers.clear();
+
             for (Widget w : columnToWidget.values()) {
                 setParent(w, null);
             }
@@ -1766,6 +1797,10 @@ public class Grid<T> extends ResizeComposite implements
             scrollHandler.removeHandler();
 
             clearEditorColumnErrors();
+
+            if (focusedColumnIndex != -1) {
+                grid.focusCell(rowIndex, focusedColumnIndex);
+            }
         }
 
         protected void setStylePrimaryName(String primaryName) {
@@ -5551,6 +5586,35 @@ public class Grid<T> extends ResizeComposite implements
         if (rows.getRowCount() > 0) {
             rows.refreshRows(0, rows.getRowCount());
         }
+    }
+
+    /**
+     * Try to focus a cell by row and column index. Purely internal method.
+     * 
+     * @param rowIndex
+     *            row index from Editor
+     * @param columnIndex
+     *            column index from Editor
+     */
+    void focusCell(int rowIndex, int columnIndex) {
+        RowReference<T> row = new RowReference<T>(this);
+        Range visibleRows = escalator.getVisibleRowRange();
+
+        TableRowElement rowElement;
+        if (visibleRows.contains(rowIndex)) {
+            rowElement = escalator.getBody().getRowElement(rowIndex);
+        } else {
+            rowElement = null;
+            getLogger().warning("Row index was not among visible row range");
+        }
+        row.set(rowIndex, dataSource.getRow(rowIndex), rowElement);
+
+        CellReference<T> cell = new CellReference<T>(row);
+        cell.set(columnIndex, columnIndex, getVisibleColumn(columnIndex));
+
+        cellFocusHandler.setCellFocus(cell);
+
+        WidgetUtil.focus(getElement());
     }
 
     /**

@@ -81,8 +81,18 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         getGridElement().getCell(4, 0).doubleClick();
         assertNotNull(getEditor());
 
-        getCancelButton().click();
+        // Move focus to the third input field
+        getEditor().findElements(By.className("gwt-TextBox")).get(2).click();
+
+        // Press save button
+        getSaveButton().click();
+
+        // Make sure the editor went away
         assertNull(getEditor());
+
+        // Check that focus has moved to cell 4,2 - the last one that was
+        // focused in Editor
+        assertTrue(getGridElement().getCell(4, 2).isFocused());
 
         // Disable editor
         selectMenuPath("Component", "Editor", "Enabled");
