@@ -12,14 +12,51 @@ except Exception as e:
 from requests.auth import HTTPDigestAuth
 from os.path import join, expanduser, basename
 from BuildHelpers import parser, getArgs
+from time import sleep
 
 parser.add_argument("--deployUrl", help="Wildfly management URL")
 parser.add_argument("--deployUser", help="Deployment user", default=None)
 parser.add_argument("--deployPass", help="Deployment password", default=None)
 
+serverUp = None
+
+def testServer():
+	global serverUp
+
+	if serverUp is not None:
+		return serverUp
+
+	print("Checking server status")
+	i = 0
+	request = {"operation" : "read-attribute", "name" : "server-state"}
+	serverUp = False
+	while not serverUp and i < 2:
+		try:
+			print("Trying on url %s" % (getUrl()))
+			result = doPostJson(url=getUrl(), auth=getAuth(), data=json.dumps(request))
+			response = result.json()
+			if "outcome" not in response or response["outcome"] != "success":
+				# Failure
+				raise Exception(response)
+			elif "result" not in response or response["result"] != "running":
+				# Another failure
+				raise Exception(response)
+			# All OK
+			serverUp = True
+			print("Got server connection.")
+		except Exception as e:
+			print("Exception while checking server state: ", e)
+			print("Server connection failed, retrying in 5 seconds.")
+			i = i + 1
+			sleep(5)
+	return serverUp
+
 # Helper for handling the full deployment
 # name should end with .war
 def deployWar(warFile, name=None):
+	if not testServer():
+		raise Exception("Server not up. Skipping deployment.")
+		return
 	if name is None:
 		name = basename(warFile).replace('.war', "-%s.war" % (getArgs().version.split('-')[0]))
 
