@@ -404,7 +404,8 @@
             <antcall target="integration-test-osgi" />
             <antcall target="integration-test-tomcat7apacheproxy" />
             <antcall target="integration-test-websphere8" />
-            <antcall target="integration-test-websphereportal8" />
+            <!-- Currently the test system does not have a server for automatic testing of WebSphere Portal 8 -->
+            <!-- <antcall target="integration-test-websphereportal8" /> -->
         </parallel>
 
     </target>
