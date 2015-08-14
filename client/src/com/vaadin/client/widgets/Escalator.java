@@ -5641,14 +5641,29 @@ public class Escalator extends Widget implements RequiresResize,
         horizontalScrollbar.setScrollbarThickness(scrollbarThickness);
         horizontalScrollbar
                 .addVisibilityHandler(new ScrollbarBundle.VisibilityHandler() {
+
+                    private boolean queued = false;
+
                     @Override
                     public void visibilityChanged(
                             ScrollbarBundle.VisibilityChangeEvent event) {
+                        if (queued) {
+                            return;
+                        }
+                        queued = true;
+
                         /*
                          * We either lost or gained a scrollbar. In any case, we
                          * need to change the height, if it's defined by rows.
                          */
-                        applyHeightByRows();
+                        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+                            @Override
+                            public void execute() {
+                                applyHeightByRows();
+                                queued = false;
+                            }
+                        });
                     }
                 });
 
