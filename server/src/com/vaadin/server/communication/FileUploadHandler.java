@@ -269,7 +269,7 @@ public class FileUploadHandler implements RequestHandler {
             streamVariable = uI.getConnectorTracker().getStreamVariable(
                     connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
-            if (!secKey.equals(parts[3])) {
+            if (secKey == null || !secKey.equals(parts[3])) {
                 // TODO Should rethink error handling
                 return true;
             }
