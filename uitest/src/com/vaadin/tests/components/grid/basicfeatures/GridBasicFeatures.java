@@ -1065,6 +1065,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }
                 });
+
+        createClickAction("All columns expanding, Col 0 has max width of 30px",
+                "Columns", new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        for (Column col : grid.getColumns()) {
+                            col.setWidthUndefined();
+                        }
+                        grid.getColumns().get(0).setMaximumWidth(30);
+                    }
+                }, null);
     }
 
     private static String getColumnProperty(int c) {
