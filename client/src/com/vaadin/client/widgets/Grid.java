@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -108,6 +107,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
+import com.vaadin.client.widget.grid.DefaultEditorEventHandler;
 import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
@@ -129,8 +129,6 @@ import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.EditorCloseEvent;
 import com.vaadin.client.widget.grid.events.EditorEvent;
 import com.vaadin.client.widget.grid.events.EditorEventHandler;
-import com.vaadin.client.widget.grid.events.EditorMoveEvent;
-import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -1127,16 +1125,129 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * A wrapper for native DOM events originating from Grid. In addition to the
+     * native event, contains a {@link CellReference} instance specifying which
+     * cell the event originated from.
+     * 
+     * @since
+     * @param <T>
+     *            The row type of the grid
+     */
+    public static class GridEvent<T> {
+        private Event event;
+        private EventCellReference<T> cell;
+
+        protected GridEvent(Event event, EventCellReference<T> cell) {
+            this.event = event;
+            this.cell = cell;
+        }
+
+        /**
+         * Returns the wrapped DOM event.
+         * 
+         * @return the DOM event
+         */
+        public Event getDomEvent() {
+            return event;
+        }
+
+        /**
+         * Returns the Grid cell this event originated from.
+         * 
+         * @return the event cell
+         */
+        public EventCellReference<T> getCell() {
+            return cell;
+        }
+
+        /**
+         * Returns the Grid instance this event originated from.
+         * 
+         * @return the grid
+         */
+        public Grid<T> getGrid() {
+            return cell.getGrid();
+        }
+    }
+
+    /**
+     * A wrapper for native DOM events related to the {@link Editor Grid editor}
+     * .
+     * 
+     * @since
+     * @param <T>
+     *            the row type of the grid
+     */
+    public static class EditorDomEvent<T> extends GridEvent<T> {
+
+        protected EditorDomEvent(Event event, EventCellReference<T> cell) {
+            super(event, cell);
+        }
+
+        /**
+         * Returns the editor of the Grid this event originated from.
+         * 
+         * @return the related editor instance
+         */
+        public Editor<T> getEditor() {
+            return getGrid().getEditor();
+        }
+
+        /**
+         * Returns the row index the editor is open at. If the editor is not
+         * open, returns -1.
+         * 
+         * @return the index of the edited row or -1 if editor is not open
+         */
+        public int getRowIndex() {
+            return getEditor().rowIndex;
+        }
+
+        /**
+         * Returns the column index the editor was opened at. If the editor is
+         * not open, returns -1.
+         * 
+         * @return the column index or -1 if editor is not open
+         */
+        public int getFocusedColumnIndex() {
+            return getEditor().focusedColumnIndex;
+        }
+    }
+
+    /**
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
+     * 
+     * @since
+     * @param <T>
+     *            the row type of the grid
      */
-    protected static class Editor<T> {
-
-        public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
-        public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
+    public static class Editor<T> {
 
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
+
+        /**
+         * A handler for events related to the Grid editor. Responsible for
+         * opening, moving or closing the editor based on the received event.
+         * 
+         * @since
+         * @author Vaadin Ltd
+         * @param <T>
+         *            the row type of the grid
+         */
+        public interface EventHandler<T> {
+            /**
+             * Handles editor-related events in an appropriate way. Opens,
+             * moves, or closes the editor based on the given event.
+             * 
+             * @param event
+             *            the received event
+             * @return true if the event was handled and nothing else should be
+             *         done, false otherwise
+             */
+            boolean handleEvent(EditorDomEvent<T> event);
+        }
 
         protected enum State {
             INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
@@ -1144,6 +1255,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private Grid<T> grid;
         private EditorHandler<T> handler;
+        private EventHandler<T> eventHandler = GWT
+                .create(DefaultEditorEventHandler.class);
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
         private DivElement cellWrapper = DivElement.as(DOM.createDiv());
@@ -1997,6 +2110,27 @@ public class Grid<T> extends ResizeComposite implements
             } else {
                 messageAndButtonsWrapper.getStyle().setDisplay(Display.NONE);
             }
+        }
+
+        /**
+         * Sets the event handler for this Editor.
+         * 
+         * @since
+         * @param handler
+         *            the new event handler
+         */
+        public void setEventHandler(EventHandler<T> handler) {
+            eventHandler = handler;
+        }
+
+        /**
+         * Returns the event handler of this Editor.
+         * 
+         * @since
+         * @return the current event handler
+         */
+        public EventHandler<T> getEventHandler() {
+            return eventHandler;
         }
     }
 
@@ -3739,10 +3873,6 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
-    private double lastTouchEventTime = 0;
-    private int lastTouchEventX = -1;
-    private int lastTouchEventY = -1;
-    private int lastTouchEventRow = -1;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -5570,8 +5700,8 @@ public class Grid<T> extends ResizeComposite implements
         if (visibleRows.contains(rowIndex)) {
             rowElement = escalator.getBody().getRowElement(rowIndex);
         } else {
-            rowElement = null;
             getLogger().warning("Row index was not among visible row range");
+            return;
         }
         row.set(rowIndex, dataSource.getRow(rowIndex), rowElement);
 
@@ -6114,7 +6244,7 @@ public class Grid<T> extends ResizeComposite implements
         return footer.isVisible();
     }
 
-    protected Editor<T> getEditor() {
+    public Editor<T> getEditor() {
         return editor;
     }
 
@@ -6641,7 +6771,7 @@ public class Grid<T> extends ResizeComposite implements
         eventCell.set(cell, getSectionFromContainer(container));
 
         // Editor can steal focus from Grid and is still handled
-        if (handleEditorEvent(event, container)) {
+        if (isEditorEnabled() && handleEditorEvent(event, container)) {
             return;
         }
 
@@ -6719,68 +6849,8 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
-        final int type = event.getTypeInt();
-        final int key = event.getKeyCode();
-        final boolean editorIsActive = editor.getState() != Editor.State.INACTIVE;
-
-        double now = Duration.currentTimeMillis();
-        int currentX = WidgetUtil.getTouchOrMouseClientX(event);
-        int currentY = WidgetUtil.getTouchOrMouseClientY(event);
-
-        final boolean validTouchOpenEvent = type == Event.ONTOUCHEND
-                && now - lastTouchEventTime < 500
-                && lastTouchEventRow == eventCell.getRowIndex()
-                && Math.abs(lastTouchEventX - currentX) < 20
-                && Math.abs(lastTouchEventY - currentY) < 20;
-
-        final boolean openEvent = eventCell.isBody()
-                && (type == Event.ONDBLCLICK
-                        || (type == Event.ONKEYDOWN && key == Editor.KEYCODE_SHOW) || validTouchOpenEvent);
-
-        if (type == Event.ONTOUCHSTART) {
-            lastTouchEventX = currentX;
-            lastTouchEventY = currentY;
-        }
-
-        if (type == Event.ONTOUCHEND) {
-            lastTouchEventTime = now;
-            lastTouchEventRow = eventCell.getRowIndex();
-        }
-
-        // TODO: Move on touch events
-        final boolean moveEvent = eventCell.isBody() && type == Event.ONCLICK;
-
-        final boolean closeEvent = type == Event.ONKEYDOWN
-                && key == Editor.KEYCODE_HIDE;
-
-        if (!editorIsActive && editor.isEnabled() && openEvent) {
-
-            editor.editRow(eventCell.getRowIndex(),
-                    eventCell.getColumnIndexDOM());
-            fireEvent(new EditorOpenEvent(eventCell));
-            event.preventDefault();
-
-            return true;
-
-        } else if (editorIsActive && !editor.isBuffered() && moveEvent) {
-
-            cellFocusHandler.setCellFocus(eventCell);
-            editor.editRow(eventCell.getRowIndex(),
-                    eventCell.getColumnIndexDOM());
-            fireEvent(new EditorMoveEvent(eventCell));
-
-            return true;
-
-        } else if (editorIsActive && closeEvent) {
-
-            editor.cancel();
-            FocusUtil.setFocus(this, true);
-
-            return true;
-        }
-
-        // Swallow events if editor is open and buffered (modal)
-        return editor.isBuffered() && editorIsActive;
+        return getEditor().getEventHandler().handleEvent(
+                new EditorDomEvent<T>(event, getEventCell()));
     }
 
     private boolean handleRendererEvent(Event event, RowContainer container) {
