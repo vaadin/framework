@@ -1,6 +1,12 @@
+// Bourbon 3.2.4
+// http://bourbon.io
+// Copyright 2011-2015 thoughtbot, inc.
+// MIT License
+
 // Settings
 @import "settings/prefixer";
 @import "settings/px-to-em";
+@import "settings/asset-pipeline";
 
 // Custom Helpers
 @import "helpers/gradient-positions-parser";
@@ -11,12 +17,14 @@
 @import "helpers/shape-size-stripper";
 
 // Custom Functions
+@import "functions/color-lightness";
 @import "functions/flex-grid";
-@import "functions/grid-width";
 @import "functions/golden-ratio";
+@import "functions/grid-width";
 @import "functions/linear-gradient";
 @import "functions/modular-scale";
 @import "functions/px-to-em";
+@import "functions/px-to-rem";
 @import "functions/radial-gradient";
 @import "functions/strip-units";
 @import "functions/tint-shade";
@@ -34,8 +42,10 @@
 @import "css3/box-sizing";
 @import "css3/calc";
 @import "css3/columns";
+@import "css3/filter";
 @import "css3/flex-box";
 @import "css3/font-face";
+@import "css3/font-feature-settings";
 @import "css3/hyphens";
 @import "css3/hidpi-media-query";
 @import "css3/image-rendering";
@@ -56,14 +66,14 @@
 @import "addons/ellipsis";
 @import "addons/font-family";
 @import "addons/hide-text";
-//@import "addons/html5-input-types";
+@import "addons/html5-input-types";
 @import "addons/position";
 @import "addons/prefixer";
-@import "addons/rem";
 @import "addons/retina-image";
 @import "addons/size";
 @import "addons/timing-functions";
 @import "addons/triangle";
+@import "addons/word-wrap";
 
 // Soon to be deprecated Mixins
 @import "bourbon-deprecated-upcoming";
