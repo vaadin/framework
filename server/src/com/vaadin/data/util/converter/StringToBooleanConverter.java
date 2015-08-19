@@ -44,7 +44,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     /**
      * Creates converter with custom string representation.
      *
-     * @since
+     * @since 7.5.4
      * @param falseString string representation for <code>false</code>
      * @param trueString string representation for <code>true</code>
      */
@@ -124,7 +124,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * Gets the locale-depended string representation for false.
      * Default is locale-independent value provided by {@link #getFalseString()}
      *
-     * @since
+     * @since 7.5.4
      * @param locale to be used
      * @return the string representation for false
      */
@@ -136,7 +136,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * Gets the locale-depended string representation for true.
      * Default is locale-independent value provided by {@link #getTrueString()}
      *
-     * @since
+     * @since 7.5.4
      * @param locale to be used
      * @return the string representation for true
      */
