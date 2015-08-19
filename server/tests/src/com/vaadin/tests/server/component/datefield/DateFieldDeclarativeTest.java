@@ -44,7 +44,7 @@ public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
     }
 
     private String getTimezoneDesign() {
-        return "<v-date-field range-start=\"2014-05-05 00:00:00+0300\" range-end=\"2014-06-05 00:00:00+0300\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient='' show-iso-week-numbers='' parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00+0300\"/>";
+        return "<v-date-field range-start=\"2014-05-05 00:00:00+0300\" range-end=\"2014-06-05 00:00:00+0300\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient='true' show-iso-week-numbers='true' parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00+0300\"/>";
     }
 
     private DateField getTimezoneExpected() {

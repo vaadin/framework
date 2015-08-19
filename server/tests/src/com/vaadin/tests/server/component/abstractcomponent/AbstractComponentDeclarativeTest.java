@@ -71,7 +71,7 @@ public class AbstractComponentDeclarativeTest extends
     public void testProperties() {
         String design = "<v-label id=\"testId\" primary-style-name=\"test-style\" "
                 + "caption=\"test-caption\" locale=\"fi_FI\" description=\"test-description\" "
-                + "error=\"<div>test-error</div>\" immediate=\"\"/>";
+                + "error=\"<div>test-error</div>\" immediate=\"true\"/>";
         component.setId("testId");
         component.setPrimaryStyleName("test-style");
         component.setCaption("test-caption");
@@ -139,7 +139,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testSizeFull() {
-        String design = "<v-label size-full=\"\"/>";
+        String design = "<v-label size-full=\"true\"/>";
         component.setSizeFull();
         testRead(design, component);
         testWrite(design, component);
@@ -147,7 +147,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testSizeAuto() {
-        String design = "<v-label size-auto=\"\"/>";
+        String design = "<v-label size-auto=\"true\"/>";
         component.setSizeUndefined();
         testRead(design, component);
         testWrite(design, component);
@@ -155,7 +155,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testHeightFull() {
-        String design = "<v-label height-full=\"\"/ width=\"20px\"/>";
+        String design = "<v-label height-full=\"true\"/ width=\"20px\"/>";
         component.setHeight("100%");
         component.setWidth("20px");
         testRead(design, component);
@@ -164,7 +164,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testHeightAuto() {
-        String design = "<v-horizontal-split-panel height-auto=\"\"/ width=\"20px\" >";
+        String design = "<v-horizontal-split-panel height-auto=\"true\"/ width=\"20px\" >";
         // we need to have default height of 100% -> use split panel
         AbstractComponent component = new HorizontalSplitPanel();
         component.setHeight(null);
@@ -175,7 +175,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthFull() {
-        String design = "<v-button width-full=\"\"/ height=\"20px\">Foo</button>";
+        String design = "<v-button width-full=\"true\"/ height=\"20px\">Foo</button>";
         AbstractComponent component = new Button();
         component.setCaptionAsHtml(true);
         component.setCaption("Foo");
@@ -187,7 +187,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthAuto() {
-        String design = "<v-label height=\"20px\"/ width-auto=\"\"/>";
+        String design = "<v-label height=\"20px\"/ width-auto=\"true\"/>";
         component.setCaptionAsHtml(false);
         component.setHeight("20px");
         component.setWidth(null);
@@ -197,7 +197,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testResponsive() {
-        String design = "<v-label responsive =\"\"/>";
+        String design = "<v-label responsive =\"true\"/>";
         Responsive.makeResponsive(component);
         testRead(design, component);
         testWrite(design, component);

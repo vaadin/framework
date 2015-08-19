@@ -42,7 +42,7 @@ public class AbstractSelectDeclarativeTest extends
         DeclarativeTestBase<AbstractSelect> {
 
     public String getDesignSingleSelectNewItemsAllowed() {
-        return "<v-combo-box new-items-allowed='' item-caption-mode='icon_only'"
+        return "<v-combo-box new-items-allowed='true' item-caption-mode='icon_only'"
                 + " null-selection-item-id='nullIid'/>";
 
     }
@@ -57,7 +57,7 @@ public class AbstractSelectDeclarativeTest extends
     }
 
     public String getDesignMultiSelect() {
-        return "<v-list-select multi-select='' null-selection-allowed='false' new-items-allowed='' item-caption-mode='property' />";
+        return "<v-list-select multi-select='true' null-selection-allowed='false' new-items-allowed='true' item-caption-mode='property' />";
     }
 
     public AbstractSelect getExpectedMultiSelect() {
@@ -210,7 +210,7 @@ public class AbstractSelectDeclarativeTest extends
         attributes.put("item-caption-mode", "property");
         attributes.put("item-caption-property-id", "name");
         attributes.put("item-icon-property-id", "icon");
-        attributes.put("null-selection-allowed", "");
+        attributes.put("null-selection-allowed", "true");
         attributes.put("null-selection-item-id", "No items selected");
         return new Element(Tag.valueOf("v-combo-box"), "", attributes);
     }
@@ -231,7 +231,7 @@ public class AbstractSelectDeclarativeTest extends
         assertEquals("Wrong caption for the combo box.", "A combo box",
                 e.attr("caption"));
         Assert.assertTrue("Adding new items should be allowed.",
-                "".equals(e.attr("new-items-allowed")));
+                "true".equals(e.attr("new-items-allowed")));
         assertEquals("Wrong item caption mode.", "icon_only",
                 e.attr("item-caption-mode"));
         assertEquals("Wrong item icon property id.", "icon",

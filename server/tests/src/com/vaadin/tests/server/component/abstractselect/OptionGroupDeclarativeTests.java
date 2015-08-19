@@ -111,7 +111,7 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<v-option-group html-content-allowed=''>"
+                "<v-option-group html-content-allowed='true'>"
                 + "<option item-id=\"foo\"><b>True</b></option>"
                 + "<option item-id=\"bar\"><font color='red'>False</font></option>"
                 + "<option>baz</option>"

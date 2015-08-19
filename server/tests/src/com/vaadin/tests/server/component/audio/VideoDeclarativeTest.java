@@ -36,7 +36,7 @@ public class VideoDeclarativeTest extends DeclarativeTestBase<Video> {
 
     @Test
     public void testVideoMultipleSources() {
-        String design = "<v-video muted='' show-controls='false'>"
+        String design = "<v-video muted='true' show-controls='false'>"
                 + "some <b>text</b>" //
                 + "<source href='http://foo.pl' />"
                 + "<source href='https://bar.pl' />" //

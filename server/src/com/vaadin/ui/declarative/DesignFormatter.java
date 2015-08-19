@@ -94,11 +94,7 @@ public class DesignFormatter implements Serializable {
             public String convertToPresentation(Boolean value,
                     Class<? extends String> targetType, Locale locale)
                     throws Converter.ConversionException {
-                if (value.booleanValue()) {
-                    return "";
-                } else {
-                    return "false";
-                }
+                return String.valueOf(value.booleanValue());
             }
 
             @Override

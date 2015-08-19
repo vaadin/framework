@@ -78,7 +78,7 @@ public class DesignFormatterTest {
 
     @Test
     public void testBoolean() {
-        assertEquals("", formatter.format(true));
+        assertEquals("true", formatter.format(true));
         assertEquals("false", formatter.format(false));
 
         assertEquals(true, formatter.parse("true", boolean.class));

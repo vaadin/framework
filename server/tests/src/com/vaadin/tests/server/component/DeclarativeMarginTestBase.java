@@ -52,19 +52,19 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
         String s = "<" + componentTag + " ";
 
         if (left && right && top && bottom) {
-            s += "margin=''";
+            s += "margin='true'";
         } else {
             if (left) {
-                s += "margin-left='' ";
+                s += "margin-left='true' ";
             }
             if (right) {
-                s += "margin-right='' ";
+                s += "margin-right='true' ";
             }
             if (top) {
-                s += "margin-top='' ";
+                s += "margin-top='true' ";
             }
             if (bottom) {
-                s += "margin-bottom='' ";
+                s += "margin-bottom='true' ";
             }
         }
         return s + " />";
