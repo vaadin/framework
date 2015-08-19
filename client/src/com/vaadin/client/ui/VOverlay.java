@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -471,7 +473,17 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
-            positionOrSizeUpdated(1.0);
+            if (BrowserInfo.get().isIE8()) {
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+                    @Override
+                    public void execute() {
+                        positionOrSizeUpdated(1.0);
+                    }
+                });
+            } else {
+                positionOrSizeUpdated(1.0);
+            }
         }
         current = null;
     }

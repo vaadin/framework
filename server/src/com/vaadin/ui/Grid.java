@@ -4184,13 +4184,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             @Override
-            public void sendDetailsComponents(int fetchId) {
-                getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
-                        detailComponentManager.getAndResetConnectorChanges(),
-                        fetchId);
-            }
-
-            @Override
             public void editorOpen(String rowKey) {
                 fireEvent(new EditorOpenEvent(Grid.this, getKeyMapper()
                         .getItemId(rowKey)));
@@ -6558,8 +6551,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         this.detailsGenerator = detailsGenerator;
 
         datasourceExtension.refreshDetails();
-        getRpcProxy(GridClientRpc.class).setDetailsConnectorChanges(
-                detailComponentManager.getAndResetConnectorChanges(), -1);
     }
 
     /**

@@ -64,14 +64,6 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
          * @see GridState#JSONKEY_DETAILS_VISIBLE
          */
         void reapplyDetailsVisibility(int rowIndex, JsonObject row);
-
-        /**
-         * Closes details for a row.
-         * 
-         * @param rowIndex
-         *            the index of the row for which to close details
-         */
-        void closeDetails(int rowIndex);
     }
 
     public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
@@ -220,11 +212,6 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                 detailsListener.reapplyDetailsVisibility(firstRowIndex + i,
                         rowData.get(i));
             }
-        }
-
-        @Override
-        protected void onDropFromCache(int rowIndex) {
-            detailsListener.closeDetails(rowIndex);
         }
     }
 

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -196,14 +195,11 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         assertEquals("Two", getGridElement().getDetails(0).getText());
     }
 
-    @Ignore("This use case is not currently supported by Grid. If the detail "
-            + "is out of view, the component is detached from the UI and a "
-            + "new instance is generated when scrolled back. Support will "
-            + "maybe be incorporated at a later time")
     @Test
     public void hierarchyChangesWorkInDetailsWhileOutOfView() {
         selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        assertEquals("One", getGridElement().getDetails(0).getText());
         scrollGridVerticallyTo(10000);
         selectMenuPath(CHANGE_HIERARCHY);
         scrollGridVerticallyTo(0);

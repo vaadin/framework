@@ -27,8 +27,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VTree;
@@ -62,6 +62,10 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         if (uidl.hasAttribute("partialUpdate")) {
             handleUpdate(uidl);
+
+            // IE8 needs a hack to measure the tree again after update
+            WidgetUtil.forceIE8Redraw(getWidget().getElement());
+
             getWidget().rendering = false;
             return;
         }

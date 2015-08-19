@@ -1,6 +1,7 @@
 #coding=UTF-8
 
 from BuildArchetypes import archetypes, getDeploymentContext
+from BuildDemos import demos
 import argparse, cgi
 
 parser = argparse.ArgumentParser(description="Build report generator")
