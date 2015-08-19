@@ -56,6 +56,8 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
     private static final String ANDROID_MOTOROLA_3_0 = "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13";
     private static final String ANDROID_GALAXY_NEXUS_4_0_4_CHROME = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19";
 
+    private static final String EDGE_WINDOWS_10 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240";
+
     public void testSafari3() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI3_WINDOWS);
         assertWebKit(bd);
@@ -423,6 +425,14 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd, true);
     }
 
+    public void testEdgeWindows10() {
+        VBrowserDetails bd = new VBrowserDetails(EDGE_WINDOWS_10);
+        assertEdge(bd);
+        assertBrowserMajorVersion(bd, 12);
+        assertBrowserMinorVersion(bd, 10240);
+        assertWindows(bd, false);
+    }
+
     /*
      * Helper methods below
      */
@@ -484,6 +494,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertFalse(browserDetails.isIE());
         assertFalse(browserDetails.isOpera());
         assertFalse(browserDetails.isSafari());
+        assertFalse(browserDetails.isEdge());
     }
 
     private void assertChrome(VBrowserDetails browserDetails) {
@@ -493,6 +504,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertFalse(browserDetails.isIE());
         assertFalse(browserDetails.isOpera());
         assertFalse(browserDetails.isSafari());
+        assertFalse(browserDetails.isEdge());
     }
 
     private void assertIE(VBrowserDetails browserDetails) {
@@ -502,6 +514,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertTrue(browserDetails.isIE());
         assertFalse(browserDetails.isOpera());
         assertFalse(browserDetails.isSafari());
+        assertFalse(browserDetails.isEdge());
     }
 
     private void assertOpera(VBrowserDetails browserDetails) {
@@ -511,6 +524,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertFalse(browserDetails.isIE());
         assertTrue(browserDetails.isOpera());
         assertFalse(browserDetails.isSafari());
+        assertFalse(browserDetails.isEdge());
     }
 
     private void assertSafari(VBrowserDetails browserDetails) {
@@ -520,6 +534,17 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertFalse(browserDetails.isIE());
         assertFalse(browserDetails.isOpera());
         assertTrue(browserDetails.isSafari());
+        assertFalse(browserDetails.isEdge());
+    }
+
+    private void assertEdge(VBrowserDetails browserDetails) {
+        // Browser
+        assertFalse(browserDetails.isFirefox());
+        assertFalse(browserDetails.isChrome());
+        assertFalse(browserDetails.isIE());
+        assertFalse(browserDetails.isOpera());
+        assertFalse(browserDetails.isSafari());
+        assertTrue(browserDetails.isEdge());
     }
 
     private void assertMacOSX(VBrowserDetails browserDetails) {

@@ -74,7 +74,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                 style.setPosition(Position.FIXED);
                 style.setTop(0, Unit.PX);
                 style.setLeft(0, Unit.PX);
-                if (browserInfo.isIE()) {
+                if (browserInfo.isIE() || browserInfo.isEdge()) {
                     // for #15294: artificially hide little bit more the
                     // focusElement, otherwise IE will make the window to scroll
                     // into it when focused

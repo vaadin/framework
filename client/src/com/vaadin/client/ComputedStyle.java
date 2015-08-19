@@ -155,10 +155,10 @@ public class ComputedStyle {
      *            the property to retrieve
      * @return the double value of the property
      */
-    public final int getDoubleProperty(String name) {
+    public final double getDoubleProperty(String name) {
         Profiler.enter("ComputedStyle.getDoubleProperty");
         String value = getProperty(name);
-        int result = parseDoubleNative(value);
+        double result = parseDoubleNative(value);
         Profiler.leave("ComputedStyle.getDoubleProperty");
         return result;
     }
@@ -275,9 +275,60 @@ public class ComputedStyle {
      * @return the value from the string before any non-numeric characters or
      *         NaN if the value cannot be parsed as a number
      */
-    private static native int parseDoubleNative(final String value)
+    private static native double parseDoubleNative(final String value)
     /*-{
         return parseFloat(value);
     }-*/;
 
+    /**
+     * Returns the sum of the top and bottom border width
+     * 
+     * @since 7.5.3
+     * @return the sum of the top and bottom border
+     */
+    public double getBorderHeight() {
+        double borderHeight = getDoubleProperty("borderTopWidth");
+        borderHeight += getDoubleProperty("borderBottomWidth");
+
+        return borderHeight;
+    }
+
+    /**
+     * Returns the sum of the left and right border width
+     * 
+     * @since 7.5.3
+     * @return the sum of the left and right border
+     */
+    public double getBorderWidth() {
+        double borderWidth = getDoubleProperty("borderLeftWidth");
+        borderWidth += getDoubleProperty("borderRightWidth");
+
+        return borderWidth;
+    }
+
+    /**
+     * Returns the sum of the top and bottom padding
+     * 
+     * @since 7.5.3
+     * @return the sum of the top and bottom padding
+     */
+    public double getPaddingHeight() {
+        double paddingHeight = getDoubleProperty("paddingTop");
+        paddingHeight += getDoubleProperty("paddingBottom");
+
+        return paddingHeight;
+    }
+
+    /**
+     * Returns the sum of the top and bottom padding
+     * 
+     * @since 7.5.3
+     * @return the sum of the left and right padding
+     */
+    public double getPaddingWidth() {
+        double paddingWidth = getDoubleProperty("paddingLeft");
+        paddingWidth += getDoubleProperty("paddingRight");
+
+        return paddingWidth;
+    }
 }

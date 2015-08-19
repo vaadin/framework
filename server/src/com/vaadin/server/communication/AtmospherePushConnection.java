@@ -274,6 +274,13 @@ public class AtmospherePushConnection implements PushConnection {
     public void disconnect() {
         assert isConnected();
 
+        if (resource == null) {
+            // Already disconnected. Should not happen but if it does, we don't
+            // want to cause NPEs
+            getLogger()
+                    .fine("AtmospherePushConnection.disconnect() called twice, this should not happen");
+            return;
+        }
         if (resource.isResumed()) {
             // This can happen for long polling because of
             // http://dev.vaadin.com/ticket/16919

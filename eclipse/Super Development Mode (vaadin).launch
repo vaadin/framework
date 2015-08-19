@@ -23,5 +23,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.codeserver.CodeServer"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noprecompile -strict -bindAddress 0.0.0.0 com.vaadin.DefaultWidgetSet  com.vaadin.tests.widgetset.TestingWidgetSet"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="vaadin"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512M -XX:MaxPermSize=256M"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1G -XX:MaxPermSize=256M"/>
 </launchConfiguration>

@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -694,17 +695,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return false;
         }
 
+        String decodedRequestURI = URLDecoder.decode(request.getRequestURI(),
+                "UTF-8");
         if ((request.getContextPath() != null)
-                && (request.getRequestURI().startsWith("/VAADIN/"))) {
-            serveStaticResourcesInVAADIN(request.getRequestURI(), request,
-                    response);
+                && (decodedRequestURI.startsWith("/VAADIN/"))) {
+            serveStaticResourcesInVAADIN(decodedRequestURI, request, response);
             return true;
-        } else if (request.getRequestURI().startsWith(
-                request.getContextPath() + "/VAADIN/")) {
+        }
+
+        String decodedContextPath = URLDecoder.decode(request.getContextPath(),
+                "UTF-8");
+        if (decodedRequestURI.startsWith(decodedContextPath + "/VAADIN/")) {
             serveStaticResourcesInVAADIN(
-                    request.getRequestURI().substring(
-                            request.getContextPath().length()), request,
-                    response);
+                    decodedRequestURI.substring(decodedContextPath.length()),
+                    request, response);
             return true;
         }
 

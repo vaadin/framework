@@ -50,6 +50,7 @@ import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -368,8 +369,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
      *         returns
      */
-    protected Object executeScript(String script) {
-        return ((JavascriptExecutor) getDriver()).executeScript(script);
+    protected Object executeScript(String script, Object... args) {
+        return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }
 
     /**
@@ -1105,4 +1106,93 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return isElementPresent(By.className("v-debugwindow"));
     }
 
+    protected void assertNoHorizontalScrollbar(WebElement element,
+            String errorMessage) {
+        // IE rounds clientWidth/clientHeight down and scrollHeight/scrollWidth
+        // up, so using clientWidth/clientHeight will fail if the element height
+        // is not an integer
+        int clientWidth = getClientWidth(element);
+        int scrollWidth = getScrollWidth(element);
+        boolean hasScrollbar = scrollWidth > clientWidth;
+
+        Assert.assertFalse(
+                "The element should not have a horizontal scrollbar (scrollWidth: "
+                        + scrollWidth + ", clientWidth: " + clientWidth + "): "
+                        + errorMessage, hasScrollbar);
+    }
+
+    protected void assertNoVerticalScrollbar(WebElement element,
+            String errorMessage) {
+        // IE rounds clientWidth/clientHeight down and scrollHeight/scrollWidth
+        // up, so using clientWidth/clientHeight will fail if the element height
+        // is not an integer
+        int clientHeight = getClientHeight(element);
+        int scrollHeight = getScrollHeight(element);
+        boolean hasScrollbar = scrollHeight > clientHeight;
+
+        Assert.assertFalse(
+                "The element should not have a vertical scrollbar (scrollHeight: "
+                        + scrollHeight + ", clientHeight: " + clientHeight
+                        + "): " + errorMessage, hasScrollbar);
+    }
+
+    protected int getScrollHeight(WebElement element) {
+        return ((Number) executeScript("return arguments[0].scrollHeight;",
+                element)).intValue();
+    }
+
+    protected int getScrollWidth(WebElement element) {
+        return ((Number) executeScript("return arguments[0].scrollWidth;",
+                element)).intValue();
+    }
+
+    /**
+     * Returns client height rounded up instead of as double because of IE9
+     * issues: https://dev.vaadin.com/ticket/18469
+     */
+    protected int getClientHeight(WebElement e) {
+        String script;
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            script = "return arguments[0].clientHeight;"; //
+        } else {
+            script = "var cs = window.getComputedStyle(arguments[0]);"
+                    + "return Math.ceil(parseFloat(cs.height)+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom));";
+        }
+        return ((Number) executeScript(script, e)).intValue();
+    }
+
+    /**
+     * Returns client width rounded up instead of as double because of IE9
+     * issues: https://dev.vaadin.com/ticket/18469
+     */
+    protected int getClientWidth(WebElement e) {
+        String script;
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            script = "return arguments[0].clientWidth;";
+        } else {
+            script = "var cs = window.getComputedStyle(arguments[0]);"
+                    + "var h = parseFloat(cs.width)+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);"
+                    + "return Math.ceil(h);";
+        }
+
+        return ((Number) executeScript(script, e)).intValue();
+    }
+
+    protected void assertElementsEquals(WebElement expectedElement,
+            WebElement actualElement) {
+        while (expectedElement instanceof WrapsElement) {
+            expectedElement = ((WrapsElement) expectedElement)
+                    .getWrappedElement();
+        }
+        while (actualElement instanceof WrapsElement) {
+            actualElement = ((WrapsElement) actualElement).getWrappedElement();
+        }
+
+        Assert.assertEquals(expectedElement, actualElement);
+    }
+
+    protected WebElement getActiveElement() {
+        return (WebElement) executeScript("return document.activeElement;");
+
+    }
 }

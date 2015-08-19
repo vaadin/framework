@@ -5,17 +5,27 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 
-public class NullEventMoveHandler extends AbstractTestUI {
+public class NullEventMoveHandler extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         Calendar calendar = getCalendar();
 
         calendar.setHandler((CalendarComponentEvents.EventMoveHandler) null);
+        calendar.setHandler(new EventClickHandler() {
+
+            @Override
+            public void eventClick(EventClick event) {
+                log("Clicked on " + event.getCalendarEvent().getCaption());
+
+            }
+        });
 
         addComponent(calendar);
     }

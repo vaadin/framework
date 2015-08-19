@@ -34,6 +34,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -476,8 +477,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     /**
      * Class for handling scrolling issues with open details.
      * 
-     * @since
-     * @author Vaadin Ltd
+     * @since 7.5.2
      */
     private class LazyDetailsScroller implements DeferredWorker {
 
@@ -507,7 +507,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         /**
          * Inform LazyDetailsScroller that a details row has opened on a row.
          * 
-         * @since
          * @param rowIndex
          *            index of row with details now open
          */
@@ -684,6 +683,26 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             @Override
             public void recalculateColumnWidths() {
                 getWidget().recalculateColumnWidths();
+            }
+
+            @Override
+            public void setSelectAll(boolean allSelected) {
+                if (selectionModel instanceof SelectionModel.Multi
+                        && selectionModel.getSelectionColumnRenderer() != null) {
+                    final Widget widget;
+                    try {
+                        HeaderRow defaultHeaderRow = getWidget()
+                                .getDefaultHeaderRow();
+                        if (defaultHeaderRow != null) {
+                            widget = defaultHeaderRow.getCell(
+                                    getWidget().getColumn(0)).getWidget();
+                            ((CheckBox) widget).setValue(allSelected, false);
+                        }
+                    } catch (Exception e) {
+                        getLogger().warning(
+                                "Problems finding select all checkbox.");
+                    }
+                }
             }
         });
 

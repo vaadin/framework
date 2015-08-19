@@ -126,6 +126,20 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Tests whether the user is using Edge.
+     * 
+     * @return true if the user is using Edge, false if the user is not using
+     *         Edge or if no information on the browser is present
+     */
+    public boolean isEdge() {
+        if (browserDetails == null) {
+            return false;
+        }
+
+        return browserDetails.isEdge();
+    }
+
+    /**
      * Tests whether the user is using Safari.
      * 
      * @return true if the user is using Safari, false if the user is not using

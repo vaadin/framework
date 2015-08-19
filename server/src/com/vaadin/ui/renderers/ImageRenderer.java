@@ -58,7 +58,7 @@ public class ImageRenderer extends ClickableRenderer<Resource> {
         if (!(resource == null || resource instanceof ExternalResource || resource instanceof ThemeResource)) {
             throw new IllegalArgumentException(
                     "ImageRenderer only supports ExternalResource and ThemeResource ("
-                            + resource.getClass().getSimpleName() + "given )");
+                            + resource.getClass().getSimpleName() + " given)");
         }
 
         return encode(ResourceReference.create(resource, this, null),

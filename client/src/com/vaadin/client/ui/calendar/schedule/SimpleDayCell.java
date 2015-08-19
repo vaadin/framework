@@ -392,8 +392,11 @@ public class SimpleDayCell extends FocusableFlowPanel implements
 
             int endX = event.getClientX();
             int endY = event.getClientY();
-            int xDiff = startX - endX;
-            int yDiff = startY - endY;
+            int xDiff = 0, yDiff = 0;
+            if (startX != -1 && startY != -1) {
+                xDiff = startX - endX;
+                yDiff = startY - endY;
+            }
             startX = -1;
             startY = -1;
             prevDayDiff = 0;

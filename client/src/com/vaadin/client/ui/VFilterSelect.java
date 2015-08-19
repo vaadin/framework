@@ -599,7 +599,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     + "]");
 
             Element menuFirstChild = menu.getElement().getFirstChildElement();
-            final int naturalMenuWidth = menuFirstChild.getOffsetWidth();
+            final int naturalMenuWidth = WidgetUtil
+                    .getRequiredWidth(menuFirstChild);
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = WidgetUtil
@@ -611,13 +612,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 menuFirstChild.getStyle().setWidth(100, Unit.PCT);
             }
 
-            if (BrowserInfo.get().isIE()) {
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 11) {
+                // Must take margin,border,padding manually into account for
+                // menu element as we measure the element child and set width to
+                // the element parent
+                int naturalMenuOuterWidth = naturalMenuWidth
+                        + getMarginBorderPaddingWidth(menu.getElement());
+
                 /*
                  * IE requires us to specify the width for the container
                  * element. Otherwise it will be 100% wide
                  */
-                int rootWidth = Math.max(desiredWidth, naturalMenuWidth)
-                        - popupOuterPadding;
+                int rootWidth = Math.max(desiredWidth - popupOuterPadding,
+                        naturalMenuOuterWidth);
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
@@ -1281,6 +1289,16 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         setStyleName(CLASSNAME);
 
         sinkEvents(Event.ONPASTE);
+    }
+
+    private static int getMarginBorderPaddingWidth(Element element) {
+        final ComputedStyle s = new ComputedStyle(element);
+        int[] margin = s.getMargin();
+        int[] border = s.getBorder();
+        int[] padding = s.getPadding();
+        return margin[1] + margin[3] + border[1] + border[3] + padding[1]
+                + padding[3];
+
     }
 
     /*

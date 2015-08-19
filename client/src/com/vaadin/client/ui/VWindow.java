@@ -562,17 +562,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static void focusTopmostModalWindow() {
-        // If we call focus() directly without scheduling, it does not work in
-        // IE and FF.
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                VWindow topmost = getTopmostWindow();
-                if ((topmost != null) && (topmost.vaadinModality)) {
-                    topmost.focus();
-                }
-            }
-        });
+        VWindow topmost = getTopmostWindow();
+        if ((topmost != null) && (topmost.vaadinModality)) {
+            topmost.focus();
+        }
     }
 
     @Override
@@ -762,11 +755,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         modalityCurtain.removeFromParent();
 
-        if (BrowserInfo.get().isIE()) {
-            // IE leaks memory in certain cases unless we release the reference
-            // (#9197)
-            modalityCurtain = null;
-        }
+        // IE leaks memory in certain cases unless we release the reference
+        // (#9197)
+        modalityCurtain = null;
     }
 
     /*
@@ -1375,7 +1366,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void focus() {
-        contentPanel.focus();
+        // We don't want to use contentPanel.focus() as that will use a timer in
+        // Chrome/Safari and ultimately run focus events in the wrong order when
+        // opening a modal window and focusing some other component at the same
+        // time
+        contentPanel.getElement().focus();
     }
 
     private int getDecorationHeight() {

@@ -72,6 +72,7 @@ import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
@@ -677,6 +678,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;
                 wc.setWindowOrderAndPosition();
+                VWindow window = wc.getWidget();
+                if (!window.isAttached()) {
+
+                    // Attach so that all widgets inside the Window are attached
+                    // when their onStateChange is run
+
+                    // Made invisible here for legacy reasons and made visible
+                    // at the end of stateChange. This dance could probably be
+                    // removed
+                    window.setVisible(false);
+                    window.show();
+                }
+
             }
         }
 

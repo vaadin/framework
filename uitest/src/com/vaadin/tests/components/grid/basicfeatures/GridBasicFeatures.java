@@ -792,6 +792,26 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.setColumnReorderingAllowed(value);
                     }
                 });
+
+        createClickAction("Select all", "State", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                SelectionModel selectionModel = c.getSelectionModel();
+                if (selectionModel instanceof SelectionModel.Multi) {
+                    ((SelectionModel.Multi) selectionModel).selectAll();
+                }
+            }
+        }, null);
+
+        createClickAction("Select none", "State", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                SelectionModel selectionModel = c.getSelectionModel();
+                if (selectionModel instanceof SelectionModel.Multi) {
+                    ((SelectionModel.Multi) selectionModel).deselectAll();
+                }
+            }
+        }, null);
     }
 
     protected void createHeaderActions() {

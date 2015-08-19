@@ -1167,6 +1167,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private int selectionLimit = DEFAULT_MAX_SELECTIONS;
 
+        private boolean allSelected;
+
         @Override
         public boolean select(final Object... itemIds)
                 throws IllegalArgumentException {
@@ -1212,6 +1214,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 }
                 fireSelectionEvent(oldSelection, selection);
             }
+
+            updateAllSelectedState();
+
             return selectionWillChange;
         }
 
@@ -1277,6 +1282,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 selection.removeAll(itemIds);
                 fireSelectionEvent(oldSelection, selection);
             }
+
+            updateAllSelectedState();
+
             return hasCommonElements;
         }
 
@@ -1357,6 +1365,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 fireSelectionEvent(oldSelection, selection);
             }
 
+            updateAllSelectedState();
+
             return changed;
         }
 
@@ -1368,6 +1378,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             } else {
                 throw new IllegalArgumentException(
                         "Vararg array of itemIds may not be null");
+            }
+        }
+
+        private void updateAllSelectedState() {
+            if (allSelected != selection.size() >= selectionLimit) {
+                allSelected = selection.size() >= selectionLimit;
+                grid.getRpcProxy(GridClientRpc.class).setSelectAll(allSelected);
             }
         }
     }
@@ -3648,10 +3665,21 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                                 safeConverter.getPresentationType(), locale);
             }
 
-            JsonValue encodedValue = renderer.encode(presentationValue);
+            JsonValue encodedValue;
+            try {
+                encodedValue = renderer.encode(presentationValue);
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Unable to encode data", e);
+                encodedValue = renderer.encode(null);
+            }
 
             return encodedValue;
         }
+
+        private static Logger getLogger() {
+            return Logger.getLogger(AbstractRenderer.class.getName());
+        }
+
     }
 
     /**

@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.orderedlayout.VerticalLayoutState;
+
 /**
  * Vertical layout
  * 
@@ -47,5 +49,10 @@ public class VerticalLayout extends AbstractOrderedLayout {
     public VerticalLayout(Component... children) {
         this();
         addComponents(children);
+    }
+
+    @Override
+    protected VerticalLayoutState getState() {
+        return (VerticalLayoutState) super.getState();
     }
 }

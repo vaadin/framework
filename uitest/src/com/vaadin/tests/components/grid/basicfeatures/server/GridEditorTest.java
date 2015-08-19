@@ -207,6 +207,8 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
 
         assertTrue("Noneditable cell should contain v-grid-cell classname",
                 classNames.contains("v-grid-cell"));
+
+        assertNoErrorNotifications();
     }
 
     @Test
