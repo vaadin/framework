@@ -16,8 +16,8 @@
 
 package com.vaadin.shared.data;
 
-import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -55,5 +55,17 @@ public interface DataRequestRpc extends ServerRpc {
      *            pinned status of referenced item
      */
     @Delayed
+    @NoLoadingIndicator
     public void setPinned(String key, boolean isPinned);
+
+    /**
+     * Informs the server that an item is dropped from the client cache.
+     * 
+     * @since
+     * @param rowKey
+     *            key mapping to item
+     */
+    @Delayed
+    @NoLoadingIndicator
+    public void dropRow(String rowKey);
 }

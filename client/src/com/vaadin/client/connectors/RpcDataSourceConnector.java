@@ -17,6 +17,7 @@
 package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.vaadin.client.ServerConnector;
@@ -95,6 +96,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                 @Override
                 public void resetDataAndSize(int size) {
                     RpcDataSource.this.resetDataAndSize(size);
+                }
+
+                @Override
+                public void updateRowData(JsonObject row) {
+                    RpcDataSource.this.updateRowData(row);
                 }
             });
         }
@@ -212,6 +218,27 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                 detailsListener.reapplyDetailsVisibility(firstRowIndex + i,
                         rowData.get(i));
             }
+        }
+
+        /**
+         * Updates row data based on row key.
+         * 
+         * @since
+         * @param row
+         *            new row object
+         */
+        protected void updateRowData(JsonObject row) {
+            int index = indexOfKey(getRowKey(row));
+            if (index >= 0) {
+                setRowData(index, Collections.singletonList(row));
+            }
+        }
+
+        @Override
+        protected void onDropFromCache(int rowIndex) {
+            super.onDropFromCache(rowIndex);
+
+            rpcProxy.dropRow(getRowKey(getRow(rowIndex)));
         }
     }
 
