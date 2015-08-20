@@ -98,7 +98,7 @@ public class CustomComponent extends AbstractComponent implements HasComponents 
      * Sets the composition root for the component.
      * 
      * <p>
-     * You must set the composition root must to a non-null value before the
+     * You must set the composition root to a non-null value before the
      * component can be used. You can change it later.
      * </p>
      * 
