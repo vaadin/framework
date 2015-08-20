@@ -274,7 +274,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     @Test
     public void testBareItemSetChangeRemovingAllRows() throws Exception {
         openTestURL();
-        selectMenuPath("Component", "Filter", "Add impassable filter");
+        selectMenuPath("Component", "Filter", "Impassable filter");
         assertFalse("A notification shouldn't have been displayed",
                 $(NotificationElement.class).exists());
         assertTrue("No body cells should've been found", getGridElement()

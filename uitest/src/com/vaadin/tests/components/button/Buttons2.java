@@ -42,9 +42,6 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
     protected void createActions() {
         super.createActions();
 
-        createFocusListener(CATEGORY_LISTENERS);
-        createBlurListener(CATEGORY_LISTENERS);
-
         createBooleanAction("Disable on click", CATEGORY_FEATURES, false,
                 disableOnClickCommand);
         addClickListener(CATEGORY_LISTENERS);

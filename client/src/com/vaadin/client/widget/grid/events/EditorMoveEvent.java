@@ -13,26 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.client.widget.grid.events;
 
-package com.vaadin.client.ui.nativeselect;
+import com.vaadin.client.widget.grid.CellReference;
 
-import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
-import com.vaadin.client.ui.VNativeSelect;
-import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.NativeSelect;
+/**
+ * Event that gets fired when an already open editor is closed and re-opened on
+ * another row
+ */
+public class EditorMoveEvent extends EditorEvent {
 
-@Connect(NativeSelect.class)
-public class NativeSelectConnector extends OptionGroupBaseConnector {
-
-    @Override
-    protected void init() {
-        super.init();
-        ConnectorFocusAndBlurHandler.addHandlers(this, getWidget().getSelect());
+    public EditorMoveEvent(CellReference<?> cell) {
+        super(cell);
     }
 
     @Override
-    public VNativeSelect getWidget() {
-        return (VNativeSelect) super.getWidget();
+    protected void dispatch(EditorEventHandler handler) {
+        handler.onEditorMove(this);
     }
 }

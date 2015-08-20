@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -45,10 +46,14 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.DataGenerator;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
@@ -172,7 +177,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractComponent implements SelectionNotifier,
+public class Grid extends AbstractFocusable implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
@@ -508,6 +513,100 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return userOriginated;
         }
 
+    }
+
+    /**
+     * Interface for an editor event listener
+     */
+    public interface EditorListener extends Serializable {
+
+        public static final Method EDITOR_OPEN_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorOpened",
+                        EditorOpenEvent.class);
+        public static final Method EDITOR_MOVE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorMoved",
+                        EditorMoveEvent.class);
+        public static final Method EDITOR_CLOSE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorClosed",
+                        EditorCloseEvent.class);
+
+        /**
+         * Called when an editor is opened
+         * 
+         * @param e
+         *            an editor open event object
+         */
+        public void editorOpened(EditorOpenEvent e);
+
+        /**
+         * Called when an editor is reopened without closing it first
+         * 
+         * @param e
+         *            an editor move event object
+         */
+        public void editorMoved(EditorMoveEvent e);
+
+        /**
+         * Called when an editor is closed
+         * 
+         * @param e
+         *            an editor close event object
+         */
+        public void editorClosed(EditorCloseEvent e);
+
+    }
+
+    /**
+     * Base class for editor related events
+     */
+    public static abstract class EditorEvent extends Component.Event {
+
+        private Object itemID;
+
+        protected EditorEvent(Grid source, Object itemID) {
+            super(source);
+            this.itemID = itemID;
+        }
+
+        /**
+         * Get the item (row) for which this editor was opened
+         */
+        public Object getItem() {
+            return itemID;
+        }
+
+    }
+
+    /**
+     * This event gets fired when an editor is opened
+     */
+    public static class EditorOpenEvent extends EditorEvent {
+
+        public EditorOpenEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is opened while another row is being
+     * edited (i.e. editor focus moves elsewhere)
+     */
+    public static class EditorMoveEvent extends EditorEvent {
+
+        public EditorMoveEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is dismissed or closed by other
+     * means.
+     */
+    public static class EditorCloseEvent extends EditorEvent {
+
+        public EditorCloseEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
     }
 
     /**
@@ -1432,39 +1531,174 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Callback interface for generating custom style names for data rows
+     * A callback interface for generating custom style names for Grid rows.
      * 
      * @see Grid#setRowStyleGenerator(RowStyleGenerator)
      */
     public interface RowStyleGenerator extends Serializable {
 
         /**
-         * Called by Grid to generate a style name for a row
+         * Called by Grid to generate a style name for a row.
          * 
-         * @param rowReference
-         *            The row to generate a style for
+         * @param row
+         *            the row to generate a style for
          * @return the style name to add to this row, or {@code null} to not set
          *         any style
          */
-        public String getStyle(RowReference rowReference);
+        public String getStyle(RowReference row);
     }
 
     /**
-     * Callback interface for generating custom style names for cells
+     * A callback interface for generating custom style names for Grid cells.
      * 
      * @see Grid#setCellStyleGenerator(CellStyleGenerator)
      */
     public interface CellStyleGenerator extends Serializable {
 
         /**
-         * Called by Grid to generate a style name for a column
+         * Called by Grid to generate a style name for a column.
          * 
-         * @param cellReference
-         *            The cell to generate a style for
+         * @param cell
+         *            the cell to generate a style for
          * @return the style name to add to this cell, or {@code null} to not
          *         set any style
          */
-        public String getStyle(CellReference cellReference);
+        public String getStyle(CellReference cell);
+    }
+
+    /**
+     * A callback interface for generating optional descriptions (tooltips) for
+     * Grid rows. If a description is generated for a row, it is used for all
+     * the cells in the row for which a {@link CellDescriptionGenerator cell
+     * description} is not generated.
+     *
+     * @see Grid#setRowDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public interface RowDescriptionGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a description (tooltip) for a row. The
+         * description may contain HTML which is rendered directly; if this is
+         * not desired the returned string must be escaped by the implementing
+         * method.
+         * 
+         * @param row
+         *            the row to generate a description for
+         * @return the row description or {@code null} for no description
+         */
+        public String getDescription(RowReference row);
+    }
+
+    /**
+     * A callback interface for generating optional descriptions (tooltips) for
+     * Grid cells. If a cell has both a {@link RowDescriptionGenerator row
+     * description} and a cell description, the latter has precedence.
+     * 
+     * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public interface CellDescriptionGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a description (tooltip) for a cell. The
+         * description may contain HTML which is rendered directly; if this is
+         * not desired the returned string must be escaped by the implementing
+         * method.
+         * 
+         * @param cell
+         *            the cell to generate a description for
+         * @return the cell description or {@code null} for no description
+         */
+        public String getDescription(CellReference cell);
+    }
+
+    /**
+     * Class for generating all row and cell related data for the essential
+     * parts of Grid.
+     */
+    private class RowDataGenerator implements DataGenerator {
+
+        private void put(String key, String value, JsonObject object) {
+            if (value != null && !value.isEmpty()) {
+                object.put(key, value);
+            }
+        }
+
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            RowReference row = new RowReference(Grid.this);
+            row.set(itemId);
+
+            if (rowStyleGenerator != null) {
+                String style = rowStyleGenerator.getStyle(row);
+                put(GridState.JSONKEY_ROWSTYLE, style, rowData);
+            }
+
+            if (rowDescriptionGenerator != null) {
+                String description = rowDescriptionGenerator
+                        .getDescription(row);
+                put(GridState.JSONKEY_ROWDESCRIPTION, description, rowData);
+
+            }
+
+            JsonObject cellStyles = Json.createObject();
+            JsonObject cellData = Json.createObject();
+            JsonObject cellDescriptions = Json.createObject();
+
+            CellReference cell = new CellReference(row);
+
+            for (Column column : getColumns()) {
+                cell.set(column.getPropertyId());
+
+                writeData(cell, cellData);
+                writeStyles(cell, cellStyles);
+                writeDescriptions(cell, cellDescriptions);
+            }
+
+            if (cellDescriptionGenerator != null
+                    && cellDescriptions.keys().length > 0) {
+                rowData.put(GridState.JSONKEY_CELLDESCRIPTION, cellDescriptions);
+            }
+
+            if (cellStyleGenerator != null && cellStyles.keys().length > 0) {
+                rowData.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
+            }
+
+            rowData.put(GridState.JSONKEY_DATA, cellData);
+        }
+
+        private void writeStyles(CellReference cell, JsonObject styles) {
+            if (cellStyleGenerator != null) {
+                String style = cellStyleGenerator.getStyle(cell);
+                put(columnKeys.key(cell.getPropertyId()), style, styles);
+            }
+        }
+
+        private void writeDescriptions(CellReference cell,
+                JsonObject descriptions) {
+            if (cellDescriptionGenerator != null) {
+                String description = cellDescriptionGenerator
+                        .getDescription(cell);
+                put(columnKeys.key(cell.getPropertyId()), description,
+                        descriptions);
+            }
+        }
+
+        private void writeData(CellReference cell, JsonObject data) {
+            Column column = getColumn(cell.getPropertyId());
+            Converter<?, ?> converter = column.getConverter();
+            Renderer<?> renderer = column.getRenderer();
+
+            Item item = cell.getItem();
+            Object modelValue = item.getItemProperty(cell.getPropertyId())
+                    .getValue();
+
+            data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
+                    .encodeValue(modelValue, renderer, converter, getLocale()));
+        }
     }
 
     /**
@@ -3382,10 +3616,78 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return JsonCodec.encode(value, null, type,
                     getUI().getConnectorTracker()).getEncodedValue();
         }
+
+        /**
+         * Converts and encodes the given data model property value using the
+         * given converter and renderer. This method is public only for testing
+         * purposes.
+         * 
+         * @param renderer
+         *            the renderer to use
+         * @param converter
+         *            the converter to use
+         * @param modelValue
+         *            the value to convert and encode
+         * @param locale
+         *            the locale to use in conversion
+         * @return an encoded value ready to be sent to the client
+         */
+        public static <T> JsonValue encodeValue(Object modelValue,
+                Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
+            Class<T> presentationType = renderer.getPresentationType();
+            T presentationValue;
+
+            if (converter == null) {
+                try {
+                    presentationValue = presentationType.cast(modelValue);
+                } catch (ClassCastException e) {
+                    if (presentationType == String.class) {
+                        // If there is no converter, just fallback to using
+                        // toString(). modelValue can't be null as
+                        // Class.cast(null) will always succeed
+                        presentationValue = (T) modelValue.toString();
+                    } else {
+                        throw new Converter.ConversionException(
+                                "Unable to convert value of type "
+                                        + modelValue.getClass().getName()
+                                        + " to presentation type "
+                                        + presentationType.getName()
+                                        + ". No converter is set and the types are not compatible.");
+                    }
+                }
+            } else {
+                assert presentationType.isAssignableFrom(converter
+                        .getPresentationType());
+                @SuppressWarnings("unchecked")
+                Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
+                presentationValue = safeConverter
+                        .convertToPresentation(modelValue,
+                                safeConverter.getPresentationType(), locale);
+            }
+
+            JsonValue encodedValue;
+            try {
+                encodedValue = renderer.encode(presentationValue);
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Unable to encode data", e);
+                encodedValue = renderer.encode(null);
+            }
+
+            return encodedValue;
+        }
+
+        private static Logger getLogger() {
+            return Logger.getLogger(AbstractRenderer.class.getName());
+        }
+
     }
 
     /**
      * An abstract base class for server-side Grid extensions.
+     * <p>
+     * Note: If the extension is an instance of {@link DataGenerator} it will
+     * automatically register itself to {@link RpcDataProviderExtension} of
+     * extended Grid. On remove this registration is automatically removed.
      * 
      * @since 7.5
      */
@@ -3408,6 +3710,26 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public AbstractGridExtension(Grid grid) {
             super();
             extend(grid);
+        }
+
+        @Override
+        protected void extend(AbstractClientConnector target) {
+            super.extend(target);
+
+            if (this instanceof DataGenerator) {
+                getParentGrid().datasourceExtension
+                        .addDataGenerator((DataGenerator) this);
+            }
+        }
+
+        @Override
+        public void remove() {
+            if (this instanceof DataGenerator) {
+                getParentGrid().datasourceExtension
+                        .removeDataGenerator((DataGenerator) this);
+            }
+
+            super.remove();
         }
 
         /**
@@ -3451,9 +3773,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             if (getParent() instanceof Grid) {
                 Grid grid = (Grid) getParent();
                 return grid;
+            } else if (getParent() == null) {
+                throw new IllegalStateException(
+                        "Renderer is not attached to any parent");
             } else {
                 throw new IllegalStateException(
-                        "Renderers can be used only with Grid");
+                        "Renderers can be used only with Grid. Extended "
+                                + getParent().getClass().getSimpleName()
+                                + " instead");
             }
         }
     }
@@ -3531,6 +3858,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
     };
 
+    private final ItemSetChangeListener editorClosingItemSetListener = new ItemSetChangeListener() {
+        @Override
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            cancelEditor();
+        }
+    };
+
     private RpcDataProviderExtension datasourceExtension;
 
     /**
@@ -3555,6 +3889,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
+
+    private CellDescriptionGenerator cellDescriptionGenerator;
+    private RowDescriptionGenerator rowDescriptionGenerator;
 
     /**
      * <code>true</code> if Grid is using the internal IndexedContainer created
@@ -3873,34 +4210,61 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                             userOriginated);
                 }
             }
+
+            @Override
+            public void editorOpen(String rowKey) {
+                fireEvent(new EditorOpenEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
+
+            @Override
+            public void editorMove(String rowKey) {
+                fireEvent(new EditorMoveEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
+
+            @Override
+            public void editorClose(String rowKey) {
+                fireEvent(new EditorCloseEvent(Grid.this, getKeyMapper()
+                        .getItemId(rowKey)));
+            }
         });
 
         registerRpc(new EditorServerRpc() {
 
             @Override
             public void bind(int rowIndex) {
-                Exception exception = null;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
-                    if (editedItemId == null) {
-                        editedItemId = id;
-                    }
 
-                    if (editedItemId.equals(id)) {
-                        doEditItem();
+                    final boolean opening = editedItemId == null;
+
+                    final boolean moving = !opening && !editedItemId.equals(id);
+
+                    final boolean allowMove = !isEditorBuffered()
+                            && getEditorFieldGroup().isValid();
+
+                    if (opening || !moving || allowMove) {
+                        doBind(id);
+                    } else {
+                        failBind(null);
                     }
                 } catch (Exception e) {
-                    exception = e;
+                    failBind(e);
                 }
+            }
 
-                if (exception != null) {
-                    handleError(exception);
-                    doCancelEditor();
-                    getEditorRpc().confirmBind(false);
-                } else {
-                    doEditItem();
-                    getEditorRpc().confirmBind(true);
+            private void doBind(Object id) {
+                editedItemId = id;
+                doEditItem();
+                getEditorRpc().confirmBind(true);
+            }
+
+            private void failBind(Exception e) {
+                if (e != null) {
+                    handleError(e);
                 }
+                getEditorRpc().confirmBind(false);
             }
 
             @Override
@@ -4009,9 +4373,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             removeExtension(datasourceExtension);
         }
 
-        datasource = container;
-
         resetEditor();
+
+        datasource = container;
 
         //
         // Adjust sort order
@@ -4041,7 +4405,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         datasourceExtension = new RpcDataProviderExtension(container);
-        datasourceExtension.extend(this, columnKeys);
+        datasourceExtension.extend(this);
+        datasourceExtension.addDataGenerator(new RowDataGenerator());
 
         detailComponentManager = datasourceExtension
                 .getDetailComponentManager();
@@ -4059,6 +4424,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             ((PropertySetChangeNotifier) datasource)
                     .addPropertySetChangeListener(propertyListener);
         }
+
         /*
          * activeRowHandler will be updated by the client-side request that
          * occurs on container change - no need to actively re-insert any
@@ -5499,6 +5865,73 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
+     * Sets the {@code CellDescriptionGenerator} instance for generating
+     * optional descriptions (tooltips) for individual Grid cells. If a
+     * {@link RowDescriptionGenerator} is also set, the row description it
+     * generates is displayed for cells for which {@code generator} returns
+     * null.
+     * 
+     * @param generator
+     *            the description generator to use or {@code null} to remove a
+     *            previously set generator if any
+     * 
+     * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
+     * 
+     * @since
+     */
+    public void setCellDescriptionGenerator(CellDescriptionGenerator generator) {
+        cellDescriptionGenerator = generator;
+        getState().hasDescriptions = (generator != null || rowDescriptionGenerator != null);
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Returns the {@code CellDescriptionGenerator} instance used to generate
+     * descriptions (tooltips) for Grid cells.
+     * 
+     * @return the description generator or {@code null} if no generator is set
+     * 
+     * @since
+     */
+    public CellDescriptionGenerator getCellDescriptionGenerator() {
+        return cellDescriptionGenerator;
+    }
+
+    /**
+     * Sets the {@code RowDescriptionGenerator} instance for generating optional
+     * descriptions (tooltips) for Grid rows. If a
+     * {@link CellDescriptionGenerator} is also set, the row description
+     * generated by {@code generator} is used for cells for which the cell
+     * description generator returns null.
+     * 
+     * 
+     * @param generator
+     *            the description generator to use or {@code null} to remove a
+     *            previously set generator if any
+     * 
+     * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
+     * 
+     * @since
+     */
+    public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
+        rowDescriptionGenerator = generator;
+        getState().hasDescriptions = (generator != null || cellDescriptionGenerator != null);
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Returns the {@code RowDescriptionGenerator} instance used to generate
+     * descriptions (tooltips) for Grid rows
+     * 
+     * @return the description generator or {@code} null if no generator is set
+     * 
+     * @since
+     */
+    public RowDescriptionGenerator getRowDescriptionGenerator() {
+        return rowDescriptionGenerator;
+    }
+
+    /**
      * Sets the style generator that is used for generating styles for cells
      * 
      * @param cellStyleGenerator
@@ -5507,8 +5940,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        getState().hasCellStyleGenerator = (cellStyleGenerator != null);
-
         datasourceExtension.refreshCache();
     }
 
@@ -5531,8 +5962,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void setRowStyleGenerator(RowStyleGenerator rowStyleGenerator) {
         this.rowStyleGenerator = rowStyleGenerator;
-        getState().hasRowStyleGenerator = (rowStyleGenerator != null);
-
         datasourceExtension.refreshCache();
     }
 
@@ -5742,10 +6171,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Opens the editor interface for the provided item. Scrolls the Grid to
      * bring the item to view if it is not already visible.
      * 
+     * Note that any cell content rendered by a WidgetRenderer will not be
+     * visible in the editor row.
+     * 
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
-     *             if the editor is not enabled or already editing an item
+     *             if the editor is not enabled or already editing an item in
+     *             buffered mode
      * @throws IllegalArgumentException
      *             if the {@code itemId} is not in the backing container
      * @see #setEditorEnabled(boolean)
@@ -5754,8 +6187,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             IllegalArgumentException {
         if (!isEditorEnabled()) {
             throw new IllegalStateException("Item editor is not enabled");
-        } else if (editedItemId != null) {
-            throw new IllegalStateException("Editing item + " + itemId
+        } else if (isEditorBuffered() && editedItemId != null) {
+            throw new IllegalStateException("Editing item " + itemId
                     + " failed. Item editor is already editing item "
                     + editedItemId);
         } else if (!getContainerDataSource().containsId(itemId)) {
@@ -5783,6 +6216,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             f.markAsDirtyRecursive();
         }
 
+        if (datasource instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) datasource)
+                    .addItemSetChangeListener(editorClosingItemSetListener);
+        }
     }
 
     private void setEditorField(Object propertyId, Field<?> field) {
@@ -5831,6 +6268,11 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editorActive = false;
         editorFieldGroup.discard();
         editorFieldGroup.setItemDataSource(null);
+
+        if (datasource instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) datasource)
+                    .removeItemSetChangeListener(editorClosingItemSetListener);
+        }
 
         // Mark Grid as dirty so the client side gets to know that the editors
         // are no longer attached
@@ -5979,6 +6421,70 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public String getEditorCancelCaption() {
         return getState(false).editorCancelCaption;
+    }
+
+    /**
+     * Add an editor event listener
+     * 
+     * @param listener
+     *            the event listener object to add
+     */
+    public void addEditorListener(EditorListener listener) {
+        addListener(GridConstants.EDITOR_OPEN_EVENT_ID, EditorOpenEvent.class,
+                listener, EditorListener.EDITOR_OPEN_METHOD);
+        addListener(GridConstants.EDITOR_MOVE_EVENT_ID, EditorMoveEvent.class,
+                listener, EditorListener.EDITOR_MOVE_METHOD);
+        addListener(GridConstants.EDITOR_CLOSE_EVENT_ID,
+                EditorCloseEvent.class, listener,
+                EditorListener.EDITOR_CLOSE_METHOD);
+    }
+
+    /**
+     * Remove an editor event listener
+     * 
+     * @param listener
+     *            the event listener object to remove
+     */
+    public void removeEditorListener(EditorListener listener) {
+        removeListener(GridConstants.EDITOR_OPEN_EVENT_ID,
+                EditorOpenEvent.class, listener);
+        removeListener(GridConstants.EDITOR_MOVE_EVENT_ID,
+                EditorMoveEvent.class, listener);
+        removeListener(GridConstants.EDITOR_CLOSE_EVENT_ID,
+                EditorCloseEvent.class, listener);
+    }
+
+    /**
+     * Sets the buffered editor mode. The default mode is buffered (
+     * <code>true</code>).
+     * 
+     * @since 7.6
+     * @param editorBuffered
+     *            <code>true</code> to enable buffered editor,
+     *            <code>false</code> to disable it
+     * @throws IllegalStateException
+     *             If editor is active while attempting to change the buffered
+     *             mode.
+     */
+    public void setEditorBuffered(boolean editorBuffered)
+            throws IllegalStateException {
+        if (isEditorActive()) {
+            throw new IllegalStateException(
+                    "Can't change editor unbuffered mode while editor is active.");
+        }
+        getState().editorBuffered = editorBuffered;
+        editorFieldGroup.setBuffered(editorBuffered);
+    }
+
+    /**
+     * Gets the buffered editor mode.
+     * 
+     * @since 7.6
+     * @return <code>true</code> if buffered editor is enabled,
+     *         <code>false</code> otherwise
+     */
+    public boolean isEditorBuffered() {
+        return getState().editorBuffered;
     }
 
     @Override
@@ -6273,6 +6779,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         result.add("footer-visible");
         result.add("editor-error-handler");
         result.add("height-mode");
+
         return result;
     }
 }

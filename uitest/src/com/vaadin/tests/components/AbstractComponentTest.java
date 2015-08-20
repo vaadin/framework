@@ -20,6 +20,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.BaseTheme;
@@ -242,16 +243,18 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
         createStyleNameSelect(CATEGORY_DECORATIONS);
 
+        createFocusActions();
     }
 
     protected Command<T, Boolean> focusListenerCommand = new Command<T, Boolean>() {
 
         @Override
         public void execute(T c, Boolean value, Object data) {
+            FocusNotifier fn = (FocusNotifier) c;
             if (value) {
-                ((FocusNotifier) c).addListener(AbstractComponentTest.this);
+                fn.addFocusListener(AbstractComponentTest.this);
             } else {
-                ((FocusNotifier) c).removeListener(AbstractComponentTest.this);
+                fn.removeFocusListener(AbstractComponentTest.this);
             }
         }
     };
@@ -259,10 +262,11 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
         @Override
         public void execute(T c, Boolean value, Object data) {
+            BlurNotifier bn = (BlurNotifier) c;
             if (value) {
-                ((BlurNotifier) c).addListener(AbstractComponentTest.this);
+                bn.addBlurListener(AbstractComponentTest.this);
             } else {
-                ((BlurNotifier) c).removeListener(AbstractComponentTest.this);
+                bn.removeBlurListener(AbstractComponentTest.this);
             }
         }
     };
@@ -277,6 +281,35 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createBooleanAction("Blur listener", category, false,
                 blurListenerCommand);
 
+    }
+
+    private void createFocusActions() {
+        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
+            createFocusListener(CATEGORY_LISTENERS);
+        }
+        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
+            createBlurListener(CATEGORY_LISTENERS);
+        }
+        if (Focusable.class.isAssignableFrom(getTestClass())) {
+            LinkedHashMap<String, Integer> tabIndexes = new LinkedHashMap<String, Integer>();
+            tabIndexes.put("0", 0);
+            tabIndexes.put("-1", -1);
+            tabIndexes.put("10", 10);
+            createSelectAction("Tab index", "State", tabIndexes, "0",
+                    new Command<T, Integer>() {
+                        @Override
+                        public void execute(T c, Integer tabIndex, Object data) {
+                            ((Focusable) c).setTabIndex(tabIndex);
+                        }
+                    });
+
+            createClickAction("Set focus", "State", new Command<T, Void>() {
+                @Override
+                public void execute(T c, Void value, Object data) {
+                    ((Focusable) c).focus();
+                }
+            }, null);
+        }
     }
 
     private void createStyleNameSelect(String category) {

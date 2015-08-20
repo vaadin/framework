@@ -143,7 +143,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         List<WebElement> selectorDivs = editorCells.findElements(By
                 .cssSelector("div"));
 
-        assertTrue("selector column cell should've been empty", selectorDivs
+        assertFalse("selector column cell should've had contents", selectorDivs
                 .get(0).getAttribute("innerHTML").isEmpty());
         assertFalse("normal column cell shoul've had contents", selectorDivs
                 .get(1).getAttribute("innerHTML").isEmpty());

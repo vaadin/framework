@@ -15,30 +15,20 @@
  */
 package com.vaadin.client.ui.nativebutton;
 
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.EventHelper;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VNativeButton;
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.NativeButtonState;
 import com.vaadin.ui.NativeButton;
 
 @Connect(NativeButton.class)
-public class NativeButtonConnector extends AbstractComponentConnector implements
-        BlurHandler, FocusHandler {
-
-    private HandlerRegistration focusHandlerRegistration;
-    private HandlerRegistration blurHandlerRegistration;
+public class NativeButtonConnector extends AbstractComponentConnector {
 
     @Override
     public void init() {
@@ -47,6 +37,8 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
         getWidget().buttonRpcProxy = getRpcProxy(ButtonServerRpc.class);
         getWidget().client = getConnection();
         getWidget().paintableId = getConnectorId();
+
+        ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
     @Override
@@ -59,10 +51,6 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
         super.onStateChanged(stateChangeEvent);
 
         getWidget().disableOnClick = getState().disableOnClick;
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
-                blurHandlerRegistration);
 
         // Set text
         VCaption.setCaptionText(getWidget(), getState());
@@ -107,19 +95,4 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     public NativeButtonState getState() {
         return (NativeButtonState) super.getState();
     }
-
-    @Override
-    public void onFocus(FocusEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).focus();
-    }
-
-    @Override
-    public void onBlur(BlurEvent event) {
-        // EventHelper.updateFocusHandler ensures that this is called only when
-        // there is a listener on server side
-        getRpcProxy(FocusAndBlurServerRpc.class).blur();
-    }
-
 }

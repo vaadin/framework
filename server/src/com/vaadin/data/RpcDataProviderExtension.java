@@ -24,11 +24,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
 import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
@@ -44,10 +41,8 @@ import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -55,18 +50,13 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.CellReference;
-import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.RowReference;
-import com.vaadin.ui.Grid.RowStyleGenerator;
-import com.vaadin.ui.renderers.Renderer;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * Provides Vaadin server-side container data source to a
@@ -92,7 +82,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * itemId &lrarr; key mapping is not needed anymore. In other words, this
      * doesn't leak memory.
      */
-    public class DataProviderKeyMapper implements Serializable {
+    public class DataProviderKeyMapper implements Serializable, DataGenerator {
         private final BiMap<Object, String> itemIdToKey = HashBiMap.create();
         private Set<Object> pinnedItemIds = new HashSet<Object>();
         private long rollingIndex = 0;
@@ -248,6 +238,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
          */
         public boolean isPinned(Object itemId) {
             return pinnedItemIds.contains(itemId);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @since
+         */
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            rowData.put(GridState.JSONKEY_ROWKEY, getKey(itemId));
         }
 
         /**
@@ -415,7 +415,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @since 7.5.0
      * @author Vaadin Ltd
      */
-    public static final class DetailComponentManager implements Serializable {
+    // TODO this should probably be a static nested class
+    public final class DetailComponentManager implements DataGenerator {
         /**
          * This map represents all the components that have been requested for
          * each item id.
@@ -423,9 +424,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * Normally this map is consistent with what is displayed in the
          * component hierarchy (and thus the DOM). The only time this map is out
          * of sync with the DOM is between the any calls to
-         * {@link #createDetails(Object, int)} or
-         * {@link #destroyDetails(Object)}, and
-         * {@link GridClientRpc#setDetailsConnectorChanges(Set)}.
+         * {@link #createDetails(Object)} or {@link #destroyDetails(Object)},
+         * and {@link GridClientRpc#setDetailsConnectorChanges(Set)}.
          * <p>
          * This is easily checked: if {@link #unattachedComponents} is
          * {@link Collection#isEmpty() empty}, then this field is consistent
@@ -436,7 +436,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         /**
          * Keeps tabs on all the details that did not get a component during
-         * {@link #createDetails(Object, int)}.
+         * {@link #createDetails(Object)}.
          */
         private final Set<Object> emptyDetails = Sets.newHashSet();
 
@@ -541,6 +541,25 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
             this.grid = grid;
         }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @since
+         */
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            if (visibleDetails.contains(itemId)) {
+                // Double check to be sure details component exists.
+                detailComponentManager.createDetails(itemId);
+                Component detailsComponent = visibleDetailsComponents
+                        .get(itemId);
+                rowData.put(
+                        GridState.JSONKEY_DETAILS_VISIBLE,
+                        (detailsComponent != null ? detailsComponent
+                                .getConnectorId() : ""));
+            }
+        }
     }
 
     private final Indexed container;
@@ -618,13 +637,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private final DataProviderKeyMapper keyMapper = new DataProviderKeyMapper();
 
-    private KeyMapper<Object> columnKeys;
-
     /** RpcDataProvider should send the current cache again. */
     private boolean refreshCache = false;
-
-    private RowReference rowReference;
-    private CellReference cellReference;
 
     /** Set of updated item ids */
     private Set<Object> updatedItemIds = new LinkedHashSet<Object>();
@@ -642,9 +656,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * This map represents all the details that are user-defined as visible.
      * This does not reflect the status in the DOM.
      */
-    private Set<Object> visibleDetails = new HashSet<Object>();
+    // TODO this should probably be inside DetailComponentManager
+    private final Set<Object> visibleDetails = new HashSet<Object>();
 
     private final DetailComponentManager detailComponentManager = new DetailComponentManager();
+
+    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<DataGenerator>();
+
     private final ActiveItemHandler activeItemHandler = new ActiveItemHandler();
 
     /**
@@ -690,6 +708,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     .addItemSetChangeListener(itemListener);
         }
 
+        addDataGenerator(keyMapper);
+        addDataGenerator(detailComponentManager);
     }
 
     /**
@@ -774,78 +794,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private JsonObject getRowData(Collection<Column> columns, Object itemId) {
         Item item = container.getItem(itemId);
 
-        JsonObject rowData = Json.createObject();
-
-        Grid grid = getGrid();
-
-        for (Column column : columns) {
-            Object propertyId = column.getPropertyId();
-
-            Object propertyValue = item.getItemProperty(propertyId).getValue();
-            JsonValue encodedValue = encodeValue(propertyValue,
-                    column.getRenderer(), column.getConverter(),
-                    grid.getLocale());
-
-            rowData.put(columnKeys.key(propertyId), encodedValue);
-        }
-
         final JsonObject rowObject = Json.createObject();
-        rowObject.put(GridState.JSONKEY_DATA, rowData);
-        rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
-
-        if (visibleDetails.contains(itemId)) {
-            // Double check to be sure details component exists.
-            detailComponentManager.createDetails(itemId);
-            Component detailsComponent = detailComponentManager.visibleDetailsComponents
-                    .get(itemId);
-            rowObject.put(
-                    GridState.JSONKEY_DETAILS_VISIBLE,
-                    (detailsComponent != null ? detailsComponent
-                            .getConnectorId() : ""));
-        }
-
-        rowReference.set(itemId);
-
-        CellStyleGenerator cellStyleGenerator = grid.getCellStyleGenerator();
-        if (cellStyleGenerator != null) {
-            setGeneratedCellStyles(cellStyleGenerator, rowObject, columns);
-        }
-        RowStyleGenerator rowStyleGenerator = grid.getRowStyleGenerator();
-        if (rowStyleGenerator != null) {
-            setGeneratedRowStyles(rowStyleGenerator, rowObject);
+        for (DataGenerator dg : dataGenerators) {
+            dg.generateData(itemId, item, rowObject);
         }
 
         return rowObject;
-    }
-
-    private void setGeneratedCellStyles(CellStyleGenerator generator,
-            JsonObject rowObject, Collection<Column> columns) {
-        JsonObject cellStyles = null;
-        for (Column column : columns) {
-            Object propertyId = column.getPropertyId();
-            cellReference.set(propertyId);
-            String style = generator.getStyle(cellReference);
-            if (style != null && !style.isEmpty()) {
-                if (cellStyles == null) {
-                    cellStyles = Json.createObject();
-                }
-
-                String columnKey = columnKeys.key(propertyId);
-                cellStyles.put(columnKey, style);
-            }
-        }
-        if (cellStyles != null) {
-            rowObject.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
-        }
-
-    }
-
-    private void setGeneratedRowStyles(RowStyleGenerator generator,
-            JsonObject rowObject) {
-        String rowStyle = generator.getStyle(rowReference);
-        if (rowStyle != null && !rowStyle.isEmpty()) {
-            rowObject.put(GridState.JSONKEY_ROWSTYLE, rowStyle);
-        }
     }
 
     /**
@@ -856,10 +810,35 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param columnKeys
      *            the key mapper for columns
      */
-    public void extend(Grid component, KeyMapper<Object> columnKeys) {
-        this.columnKeys = columnKeys;
+    public void extend(Grid component) {
         detailComponentManager.setGrid(component);
         super.extend(component);
+    }
+
+    /**
+     * Adds a {@link DataGenerator} for this {@code RpcDataProviderExtension}.
+     * DataGenerators are called when sending row data to client. If given
+     * DataGenerator is already added, this method does nothing.
+     * 
+     * @since
+     * @param generator
+     *            generator to add
+     */
+    public void addDataGenerator(DataGenerator generator) {
+        dataGenerators.add(generator);
+    }
+
+    /**
+     * Removes a {@link DataGenerator} from this
+     * {@code RpcDataProviderExtension}. If given DataGenerator is not added to
+     * this data provider, this method does nothing.
+     * 
+     * @since
+     * @param generator
+     *            generator to remove
+     */
+    public void removeDataGenerator(DataGenerator generator) {
+        dataGenerators.remove(generator);
     }
 
     /**
@@ -960,11 +939,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .removeItemSetChangeListener(itemListener);
             }
 
-        } else if (parent instanceof Grid) {
-            Grid grid = (Grid) parent;
-            rowReference = new RowReference(grid);
-            cellReference = new CellReference(rowReference);
-        } else {
+        } else if (!(parent instanceof Grid)) {
             throw new IllegalStateException(
                     "Grid is the only accepted parent type");
         }
@@ -1010,68 +985,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     protected Grid getGrid() {
         return (Grid) getParent();
-    }
-
-    /**
-     * Converts and encodes the given data model property value using the given
-     * converter and renderer. This method is public only for testing purposes.
-     * 
-     * @param renderer
-     *            the renderer to use
-     * @param converter
-     *            the converter to use
-     * @param modelValue
-     *            the value to convert and encode
-     * @param locale
-     *            the locale to use in conversion
-     * @return an encoded value ready to be sent to the client
-     */
-    public static <T> JsonValue encodeValue(Object modelValue,
-            Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
-        Class<T> presentationType = renderer.getPresentationType();
-        T presentationValue;
-
-        if (converter == null) {
-            try {
-                presentationValue = presentationType.cast(modelValue);
-            } catch (ClassCastException e) {
-                if (presentationType == String.class) {
-                    // If there is no converter, just fallback to using
-                    // toString().
-                    // modelValue can't be null as Class.cast(null) will always
-                    // succeed
-                    presentationValue = (T) modelValue.toString();
-                } else {
-                    throw new Converter.ConversionException(
-                            "Unable to convert value of type "
-                                    + modelValue.getClass().getName()
-                                    + " to presentation type "
-                                    + presentationType.getName()
-                                    + ". No converter is set and the types are not compatible.");
-                }
-            }
-        } else {
-            assert presentationType.isAssignableFrom(converter
-                    .getPresentationType());
-            @SuppressWarnings("unchecked")
-            Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
-            presentationValue = safeConverter.convertToPresentation(modelValue,
-                    safeConverter.getPresentationType(), locale);
-        }
-
-        JsonValue encodedValue;
-        try {
-            encodedValue = renderer.encode(presentationValue);
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Unable to encode data", e);
-            encodedValue = renderer.encode(null);
-        }
-
-        return encodedValue;
-    }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(RpcDataProviderExtension.class.getName());
     }
 
     /**

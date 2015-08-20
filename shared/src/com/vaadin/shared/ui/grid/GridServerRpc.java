@@ -37,6 +37,31 @@ public interface GridServerRpc extends ServerRpc {
             boolean userOriginated);
 
     /**
+     * Informs the server that the editor was opened (fresh) on a certain row
+     * 
+     * @param rowKey
+     *            a key identifying item the editor was opened on
+     */
+    void editorOpen(String rowKey);
+
+    /**
+     * Informs the server that the editor was reopened (without closing it in
+     * between) on another row
+     * 
+     * @param rowKey
+     *            a key identifying item the editor was opened on
+     */
+    void editorMove(String rowKey);
+
+    /**
+     * Informs the server that the editor was closed
+     * 
+     * @param rowKey
+     *            a key identifying item the editor was opened on
+     */
+    void editorClose(String rowKey);
+
+    /**
      * Informs the server that an item has been clicked in Grid.
      * 
      * @param rowKey

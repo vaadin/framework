@@ -13,8 +13,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;
@@ -29,15 +27,9 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
     @Override
     protected void createActions() {
         super.createActions();
+
         createBooleanAction("Required", CATEGORY_STATE, false, requiredCommand);
         createRequiredErrorSelect(CATEGORY_DECORATIONS);
-        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
-            createFocusListener(CATEGORY_LISTENERS);
-        }
-
-        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
-            createBlurListener(CATEGORY_LISTENERS);
-        }
 
         createValueChangeListener(CATEGORY_LISTENERS);
         createReadOnlyStatusChangeListener(CATEGORY_LISTENERS);
@@ -52,7 +44,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         // * invalidallowed
         // * error indicator
         //
-        // * tabindex
         // * validation visible
         // * ShortcutListener
 

@@ -124,6 +124,10 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
       vertical-align: middle;
     }
     
+    &.not-editable.#{$primary-stylename}-cell {
+      float: none;
+    }
+    
     .error::before {
       border-top: round($v-unit-size / 4) solid $v-error-indicator-color;
       border-right: round($v-unit-size / 4) solid transparent;

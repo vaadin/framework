@@ -15,8 +15,17 @@
  */
 package com.vaadin.tests.server.renderer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
+import java.util.Date;
+import java.util.Locale;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.vaadin.data.Item;
-import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -24,22 +33,15 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.AbstractRenderer;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
+
 import elemental.json.JsonValue;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Date;
-import java.util.Locale;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 public class RendererTest {
 
@@ -259,7 +261,7 @@ public class RendererTest {
     }
 
     private JsonValue render(Column column, Object value) {
-        return RpcDataProviderExtension.encodeValue(value,
-                column.getRenderer(), column.getConverter(), grid.getLocale());
+        return AbstractRenderer.encodeValue(value, column.getRenderer(),
+                column.getConverter(), grid.getLocale());
     }
 }

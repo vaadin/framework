@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -39,8 +40,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
@@ -48,6 +49,7 @@ import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
@@ -61,6 +63,10 @@ import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
+import com.vaadin.client.widget.grid.events.EditorCloseEvent;
+import com.vaadin.client.widget.grid.events.EditorEventHandler;
+import com.vaadin.client.widget.grid.events.EditorMoveEvent;
+import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
@@ -114,8 +120,8 @@ import elemental.json.JsonValue;
 public class GridConnector extends AbstractHasComponentsConnector implements
         SimpleManagedLayout, DeferredWorker {
 
-    private static final class CustomCellStyleGenerator implements
-            CellStyleGenerator<JsonObject> {
+    private static final class CustomStyleGenerator implements
+            CellStyleGenerator<JsonObject>, RowStyleGenerator<JsonObject> {
         @Override
         public String getStyle(CellReference<JsonObject> cellReference) {
             JsonObject row = cellReference.getRow();
@@ -141,10 +147,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-    }
-
-    private static final class CustomRowStyleGenerator implements
-            RowStyleGenerator<JsonObject> {
         @Override
         public String getStyle(RowReference<JsonObject> rowReference) {
             JsonObject row = rowReference.getRow();
@@ -154,7 +156,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 return null;
             }
         }
-
     }
 
     /**
@@ -579,6 +580,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private String lastKnownTheme = null;
 
     private final CustomDetailsGenerator customDetailsGenerator = new CustomDetailsGenerator();
+    private final CustomStyleGenerator styleGenerator = new CustomStyleGenerator();
 
     private final DetailsListener detailsListener = new DetailsListener() {
         @Override
@@ -710,6 +712,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
 
+        /* Style Generators */
+        getWidget().setCellStyleGenerator(styleGenerator);
+        getWidget().setRowStyleGenerator(styleGenerator);
+
         getWidget().addSortHandler(new SortHandler<JsonObject>() {
             @Override
             public void sort(SortEvent<JsonObject> event) {
@@ -747,8 +753,37 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().addColumnReorderHandler(columnReorderHandler);
         getWidget().addColumnVisibilityChangeHandler(
                 columnVisibilityChangeHandler);
+
+        ConnectorFocusAndBlurHandler.addHandlers(this);
+
         getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
+
+        getWidget().addEditorEventHandler(new EditorEventHandler() {
+            @Override
+            public void onEditorOpen(EditorOpenEvent e) {
+                if (hasEventListener(GridConstants.EDITOR_OPEN_EVENT_ID)) {
+                    String rowKey = getRowKey((JsonObject) e.getRow());
+                    getRpcProxy(GridServerRpc.class).editorOpen(rowKey);
+                }
+            }
+
+            @Override
+            public void onEditorMove(EditorMoveEvent e) {
+                if (hasEventListener(GridConstants.EDITOR_MOVE_EVENT_ID)) {
+                    String rowKey = getRowKey((JsonObject) e.getRow());
+                    getRpcProxy(GridServerRpc.class).editorMove(rowKey);
+                }
+            }
+
+            @Override
+            public void onEditorClose(EditorCloseEvent e) {
+                if (hasEventListener(GridConstants.EDITOR_CLOSE_EVENT_ID)) {
+                    String rowKey = getRowKey((JsonObject) e.getRow());
+                    getRpcProxy(GridServerRpc.class).editorClose(rowKey);
+                }
+            }
+        });
 
         layout();
     }
@@ -1099,24 +1134,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    @OnStateChange("hasCellStyleGenerator")
-    private void onCellStyleGeneratorChange() {
-        if (getState().hasCellStyleGenerator) {
-            getWidget().setCellStyleGenerator(new CustomCellStyleGenerator());
-        } else {
-            getWidget().setCellStyleGenerator(null);
-        }
-    }
-
-    @OnStateChange("hasRowStyleGenerator")
-    private void onRowStyleGeneratorChange() {
-        if (getState().hasRowStyleGenerator) {
-            getWidget().setRowStyleGenerator(new CustomRowStyleGenerator());
-        } else {
-            getWidget().setRowStyleGenerator(null);
-        }
-    }
-
     private void updateSelectionFromState() {
         boolean changed = false;
 
@@ -1270,5 +1287,43 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     public DetailsListener getDetailsListener() {
         return detailsListener;
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        return getState().hasDescriptions || super.hasTooltip();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        CellReference<JsonObject> cell = getWidget().getCellReference(element);
+
+        if (cell != null) {
+            JsonObject row = cell.getRow();
+            if (row == null) {
+                return null;
+            }
+
+            Column<?, JsonObject> column = cell.getColumn();
+            if (!(column instanceof CustomGridColumn)) {
+                // Selection checkbox column
+                return null;
+            }
+            CustomGridColumn c = (CustomGridColumn) column;
+
+            JsonObject cellDescriptions = row
+                    .getObject(GridState.JSONKEY_CELLDESCRIPTION);
+
+            if (cellDescriptions != null && cellDescriptions.hasKey(c.id)) {
+                return new TooltipInfo(cellDescriptions.getString(c.id));
+            } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
+                return new TooltipInfo(
+                        row.getString(GridState.JSONKEY_ROWDESCRIPTION));
+            } else {
+                return null;
+            }
+        }
+
+        return super.getTooltipInfo(element);
     }
 }
