@@ -287,8 +287,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * Simple case: no overlap between cached data and needed data.
              * Clear the cache and request new data
              */
-            indexToRowMap.clear();
-            keyToIndexMap.clear();
+            dropFromCache(cached);
             cached = Range.between(0, 0);
 
             handleMissingRows(getMaxCacheRange());
@@ -330,25 +329,46 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private void dropFromCache(Range range) {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
-            // Called before dropping from cache, so we can actually do
-            // something with the data before the drop.
-            onDropFromCache(i);
-
+            // Called after dropping from cache. Dropped row is passed as a
+            // parameter, but is no longer present in the DataSource
             T removed = indexToRowMap.remove(Integer.valueOf(i));
+            onDropFromCache(i, removed);
             keyToIndexMap.remove(getRowKey(removed));
         }
     }
 
     /**
-     * A hook that can be overridden to do something whenever a row is about to
-     * be dropped from the cache.
+     * A hook that can be overridden to do something whenever a row has been
+     * dropped from the cache. DataSource no longer has anything in the given
+     * index.
+     * <p>
+     * NOTE: This method has been replaced. Override
+     * {@link #onDropFromCache(int, Object)} instead of this method.
      * 
      * @since 7.5.0
      * @param rowIndex
      *            the index of the dropped row
+     * @deprecated replaced by {@link #onDropFromCache(int, Object)}
      */
+    @Deprecated
     protected void onDropFromCache(int rowIndex) {
         // noop
+    }
+
+    /**
+     * A hook that can be overridden to do something whenever a row has been
+     * dropped from the cache. DataSource no longer has anything in the given
+     * index.
+     * 
+     * @since
+     * @param rowIndex
+     *            the index of the dropped row
+     * @param removed
+     *            the removed row object
+     */
+    protected void onDropFromCache(int rowIndex, T removed) {
+        // Call old version as a fallback (someone might have used it)
+        onDropFromCache(rowIndex);
     }
 
     private void handleMissingRows(Range range) {
@@ -481,6 +501,15 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * updated before the widget settings. Support for this will be
              * implemented later on.
              */
+
+            // Run a dummy drop from cache for unused rows.
+            for (int i = 0; i < partition[0].length(); ++i) {
+                onDropFromCache(i + partition[0].getStart(), rowData.get(i));
+            }
+
+            for (int i = 0; i < partition[2].length(); ++i) {
+                onDropFromCache(i + partition[2].getStart(), rowData.get(i));
+            }
         }
 
         // Eventually check whether all needed rows are now available

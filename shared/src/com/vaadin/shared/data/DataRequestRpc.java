@@ -20,6 +20,8 @@ import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.communication.ServerRpc;
 
+import elemental.json.JsonArray;
+
 /**
  * RPC interface used for requesting container data to the client.
  * 
@@ -59,13 +61,13 @@ public interface DataRequestRpc extends ServerRpc {
     public void setPinned(String key, boolean isPinned);
 
     /**
-     * Informs the server that an item is dropped from the client cache.
+     * Informs the server that items have been dropped from the client cache.
      * 
      * @since
-     * @param rowKey
-     *            key mapping to item
+     * @param rowKeys
+     *            array of dropped keys mapping to items
      */
     @Delayed
     @NoLoadingIndicator
-    public void dropRow(String rowKey);
+    public void dropRows(JsonArray rowKeys);
 }

@@ -107,10 +107,16 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         private DataRequestRpc rpcProxy = getRpcProxy(DataRequestRpc.class);
         private DetailsListener detailsListener;
+        private JsonArray droppedRowKeys = Json.createArray();
 
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows,
                 RequestRowsCallback<JsonObject> callback) {
+            if (droppedRowKeys.length() > 0) {
+                rpcProxy.dropRows(droppedRowKeys);
+                droppedRowKeys = Json.createArray();
+            }
+
             /*
              * If you're looking at this code because you want to learn how to
              * use AbstactRemoteDataSource, please look somewhere else instead.
@@ -235,10 +241,8 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        protected void onDropFromCache(int rowIndex) {
-            super.onDropFromCache(rowIndex);
-
-            rpcProxy.dropRow(getRowKey(getRow(rowIndex)));
+        protected void onDropFromCache(int rowIndex, JsonObject row) {
+            droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
         }
     }
 

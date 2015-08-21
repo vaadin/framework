@@ -123,7 +123,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          *            the item ids for which to get keys
          * @return keys for the {@code itemIds}
          */
-        public List<String> getKeys(Collection<Object> itemIds) {
+        public List<String> getKeys(Collection<?> itemIds) {
             if (itemIds == null) {
                 throw new IllegalArgumentException("itemIds can't be null");
             }
@@ -698,8 +698,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             @Override
-            public void dropRow(String rowKey) {
-                activeItemHandler.dropActiveItem(keyMapper.getItemId(rowKey));
+            public void dropRows(JsonArray rowKeys) {
+                for (int i = 0; i < rowKeys.length(); ++i) {
+                    activeItemHandler.dropActiveItem(keyMapper
+                            .getItemId(rowKeys.getString(i)));
+                }
             }
         });
 
