@@ -331,4 +331,31 @@ public class ComputedStyle {
 
         return paddingWidth;
     }
+
+    /**
+     * Returns the sum of the top and bottom margin
+     * 
+     * @since
+     * @return the sum of the top and bottom margin
+     */
+    public double getMarginHeight() {
+        double marginHeight = getDoubleProperty("marginTop");
+        marginHeight += getDoubleProperty("marginBottom");
+
+        return marginHeight;
+    }
+
+    /**
+     * Returns the sum of the top and bottom margin
+     * 
+     * @since
+     * @return the sum of the left and right margin
+     */
+    public double getMarginWidth() {
+        double marginWidth = getDoubleProperty("marginLeft");
+        marginWidth += getDoubleProperty("marginRight");
+
+        return marginWidth;
+    }
+
 }
