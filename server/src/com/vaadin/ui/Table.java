@@ -1322,7 +1322,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (collapsed && noncollapsibleColumns.contains(propertyId)) {
             throw new IllegalStateException("The column is noncollapsible!");
         }
-        if (!getContainerPropertyIds().contains(propertyId)) {
+        if (!getContainerPropertyIds().contains(propertyId)
+                && !columnGenerators.containsKey(propertyId)) {
             throw new IllegalArgumentException("Property '" + propertyId
                     + "' was not found in the container");
         }
@@ -5772,7 +5773,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * @param source
          *            The source of the event
          * @param propertyId
-         *            The id of the coumn
+         *            The id of the column
          */
         public ColumnCollapseEvent(Component source, Object propertyId) {
             super(source);
