@@ -24,14 +24,14 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 public class GridColumnMaxWidthTest extends GridBasicFeaturesTest {
 
     @Test
-    public void testRemovingAllColumns() {
+    public void testMaxWidthAffectsColumnWidth() {
         setDebug(true);
         openTestURL();
 
         selectMenuPath("Component", "Columns",
                 "All columns expanding, Col 0 has max width of 30px");
 
-        assertEquals("Column 0 did not obey max width of 30px.", "30px",
-                getGridElement().getCell(0, 0).getCssValue("width"));
+        assertEquals("Column 0 did not obey max width of 30px.", 30,
+                getGridElement().getCell(0, 0).getSize().getWidth());
     }
 }

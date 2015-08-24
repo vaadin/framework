@@ -2780,7 +2780,9 @@ public class Grid<T> extends ResizeComposite implements
             for (Column<?, T> column : visibleColumns) {
                 final double widthAsIs = column.getWidth();
                 final boolean isFixedWidth = widthAsIs >= 0;
-                final double widthFixed = Math.max(widthAsIs,
+                // Check for max width just to be sure we don't break the limits
+                final double widthFixed = Math.max(
+                        Math.min(getMaxWidth(column), widthAsIs),
                         column.getMinimumWidth());
                 defaultExpandRatios = defaultExpandRatios
                         && (column.getExpandRatio() == -1 || column == selectionColumn);
@@ -2820,7 +2822,10 @@ public class Grid<T> extends ResizeComposite implements
             double pixelsToDistribute = escalator.getInnerWidth()
                     - reservedPixels;
             if (pixelsToDistribute <= 0 || totalRatios <= 0) {
-                setColumnSizes(columnSizes);
+                if (pixelsToDistribute <= 0) {
+                    // Set column sizes for expanding columns
+                    setColumnSizes(columnSizes);
+                }
                 return;
             }
 
