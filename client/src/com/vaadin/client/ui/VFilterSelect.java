@@ -617,14 +617,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // Must take margin,border,padding manually into account for
                 // menu element as we measure the element child and set width to
                 // the element parent
-                int naturalMenuOuterWidth = naturalMenuWidth
+                double naturalMenuOuterWidth = WidgetUtil
+                        .getRequiredWidthDouble(menuFirstChild)
                         + getMarginBorderPaddingWidth(menu.getElement());
 
                 /*
                  * IE requires us to specify the width for the container
                  * element. Otherwise it will be 100% wide
                  */
-                int rootWidth = Math.max(desiredWidth - popupOuterPadding,
+                double rootWidth = Math.max(desiredWidth - popupOuterPadding,
                         naturalMenuOuterWidth);
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
@@ -1291,13 +1292,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         sinkEvents(Event.ONPASTE);
     }
 
-    private static int getMarginBorderPaddingWidth(Element element) {
+    private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
-        int[] margin = s.getMargin();
-        int[] border = s.getBorder();
-        int[] padding = s.getPadding();
-        return margin[1] + margin[3] + border[1] + border[3] + padding[1]
-                + padding[3];
+        return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
 
     }
 
