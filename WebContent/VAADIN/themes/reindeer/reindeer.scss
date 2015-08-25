@@ -3,16 +3,16 @@ $line-height: normal !default;
 
 
 // Override Base Grid variables
-$v-grid-border: 1px solid #c2c3c4;
-$v-grid-cell-vertical-border: 1px solid #d4d4d4;
-$v-grid-cell-horizontal-border: none;
-$v-grid-cell-focused-border: 1px solid #0f68ba;
-$v-grid-row-height: 20px;
-$v-grid-row-stripe-background-color: #eff0f1;
-$v-grid-row-selected-background-color: #4d749f;
-$v-grid-header-font-size: 10px;
-$v-grid-header-background-color: rgb(217,219,221);
-$v-grid-cell-padding-horizontal: 6px;
+$v-grid-border: 1px solid #c2c3c4 !default;
+$v-grid-cell-vertical-border: 1px solid #d4d4d4 !default;
+$v-grid-cell-horizontal-border: none !default;
+$v-grid-cell-focused-border: 1px solid #0f68ba !default;
+$v-grid-row-height: 20px !default;
+$v-grid-row-stripe-background-color: #eff0f1 !default;
+$v-grid-row-selected-background-color: #4d749f !default;
+$v-grid-header-font-size: 10px !default;
+$v-grid-header-background-color: rgb(217,219,221) !default;
+$v-grid-cell-padding-horizontal: 6px !default;
 
 
 @import "../base/base.scss";
