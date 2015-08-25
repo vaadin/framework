@@ -6484,7 +6484,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *         <code>false</code> otherwise
      */
     public boolean isEditorBuffered() {
-        return getState().editorBuffered;
+        return getState(false).editorBuffered;
     }
 
     @Override
