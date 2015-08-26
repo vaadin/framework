@@ -45,6 +45,10 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
   .#{$primary-stylename} {
     @include user-select(text);
     background-color: $v-background-color;
+
+    &.v-disabled {
+      @include opacity($v-disabled-opacity);
+    }
   }
 
   .#{$primary-stylename}-header .#{$primary-stylename}-cell {
