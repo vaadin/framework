@@ -3494,46 +3494,6 @@ public class Grid<T> extends ResizeComposite implements
             return content.getParent() == rootContainer;
         }
 
-        /**
-         * Adds or moves the given widget to the end of the sidebar.
-         * 
-         * @param widget
-         *            the widget to add or move
-         */
-        public void add(Widget widget) {
-            content.add(widget);
-            updateVisibility();
-        }
-
-        /**
-         * Removes the given widget from the sidebar.
-         * 
-         * @param widget
-         *            the widget to remove
-         */
-        public void remove(Widget widget) {
-            content.remove(widget);
-            // updateVisibility is called by remove listener
-        }
-
-        /**
-         * Inserts given widget to the given index inside the sidebar. If the
-         * widget is already in the sidebar, then it is moved to the new index.
-         * <p>
-         * See
-         * {@link FlowPanel#insert(com.google.gwt.user.client.ui.IsWidget, int)}
-         * for further details.
-         * 
-         * @param widget
-         *            the widget to insert
-         * @param beforeIndex
-         *            0-based index position for the widget.
-         */
-        public void insert(Widget widget, int beforeIndex) {
-            content.insert(widget, beforeIndex);
-            updateVisibility();
-        }
-
         @Override
         public void setStylePrimaryName(String styleName) {
             super.setStylePrimaryName(styleName);
@@ -3968,8 +3928,8 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private boolean isSidebarOnDraggedRow() {
-            return eventCell.getRowIndex() == 0 && getSidebar().isInDOM()
-                    && !getSidebar().isOpen();
+            return eventCell.getRowIndex() == 0 && sidebar.isInDOM()
+                    && !sidebar.isOpen();
         }
 
         /**
@@ -3979,8 +3939,7 @@ public class Grid<T> extends ResizeComposite implements
         private double getSidebarBoundaryComparedTo(double left) {
             if (isSidebarOnDraggedRow()) {
                 double absoluteLeft = left + getElement().getAbsoluteLeft();
-                double sidebarLeft = getSidebar().getElement()
-                        .getAbsoluteLeft();
+                double sidebarLeft = sidebar.getElement().getAbsoluteLeft();
                 double diff = absoluteLeft - sidebarLeft;
 
                 if (diff > 0) {
@@ -8104,15 +8063,15 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     protected void doAttachChildren() {
-        if (getSidebar().getParent() == this) {
-            onAttach(getSidebar());
+        if (sidebar.getParent() == this) {
+            onAttach(sidebar);
         }
     }
 
     @Override
     protected void doDetachChildren() {
-        if (getSidebar().getParent() == this) {
-            onDetach(getSidebar());
+        if (sidebar.getParent() == this) {
+            onDetach(sidebar);
         }
     }
 
@@ -8230,19 +8189,6 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void recalculateColumnWidths() {
         autoColumnWidthsRecalculator.schedule();
-    }
-
-    /**
-     * Returns the sidebar for this grid.
-     * <p>
-     * The grid's sidebar shows the column hiding options for those columns that
-     * have been set as {@link Column#setHidable(boolean) hidable}.
-     * 
-     * @since 7.5.0
-     * @return the sidebar widget for this grid
-     */
-    private Sidebar getSidebar() {
-        return sidebar;
     }
 
     /**
