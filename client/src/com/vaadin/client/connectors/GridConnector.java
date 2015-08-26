@@ -33,6 +33,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,9 +42,10 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -170,6 +173,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private AbstractFieldConnector editorConnector;
 
+        private HandlerRegistration errorStateHandler;
+
         public CustomGridColumn(String id,
                 AbstractRendererConnector<Object> rendererConnector) {
             super(rendererConnector.getRenderer());
@@ -206,8 +211,54 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             return editorConnector;
         }
 
-        private void setEditorConnector(AbstractFieldConnector editorConnector) {
+        private void setEditorConnector(
+                final AbstractFieldConnector editorConnector) {
             this.editorConnector = editorConnector;
+
+            if (errorStateHandler != null) {
+                errorStateHandler.removeHandler();
+                errorStateHandler = null;
+            }
+
+            // Avoid nesting too deep
+            if (editorConnector == null) {
+                return;
+            }
+
+            errorStateHandler = editorConnector.addStateChangeHandler(
+                    "errorMessage", new StateChangeHandler() {
+
+                        @Override
+                        public void onStateChanged(
+                                StateChangeEvent stateChangeEvent) {
+
+                            String error = editorConnector.getState().errorMessage;
+
+                            if (error == null) {
+                                columnToErrorMessage
+                                        .remove(CustomGridColumn.this);
+                            } else {
+                                // The error message is formatted as HTML;
+                                // therefore, we use this hack to make the
+                                // string human-readable.
+                                Element e = DOM.createElement("div");
+                                e.setInnerHTML(editorConnector.getState().errorMessage);
+                                error = getHeaderCaption() + ": "
+                                        + e.getInnerText();
+
+                                columnToErrorMessage.put(CustomGridColumn.this,
+                                        error);
+                            }
+
+                            // Editor should not be touched while there's a
+                            // request pending.
+                            if (editorHandler.currentRequest == null) {
+                                getWidget().getEditor().setEditorError(
+                                        getColumnErrors(),
+                                        columnToErrorMessage.keySet());
+                            }
+                        }
+                    });
         }
     }
 
@@ -282,7 +333,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             if (column instanceof CustomGridColumn) {
                 AbstractFieldConnector c = ((CustomGridColumn) column)
                         .getEditorConnector();
-                return c != null ? c.getWidget() : null;
+
+                if (c == null) {
+                    return null;
+                }
+
+                return c.getWidget();
             } else {
                 throw new IllegalStateException("Unexpected column type: "
                         + column.getClass().getName());
@@ -575,6 +631,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
+    /* Used to track Grid editor columns with validation errors */
+    private final Map<Column<?, JsonObject>, String> columnToErrorMessage = new HashMap<Column<?, JsonObject>, String>();
+
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     private String lastKnownTheme = null;
@@ -616,6 +675,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     };
 
     private final LazyDetailsScroller lazyDetailsScroller = new LazyDetailsScroller();
+    private final CustomEditorHandler editorHandler = new CustomEditorHandler();
 
     /*
      * Initially details need to behave a bit differently to allow some
@@ -749,7 +809,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         });
 
-        getWidget().setEditorHandler(new CustomEditorHandler());
+        getWidget().setEditorHandler(editorHandler);
         getWidget().addColumnReorderHandler(columnReorderHandler);
         getWidget().addColumnVisibilityChangeHandler(
                 columnVisibilityChangeHandler);
@@ -1326,4 +1386,36 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         return super.getTooltipInfo(element);
     }
+
+    /**
+     * Creates a concatenation of all columns errors for Editor.
+     * 
+     * @since
+     * @return displayed error string
+     */
+    private String getColumnErrors() {
+        List<String> errors = new ArrayList<String>();
+
+        for (Grid.Column<?, JsonObject> c : getWidget().getColumns()) {
+            if (!(c instanceof CustomGridColumn)) {
+                continue;
+            }
+
+            String error = columnToErrorMessage.get(c);
+            if (error != null) {
+                errors.add(error);
+            }
+        }
+
+        String result = "";
+        Iterator<String> i = errors.iterator();
+        while (i.hasNext()) {
+            result += i.next();
+            if (i.hasNext()) {
+                result += ", ";
+            }
+        }
+        return result.isEmpty() ? null : result;
+    }
+
 }

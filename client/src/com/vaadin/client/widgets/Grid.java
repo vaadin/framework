@@ -1091,14 +1091,10 @@ public class Grid<T> extends ResizeComposite implements
             }
             completed = true;
 
-            grid.getEditor().setErrorMessage(errorMessage);
-
-            grid.getEditor().clearEditorColumnErrors();
-            if (errorColumns != null) {
-                for (Column<?, T> column : errorColumns) {
-                    grid.getEditor().setEditorColumnError(column, true);
-                }
+            if (errorColumns == null) {
+                errorColumns = Collections.emptySet();
             }
+            grid.getEditor().setEditorError(errorMessage, errorColumns);
         }
 
         @Override
@@ -1223,6 +1219,9 @@ public class Grid<T> extends ResizeComposite implements
      *            the row type of the grid
      */
     public static class Editor<T> {
+
+        public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
+        public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
@@ -1407,7 +1406,9 @@ public class Grid<T> extends ResizeComposite implements
             });
         }
 
-        public void setErrorMessage(String errorMessage) {
+        public void setEditorError(String errorMessage,
+                Collection<Column<?, T>> errorColumns) {
+
             if (errorMessage == null) {
                 message.removeFromParent();
             } else {
@@ -1419,6 +1420,13 @@ public class Grid<T> extends ResizeComposite implements
             // In unbuffered mode only show message wrapper if there is an error
             if (!isBuffered()) {
                 setMessageAndButtonsWrapperVisible(errorMessage != null);
+            }
+
+            if (state == State.ACTIVE || state == State.SAVING) {
+                for (Column<?, T> c : grid.getColumns()) {
+                    grid.getEditor().setEditorColumnError(c,
+                            errorColumns.contains(c));
+                }
             }
         }
 
@@ -4566,6 +4574,16 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             return this;
+        }
+
+        /**
+         * Returns the current header caption for this column
+         * 
+         * @since
+         * @return the header caption string
+         */
+        public String getHeaderCaption() {
+            return headerCaption;
         }
 
         private void updateHeader() {
