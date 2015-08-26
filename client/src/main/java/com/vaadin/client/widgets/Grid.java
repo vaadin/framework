@@ -140,6 +140,8 @@ import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
+import com.vaadin.client.widget.grid.events.GridEnabledEvent;
+import com.vaadin.client.widget.grid.events.GridEnabledHandler;
 import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
 import com.vaadin.client.widget.grid.events.GridKeyPressEvent;
 import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
@@ -2845,7 +2847,8 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
-    public final class SelectionColumn extends Column<Boolean, T> {
+    public final class SelectionColumn extends Column<Boolean, T>
+                                            implements GridEnabledHandler {
 
         private boolean initDone = false;
         private boolean selected = false;
@@ -2853,6 +2856,8 @@ public class Grid<T> extends ResizeComposite implements
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
+
+            addEnabledHandler(this);
         }
 
         void initDone() {
@@ -3001,6 +3006,24 @@ public class Grid<T> extends ResizeComposite implements
             }
             super.setEditable(editable);
             return this;
+        }
+
+        /**
+         * Sets whether the selection column is enabled.
+         *
+         * @since
+         * @param enabled <code>true</code> to enable the column,
+         *                <code>false</code> to disable it.
+         */
+        public void setEnabled(boolean enabled) {
+            if(selectAllCheckBox != null) {
+                selectAllCheckBox.setEnabled(enabled);
+            }
+        }
+
+        @Override
+        public void onEnabled(boolean enabled) {
+            setEnabled(enabled);
         }
     }
 
@@ -5971,6 +5994,8 @@ public class Grid<T> extends ResizeComposite implements
         getEscalator().setScrollLocked(Direction.VERTICAL,
                 !enabled || editorOpen);
         getEscalator().setScrollLocked(Direction.HORIZONTAL, !enabled);
+
+        fireEvent(new GridEnabledEvent(enabled));
     }
 
     @Override
@@ -7538,6 +7563,8 @@ public class Grid<T> extends ResizeComposite implements
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
             addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+
+            selectionColumn.setEnabled(isEnabled());
             selectionColumn.initDone();
         } else {
             selectionColumn = null;
@@ -8097,6 +8124,17 @@ public class Grid<T> extends ResizeComposite implements
     public HandlerRegistration addColumnResizeHandler(
             ColumnResizeHandler<T> handler) {
         return addHandler(handler, ColumnResizeEvent.getType());
+    }
+
+    /**
+     * Register a enabled status change handler to this Grid.
+     * The event for this handler is fired when the Grid changes from disabled
+     * to enabled and vice-versa.
+     * @param handler the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addEnabledHandler(GridEnabledHandler handler) {
+        return addHandler(handler, GridEnabledEvent.TYPE);
     }
 
     /**
