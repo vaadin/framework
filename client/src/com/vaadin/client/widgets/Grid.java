@@ -8302,7 +8302,7 @@ public class Grid<T> extends ResizeComposite implements
      * Returns a CellReference for the cell to which the given element belongs
      * to.
      * 
-     * @since
+     * @since 7.6
      * @param element
      *            Element to find from the cell's content.
      * @return CellReference or <code>null</code> if cell was not found.

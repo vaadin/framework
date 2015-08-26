@@ -1574,7 +1574,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @see Grid#setRowDescriptionGenerator(CellDescriptionGenerator)
      * 
-     * @since
+     * @since 7.6
      */
     public interface RowDescriptionGenerator extends Serializable {
 
@@ -1598,7 +1598,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
      * 
-     * @since
+     * @since 7.6
      */
     public interface CellDescriptionGenerator extends Serializable {
 
@@ -5877,7 +5877,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
      * 
-     * @since
+     * @since 7.6
      */
     public void setCellDescriptionGenerator(CellDescriptionGenerator generator) {
         cellDescriptionGenerator = generator;
@@ -5891,7 +5891,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @return the description generator or {@code null} if no generator is set
      * 
-     * @since
+     * @since 7.6
      */
     public CellDescriptionGenerator getCellDescriptionGenerator() {
         return cellDescriptionGenerator;
@@ -5911,7 +5911,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
      * 
-     * @since
+     * @since 7.6
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
         rowDescriptionGenerator = generator;
@@ -5925,7 +5925,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @return the description generator or {@code} null if no generator is set
      * 
-     * @since
+     * @since 7.6
      */
     public RowDescriptionGenerator getRowDescriptionGenerator() {
         return rowDescriptionGenerator;

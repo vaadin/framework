@@ -360,7 +360,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * dropped from the cache. DataSource no longer has anything in the given
      * index.
      * 
-     * @since
+     * @since 7.6
      * @param rowIndex
      *            the index of the dropped row
      * @param removed

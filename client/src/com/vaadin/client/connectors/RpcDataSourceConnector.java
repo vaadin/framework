@@ -229,7 +229,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         /**
          * Updates row data based on row key.
          * 
-         * @since
+         * @since 7.6
          * @param row
          *            new row object
          */

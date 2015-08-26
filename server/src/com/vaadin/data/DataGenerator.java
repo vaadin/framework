@@ -29,7 +29,7 @@ import elemental.json.JsonObject;
  * {@link AbstractRenderer} implements this interface to provide encoded data to
  * client for {@link Renderer}s automatically.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface DataGenerator extends Serializable {

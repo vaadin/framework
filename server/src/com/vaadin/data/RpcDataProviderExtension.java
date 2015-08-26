@@ -243,7 +243,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         /**
          * {@inheritDoc}
          * 
-         * @since
+         * @since 7.6
          */
         @Override
         public void generateData(Object itemId, Item item, JsonObject rowData) {
@@ -253,7 +253,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         /**
          * Removes all inactive item id to key mapping from the key mapper.
          * 
-         * @since
+         * @since 7.6
          */
         public void dropInactiveItems() {
             Collection<Object> active = activeItemHandler.getActiveItemIds();
@@ -270,7 +270,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Class for keeping track of current items and ValueChangeListeners.
      * 
-     * @since
+     * @since 7.6
      */
     private class ActiveItemHandler implements Serializable {
 
@@ -545,7 +545,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         /**
          * {@inheritDoc}
          * 
-         * @since
+         * @since 7.6
          */
         @Override
         public void generateData(Object itemId, Item item, JsonObject rowData) {
@@ -823,7 +823,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * DataGenerators are called when sending row data to client. If given
      * DataGenerator is already added, this method does nothing.
      * 
-     * @since
+     * @since 7.6
      * @param generator
      *            generator to add
      */
@@ -836,7 +836,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * {@code RpcDataProviderExtension}. If given DataGenerator is not added to
      * this data provider, this method does nothing.
      * 
-     * @since
+     * @since 7.6
      * @param generator
      *            generator to remove
      */

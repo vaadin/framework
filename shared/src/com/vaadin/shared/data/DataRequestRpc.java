@@ -63,7 +63,7 @@ public interface DataRequestRpc extends ServerRpc {
     /**
      * Informs the server that items have been dropped from the client cache.
      * 
-     * @since
+     * @since 7.6
      * @param rowKeys
      *            array of dropped keys mapping to items
      */

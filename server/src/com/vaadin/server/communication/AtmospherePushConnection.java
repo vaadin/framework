@@ -359,7 +359,7 @@ public class AtmospherePushConnection implements PushConnection {
      * Internal method used for reconfiguring loggers to show all Atmosphere log
      * messages in the console.
      * 
-     * @since
+     * @since 7.6
      */
     public static void enableAtmosphereDebugLogging() {
         Level level = Level.FINEST;

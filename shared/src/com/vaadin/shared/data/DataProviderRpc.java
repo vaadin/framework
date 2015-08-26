@@ -97,7 +97,7 @@ public interface DataProviderRpc extends ClientRpc {
      * Informs the client that a row has updated. The client-side DataSource
      * will map the given data to correct index if it should be in the cache.
      * 
-     * @since
+     * @since 7.6
      * @param row
      *            the updated row data
      */
