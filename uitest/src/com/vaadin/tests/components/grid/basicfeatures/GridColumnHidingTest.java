@@ -823,6 +823,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testColumnHiding_detailsRowIsOpen_renderedCorrectly() {
+        selectMenuPath("Component", "Row details", "Set generator");
         selectMenuPath("Component", "Row details", "Toggle details for...",
                 "Row 1");
         assertColumnHeaderOrder(0, 1, 2, 3, 4);

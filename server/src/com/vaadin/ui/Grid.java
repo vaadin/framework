@@ -6597,6 +6597,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            to hide them
      */
     public void setDetailsVisible(Object itemId, boolean visible) {
+        if (DetailsGenerator.NULL.equals(detailsGenerator)) {
+            return;
+        }
         datasourceExtension.setDetailsVisible(itemId, visible);
     }
 

@@ -86,9 +86,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
 
         for (int rowIndex : params) {
 
-            data.add(new Param(rowIndex, false, false));
             data.add(new Param(rowIndex, true, false));
-            data.add(new Param(rowIndex, false, true));
             data.add(new Param(rowIndex, true, true));
         }
 
@@ -135,23 +133,6 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 throw new Throwable("" + param, t);
             }
         }
-    }
-
-    @Test
-    public void testDetailsHeightWithNoGenerator() {
-        openTestURL();
-        toggleAndScroll(5);
-
-        verifyDetailsRowHeight(5, detailsDefaultHeight, 0);
-        verifyDetailsDecoratorLocation(5, 0, 0);
-
-        toggleAndScroll(0);
-
-        verifyDetailsRowHeight(0, detailsDefaultHeight, 0);
-        verifyDetailsDecoratorLocation(0, 0, 1);
-
-        verifyDetailsRowHeight(5, detailsDefaultHeight, 1);
-        verifyDetailsDecoratorLocation(5, 1, 0);
     }
 
     @Test

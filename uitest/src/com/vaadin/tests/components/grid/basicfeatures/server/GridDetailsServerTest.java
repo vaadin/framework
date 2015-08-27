@@ -58,7 +58,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         openTestURL();
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void openVisibleDetails() {
         try {
             getGridElement().getDetails(0);
@@ -67,8 +67,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
             // expected
         }
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        assertNotNull("details should've opened", getGridElement()
-                .getDetails(0));
+        getGridElement().getDetails(0);
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -98,6 +97,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     @Test
     public void openDetailsOutsideOfActiveRange() throws InterruptedException {
         getGridElement().scroll(10000);
+        selectMenuPath(DETAILS_GENERATOR_WATCHING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         getGridElement().scroll(0);
         Thread.sleep(50);
@@ -215,13 +215,15 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_shownDetails() {
+        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        assertTrue("Details should be empty at the start", getGridElement()
-                .getDetails(0).getText().isEmpty());
+        assertTrue("Details should contain 'One' at first", getGridElement()
+                .getDetails(0).getText().contains("One"));
 
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
-        assertFalse("Details should not be empty after swapping generator",
-                getGridElement().getDetails(0).getText().isEmpty());
+        assertFalse(
+                "Details should contain 'Watching' after swapping generator",
+                getGridElement().getDetails(0).getText().contains("Watching"));
     }
 
     @Test
@@ -235,6 +237,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showAfter() {
         scrollGridVerticallyTo(1000);
+        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(0);
@@ -246,6 +249,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showBefore() {
+        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(1000);
@@ -257,6 +261,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showBeforeAndAfter() {
+        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(1000);
@@ -265,24 +270,6 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         assertFalse("Got some errors", $(NotificationElement.class).exists());
         assertNotNull("Could not find a details", getGridElement()
                 .getDetails(0));
-    }
-
-    @Test
-    public void nullDetailComponentToggling() {
-        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        selectMenuPath(DETAILS_GENERATOR_WATCHING);
-        selectMenuPath(DETAILS_GENERATOR_NULL);
-
-        try {
-            assertTrue("Details should be empty with null component",
-                    getGridElement().getDetails(0).getText().isEmpty());
-        } catch (NoSuchElementException e) {
-            fail("Expected to find a details row with empty content");
-        }
-
-        selectMenuPath(DETAILS_GENERATOR_WATCHING);
-        assertFalse("Details should be not empty with details component",
-                getGridElement().getDetails(0).getText().isEmpty());
     }
 
     @Test
