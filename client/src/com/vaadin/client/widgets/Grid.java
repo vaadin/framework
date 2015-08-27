@@ -7913,6 +7913,10 @@ public class Grid<T> extends ResizeComposite implements
      * @see #isDetailsVisible(int)
      */
     public void setDetailsVisible(int rowIndex, boolean visible) {
+        if (DetailsGenerator.NULL.equals(detailsGenerator)) {
+            return;
+        }
+
         Integer rowIndexInteger = Integer.valueOf(rowIndex);
 
         /*

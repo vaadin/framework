@@ -6096,6 +6096,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *            to hide them
      */
     public void setDetailsVisible(Object itemId, boolean visible) {
+        if (DetailsGenerator.NULL.equals(detailsGenerator)) {
+            return;
+        }
         datasourceExtension.setDetailsVisible(itemId, visible);
     }
 

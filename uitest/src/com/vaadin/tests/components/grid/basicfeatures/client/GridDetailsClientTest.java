@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -58,14 +59,10 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
                 getGridElement().getDetails(1));
     }
 
-    @Test
-    public void nullRendererShowsDetailsPlaceholder() {
+    @Test(expected = NoSuchElementException.class)
+    public void nullRendererDoesNotShowDetailsPlaceholder() {
         toggleDetailsFor(1);
-        TestBenchElement details = getGridElement().getDetails(1);
-        assertNotNull("details for row 1 should not exist at the start",
-                details);
-        assertTrue("details should've been empty for null renderer", details
-                .getText().isEmpty());
+        getGridElement().getDetails(1);
     }
 
     @Test
@@ -76,6 +73,14 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         TestBenchElement details = getGridElement().getDetails(1);
         assertTrue("Unexpected details content",
                 details.getText().startsWith("Row: 1."));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void openDetailsThenAppyRendererShouldNotShowDetails() {
+        toggleDetailsFor(1);
+        selectMenuPath(SET_GENERATOR);
+
+        getGridElement().getDetails(1);
     }
 
     @Test
@@ -122,8 +127,22 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(1);
 
         selectMenuPath(SET_FAULTY_GENERATOR);
-
         getGridElement().getDetails(1);
+    }
+
+    @Test
+    public void settingNewGeneratorStillWorksAfterError() {
+        selectMenuPath(SET_FAULTY_GENERATOR);
+        toggleDetailsFor(1);
+        $(FixedNotificationElement.class).first().close();
+        toggleDetailsFor(1);
+
+        selectMenuPath(SET_GENERATOR);
+        toggleDetailsFor(1);
+
+        assertNotEquals(
+                "New details should've been generated even after error", "",
+                getGridElement().getDetails(1).getText());
     }
 
     @Test
@@ -171,6 +190,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void rowElementClassNames() {
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(0);
         toggleDetailsFor(1);
 
@@ -183,25 +203,28 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void scrollDownToRowWithDetails() {
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(100);
         scrollToRow(100, ScrollDestination.ANY);
 
-        Range validScrollRange = Range.between(1700, 1715);
+        Range validScrollRange = Range.between(1691, 1706);
         assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
     }
 
     @Test
     public void scrollUpToRowWithDetails() {
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(100);
         scrollGridVerticallyTo(999999);
         scrollToRow(100, ScrollDestination.ANY);
 
-        Range validScrollRange = Range.between(1990, 2010);
+        Range validScrollRange = Range.between(1981, 2001);
         assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
     }
 
     @Test
     public void cannotScrollBeforeTop() {
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(1);
         scrollToRow(0, ScrollDestination.END);
         assertEquals(0, getGridVerticalScrollPos());
@@ -209,10 +232,11 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void cannotScrollAfterBottom() {
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(999);
         scrollToRow(999, ScrollDestination.START);
 
-        Range expectedRange = Range.withLength(19680, 20);
+        Range expectedRange = Range.withLength(19671, 20);
         assertTrue(expectedRange.contains(getGridVerticalScrollPos()));
     }
 
