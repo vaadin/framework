@@ -425,7 +425,19 @@ public class ReconnectingCommunicationProblemHandler implements
 
     @Override
     public void pushInvalidContent(PushConnection pushConnection, String message) {
-        // Do nothing for now. Should likely do the same as xhrInvalidContent
+        debug("pushInvalidContent");
+        if (pushConnection.isBidirectional()) {
+            // We can't be sure that what was pushed was actually a response but
+            // at this point it should not really matter, as something is
+            // seriously broken.
+            endRequest();
+        }
+
+        // Do nothing special for now. Should likely do the same as
+        // xhrInvalidContent
+        handleUnrecoverableCommunicationError("Invalid JSON from server: "
+                + message, null);
+
     }
 
     @Override
@@ -474,10 +486,12 @@ public class ReconnectingCommunicationProblemHandler implements
 
     private void handleUnrecoverableCommunicationError(String details,
             CommunicationProblemEvent event) {
-        Response response = event.getResponse();
         int statusCode = -1;
-        if (response != null) {
-            statusCode = response.getStatusCode();
+        if (event != null) {
+            Response response = event.getResponse();
+            if (response != null) {
+                statusCode = response.getStatusCode();
+            }
         }
         connection.handleCommunicationError(details, statusCode);
 

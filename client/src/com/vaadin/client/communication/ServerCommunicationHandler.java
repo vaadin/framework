@@ -48,9 +48,6 @@ import elemental.json.JsonObject;
  */
 public class ServerCommunicationHandler {
 
-    public static final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
-    public static final String JSON_COMMUNICATION_SUFFIX = "]";
-
     private ApplicationConnection connection;
     private boolean hasActiveRequest = false;
 
@@ -102,6 +99,7 @@ public class ServerCommunicationHandler {
      * 
      */
     private void doSendInvocationsToServer() {
+
         ServerRpcQueue serverRpcQueue = getServerRpcQueue();
         if (serverRpcQueue.isEmpty()) {
             return;
@@ -367,28 +365,4 @@ public class ServerCommunicationHandler {
         }
     }
 
-    /**
-     * Strips the JSON wrapping from the given json string with wrapping.
-     * 
-     * If the given string is not wrapped as expected, returns null
-     * 
-     * @since
-     * @param jsonWithWrapping
-     *            the JSON received from the server
-     * @return an unwrapped JSON string or null if the given string was not
-     *         wrapped
-     */
-    public static String stripJSONWrapping(String jsonWithWrapping) {
-        if (!jsonWithWrapping
-                .startsWith(ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX)
-                || !jsonWithWrapping
-                        .endsWith(ServerCommunicationHandler.JSON_COMMUNICATION_SUFFIX)) {
-            return null;
-        }
-        return jsonWithWrapping.substring(
-                ServerCommunicationHandler.JSON_COMMUNICATION_PREFIX.length(),
-                jsonWithWrapping.length()
-                        - ServerCommunicationHandler.JSON_COMMUNICATION_SUFFIX
-                                .length());
-    }
 }

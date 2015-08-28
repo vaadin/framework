@@ -440,7 +440,8 @@ public class ApplicationConnection implements HasHandlers {
 
             // Hack to avoid logging an error in endRequest()
             getServerCommunicationHandler().startRequest();
-            getServerMessageHandler().handleMessage(jsonText);
+            getServerMessageHandler().handleMessage(
+                    ServerMessageHandler.parseJson(jsonText));
         }
 
         // Tooltip can't be created earlier because the

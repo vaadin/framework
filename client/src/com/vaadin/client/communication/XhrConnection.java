@@ -33,6 +33,7 @@ import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingEndedEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingStartedEvent;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -165,10 +166,9 @@ public class XhrConnection {
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
 
-            final String jsonText = ServerCommunicationHandler
-                    .stripJSONWrapping(responseText);
-            if (jsonText == null) {
-                // Invalid string (not wrapped as expected)
+            ValueMap json = ServerMessageHandler.parseWrappedJson(responseText);
+            if (json == null) {
+                // Invalid string (not wrapped as expected or can't parse)
                 getCommunicationProblemHandler().xhrInvalidContent(
                         new CommunicationProblemEvent(request, payload,
                                 response));
@@ -176,8 +176,8 @@ public class XhrConnection {
             }
 
             getCommunicationProblemHandler().xhrOk();
-            getLogger().info("Received xhr message: " + jsonText);
-            getServerMessageHandler().handleMessage(jsonText);
+            getLogger().info("Received xhr message: " + responseText);
+            getServerMessageHandler().handleMessage(json);
         }
 
         /**

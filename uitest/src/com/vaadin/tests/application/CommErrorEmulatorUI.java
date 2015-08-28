@@ -20,8 +20,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.communication.PushMode;
-import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -69,12 +67,10 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         String transport = request.getParameter("transport");
 
         if ("websocket".equalsIgnoreCase(transport)) {
-            getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
-            getPushConfiguration().setTransport(Transport.WEBSOCKET);
             log("Using websocket");
+        } else if ("websocket-xhr".equalsIgnoreCase(transport)) {
+            log("Using websocket for push only");
         } else if ("long-polling".equalsIgnoreCase(transport)) {
-            getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
-            getPushConfiguration().setTransport(Transport.LONG_POLLING);
             log("Using long-polling");
         } else {
             log("Using XHR");

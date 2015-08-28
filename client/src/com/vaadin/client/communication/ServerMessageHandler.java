@@ -85,6 +85,9 @@ import elemental.json.JsonObject;
  */
 public class ServerMessageHandler {
 
+    public static final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
+    public static final String JSON_COMMUNICATION_SUFFIX = "]";
+
     /**
      * Helper used to return two values when updating the connector hierarchy.
      */
@@ -222,28 +225,11 @@ public class ServerMessageHandler {
      * @param jsonText
      *            The JSON to handle
      */
-    public void handleMessage(String jsonText) {
-        final Date start = new Date();
-        final ValueMap json;
-        try {
-            json = parseJSONResponse(jsonText);
-        } catch (final Exception e) {
-            // Should not call endRequest for a asynchronous push message
-            // but there is currently no way of knowing if this is an async
-            // message if we get invalid JSON.
-
-            // TODO Move parsing out from this method and handle the error the
-            // same way as if we do not receive the expected prefix and suffix
-            getServerCommunicationHandler().endRequest();
-
-            connection.showCommunicationError(e.getMessage()
-                    + " - Original JSON-text:" + jsonText, 200);
-            return;
+    public void handleMessage(final ValueMap json) {
+        if (json == null) {
+            throw new IllegalArgumentException(
+                    "The json to handle cannot be null");
         }
-        getLogger().info(
-                "JSON parsing took " + (new Date().getTime() - start.getTime())
-                        + "ms");
-
         if (getServerId(json) == -1) {
             getLogger()
                     .severe("Response didn't contain a server id. "
@@ -268,11 +254,6 @@ public class ServerMessageHandler {
             return;
         }
     }
-
-    private static native ValueMap parseJSONResponse(String jsonText)
-    /*-{
-       return JSON.parse(jsonText);
-    }-*/;
 
     protected void handleJSON(final ValueMap json) {
         final int serverId = getServerId(json);
@@ -1694,6 +1675,72 @@ public class ServerMessageHandler {
 
     private ServerCommunicationHandler getServerCommunicationHandler() {
         return connection.getServerCommunicationHandler();
+    }
+
+    /**
+     * Strips the JSON wrapping from the given json string with wrapping.
+     * 
+     * If the given string is not wrapped as expected, returns null
+     * 
+     * @since
+     * @param jsonWithWrapping
+     *            the JSON received from the server
+     * @return an unwrapped JSON string or null if the given string was not
+     *         wrapped
+     */
+    public static String stripJSONWrapping(String jsonWithWrapping) {
+        if (jsonWithWrapping == null) {
+            return null;
+        }
+
+        if (!jsonWithWrapping.startsWith(JSON_COMMUNICATION_PREFIX)
+                || !jsonWithWrapping.endsWith(JSON_COMMUNICATION_SUFFIX)) {
+            return null;
+        }
+        return jsonWithWrapping.substring(JSON_COMMUNICATION_PREFIX.length(),
+                jsonWithWrapping.length() - JSON_COMMUNICATION_SUFFIX.length());
+    }
+
+    /**
+     * Unwraps and parses the given JSON, originating from the server
+     * 
+     * @param jsonText
+     *            the json from the server
+     * @return A parsed ValueMap or null if the input could not be parsed (or
+     *         was null)
+     */
+    public static ValueMap parseJson(String jsonText) {
+        if (jsonText == null) {
+            return null;
+        }
+        final Date start = new Date();
+        try {
+            ValueMap json = parseJSONResponse(jsonText);
+            getLogger().info(
+                    "JSON parsing took "
+                            + (new Date().getTime() - start.getTime()) + "ms");
+            return json;
+        } catch (final Exception e) {
+            getLogger().severe("Unable to parse JSON: " + jsonText);
+            return null;
+        }
+    }
+
+    private static native ValueMap parseJSONResponse(String jsonText)
+    /*-{
+       return JSON.parse(jsonText);
+    }-*/;
+
+    /**
+     * Parse the given wrapped JSON, received from the server, to a ValueMap
+     * 
+     * @param wrappedJsonText
+     *            the json, wrapped as done by the server
+     * @return a ValueMap, or null if the wrapping was incorrect or json could
+     *         not be parsed
+     */
+    public static ValueMap parseWrappedJson(String wrappedJsonText) {
+        return parseJson(stripJSONWrapping(wrappedJsonText));
     }
 
 }

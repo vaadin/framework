@@ -29,6 +29,7 @@ import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
+import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushConstants;
@@ -354,7 +355,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected void onMessage(AtmosphereResponse response) {
         String message = response.getResponseBody();
-        String json = ServerCommunicationHandler.stripJSONWrapping(message);
+        ValueMap json = ServerMessageHandler.parseWrappedJson(message);
         if (json == null) {
             // Invalid string (not wrapped as expected)
             getCommunicationProblemHandler().pushInvalidContent(this, message);
@@ -362,7 +363,7 @@ public class AtmospherePushConnection implements PushConnection {
         } else {
             getLogger().info(
                     "Received push (" + getTransportType() + ") message: "
-                            + json);
+                            + message);
             connection.getServerMessageHandler().handleMessage(json);
         }
     }
