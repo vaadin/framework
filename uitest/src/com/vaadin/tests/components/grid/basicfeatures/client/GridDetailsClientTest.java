@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -80,16 +79,6 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
     }
 
     @Test
-    public void openDetailsThenAppyRenderer() {
-        toggleDetailsFor(1);
-        selectMenuPath(SET_GENERATOR);
-
-        TestBenchElement details = getGridElement().getDetails(1);
-        assertTrue("Unexpected details content",
-                details.getText().startsWith("Row: 1."));
-    }
-
-    @Test
     public void openHiddenDetailsThenScrollToIt() {
         try {
             getGridElement().getDetails(100);
@@ -114,8 +103,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         assertFalse("No notifications should've been at the start",
                 $(FixedNotificationElement.class).exists());
 
-        toggleDetailsFor(1);
         selectMenuPath(SET_FAULTY_GENERATOR);
+        toggleDetailsFor(1);
 
         ElementQuery<FixedNotificationElement> notification = $(FixedNotificationElement.class);
         assertTrue("Was expecting an error notification here",
@@ -126,17 +115,15 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
                 getGridElement().getDetails(1).getText());
     }
 
-    @Test
-    public void updaterStillWorksAfterError() {
+    @Test(expected = NoSuchElementException.class)
+    public void detailsClosedWhenResettingGenerator() {
+
+        selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(1);
 
         selectMenuPath(SET_FAULTY_GENERATOR);
-        $(FixedNotificationElement.class).first().close();
-        selectMenuPath(SET_GENERATOR);
 
-        assertNotEquals(
-                "New details should've been generated even after error", "",
-                getGridElement().getDetails(1).getText());
+        getGridElement().getDetails(1);
     }
 
     @Test
