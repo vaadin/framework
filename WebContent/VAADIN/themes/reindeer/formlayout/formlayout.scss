@@ -2,6 +2,7 @@
 
 .#{$primaryStyleName}-errorcell {
 	width: 13px;
+	min-width: 13px;
 }
 .#{$primaryStyleName}-cell .v-errorindicator {
 	width: 13px;
