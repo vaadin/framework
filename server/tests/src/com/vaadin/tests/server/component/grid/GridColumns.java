@@ -18,6 +18,8 @@ package com.vaadin.tests.server.component.grid;
 import static org.easymock.EasyMock.and;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.isA;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -390,5 +392,23 @@ public class GridColumns {
                 event.getColumn());
         assertFalse("Event should not be userOriginated",
                 event.isUserOriginated());
+    }
+
+	@Test
+    public void textHeaderCaptionIsReturned() {
+        Column firstColumn = grid.getColumns().get(0);
+
+        firstColumn.setHeaderCaption("text");
+
+        assertThat(firstColumn.getHeaderCaption(), is("text"));
+    }
+
+    @Test
+    public void defaultCaptionIsReturnedForHtml() {
+        Column firstColumn = grid.getColumns().get(0);
+
+        grid.getDefaultHeaderRow().getCell("column0").setHtml("<b>html</b>");
+
+        assertThat(firstColumn.getHeaderCaption(), is("Column0"));
     }
 }
