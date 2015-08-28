@@ -1,12 +1,21 @@
 #coding=UTF-8
 
 import argparse, cgi
+from os.path import exists, isdir
+from os import makedirs
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
 parser.add_argument("version", type=str, help="Vaadin version that was just built")
 parser.add_argument("buildResultUrl", type=str, help="URL for the build result page")
 
 args = parser.parse_args()
+
+resultPath = "result"
+if not exists(resultPath):
+	makedirs(resultPath)
+elif not isdir(resultPath):
+	print("Result path is not a directory.")
+	sys.exit(1)
 
 (major, minor, maintenance) = args.version.split(".", 2)
 prerelease = "." in maintenance
