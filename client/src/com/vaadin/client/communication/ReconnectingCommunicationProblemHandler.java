@@ -502,6 +502,7 @@ public class ReconnectingCommunicationProblemHandler implements
         }
 
         reconnectionCause = null;
+        reconnectAttempt = 0;
         hideDialog();
 
         getLogger().info("Re-established connection to server");
