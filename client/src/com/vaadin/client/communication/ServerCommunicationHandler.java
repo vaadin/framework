@@ -35,15 +35,12 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * ServerCommunicationHandler is responsible for communicating (sending and
- * receiving messages) with the servlet.
+ * ServerCommunicationHandler is responsible for sending messages to the server.
  * 
- * It will internally use either XHR or websockets for communicating, depending
- * on how the application is configured.
+ * Internally either XHR or push is used for communicating, depending on the
+ * application configuration.
  * 
- * Uses {@link ServerMessageHandler} for processing received messages
- * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class ServerCommunicationHandler {
@@ -73,7 +70,7 @@ public class ServerCommunicationHandler {
         xhrConnection.setConnection(connection);
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ServerCommunicationHandler.class.getName());
     }
 
@@ -250,8 +247,7 @@ public class ServerCommunicationHandler {
             if (getServerRpcQueue().isFlushPending()) {
                 sendInvocationsToServer();
             }
-            ApplicationConnection.runPostRequestHooks(connection
-                    .getConfiguration().getRootPanelId());
+            runPostRequestHooks(connection.getConfiguration().getRootPanelId());
         }
 
         // deferring to avoid flickering
@@ -269,12 +265,51 @@ public class ServerCommunicationHandler {
                     // responsiveness.
                     // Postponed until the end of the next request if other
                     // requests still pending.
-                    ApplicationConnection.extendLiferaySession();
+                    extendLiferaySession();
                 }
             }
         });
         connection.fireEvent(new ResponseHandlingEndedEvent(connection));
     }
+
+    /**
+     * Runs possibly registered client side post request hooks. This is expected
+     * to be run after each uidl request made by Vaadin application.
+     * 
+     * @param appId
+     */
+    public static native void runPostRequestHooks(String appId)
+    /*-{
+        if ($wnd.vaadin.postRequestHooks) {
+                for ( var hook in $wnd.vaadin.postRequestHooks) {
+                        if (typeof ($wnd.vaadin.postRequestHooks[hook]) == "function") {
+                                try {
+                                        $wnd.vaadin.postRequestHooks[hook](appId);
+                                } catch (e) {
+                                }
+                        }
+                }
+        }
+    }-*/;
+
+    /**
+     * If on Liferay and logged in, ask the client side session management
+     * JavaScript to extend the session duration.
+     * 
+     * Otherwise, Liferay client side JavaScript will explicitly expire the
+     * session even though the server side considers the session to be active.
+     * See ticket #8305 for more information.
+     */
+    public static native void extendLiferaySession()
+    /*-{
+    if ($wnd.Liferay && $wnd.Liferay.Session) {
+        $wnd.Liferay.Session.extend();
+        // if the extend banner is visible, hide it
+        if ($wnd.Liferay.Session.banner) {
+            $wnd.Liferay.Session.banner.remove();
+        }
+    }
+    }-*/;
 
     /**
      * Indicates whether or not there are currently active UIDL requests. Used

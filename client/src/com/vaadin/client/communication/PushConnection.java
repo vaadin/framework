@@ -105,11 +105,11 @@ public interface PushConnection {
 
     /**
      * Checks whether this push connection should be used for communication in
-     * both directions or if a normal XHR should be used for client to server
+     * both directions or if an XHR should be used for client to server
      * communication.
      * 
-     * A bidirectional push connection must be able to reliably tell when it is
-     * connected and when it is not.
+     * A bidirectional push connection must be able to reliably inform about its
+     * connection state.
      * 
      * @since 7.6
      * @return true if the push connection should be used for messages in both

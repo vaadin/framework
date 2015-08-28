@@ -21,8 +21,10 @@ import com.google.gwt.http.client.Response;
 import elemental.json.JsonObject;
 
 /**
+ * Event describing a problem which took place during communication with the
+ * server
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class CommunicationProblemEvent {
@@ -33,7 +35,14 @@ public class CommunicationProblemEvent {
     private JsonObject payload;
 
     /**
+     * Constructs an event from the given request, payload and exception
+     * 
+     * @param request
+     *            the request which failed
+     * @param payload
+     *            the payload which was going to the server
      * @param exception
+     *            the exception describing the problem
      */
     public CommunicationProblemEvent(Request request, JsonObject payload,
             Throwable exception) {
@@ -43,8 +52,14 @@ public class CommunicationProblemEvent {
     }
 
     /**
+     * Constructs an event from the given request, response and payload
+     * 
      * @param request
-     * @param statusCode
+     *            the request which failed
+     * @param payload
+     *            the payload which was going to the server
+     * @param response
+     *            the response for the request
      */
     public CommunicationProblemEvent(Request request, JsonObject payload,
             Response response) {
@@ -54,28 +69,36 @@ public class CommunicationProblemEvent {
     }
 
     /**
-     * @return the exception
+     * Returns the exception which caused the problem, if available
+     * 
+     * @return the exception which caused the problem, or null if not available
      */
     public Throwable getException() {
         return exception;
     }
 
     /**
-     * @return the request
+     * Returns the request for which the problem occurred
+     * 
+     * @return the request where the problem occurred
      */
     public Request getRequest() {
         return request;
     }
 
     /**
-     * @return the response
+     * Returns the received response, if available
+     * 
+     * @return the received response, or null if not available
      */
     public Response getResponse() {
         return response;
     }
 
     /**
-     * @return the payload
+     * Returns the payload which was sent to the server
+     * 
+     * @return the payload which was sent, never null
      */
     public JsonObject getPayload() {
         return payload;

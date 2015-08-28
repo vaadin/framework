@@ -99,7 +99,7 @@ public class XhrConnection {
 
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(XhrConnection.class.getName());
     }
 

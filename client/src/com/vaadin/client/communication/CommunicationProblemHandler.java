@@ -22,13 +22,12 @@ import com.vaadin.client.ApplicationConnection;
 import elemental.json.JsonObject;
 
 /**
- * Interface for handling problems which occur during communications with the
+ * Interface for handling problems which occur during communication with the
  * server.
  * 
  * The handler is responsible for handling any problem in XHR, heartbeat and
- * push connections in a way it sees fit. The default implementation used is
- * {@link DefaultCommunicationProblemHandler}, which considers all problems
- * terminal
+ * push connections in a way it sees fit. The default implementation is
+ * {@link ReconnectingCommunicationProblemHandler}.
  * 
  * @since 7.6
  * @author Vaadin Ltd
@@ -188,7 +187,6 @@ public interface CommunicationProblemHandler {
     /**
      * Called when some part of the reconnect dialog configuration has been
      * changed.
-     * 
      */
     void configurationUpdated();
 

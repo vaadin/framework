@@ -71,7 +71,8 @@ public interface ReconnectDialog {
      * re-established.
      * 
      * @param modal
-     *            true to set the dialog to modal, false otherwise
+     *            true to make the dialog modal, false to allow usage while
+     *            dialog is shown
      */
     void setModal(boolean modal);
 
@@ -79,7 +80,7 @@ public interface ReconnectDialog {
      * Checks the modality of the dialog.
      * 
      * @see #setModal(boolean)
-     * @return
+     * @return true if the dialog is modal, false otherwise
      */
     boolean isModal();
 }

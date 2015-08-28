@@ -1717,6 +1717,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * 
      * @return lastProcessedServerMessageId the id of the last processed server
      *         message
+     * @since 7.6
      */
     public int getLastProcessedClientToServerId() {
         return lastProcessedClientToServerId;
@@ -1729,6 +1730,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * 
      * @param lastProcessedServerMessageId
      *            the id of the last processed server message
+     * @since 7.6
      */
     public void setLastProcessedClientToServerId(
             int lastProcessedClientToServerId) {

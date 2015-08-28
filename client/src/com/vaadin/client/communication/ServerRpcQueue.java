@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
  * Manages the queue of server invocations (RPC) which are waiting to be sent to
  * the server.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class ServerRpcQueue {
@@ -76,7 +76,7 @@ public class ServerRpcQueue {
         this.connection = connection;
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ServerRpcQueue.class.getName());
     }
 
@@ -135,6 +135,8 @@ public class ServerRpcQueue {
 
     /**
      * Returns a collection of all queued method invocations
+     * <p>
+     * The returned collection must not be modified in any way
      * 
      * @return a collection of all queued method invocations
      */

@@ -42,7 +42,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.CommunicationProblemHandler;
@@ -569,45 +568,6 @@ public class ApplicationConnection implements HasHandlers {
     		}
     		app.@com.vaadin.client.ApplicationConnection::forceLayout()();
     	});
-    }-*/;
-
-    /**
-     * Runs possibly registered client side post request hooks. This is expected
-     * to be run after each uidl request made by Vaadin application.
-     * 
-     * @param appId
-     */
-    public static native void runPostRequestHooks(String appId)
-    /*-{
-    	if ($wnd.vaadin.postRequestHooks) {
-    		for ( var hook in $wnd.vaadin.postRequestHooks) {
-    			if (typeof ($wnd.vaadin.postRequestHooks[hook]) == "function") {
-    				try {
-    					$wnd.vaadin.postRequestHooks[hook](appId);
-    				} catch (e) {
-    				}
-    			}
-    		}
-    	}
-    }-*/;
-
-    /**
-     * If on Liferay and logged in, ask the client side session management
-     * JavaScript to extend the session duration.
-     * 
-     * Otherwise, Liferay client side JavaScript will explicitly expire the
-     * session even though the server side considers the session to be active.
-     * See ticket #8305 for more information.
-     */
-    public static native void extendLiferaySession()
-    /*-{
-    if ($wnd.Liferay && $wnd.Liferay.Session) {
-        $wnd.Liferay.Session.extend();
-        // if the extend banner is visible, hide it
-        if ($wnd.Liferay.Session.banner) {
-            $wnd.Liferay.Session.banner.remove();
-        }
-    }
     }-*/;
 
     /**

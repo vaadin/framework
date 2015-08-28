@@ -80,7 +80,7 @@ import elemental.json.JsonObject;
  * from the server (state changes, RPCs and other updates) and ensuring that the
  * connectors are updated accordingly.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class ServerMessageHandler {
@@ -214,7 +214,7 @@ public class ServerMessageHandler {
         this.connection = connection;
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ServerMessageHandler.class.getName());
     }
 
