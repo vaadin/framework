@@ -1329,11 +1329,6 @@ public class Grid<T> extends ResizeComposite implements
             public void onError(EditorRequest<T> request) {
                 if (state == State.SAVING) {
                     cleanup();
-
-                    // TODO probably not the most correct thing to do...
-                    getLogger().warning(
-                            "An error occurred when trying to save the "
-                                    + "modified row");
                 }
             }
 
@@ -1379,11 +1374,6 @@ public class Grid<T> extends ResizeComposite implements
                         // TODO: Maybe restore focus?
                     }
                     bindTimeout.cancel();
-
-                    // TODO show something in the DOM as well?
-                    getLogger().warning(
-                            "An error occurred while trying to show the "
-                                    + "Grid editor");
                 }
             }
         };
@@ -1529,8 +1519,10 @@ public class Grid<T> extends ResizeComposite implements
                 updateHorizontalScrollPosition();
 
                 // Update Grid internal focus and focus widget if possible
-                grid.focusCell(rowIndex, focusedColumnIndex);
-                focusColumn(focusedColumnIndex);
+                if (focusedColumnIndex >= 0) {
+                    grid.focusCell(rowIndex, focusedColumnIndex);
+                    focusColumn(focusedColumnIndex);
+                }
 
                 // No need to request anything from the editor handler.
                 return;
@@ -1961,10 +1953,6 @@ public class Grid<T> extends ResizeComposite implements
             hScrollHandler.removeHandler();
 
             clearEditorColumnErrors();
-
-            if (focusedColumnIndex != -1) {
-                grid.focusCell(rowIndex, focusedColumnIndex);
-            }
         }
 
         private void updateBufferedStyleName() {
@@ -5804,32 +5792,27 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Try to focus a cell by row and column index. Purely internal method.
+     * Focus a body cell by row and column index.
      * 
      * @param rowIndex
-     *            row index from Editor
+     *            index of row to focus
      * @param columnIndex
-     *            column index from Editor
+     *            index of cell to focus
      */
     void focusCell(int rowIndex, int columnIndex) {
-        RowReference<T> row = new RowReference<T>(this);
-        Range visibleRows = escalator.getVisibleRowRange();
+        final Range rowRange = Range.between(0, dataSource.size());
+        final Range columnRange = Range.between(0, getVisibleColumns().size());
 
-        TableRowElement rowElement;
-        if (visibleRows.contains(rowIndex)) {
-            rowElement = escalator.getBody().getRowElement(rowIndex);
-        } else {
-            getLogger().warning("Row index was not among visible row range");
-            return;
+        assert rowRange.contains(rowIndex) : "Illegal row index. Should be in range "
+                + rowRange;
+        assert columnRange.contains(columnIndex) : "Illegal column index. Should be in range "
+                + columnRange;
+
+        if (rowRange.contains(rowIndex) && columnRange.contains(columnIndex)) {
+            cellFocusHandler.setCellFocus(rowIndex, columnIndex,
+                    escalator.getBody());
+            WidgetUtil.focus(getElement());
         }
-        row.set(rowIndex, dataSource.getRow(rowIndex), rowElement);
-
-        CellReference<T> cell = new CellReference<T>(row);
-        cell.set(columnIndex, columnIndex, getVisibleColumn(columnIndex));
-
-        cellFocusHandler.setCellFocus(cell);
-
-        WidgetUtil.focus(getElement());
     }
 
     /**
@@ -6876,8 +6859,6 @@ public class Grid<T> extends ResizeComposite implements
                     int colIndex = editor.getElementColumn(e);
 
                     if (colIndex < 0) {
-                        getLogger().warning(
-                                "Did not find a suitable column index.");
                         // Click in editor, but not for any column.
                         return;
                     }
@@ -6888,7 +6869,6 @@ public class Grid<T> extends ResizeComposite implements
 
                     cell = new Cell(rowIndex, colIndex, cellElement);
                 } else {
-                    getLogger().warning("Click is lost.");
                     // Click in a place that does not have a column.
                     return;
                 }
