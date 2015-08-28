@@ -15,6 +15,7 @@ content = """<html>
 <body>
 <table>
 <tr><td><a href="https://dev.vaadin.com/milestone?action=new">Create milestone for next release</a></td></tr>
+<tr><td><a href="https://dev.vaadin.com/query?status=closed&component=Core+Framework&resolution=fixed&milestone=!Vaadin {version}&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority">Closed fixed tickets without milestone {version}</a></td></tr>
 <tr><td><a href="https://dev.vaadin.com/query?status=closed&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type">Closed tickets with milestone {version}</a></td></tr>
 <tr><td><a href="https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type">Pending-release tickets with milestone {version}</a></td></tr>
 <tr><td><a href="https://dev.vaadin.com/query?status=pending-release&milestone=">Pending-release tickets without milestone</a></td></tr>
@@ -24,8 +25,8 @@ content = """<html>
 
 try:
 	p1 = subprocess.Popen(['find', '.', '-name', '*.java'], stdout=subprocess.PIPE)
-	p2 = subprocess.Popen(['xargs', 'egrep', '@since ?$'], stdin=p1.stdout, stdout=subprocess.PIPE)
-	missing = subprocess.check_output(['grep', '-v', 'tests'], stdin=p2.stdout)
+	p2 = subprocess.Popen(['xargs', 'egrep', '-n', '@since ?$'], stdin=p1.stdout, stdout=subprocess.PIPE)
+	missing = subprocess.check_output(['egrep', '-v', '/(tests|result)/'], stdin=p2.stdout)
 	content += "<tr><td>Empty @since:<br>\n<pre>%s</pre></td></tr>\n" % (missing)
 except subprocess.CalledProcessError as e:
 	if e.returncode == 1:
