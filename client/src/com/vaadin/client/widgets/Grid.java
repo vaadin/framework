@@ -8191,6 +8191,10 @@ public class Grid<T> extends ResizeComposite implements
                     "Details generator may not be null");
         }
 
+        for (Integer index : visibleDetails) {
+            setDetailsVisible(index, false);
+        }
+
         this.detailsGenerator = detailsGenerator;
 
         // this will refresh all visible spacers
