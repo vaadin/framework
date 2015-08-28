@@ -185,4 +185,11 @@ public interface CommunicationProblemHandler {
      */
     void pushInvalidContent(PushConnection pushConnection, String message);
 
+    /**
+     * Called when some part of the reconnect dialog configuration has been
+     * changed.
+     * 
+     */
+    void configurationUpdated();
+
 }

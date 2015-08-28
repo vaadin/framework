@@ -136,7 +136,6 @@ public class ReconnectingCommunicationProblemHandler implements
     @Override
     public void xhrException(CommunicationProblemEvent event) {
         debug("xhrException");
-        endRequest();
         handleRecoverableError(Type.XHR, event.getPayload());
     }
 
@@ -250,10 +249,9 @@ public class ReconnectingCommunicationProblemHandler implements
      */
     protected void scheduleReconnect(final JsonObject payload) {
         // Here and not in timer to avoid TB for getting in between
-        if (payload != null) {
-            getConnection().getServerCommunicationHandler().startRequest();
-        }
 
+        // The request is still open at this point to avoid interference, so we
+        // do not need to start a new one
         if (reconnectAttempt == 1) {
             // Try once immediately
             doReconnect(payload);
@@ -310,6 +308,9 @@ public class ReconnectingCommunicationProblemHandler implements
      * 
      */
     protected void giveUp() {
+        reconnectionCause = null;
+        endRequest();
+
         stopDialogTimer();
         if (!isDialogVisible()) {
             // It SHOULD always be visible at this point, unless you have a
@@ -388,8 +389,14 @@ public class ReconnectingCommunicationProblemHandler implements
                 + "");
     }
 
+    @Override
+    public void configurationUpdated() {
+        // All other properties are fetched directly from the state when needed
+        reconnectDialog.setModal(getConfiguration().dialogModal);
+    }
+
     private ReconnectDialogConfigurationState getConfiguration() {
-        return connection.getUIConnector().getState().reconnectDialog;
+        return connection.getUIConnector().getState().reconnectDialogConfiguration;
     }
 
     @Override
@@ -424,7 +431,6 @@ public class ReconnectingCommunicationProblemHandler implements
     @Override
     public void xhrInvalidStatusCode(CommunicationProblemEvent event) {
         debug("xhrInvalidStatusCode");
-        endRequest();
 
         Response response = event.getResponse();
         int statusCode = response.getStatusCode();
@@ -432,6 +438,7 @@ public class ReconnectingCommunicationProblemHandler implements
 
         if (statusCode == 401) {
             // Authentication/authorization failed, no need to re-try
+            endRequest();
             handleUnauthorized(event);
             return;
         } else {
@@ -517,7 +524,6 @@ public class ReconnectingCommunicationProblemHandler implements
     @Override
     public void pushNotConnected(JsonObject payload) {
         debug("pushNotConnected()");
-        endRequest();
         handleRecoverableError(Type.PUSH, payload);
     }
 

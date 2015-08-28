@@ -90,6 +90,45 @@ public interface ReconnectDialogConfiguration extends Serializable {
      *            the interval (in ms) between reconnect attempts
      */
     public void setReconnectInterval(int reconnectInterval);
+
+    /**
+     * Gets the timeout (in milliseconds) between noticing a loss of connection
+     * and showing the dialog.
+     * 
+     * @return the time to wait before showing a dialog
+     */
+    public int getDialogGracePeriod();
+
+    /**
+     * Sets the timeout (in milliseconds) between noticing a loss of connection
+     * and showing the dialog.
+     * 
+     * @param dialogGracePeriod
+     *            the time to wait before showing a dialog
+     */
+    public void setDialogGracePeriod(int dialogGracePeriod);
+
+    /**
+     * Sets the modality of the dialog.
+     * <p>
+     * If the dialog is set to modal, it will prevent the usage of the
+     * application while the dialog is being shown. If not modal, the user can
+     * continue to use the application as normally and all server events will be
+     * queued until connection has been re-established.
+     * 
+     * @param dialogModal
+     *            true to make the dialog modal, false otherwise
+     */
+    public void setDialogModal(boolean dialogModal);
+
+    /**
+     * Checks the modality of the dialog.
+     * <p>
+     *
+     * @see #setDialogModal(boolean)
+     * @return true if the dialog is modal, false otherwise
+     */
+    public boolean isDialogModal();
 }
 
 class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
@@ -101,42 +140,62 @@ class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
 
     @Override
     public String getDialogText() {
-        return ui.getState(false).reconnectDialog.dialogText;
+        return ui.getState(false).reconnectDialogConfiguration.dialogText;
     }
 
     @Override
     public void setDialogText(String dialogText) {
-        ui.getState().reconnectDialog.dialogText = dialogText;
+        ui.getState().reconnectDialogConfiguration.dialogText = dialogText;
     }
 
     @Override
     public String getDialogTextGaveUp() {
-        return ui.getState(false).reconnectDialog.dialogTextGaveUp;
+        return ui.getState(false).reconnectDialogConfiguration.dialogTextGaveUp;
     }
 
     @Override
     public void setDialogTextGaveUp(String dialogTextGaveUp) {
-        ui.getState().reconnectDialog.dialogTextGaveUp = dialogTextGaveUp;
+        ui.getState().reconnectDialogConfiguration.dialogTextGaveUp = dialogTextGaveUp;
     }
 
     @Override
     public int getReconnectAttempts() {
-        return ui.getState(false).reconnectDialog.reconnectAttempts;
+        return ui.getState(false).reconnectDialogConfiguration.reconnectAttempts;
     }
 
     @Override
     public void setReconnectAttempts(int reconnectAttempts) {
-        ui.getState().reconnectDialog.reconnectAttempts = reconnectAttempts;
+        ui.getState().reconnectDialogConfiguration.reconnectAttempts = reconnectAttempts;
     }
 
     @Override
     public int getReconnectInterval() {
-        return ui.getState(false).reconnectDialog.reconnectInterval;
+        return ui.getState(false).reconnectDialogConfiguration.reconnectInterval;
     }
 
     @Override
     public void setReconnectInterval(int reconnectInterval) {
-        ui.getState().reconnectDialog.reconnectInterval = reconnectInterval;
+        ui.getState().reconnectDialogConfiguration.reconnectInterval = reconnectInterval;
+    }
+
+    @Override
+    public int getDialogGracePeriod() {
+        return ui.getState(false).reconnectDialogConfiguration.dialogGracePeriod;
+    }
+
+    @Override
+    public void setDialogGracePeriod(int dialogGracePeriod) {
+        ui.getState().reconnectDialogConfiguration.dialogGracePeriod = dialogGracePeriod;
+    }
+
+    @Override
+    public boolean isDialogModal() {
+        return ui.getState(false).reconnectDialogConfiguration.dialogModal;
+    }
+
+    @Override
+    public void setDialogModal(boolean dialogModal) {
+        ui.getState().reconnectDialogConfiguration.dialogModal = dialogModal;
     }
 
 }

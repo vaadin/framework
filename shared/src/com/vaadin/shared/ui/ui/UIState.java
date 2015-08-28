@@ -72,7 +72,7 @@ public class UIState extends TabIndexState {
      * @since 7.3
      */
     public String theme;
-    public ReconnectDialogConfigurationState reconnectDialog = new ReconnectDialogConfigurationState();
+    public ReconnectDialogConfigurationState reconnectDialogConfiguration = new ReconnectDialogConfigurationState();
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons
@@ -132,6 +132,7 @@ public class UIState extends TabIndexState {
         public int reconnectAttempts = 10000;
         public int reconnectInterval = 5000;
         public int dialogGracePeriod = 1000;
+        public boolean dialogModal = true;
     }
 
     public static class LocaleServiceState implements Serializable {

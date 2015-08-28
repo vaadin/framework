@@ -751,6 +751,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getConnection().getServerCommunicationHandler().setPushEnabled(
                     getState().pushConfiguration.mode.isEnabled());
         }
+        if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
+            getConnection().getCommunicationProblemHandler()
+                    .configurationUpdated();
+        }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
             VOverlay.setOverlayContainerLabel(getConnection(),

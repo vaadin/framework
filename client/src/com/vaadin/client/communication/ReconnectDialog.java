@@ -62,4 +62,24 @@ public interface ReconnectDialog {
      * Hides the dialog from the user
      */
     void hide();
+
+    /**
+     * Sets the modality of the dialog. If the dialog is set to modal, it will
+     * prevent the usage of the application while the dialog is being shown. If
+     * not modal, the user can continue to use the application as normally and
+     * all server events will be queued until connection has been
+     * re-established.
+     * 
+     * @param modal
+     *            true to set the dialog to modal, false otherwise
+     */
+    void setModal(boolean modal);
+
+    /**
+     * Checks the modality of the dialog.
+     * 
+     * @see #setModal(boolean)
+     * @return
+     */
+    boolean isModal();
 }
