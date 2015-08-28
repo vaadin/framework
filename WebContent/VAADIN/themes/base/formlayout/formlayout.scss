@@ -19,6 +19,7 @@
 }
 .#{$primaryStyleName}-errorcell, .#{$primaryStyleName}-captioncell {
 	width: 1px; /* Don't use any extra space */
+	min-width: 1px;
 }
 .#{$primaryStyleName}-captioncell .v-caption {
 	overflow: visible;

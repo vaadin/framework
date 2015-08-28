@@ -86,7 +86,7 @@ public class VFormLayout extends SimplePanel {
 
         private static final int COLUMN_CAPTION = 0;
         private static final int COLUMN_ERRORFLAG = 1;
-        private static final int COLUMN_WIDGET = 2;
+        public static final int COLUMN_WIDGET = 2;
 
         private HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
         private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
