@@ -2508,19 +2508,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * Returns the caption of the header. By default the header caption is
          * the property id of the column.
          * 
-         * @return the text in the default row of header, null if no default row
+         * @return the text in the default row of header.
          * 
          * @throws IllegalStateException
          *             if the column no longer is attached to the grid
          */
         public String getHeaderCaption() throws IllegalStateException {
             checkColumnIsAttached();
-            HeaderRow row = grid.getHeader().getDefaultRow();
-            if (row != null) {
-                return row.getCell(grid.getPropertyIdByColumnId(state.id))
-                        .getText();
-            }
-            return null;
+
+            return state.headerCaption;
         }
 
         /**
