@@ -2846,6 +2846,18 @@ public class Grid<T> extends ResizeComposite implements
                         });
                 selectAllCheckBox.setValue(selected);
 
+                addHeaderClickHandler(new HeaderClickHandler() {
+                    @Override
+                    public void onClick(GridClickEvent event) {
+                        CellReference<?> targetCell = event.getTargetCell();
+                        int defaultRowIndex = getHeader().getRows().indexOf(getDefaultHeaderRow());
+
+                        if(targetCell.getColumnIndex() == 0 && targetCell.getRowIndex() == defaultRowIndex) {
+                            selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
+                        }
+                    }
+                });
+
                 // Select all with space when "select all" cell is active
                 addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
                     @Override
