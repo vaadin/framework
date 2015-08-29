@@ -22,8 +22,15 @@ import java.util.Locale;
  * A converter that converts from {@link String} to an {@link Enum} and back.
  * <p>
  * Designed to provide nice human readable strings for {@link Enum} classes
- * where the constants are named SOME_UPPERCASE_WORDS. Will not necessarily work
- * correctly for other cases.
+ * conforming to one of these patterns:
+ * <ul>
+ * <li>The constants are named SOME_UPPERCASE_WORDS and there's no toString
+ * implementation.</li>
+ * <li>toString() always returns the same human readable string that is not the
+ * same as its name() value. Each constant in the enum type returns a distinct
+ * toString() value.</li>
+ * </ul>
+ * Will not necessarily work correctly for other cases.
  * </p>
  * 
  * @author Vaadin Ltd
@@ -63,26 +70,35 @@ public class StringToEnumConverter implements Converter<String, Enum> {
             locale = Locale.getDefault();
         }
 
-        // Foo -> FOO
-        // Foo bar -> FOO_BAR
-        String result = value.replace(" ", "_").toUpperCase(locale);
-        try {
-            return Enum.valueOf(enumType, result);
-        } catch (Exception ee) {
-            // There was no match. Try to compare the available values to see if
-            // the constant is using something else than all upper case
-            try {
-                EnumSet<T> set = EnumSet.allOf(enumType);
-                for (T e : set) {
-                    if (e.name().toUpperCase(locale).equals(result)) {
-                        return e;
-                    }
-                }
-            } catch (Exception e) {
-            }
+        if (!enumType.isEnum()) {
+            throw new ConversionException(enumType.getName()
+                    + " is not an enum type");
+        }
 
-            // Fallback did not work either, re-throw original exception so
-            // user knows what went wrong
+        // First test for the human-readable value since that's the more likely
+        // input
+        String upperCaseValue = value.toUpperCase(locale);
+        T match = null;
+        for (T e : EnumSet.allOf(enumType)) {
+            String upperCase = enumToString(e, locale).toUpperCase(locale);
+            if (upperCase.equals(upperCaseValue)) {
+                if (match != null) {
+                    throw new ConversionException("Both " + match.name()
+                            + " and " + e.name()
+                            + " are matching the input string " + value);
+                }
+                match = e;
+            }
+        }
+
+        if (match != null) {
+            return match;
+        }
+
+        // Then fall back to using a strict match based on name()
+        try {
+            return Enum.valueOf(enumType, upperCaseValue);
+        } catch (Exception ee) {
             throw new ConversionException(ee);
         }
     }
@@ -107,12 +123,17 @@ public class StringToEnumConverter implements Converter<String, Enum> {
         }
 
         String enumString = value.toString();
-        // FOO -> Foo
-        // FOO_BAR -> Foo bar
-        // _FOO -> _foo
-        String result = enumString.substring(0, 1).toUpperCase(locale);
-        result += enumString.substring(1).toLowerCase(locale).replace('_', ' ');
-        return result;
+        if (enumString.equals(value.name())) {
+            // FOO -> Foo
+            // FOO_BAR -> Foo bar
+            // _FOO -> _foo
+            String result = enumString.substring(0, 1).toUpperCase(locale);
+            result += enumString.substring(1).toLowerCase(locale)
+                    .replace('_', ' ');
+            return result;
+        } else {
+            return enumString;
+        }
     }
 
     @Override

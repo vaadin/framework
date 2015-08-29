@@ -14,9 +14,35 @@ public class StringToEnumConverterTest {
         VALUE1, SOME_VALUE, FOO_BAR_BAZ, Bar, nonStandardCase, _HUGH;
     }
 
+    public static enum EnumWithCustomToString {
+        ONE, TWO, THREE;
+
+        @Override
+        public String toString() {
+            return "case " + (ordinal() + 1);
+        }
+    }
+
+    public static enum EnumWithAmbigousToString {
+        FOO, FOOBAR, FOO_BAR;
+
+        @Override
+        public String toString() {
+            return name().replaceAll("_", "");
+        }
+    }
+
     StringToEnumConverter converter = new StringToEnumConverter();
     Converter<Enum, String> reverseConverter = new ReverseConverter<Enum, String>(
             converter);
+
+    private String convertToString(Enum value) {
+        return converter.convertToPresentation(value, String.class, null);
+    }
+
+    public Enum convertToEnum(String string, Class<? extends Enum> type) {
+        return converter.convertToModel(string, type, null);
+    }
 
     @Test
     public void testEmptyStringConversion() {
@@ -79,4 +105,31 @@ public class StringToEnumConverterTest {
 
     }
 
+    @Test
+    public void preserveFormattingWithCustomToString() {
+        for (EnumWithCustomToString e : EnumWithCustomToString.values()) {
+            Assert.assertEquals(e.toString(), convertToString(e));
+        }
+    }
+
+    @Test
+    public void findEnumWithCustomToString() {
+        for (EnumWithCustomToString e : EnumWithCustomToString.values()) {
+            Assert.assertSame(e,
+                    convertToEnum(e.toString(), EnumWithCustomToString.class));
+            Assert.assertSame(e,
+                    convertToEnum(e.name(), EnumWithCustomToString.class));
+        }
+    }
+
+    @Test
+    public void unambigousValueInEnumWithAmbigous_succeed() {
+        Assert.assertSame(EnumWithAmbigousToString.FOO,
+                convertToEnum("foo", EnumWithAmbigousToString.class));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void ambigousValue_throws() {
+        convertToEnum("foobar", EnumWithAmbigousToString.class);
+    }
 }

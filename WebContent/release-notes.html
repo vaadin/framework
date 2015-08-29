@@ -115,6 +115,8 @@
                 on the reasoning behind the change.</li>
             <li>Grid SelectionModels are now Extensions. This update removes all selection related variables and API from 
             GridConnector, GridState, GridServerRpc and GridClientRpc</li>
+            <li>StringToEnumConverter now explicitly supports Enum types with custom toString() implementations.
+                This may affect applications that relied on the undefined behavior in previous versions.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
