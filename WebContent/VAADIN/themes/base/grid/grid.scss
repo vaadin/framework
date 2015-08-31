@@ -110,6 +110,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       text-align: right;
       line-height: 1;
 
+      &[disabled] {
+        cursor: default;
+      }
+
       &::-moz-focus-inner {
         border: 0;
       }
