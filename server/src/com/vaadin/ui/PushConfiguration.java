@@ -139,33 +139,6 @@ public interface PushConfiguration extends Serializable {
      */
     public void setParameter(String parameter, String value);
 
-    /**
-     * Sets whether to force the use of XHR when sending data from the client to
-     * the server.
-     * 
-     * This settings currently only has effect when using websockets, which by
-     * default send client to server requests through the websockets channel. If
-     * you need to support cookies, HTTP auth or similar features not available
-     * in websockets communication you can set this to true.
-     * 
-     * @since 7.6
-     * @param alwaysUseXhrForServerRequests
-     *            true to always use XHR for server requests, false otherwise
-     */
-    public void setAlwaysUseXhrForServerRequests(
-            boolean alwaysUseXhrForServerRequests);
-
-    /**
-     * Checks whether to force the use of XHR when sending data from the client
-     * to the server.
-     * 
-     * @see #setAlwaysUseXhrForServerRequests(boolean)
-     * 
-     * @since 7.6
-     * @return true to always use XHR for server requests, false otherwise
-     */
-    public boolean isAlwaysUseXhrForServerRequests();
-
 }
 
 class PushConfigurationImpl implements PushConfiguration {
@@ -234,8 +207,14 @@ class PushConfigurationImpl implements PushConfiguration {
     @Override
     public Transport getTransport() {
         try {
-            return Transport
+            Transport tr = Transport
                     .getByIdentifier(getParameter(PushConfigurationState.TRANSPORT_PARAM));
+            if (tr == Transport.WEBSOCKET
+                    && getState(false).alwaysUseXhrForServerRequests) {
+                return Transport.WEBSOCKET_XHR;
+            } else {
+                return tr;
+            }
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -250,8 +229,16 @@ class PushConfigurationImpl implements PushConfiguration {
      */
     @Override
     public void setTransport(Transport transport) {
-        setParameter(PushConfigurationState.TRANSPORT_PARAM,
-                transport.getIdentifier());
+        if (transport == Transport.WEBSOCKET_XHR) {
+            getState().alwaysUseXhrForServerRequests = true;
+            // Atmosphere knows only about "websocket"
+            setParameter(PushConfigurationState.TRANSPORT_PARAM,
+                    Transport.WEBSOCKET.getIdentifier());
+        } else {
+            getState().alwaysUseXhrForServerRequests = false;
+            setParameter(PushConfigurationState.TRANSPORT_PARAM,
+                    transport.getIdentifier());
+        }
     }
 
     /*
@@ -278,6 +265,10 @@ class PushConfigurationImpl implements PushConfiguration {
      */
     @Override
     public void setFallbackTransport(Transport fallbackTransport) {
+        if (fallbackTransport == Transport.WEBSOCKET_XHR) {
+            throw new IllegalArgumentException(
+                    "WEBSOCKET_XHR can only be used as primary transport");
+        }
         setParameter(PushConfigurationState.FALLBACK_TRANSPORT_PARAM,
                 fallbackTransport.getIdentifier());
     }
@@ -318,14 +309,4 @@ class PushConfigurationImpl implements PushConfiguration {
                 .keySet());
     }
 
-    @Override
-    public void setAlwaysUseXhrForServerRequests(
-            boolean alwaysUseXhrForServerRequests) {
-        getState().alwaysUseXhrForServerRequests = alwaysUseXhrForServerRequests;
-    }
-
-    @Override
-    public boolean isAlwaysUseXhrForServerRequests() {
-        return getState(false).alwaysUseXhrForServerRequests;
-    }
 }

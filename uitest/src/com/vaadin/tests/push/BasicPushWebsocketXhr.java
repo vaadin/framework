@@ -20,7 +20,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
-@Push(transport = Transport.WEBSOCKET)
+@Push(transport = Transport.WEBSOCKET_XHR)
 public class BasicPushWebsocketXhr extends BasicPush {
 
     @Override
@@ -29,7 +29,6 @@ public class BasicPushWebsocketXhr extends BasicPush {
         // Don't use fallback so we can easier detect if websocket fails
         getPushConfiguration().setParameter(
                 PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
-        getPushConfiguration().setAlwaysUseXhrForServerRequests(true);
     }
 
 }

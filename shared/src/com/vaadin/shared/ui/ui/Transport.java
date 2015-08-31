@@ -28,6 +28,12 @@ public enum Transport {
      */
     WEBSOCKET("websocket"),
     /**
+     * Websockets for server to client, XHR for client to server
+     * 
+     * @since 7.6
+     */
+    WEBSOCKET_XHR("websocket-xhr"),
+    /**
      * HTTP streaming
      * 
      * @deprecated Use the more reliable {@link Transport#LONG_POLLING} instead.

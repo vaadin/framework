@@ -328,11 +328,17 @@ public class ServerCommunicationHandler {
      * @return A string representation of the current transport type
      */
     public String getCommunicationMethodName() {
+        String clientToServer = "XHR";
+        String serverToClient = "-";
         if (push != null) {
-            return "Push (" + push.getTransportType() + ")";
-        } else {
-            return "XHR";
+            serverToClient = push.getTransportType();
+            if (push.isBidirectional()) {
+                clientToServer = serverToClient;
+            }
         }
+
+        return "Client to server: " + clientToServer + ", "
+                + "server to client: " + serverToClient;
     }
 
     private CommunicationProblemHandler getCommunicationProblemHandler() {

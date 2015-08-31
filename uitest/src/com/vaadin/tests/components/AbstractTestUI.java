@@ -125,8 +125,7 @@ public abstract class AbstractTestUI extends UI {
         } else if ("websocket".equals(transport)) {
             enablePush(Transport.WEBSOCKET);
         } else if ("websocket-xhr".equals(transport)) {
-            enablePush(Transport.WEBSOCKET);
-            getPushConfiguration().setAlwaysUseXhrForServerRequests(true);
+            enablePush(Transport.WEBSOCKET_XHR);
         } else if ("streaming".equals(transport)) {
             enablePush(Transport.STREAMING);
         } else if ("long-polling".equals(transport)) {
