@@ -190,23 +190,15 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        protected void pinHandle(RowHandleImpl handle) {
-            // Server only knows if something is pinned or not. No need to pin
-            // multiple times.
-            boolean pinnedBefore = handle.isPinned();
-            super.pinHandle(handle);
-            if (!pinnedBefore) {
-                rpcProxy.setPinned(getRowKey(handle.getRow()), true);
-            }
-        }
-
-        @Override
         protected void unpinHandle(RowHandleImpl handle) {
             // Row data is no longer available after it has been unpinned.
             String key = getRowKey(handle.getRow());
             super.unpinHandle(handle);
             if (!handle.isPinned()) {
-                rpcProxy.setPinned(key, false);
+                if (indexOfKey(key) == -1) {
+                    // Row out of view has been unpinned. drop it
+                    droppedRowKeys.set(droppedRowKeys.length(), key);
+                }
             }
         }
 
@@ -244,7 +236,9 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         @Override
         protected void onDropFromCache(int rowIndex, JsonObject row) {
-            droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
+            if (!((RowHandleImpl) getHandle(row)).isPinned()) {
+                droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
+            }
         }
     }
 

@@ -21,14 +21,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.thirdparty.guava.common.collect.BiMap;
-import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
 import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
 import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
@@ -43,6 +40,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -71,214 +69,21 @@ import elemental.json.JsonObject;
 public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
-     * ItemId to Key to ItemId mapper.
-     * <p>
-     * This class is used when transmitting information about items in container
-     * related to Grid. It introduces a consistent way of mapping ItemIds and
-     * its container to a String that can be mapped back to ItemId.
-     * <p>
-     * <em>Technical note:</em> This class also keeps tabs on which indices are
-     * being shown/selected, and is able to clean up after itself once the
-     * itemId &lrarr; key mapping is not needed anymore. In other words, this
-     * doesn't leak memory.
-     */
-    public class DataProviderKeyMapper implements Serializable, DataGenerator {
-        private final BiMap<Object, String> itemIdToKey = HashBiMap.create();
-        private Set<Object> pinnedItemIds = new HashSet<Object>();
-        private long rollingIndex = 0;
-
-        private DataProviderKeyMapper() {
-            // private implementation
-        }
-
-        private String nextKey() {
-            return String.valueOf(rollingIndex++);
-        }
-
-        /**
-         * Gets the key for a given item id. Creates a new key mapping if no
-         * existing mapping was found for the given item id.
-         * 
-         * @since 7.5.0
-         * @param itemId
-         *            the item id to get the key for
-         * @return the key for the given item id
-         */
-        public String getKey(Object itemId) {
-            String key = itemIdToKey.get(itemId);
-            if (key == null) {
-                key = nextKey();
-                itemIdToKey.put(itemId, key);
-            }
-            return key;
-        }
-
-        /**
-         * Gets keys for a collection of item ids.
-         * <p>
-         * If the itemIds are currently cached, the existing keys will be used.
-         * Otherwise new ones will be created.
-         * 
-         * @param itemIds
-         *            the item ids for which to get keys
-         * @return keys for the {@code itemIds}
-         */
-        public List<String> getKeys(Collection<?> itemIds) {
-            if (itemIds == null) {
-                throw new IllegalArgumentException("itemIds can't be null");
-            }
-
-            ArrayList<String> keys = new ArrayList<String>(itemIds.size());
-            for (Object itemId : itemIds) {
-                keys.add(getKey(itemId));
-            }
-            return keys;
-        }
-
-        /**
-         * Gets the registered item id based on its key.
-         * <p>
-         * A key is used to identify a particular row on both a server and a
-         * client. This method can be used to get the item id for the row key
-         * that the client has sent.
-         * 
-         * @param key
-         *            the row key for which to retrieve an item id
-         * @return the item id corresponding to {@code key}
-         * @throws IllegalStateException
-         *             if the key mapper does not have a record of {@code key} .
-         */
-        public Object getItemId(String key) throws IllegalStateException {
-            Object itemId = itemIdToKey.inverse().get(key);
-            if (itemId != null) {
-                return itemId;
-            } else {
-                throw new IllegalStateException("No item id for key " + key
-                        + " found.");
-            }
-        }
-
-        /**
-         * Gets corresponding item ids for each of the keys in a collection.
-         * 
-         * @param keys
-         *            the keys for which to retrieve item ids
-         * @return a collection of item ids for the {@code keys}
-         * @throws IllegalStateException
-         *             if one or more of keys don't have a corresponding item id
-         *             in the cache
-         */
-        public Collection<Object> getItemIds(Collection<String> keys)
-                throws IllegalStateException {
-            if (keys == null) {
-                throw new IllegalArgumentException("keys may not be null");
-            }
-
-            ArrayList<Object> itemIds = new ArrayList<Object>(keys.size());
-            for (String key : keys) {
-                itemIds.add(getItemId(key));
-            }
-            return itemIds;
-        }
-
-        /**
-         * Pin an item id to be cached indefinitely.
-         * <p>
-         * Normally when an itemId is not an active row, it is discarded from
-         * the cache. Pinning an item id will make sure that it is kept in the
-         * cache.
-         * <p>
-         * In effect, while an item id is pinned, it always has the same key.
-         * 
-         * @param itemId
-         *            the item id to pin
-         * @throws IllegalStateException
-         *             if {@code itemId} was already pinned
-         * @see #unpin(Object)
-         * @see #isPinned(Object)
-         * @see #getItemIds(Collection)
-         */
-        public void pin(Object itemId) throws IllegalStateException {
-            if (isPinned(itemId)) {
-                throw new IllegalStateException("Item id " + itemId
-                        + " was pinned already");
-            }
-            pinnedItemIds.add(itemId);
-        }
-
-        /**
-         * Unpin an item id.
-         * <p>
-         * This cancels the effect of pinning an item id. If the item id is
-         * currently inactive, it will be immediately removed from the cache.
-         * 
-         * @param itemId
-         *            the item id to unpin
-         * @throws IllegalStateException
-         *             if {@code itemId} was not pinned
-         * @see #pin(Object)
-         * @see #isPinned(Object)
-         * @see #getItemIds(Collection)
-         */
-        public void unpin(Object itemId) throws IllegalStateException {
-            if (!isPinned(itemId)) {
-                throw new IllegalStateException("Item id " + itemId
-                        + " was not pinned");
-            }
-
-            pinnedItemIds.remove(itemId);
-        }
-
-        /**
-         * Checks whether an item id is pinned or not.
-         * 
-         * @param itemId
-         *            the item id to check for pin status
-         * @return {@code true} iff the item id is currently pinned
-         */
-        public boolean isPinned(Object itemId) {
-            return pinnedItemIds.contains(itemId);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @since 7.6
-         */
-        @Override
-        public void generateData(Object itemId, Item item, JsonObject rowData) {
-            rowData.put(GridState.JSONKEY_ROWKEY, getKey(itemId));
-        }
-
-        /**
-         * Removes all inactive item id to key mapping from the key mapper.
-         * 
-         * @since 7.6
-         */
-        public void dropInactiveItems() {
-            Collection<Object> active = activeItemHandler.getActiveItemIds();
-            Iterator<Object> itemIter = itemIdToKey.keySet().iterator();
-            while (itemIter.hasNext()) {
-                Object itemId = itemIter.next();
-                if (!active.contains(itemId) && !isPinned(itemId)) {
-                    itemIter.remove();
-                }
-            }
-        }
-    }
-
-    /**
      * Class for keeping track of current items and ValueChangeListeners.
      * 
      * @since 7.6
      */
-    private class ActiveItemHandler implements Serializable {
+    private class ActiveItemHandler implements Serializable, DataGenerator {
 
         private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
+        private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();
         private final Set<Object> droppedItems = new HashSet<Object>();
 
         /**
-         * Registers ValueChangeListeners for given items ids.
+         * Registers ValueChangeListeners for given item ids.
+         * <p>
+         * Note: This method will clean up any unneeded listeners and key
+         * mappings
          * 
          * @param itemIds
          *            collection of new active item ids
@@ -293,7 +98,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             // Remove still active rows that were "dropped"
             droppedItems.removeAll(itemIds);
-            dropListeners(droppedItems);
+            internalDropActiveItems(droppedItems);
             droppedItems.clear();
         }
 
@@ -310,11 +115,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
         }
 
-        private void dropListeners(Collection<Object> itemIds) {
+        private void internalDropActiveItems(Collection<Object> itemIds) {
             for (Object itemId : droppedItems) {
                 assert activeItemMap.containsKey(itemId) : "Item ID should exist in the activeItemMap";
 
                 activeItemMap.remove(itemId).removeListener();
+                keyMapper.remove(itemId);
             }
         }
 
@@ -335,6 +141,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public Collection<GridValueChangeListener> getValueChangeListeners() {
             return new HashSet<GridValueChangeListener>(activeItemMap.values());
         }
+
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            rowData.put(GridState.JSONKEY_ROWKEY, keyMapper.key(itemId));
+        }
+
     }
 
     /**
@@ -635,8 +447,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
     };
 
-    private final DataProviderKeyMapper keyMapper = new DataProviderKeyMapper();
-
     /** RpcDataProvider should send the current cache again. */
     private boolean refreshCache = false;
 
@@ -684,24 +494,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             @Override
-            public void setPinned(String key, boolean isPinned) {
-                Object itemId = keyMapper.getItemId(key);
-                if (isPinned) {
-                    // Row might already be pinned if it was selected from the
-                    // server
-                    if (!keyMapper.isPinned(itemId)) {
-                        keyMapper.pin(itemId);
-                    }
-                } else {
-                    keyMapper.unpin(itemId);
-                }
-            }
-
-            @Override
             public void dropRows(JsonArray rowKeys) {
                 for (int i = 0; i < rowKeys.length(); ++i) {
-                    activeItemHandler.dropActiveItem(keyMapper
-                            .getItemId(rowKeys.getString(i)));
+                    activeItemHandler.dropActiveItem(getKeyMapper().get(
+                            rowKeys.getString(i)));
                 }
             }
         });
@@ -711,7 +507,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     .addItemSetChangeListener(itemListener);
         }
 
-        addDataGenerator(keyMapper);
+        addDataGenerator(activeItemHandler);
         addDataGenerator(detailComponentManager);
     }
 
@@ -787,7 +583,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         rpc.setRowData(firstRowToPush, rows);
 
         activeItemHandler.addActiveItems(itemIds);
-        keyMapper.dropInactiveItems();
     }
 
     private JsonObject getRowData(Collection<Column> columns, Object itemId) {
@@ -939,7 +734,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public void setParent(ClientConnector parent) {
         if (parent == null) {
             // We're being detached, release various listeners
-            activeItemHandler.dropListeners(activeItemHandler
+            activeItemHandler.internalDropActiveItems(activeItemHandler
                     .getActiveItemIds());
 
             if (container instanceof ItemSetChangeNotifier) {
@@ -987,8 +782,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
         refreshCache();
     }
 
-    public DataProviderKeyMapper getKeyMapper() {
-        return keyMapper;
+    public KeyMapper<Object> getKeyMapper() {
+        return activeItemHandler.keyMapper;
     }
 
     protected Grid getGrid() {

@@ -47,20 +47,6 @@ public interface DataRequestRpc extends ServerRpc {
             int firstCachedRowIndex, int cacheSize);
 
     /**
-     * Informs the server that an item referenced with a key pinned status has
-     * changed. This is a delayed call that happens along with next rpc call to
-     * server.
-     * 
-     * @param key
-     *            key mapping to item
-     * @param isPinned
-     *            pinned status of referenced item
-     */
-    @Delayed
-    @NoLoadingIndicator
-    public void setPinned(String key, boolean isPinned);
-
-    /**
      * Informs the server that items have been dropped from the client cache.
      * 
      * @since 7.6

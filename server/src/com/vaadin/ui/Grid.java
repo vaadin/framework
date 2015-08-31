@@ -57,7 +57,6 @@ import com.vaadin.data.DataGenerator;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
-import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.RpcDataProviderExtension.DetailComponentManager;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
@@ -3856,7 +3855,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @return the item id corresponding to {@code key}
          */
         protected Object getItemId(String rowKey) {
-            return getParentGrid().getKeyMapper().getItemId(rowKey);
+            return getParentGrid().getKeyMapper().get(rowKey);
         }
 
         /**
@@ -4139,7 +4138,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             @Override
             public void itemClick(String rowKey, String columnId,
                     MouseEventDetails details) {
-                Object itemId = getKeyMapper().getItemId(rowKey);
+                Object itemId = getKeyMapper().get(rowKey);
                 Item item = datasource.getItem(itemId);
                 Object propertyId = getPropertyIdByColumnId(columnId);
                 fireEvent(new ItemClickEvent(Grid.this, item, itemId,
@@ -4222,20 +4221,20 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             @Override
             public void editorOpen(String rowKey) {
-                fireEvent(new EditorOpenEvent(Grid.this, getKeyMapper()
-                        .getItemId(rowKey)));
+                fireEvent(new EditorOpenEvent(Grid.this, getKeyMapper().get(
+                        rowKey)));
             }
 
             @Override
             public void editorMove(String rowKey) {
-                fireEvent(new EditorMoveEvent(Grid.this, getKeyMapper()
-                        .getItemId(rowKey)));
+                fireEvent(new EditorMoveEvent(Grid.this, getKeyMapper().get(
+                        rowKey)));
             }
 
             @Override
             public void editorClose(String rowKey) {
-                fireEvent(new EditorCloseEvent(Grid.this, getKeyMapper()
-                        .getItemId(rowKey)));
+                fireEvent(new EditorCloseEvent(Grid.this, getKeyMapper().get(
+                        rowKey)));
             }
         });
 
@@ -5299,7 +5298,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @return the key mapper being used by the data source
      */
-    DataProviderKeyMapper getKeyMapper() {
+    KeyMapper<Object> getKeyMapper() {
         return datasourceExtension.getKeyMapper();
     }
 

@@ -156,19 +156,16 @@ public class MultiSelectionModelConnector extends
         public void selectAll() {
             assert !isBeingBatchSelected() : "Can't select all in middle of a batch selection.";
 
-            Set<RowHandle<JsonObject>> rows = new HashSet<DataSource.RowHandle<JsonObject>>();
             DataSource<JsonObject> dataSource = getGrid().getDataSource();
             for (int i = availableRows.getStart(); i < availableRows.getEnd(); ++i) {
                 final JsonObject row = dataSource.getRow(i);
                 if (row != null) {
                     RowHandle<JsonObject> handle = dataSource.getHandle(row);
                     markAsSelected(handle, true);
-                    rows.add(handle);
                 }
             }
 
             getRpcProxy(MultiSelectionModelServerRpc.class).selectAll();
-            cleanRowCache(rows);
         }
 
         @Override
@@ -205,19 +202,16 @@ public class MultiSelectionModelConnector extends
         public boolean deselectAll() {
             assert !isBeingBatchSelected() : "Can't select all in middle of a batch selection.";
 
-            Set<RowHandle<JsonObject>> rows = new HashSet<DataSource.RowHandle<JsonObject>>();
             DataSource<JsonObject> dataSource = getGrid().getDataSource();
             for (int i = availableRows.getStart(); i < availableRows.getEnd(); ++i) {
                 final JsonObject row = dataSource.getRow(i);
                 if (row != null) {
                     RowHandle<JsonObject> handle = dataSource.getHandle(row);
                     markAsSelected(handle, false);
-                    rows.add(handle);
                 }
             }
 
             getRpcProxy(MultiSelectionModelServerRpc.class).deselectAll();
-            cleanRowCache(rows);
 
             return true;
         }
@@ -235,8 +229,9 @@ public class MultiSelectionModelConnector extends
 
             for (JsonObject row : rows) {
                 RowHandle<JsonObject> rowHandle = getRowHandle(row);
-                markAsSelected(rowHandle, true);
-                selected.add(rowHandle);
+                if (markAsSelected(rowHandle, true)) {
+                    selected.add(rowHandle);
+                }
             }
 
             if (!isBeingBatchSelected()) {
@@ -246,23 +241,35 @@ public class MultiSelectionModelConnector extends
         }
 
         /**
-         * Marks the JsonObject pointed by RowHandle to have selected
-         * information equal to given boolean
+         * Marks the given row to be selected or deselected. Returns true if the
+         * value actually changed.
+         * <p>
+         * Note: If selection model is in batch select state, the row will be
+         * pinned on select.
          * 
          * @param row
          *            row handle
          * @param selected
-         *            should row be selected
+         *            {@code true} if row should be selected; {@code false} if
+         *            not
+         * @return {@code true} if selected status changed; {@code false} if not
          */
-        protected void markAsSelected(RowHandle<JsonObject> row,
+        protected boolean markAsSelected(RowHandle<JsonObject> row,
                 boolean selected) {
-            row.pin();
-            if (selected) {
+            if (selected && !isSelected(row.getRow())) {
                 row.getRow().put(GridState.JSONKEY_SELECTED, true);
-            } else {
+            } else if (!selected && isSelected(row.getRow())) {
                 row.getRow().remove(GridState.JSONKEY_SELECTED);
+            } else {
+                return false;
             }
+
             row.updateRow();
+
+            if (isBeingBatchSelected()) {
+                row.pin();
+            }
+            return true;
         }
 
         /**
@@ -278,8 +285,9 @@ public class MultiSelectionModelConnector extends
 
             for (JsonObject row : rows) {
                 RowHandle<JsonObject> rowHandle = getRowHandle(row);
-                markAsSelected(rowHandle, false);
-                deselected.add(rowHandle);
+                if (markAsSelected(rowHandle, false)) {
+                    deselected.add(rowHandle);
+                }
             }
 
             if (!isBeingBatchSelected()) {
@@ -288,16 +296,38 @@ public class MultiSelectionModelConnector extends
             return true;
         }
 
+        /**
+         * Sends a deselect RPC call to server-side containing all deselected
+         * rows. Unpins any pinned rows.
+         */
         private void sendDeselected() {
             getRpcProxy(MultiSelectionModelServerRpc.class).deselect(
                     getRowKeys(deselected));
-            cleanRowCache(deselected);
+
+            if (isBeingBatchSelected()) {
+                for (RowHandle<JsonObject> row : deselected) {
+                    row.unpin();
+                }
+            }
+
+            deselected.clear();
         }
 
+        /**
+         * Sends a select RPC call to server-side containing all selected rows.
+         * Unpins any pinned rows.
+         */
         private void sendSelected() {
             getRpcProxy(MultiSelectionModelServerRpc.class).select(
                     getRowKeys(selected));
-            cleanRowCache(selected);
+
+            if (isBeingBatchSelected()) {
+                for (RowHandle<JsonObject> row : selected) {
+                    row.unpin();
+                }
+            }
+
+            selected.clear();
         }
 
         private List<String> getRowKeys(Set<RowHandle<JsonObject>> handles) {
@@ -314,13 +344,6 @@ public class MultiSelectionModelConnector extends
                 rows.add(handle.getRow());
             }
             return rows;
-        }
-
-        private void cleanRowCache(Set<RowHandle<JsonObject>> handles) {
-            for (RowHandle<JsonObject> handle : handles) {
-                handle.unpin();
-            }
-            handles.clear();
         }
 
         @Override

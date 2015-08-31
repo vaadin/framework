@@ -16,8 +16,6 @@
 
 package com.vaadin.client.data;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,12 +118,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         @Override
         public T getRow() throws IllegalStateException {
-            if (isPinned()) {
-                return row;
-            } else {
-                throw new IllegalStateException("The row handle for key " + key
-                        + " was not pinned");
-            }
+            return row;
         }
 
         public boolean isPinned() {
@@ -197,7 +190,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
     private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
-    protected Collection<T> temporarilyPinnedRows = Collections.emptySet();
 
     // Size not yet known
     private int size = -1;
