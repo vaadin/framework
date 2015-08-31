@@ -22,24 +22,24 @@ import com.vaadin.client.ApplicationConnection;
 import elemental.json.JsonObject;
 
 /**
- * Interface for handling problems which occur during communication with the
- * server.
+ * Interface for handling problems and other events which occur during
+ * communication with the server.
  * 
  * The handler is responsible for handling any problem in XHR, heartbeat and
  * push connections in a way it sees fit. The default implementation is
- * {@link ReconnectingCommunicationProblemHandler}.
+ * {@link DefaultConnectionStateHandler}.
  * 
  * @since 7.6
  * @author Vaadin Ltd
  */
-public interface CommunicationProblemHandler {
+public interface ConnectionStateHandler {
 
     /**
-     * Sets the application connection this handler is connected to. Called
+     * Sets the application connection this instance is connected to. Called
      * internally by the framework.
      *
      * @param connection
-     *            the application connection this handler is connected to
+     *            the application connection this instance is connected to
      */
     void setConnection(ApplicationConnection connection);
 
@@ -134,11 +134,11 @@ public interface CommunicationProblemHandler {
      * Called when an exception occurs during an XmlHttpRequest request to the
      * server.
      * 
-     * @param communicationProblemEvent
+     * @param xhrConnectionError
      *            An event containing what was being sent to the server and what
      *            exception occurred
      */
-    void xhrException(CommunicationProblemEvent communicationProblemEvent);
+    void xhrException(XhrConnectionError xhrConnectionError);
 
     /**
      * Called when invalid content (not JSON) was returned from the server as
@@ -148,7 +148,7 @@ public interface CommunicationProblemHandler {
      *            An event containing what was being sent to the server and what
      *            was returned
      */
-    void xhrInvalidContent(CommunicationProblemEvent communicationProblemEvent);
+    void xhrInvalidContent(XhrConnectionError xhrConnectionError);
 
     /**
      * Called when invalid status code (not 200) was returned by the server as
@@ -158,7 +158,7 @@ public interface CommunicationProblemHandler {
      *            An event containing what was being sent to the server and what
      *            was returned
      */
-    void xhrInvalidStatusCode(CommunicationProblemEvent problemEvent);
+    void xhrInvalidStatusCode(XhrConnectionError xhrConnectionError);
 
     /**
      * Called whenever a XmlHttpRequest to the server completes successfully

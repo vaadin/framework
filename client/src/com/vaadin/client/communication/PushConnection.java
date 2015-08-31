@@ -49,7 +49,7 @@ public interface PushConnection {
      * <p>
      * Implementation detail: If the push connection is not connected and the
      * message can thus not be sent, the implementation must call
-     * {@link CommunicationProblemHandler#pushNotConnected(JsonObject)}, which
+     * {@link ConnectionStateHandler#pushNotConnected(JsonObject)}, which
      * will retry the send later.
      * <p>
      * This method must not be called if the push connection is not

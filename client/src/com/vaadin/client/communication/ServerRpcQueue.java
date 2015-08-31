@@ -67,10 +67,11 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Sets the application connection this queue is connected to
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
      *
      * @param connection
-     *            the application connection this queue is connected to
+     *            the application connection this instance is connected to
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
@@ -203,8 +204,7 @@ public class ServerRpcQueue {
                 // Somebody else cleared the queue before we had the chance
                 return;
             }
-            connection.getServerCommunicationHandler()
-                    .sendInvocationsToServer();
+            connection.getMessageSender().sendInvocationsToServer();
         }
     };
 

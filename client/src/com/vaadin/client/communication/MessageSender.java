@@ -35,15 +35,15 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * ServerCommunicationHandler is responsible for sending messages to the server.
- * 
- * Internally either XHR or push is used for communicating, depending on the
- * application configuration.
+ * MessageSender is responsible for sending messages to the server.
+ * <p>
+ * Internally uses {@link XhrConnection} and/or {@link PushConnection} for
+ * delivering messages, depending on the application configuration.
  * 
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class ServerCommunicationHandler {
+public class MessageSender {
 
     private ApplicationConnection connection;
     private boolean hasActiveRequest = false;
@@ -55,15 +55,16 @@ public class ServerCommunicationHandler {
     private XhrConnection xhrConnection;
     private PushConnection push;
 
-    public ServerCommunicationHandler() {
+    public MessageSender() {
         xhrConnection = GWT.create(XhrConnection.class);
     }
 
     /**
-     * Sets the application connection this handler is connected to
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
      *
      * @param connection
-     *            the application connection this handler is connected to
+     *            the application connection this instance is connected to
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
@@ -71,7 +72,7 @@ public class ServerCommunicationHandler {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ServerCommunicationHandler.class.getName());
+        return Logger.getLogger(MessageSender.class.getName());
     }
 
     public void sendInvocationsToServer() {
@@ -148,13 +149,13 @@ public class ServerCommunicationHandler {
         startRequest();
 
         JsonObject payload = Json.createObject();
-        String csrfToken = getServerMessageHandler().getCsrfToken();
+        String csrfToken = getMessageHandler().getCsrfToken();
         if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
             payload.put(ApplicationConstants.CSRF_TOKEN, csrfToken);
         }
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
-        payload.put(ApplicationConstants.SERVER_SYNC_ID,
-                getServerMessageHandler().getLastSeenServerSyncId());
+        payload.put(ApplicationConstants.SERVER_SYNC_ID, getMessageHandler()
+                .getLastSeenServerSyncId());
         payload.put(ApplicationConstants.CLIENT_TO_SERVER_ID,
                 clientToServerMessageId++);
 
@@ -341,12 +342,12 @@ public class ServerCommunicationHandler {
                 + "server to client: " + serverToClient;
     }
 
-    private CommunicationProblemHandler getCommunicationProblemHandler() {
-        return connection.getCommunicationProblemHandler();
+    private ConnectionStateHandler getConnectionStateHandler() {
+        return connection.getConnectionStateHandler();
     }
 
-    private ServerMessageHandler getServerMessageHandler() {
-        return connection.getServerMessageHandler();
+    private MessageHandler getMessageHandler() {
+        return connection.getMessageHandler();
     }
 
     private VLoadingIndicator getLoadingIndicator() {

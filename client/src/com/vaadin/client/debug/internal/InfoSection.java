@@ -166,7 +166,7 @@ public class InfoSection implements Section {
         addRow("Theme", connection.getUIConnector().getActiveTheme());
 
         String communicationMethodInfo = connection
-                .getServerCommunicationHandler().getCommunicationMethodName();
+                .getMessageSender().getCommunicationMethodName();
         int pollInterval = connection.getUIConnector().getState().pollInterval;
         if (pollInterval > 0) {
             communicationMethodInfo += " (poll interval " + pollInterval

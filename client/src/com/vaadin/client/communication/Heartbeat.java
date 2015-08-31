@@ -96,11 +96,11 @@ public class Heartbeat {
                 int status = response.getStatusCode();
 
                 if (status == Response.SC_OK) {
-                    connection.getCommunicationProblemHandler().heartbeatOk();
+                    connection.getConnectionStateHandler().heartbeatOk();
                 } else {
                     // Handler should stop the application if heartbeat should
                     // no longer be sent
-                    connection.getCommunicationProblemHandler()
+                    connection.getConnectionStateHandler()
                             .heartbeatInvalidStatusCode(request, response);
                 }
 
@@ -111,7 +111,7 @@ public class Heartbeat {
             public void onError(Request request, Throwable exception) {
                 // Handler should stop the application if heartbeat should no
                 // longer be sent
-                connection.getCommunicationProblemHandler().heartbeatException(
+                connection.getConnectionStateHandler().heartbeatException(
                         request, exception);
                 schedule();
             }

@@ -21,13 +21,13 @@ import com.google.gwt.http.client.Response;
 import elemental.json.JsonObject;
 
 /**
- * Event describing a problem which took place during communication with the
- * server
+ * XhrConnectionError provides detail about an error which occured during an XHR
+ * request to the server
  * 
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class CommunicationProblemEvent {
+public class XhrConnectionError {
 
     private Throwable exception;
     private Request request;
@@ -44,7 +44,7 @@ public class CommunicationProblemEvent {
      * @param exception
      *            the exception describing the problem
      */
-    public CommunicationProblemEvent(Request request, JsonObject payload,
+    public XhrConnectionError(Request request, JsonObject payload,
             Throwable exception) {
         this.request = request;
         this.exception = exception;
@@ -61,7 +61,7 @@ public class CommunicationProblemEvent {
      * @param response
      *            the response for the request
      */
-    public CommunicationProblemEvent(Request request, JsonObject payload,
+    public XhrConnectionError(Request request, JsonObject payload,
             Response response) {
         this.request = request;
         this.response = response;

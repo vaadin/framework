@@ -28,29 +28,27 @@ public class ServerMessageHandlerTest {
     @Test
     public void unwrapValidJson() {
         String payload = "{'foo': 'bar'}";
-        Assert.assertEquals(
-                payload,
-                ServerMessageHandler.stripJSONWrapping("for(;;);[" + payload
-                        + "]"));
+        Assert.assertEquals(payload,
+                MessageHandler.stripJSONWrapping("for(;;);[" + payload + "]"));
 
     }
 
     @Test
     public void unwrapUnwrappedJson() {
         String payload = "{'foo': 'bar'}";
-        Assert.assertNull(ServerMessageHandler.stripJSONWrapping(payload));
+        Assert.assertNull(MessageHandler.stripJSONWrapping(payload));
 
     }
 
     @Test
     public void unwrapNull() {
-        Assert.assertNull(ServerMessageHandler.stripJSONWrapping(null));
+        Assert.assertNull(MessageHandler.stripJSONWrapping(null));
 
     }
 
     @Test
     public void unwrapEmpty() {
-        Assert.assertNull(ServerMessageHandler.stripJSONWrapping(""));
+        Assert.assertNull(MessageHandler.stripJSONWrapping(""));
 
     }
 }

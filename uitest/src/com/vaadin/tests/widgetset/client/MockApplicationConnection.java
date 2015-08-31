@@ -28,21 +28,21 @@ public class MockApplicationConnection extends ApplicationConnection {
 
     public MockApplicationConnection() {
         super();
-        serverMessageHandler = new MockServerMessageHandler();
-        serverMessageHandler.setConnection(this);
-        serverCommunicationHandler = new MockServerCommunicationHandler();
-        serverCommunicationHandler.setConnection(this);
+        messageHandler = new MockServerMessageHandler();
+        messageHandler.setConnection(this);
+        messageSender = new MockServerCommunicationHandler();
+        messageSender.setConnection(this);
     }
 
     @Override
-    public MockServerMessageHandler getServerMessageHandler() {
-        return (MockServerMessageHandler) super.getServerMessageHandler();
+    public MockServerMessageHandler getMessageHandler() {
+        return (MockServerMessageHandler) super.getMessageHandler();
     }
 
     @Override
-    public MockServerCommunicationHandler getServerCommunicationHandler() {
+    public MockServerCommunicationHandler getMessageSender() {
         return (MockServerCommunicationHandler) super
-                .getServerCommunicationHandler();
+                .getMessageSender();
     }
 
     /**
@@ -52,7 +52,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenReceiver() {
-        return getServerMessageHandler().lastCsrfTokenReceiver;
+        return getMessageHandler().lastCsrfTokenReceiver;
     }
 
     /**
@@ -62,7 +62,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenSent() {
-        return getServerCommunicationHandler().lastCsrfTokenSent;
+        return getMessageSender().lastCsrfTokenSent;
     }
 
 }

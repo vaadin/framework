@@ -194,7 +194,7 @@ public class AtmospherePushConnection implements PushConnection {
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
-        String csrfToken = connection.getServerMessageHandler().getCsrfToken();
+        String csrfToken = connection.getMessageHandler().getCsrfToken();
         if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
             extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER
                     + "=" + csrfToken;
@@ -270,7 +270,7 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         if (state == State.CONNECT_PENDING) {
-            getCommunicationProblemHandler().pushNotConnected(message);
+            getConnectionStateHandler().pushNotConnected(message);
             return;
         }
 
@@ -307,7 +307,7 @@ public class AtmospherePushConnection implements PushConnection {
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
-            getCommunicationProblemHandler().pushOk(this);
+            getConnectionStateHandler().pushOk(this);
             break;
         case DISCONNECT_PENDING:
             // Set state to connected to make disconnect close the connection
@@ -355,16 +355,16 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected void onMessage(AtmosphereResponse response) {
         String message = response.getResponseBody();
-        ValueMap json = ServerMessageHandler.parseWrappedJson(message);
+        ValueMap json = MessageHandler.parseWrappedJson(message);
         if (json == null) {
             // Invalid string (not wrapped as expected)
-            getCommunicationProblemHandler().pushInvalidContent(this, message);
+            getConnectionStateHandler().pushInvalidContent(this, message);
             return;
         } else {
             getLogger().info(
                     "Received push (" + getTransportType() + ") message: "
                             + message);
-            connection.getServerMessageHandler().handleMessage(json);
+            connection.getMessageHandler().handleMessage(json);
         }
     }
 
@@ -386,17 +386,17 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        getCommunicationProblemHandler().pushError(this);
+        getConnectionStateHandler().pushError(this);
     }
 
     protected void onClose(AtmosphereResponse response) {
         state = State.CONNECT_PENDING;
-        getCommunicationProblemHandler().pushClosed(this);
+        getConnectionStateHandler().pushClosed(this);
     }
 
     protected void onClientTimeout(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        getCommunicationProblemHandler().pushClientTimeout(this);
+        getConnectionStateHandler().pushClientTimeout(this);
     }
 
     protected void onReconnect(JavaScriptObject request,
@@ -404,7 +404,7 @@ public class AtmospherePushConnection implements PushConnection {
         if (state == State.CONNECTED) {
             state = State.CONNECT_PENDING;
         }
-        getCommunicationProblemHandler().pushReconnectPending(this);
+        getConnectionStateHandler().pushReconnectPending(this);
     }
 
     public static abstract class AbstractJSO extends JavaScriptObject {
@@ -575,7 +575,7 @@ public class AtmospherePushConnection implements PushConnection {
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            getCommunicationProblemHandler()
+                            getConnectionStateHandler()
                                     .pushScriptLoadError(event.getResourceUrl());
                         }
                     });
@@ -603,8 +603,8 @@ public class AtmospherePushConnection implements PushConnection {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
 
-    private CommunicationProblemHandler getCommunicationProblemHandler() {
-        return connection.getCommunicationProblemHandler();
+    private ConnectionStateHandler getConnectionStateHandler() {
+        return connection.getConnectionStateHandler();
     }
 
 }

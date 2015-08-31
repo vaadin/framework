@@ -71,10 +71,11 @@ public class XhrConnection {
     }
 
     /**
-     * Sets the application connection this queue is connected to
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
      *
      * @param connection
-     *            the application connection this queue is connected to
+     *            the application connection this instance is connected to
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
@@ -127,12 +128,8 @@ public class XhrConnection {
 
         @Override
         public void onError(Request request, Throwable exception) {
-            getCommunicationProblemHandler().xhrException(
-                    new CommunicationProblemEvent(request, payload, exception));
-        }
-
-        private ServerCommunicationHandler getServerCommunicationHandler() {
-            return connection.getServerCommunicationHandler();
+            getConnectionStateHandler().xhrException(
+                    new XhrConnectionError(request, payload, exception));
         }
 
         @Override
@@ -141,11 +138,10 @@ public class XhrConnection {
 
             if (statusCode != 200) {
                 // There was a problem
-                CommunicationProblemEvent problemEvent = new CommunicationProblemEvent(
+                XhrConnectionError problemEvent = new XhrConnectionError(
                         request, payload, response);
 
-                getCommunicationProblemHandler().xhrInvalidStatusCode(
-                        problemEvent);
+                getConnectionStateHandler().xhrInvalidStatusCode(problemEvent);
                 return;
             }
 
@@ -157,27 +153,25 @@ public class XhrConnection {
             String contentType = response.getHeader("Content-Type");
             if (contentType == null
                     || !contentType.startsWith("application/json")) {
-                getCommunicationProblemHandler().xhrInvalidContent(
-                        new CommunicationProblemEvent(request, payload,
-                                response));
+                getConnectionStateHandler().xhrInvalidContent(
+                        new XhrConnectionError(request, payload, response));
                 return;
             }
 
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
 
-            ValueMap json = ServerMessageHandler.parseWrappedJson(responseText);
+            ValueMap json = MessageHandler.parseWrappedJson(responseText);
             if (json == null) {
                 // Invalid string (not wrapped as expected or can't parse)
-                getCommunicationProblemHandler().xhrInvalidContent(
-                        new CommunicationProblemEvent(request, payload,
-                                response));
+                getConnectionStateHandler().xhrInvalidContent(
+                        new XhrConnectionError(request, payload, response));
                 return;
             }
 
-            getCommunicationProblemHandler().xhrOk();
+            getConnectionStateHandler().xhrOk();
             getLogger().info("Received xhr message: " + responseText);
-            getServerMessageHandler().handleMessage(json);
+            getMessageHandler().handleMessage(json);
         }
 
         /**
@@ -233,8 +227,8 @@ public class XhrConnection {
                 }.schedule(retryTimeout);
             }
         } catch (RequestException e) {
-            getCommunicationProblemHandler().xhrException(
-                    new CommunicationProblemEvent(null, payload, e));
+            getConnectionStateHandler().xhrException(
+                    new XhrConnectionError(null, payload, e));
         }
     }
 
@@ -255,12 +249,12 @@ public class XhrConnection {
 
     }
 
-    private CommunicationProblemHandler getCommunicationProblemHandler() {
-        return connection.getCommunicationProblemHandler();
+    private ConnectionStateHandler getConnectionStateHandler() {
+        return connection.getConnectionStateHandler();
     }
 
-    private ServerMessageHandler getServerMessageHandler() {
-        return connection.getServerMessageHandler();
+    private MessageHandler getMessageHandler() {
+        return connection.getMessageHandler();
     }
 
     private static native boolean resendRequest(Request request)

@@ -42,14 +42,15 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
-import com.vaadin.client.communication.CommunicationProblemHandler;
+import com.vaadin.client.communication.ConnectionStateHandler;
+import com.vaadin.client.communication.DefaultConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
-import com.vaadin.client.communication.ReconnectingCommunicationProblemHandler;
+import com.vaadin.client.communication.MessageHandler;
+import com.vaadin.client.communication.MessageSender;
 import com.vaadin.client.communication.RpcManager;
-import com.vaadin.client.communication.ServerCommunicationHandler;
-import com.vaadin.client.communication.ServerMessageHandler;
 import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
@@ -139,11 +140,11 @@ public class ApplicationConnection implements HasHandlers {
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
 
-    public enum State {
+    public enum ApplicationState {
         INITIALIZING, RUNNING, TERMINATED;
     }
 
-    private State state = State.INITIALIZING;
+    private ApplicationState applicationState = ApplicationState.INITIALIZING;
 
     /**
      * The communication handler methods are called at certain points during
@@ -364,14 +365,13 @@ public class ApplicationConnection implements HasHandlers {
         loadingIndicator.setConnection(this);
         serverRpcQueue = GWT.create(ServerRpcQueue.class);
         serverRpcQueue.setConnection(this);
-        communicationProblemHandler = GWT
-                .create(ReconnectingCommunicationProblemHandler.class);
-        communicationProblemHandler.setConnection(this);
-        serverMessageHandler = GWT.create(ServerMessageHandler.class);
-        serverMessageHandler.setConnection(this);
-        serverCommunicationHandler = GWT
-                .create(ServerCommunicationHandler.class);
-        serverCommunicationHandler.setConnection(this);
+        connectionStateHandler = GWT
+                .create(DefaultConnectionStateHandler.class);
+        connectionStateHandler.setConnection(this);
+        messageHandler = GWT.create(MessageHandler.class);
+        messageHandler.setConnection(this);
+        messageSender = GWT.create(MessageSender.class);
+        messageSender.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -433,14 +433,14 @@ public class ApplicationConnection implements HasHandlers {
         String jsonText = configuration.getUIDL();
         if (jsonText == null) {
             // initial UIDL not in DOM, request from server
-            getServerCommunicationHandler().resynchronize();
+            getMessageSender().resynchronize();
         } else {
             // initial UIDL provided in DOM, continue as if returned by request
 
             // Hack to avoid logging an error in endRequest()
-            getServerCommunicationHandler().startRequest();
-            getServerMessageHandler().handleMessage(
-                    ServerMessageHandler.parseJson(jsonText));
+            getMessageSender().startRequest();
+            getMessageHandler().handleMessage(
+                    MessageHandler.parseJson(jsonText));
         }
 
         // Tooltip can't be created earlier because the
@@ -463,9 +463,8 @@ public class ApplicationConnection implements HasHandlers {
      * @return true if the client has some work to be done, false otherwise
      */
     private boolean isActive() {
-        return !getServerMessageHandler().isInitialUidlHandled()
-                || isWorkPending()
-                || getServerCommunicationHandler().hasActiveRequest()
+        return !getMessageHandler().isInitialUidlHandled() || isWorkPending()
+                || getMessageSender().hasActiveRequest()
                 || isExecutingDeferredCommands();
     }
 
@@ -485,13 +484,13 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         client.getProfilingData = $entry(function() {
-            var smh = ap.@com.vaadin.client.ApplicationConnection::getServerMessageHandler();
+            var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler();
             var pd = [
-                smh.@com.vaadin.client.communication.ServerMessageHandler::lastProcessingTime,
-                    smh.@com.vaadin.client.communication.ServerMessageHandler::totalProcessingTime
+                smh.@com.vaadin.client.communication.MessageHandler::lastProcessingTime,
+                    smh.@com.vaadin.client.communication.MessageHandler::totalProcessingTime
                 ];
-            pd = pd.concat(smh.@com.vaadin.client.communication.ServerMessageHandler::serverTimingInfo);
-            pd[pd.length] = smh.@com.vaadin.client.communication.ServerMessageHandler::bootstrapTime;
+            pd = pd.concat(smh.@com.vaadin.client.communication.MessageHandler::serverTimingInfo);
+            pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
 
@@ -598,9 +597,9 @@ public class ApplicationConnection implements HasHandlers {
     int cssWaits = 0;
 
     protected ServerRpcQueue serverRpcQueue;
-    protected CommunicationProblemHandler communicationProblemHandler;
-    protected ServerMessageHandler serverMessageHandler;
-    protected ServerCommunicationHandler serverCommunicationHandler;
+    protected ConnectionStateHandler connectionStateHandler;
+    protected MessageHandler messageHandler;
+    protected MessageSender messageSender;
 
     static final int MAX_CSS_WAITS = 100;
 
@@ -1475,7 +1474,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     public void setApplicationRunning(boolean applicationRunning) {
-        if (getState() == State.TERMINATED) {
+        if (getApplicationState() == ApplicationState.TERMINATED) {
             if (applicationRunning) {
                 getLogger()
                         .severe("Tried to restart a terminated application. This is not supported");
@@ -1485,17 +1484,17 @@ public class ApplicationConnection implements HasHandlers {
                                 "Tried to stop a terminated application. This should not be done");
             }
             return;
-        } else if (getState() == State.INITIALIZING) {
+        } else if (getApplicationState() == ApplicationState.INITIALIZING) {
             if (applicationRunning) {
-                state = State.RUNNING;
+                applicationState = ApplicationState.RUNNING;
             } else {
                 getLogger()
                         .warning(
                                 "Tried to stop the application before it has started. This should not be done");
             }
-        } else if (getState() == State.RUNNING) {
+        } else if (getApplicationState() == ApplicationState.RUNNING) {
             if (!applicationRunning) {
-                state = State.TERMINATED;
+                applicationState = ApplicationState.TERMINATED;
                 eventBus.fireEvent(new ApplicationStoppedEvent());
             } else {
                 getLogger()
@@ -1506,13 +1505,14 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Checks if the application is in the {@link State#RUNNING} state.
+     * Checks if the application is in the {@link ApplicationState#RUNNING}
+     * state.
      * 
      * @since
      * @return true if the application is in the running state, false otherwise
      */
     public boolean isApplicationRunning() {
-        return state == State.RUNNING;
+        return applicationState == ApplicationState.RUNNING;
     }
 
     public <H extends EventHandler> HandlerRegistration addHandler(
@@ -1568,11 +1568,11 @@ public class ApplicationConnection implements HasHandlers {
      * application to go back to a previous state, i.e. a stopped application
      * can never be re-started
      * 
-     * @since
+     * @since 7.6
      * @return the current state of this application
      */
-    public State getState() {
-        return state;
+    public ApplicationState getApplicationState() {
+        return applicationState;
     }
 
     /**
@@ -1589,17 +1589,17 @@ public class ApplicationConnection implements HasHandlers {
      * 
      * @return the server RPC queue
      */
-    public CommunicationProblemHandler getCommunicationProblemHandler() {
-        return communicationProblemHandler;
+    public ConnectionStateHandler getConnectionStateHandler() {
+        return connectionStateHandler;
     }
 
     /**
-     * Gets the server message handler for this application
+     * Gets the (server to client) message handler for this application
      * 
-     * @return the server message handler
+     * @return the message handler
      */
-    public ServerMessageHandler getServerMessageHandler() {
-        return serverMessageHandler;
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
 
     /**
@@ -1612,12 +1612,12 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the server communication handler for this application
+     * Gets the (client to server) message sender for this application
      * 
-     * @return the server communication handler
+     * @return the message sender
      */
-    public ServerCommunicationHandler getServerCommunicationHandler() {
-        return serverCommunicationHandler;
+    public MessageSender getMessageSender() {
+        return messageSender;
     }
 
     /**
@@ -1628,7 +1628,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     public int getLastSeenServerSyncId() {
-        return getServerMessageHandler().getLastSeenServerSyncId();
+        return getMessageHandler().getLastSeenServerSyncId();
     }
 
 }

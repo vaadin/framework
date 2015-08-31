@@ -32,7 +32,7 @@ import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
 import elemental.json.JsonObject;
 
 /**
- * Default implementation of the communication problem handler.
+ * Default implementation of the connection state handler.
  * <p>
  * Handles temporary errors by showing a reconnect dialog to the user while
  * trying to re-establish the connection to the server and re-send the pending
@@ -44,8 +44,7 @@ import elemental.json.JsonObject;
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class ReconnectingCommunicationProblemHandler implements
-        CommunicationProblemHandler {
+public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     private ApplicationConnection connection;
     private ReconnectDialog reconnectDialog = GWT.create(ReconnectDialog.class);
@@ -120,8 +119,7 @@ public class ReconnectingCommunicationProblemHandler implements
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ReconnectingCommunicationProblemHandler.class
-                .getName());
+        return Logger.getLogger(DefaultConnectionStateHandler.class.getName());
     }
 
     /**
@@ -134,9 +132,9 @@ public class ReconnectingCommunicationProblemHandler implements
     }
 
     @Override
-    public void xhrException(CommunicationProblemEvent event) {
+    public void xhrException(XhrConnectionError xhrConnectionError) {
         debug("xhrException");
-        handleRecoverableError(Type.XHR, event.getPayload());
+        handleRecoverableError(Type.XHR, xhrConnectionError.getPayload());
     }
 
     @Override
@@ -286,7 +284,7 @@ public class ReconnectingCommunicationProblemHandler implements
         }
         if (payload != null) {
             getLogger().info("Re-sending last message to the server...");
-            getConnection().getServerCommunicationHandler().send(payload);
+            getConnection().getMessageSender().send(payload);
         } else {
             // Use heartbeat
             getLogger().info("Trying to re-establish server connection...");
@@ -400,11 +398,11 @@ public class ReconnectingCommunicationProblemHandler implements
     }
 
     @Override
-    public void xhrInvalidContent(CommunicationProblemEvent event) {
+    public void xhrInvalidContent(XhrConnectionError xhrConnectionError) {
         debug("xhrInvalidContent");
         endRequest();
 
-        String responseText = event.getResponse().getText();
+        String responseText = xhrConnectionError.getResponse().getText();
         /*
          * A servlet filter or equivalent may have intercepted the request and
          * served non-UIDL content (for instance, a login page if the session
@@ -418,7 +416,8 @@ public class ReconnectingCommunicationProblemHandler implements
             WidgetUtil.redirect(refreshToken.getGroup(2));
         } else {
             handleUnrecoverableCommunicationError(
-                    "Invalid JSON response from server: " + responseText, event);
+                    "Invalid JSON response from server: " + responseText,
+                    xhrConnectionError);
         }
 
     }
@@ -441,24 +440,24 @@ public class ReconnectingCommunicationProblemHandler implements
     }
 
     @Override
-    public void xhrInvalidStatusCode(CommunicationProblemEvent event) {
+    public void xhrInvalidStatusCode(XhrConnectionError xhrConnectionError) {
         debug("xhrInvalidStatusCode");
 
-        Response response = event.getResponse();
+        Response response = xhrConnectionError.getResponse();
         int statusCode = response.getStatusCode();
         getLogger().warning("Server returned " + statusCode + " for xhr");
 
         if (statusCode == 401) {
             // Authentication/authorization failed, no need to re-try
             endRequest();
-            handleUnauthorized(event);
+            handleUnauthorized(xhrConnectionError);
             return;
         } else {
             // 404, 408 and other 4xx codes CAN be temporary when you have a
             // proxy between the client and the server and e.g. restart the
             // server
             // 5xx codes may or may not be temporary
-            handleRecoverableError(Type.XHR, event.getPayload());
+            handleRecoverableError(Type.XHR, xhrConnectionError.getPayload());
         }
     }
 
@@ -466,10 +465,10 @@ public class ReconnectingCommunicationProblemHandler implements
      * @since
      */
     private void endRequest() {
-        getConnection().getServerCommunicationHandler().endRequest();
+        getConnection().getMessageSender().endRequest();
     }
 
-    protected void handleUnauthorized(CommunicationProblemEvent event) {
+    protected void handleUnauthorized(XhrConnectionError xhrConnectionError) {
         /*
          * Authorization has failed (401). Could be that the session has timed
          * out.
@@ -485,10 +484,10 @@ public class ReconnectingCommunicationProblemHandler implements
     }
 
     private void handleUnrecoverableCommunicationError(String details,
-            CommunicationProblemEvent event) {
+            XhrConnectionError xhrConnectionError) {
         int statusCode = -1;
-        if (event != null) {
-            Response response = event.getResponse();
+        if (xhrConnectionError != null) {
+            Response response = xhrConnectionError.getResponse();
             if (response != null) {
                 statusCode = response.getStatusCode();
             }

@@ -37,9 +37,9 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.ApplicationState;
 import com.vaadin.client.ApplicationConnection.MultiStepDuration;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingStartedEvent;
-import com.vaadin.client.ApplicationConnection.State;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
@@ -76,14 +76,14 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * ServerMessageHandler is responsible for handling all incoming messages (JSON)
+ * A MessageHandler is responsible for handling all incoming messages (JSON)
  * from the server (state changes, RPCs and other updates) and ensuring that the
  * connectors are updated accordingly.
  * 
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class ServerMessageHandler {
+public class MessageHandler {
 
     public static final String JSON_COMMUNICATION_PREFIX = "for(;;);[";
     public static final String JSON_COMMUNICATION_SUFFIX = "]";
@@ -205,17 +205,18 @@ public class ServerMessageHandler {
     }
 
     /**
-     * Sets the application connection this queue is connected to
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
      *
      * @param connection
-     *            the application connection this queue is connected to
+     *            the application connection this instance is connected to
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ServerMessageHandler.class.getName());
+        return Logger.getLogger(MessageHandler.class.getName());
     }
 
     /**
@@ -236,9 +237,9 @@ public class ServerMessageHandler {
                             + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
         }
 
-        if (connection.getState() == State.RUNNING) {
+        if (connection.getApplicationState() == ApplicationState.RUNNING) {
             handleJSON(json);
-        } else if (connection.getState() == State.INITIALIZING) {
+        } else if (connection.getApplicationState() == ApplicationState.INITIALIZING) {
             // Application is starting up for the first time
             connection.setApplicationRunning(true);
             connection.executeWhenCSSLoaded(new Command() {
@@ -325,8 +326,8 @@ public class ServerMessageHandler {
         if (json.containsKey(ApplicationConstants.CLIENT_TO_SERVER_ID)) {
             int serverNextExpected = json
                     .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
-            getServerCommunicationHandler().setClientToServerMessageId(
-                    serverNextExpected, isResynchronize(json));
+            getMessageSender().setClientToServerMessageId(serverNextExpected,
+                    isResynchronize(json));
         }
 
         if (serverId != -1) {
@@ -1440,7 +1441,7 @@ public class ServerMessageHandler {
         if (isResponse(json)) {
             // End the request if the received message was a
             // response, not sent asynchronously
-            getServerCommunicationHandler().endRequest();
+            getMessageSender().endRequest();
         }
     }
 
@@ -1516,7 +1517,7 @@ public class ServerMessageHandler {
                 // has been lost
                 // Drop pending messages and resynchronize
                 pendingUIDLMessages.clear();
-                getServerCommunicationHandler().resynchronize();
+                getMessageSender().resynchronize();
             }
         }
     };
@@ -1673,8 +1674,8 @@ public class ServerMessageHandler {
         return connection.getRpcManager();
     }
 
-    private ServerCommunicationHandler getServerCommunicationHandler() {
-        return connection.getServerCommunicationHandler();
+    private MessageSender getMessageSender() {
+        return connection.getMessageSender();
     }
 
     /**

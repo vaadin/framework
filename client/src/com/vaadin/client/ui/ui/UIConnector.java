@@ -748,11 +748,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {
-            getConnection().getServerCommunicationHandler().setPushEnabled(
+            getConnection().getMessageSender().setPushEnabled(
                     getState().pushConfiguration.mode.isEnabled());
         }
         if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
-            getConnection().getCommunicationProblemHandler()
+            getConnection().getConnectionStateHandler()
                     .configurationUpdated();
         }
 

@@ -488,7 +488,7 @@ public class VDragAndDropManager {
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
                         @Override
                         public boolean execute() {
-                            if (!client.getServerCommunicationHandler()
+                            if (!client.getMessageSender()
                                     .hasActiveRequest()) {
                                 removeActiveDragSourceStyleName(dragSource);
                                 return false;
