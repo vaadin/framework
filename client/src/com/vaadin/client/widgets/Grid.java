@@ -3487,7 +3487,7 @@ public class Grid<T> extends ResizeComposite implements
      * 
      * @since 7.5.0
      */
-    private static class Sidebar extends Composite {
+    private static class Sidebar extends Composite implements HasEnabled {
 
         private final ClickHandler openCloseButtonHandler = new ClickHandler() {
 
@@ -3538,6 +3538,9 @@ public class Grid<T> extends ResizeComposite implements
             initWidget(rootContainer);
 
             openCloseButton = new Button();
+
+            setEnabled(grid.isEnabled());
+
             openCloseButton.addClickHandler(openCloseButtonHandler);
 
             rootContainer.add(openCloseButton);
@@ -3718,6 +3721,20 @@ public class Grid<T> extends ResizeComposite implements
                     setHeightToHeaderCellHeight();
                 }
             });
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return openCloseButton.isEnabled();
+        }
+
+        @Override
+        public void setEnabled(boolean enabled) {
+            if(!enabled && isOpen()) {
+                close();
+            }
+
+            openCloseButton.setEnabled(enabled);
         }
     }
 
@@ -5624,6 +5641,8 @@ public class Grid<T> extends ResizeComposite implements
         if (editorOpen) {
             editor.setGridEnabled(enabled);
         }
+
+        sidebar.setEnabled(enabled);
 
         getEscalator().setScrollLocked(Direction.VERTICAL,
                 !enabled || editorOpen);

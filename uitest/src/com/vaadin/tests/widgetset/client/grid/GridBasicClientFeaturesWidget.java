@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -1591,6 +1592,26 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 grid.setSidebarOpen(!grid.isSidebarOpen());
+            }
+        }, menupath);
+
+        addMenuCommand("Open sidebar and disable grid", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setSidebarOpen(true);
+
+                Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+                    @Override
+                    public boolean execute() {
+                        if(grid.isSidebarOpen()) {
+                            grid.setEnabled(false);
+
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }, 250);
             }
         }, menupath);
     }
