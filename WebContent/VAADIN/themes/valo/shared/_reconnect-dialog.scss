@@ -20,13 +20,12 @@
 
     .spinner {
       @include valo-spinner;
-      display: inline-block;
-      visibility: hidden;
+      display: none;
       vertical-align: middle;
     }
 
     &.active .spinner {
-      visibility: visible;
+      display: inline-block;
     }
   }
 }
