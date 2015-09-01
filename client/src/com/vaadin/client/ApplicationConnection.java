@@ -359,19 +359,13 @@ public class ApplicationConnection implements HasHandlers {
         uIConnector = GWT.create(UIConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
-        layoutManager.setConnection(this);
         tooltip = GWT.create(VTooltip.class);
         loadingIndicator = GWT.create(VLoadingIndicator.class);
-        loadingIndicator.setConnection(this);
         serverRpcQueue = GWT.create(ServerRpcQueue.class);
-        serverRpcQueue.setConnection(this);
         connectionStateHandler = GWT
                 .create(DefaultConnectionStateHandler.class);
-        connectionStateHandler.setConnection(this);
         messageHandler = GWT.create(MessageHandler.class);
-        messageHandler.setConnection(this);
         messageSender = GWT.create(MessageSender.class);
-        messageSender.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -392,6 +386,12 @@ public class ApplicationConnection implements HasHandlers {
         this.widgetSet = widgetSet;
         configuration = cnf;
 
+        layoutManager.setConnection(this);
+        loadingIndicator.setConnection(this);
+        serverRpcQueue.setConnection(this);
+        messageHandler.setConnection(this);
+        messageSender.setConnection(this);
+
         ComponentLocator componentLocator = new ComponentLocator(this);
 
         String appRootPanelName = cnf.getRootPanelId();
@@ -403,6 +403,11 @@ public class ApplicationConnection implements HasHandlers {
         initializeClientHooks();
 
         uIConnector.init(cnf.getRootPanelId(), this);
+
+        // Connection state handler preloads the reconnect dialog, which uses
+        // overlay container. This in turn depends on VUI being attached
+        // (done in uiConnector.init)
+        connectionStateHandler.setConnection(this);
 
         tooltip.setOwner(uIConnector.getWidget());
 

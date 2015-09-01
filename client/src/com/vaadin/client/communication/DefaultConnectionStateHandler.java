@@ -106,6 +106,10 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
                     }
 
                 });
+
+        // Allow dialog to cache needed resources to make them available when we
+        // are offline
+        reconnectDialog.preload(connection);
     };
 
     /**

@@ -83,4 +83,11 @@ public interface ReconnectDialog {
      * @return true if the dialog is modal, false otherwise
      */
     boolean isModal();
+
+    /**
+     * Called once after initialization to allow the reconnect dialog to preload
+     * required resources, which might not be available when the server
+     * connection is gone
+     */
+    void preload(ApplicationConnection connection);
 }

@@ -15,7 +15,10 @@
  */
 package com.vaadin.client.communication;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -79,12 +82,31 @@ public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog 
 
     @Override
     public void show(ApplicationConnection connection) {
-        setOwner(connection.getUIConnector().getWidget());
+        ac = connection;
         show();
     }
 
     @Override
     public void setPopupPosition(int left, int top) {
         // Don't set inline styles for position, handle it in the theme
+    }
+
+    @Override
+    public void preload(ApplicationConnection connection) {
+        setModal(false); // Don't interfere with application use
+        show(connection);
+        getElement().getStyle().setVisibility(Visibility.HIDDEN);
+        setStyleName(STYLE_RECONNECTING, true);
+
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                getElement().getStyle().setVisibility(Visibility.VISIBLE);
+                setStyleName(STYLE_RECONNECTING, false);
+                hide();
+
+            }
+        });
     }
 }
