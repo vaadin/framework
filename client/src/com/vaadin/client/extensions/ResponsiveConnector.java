@@ -205,7 +205,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
         // Get all the rulesets from the stylesheet
         var theRules = new Array();
-        var IE = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()();
+        var IEOrEdge = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()() || @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isEdge()();
         var IE8 = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE8()();
 
         try {
@@ -263,8 +263,8 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                 // Array of all of the separate selectors in this ruleset
                 var haystack = rule.selectorText.split(",");
 
-                // IE parses CSS like .class[attr="val"] into [attr="val"].class so we need to check for both
-                var selectorRegEx = IE ? /\[.*\]([\.|#]\S+)/ : /([\.|#]\S+?)\[.*\]/;
+                // IE/Edge parses CSS like .class[attr="val"] into [attr="val"].class so we need to check for both
+                var selectorRegEx = IEOrEdge ? /\[.*\]([\.|#]\S+)/ : /([\.|#]\S+?)\[.*\]/;
 
                 // Loop all the selectors in this ruleset
                 for(var k = 0, len2 = haystack.length; k < len2; k++) {
