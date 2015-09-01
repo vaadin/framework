@@ -230,6 +230,13 @@
             <param name="target-server" value="wildfly9" />
         </antcall>
     </target>
+    <target name="integration-test-wildfly9-nginx">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly9-nginx" />
+            <param name="target-port" value="80" />
+        </antcall>
+    </target>
     <target name="integration-test-glassfish3">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
