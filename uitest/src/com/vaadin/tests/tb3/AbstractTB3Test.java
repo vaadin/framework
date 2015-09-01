@@ -368,8 +368,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
      *         returns
      */
-    protected Object executeScript(String script) {
-        return ((JavascriptExecutor) getDriver()).executeScript(script);
+    protected Object executeScript(String script, Object... args) {
+        return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }
 
     /**
@@ -462,6 +462,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitForElementPresent(final By by) {
         waitUntil(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    protected void waitForElementNotPresent(final By by) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return input.findElements(by).isEmpty();
+            }
+        });
     }
 
     protected void waitForElementVisible(final By by) {

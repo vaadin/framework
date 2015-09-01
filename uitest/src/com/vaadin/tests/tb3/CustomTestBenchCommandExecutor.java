@@ -118,7 +118,7 @@ public class CustomTestBenchCommandExecutor {
      * @return
      * @throws IOException
      */
-    private BufferedImage cropToElement(WebElement element,
+    public static BufferedImage cropToElement(WebElement element,
             BufferedImage fullScreen, boolean isIE8) throws IOException {
         Point loc = element.getLocation();
         Dimension size = element.getSize();
