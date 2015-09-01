@@ -149,6 +149,8 @@ public abstract class VLayoutSlot {
             if (captionAboveCompnent) {
                 captionStyle.setLeft(0, Unit.PX);
             }
+            // Reset left when changing back to align left
+            widget.getElement().getStyle().clearLeft();
         }
 
     }
@@ -212,6 +214,10 @@ public abstract class VLayoutSlot {
             padding += captionHeight;
 
             widget.getElement().getStyle().setTop(padding, Unit.PX);
+        } else {
+            // Reset top when changing back to align top
+            widget.getElement().getStyle().clearTop();
+
         }
     }
 
