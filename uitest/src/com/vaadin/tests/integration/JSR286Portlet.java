@@ -114,7 +114,7 @@ public class JSR286Portlet extends UI {
 
         String censoredUserAgent = getPage().getWebBrowser()
                 .getBrowserApplication();
-        if (censoredUserAgent.contains("Chrome/")) {
+        if (censoredUserAgent != null && censoredUserAgent.contains("Chrome/")) {
             // Censor version info as it tends to change
             censoredUserAgent = censoredUserAgent.replaceAll("Chrome/[^ ]* ",
                     "Chrome/xyz ");
