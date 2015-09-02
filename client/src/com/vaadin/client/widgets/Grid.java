@@ -2671,7 +2671,6 @@ public class Grid<T> extends ResizeComposite implements
                 } else {
                     calculate();
                 }
-                lastCalculatedInnerWidth = escalator.getInnerWidth();
             }
         };
 
@@ -2693,7 +2692,7 @@ public class Grid<T> extends ResizeComposite implements
          * @see Column#setMaximumWidth(double)
          */
         public void schedule() {
-            if (!isScheduled) {
+            if (!isScheduled && isAttached()) {
                 isScheduled = true;
                 Scheduler.get().scheduleFinally(calculateCommand);
             }
@@ -2710,6 +2709,9 @@ public class Grid<T> extends ResizeComposite implements
             } else {
                 applyColumnWidthsWithExpansion();
             }
+
+            // Update latest width to prevent recalculate on height change.
+            lastCalculatedInnerWidth = escalator.getInnerWidth();
         }
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
@@ -7730,6 +7732,9 @@ public class Grid<T> extends ResizeComposite implements
         if (getEscalator().getBody().getRowCount() == 0 && dataSource != null) {
             setEscalatorSizeFromDataSource();
         }
+
+        // Grid was just attached to DOM. Column widths should be calculated.
+        recalculateColumnWidths();
     }
 
     @Override
@@ -7745,10 +7750,11 @@ public class Grid<T> extends ResizeComposite implements
     @Override
     public void onResize() {
         super.onResize();
+
         /*
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
             @Override
             public void execute() {
