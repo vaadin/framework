@@ -37,6 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.junit.Assert;
 import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -95,6 +96,9 @@ import elemental.json.impl.JsonUtil;
  */
 @RunWith(TB3Runner.class)
 public abstract class AbstractTB3Test extends ParallelTest {
+
+    @Rule
+    public TestName testName = new TestName();
 
     @Rule
     public RetryOnFail retry = new RetryOnFail();

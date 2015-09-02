@@ -32,51 +32,12 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.CustomTestBenchCommandExecutor;
 import com.vaadin.tests.tb3.MultiBrowserThemeTestWithProxy;
 
-public abstract class ReconnectDialogUIThemeTest extends
-        MultiBrowserThemeTestWithProxy {
-
-    public static class ValoReconnectDialogTest extends
-            ReconnectDialogUIThemeTest {
-        @Override
-        protected String getTheme() {
-            return "valo";
-        }
-    }
-
-    public static class ReindeerReconnectDialogTest extends
-            ReconnectDialogUIThemeTest {
-        @Override
-        protected String getTheme() {
-            return "reindeer";
-        }
-    }
-
-    public static class RunoReconnectDialogTest extends
-            ReconnectDialogUIThemeTest {
-        @Override
-        protected String getTheme() {
-            return "runo";
-        }
-    }
-
-    public static class ChameleonReconnectDialogTest extends
-            ReconnectDialogUIThemeTest {
-        @Override
-        protected String getTheme() {
-            return "chameleon";
-        }
-    }
-
-    public static class BaseReconnectDialogTest extends
-            ReconnectDialogUIThemeTest {
-        @Override
-        protected String getTheme() {
-            return "base";
-        }
-    }
+@TestCategory("")
+public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
 
     static By reconnectDialogBy = By.className("v-reconnect-dialog");
 

@@ -55,7 +55,7 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     private void waitForReconnectDialogWithText(final String text) {
         waitForReconnectDialogPresent();
-        final WebElement reconnectDialog = findElement(ReconnectDialogUIThemeTest.reconnectDialogBy);
+        final WebElement reconnectDialog = findElement(ReconnectDialogThemeTest.reconnectDialogBy);
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
@@ -67,12 +67,12 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
     }
 
     private void waitForReconnectDialogToDisappear() {
-        waitForElementNotPresent(ReconnectDialogUIThemeTest.reconnectDialogBy);
+        waitForElementNotPresent(ReconnectDialogThemeTest.reconnectDialogBy);
 
     }
 
     private void waitForReconnectDialogPresent() {
-        waitForElementPresent(ReconnectDialogUIThemeTest.reconnectDialogBy);
+        waitForElementPresent(ReconnectDialogThemeTest.reconnectDialogBy);
     }
 
     private WebElement getButton() {
