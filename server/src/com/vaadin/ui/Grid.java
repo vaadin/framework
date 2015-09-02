@@ -2538,7 +2538,9 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         public Column setHeaderCaption(String caption)
                 throws IllegalStateException {
             checkColumnIsAttached();
-
+            if (caption == null) {
+                caption = ""; // Render null as empty
+            }
             state.headerCaption = caption;
 
             HeaderRow row = grid.getHeader().getDefaultRow();

@@ -4288,12 +4288,10 @@ public class Grid<T> extends ResizeComposite implements
          *            The header caption for this column
          * @return the column itself
          * 
-         * @throws IllegalArgumentException
-         *             if given caption text is null
          */
         public Column<C, T> setHeaderCaption(String caption) {
             if (caption == null) {
-                throw new IllegalArgumentException("Caption cannot be null.");
+                caption = "";
             }
 
             if (!this.headerCaption.equals(caption)) {
