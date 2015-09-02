@@ -1778,11 +1778,12 @@ public class Grid<T> extends ResizeComposite implements
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
                     cell.addClassName(tr.getCells().getItem(i).getClassName());
-                    // If the focused stylename is present it should not be
-                    // inherited by the editor cell as it is not useful in the
-                    // editor and would look broken without additional style
-                    // rules. This is a bit of a hack.
+                    // If the focused or frozen stylename is present it should
+                    // not be inherited by the editor cell as it is not useful
+                    // in the editor and would look broken without additional
+                    // style rules. This is a bit of a hack.
                     cell.removeClassName(grid.cellFocusStyleName);
+                    cell.removeClassName("frozen");
 
                     if (column == grid.selectionColumn) {
                         // Duplicate selection column CheckBox
