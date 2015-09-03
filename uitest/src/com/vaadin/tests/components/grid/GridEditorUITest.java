@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -22,6 +25,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -32,11 +36,36 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridEditorUITest extends MultiBrowserTest {
 
-    @Test
-    public void testEditor() {
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
         setDebug(true);
         openTestURL();
+    }
 
+    private void openEditor(int rowIndex) {
+        GridElement grid = $(GridElement.class).first();
+
+        GridCellElement cell = grid.getCell(rowIndex, 1);
+
+        new Actions(driver).moveToElement(cell).doubleClick().build().perform();
+    }
+
+    private void saveEditor() {
+        findElement(By.cssSelector(".v-grid-editor-save")).click();
+    }
+
+    private GridCellElement getHeaderCell(int rowIndex, int colIndex) {
+        GridElement grid = $(GridElement.class).first();
+
+        GridCellElement headerCell = grid.getHeaderCell(rowIndex, colIndex);
+
+        return headerCell;
+    }
+
+    @Test
+    public void testEditor() {
         assertFalse("Sanity check",
                 isElementPresent(PasswordFieldElement.class));
 
@@ -52,12 +81,15 @@ public class GridEditorUITest extends MultiBrowserTest {
                 isElementPresent(NotificationElement.class));
     }
 
-    private void openEditor(int rowIndex) {
-        GridElement grid = $(GridElement.class).first();
+    @Test
+    public void savingResetsSortingIndicator() {
+        GridCellElement headerCell = getHeaderCell(0, 0);
+        headerCell.click();
 
-        GridCellElement cell = grid.getCell(rowIndex, 1);
+        openEditor(1);
 
-        new Actions(driver).moveToElement(cell).doubleClick().build().perform();
+        saveEditor();
+
+        assertThat(headerCell.getAttribute("class"), not(containsString("sort")));
     }
-
 }

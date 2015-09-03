@@ -1321,6 +1321,7 @@ public class Grid<T> extends ResizeComposite implements
                 if (state == State.SAVING) {
                     cleanup();
                     cancel();
+                    grid.clearSortOrder();
                 }
             }
 
@@ -7610,6 +7611,14 @@ public class Grid<T> extends ResizeComposite implements
      */
     public void setSortOrder(List<SortOrder> order) {
         setSortOrder(order, false);
+    }
+
+    /**
+     * Clears the sort order and indicators without re-sorting.
+     */
+    private void clearSortOrder() {
+        sortOrder.clear();
+        refreshHeader();
     }
 
     private void setSortOrder(List<SortOrder> order, boolean userOriginated) {
