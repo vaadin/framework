@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -120,9 +121,24 @@ public class LocaleService implements Serializable {
         LocaleData localeData = new LocaleData();
         localeData.name = locale.toString();
 
+        Calendar c = Calendar.getInstance(locale);
+        c.set(2015, 0, 1);
+        SimpleDateFormat shortMonthFormat = new SimpleDateFormat("MMM", locale);
+        SimpleDateFormat longMonthFormat = new SimpleDateFormat("MMMM", locale);
+
+        int monthsInYear = c.getMaximum(Calendar.MONTH) + 1;
+        localeData.shortMonthNames = new String[monthsInYear];
+        localeData.monthNames = new String[monthsInYear];
+        for (int month = 0; month < monthsInYear; month++) {
+            c.set(Calendar.MONTH, month);
+            String shortMonth = shortMonthFormat.format(c.getTime());
+            String longMonth = longMonthFormat.format(c.getTime());
+            localeData.shortMonthNames[month] = shortMonth;
+            localeData.monthNames[month] = longMonth;
+        }
+
         final DateFormatSymbols dfs = new DateFormatSymbols(locale);
-        localeData.shortMonthNames = dfs.getShortMonths();
-        localeData.monthNames = dfs.getMonths();
+
         // Client expects 0 based indexing, DateFormatSymbols use 1 based
         localeData.shortDayNames = new String[7];
         localeData.dayNames = new String[7];
