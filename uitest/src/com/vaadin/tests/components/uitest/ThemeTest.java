@@ -13,11 +13,11 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 
-public abstract class ThemeTest extends MultiBrowserTest {
+public class ThemeTest extends MultiBrowserThemeTest {
 
     @ServerClass("com.vaadin.ui.DateField")
     public static class DateFieldElement extends
@@ -51,15 +51,9 @@ public abstract class ThemeTest extends MultiBrowserTest {
         return ThemeTestUI.class;
     }
 
-    protected abstract String getTheme();
-
     @Test
     public void testTheme() throws Exception {
-        openTestURL("theme=" + getTheme());
-        runThemeTest();
-    }
-
-    private void runThemeTest() throws IOException {
+        openTestURL();
         TabSheetElement themeTabSheet = $(TabSheetElement.class).first();
 
         // Labels tab
@@ -161,12 +155,26 @@ public abstract class ThemeTest extends MultiBrowserTest {
     }
 
     private void testTables() throws IOException {
+
         compareScreen("tables");
-        TableElement table = $(TableElement.class).first();
-        new Actions(driver).moveToElement(table.getCell(0, 1), 5, 5)
-                .contextClick().perform();
-        compareScreen("tables-contextmenu");
-        table.findElement(By.className("v-table-column-selector")).click();
+        final TableElement table = $(TableElement.class).first();
+        if (!BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            // Context click does not work in phantom js
+            new Actions(driver).moveToElement(table.getCell(0, 1), 5, 5)
+                    .contextClick().perform();
+            compareScreen("tables-contextmenu");
+
+            // Close context menu before opening collapsemenu
+            // (https://dev.vaadin.com/ticket/18770)
+            WebElement cm = findElement(By.className("v-contextmenu"));
+            cm.findElement(By.xpath("//div[text()='Save']")).click();
+        }
+
+        WebElement columnSelector = table.findElement(By
+                .className("v-table-column-selector"));
+        new Actions(driver).moveToElement(columnSelector, 5, 5).click()
+                .perform();
+
         compareScreen("tables-collapsemenu");
     }
 
