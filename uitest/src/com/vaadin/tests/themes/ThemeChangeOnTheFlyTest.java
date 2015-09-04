@@ -71,7 +71,7 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     public void reindeerToNullToReindeer() throws IOException {
         openTestURL();
 
-        changeThemeAndCompare("null");
+        changeTheme("null");
         changeThemeAndCompare("reindeer");
     }
 
