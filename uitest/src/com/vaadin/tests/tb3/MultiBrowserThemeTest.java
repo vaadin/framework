@@ -39,10 +39,6 @@ public abstract class MultiBrowserThemeTest extends MultiBrowserTest {
         this.theme = theme;
     }
 
-    protected String getTheme() {
-        return theme;
-    }
-
     @Parameters
     public static Collection<String> getThemes() {
         return Arrays.asList(new String[] { "valo", "reindeer", "runo",
