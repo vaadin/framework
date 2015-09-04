@@ -36,7 +36,7 @@ public class GridThemeChangeTest extends MultiBrowserTest {
 
     @Test
     public void testThemeChange() {
-        openTestURL();
+        openTestURL("debug");
 
         GridElement grid = $(GridElement.class).first();
 
@@ -44,6 +44,7 @@ public class GridThemeChangeTest extends MultiBrowserTest {
 
         grid.getCell(0, 0).click();
 
+        grid = $(GridElement.class).first();
         int valoHeight = grid.getRow(0).getSize().getHeight();
 
         Assert.assertTrue(
