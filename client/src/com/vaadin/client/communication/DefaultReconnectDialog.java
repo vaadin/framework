@@ -22,9 +22,8 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
@@ -37,14 +36,9 @@ import com.vaadin.client.ui.VOverlay;
  * @author Vaadin Ltd
  */
 public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog {
-    interface MyUiBinder extends UiBinder<HTMLPanel, DefaultReconnectDialog> {
-    }
-
-    private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     private static final String STYLE_RECONNECTING = "active";
 
-    @UiField
     public Label label;
 
     private HandlerRegistration clickHandler = null;
@@ -52,7 +46,18 @@ public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog 
     public DefaultReconnectDialog() {
         super(false, true);
         addStyleName("v-reconnect-dialog");
-        setWidget(uiBinder.createAndBindUi(this));
+
+        FlowPanel root = new FlowPanel("div");
+        HTML spinner = new HTML();
+        spinner.addStyleName("spinner");
+
+        label = GWT.create(Label.class);
+        label.addStyleName("text");
+
+        root.add(spinner);
+        root.add(label);
+
+        setWidget(root);
     }
 
     @Override
