@@ -386,17 +386,17 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        getConnectionStateHandler().pushError(this);
+        getConnectionStateHandler().pushError(this, response);
     }
 
     protected void onClose(AtmosphereResponse response) {
         state = State.CONNECT_PENDING;
-        getConnectionStateHandler().pushClosed(this);
+        getConnectionStateHandler().pushClosed(this, response);
     }
 
     protected void onClientTimeout(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        getConnectionStateHandler().pushClientTimeout(this);
+        getConnectionStateHandler().pushClientTimeout(this, response);
     }
 
     protected void onReconnect(JavaScriptObject request,
@@ -575,8 +575,8 @@ public class AtmospherePushConnection implements PushConnection {
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            getConnectionStateHandler()
-                                    .pushScriptLoadError(event.getResourceUrl());
+                            getConnectionStateHandler().pushScriptLoadError(
+                                    event.getResourceUrl());
                         }
                     });
         }

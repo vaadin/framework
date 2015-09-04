@@ -17,6 +17,7 @@ package com.vaadin.client.communication;
 
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
@@ -27,6 +28,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.communication.AtmospherePushConnection.AtmosphereResponse;
 import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
 
 import elemental.json.JsonObject;
@@ -562,14 +564,17 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     @Override
-    public void pushError(PushConnection pushConnection) {
+    public void pushError(PushConnection pushConnection,
+            JavaScriptObject response) {
         debug("pushError()");
         connection.handleCommunicationError("Push connection using "
-                + pushConnection.getTransportType() + " failed!", -1);
+                + ((AtmosphereResponse) response).getTransport() + " failed!",
+                -1);
     }
 
     @Override
-    public void pushClientTimeout(PushConnection pushConnection) {
+    public void pushClientTimeout(PushConnection pushConnection,
+            JavaScriptObject response) {
         debug("pushClientTimeout()");
         // TODO Reconnect, allowing client timeout to be set
         // https://dev.vaadin.com/ticket/18429
@@ -580,7 +585,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     @Override
-    public void pushClosed(PushConnection pushConnection) {
+    public void pushClosed(PushConnection pushConnection,
+            JavaScriptObject response) {
         debug("pushClosed()");
         getLogger().info("Push connection closed");
     }

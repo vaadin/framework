@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.communication;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.vaadin.client.ApplicationConnection;
@@ -76,8 +77,11 @@ public interface ConnectionStateHandler {
      * 
      * @param pushConnection
      *            The push connection which was closed
+     * @param response
+     *            An object containing response data
      */
-    void pushClosed(PushConnection pushConnection);
+    void pushClosed(PushConnection pushConnection,
+            JavaScriptObject responseObject);
 
     /**
      * Called when a client side timeout occurs before a push connection to the
@@ -88,8 +92,11 @@ public interface ConnectionStateHandler {
      * 
      * @param pushConnection
      *            The push connection which timed out
+     * @param response
+     *            An object containing response data
      */
-    void pushClientTimeout(PushConnection pushConnection);
+    void pushClientTimeout(PushConnection pushConnection,
+            JavaScriptObject response);
 
     /**
      * Called when a fatal error fatal error occurs in the push connection.
@@ -102,8 +109,10 @@ public interface ConnectionStateHandler {
      * 
      * @param pushConnection
      *            The push connection where the error occurred
+     * @param response
+     *            An object containing response data
      */
-    void pushError(PushConnection pushConnection);
+    void pushError(PushConnection pushConnection, JavaScriptObject response);
 
     /**
      * Called when the push connection has lost the connection to the server and
