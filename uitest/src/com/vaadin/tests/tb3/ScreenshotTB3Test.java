@@ -439,7 +439,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         // Windows_Firefox_24_bufferingdemo_valo
 
         if (versionOverride != null) {
-            // Windows_Firefox_17_-buffering-demo_valo
+            // Windows_Firefox_17_bufferingdemo_valo
             parameters = parameters.replaceFirst("_"
                     + getDesiredCapabilities().getVersion(), "_"
                     + versionOverride);

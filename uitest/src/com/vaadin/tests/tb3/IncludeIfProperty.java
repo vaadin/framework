@@ -21,6 +21,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to control inclusion of a test into a test suite.
+ * <p>
+ * The test will be included in the suite only if the given System property
+ * {@code property} has the given {@code value}.
+ * <p>
+ * Used by {@link TB3TestLocator}
+ * 
+ * @since
+ * @author Vaadin Ltd
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited

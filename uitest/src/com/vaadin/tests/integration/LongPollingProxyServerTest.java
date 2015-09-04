@@ -67,31 +67,29 @@ public class LongPollingProxyServerTest extends AbstractIntegrationTest {
         actionAfterFirstTimeout("nonbuffering-timeout");
     }
 
+    private String getUrl(String bufferingOrNot) {
+        return getBaseURL() + "/" + bufferingOrNot + "/demo"
+                + getDeploymentPath();
+    }
+
     private void actionAfterFirstTimeout(String bufferingOrNot)
             throws Exception {
-        String url = getBaseURL() + "/" + bufferingOrNot + "/demo"
-                + getDeploymentPath();
+        String url = getUrl(bufferingOrNot);
         getDriver().get(url);
-        Thread.sleep(15000); // Server Timeout is 10s
+        // The wildfly9-nginx server has a configured timeout of 10s for
+        // *-timeout urls
+        Thread.sleep(15000);
         Assert.assertEquals(0, BasicPushTest.getClientCounter(this));
         BasicPushTest.getIncrementButton(this).click();
         Assert.assertEquals(1, BasicPushTest.getClientCounter(this));
     }
 
     private void basicPush(String bufferingOrNot) throws Exception {
-        String url = getBaseURL() + "/" + bufferingOrNot + "/demo"
-                + getDeploymentPath();
+        String url = getUrl(bufferingOrNot);
         getDriver().get(url);
 
         Assert.assertEquals(0, BasicPushTest.getServerCounter(this));
         BasicPushTest.getServerCounterStartButton(this).click();
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getServerCounter(LongPollingProxyServerTest.this) > 0;
-            }
-        });
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {

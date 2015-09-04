@@ -99,13 +99,14 @@ public class ParameterizedTB3Runner extends TB3Runner {
             try {
                 values = (Collection<String>) m.invoke(null);
                 if (!values.isEmpty()) {
-                    // Ignore any empty collections to allow e.g. intergration
+                    // Ignore any empty collections to allow e.g. integration
                     // tests to use "/demo" path by default without adding that
-                    // to the screnshot name
+                    // to the screenshot name
                     parameters.put(setterMethod, values);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new IllegalStateException("The setter " + m.getName()
+                        + " could not be invoked", e);
             }
         }
 
