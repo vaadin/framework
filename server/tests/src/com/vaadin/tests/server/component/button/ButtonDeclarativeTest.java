@@ -98,7 +98,7 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
     @Test
     public void testAttributes() {
         String design = "<v-button tabindex=3 plain-text='' icon-alt=OK "
-                + "click-shortcut=ctrl-shift-o></v-button>";
+                + "click-shortcut=shift-ctrl-o></v-button>";
         Button b = new Button("");
         b.setTabIndex(3);
         b.setIconAlternateText("OK");

@@ -46,6 +46,7 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class Dragging extends VerticalLayout implements View {
         setSpacing(true);
 
         Label h1 = new Label("Dragging Components");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         MenuBar options = new MenuBar();
@@ -74,9 +75,9 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName("no-vertical-drag-hints");
+                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
                 } else {
-                    sample.addStyleName("no-vertical-drag-hints");
+                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
                 }
             }
         });
@@ -87,9 +88,9 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName("no-horizontal-drag-hints");
+                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
                 } else {
-                    sample.addStyleName("no-horizontal-drag-hints");
+                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
                 }
             }
         });
@@ -100,9 +101,9 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName("no-box-drag-hints");
+                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
                 } else {
-                    sample.addStyleName("no-box-drag-hints");
+                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
                 }
             }
         });

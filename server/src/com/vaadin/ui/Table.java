@@ -69,6 +69,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.util.ReflectTools;
 
 /**
  * <p>
@@ -1310,6 +1311,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the desired collapsedness.
      * @throws IllegalStateException
      *             if column collapsing is not allowed
+     * @throws IllegalArgumentException
+     *             if the property id does not exist
      */
     public void setColumnCollapsed(Object propertyId, boolean collapsed)
             throws IllegalStateException {
@@ -1319,11 +1322,20 @@ public class Table extends AbstractSelect implements Action.Container,
         if (collapsed && noncollapsibleColumns.contains(propertyId)) {
             throw new IllegalStateException("The column is noncollapsible!");
         }
+        if (!getContainerPropertyIds().contains(propertyId)
+                && !columnGenerators.containsKey(propertyId)) {
+            throw new IllegalArgumentException("Property '" + propertyId
+                    + "' was not found in the container");
+        }
 
         if (collapsed) {
-            collapsedColumns.add(propertyId);
+            if (collapsedColumns.add(propertyId)) {
+                fireColumnCollapseEvent(propertyId);
+            }
         } else {
-            collapsedColumns.remove(propertyId);
+            if (collapsedColumns.remove(propertyId)) {
+                fireColumnCollapseEvent(propertyId);
+            }
         }
 
         // Assures the visual refresh
@@ -3180,6 +3192,10 @@ public class Table extends AbstractSelect implements Action.Container,
                 fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
             }
         }
+    }
+
+    private void fireColumnCollapseEvent(Object propertyId) {
+        fireEvent(new ColumnCollapseEvent(this, propertyId));
     }
 
     private void fireColumnResizeEvent(Object propertyId, int previousWidth,
@@ -5742,6 +5758,53 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * This event is fired when the collapse state of a column changes
+     */
+    public static class ColumnCollapseEvent extends Component.Event {
+
+        public static final Method METHOD = ReflectTools.findMethod(
+                ColumnCollapseListener.class, "columnCollapseStateChange",
+                ColumnCollapseEvent.class);
+        private Object propertyId;
+
+        /**
+         * Constructor
+         * 
+         * @param source
+         *            The source of the event
+         * @param propertyId
+         *            The id of the column
+         */
+        public ColumnCollapseEvent(Component source, Object propertyId) {
+            super(source);
+            this.propertyId = propertyId;
+        }
+
+        /**
+         * Gets the id of the column whose collapse state changed
+         * 
+         * @return the property id of the column
+         */
+        public Object getPropertyId() {
+            return propertyId;
+        }
+    }
+
+    /**
+     * Interface for listening to column collapse events.
+     */
+    public interface ColumnCollapseListener extends Serializable {
+
+        /**
+         * This method is triggered when the collapse state for a column has
+         * changed
+         * 
+         * @param event
+         */
+        public void columnCollapseStateChange(ColumnCollapseEvent event);
+    }
+
+    /**
      * Adds a column reorder listener to the Table. A column reorder listener is
      * called when a user reorders columns.
      * 
@@ -5780,6 +5843,29 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public void removeListener(ColumnReorderListener listener) {
         removeColumnReorderListener(listener);
+    }
+
+    /**
+     * Adds a column collapse listener to the Table. A column collapse listener
+     * is called when the collapsed state of a column changes.
+     * 
+     * @param listener
+     *            The listener to attach
+     */
+    public void addColumnCollapseListener(ColumnCollapseListener listener) {
+        addListener(TableConstants.COLUMN_COLLAPSE_EVENT_ID,
+                ColumnCollapseEvent.class, listener, ColumnCollapseEvent.METHOD);
+    }
+
+    /**
+     * Removes a column reorder listener from the Table.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeColumnCollapseListener(ColumnCollapseListener listener) {
+        removeListener(TableConstants.COLUMN_COLLAPSE_EVENT_ID,
+                ColumnCollapseEvent.class, listener);
     }
 
     /**

@@ -28,6 +28,10 @@ public class GridEditorUI extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         PersonContainer container = PersonContainer.createWithTestData();
 
+        addComponent(createGrid(container));
+    }
+
+    protected Grid createGrid(PersonContainer container) {
         Grid grid = new Grid(container);
 
         // Don't use address since there's no converter
@@ -43,7 +47,7 @@ public class GridEditorUI extends AbstractTestUI {
 
         grid.getColumn("phoneNumber").getEditorField().setReadOnly(true);
 
-        addComponent(grid);
+        return grid;
     }
 
 }

@@ -283,8 +283,7 @@ public class ResourceLoader {
      * @since 7.2.4
      */
     public static boolean supportsInOrderScriptExecution() {
-        return BrowserInfo.get().isIE()
-                && BrowserInfo.get().getBrowserMajorVersion() >= 11;
+        return BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge();
     }
 
     /**
@@ -486,10 +485,11 @@ public class ResourceLoader {
                 addOnloadHandler(linkElement, new ResourceLoadListener() {
                     @Override
                     public void onLoad(ResourceLoadEvent event) {
-                        // Chrome && IE fires load for errors, must check
+                        // Chrome, IE, Edge all fire load for errors, must check
                         // stylesheet data
                         if (BrowserInfo.get().isChrome()
-                                || BrowserInfo.get().isIE()) {
+                                || BrowserInfo.get().isIE()
+                                || BrowserInfo.get().isEdge()) {
                             int styleSheetLength = getStyleSheetLength(url);
                             // Error if there's an empty stylesheet
                             if (styleSheetLength == 0) {

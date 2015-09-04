@@ -71,8 +71,9 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         expected.setClosable(!expected.isClosable());
         expected.setDraggable(!expected.isDraggable());
 
-        expected.setCloseShortcut(KeyCode.ESCAPE, ModifierKey.CTRL,
-                ModifierKey.ALT);
+        expected.removeAllCloseShortcuts();
+        expected.addCloseShortcut(KeyCode.ESCAPE, ModifierKey.ALT,
+                ModifierKey.CTRL);
 
         expected.setAssistivePrefix("Hello");
         expected.setAssistivePostfix("World");
@@ -83,6 +84,40 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
         testRead(design, expected);
         testWrite(design, expected);
+    }
+
+    @Test
+    public void testMultiCloseShortcuts() {
+
+        Window expected = new Window();
+
+        // Add two shortcuts - should now contain three (default escape + two
+        // added)
+        expected.addCloseShortcut(KeyCode.SPACEBAR);
+        expected.addCloseShortcut(KeyCode.ARROW_LEFT, ModifierKey.ALT,
+                ModifierKey.CTRL);
+
+        // Try to add the same shortcut again, should be no-op
+        expected.addCloseShortcut(KeyCode.ARROW_LEFT, ModifierKey.CTRL,
+                ModifierKey.ALT);
+
+        // Add a third shortcut, should total four (default escape + three
+        // added)
+        expected.addCloseShortcut(KeyCode.ARROW_RIGHT, ModifierKey.CTRL);
+
+        // Test validity
+        String design = "<v-window close-shortcut='escape spacebar ctrl-alt-left ctrl-right' />";
+        testRead(design, expected);
+        testWrite(design, expected);
+
+        // Try removing the spacebar shortcut
+        expected.removeCloseShortcut(KeyCode.SPACEBAR);
+
+        // Test again
+        design = "<v-window close-shortcut='escape ctrl-alt-left ctrl-right' />";
+        testRead(design, expected);
+        testWrite(design, expected);
+
     }
 
     @Test

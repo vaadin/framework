@@ -20,18 +20,25 @@ import org.junit.Assert;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     private static final String BEAN_VALUES = "Person [firstName=John, lastName=Doe, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]";
-    private int logCounter = 0;
+    private int logCounter;
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        logCounter = 0;
+    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -75,7 +82,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected void closeNotification() {
-        $(NotificationElement.class).first().close();
+        $(FixedNotificationElement.class).first().close();
     }
 
     protected CheckBoxElement getPostCommitFailsCheckBox() {
@@ -169,5 +176,4 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
         assertSelectedSex(Sex.MALE);
         assertDeceasedValue("NAAAAAH");
     }
-
 }

@@ -81,8 +81,18 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         getGridElement().getCell(4, 0).doubleClick();
         assertNotNull(getEditor());
 
-        getCancelButton().click();
+        // Move focus to the third input field
+        getEditor().findElements(By.className("gwt-TextBox")).get(2).click();
+
+        // Press save button
+        getSaveButton().click();
+
+        // Make sure the editor went away
         assertNull(getEditor());
+
+        // Check that focus has moved to cell 4,2 - the last one that was
+        // focused in Editor
+        assertTrue(getGridElement().getCell(4, 2).isFocused());
 
         // Disable editor
         selectMenuPath("Component", "Editor", "Enabled");
@@ -134,14 +144,16 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void testWithSelectionColumn() throws Exception {
         selectMenuPath("Component", "State", "Selection mode", "multi");
+        selectMenuPath("Component", "State", "Frozen column count",
+                "-1 columns");
         selectMenuPath(EDIT_ROW_5);
 
-        WebElement editorCells = findElement(By
-                .className("v-grid-editor-cells"));
+        WebElement editorCells = findElements(
+                By.className("v-grid-editor-cells")).get(1);
         List<WebElement> selectorDivs = editorCells.findElements(By
                 .cssSelector("div"));
 
-        assertTrue("selector column cell should've been empty", selectorDivs
+        assertFalse("selector column cell should've had contents", selectorDivs
                 .get(0).getAttribute("innerHTML").isEmpty());
         assertFalse("normal column cell shoul've had contents", selectorDivs
                 .get(1).getAttribute("innerHTML").isEmpty());

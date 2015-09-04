@@ -20,8 +20,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
@@ -333,6 +335,62 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         assertFalse(
                 "Row should not be selected after changing selection model",
                 getRow(5).isSelected());
+    }
+
+    @Test
+    public void testSelectionCheckBoxesHaveStyleNames() {
+        openTestURL();
+
+        setSelectionModelMulti();
+
+        assertTrue(
+                "Selection column CheckBox should have the proper style name set",
+                getGridElement().getCell(0, 0).findElement(By.tagName("span"))
+                        .getAttribute("class")
+                        .contains("v-grid-selection-checkbox"));
+
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+        assertTrue("Select all CheckBox should have the proper style name set",
+                header.findElement(By.tagName("span")).getAttribute("class")
+                        .contains("v-grid-select-all-checkbox"));
+    }
+
+    @Test
+    public void testServerSideSelectTogglesSelectAllCheckBox() {
+        openTestURL();
+
+        setSelectionModelMulti();
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+
+        WebElement selectAll = header.findElement(By.tagName("input"));
+
+        selectMenuPath("Component", "State", "Select all");
+        waitUntilCheckBoxValue(selectAll, true);
+        assertTrue("Select all CheckBox wasn't selected as expected",
+                selectAll.isSelected());
+
+        selectMenuPath("Component", "State", "Select none");
+        waitUntilCheckBoxValue(selectAll, false);
+        assertFalse("Select all CheckBox was selected unexpectedly",
+                selectAll.isSelected());
+
+        selectMenuPath("Component", "State", "Select all");
+        waitUntilCheckBoxValue(selectAll, true);
+        getGridElement().getCell(5, 0).click();
+        waitUntilCheckBoxValue(selectAll, false);
+        assertFalse("Select all CheckBox was selected unexpectedly",
+                selectAll.isSelected());
+    }
+
+    private void waitUntilCheckBoxValue(final WebElement checkBoxElememnt,
+            final boolean expectedValue) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return expectedValue ? checkBoxElememnt.isSelected()
+                        : !checkBoxElememnt.isSelected();
+            }
+        }, 5);
     }
 
     private void setSelectionModelMulti() {

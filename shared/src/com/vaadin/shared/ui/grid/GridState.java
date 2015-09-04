@@ -19,9 +19,9 @@ package com.vaadin.shared.ui.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.TabIndexState;
 
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
@@ -29,7 +29,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class GridState extends AbstractComponentState {
+public class GridState extends TabIndexState {
 
     /**
      * A description of which of the three bundled SelectionModels is currently
@@ -103,6 +103,20 @@ public class GridState extends AbstractComponentState {
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
+     * The key in which a row's description can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_ROWDESCRIPTION = "rd";
+
+    /**
+     * The key in which a cell's description can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_CELLDESCRIPTION = "cd";
+
+    /**
      * The key that tells whether details are visible for the row.
      * 
      * @since 7.5.0
@@ -113,6 +127,13 @@ public class GridState extends AbstractComponentState {
      *      elemental.json.JsonArray)
      * */
     public static final String JSONKEY_DETAILS_VISIBLE = "dv";
+
+    /**
+     * The key that tells whether row is selected.
+     * 
+     * @since
+     */
+    public static final String JSONKEY_SELECTED = "s";
 
     /**
      * Columns in grid.
@@ -139,14 +160,6 @@ public class GridState extends AbstractComponentState {
     @DelegateToWidget
     public HeightMode heightMode = HeightMode.CSS;
 
-    // instantiated just to avoid NPEs
-    public List<String> selectedKeys = new ArrayList<String>();
-
-    public SharedSelectionMode selectionMode;
-
-    /** Whether single select mode can be cleared through the UI */
-    public boolean singleSelectDeselectAllowed = true;
-
     /** Keys of the currently sorted columns */
     public String[] sortColumns = new String[0];
 
@@ -156,10 +169,12 @@ public class GridState extends AbstractComponentState {
     /** The enabled state of the editor interface */
     public boolean editorEnabled = false;
 
-    /** Whether row data might contain generated row styles */
-    public boolean hasRowStyleGenerator;
-    /** Whether row data might contain generated cell styles */
-    public boolean hasCellStyleGenerator;
+    /** Buffered editor mode */
+    @DelegateToWidget
+    public boolean editorBuffered = true;
+
+    /** Whether rows and/or cells have generated descriptions (tooltips) */
+    public boolean hasDescriptions;
 
     /** The caption for the save button in the editor */
     @DelegateToWidget

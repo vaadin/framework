@@ -16,9 +16,11 @@
 
 package com.vaadin.shared.data;
 
-import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.communication.ServerRpc;
+
+import elemental.json.JsonArray;
 
 /**
  * RPC interface used for requesting container data to the client.
@@ -45,15 +47,13 @@ public interface DataRequestRpc extends ServerRpc {
             int firstCachedRowIndex, int cacheSize);
 
     /**
-     * Informs the server that an item referenced with a key pinned status has
-     * changed. This is a delayed call that happens along with next rpc call to
-     * server.
+     * Informs the server that items have been dropped from the client cache.
      * 
-     * @param key
-     *            key mapping to item
-     * @param isPinned
-     *            pinned status of referenced item
+     * @since 7.6
+     * @param rowKeys
+     *            array of dropped keys mapping to items
      */
     @Delayed
-    public void setPinned(String key, boolean isPinned);
+    @NoLoadingIndicator
+    public void dropRows(JsonArray rowKeys);
 }

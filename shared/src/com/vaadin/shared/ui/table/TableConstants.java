@@ -23,6 +23,7 @@ public class TableConstants implements Serializable {
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
     public static final String COLUMN_RESIZE_EVENT_ID = "columnResize";
     public static final String COLUMN_REORDER_EVENT_ID = "columnReorder";
+    public static final String COLUMN_COLLAPSE_EVENT_ID = "columnCollapse";
 
     @Deprecated
     public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";

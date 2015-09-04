@@ -2,21 +2,22 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Alignment;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Table.ColumnCollapseEvent;
+import com.vaadin.ui.Table.ColumnCollapseListener;
 
-public class ColumnCollapsingAndColumnExpansion extends TestBase {
+public class ColumnCollapsingAndColumnExpansion extends AbstractTestUIWithLog {
 
     private Table table;
 
     @Override
-    public void setup() {
+    protected void setup(VaadinRequest request) {
 
         table = new Table();
 
@@ -50,41 +51,44 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
                     "cell " + 2 + "-" + y, "cell " + 3 + "-" + y, },
                     new Object());
         }
+        table.addColumnCollapseListener(new ColumnCollapseListener() {
 
+            @Override
+            public void columnCollapseStateChange(ColumnCollapseEvent event) {
+                log("Collapse state for " + event.getPropertyId()
+                        + " changed to "
+                        + table.isColumnCollapsed(event.getPropertyId()));
+
+            }
+        });
         addComponent(table);
 
-        HorizontalLayout hl = new HorizontalLayout();
-        final TextField tf = new TextField("Column name (ColX)");
-        Button hide = new Button("Collapse", new ClickListener() {
+        for (int i = 1; i <= 3; i++) {
+            HorizontalLayout hl = new HorizontalLayout();
+            final String id = "Col" + i;
+            Button hide = new Button("Collapse " + id, new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    table.setColumnCollapsed(id, true);
+                }
+            });
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnCollapsed(tf.getValue(), true);
-            }
+            Button show = new Button("Show " + id, new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    table.setColumnCollapsed(id, false);
+                }
+            });
 
-        });
-
-        Button show = new Button("Show", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnCollapsed(tf.getValue(), false);
-            }
-
-        });
-
-        hl.addComponent(tf);
-        hl.addComponent(hide);
-        hl.addComponent(show);
-        hl.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
-        hl.setComponentAlignment(hide, Alignment.BOTTOM_LEFT);
-        hl.setComponentAlignment(show, Alignment.BOTTOM_LEFT);
-        addComponent(hl);
+            hl.addComponent(hide);
+            hl.addComponent(show);
+            addComponent(hl);
+        }
 
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "After hiding column 2 the remaining columns (1 and 3) should use all available space in the table";
     }
 

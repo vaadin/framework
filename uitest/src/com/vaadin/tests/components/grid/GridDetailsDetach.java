@@ -56,7 +56,6 @@ public class GridDetailsDetach extends AbstractTestUI {
 
         layout.addComponent(new Button("Reattach Grid",
                 new Button.ClickListener() {
-
                     @Override
                     public void buttonClick(ClickEvent event) {
                         gridContainer.removeAllComponents();

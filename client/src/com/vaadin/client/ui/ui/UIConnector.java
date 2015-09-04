@@ -59,6 +59,7 @@ import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
@@ -71,6 +72,7 @@ import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
@@ -319,19 +321,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    ComponentConnector paintable = (ComponentConnector) uidl
+                    ComponentConnector connector = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
 
-                    if (paintable == null) {
+                    if (connector == null) {
                         // Do not try to focus invisible components which not
                         // present in UIDL
                         return;
                     }
 
-                    final Widget toBeFocused = paintable.getWidget();
+                    final Widget toBeFocused = connector.getWidget();
                     /*
                      * Two types of Widgets can be focused, either implementing
-                     * GWT HasFocus of a thinner Vaadin specific Focusable
+                     * GWT Focusable of a thinner Vaadin specific Focusable
                      * interface.
                      */
                     if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
@@ -340,7 +342,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        VConsole.log("Could not focus component");
+                        getLogger()
+                                .severe("Server is trying to set focus to the widget of connector "
+                                        + Util.getConnectorString(connector)
+                                        + " but it is not focusable. The widget should implement either "
+                                        + com.google.gwt.user.client.ui.Focusable.class
+                                                .getName()
+                                        + " or "
+                                        + Focusable.class.getName());
                     }
                 }
             });
@@ -669,6 +678,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;
                 wc.setWindowOrderAndPosition();
+                VWindow window = wc.getWidget();
+                if (!window.isAttached()) {
+
+                    // Attach so that all widgets inside the Window are attached
+                    // when their onStateChange is run
+
+                    // Made invisible here for legacy reasons and made visible
+                    // at the end of stateChange. This dance could probably be
+                    // removed
+                    window.setVisible(false);
+                    window.show();
+                }
+
             }
         }
 
@@ -752,8 +774,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     getState().pushConfiguration.mode.isEnabled());
         }
         if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
-            getConnection().getConnectionStateHandler()
-                    .configurationUpdated();
+            getConnection().getConnectionStateHandler().configurationUpdated();
         }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
@@ -1022,56 +1043,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         }
 
+        // Request a full resynchronization from the server to deal with legacy
+        // components
+        getConnection().getMessageSender().resynchronize();
+
+        // Immediately update state and do layout while waiting for the resync
         forceStateChangeRecursively(UIConnector.this);
-        // UIDL has no stored URL which we can repaint so we do some find and
-        // replace magic...
-        String newThemeBase = getConnection().translateVaadinUri("theme://");
-        replaceThemeAttribute(oldThemeBase, newThemeBase);
-
         getLayoutManager().forceLayout();
-    }
-
-    /**
-     * Finds all attributes where theme:// urls have possibly been used and
-     * replaces any old theme url with a new one
-     * 
-     * @param oldPrefix
-     *            The start of the old theme URL
-     * @param newPrefix
-     *            The start of the new theme URL
-     */
-    private void replaceThemeAttribute(String oldPrefix, String newPrefix) {
-        // Images
-        replaceThemeAttribute("src", oldPrefix, newPrefix);
-        // Embedded flash
-        replaceThemeAttribute("value", oldPrefix, newPrefix);
-        replaceThemeAttribute("movie", oldPrefix, newPrefix);
-    }
-
-    /**
-     * Finds any attribute of the given type where theme:// urls have possibly
-     * been used and replaces any old theme url with a new one
-     * 
-     * @param attributeName
-     *            The name of the attribute, e.g. "src"
-     * @param oldPrefix
-     *            The start of the old theme URL
-     * @param newPrefix
-     *            The start of the new theme URL
-     */
-    private void replaceThemeAttribute(String attributeName, String oldPrefix,
-            String newPrefix) {
-        // Find all "attributeName=" which start with "oldPrefix" using e.g.
-        // [^src='http://oldpath']
-        NodeList<Element> elements = querySelectorAll("[" + attributeName
-                + "^='" + oldPrefix + "']");
-        for (int i = 0; i < elements.getLength(); i++) {
-            Element element = elements.getItem(i);
-            element.setAttribute(
-                    attributeName,
-                    element.getAttribute(attributeName).replace(oldPrefix,
-                            newPrefix));
-        }
     }
 
     /**

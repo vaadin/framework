@@ -181,7 +181,7 @@
         <property name="js.output.dir" location="WebContent" />
         <property name="push.js.dir" location="${basedir}/push/result/js" />
         <copy todir="${js.output.dir}">
-            <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*">
+            <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*" excludes="**/*.gz">
             </fileset>
         </copy>
     </target>

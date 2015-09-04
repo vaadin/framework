@@ -109,11 +109,18 @@
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
+            <li>Window close shortcuts have been changed, and ESCAPE is no longer a hard-coded default, but rather a soft one,
+                and can be removed. If the <pre>close-shortcut</pre> attribute of the <pre>v-window</pre> element is present,
+                it must list all close shortcuts, including ESCAPE, separated by whitespace. Existing, unchanged code should
+                behave as before. See ticket <a href="https://dev.vaadin.com/ticket/17383">#17383</a> for more information 
+                on the reasoning behind the change.</li>
             <li>The push path has been changed from /PUSH/ to /PUSH to be compatible with JSR 356.</li>
             <li>Widgetset files and other pre-compressed resources are sent as gzip to compatible browsers.
                 This may interfere with custom response compression solutions that do not respect the Content-Encoding response header.</li>
             <li>Unused methods related to the "out of sync" message have been removed from SystemMessages class.</li>
             <li>All notifications use the WAI-ARIA alert role to be compatible with Jaws</li>
+            <li>Grid SelectionModels are now Extensions. This update removes all selection related variables and API from 
+            GridConnector, GridState, GridServerRpc and GridClientRpc</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>

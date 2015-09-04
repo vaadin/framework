@@ -16,6 +16,7 @@
 package com.vaadin.server.widgetsetutils;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Date;
 
 import com.google.gwt.core.ext.Generator;
@@ -29,6 +30,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.ui.dd.VAcceptCriterion;
 import com.vaadin.client.ui.dd.VAcceptCriterionFactory;
+import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 
 /**
@@ -114,7 +116,9 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
 
         JClassType criteriaType = context.getTypeOracle().findType(
                 VAcceptCriterion.class.getName());
-        for (JClassType clientClass : criteriaType.getSubtypes()) {
+        JClassType[] subtypes = criteriaType.getSubtypes();
+        Arrays.sort(subtypes, ConnectorBundle.jClassComparator);
+        for (JClassType clientClass : subtypes) {
             AcceptCriterion annotation = clientClass
                     .getAnnotation(AcceptCriterion.class);
             if (annotation != null) {

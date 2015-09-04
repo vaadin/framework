@@ -21,6 +21,11 @@ $v-grid-details-marker-width: first-number($v-grid-border) * 2 !default;
 $v-grid-details-marker-color: $v-selection-color !default;
 $v-grid-details-border-top: valo-border($color: $v-grid-border-color-source, $strength: 0.3) !default;
 $v-grid-details-border-top-stripe: valo-border($color: $v-grid-row-stripe-background-color, $strength: 0.3) !default;
+
+$v-grid-border-size: 1px !default;
+$v-grid-border: $v-grid-border-size solid #ddd !default;
+$v-grid-cell-vertical-border: $v-grid-border !default;
+$v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
 $v-grid-details-border-bottom: $v-grid-cell-horizontal-border !default;
 $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
 
@@ -119,6 +124,10 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
       vertical-align: middle;
     }
     
+    &.not-editable.#{$primary-stylename}-cell {
+      float: none;
+    }
+    
     .error::before {
       border-top: round($v-unit-size / 4) solid $v-error-indicator-color;
       border-right: round($v-unit-size / 4) solid transparent;
@@ -203,9 +212,6 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
   // Sidebar
   .#{$primary-stylename}-sidebar.v-contextmenu {
     &.open {
-      .#{$primary-stylename}-sidebar-button:after {
-        font-size: 20px;
-      }
 
       .#{$primary-stylename}-sidebar-content {
         margin: 0 0 2px;

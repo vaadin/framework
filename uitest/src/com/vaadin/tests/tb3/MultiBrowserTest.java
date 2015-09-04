@@ -84,6 +84,8 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     @Override
     public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+        super.setDesiredCapabilities(desiredCapabilities);
+
         if (BrowserUtil.isIE(desiredCapabilities)) {
             if (requireWindowFocusForIE()) {
                 desiredCapabilities.setCapability(
@@ -103,8 +105,6 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                 "name",
                 String.format("%s.%s", getClass().getCanonicalName(),
                         testName.getMethodName()));
-
-        super.setDesiredCapabilities(desiredCapabilities);
     }
 
     @Override

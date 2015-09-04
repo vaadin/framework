@@ -44,8 +44,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -79,8 +77,7 @@ import com.vaadin.shared.ui.window.WindowRole;
  * @author Vaadin Ltd
  */
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
-        ScrollHandler, KeyDownHandler, KeyUpHandler, FocusHandler, BlurHandler,
-        Focusable {
+        ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -221,7 +218,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         constructDOM();
         contentPanel.addScrollHandler(this);
         contentPanel.addKeyDownHandler(this);
-        contentPanel.addKeyUpHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
     }
@@ -562,17 +558,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static void focusTopmostModalWindow() {
-        // If we call focus() directly without scheduling, it does not work in
-        // IE and FF.
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                VWindow topmost = getTopmostWindow();
-                if ((topmost != null) && (topmost.vaadinModality)) {
-                    topmost.focus();
-                }
-            }
-        });
+        VWindow topmost = getTopmostWindow();
+        if ((topmost != null) && (topmost.vaadinModality)) {
+            topmost.focus();
+        }
     }
 
     @Override
@@ -762,11 +751,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         modalityCurtain.removeFromParent();
 
-        if (BrowserInfo.get().isIE()) {
-            // IE leaks memory in certain cases unless we release the reference
-            // (#9197)
-            modalityCurtain = null;
-        }
+        // IE leaks memory in certain cases unless we release the reference
+        // (#9197)
+        modalityCurtain = null;
     }
 
     /*
@@ -1353,13 +1340,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     @Override
-    public void onKeyUp(KeyUpEvent event) {
-        if (isClosable() && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-            onCloseClick();
-        }
-    }
-
-    @Override
     public void onBlur(BlurEvent event) {
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
@@ -1375,7 +1355,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void focus() {
-        contentPanel.focus();
+        // We don't want to use contentPanel.focus() as that will use a timer in
+        // Chrome/Safari and ultimately run focus events in the wrong order when
+        // opening a modal window and focusing some other component at the same
+        // time
+        contentPanel.getElement().focus();
     }
 
     private int getDecorationHeight() {

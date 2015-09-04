@@ -1295,8 +1295,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (uidl.hasVariable("selected")) {
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
-            removeUnselectedRowKeys(selectedKeys);
-
+            // Do not update focus if there is a single selected row
+            // that is the same as the previous selection. This prevents
+            // unwanted scrolling (#18247).
+            boolean rowsUnSelected = removeUnselectedRowKeys(selectedKeys);
+            boolean updateFocus = rowsUnSelected || selectedRowKeys.size() == 0
+                    || focusedRow == null;
             if (scrollBody != null) {
                 Iterator<Widget> iterator = scrollBody.iterator();
                 while (iterator.hasNext()) {
@@ -1313,7 +1317,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
-                    if (selected && selectedKeys.size() == 1) {
+                    if (selected && selectedKeys.size() == 1 && updateFocus) {
                         /*
                          * If a single item is selected, move focus to the
                          * selected row. (#10522)
@@ -1338,14 +1342,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return keyboardSelectionOverRowFetchInProgress;
     }
 
-    private void removeUnselectedRowKeys(final Set<String> selectedKeys) {
+    private boolean removeUnselectedRowKeys(final Set<String> selectedKeys) {
         List<String> unselectedKeys = new ArrayList<String>(0);
         for (String key : selectedRowKeys) {
             if (!selectedKeys.contains(key)) {
                 unselectedKeys.add(key);
             }
         }
-        selectedRowKeys.removeAll(unselectedKeys);
+        return selectedRowKeys.removeAll(unselectedKeys);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -3629,6 +3633,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     }
                 } else {
                     c.setText(caption);
+                    if (BrowserInfo.get().isIE10()) {
+                        // IE10 can some times define min-height to include
+                        // padding when setting the text...
+                        // See https://dev.vaadin.com/ticket/15169
+                        WidgetUtil.forceIERedraw(c.getElement());
+                    }
                 }
 
                 c.setSorted(false);

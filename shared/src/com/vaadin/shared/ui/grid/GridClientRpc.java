@@ -15,8 +15,6 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import java.util.Set;
-
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -57,19 +55,4 @@ public interface GridClientRpc extends ClientRpc {
      * Command client Grid to recalculate column widths.
      */
     public void recalculateColumnWidths();
-
-    /**
-     * Informs the GridConnector on how the indexing of details connectors has
-     * changed.
-     * 
-     * @since 7.5.0
-     * @param connectorChanges
-     *            the indexing changes of details connectors
-     * @param fetchId
-     *            the id of the request for fetching the changes. A negative
-     *            number indicates a push (not requested by the client side)
-     */
-    public void setDetailsConnectorChanges(
-            Set<DetailsConnectorChange> connectorChanges, int fetchId);
-
 }

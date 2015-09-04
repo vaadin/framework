@@ -47,8 +47,8 @@ public class CustomRendererTest extends MultiBrowserTest {
                 .getText());
 
         grid.getCell(0, 1).click();
-        assertEquals("row: 0, key: 0", grid.getCell(0, 1).getText());
-        assertEquals("key: 0, itemId: " + CustomRenderer.ITEM_ID,
+        assertEquals("row: 0, key: 1", grid.getCell(0, 1).getText());
+        assertEquals("key: 1, itemId: " + CustomRenderer.ITEM_ID,
                 findDebugLabel().getText());
     }
 

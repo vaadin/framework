@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -94,8 +93,6 @@ public class VButton extends FocusWidget implements ClickHandler {
     /** For internal use only. May be removed or replaced in the future. */
     public int clickShortcut = 0;
 
-    private HandlerRegistration focusHandlerRegistration;
-    private HandlerRegistration blurHandlerRegistration;
     private long lastClickTime = 0;
 
     public VButton() {

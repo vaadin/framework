@@ -17,6 +17,7 @@
 package com.vaadin.event;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +56,7 @@ public class ShortcutAction extends Action {
 
     private final int keyCode;
 
-    private final int[] modifiers;
+    private int[] modifiers;
 
     /**
      * Creates a shortcut that reacts to the given {@link KeyCode} and
@@ -73,7 +74,7 @@ public class ShortcutAction extends Action {
     public ShortcutAction(String caption, int kc, int... m) {
         super(caption);
         keyCode = kc;
-        modifiers = m;
+        setModifiers(m);
     }
 
     /**
@@ -94,7 +95,7 @@ public class ShortcutAction extends Action {
     public ShortcutAction(String caption, Resource icon, int kc, int... m) {
         super(caption, icon);
         keyCode = kc;
-        modifiers = m;
+        setModifiers(m);
     }
 
     /**
@@ -190,7 +191,7 @@ public class ShortcutAction extends Action {
 
             // Given modifiers override this indicated in the caption
             if (modifierKeys != null) {
-                modifiers = modifierKeys;
+                setModifiers(modifierKeys);
             } else {
                 // Read modifiers from caption
                 int[] mod = new int[match.length() - 1];
@@ -208,13 +209,30 @@ public class ShortcutAction extends Action {
                         break;
                     }
                 }
-                modifiers = mod;
+                setModifiers(mod);
             }
 
         } else {
             keyCode = -1;
-            modifiers = modifierKeys;
+            setModifiers(modifierKeys);
         }
+
+    }
+
+    /**
+     * When setting modifiers, make sure that modifiers is a valid array AND
+     * that it's sorted.
+     * 
+     * @param modifiers
+     *            the modifier keys for this shortcut
+     */
+    private void setModifiers(int... modifiers) {
+        if (modifiers == null) {
+            this.modifiers = new int[0];
+        } else {
+            this.modifiers = modifiers;
+        }
+        Arrays.sort(this.modifiers);
     }
 
     /**

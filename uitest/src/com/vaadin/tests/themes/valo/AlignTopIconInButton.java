@@ -20,6 +20,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Test UI for image icon in button with 'icon-align-top' style.
@@ -34,7 +35,7 @@ public class AlignTopIconInButton extends AbstractTestUI {
         Button button = new Button();
         button.setIcon(new ThemeResource("../runo/icons/16/document.png"));
         addComponent(button);
-        button.addStyleName("icon-align-top");
+        button.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
         button.setCaption("caption");
     }
 

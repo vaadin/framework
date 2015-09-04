@@ -14,6 +14,7 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
 
     private final String restoreBoxClass = "v-window-restorebox";
     private final String maximizeBoxClass = "v-window-maximizebox";
+    private final String closeBoxClass = "v-window-closebox";
 
     public void restore() {
         if (isMaximized()) {
@@ -62,5 +63,14 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
     @Override
     public String getCaption() {
         return findElement(By.className("v-window-header")).getText();
+    }
+
+    private WebElement getCloseButton() {
+        return findElement(By.className(closeBoxClass));
+    }
+
+    public void close() {
+        getCloseButton().click();
+
     }
 }

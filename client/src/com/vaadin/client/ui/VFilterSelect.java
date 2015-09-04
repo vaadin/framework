@@ -65,6 +65,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
@@ -90,7 +91,7 @@ import com.vaadin.shared.util.SharedUtil;
 public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
-        HandlesAriaRequired {
+        HandlesAriaRequired, DeferredWorker {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -417,7 +418,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 selectPrevPage();
 
             } else {
-                selectItem(menu.getItems().get(menu.getItems().size() - 1));
+                if (!menu.getItems().isEmpty()) {
+                    selectLastItem();
+                }
             }
         }
 
@@ -596,7 +599,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     + "]");
 
             Element menuFirstChild = menu.getElement().getFirstChildElement();
-            final int naturalMenuWidth = menuFirstChild.getOffsetWidth();
+            final int naturalMenuWidth = WidgetUtil
+                    .getRequiredWidth(menuFirstChild);
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = WidgetUtil
@@ -608,13 +612,21 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 menuFirstChild.getStyle().setWidth(100, Unit.PCT);
             }
 
-            if (BrowserInfo.get().isIE()) {
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 11) {
+                // Must take margin,border,padding manually into account for
+                // menu element as we measure the element child and set width to
+                // the element parent
+                double naturalMenuOuterWidth = WidgetUtil
+                        .getRequiredWidthDouble(menuFirstChild)
+                        + getMarginBorderPaddingWidth(menu.getElement());
+
                 /*
                  * IE requires us to specify the width for the container
                  * element. Otherwise it will be 100% wide
                  */
-                int rootWidth = Math.max(desiredWidth, naturalMenuWidth)
-                        - popupOuterPadding;
+                double rootWidth = Math.max(desiredWidth - popupOuterPadding,
+                        naturalMenuOuterWidth);
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
@@ -1278,6 +1290,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         setStyleName(CLASSNAME);
 
         sinkEvents(Event.ONPASTE);
+    }
+
+    private static double getMarginBorderPaddingWidth(Element element) {
+        final ComputedStyle s = new ComputedStyle(element);
+        return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
+
     }
 
     /*
@@ -2185,11 +2203,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        if ("textbox".equals(subPart)) {
+        String[] parts = subPart.split("/");
+        if ("textbox".equals(parts[0])) {
             return tb.getElement();
-        } else if ("button".equals(subPart)) {
+        } else if ("button".equals(parts[0])) {
             return popupOpener.getElement();
-        } else if ("popup".equals(subPart) && suggestionPopup.isAttached()) {
+        } else if ("popup".equals(parts[0]) && suggestionPopup.isAttached()) {
+            if (parts.length == 2) {
+                return suggestionPopup.menu.getSubPartElement(parts[1]);
+            }
             return suggestionPopup.getElement();
         }
         return null;
@@ -2231,6 +2253,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         // Then set your specific selection type only after
         // client.updateVariable() method call.
         selectPopupItemWhenResponseIsReceived = Select.NONE;
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return waitingForFilteringResponse
+                || suggestionPopup.lazyPageScroller.isRunning();
     }
 
 }

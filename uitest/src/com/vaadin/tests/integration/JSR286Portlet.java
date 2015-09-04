@@ -110,10 +110,16 @@ public class JSR286Portlet extends UI {
     }
 
     private void possiblyChangedModeOrState() {
-        VaadinPortletRequest request = (VaadinPortletRequest) VaadinPortletService
-                .getCurrentRequest();
+        VaadinPortletRequest request = VaadinPortletService.getCurrentRequest();
 
-        userAgent.setValue(getPage().getWebBrowser().getBrowserApplication());
+        String censoredUserAgent = getPage().getWebBrowser()
+                .getBrowserApplication();
+        if (censoredUserAgent != null && censoredUserAgent.contains("Chrome/")) {
+            // Censor version info as it tends to change
+            censoredUserAgent = censoredUserAgent.replaceAll("Chrome/[^ ]* ",
+                    "Chrome/xyz ");
+        }
+        userAgent.setValue(censoredUserAgent);
         screenWidth.setValue(String.valueOf(getPage().getBrowserWindowWidth()));
         screenHeight.setValue(String
                 .valueOf(getPage().getBrowserWindowHeight()));

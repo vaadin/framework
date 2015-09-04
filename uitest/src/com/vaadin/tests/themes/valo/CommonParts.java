@@ -51,13 +51,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class CommonParts extends VerticalLayout implements View {
     public CommonParts() {
         setMargin(true);
 
         Label h1 = new Label("Common UI Elements");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         GridLayout row = new GridLayout(2, 3);
@@ -83,7 +84,7 @@ public class CommonParts extends VerticalLayout implements View {
 
         CssLayout group = new CssLayout();
         group.setCaption("Show the loading indicator for…");
-        group.addStyleName("v-component-group");
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         content.addComponent(group);
         Button loading = new Button("0.8");
         loading.addClickListener(new ClickListener() {
@@ -127,13 +128,13 @@ public class CommonParts extends VerticalLayout implements View {
 
         Label spinnerDesc = new Label(
                 "The theme also provides a mixin that you can use to include a spinner anywhere in your application. Below is a Label with a custom style name, for which the spinner mixin is added.");
-        spinnerDesc.addStyleName("small");
+        spinnerDesc.addStyleName(ValoTheme.LABEL_SMALL);
         spinnerDesc.setCaption("Spinner");
         content.addComponent(spinnerDesc);
 
         if (!ValoThemeUI.isTestMode()) {
             Label spinner = new Label();
-            spinner.addStyleName("spinner");
+            spinner.addStyleName(ValoTheme.LABEL_SPINNER);
             content.addComponent(spinner);
         }
 
@@ -172,7 +173,7 @@ public class CommonParts extends VerticalLayout implements View {
                 addComponent(title);
 
                 description.setInputPrompt("Description for the notification");
-                description.addStyleName("small");
+                description.addStyleName(ValoTheme.TEXTAREA_SMALL);
                 description.addValueChangeListener(new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
@@ -217,7 +218,7 @@ public class CommonParts extends VerticalLayout implements View {
                 type.addItem("Error", typeCommand).setCheckable(true);
                 type.addItem("System", typeCommand).setCheckable(true);
                 addComponent(type);
-                type.addStyleName("small");
+                type.addStyleName(ValoTheme.MENUBAR_SMALL);
 
                 Command styleCommand = new Command() {
                     @Override
@@ -249,16 +250,16 @@ public class CommonParts extends VerticalLayout implements View {
                 style.addItem("Small", styleCommand).setCheckable(true);
                 style.addItem("Closable", styleCommand).setCheckable(true);
                 addComponent(style);
-                style.addStyleName("small");
+                style.addStyleName(ValoTheme.MENUBAR_SMALL);
 
                 CssLayout group = new CssLayout();
                 group.setCaption("Fade delay");
-                group.addStyleName("v-component-group");
+                group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
                 addComponent(group);
 
                 delay.setInputPrompt("Infinite");
-                delay.addStyleName("align-right");
-                delay.addStyleName("small");
+                delay.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
+                delay.addStyleName(ValoTheme.TEXTFIELD_SMALL);
                 delay.setWidth("7em");
                 delay.addValueChangeListener(new ValueChangeListener() {
                     @Override
@@ -284,8 +285,8 @@ public class CommonParts extends VerticalLayout implements View {
                 });
                 clear.setIcon(FontAwesome.TIMES_CIRCLE);
                 clear.addStyleName("last");
-                clear.addStyleName("small");
-                clear.addStyleName("icon-only");
+                clear.addStyleName(ValoTheme.BUTTON_SMALL);
+                clear.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
                 group.addComponent(clear);
                 group.addComponent(new Label("&nbsp; msec", ContentMode.HTML));
 
@@ -301,7 +302,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -311,7 +312,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -321,7 +322,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -331,7 +332,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -341,7 +342,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -351,7 +352,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -361,7 +362,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -371,7 +372,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {
@@ -381,7 +382,7 @@ public class CommonParts extends VerticalLayout implements View {
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName("small");
+                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
             }
@@ -397,35 +398,35 @@ public class CommonParts extends VerticalLayout implements View {
             {
                 setSpacing(true);
                 setMargin(true);
-                addStyleName("wrapping");
+                addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 
                 addComponent(new Label(
                         "Try out different tooltips/descriptions by hovering over the labels."));
 
                 Label label = new Label("Simple");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("Simple tooltip message");
                 addComponent(label);
 
                 label = new Label("Long");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("Long tooltip message. Inmensae subtilitatis, obscuris et malesuada fames. Salutantibus vitae elit libero, a pharetra augue.");
                 addComponent(label);
 
                 label = new Label("HTML tooltip");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("<div><h1>Ut enim ad minim veniam, quis nostrud exercitation</h1><p><span>Morbi fringilla convallis sapien, id pulvinar odio volutpat.</span> <span>Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</span> <span>Donec sed odio operae, eu vulputate felis rhoncus.</span> <span>At nos hinc posthac, sitientis piros Afros.</span> <span>Tu quoque, Brute, fili mi, nihil timor populi, nihil!</span></p><p><span>Gallia est omnis divisa in partes tres, quarum.</span> <span>Praeterea iter est quasdam res quas ex communi.</span> <span>Cum ceteris in veneratione tui montes, nascetur mus.</span> <span>Quam temere in vitiis, legem sancimus haerentia.</span> <span>Idque Caesaris facere voluntate liceret: sese habere.</span></p></div>");
                 addComponent(label);
 
                 label = new Label("With an error message");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("Simple tooltip message");
                 label.setComponentError(new UserError(
                         "Something terrible has happened"));
                 addComponent(label);
 
                 label = new Label("With a long error message");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("Simple tooltip message");
                 label.setComponentError(new UserError(
                         "<h2>Contra legem facit qui id facit quod lex prohibet <span>Tityre, tu patulae recubans sub tegmine fagi  dolor.</span> <span>Tityre, tu patulae recubans sub tegmine fagi  dolor.</span> <span>Prima luce, cum quibus mons aliud  consensu ab eo.</span> <span>Quid securi etiam tamquam eu fugiat nulla pariatur.</span> <span>Fabio vel iudice vincam, sunt in culpa qui officia.</span> <span>Nihil hic munitissimus habendi senatus locus, nihil horum?</span></p><p><span>Plura mihi bona sunt, inclinet, amari petere vellent.</span> <span>Integer legentibus erat a ante historiarum dapibus.</span> <span>Quam diu etiam furor iste tuus nos eludet?</span> <span>Nec dubitamus multa iter quae et nos invenerat.</span> <span>Quisque ut dolor gravida, placerat libero vel, euismod.</span> <span>Quae vero auctorem tractata ab fiducia dicuntur.</span></h2>",
@@ -434,7 +435,7 @@ public class CommonParts extends VerticalLayout implements View {
                 addComponent(label);
 
                 label = new Label("Error message only");
-                label.addStyleName("bold");
+                label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setComponentError(new UserError(
                         "Something terrible has happened"));
                 addComponent(label);
@@ -479,7 +480,7 @@ public class CommonParts extends VerticalLayout implements View {
                                 Alignment.TOP_RIGHT);
                         toolbar = toolbarLayout;
                     }
-                    toolbar.addStyleName("v-window-top-toolbar");
+                    toolbar.addStyleName(ValoTheme.WINDOW_TOP_TOOLBAR);
                     root.addComponent(toolbar);
                 }
 
@@ -498,7 +499,7 @@ public class CommonParts extends VerticalLayout implements View {
                             "Another");
                     tabs.addTab(new Label("&nbsp;", ContentMode.HTML),
                             "One more");
-                    tabs.addStyleName("padded-tabbar");
+                    tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
                     tabs.addSelectedTabChangeListener(new SelectedTabChangeListener() {
                         @Override
                         public void selectedTabChange(
@@ -514,9 +515,9 @@ public class CommonParts extends VerticalLayout implements View {
                 } else if (!autoHeight) {
                     Panel p = new Panel();
                     p.setSizeFull();
-                    p.addStyleName("borderless");
+                    p.addStyleName(ValoTheme.PANEL_BORDERLESS);
                     if (!toolbarVisible || !toolbarLayout) {
-                        p.addStyleName("scroll-divider");
+                        p.addStyleName(ValoTheme.PANEL_SCROLL_INDICATOR);
                     }
                     VerticalLayout l = new VerticalLayout();
                     l.addComponent(new Label(
@@ -538,13 +539,13 @@ public class CommonParts extends VerticalLayout implements View {
                     HorizontalLayout footer = new HorizontalLayout();
                     footer.setWidth("100%");
                     footer.setSpacing(true);
-                    footer.addStyleName("v-window-bottom-toolbar");
+                    footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
                     Label footerText = new Label("Footer text");
                     footerText.setSizeUndefined();
 
                     Button ok = new Button("OK");
-                    ok.addStyleName("primary");
+                    ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
                     Button cancel = new Button("Cancel");
 
@@ -614,7 +615,7 @@ public class CommonParts extends VerticalLayout implements View {
 
                         if (selectedItem.getText()
                                 .equals("Borderless Toolbars")) {
-                            toolbarStyle = selectedItem.isChecked() ? "borderless"
+                            toolbarStyle = selectedItem.isChecked() ? ValoTheme.MENUBAR_BORDERLESS
                                     : null;
                         }
 
@@ -630,7 +631,7 @@ public class CommonParts extends VerticalLayout implements View {
                 MenuItem option = options.addItem("Footer", optionsCommand);
                 option.setCheckable(true);
                 option.setChecked(true);
-                options.addStyleName("small");
+                options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
                 options = new MenuBar();
@@ -643,7 +644,7 @@ public class CommonParts extends VerticalLayout implements View {
                         .setCheckable(true);
                 options.addItem("Borderless Toolbars", optionsCommand)
                         .setCheckable(true);
-                options.addStyleName("small");
+                options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
                 Command optionsCommand2 = new Command() {
@@ -671,7 +672,7 @@ public class CommonParts extends VerticalLayout implements View {
                 options.addItem("Resizable", optionsCommand2)
                         .setCheckable(true);
                 options.addItem("Modal", optionsCommand2).setCheckable(true);
-                options.addStyleName("small");
+                options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
                 final Button show = new Button("Open Window",
@@ -684,7 +685,7 @@ public class CommonParts extends VerticalLayout implements View {
                                 event.getButton().setEnabled(false);
                             }
                         });
-                show.addStyleName("primary");
+                show.addStyleName(ValoTheme.BUTTON_PRIMARY);
                 addComponent(show);
 
                 final CheckBox hidden = new CheckBox("Hidden");

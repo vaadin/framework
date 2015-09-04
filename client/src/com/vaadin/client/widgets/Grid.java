@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -42,6 +41,7 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
@@ -49,6 +49,9 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -79,6 +82,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
@@ -103,6 +107,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
+import com.vaadin.client.widget.grid.DefaultEditorEventHandler;
 import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
@@ -121,6 +126,9 @@ import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
+import com.vaadin.client.widget.grid.events.EditorCloseEvent;
+import com.vaadin.client.widget.grid.events.EditorEvent;
+import com.vaadin.client.widget.grid.events.EditorEventHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -206,8 +214,10 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
-        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets,
-        HasEnabled {
+        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, Focusable,
+        com.google.gwt.user.client.ui.Focusable, HasWidgets, HasEnabled {
+
+    private static final String SELECT_ALL_CHECKBOX_CLASSNAME = "-select-all-checkbox";
 
     /**
      * Enum describing different sections of Grid.
@@ -1081,14 +1091,10 @@ public class Grid<T> extends ResizeComposite implements
             }
             completed = true;
 
-            grid.getEditor().setErrorMessage(errorMessage);
-
-            grid.getEditor().clearEditorColumnErrors();
-            if (errorColumns != null) {
-                for (Column<?, T> column : errorColumns) {
-                    grid.getEditor().setEditorColumnError(column, true);
-                }
+            if (errorColumns == null) {
+                errorColumns = Collections.emptySet();
             }
+            grid.getEditor().setEditorError(errorMessage, errorColumns);
         }
 
         @Override
@@ -1115,10 +1121,104 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * A wrapper for native DOM events originating from Grid. In addition to the
+     * native event, contains a {@link CellReference} instance specifying which
+     * cell the event originated from.
+     * 
+     * @since
+     * @param <T>
+     *            The row type of the grid
+     */
+    public static class GridEvent<T> {
+        private Event event;
+        private EventCellReference<T> cell;
+
+        protected GridEvent(Event event, EventCellReference<T> cell) {
+            this.event = event;
+            this.cell = cell;
+        }
+
+        /**
+         * Returns the wrapped DOM event.
+         * 
+         * @return the DOM event
+         */
+        public Event getDomEvent() {
+            return event;
+        }
+
+        /**
+         * Returns the Grid cell this event originated from.
+         * 
+         * @return the event cell
+         */
+        public EventCellReference<T> getCell() {
+            return cell;
+        }
+
+        /**
+         * Returns the Grid instance this event originated from.
+         * 
+         * @return the grid
+         */
+        public Grid<T> getGrid() {
+            return cell.getGrid();
+        }
+    }
+
+    /**
+     * A wrapper for native DOM events related to the {@link Editor Grid editor}
+     * .
+     * 
+     * @since
+     * @param <T>
+     *            the row type of the grid
+     */
+    public static class EditorDomEvent<T> extends GridEvent<T> {
+
+        protected EditorDomEvent(Event event, EventCellReference<T> cell) {
+            super(event, cell);
+        }
+
+        /**
+         * Returns the editor of the Grid this event originated from.
+         * 
+         * @return the related editor instance
+         */
+        public Editor<T> getEditor() {
+            return getGrid().getEditor();
+        }
+
+        /**
+         * Returns the row index the editor is open at. If the editor is not
+         * open, returns -1.
+         * 
+         * @return the index of the edited row or -1 if editor is not open
+         */
+        public int getRowIndex() {
+            return getEditor().rowIndex;
+        }
+
+        /**
+         * Returns the column index the editor was opened at. If the editor is
+         * not open, returns -1.
+         * 
+         * @return the column index or -1 if editor is not open
+         */
+        public int getFocusedColumnIndex() {
+            return getEditor().focusedColumnIndex;
+        }
+    }
+
+    /**
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
+     * 
+     * @since
+     * @param <T>
+     *            the row type of the grid
      */
-    protected static class Editor<T> {
+    public static class Editor<T> {
 
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
@@ -1126,15 +1226,41 @@ public class Grid<T> extends ResizeComposite implements
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
 
+        /**
+         * A handler for events related to the Grid editor. Responsible for
+         * opening, moving or closing the editor based on the received event.
+         * 
+         * @since
+         * @author Vaadin Ltd
+         * @param <T>
+         *            the row type of the grid
+         */
+        public interface EventHandler<T> {
+            /**
+             * Handles editor-related events in an appropriate way. Opens,
+             * moves, or closes the editor based on the given event.
+             * 
+             * @param event
+             *            the received event
+             * @return true if the event was handled and nothing else should be
+             *         done, false otherwise
+             */
+            boolean handleEvent(EditorDomEvent<T> event);
+        }
+
         protected enum State {
             INACTIVE, ACTIVATING, BINDING, ACTIVE, SAVING
         }
 
         private Grid<T> grid;
         private EditorHandler<T> handler;
+        private EventHandler<T> eventHandler = GWT
+                .create(DefaultEditorEventHandler.class);
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
         private DivElement cellWrapper = DivElement.as(DOM.createDiv());
+        private DivElement frozenCellWrapper = DivElement.as(DOM.createDiv());
+
         private DivElement messageAndButtonsWrapper = DivElement.as(DOM
                 .createDiv());
 
@@ -1146,14 +1272,24 @@ public class Grid<T> extends ResizeComposite implements
         private DivElement message = DivElement.as(DOM.createDiv());
 
         private Map<Column<?, T>, Widget> columnToWidget = new HashMap<Column<?, T>, Widget>();
+        private List<HandlerRegistration> focusHandlers = new ArrayList<HandlerRegistration>();
 
         private boolean enabled = false;
         private State state = State.INACTIVE;
         private int rowIndex = -1;
-        private int columnIndex = -1;
+        private int focusedColumnIndex = -1;
         private String styleName = null;
 
+        /*
+         * Used to track Grid horizontal scrolling
+         */
         private HandlerRegistration scrollHandler;
+
+        /*
+         * Used to open editor once Grid has vertically scrolled to the proper
+         * position and data is available
+         */
+        private HandlerRegistration dataAvailableHandler;
 
         private final Button saveButton;
         private final Button cancelButton;
@@ -1209,6 +1345,7 @@ public class Grid<T> extends ResizeComposite implements
                                 + " remember to call success() or fail()?");
             }
         };
+
         private final EditorRequestImpl.RequestCallback<T> bindRequestCallback = new EditorRequestImpl.RequestCallback<T>() {
             @Override
             public void onSuccess(EditorRequest<T> request) {
@@ -1216,10 +1353,7 @@ public class Grid<T> extends ResizeComposite implements
                     state = State.ACTIVE;
                     bindTimeout.cancel();
 
-                    assert rowIndex == request.getRowIndex() : "Request row index "
-                            + request.getRowIndex()
-                            + " did not match the saved row index " + rowIndex;
-
+                    rowIndex = request.getRowIndex();
                     showOverlay();
                 }
             }
@@ -1227,22 +1361,30 @@ public class Grid<T> extends ResizeComposite implements
             @Override
             public void onError(EditorRequest<T> request) {
                 if (state == State.BINDING) {
-                    state = State.INACTIVE;
+                    if (rowIndex == -1) {
+                        doCancel();
+                    } else {
+                        state = State.ACTIVE;
+                    }
                     bindTimeout.cancel();
 
                     // TODO show something in the DOM as well?
                     getLogger().warning(
                             "An error occurred while trying to show the "
                                     + "Grid editor");
-                    grid.getEscalator().setScrollLocked(Direction.VERTICAL,
-                            false);
-                    updateSelectionCheckboxesAsNeeded(true);
                 }
             }
         };
 
         /** A set of all the columns that display an error flag. */
         private final Set<Column<?, T>> columnErrors = new HashSet<Grid.Column<?, T>>();
+        private boolean buffered = true;
+
+        /** Original position of editor */
+        private double originalTop;
+        /** Original scroll position of grid when editor was opened */
+        private double originalScrollTop;
+        private RowHandle<T> pinnedRowHandle;
 
         public Editor() {
             saveButton = new Button();
@@ -1264,13 +1406,26 @@ public class Grid<T> extends ResizeComposite implements
             });
         }
 
-        public void setErrorMessage(String errorMessage) {
+        public void setEditorError(String errorMessage,
+                Collection<Column<?, T>> errorColumns) {
+
             if (errorMessage == null) {
                 message.removeFromParent();
             } else {
                 message.setInnerText(errorMessage);
                 if (message.getParentElement() == null) {
                     messageWrapper.appendChild(message);
+                }
+            }
+            // In unbuffered mode only show message wrapper if there is an error
+            if (!isBuffered()) {
+                setMessageAndButtonsWrapperVisible(errorMessage != null);
+            }
+
+            if (state == State.ACTIVE || state == State.SAVING) {
+                for (Column<?, T> c : grid.getColumns()) {
+                    grid.getEditor().setEditorColumnError(c,
+                            errorColumns.contains(c));
                 }
             }
         }
@@ -1280,12 +1435,26 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Equivalent to {@code editRow(rowIndex, -1)}.
+         * If a cell of this Grid had focus once this editRow call was
+         * triggered, the editor component at the previously focused column
+         * index will be focused.
+         * 
+         * If a Grid cell was not focused prior to calling this method, it will
+         * be equivalent to {@code editRow(rowIndex, -1)}.
          * 
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            editRow(rowIndex, -1);
+            // Focus the last focused column in the editor iff grid or its child
+            // was focused before the edit request
+            Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
+            Element focusedElement = WidgetUtil.getFocusedElement();
+            if (focusedCell != null && focusedElement != null
+                    && grid.getElement().isOrHasChild(focusedElement)) {
+                editRow(rowIndex, focusedCell.getColumn());
+            } else {
+                editRow(rowIndex, -1);
+            }
         }
 
         /**
@@ -1302,28 +1471,41 @@ public class Grid<T> extends ResizeComposite implements
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
-         *             if this editor is already in edit mode
+         *             if this editor is already in edit mode and in buffered
+         *             mode
          * 
          * @since 7.5
          */
-        public void editRow(int rowIndex, int columnIndex) {
+        public void editRow(final int rowIndex, int columnIndex) {
             if (!enabled) {
                 throw new IllegalStateException(
                         "Cannot edit row: editor is not enabled");
             }
             if (state != State.INACTIVE) {
-                throw new IllegalStateException(
-                        "Cannot edit row: editor already in edit mode");
+                if (isBuffered()) {
+                    throw new IllegalStateException(
+                            "Cannot edit row: editor already in edit mode");
+                }
             }
 
             this.rowIndex = rowIndex;
-            this.columnIndex = columnIndex;
-
+            this.focusedColumnIndex = columnIndex;
             state = State.ACTIVATING;
 
             if (grid.getEscalator().getVisibleRowRange().contains(rowIndex)) {
-                show();
+                show(rowIndex);
             } else {
+                hideOverlay();
+                dataAvailableHandler = grid
+                        .addDataAvailableHandler(new DataAvailableHandler() {
+                            @Override
+                            public void onDataAvailable(DataAvailableEvent event) {
+                                if (event.getAvailableRows().contains(rowIndex)) {
+                                    show(rowIndex);
+                                    dataAvailableHandler.removeHandler();
+                                }
+                            }
+                        });
                 grid.scrollToRow(rowIndex, ScrollDestination.MIDDLE);
             }
         }
@@ -1346,14 +1528,18 @@ public class Grid<T> extends ResizeComposite implements
                 throw new IllegalStateException(
                         "Cannot cancel edit: editor is not in edit mode");
             }
-            hideOverlay();
-            grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
+            handler.cancel(new EditorRequestImpl<T>(grid, rowIndex, null));
+            doCancel();
+        }
 
-            EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
-                    null);
-            handler.cancel(request);
+        private void doCancel() {
+            hideOverlay();
             state = State.INACTIVE;
+            rowIndex = -1;
+            focusedColumnIndex = -1;
+            grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
             updateSelectionCheckboxesAsNeeded(true);
+            grid.fireEvent(new EditorCloseEvent(grid.eventCell));
         }
 
         private void updateSelectionCheckboxesAsNeeded(boolean isEnabled) {
@@ -1446,14 +1632,15 @@ public class Grid<T> extends ResizeComposite implements
             this.enabled = enabled;
         }
 
-        protected void show() {
+        protected void show(int rowIndex) {
             if (state == State.ACTIVATING) {
                 state = State.BINDING;
                 bindTimeout.schedule(BIND_TIMEOUT_MS);
                 EditorRequest<T> request = new EditorRequestImpl<T>(grid,
                         rowIndex, bindRequestCallback);
                 handler.bind(request);
-                grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
+                grid.getEscalator().setScrollLocked(Direction.VERTICAL,
+                        isBuffered());
                 updateSelectionCheckboxesAsNeeded(false);
             }
         }
@@ -1463,15 +1650,6 @@ public class Grid<T> extends ResizeComposite implements
             assert this.grid == null : "Can only attach editor to Grid once";
 
             this.grid = grid;
-
-            grid.addDataAvailableHandler(new DataAvailableHandler() {
-                @Override
-                public void onDataAvailable(DataAvailableEvent event) {
-                    if (event.getAvailableRows().contains(rowIndex)) {
-                        show();
-                    }
-                }
-            });
         }
 
         protected State getState() {
@@ -1516,6 +1694,8 @@ public class Grid<T> extends ResizeComposite implements
          * @since 7.5
          */
         protected void showOverlay() {
+            // Ensure overlay is hidden initially
+            hideOverlay();
 
             DivElement gridElement = DivElement.as(grid.getElement());
 
@@ -1526,19 +1706,38 @@ public class Grid<T> extends ResizeComposite implements
                 @Override
                 public void onScroll(ScrollEvent event) {
                     updateHorizontalScrollPosition();
+                    if (!isBuffered()) {
+                        updateVerticalScrollPosition();
+                    }
                 }
             });
 
             gridElement.appendChild(editorOverlay);
+            editorOverlay.appendChild(frozenCellWrapper);
             editorOverlay.appendChild(cellWrapper);
             editorOverlay.appendChild(messageAndButtonsWrapper);
 
+            int frozenColumns = grid.getVisibleFrozenColumnCount();
+            double frozenColumnsWidth = 0;
+            double cellHeight = 0;
+
             for (int i = 0; i < tr.getCells().getLength(); i++) {
                 Element cell = createCell(tr.getCells().getItem(i));
-
-                cellWrapper.appendChild(cell);
+                cellHeight = Math.max(cellHeight, WidgetUtil
+                        .getRequiredHeightBoundingClientRectDouble(tr
+                                .getCells().getItem(i)));
 
                 Column<?, T> column = grid.getVisibleColumn(i);
+
+                if (i < frozenColumns) {
+                    frozenCellWrapper.appendChild(cell);
+                    frozenColumnsWidth += WidgetUtil
+                            .getRequiredWidthBoundingClientRectDouble(tr
+                                    .getCells().getItem(i));
+                } else {
+                    cellWrapper.appendChild(cell);
+                }
+
                 if (column.isEditable()) {
                     Widget editor = getHandler().getWidget(column);
 
@@ -1547,7 +1746,28 @@ public class Grid<T> extends ResizeComposite implements
                         attachWidget(editor, cell);
                     }
 
-                    if (i == columnIndex) {
+                    final int currentColumnIndex = i;
+                    if (editor instanceof HasFocusHandlers) {
+                        // Use a proper focus handler if available
+                        focusHandlers.add(((HasFocusHandlers) editor)
+                                .addFocusHandler(new FocusHandler() {
+                                    @Override
+                                    public void onFocus(FocusEvent event) {
+                                        focusedColumnIndex = currentColumnIndex;
+                                    }
+                                }));
+                    } else {
+                        // Try sniffing for DOM focus events
+                        focusHandlers.add(editor.addDomHandler(
+                                new FocusHandler() {
+                                    @Override
+                                    public void onFocus(FocusEvent event) {
+                                        focusedColumnIndex = currentColumnIndex;
+                                    }
+                                }, FocusEvent.getType()));
+                    }
+
+                    if (i == focusedColumnIndex) {
                         if (editor instanceof Focusable) {
                             ((Focusable) editor).focus();
                         } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
@@ -1557,8 +1777,57 @@ public class Grid<T> extends ResizeComposite implements
                     }
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
+                    cell.addClassName(tr.getCells().getItem(i).getClassName());
+                    // If the focused or frozen stylename is present it should
+                    // not be inherited by the editor cell as it is not useful
+                    // in the editor and would look broken without additional
+                    // style rules. This is a bit of a hack.
+                    cell.removeClassName(grid.cellFocusStyleName);
+                    cell.removeClassName("frozen");
+
+                    if (column == grid.selectionColumn) {
+                        // Duplicate selection column CheckBox
+
+                        pinnedRowHandle = grid.getDataSource().getHandle(
+                                grid.getDataSource().getRow(rowIndex));
+                        pinnedRowHandle.pin();
+
+                        // We need to duplicate the selection CheckBox for the
+                        // editor overlay since the original one is hidden by
+                        // the overlay
+                        final CheckBox checkBox = GWT.create(CheckBox.class);
+                        checkBox.setValue(grid.isSelected(pinnedRowHandle
+                                .getRow()));
+                        checkBox.sinkEvents(Event.ONCLICK);
+
+                        checkBox.addClickHandler(new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                T row = pinnedRowHandle.getRow();
+                                if (grid.isSelected(row)) {
+                                    grid.deselect(row);
+                                } else {
+                                    grid.select(row);
+                                }
+                            }
+                        });
+                        attachWidget(checkBox, cell);
+                        columnToWidget.put(column, checkBox);
+
+                        // Only enable CheckBox in non-buffered mode
+                        checkBox.setEnabled(!isBuffered());
+
+                    } else if (!(column.getRenderer() instanceof WidgetRenderer)) {
+                        // Copy non-widget content directly
+                        cell.setInnerHTML(tr.getCells().getItem(i)
+                                .getInnerHTML());
+                    }
                 }
             }
+
+            setBounds(frozenCellWrapper, 0, 0, frozenColumnsWidth, 0);
+            setBounds(cellWrapper, frozenColumnsWidth, 0, tr.getOffsetWidth()
+                    - frozenColumnsWidth, cellHeight);
 
             // Only add these elements once
             if (!messageAndButtonsWrapper.isOrHasChild(messageWrapper)) {
@@ -1566,8 +1835,12 @@ public class Grid<T> extends ResizeComposite implements
                 messageAndButtonsWrapper.appendChild(buttonsWrapper);
             }
 
-            attachWidget(saveButton, buttonsWrapper);
-            attachWidget(cancelButton, buttonsWrapper);
+            if (isBuffered()) {
+                attachWidget(saveButton, buttonsWrapper);
+                attachWidget(cancelButton, buttonsWrapper);
+            }
+
+            setMessageAndButtonsWrapperVisible(isBuffered());
 
             updateHorizontalScrollPosition();
 
@@ -1579,9 +1852,11 @@ public class Grid<T> extends ResizeComposite implements
             int gridTop = gridElement.getAbsoluteTop();
             double overlayTop = rowTop + bodyTop - gridTop;
 
-            if (buttonsShouldBeRenderedBelow(tr)) {
+            originalScrollTop = grid.getScrollTop();
+            if (!isBuffered() || buttonsShouldBeRenderedBelow(tr)) {
                 // Default case, editor buttons are below the edited row
                 editorOverlay.getStyle().setTop(overlayTop, Unit.PX);
+                originalTop = overlayTop;
                 editorOverlay.getStyle().clearBottom();
             } else {
                 // Move message and buttons wrapper on top of cell wrapper if
@@ -1614,6 +1889,20 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         protected void hideOverlay() {
+            if (editorOverlay.getParentElement() == null) {
+                return;
+            }
+
+            if (pinnedRowHandle != null) {
+                pinnedRowHandle.unpin();
+                pinnedRowHandle = null;
+            }
+
+            for (HandlerRegistration r : focusHandlers) {
+                r.removeHandler();
+            }
+            focusHandlers.clear();
+
             for (Widget w : columnToWidget.values()) {
                 setParent(w, null);
             }
@@ -1624,11 +1913,16 @@ public class Grid<T> extends ResizeComposite implements
 
             editorOverlay.removeAllChildren();
             cellWrapper.removeAllChildren();
+            frozenCellWrapper.removeAllChildren();
             editorOverlay.removeFromParent();
 
             scrollHandler.removeHandler();
 
             clearEditorColumnErrors();
+
+            if (focusedColumnIndex != -1) {
+                grid.focusCell(rowIndex, focusedColumnIndex);
+            }
         }
 
         protected void setStylePrimaryName(String primaryName) {
@@ -1636,6 +1930,7 @@ public class Grid<T> extends ResizeComposite implements
                 editorOverlay.removeClassName(styleName);
 
                 cellWrapper.removeClassName(styleName + "-cells");
+                frozenCellWrapper.removeClassName(styleName + "-cells");
                 messageAndButtonsWrapper.removeClassName(styleName + "-footer");
 
                 messageWrapper.removeClassName(styleName + "-message");
@@ -1648,6 +1943,7 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.setClassName(styleName);
 
             cellWrapper.setClassName(styleName + "-cells");
+            frozenCellWrapper.setClassName(styleName + "-cells frozen");
             messageAndButtonsWrapper.setClassName(styleName + "-footer");
 
             messageWrapper.setClassName(styleName + "-message");
@@ -1698,7 +1994,37 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
-            cellWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
+            cellWrapper.getStyle().setLeft(
+                    frozenCellWrapper.getOffsetWidth() - scrollLeft, Unit.PX);
+        }
+
+        /**
+         * Moves the editor overlay on scroll so that it stays on top of the
+         * edited row. This will also snap the editor to top or bottom of the
+         * row container if the edited row is scrolled out of the visible area.
+         */
+        private void updateVerticalScrollPosition() {
+            double newScrollTop = grid.getScrollTop();
+
+            int gridTop = grid.getElement().getAbsoluteTop();
+            int editorHeight = editorOverlay.getOffsetHeight();
+
+            Escalator escalator = grid.getEscalator();
+            TableSectionElement header = escalator.getHeader().getElement();
+            int footerTop = escalator.getFooter().getElement().getAbsoluteTop();
+            int headerBottom = header.getAbsoluteBottom();
+
+            double newTop = originalTop - (newScrollTop - originalScrollTop);
+
+            if (newTop + gridTop < headerBottom) {
+                // Snap editor to top of the row container
+                newTop = header.getOffsetHeight();
+            } else if (newTop + gridTop > footerTop - editorHeight) {
+                // Snap editor to the bottom of the row container
+                newTop = footerTop - editorHeight - gridTop;
+            }
+
+            editorOverlay.getStyle().setTop(newTop, Unit.PX);
         }
 
         protected void setGridEnabled(boolean enabled) {
@@ -1776,6 +2102,44 @@ public class Grid<T> extends ResizeComposite implements
 
         public boolean isEditorColumnError(Column<?, T> column) {
             return columnErrors.contains(column);
+        }
+
+        public void setBuffered(boolean buffered) {
+            this.buffered = buffered;
+            setMessageAndButtonsWrapperVisible(buffered);
+        }
+
+        public boolean isBuffered() {
+            return buffered;
+        }
+
+        private void setMessageAndButtonsWrapperVisible(boolean visible) {
+            if (visible) {
+                messageAndButtonsWrapper.getStyle().clearDisplay();
+            } else {
+                messageAndButtonsWrapper.getStyle().setDisplay(Display.NONE);
+            }
+        }
+
+        /**
+         * Sets the event handler for this Editor.
+         * 
+         * @since
+         * @param handler
+         *            the new event handler
+         */
+        public void setEventHandler(EventHandler<T> handler) {
+            eventHandler = handler;
+        }
+
+        /**
+         * Returns the event handler of this Editor.
+         * 
+         * @since
+         * @return the current event handler
+         */
+        public EventHandler<T> getEventHandler() {
+            return eventHandler;
         }
     }
 
@@ -2351,6 +2715,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean initDone = false;
         private boolean selected = false;
+        private CheckBox selectAllCheckBox;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2375,41 +2740,57 @@ public class Grid<T> extends ResizeComposite implements
              * exist.
              */
             final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
-            final CheckBox checkBox = GWT.create(CheckBox.class);
-            checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-                @Override
-                public void onValueChange(ValueChangeEvent<Boolean> event) {
-                    if (event.getValue()) {
-                        fireEvent(new SelectAllEvent<T>(model));
-                        selected = true;
-                    } else {
-                        model.deselectAll();
-                        selected = false;
+            if (selectAllCheckBox == null) {
+                selectAllCheckBox = GWT.create(CheckBox.class);
+                selectAllCheckBox.setStylePrimaryName(getStylePrimaryName()
+                        + SELECT_ALL_CHECKBOX_CLASSNAME);
+                selectAllCheckBox
+                        .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                            @Override
+                            public void onValueChange(
+                                    ValueChangeEvent<Boolean> event) {
+                                if (event.getValue()) {
+                                    fireEvent(new SelectAllEvent<T>(model));
+                                    selected = true;
+                                } else {
+                                    model.deselectAll();
+                                    selected = false;
+                                }
+                            }
+                        });
+                selectAllCheckBox.setValue(selected);
+
+                // Select all with space when "select all" cell is active
+                addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
+                    @Override
+                    public void onKeyUp(GridKeyUpEvent event) {
+                        if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+                            return;
+                        }
+                        HeaderRow targetHeaderRow = getHeader().getRow(
+                                event.getFocusedCell().getRowIndex());
+                        if (!targetHeaderRow.isDefault()) {
+                            return;
+                        }
+                        if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
+                            // Send events to ensure state is updated
+                            selectAllCheckBox.setValue(
+                                    !selectAllCheckBox.getValue(), true);
+                        }
+                    }
+                });
+            } else {
+                for (HeaderRow row : header.getRows()) {
+                    if (row.getCell(this).getType() == GridStaticCellType.WIDGET) {
+                        // Detach from old header.
+                        row.getCell(this).setText("");
                     }
                 }
-            });
-            checkBox.setValue(selected);
-            selectionCell.setWidget(checkBox);
-            // Select all with space when "select all" cell is active
-            addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
-                @Override
-                public void onKeyUp(GridKeyUpEvent event) {
-                    if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
-                        return;
-                    }
-                    HeaderRow targetHeaderRow = getHeader().getRow(
-                            event.getFocusedCell().getRowIndex());
-                    if (!targetHeaderRow.isDefault()) {
-                        return;
-                    }
-                    if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
-                        // Send events to ensure row selection state is
-                        // updated
-                        checkBox.setValue(!checkBox.getValue(), true);
-                    }
-                }
-            });
+            }
+
+            selectionCell.setWidget(selectAllCheckBox);
         }
 
         @Override
@@ -2471,7 +2852,6 @@ public class Grid<T> extends ResizeComposite implements
             super.setEditable(editable);
             return this;
         }
-
     }
 
     /**
@@ -2736,7 +3116,9 @@ public class Grid<T> extends ResizeComposite implements
             for (Column<?, T> column : visibleColumns) {
                 final double widthAsIs = column.getWidth();
                 final boolean isFixedWidth = widthAsIs >= 0;
-                final double widthFixed = Math.max(widthAsIs,
+                // Check for max width just to be sure we don't break the limits
+                final double widthFixed = Math.max(
+                        Math.min(getMaxWidth(column), widthAsIs),
                         column.getMinimumWidth());
                 defaultExpandRatios = defaultExpandRatios
                         && (column.getExpandRatio() == -1 || column == selectionColumn);
@@ -2755,8 +3137,9 @@ public class Grid<T> extends ResizeComposite implements
             for (Column<?, T> column : nonFixedColumns) {
                 final int expandRatio = (defaultExpandRatios ? 1 : column
                         .getExpandRatio());
-                final double newWidth = column.getWidthActual();
                 final double maxWidth = getMaxWidth(column);
+                final double newWidth = Math.min(maxWidth,
+                        column.getWidthActual());
                 boolean shouldExpand = newWidth < maxWidth && expandRatio > 0
                         && column != selectionColumn;
                 if (shouldExpand) {
@@ -2775,6 +3158,10 @@ public class Grid<T> extends ResizeComposite implements
             double pixelsToDistribute = escalator.getInnerWidth()
                     - reservedPixels;
             if (pixelsToDistribute <= 0 || totalRatios <= 0) {
+                if (pixelsToDistribute <= 0) {
+                    // Set column sizes for expanding columns
+                    setColumnSizes(columnSizes);
+                }
                 return;
             }
 
@@ -3222,7 +3609,6 @@ public class Grid<T> extends ResizeComposite implements
                 clickOutsideToCloseHandlerRegistration = Event
                         .addNativePreviewHandler(clickOutsideToCloseHandler);
             }
-            openCloseButton.setHeight("");
         }
 
         /**
@@ -3249,46 +3635,6 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isOpen() {
             return content.getParent() == rootContainer;
-        }
-
-        /**
-         * Adds or moves the given widget to the end of the sidebar.
-         * 
-         * @param widget
-         *            the widget to add or move
-         */
-        public void add(Widget widget) {
-            content.add(widget);
-            updateVisibility();
-        }
-
-        /**
-         * Removes the given widget from the sidebar.
-         * 
-         * @param widget
-         *            the widget to remove
-         */
-        public void remove(Widget widget) {
-            content.remove(widget);
-            // updateVisibility is called by remove listener
-        }
-
-        /**
-         * Inserts given widget to the given index inside the sidebar. If the
-         * widget is already in the sidebar, then it is moved to the new index.
-         * <p>
-         * See
-         * {@link FlowPanel#insert(com.google.gwt.user.client.ui.IsWidget, int)}
-         * for further details.
-         * 
-         * @param widget
-         *            the widget to insert
-         * @param beforeIndex
-         *            0-based index position for the widget.
-         */
-        public void insert(Widget widget, int beforeIndex) {
-            content.insert(widget, beforeIndex);
-            updateVisibility();
         }
 
         @Override
@@ -3536,10 +3882,6 @@ public class Grid<T> extends ResizeComposite implements
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
     private boolean enabled = true;
-    private double lastTouchEventTime = 0;
-    private int lastTouchEventX = -1;
-    private int lastTouchEventY = -1;
-    private int lastTouchEventRow = -1;
 
     private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
@@ -3725,8 +4067,8 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private boolean isSidebarOnDraggedRow() {
-            return eventCell.getRowIndex() == 0 && getSidebar().isInDOM()
-                    && !getSidebar().isOpen();
+            return eventCell.getRowIndex() == 0 && sidebar.isInDOM()
+                    && !sidebar.isOpen();
         }
 
         /**
@@ -3736,8 +4078,7 @@ public class Grid<T> extends ResizeComposite implements
         private double getSidebarBoundaryComparedTo(double left) {
             if (isSidebarOnDraggedRow()) {
                 double absoluteLeft = left + getElement().getAbsoluteLeft();
-                double sidebarLeft = getSidebar().getElement()
-                        .getAbsoluteLeft();
+                double sidebarLeft = sidebar.getElement().getAbsoluteLeft();
                 double diff = absoluteLeft - sidebarLeft;
 
                 if (diff > 0) {
@@ -4234,6 +4575,16 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             return this;
+        }
+
+        /**
+         * Returns the current header caption for this column
+         * 
+         * @since
+         * @return the header caption string
+         */
+        public String getHeaderCaption() {
+            return headerCaption;
         }
 
         private void updateHeader() {
@@ -4937,7 +5288,7 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
             for (FlyweightCell cell : cellsToDetach) {
-                Renderer renderer = findRenderer(cell);
+                Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(cell.getElement()
@@ -4967,7 +5318,7 @@ public class Grid<T> extends ResizeComposite implements
             // any more
             rowReference.set(rowIndex, null, row.getElement());
             for (FlyweightCell cell : detachedCells) {
-                Renderer renderer = findRenderer(cell);
+                Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
                         Column<?, T> column = getVisibleColumn(cell.getColumn());
@@ -5211,7 +5562,7 @@ public class Grid<T> extends ResizeComposite implements
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
                 BrowserEvents.KEYPRESS, BrowserEvents.DBLCLICK,
-                BrowserEvents.MOUSEDOWN));
+                BrowserEvents.MOUSEDOWN, BrowserEvents.CLICK));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
         addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
@@ -5350,6 +5701,35 @@ public class Grid<T> extends ResizeComposite implements
         if (rows.getRowCount() > 0) {
             rows.refreshRows(0, rows.getRowCount());
         }
+    }
+
+    /**
+     * Try to focus a cell by row and column index. Purely internal method.
+     * 
+     * @param rowIndex
+     *            row index from Editor
+     * @param columnIndex
+     *            column index from Editor
+     */
+    void focusCell(int rowIndex, int columnIndex) {
+        RowReference<T> row = new RowReference<T>(this);
+        Range visibleRows = escalator.getVisibleRowRange();
+
+        TableRowElement rowElement;
+        if (visibleRows.contains(rowIndex)) {
+            rowElement = escalator.getBody().getRowElement(rowIndex);
+        } else {
+            getLogger().warning("Row index was not among visible row range");
+            return;
+        }
+        row.set(rowIndex, dataSource.getRow(rowIndex), rowElement);
+
+        CellReference<T> cell = new CellReference<T>(row);
+        cell.set(columnIndex, columnIndex, getVisibleColumn(columnIndex));
+
+        cellFocusHandler.setCellFocus(cell);
+
+        WidgetUtil.focus(getElement());
     }
 
     /**
@@ -5883,8 +6263,21 @@ public class Grid<T> extends ResizeComposite implements
         return footer.isVisible();
     }
 
-    protected Editor<T> getEditor() {
+    public Editor<T> getEditor() {
         return editor;
+    }
+
+    /**
+     * Add handler for editor open/move/close events
+     * 
+     * @param handler
+     *            editor handler object
+     * @return a {@link HandlerRegistration} object that can be used to remove
+     *         the event handler
+     */
+    public HandlerRegistration addEditorEventHandler(EditorEventHandler handler) {
+        return addHandler(handler, EditorEvent.TYPE);
+
     }
 
     protected Escalator getEscalator() {
@@ -6051,7 +6444,12 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private void updateFrozenColumns() {
-        int numberOfColumns = frozenColumnCount;
+        escalator.getColumnConfiguration().setFrozenColumnCount(
+                getVisibleFrozenColumnCount());
+    }
+
+    private int getVisibleFrozenColumnCount() {
+        int numberOfColumns = getFrozenColumnCount();
 
         // for the escalator the hidden columns are not in the frozen column
         // count, but for grid they are. thus need to convert the index
@@ -6066,9 +6464,7 @@ public class Grid<T> extends ResizeComposite implements
         } else if (selectionColumn != null) {
             numberOfColumns++;
         }
-
-        escalator.getColumnConfiguration()
-                .setFrozenColumnCount(numberOfColumns);
+        return numberOfColumns;
     }
 
     /**
@@ -6347,6 +6743,14 @@ public class Grid<T> extends ResizeComposite implements
             return;
         }
 
+        String eventType = event.getType();
+
+        if (eventType.equals(BrowserEvents.FOCUS)
+                || eventType.equals(BrowserEvents.BLUR)) {
+            super.onBrowserEvent(event);
+            return;
+        }
+
         EventTarget target = event.getEventTarget();
 
         if (!Element.is(target) || isOrContainsInSpacer(Element.as(target))) {
@@ -6357,7 +6761,6 @@ public class Grid<T> extends ResizeComposite implements
         RowContainer container = escalator.findRowContainer(e);
         Cell cell;
 
-        String eventType = event.getType();
         if (container == null) {
             if (eventType.equals(BrowserEvents.KEYDOWN)
                     || eventType.equals(BrowserEvents.KEYUP)
@@ -6387,7 +6790,7 @@ public class Grid<T> extends ResizeComposite implements
         eventCell.set(cell, getSectionFromContainer(container));
 
         // Editor can steal focus from Grid and is still handled
-        if (handleEditorEvent(event, container)) {
+        if (isEditorEnabled() && handleEditorEvent(event, container)) {
             return;
         }
 
@@ -6465,50 +6868,8 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
-
-        final boolean closeEvent = event.getTypeInt() == Event.ONKEYDOWN
-                && event.getKeyCode() == Editor.KEYCODE_HIDE;
-
-        double now = Duration.currentTimeMillis();
-        int currentX = WidgetUtil.getTouchOrMouseClientX(event);
-        int currentY = WidgetUtil.getTouchOrMouseClientY(event);
-
-        final boolean validTouchOpenEvent = event.getTypeInt() == Event.ONTOUCHEND
-                && now - lastTouchEventTime < 500
-                && lastTouchEventRow == eventCell.getRowIndex()
-                && Math.abs(lastTouchEventX - currentX) < 20
-                && Math.abs(lastTouchEventY - currentY) < 20;
-
-        final boolean openEvent = event.getTypeInt() == Event.ONDBLCLICK
-                || (event.getTypeInt() == Event.ONKEYDOWN && event.getKeyCode() == Editor.KEYCODE_SHOW)
-                || validTouchOpenEvent;
-
-        if (event.getTypeInt() == Event.ONTOUCHSTART) {
-            lastTouchEventX = currentX;
-            lastTouchEventY = currentY;
-        }
-
-        if (event.getTypeInt() == Event.ONTOUCHEND) {
-            lastTouchEventTime = now;
-            lastTouchEventRow = eventCell.getRowIndex();
-        }
-
-        if (editor.getState() != Editor.State.INACTIVE) {
-            if (closeEvent) {
-                editor.cancel();
-                FocusUtil.setFocus(this, true);
-            }
-            return true;
-        }
-
-        if (container == escalator.getBody() && editor.isEnabled() && openEvent) {
-            editor.editRow(eventCell.getRowIndex(),
-                    eventCell.getColumnIndexDOM());
-            event.preventDefault();
-            return true;
-        }
-
-        return false;
+        return getEditor().getEventHandler().handleEvent(
+                new EditorDomEvent<T>(event, getEventCell()));
     }
 
     private boolean handleRendererEvent(Event event, RowContainer container) {
@@ -6703,11 +7064,21 @@ public class Grid<T> extends ResizeComposite implements
 
         if (args.getIndicesLength() == 0) {
             return editor.editorOverlay;
-        } else if (args.getIndicesLength() == 1
-                && args.getIndex(0) < columns.size()) {
-            escalator
-                    .scrollToColumn(args.getIndex(0), ScrollDestination.ANY, 0);
-            return editor.getWidget(columns.get(args.getIndex(0))).getElement();
+        } else if (args.getIndicesLength() == 1) {
+            int index = args.getIndex(0);
+            if (index >= columns.size()) {
+                return null;
+            }
+
+            escalator.scrollToColumn(index, ScrollDestination.ANY, 0);
+            Widget widget = editor.getWidget(columns.get(index));
+
+            if (widget != null) {
+                return widget.getElement();
+            }
+
+            // No widget for the column.
+            return null;
         }
 
         return null;
@@ -6863,12 +7234,12 @@ public class Grid<T> extends ResizeComposite implements
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    @SuppressWarnings("unchecked")
     public boolean select(T row) {
         if (selectionModel instanceof SelectionModel.Single<?>) {
             return ((SelectionModel.Single<T>) selectionModel).select(row);
         } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel).select(row);
+            return ((SelectionModel.Multi<T>) selectionModel)
+                    .select(Collections.singleton(row));
         } else {
             throw new IllegalStateException("Unsupported selection model");
         }
@@ -6888,12 +7259,12 @@ public class Grid<T> extends ResizeComposite implements
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    @SuppressWarnings("unchecked")
     public boolean deselect(T row) {
         if (selectionModel instanceof SelectionModel.Single<?>) {
             return ((SelectionModel.Single<T>) selectionModel).deselect(row);
         } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel).deselect(row);
+            return ((SelectionModel.Multi<T>) selectionModel)
+                    .deselect(Collections.singleton(row));
         } else {
             throw new IllegalStateException("Unsupported selection model");
         }
@@ -7670,6 +8041,12 @@ public class Grid<T> extends ResizeComposite implements
                 if (escalator.getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
                     recalculateColumnWidths();
                 }
+
+                // Vertical resizing could make editor positioning invalid so it
+                // needs to be recalculated on resize
+                if (isEditorActive()) {
+                    editor.updateVerticalScrollPosition();
+                }
             }
         });
     }
@@ -7775,15 +8152,15 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     protected void doAttachChildren() {
-        if (getSidebar().getParent() == this) {
-            onAttach(getSidebar());
+        if (sidebar.getParent() == this) {
+            onAttach(sidebar);
         }
     }
 
     @Override
     protected void doDetachChildren() {
-        if (getSidebar().getParent() == this) {
-            onDetach(getSidebar());
+        if (sidebar.getParent() == this) {
+            onDetach(sidebar);
         }
     }
 
@@ -7813,6 +8190,10 @@ public class Grid<T> extends ResizeComposite implements
         if (detailsGenerator == null) {
             throw new IllegalArgumentException(
                     "Details generator may not be null");
+        }
+
+        for (Integer index : visibleDetails) {
+            setDetailsVisible(index, false);
         }
 
         this.detailsGenerator = detailsGenerator;
@@ -7846,6 +8227,10 @@ public class Grid<T> extends ResizeComposite implements
      * @see #isDetailsVisible(int)
      */
     public void setDetailsVisible(int rowIndex, boolean visible) {
+        if (DetailsGenerator.NULL.equals(detailsGenerator)) {
+            return;
+        }
+
         Integer rowIndexInteger = Integer.valueOf(rowIndex);
 
         /*
@@ -7904,19 +8289,6 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Returns the sidebar for this grid.
-     * <p>
-     * The grid's sidebar shows the column hiding options for those columns that
-     * have been set as {@link Column#setHidable(boolean) hidable}.
-     * 
-     * @since 7.5.0
-     * @return the sidebar widget for this grid
-     */
-    private Sidebar getSidebar() {
-        return sidebar;
-    }
-
-    /**
      * Gets the customizable menu bar that is by default used for toggling
      * column hidability. The application developer is allowed to add their
      * custom items to the end of the menu, but should try to avoid modifying
@@ -7962,6 +8334,54 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    @Override
+    public int getTabIndex() {
+        return FocusUtil.getTabIndex(this);
+    }
+
+    @Override
+    public void setAccessKey(char key) {
+        FocusUtil.setAccessKey(this, key);
+    }
+
+    @Override
+    public void setFocus(boolean focused) {
+        FocusUtil.setFocus(this, focused);
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        FocusUtil.setTabIndex(this, index);
+    }
+
+    @Override
+    public void focus() {
+        setFocus(true);
+    }
+
+    /**
+     * Sets the buffered editor mode.
+     * 
+     * @since 7.6
+     * @param editorUnbuffered
+     *            <code>true</code> to enable buffered editor,
+     *            <code>false</code> to disable it
+     */
+    public void setEditorBuffered(boolean editorBuffered) {
+        editor.setBuffered(editorBuffered);
+    }
+
+    /**
+     * Gets the buffered editor mode.
+     * 
+     * @since 7.6
+     * @return <code>true</code> if buffered editor is enabled,
+     *         <code>false</code> otherwise
+     */
+    public boolean isEditorBuffered() {
+        return editor.isBuffered();
+    }
+
     /**
      * Returns the {@link EventCellReference} for the latest event fired from
      * this Grid.
@@ -7973,5 +8393,27 @@ public class Grid<T> extends ResizeComposite implements
      */
     public EventCellReference<T> getEventCell() {
         return eventCell;
+    }
+
+    /**
+     * Returns a CellReference for the cell to which the given element belongs
+     * to.
+     * 
+     * @since 7.6
+     * @param element
+     *            Element to find from the cell's content.
+     * @return CellReference or <code>null</code> if cell was not found.
+     */
+    public CellReference<T> getCellReference(Element element) {
+        RowContainer container = getEscalator().findRowContainer(element);
+        if (container != null) {
+            Cell cell = container.getCell(element);
+            if (cell != null) {
+                EventCellReference<T> cellRef = new EventCellReference<T>(this);
+                cellRef.set(cell, getSectionFromContainer(container));
+                return cellRef;
+            }
+        }
+        return null;
     }
 }

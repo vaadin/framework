@@ -58,11 +58,11 @@ public abstract class BasicPushTest extends MultiBrowserTest {
         return Integer.parseInt(clientCounterElem.getText());
     }
 
-    private WebElement getIncrementButton() {
+    protected WebElement getIncrementButton() {
         return getIncrementButton(this);
     }
 
-    private WebElement getServerCounterStartButton() {
+    protected WebElement getServerCounterStartButton() {
         return getServerCounterStartButton(this);
     }
 
@@ -84,7 +84,7 @@ public abstract class BasicPushTest extends MultiBrowserTest {
         return t.findElement(By.id(BasicPush.INCREMENT_BUTTON_ID));
     }
 
-    private void waitUntilClientCounterChanges(final int expectedValue) {
+    protected void waitUntilClientCounterChanges(final int expectedValue) {
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override
@@ -94,7 +94,7 @@ public abstract class BasicPushTest extends MultiBrowserTest {
         }, 10);
     }
 
-    private void waitUntilServerCounterChanges() {
+    protected void waitUntilServerCounterChanges() {
         final int counter = BasicPushTest.getServerCounter(this);
         waitUntil(new ExpectedCondition<Boolean>() {
 

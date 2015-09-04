@@ -24,17 +24,18 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class PopupViews extends VerticalLayout implements View {
     public PopupViews() {
         setMargin(true);
 
         Label h1 = new Label("Popup Views");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         addComponent(row);
 

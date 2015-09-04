@@ -1,9 +1,5 @@
 @mixin base-checkbox($primaryStyleName : v-checkbox) {
 
- .#{$primaryStyleName} {
- 	display: block;
- }
-
 .#{$primaryStyleName},
 .#{$primaryStyleName} label,
 .#{$primaryStyleName} input,

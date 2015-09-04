@@ -128,6 +128,16 @@
         <async-supported>true</async-supported>
     </servlet>
 
+    <servlet>
+        <servlet-name>VaadinApplicationRunnerWithPushTimeout</servlet-name>
+        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+        <init-param>
+            <param-name>pushLongPollingSuspendTimeout</param-name>
+            <param-value>10000</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+
     <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
     <servlet>
         <servlet-name>IntegrationTest</servlet-name>
@@ -170,6 +180,11 @@
     <servlet-mapping>
         <servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
         <url-pattern>/run-push/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VaadinApplicationRunnerWithPushTimeout</servlet-name>
+        <url-pattern>/run-push-timeout/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

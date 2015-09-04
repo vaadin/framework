@@ -23,20 +23,21 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class SplitPanels extends VerticalLayout implements View {
     public SplitPanels() {
         setMargin(true);
 
         Label h1 = new Label("Split Panels");
-        h1.addStyleName("h1");
+        h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         addComponent(new Label(
                 "Outlines are just to show the areas of the SplitPanels. They are not part of the actual component style."));
 
         HorizontalLayout row = new HorizontalLayout();
-        row.addStyleName("wrapping");
+        row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         row.setSpacing(true);
         row.setMargin(new MarginInfo(true, false, false, false));
         addComponent(row);
@@ -61,7 +62,7 @@ public class SplitPanels extends VerticalLayout implements View {
         sp.setCaption("Large style");
         sp.setWidth("300px");
         sp.setHeight("200px");
-        sp.addStyleName("large");
+        sp.addStyleName(ValoTheme.SPLITPANEL_LARGE);
         sp.setFirstComponent(getContent());
         sp.setSecondComponent(getContent());
         row.addComponent(sp);
@@ -70,7 +71,7 @@ public class SplitPanels extends VerticalLayout implements View {
         sp2.setCaption("Large style");
         sp2.setWidth("300px");
         sp2.setHeight("200px");
-        sp2.addStyleName("large");
+        sp2.addStyleName(ValoTheme.SPLITPANEL_LARGE);
         sp2.setFirstComponent(getContent());
         sp2.setSecondComponent(getContent());
         row.addComponent(sp2);

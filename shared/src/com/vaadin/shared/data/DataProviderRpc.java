@@ -91,4 +91,16 @@ public interface DataProviderRpc extends ClientRpc {
      *            the size of the new data set
      */
     public void resetDataAndSize(int size);
+
+    /**
+     * Informs the client that rows have been updated. The client-side
+     * DataSource will map the given data to correct index if it should be in
+     * the cache.
+     * 
+     * @since 7.6
+     * @param rowArray
+     *            array of updated rows
+     */
+    @NoLayout
+    public void updateRowData(JsonArray rowArray);
 }

@@ -709,7 +709,7 @@ public class ValoTheme {
      * area is scrolled. Suitable with the {@link #PANEL_BORDERLESS} style. Can
      * be combined with any other Panel style.
      */
-    public static final String PANEL_SCROLL_INDICATOR = "scroll-indicator";
+    public static final String PANEL_SCROLL_INDICATOR = "scroll-divider";
 
     /**
      * Inset panel style. Can be combined with any other Panel style.

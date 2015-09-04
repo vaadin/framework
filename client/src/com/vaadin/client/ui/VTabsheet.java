@@ -61,11 +61,12 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
@@ -1227,8 +1228,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     public void updateContentNodeHeight() {
         if (!isDynamicHeight()) {
             int contentHeight = getOffsetHeight();
-            contentHeight -= DOM.getElementPropertyInt(deco, "offsetHeight");
+            contentHeight -= deco.getOffsetHeight();
             contentHeight -= tb.getOffsetHeight();
+
+            ComputedStyle cs = new ComputedStyle(contentNode);
+            contentHeight -= Math.ceil(cs.getPaddingHeight());
+            contentHeight -= Math.ceil(cs.getBorderHeight());
+
             if (contentHeight < 0) {
                 contentHeight = 0;
             }

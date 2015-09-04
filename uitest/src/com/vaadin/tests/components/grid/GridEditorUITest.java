@@ -45,7 +45,7 @@ public class GridEditorUITest extends MultiBrowserTest {
 
         openEditor(10);
 
-        assertTrue("Edtor should be opened with a password field",
+        assertTrue("Editor should be opened with a password field",
                 isElementPresent(PasswordFieldElement.class));
 
         assertFalse("Notification was present",
