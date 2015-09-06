@@ -291,7 +291,7 @@ $v-table-background-color: null !default;
     border-top: $v-table-border-width solid $border-color;
   }
 
-  .#{$primary-stylename}-table tr:first-child td {
+  .#{$primary-stylename}-table tr:first-child > td {
     border-top: none;
   }
 
