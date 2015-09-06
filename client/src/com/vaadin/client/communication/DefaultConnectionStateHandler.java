@@ -522,6 +522,9 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
         reconnectionCause = null;
         reconnectAttempt = 0;
+        // IF reconnect happens during grace period, make sure the dialog is not
+        // shown and does not popup later
+        stopDialogTimer();
         hideDialog();
 
         getLogger().info("Re-established connection to server");
