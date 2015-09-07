@@ -43,18 +43,6 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
         Assert.assertEquals("2. Hello from the server", getLogRow(0));
     }
 
-    @Test
-    public void gaveUpMessageShown() {
-        openTestURL("reconnectAttempts=3");
-        getButton().click();
-        Assert.assertEquals("1. Hello from the server", getLogRow(0));
-
-        disconnectProxy();
-        getButton().click();
-
-        waitForReconnectDialogWithText("Server connection lost.");
-    }
-
     private void waitForReconnectDialogWithText(final String text) {
         waitForReconnectDialogPresent();
         final WebElement reconnectDialog = findElement(ReconnectDialogThemeTest.reconnectDialogBy);

@@ -80,6 +80,46 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
 
     }
 
+    @Test
+    public void gaveUpTheme() throws IOException {
+        openTestURL("reconnectAttempts=3");
+
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                try {
+                    return $(ButtonElement.class).first() != null;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        });
+
+        disconnectProxy();
+        $(ButtonElement.class).first().click();
+
+        waitForReconnectDialogWithText("Server connection lost.");
+        compareScreen("gaveupdialog");
+
+    }
+
+    private void waitForReconnectDialogWithText(final String text) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                try {
+                    final WebElement reconnectDialog = findElement(ReconnectDialogThemeTest.reconnectDialogBy);
+                    return reconnectDialog.findElement(By.className("text"))
+                            .getText().equals(text);
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        }, 10);
+
+    }
+
     private void assertHasManyColors(String message, BufferedImage spinnerImage) {
         int backgroundColor = spinnerImage.getRGB(0, 0);
         for (int x = 0; x < spinnerImage.getWidth(); x++) {

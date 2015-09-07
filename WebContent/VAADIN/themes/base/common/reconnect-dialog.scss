@@ -20,13 +20,12 @@
         background-image: url(img/reconnect-spinner.gif);
         width: 31px;
         height: 31px;
-        display: inline-block;
-        visibility: hidden;
+        display: none;
         vertical-align: middle;
     }
 
     &.active .spinner {
-        visibility: visible;
+        display: inline-block;
     }
   }
 }
