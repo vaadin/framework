@@ -26,5 +26,5 @@ import com.vaadin.shared.communication.SharedState;
 public class SingleSelectionModelState extends SharedState {
 
     /* Allow deselecting rows */
-    public boolean deselectAllowed;
+    public boolean deselectAllowed = true;
 }
