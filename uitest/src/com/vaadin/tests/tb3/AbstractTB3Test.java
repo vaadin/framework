@@ -1195,4 +1195,20 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return (WebElement) executeScript("return document.activeElement;");
 
     }
+
+    protected void waitForThemeToChange(final String theme) {
+
+        final WebElement rootDiv = findElement(By
+                .xpath("//div[contains(@class,'v-app')]"));
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                String rootClass = rootDiv.getAttribute("class").trim();
+
+                return rootClass.contains(theme);
+            }
+        }, 30);
+    }
+
 }

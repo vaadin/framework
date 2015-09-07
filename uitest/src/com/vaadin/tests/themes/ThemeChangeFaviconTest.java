@@ -21,10 +21,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.Browser;
@@ -55,18 +53,7 @@ public class ThemeChangeFaviconTest extends SingleBrowserTest {
 
     private void changeTheme(final String theme) {
         $(ButtonElement.class).caption(theme).first().click();
-
-        final WebElement rootDiv = findElement(By
-                .xpath("//div[contains(@class,'v-app')]"));
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                String rootClass = rootDiv.getAttribute("class").trim();
-
-                return rootClass.contains(theme);
-            }
-        }, 30);
+        waitForThemeToChange(theme);
     }
 
     private void assertFavicon(String theme) {
