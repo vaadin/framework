@@ -24,8 +24,10 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.jcraft.jsch.JSchException;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 
+@TestCategory("communication")
 public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     @Test
