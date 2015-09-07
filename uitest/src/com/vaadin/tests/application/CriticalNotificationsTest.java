@@ -24,6 +24,11 @@ import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 public class CriticalNotificationsTest extends MultiBrowserThemeTest {
 
+    @Override
+    protected boolean useNativeEventsForIE11() {
+        return false;
+    }
+
     @Test
     public void internalError() throws Exception {
         testCriticalNotification("Internal error");
