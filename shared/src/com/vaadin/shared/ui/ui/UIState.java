@@ -132,7 +132,7 @@ public class UIState extends TabIndexState {
         public int reconnectAttempts = 10000;
         public int reconnectInterval = 5000;
         public int dialogGracePeriod = 1000;
-        public boolean dialogModal = true;
+        public boolean dialogModal = false;
     }
 
     public static class LocaleServiceState implements Serializable {
