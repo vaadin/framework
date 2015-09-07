@@ -48,13 +48,7 @@ public class ResynchronizeUITest extends SingleBrowserTest {
         // Click causes repaint, after this the old button element should no
         // longer be available
         // Ensure that the theme has changed
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                WebElement app = input.findElement(By.className("v-app"));
-                return hasCssClass(app, "runo");
-            }
-        });
+        waitForThemeToChange("runo");
         try {
             button.click();
             Assert.fail("The old button element should have been removed by the click and replaced by a new one.");

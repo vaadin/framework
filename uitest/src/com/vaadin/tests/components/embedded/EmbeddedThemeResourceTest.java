@@ -80,12 +80,16 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
 
     @Test
     public void testUpdatedTheme() {
-        EmbeddedElement embedded = $(EmbeddedElement.class).first();
-        final ImageElement image = $(ImageElement.class).first();
-        final String initial = image.getAttribute("src");
+        final String initial = $(ImageElement.class).first()
+                .getAttribute("src");
 
         // update theme
         $(ButtonElement.class).first().click();
+        waitForThemeToChange("reindeer");
+
+        EmbeddedElement embedded = $(EmbeddedElement.class).first();
+        // Re fetch as theme change creates new elements
+        final ImageElement image = $(ImageElement.class).first();
 
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
@@ -107,4 +111,5 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
                 embedded.findElement(By.tagName("img")).getAttribute("src"),
                 is(image.getAttribute("src")));
     }
+
 }
