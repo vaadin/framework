@@ -425,6 +425,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     margin-top: nth($v-grid-cell-horizontal-border, 1) * -1;
     background: $v-grid-row-background-color;
     padding: 0 5px;
+    width: 100%;
 
     + .#{$primaryStyleName}-editor-cells > div {
       border-bottom: none;
