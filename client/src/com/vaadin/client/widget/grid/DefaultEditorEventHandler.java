@@ -18,6 +18,7 @@ package com.vaadin.client.widget.grid;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.widget.grid.events.EditorMoveEvent;
@@ -204,7 +205,28 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         // Limit colIndex between 0 and colCount - 1
         colIndex = Math.max(0, Math.min(colCount - 1, colIndex));
 
+        triggerValueChangeEvent(event);
+
         event.getEditor().editRow(rowIndex, colIndex);
+    }
+
+    /**
+     * Triggers a value change event from the editor field if it has focus. This
+     * is based on the assumption that editor field will fire the value change
+     * when a blur event occurs.
+     * 
+     * @param event
+     *            the editor DOM event
+     */
+    private void triggerValueChangeEvent(EditorDomEvent<T> event) {
+        // Force a blur to cause a value change event
+        Widget editorWidget = event.getEditorWidget();
+        if (editorWidget != null) {
+            if (editorWidget.getElement().isOrHasChild(
+                    WidgetUtil.getFocusedElement())) {
+                WidgetUtil.getFocusedElement().blur();
+            }
+        }
     }
 
     @Override

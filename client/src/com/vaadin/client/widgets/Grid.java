@@ -1176,8 +1176,12 @@ public class Grid<T> extends ResizeComposite implements
      */
     public static class EditorDomEvent<T> extends GridEvent<T> {
 
-        protected EditorDomEvent(Event event, EventCellReference<T> cell) {
+        private final Widget editorWidget;
+
+        protected EditorDomEvent(Event event, EventCellReference<T> cell,
+                Widget editorWidget) {
             super(event, cell);
+            this.editorWidget = editorWidget;
         }
 
         /**
@@ -1187,6 +1191,15 @@ public class Grid<T> extends ResizeComposite implements
          */
         public Editor<T> getEditor() {
             return getGrid().getEditor();
+        }
+
+        /**
+         * Returns the currently focused editor widget.
+         * 
+         * @return the focused editor widget or {@code null} if not editable
+         */
+        public Widget getEditorWidget() {
+            return editorWidget;
         }
 
         /**
@@ -3162,6 +3175,7 @@ public class Grid<T> extends ResizeComposite implements
                     // Set column sizes for expanding columns
                     setColumnSizes(columnSizes);
                 }
+
                 return;
             }
 
@@ -6869,7 +6883,8 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
         return getEditor().getEventHandler().handleEvent(
-                new EditorDomEvent<T>(event, getEventCell()));
+                new EditorDomEvent<T>(event, getEventCell(), editor
+                        .getWidget(eventCell.getColumn())));
     }
 
     private boolean handleRendererEvent(Event event, RowContainer container) {

@@ -26,6 +26,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
@@ -219,5 +220,26 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         getGridElement().getHeaderCell(0, 0).click();
 
         assertEditorClosed();
+    }
+
+    @Test
+    public void testEditorSaveOnRowChange() {
+        // Double click sets the focus programmatically
+        getGridElement().getCell(5, 2).doubleClick();
+
+        TestBenchElement editor = getGridElement().getEditor().getField(2);
+        editor.clear();
+        // Click to ensure IE focus...
+        editor.click(5, 5);
+        editor.sendKeys("Foo", Keys.ENTER);
+
+        assertEquals("Editor did not move.", "(6, 0)", getGridElement()
+                .getEditor().getField(0).getAttribute("value"));
+        assertEquals("Editor field value did not update from server.",
+                "(6, 2)", getGridElement().getEditor().getField(2)
+                        .getAttribute("value"));
+
+        assertEquals("Edited value was not saved.", "Foo", getGridElement()
+                .getCell(5, 2).getText());
     }
 }
