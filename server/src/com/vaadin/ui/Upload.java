@@ -121,6 +121,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
             public void change(String filename) {
                 fireEvent(new ChangeEvent(Upload.this, filename));
             }
+
+            @Override
+            public void poll() {
+                // Nothing to do, called only to visit the server
+            }
         });
     }
 

@@ -213,6 +213,17 @@ public class TB3TestLocator {
             return false;
         }
 
+        IncludeIfProperty includeIfProperty = c
+                .getAnnotation(IncludeIfProperty.class);
+        if (includeIfProperty != null) {
+            String includeValue = includeIfProperty.value();
+            String systemPropertyValue = System.getProperty(includeIfProperty
+                    .property());
+            if (!includeValue.equals(systemPropertyValue)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

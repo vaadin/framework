@@ -175,7 +175,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                         event.getWidth(), Window.getClientWidth(),
                         Window.getClientHeight());
                 if (getState().immediate || getPageState().hasResizeListeners) {
-                    getConnection().sendPendingVariableChanges();
+                    getConnection().getServerRpcQueue().flush();
                 }
             }
         });
@@ -770,8 +770,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {
-            getConnection().setPushEnabled(
+            getConnection().getMessageSender().setPushEnabled(
                     getState().pushConfiguration.mode.isEnabled());
+        }
+        if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
+            getConnection().getConnectionStateHandler().configurationUpdated();
         }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
@@ -797,13 +800,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     }
                     getRpcProxy(UIServerRpc.class).poll();
                     // Send changes even though poll is @Delayed
-                    getConnection().sendPendingVariableChanges();
+                    getConnection().getServerRpcQueue().flush();
                 }
             };
             pollTimer.scheduleRepeating(getState().pollInterval);
         } else {
             // Ensure no more polls are sent as polling has been disabled
-            getConnection().removePendingInvocations(
+            getConnection().getServerRpcQueue().removeMatching(
                     new MethodInvocation(getConnectorId(), UIServerRpc.class
                             .getName(), "poll"));
         }
@@ -1042,7 +1045,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         // Request a full resynchronization from the server to deal with legacy
         // components
-        getConnection().repaintAll();
+        getConnection().getMessageSender().resynchronize();
 
         // Immediately update state and do layout while waiting for the resync
         forceStateChangeRecursively(UIConnector.this);

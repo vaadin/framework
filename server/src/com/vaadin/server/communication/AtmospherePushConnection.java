@@ -165,7 +165,7 @@ public class AtmospherePushConnection implements PushConnection {
         } else {
             try {
                 Writer writer = new StringWriter();
-                new UidlWriter().write(getUI(), writer, false, async);
+                new UidlWriter().write(getUI(), writer, async);
                 sendMessage("for(;;);[{" + writer.toString() + "}]");
             } catch (Exception e) {
                 throw new RuntimeException("Push failed", e);

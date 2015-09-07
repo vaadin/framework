@@ -30,8 +30,11 @@ public class TranslatedURLReference extends URLReference {
     private ApplicationConnection connection;
 
     /**
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
+     *
      * @param connection
-     *            the connection to set
+     *            the application connection this instance is connected to
      */
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;

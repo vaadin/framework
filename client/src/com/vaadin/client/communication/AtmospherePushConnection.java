@@ -16,7 +16,6 @@
 
 package com.vaadin.client.communication;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -27,10 +26,10 @@ import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
-import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
+import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushConstants;
@@ -117,8 +116,6 @@ public class AtmospherePushConnection implements PushConnection {
 
     private JavaScriptObject socket;
 
-    private ArrayList<JsonObject> messageQueue = new ArrayList<JsonObject>();
-
     private State state = State.CONNECT_PENDING;
 
     private AtmosphereConfiguration config;
@@ -126,8 +123,6 @@ public class AtmospherePushConnection implements PushConnection {
     private String uri;
 
     private String transport;
-
-    private CommunicationErrorHandler errorHandler;
 
     /**
      * Keeps track of the disconnect confirmation command for cases where
@@ -147,10 +142,8 @@ public class AtmospherePushConnection implements PushConnection {
      */
     @Override
     public void init(final ApplicationConnection connection,
-            final PushConfigurationState pushConfiguration,
-            CommunicationErrorHandler errorHandler) {
+            final PushConfigurationState pushConfiguration) {
         this.connection = connection;
-        this.errorHandler = errorHandler;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
                 new ApplicationStoppedHandler() {
@@ -201,10 +194,10 @@ public class AtmospherePushConnection implements PushConnection {
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
-        if (!connection.getCsrfToken().equals(
-                ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
+        String csrfToken = connection.getMessageHandler().getCsrfToken();
+        if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
             extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER
-                    + "=" + connection.getCsrfToken();
+                    + "=" + csrfToken;
         }
 
         // uri is needed to identify the right connection when closing
@@ -226,16 +219,43 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     @Override
+    public boolean isBidirectional() {
+        if (transport == null) {
+            return false;
+        }
+
+        if (!transport.equals("websocket")) {
+            // If we are not using websockets, we want to send XHRs
+            return false;
+        }
+        if (getPushConfigurationState().alwaysUseXhrForServerRequests) {
+            // If user has forced us to use XHR, let's abide
+            return false;
+        }
+        if (state == State.CONNECT_PENDING) {
+            // Not sure yet, let's go for using websockets still as still will
+            // delay the message until a connection is established. When the
+            // connection is established, bi-directionality will be checked
+            // again to be sure
+        }
+        return true;
+
+    };
+
+    private PushConfigurationState getPushConfigurationState() {
+        return connection.getUIConnector().getState().pushConfiguration;
+    }
+
+    @Override
     public void push(JsonObject message) {
-        switch (state) {
-        case CONNECT_PENDING:
-            assert isActive();
-            getLogger().info("Queuing push message: " + message.toJson());
-            messageQueue.add(message);
-            break;
-        case CONNECTED:
-            assert isActive();
-            getLogger().info("Sending push message: " + message.toJson());
+        if (!isBidirectional()) {
+            throw new IllegalStateException(
+                    "This server to client push connection should not be used to send client to server messages");
+        }
+        if (state == State.CONNECTED) {
+            getLogger().info(
+                    "Sending push (" + transport + ") message to server: "
+                            + message.toJson());
 
             if (transport.equals("websocket")) {
                 FragmentedMessage fragmented = new FragmentedMessage(
@@ -246,11 +266,15 @@ public class AtmospherePushConnection implements PushConnection {
             } else {
                 doPush(socket, message.toJson());
             }
-            break;
-        case DISCONNECT_PENDING:
-        case DISCONNECTED:
-            throw new IllegalStateException("Can not push after disconnecting");
+            return;
         }
+
+        if (state == State.CONNECT_PENDING) {
+            getConnectionStateHandler().pushNotConnected(message);
+            return;
+        }
+
+        throw new IllegalStateException("Can not push after disconnecting");
     }
 
     protected AtmosphereConfiguration getConfig() {
@@ -280,14 +304,10 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected void onConnect(AtmosphereResponse response) {
         transport = response.getTransport();
-
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
-            for (JsonObject message : messageQueue) {
-                push(message);
-            }
-            messageQueue.clear();
+            getConnectionStateHandler().pushOk(this);
             break;
         case DISCONNECT_PENDING:
             // Set state to connected to make disconnect close the connection
@@ -335,11 +355,16 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected void onMessage(AtmosphereResponse response) {
         String message = response.getResponseBody();
-        if (message.startsWith("for(;;);")) {
-            getLogger().info("Received push message: " + message);
-            // "for(;;);[{json}]" -> "{json}"
-            message = message.substring(9, message.length() - 1);
-            connection.handlePushMessage(message);
+        ValueMap json = MessageHandler.parseWrappedJson(message);
+        if (json == null) {
+            // Invalid string (not wrapped as expected)
+            getConnectionStateHandler().pushInvalidContent(this, message);
+            return;
+        } else {
+            getLogger().info(
+                    "Received push (" + getTransportType() + ") message: "
+                            + message);
+            connection.getMessageHandler().handleMessage(json);
         }
     }
 
@@ -361,32 +386,25 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        errorHandler.onError("Push connection using "
-                + getConfig().getTransport() + " failed!",
-                response.getStatusCode());
+        getConnectionStateHandler().pushError(this, response);
     }
 
     protected void onClose(AtmosphereResponse response) {
-        getLogger().info("Push connection closed");
         state = State.CONNECT_PENDING;
+        getConnectionStateHandler().pushClosed(this, response);
     }
 
     protected void onClientTimeout(AtmosphereResponse response) {
         state = State.DISCONNECTED;
-        errorHandler
-                .onError(
-                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
-                        -1);
+        getConnectionStateHandler().pushClientTimeout(this, response);
     }
 
     protected void onReconnect(JavaScriptObject request,
             final AtmosphereResponse response) {
         if (state == State.CONNECTED) {
-            getLogger()
-                    .fine("No onClose was received before reconnect. Forcing state to closed.");
             state = State.CONNECT_PENDING;
         }
-        getLogger().info("Reopening push connection");
+        getConnectionStateHandler().pushReconnectPending(this);
     }
 
     public static abstract class AbstractJSO extends JavaScriptObject {
@@ -557,10 +575,8 @@ public class AtmospherePushConnection implements PushConnection {
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            errorHandler.onError(
-                                    event.getResourceUrl()
-                                            + " could not be loaded. Push will not work.",
-                                    0);
+                            getConnectionStateHandler().pushScriptLoadError(
+                                    event.getResourceUrl());
                         }
                     });
         }
@@ -578,11 +594,6 @@ public class AtmospherePushConnection implements PushConnection {
         return pushJs;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.communication.PushConnection#getTransportType()
-     */
     @Override
     public String getTransportType() {
         return transport;
@@ -591,4 +602,9 @@ public class AtmospherePushConnection implements PushConnection {
     private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
+
+    private ConnectionStateHandler getConnectionStateHandler() {
+        return connection.getConnectionStateHandler();
+    }
+
 }

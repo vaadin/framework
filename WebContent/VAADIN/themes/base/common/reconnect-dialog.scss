@@ -1,0 +1,32 @@
+@mixin base-reconnect-dialog {
+  .v-reconnect-dialog {
+    color: white;
+    top: 12px;
+    right: 12px;
+    max-width: 100%;
+    border-radius: 0;
+    @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
+    padding: 10px;
+
+    background-color: #444;
+    text-align: center;
+
+    .text {
+        display: inline-block;
+        padding-left: 10px;
+    }
+
+    .spinner {
+        background-image: url(img/reconnect-spinner.gif);
+        width: 31px;
+        height: 31px;
+        display: inline-block;
+        visibility: hidden;
+        vertical-align: middle;
+    }
+
+    &.active .spinner {
+        visibility: visible;
+    }
+  }
+}

@@ -67,7 +67,7 @@ public class LayoutManagerIE8 extends LayoutManager {
     }
 
     @Override
-    protected void cleanMeasuredSizes() {
+    public void cleanMeasuredSizes() {
         Profiler.enter("LayoutManager.cleanMeasuredSizes");
 
         // #12688: IE8 was leaking memory when adding&removing components.

@@ -50,7 +50,7 @@ public class BasicPush extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-
+        getReconnectDialogConfiguration().setDialogModal(false);
         spacer();
 
         /*

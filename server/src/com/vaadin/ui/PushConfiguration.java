@@ -207,8 +207,14 @@ class PushConfigurationImpl implements PushConfiguration {
     @Override
     public Transport getTransport() {
         try {
-            return Transport
+            Transport tr = Transport
                     .getByIdentifier(getParameter(PushConfigurationState.TRANSPORT_PARAM));
+            if (tr == Transport.WEBSOCKET
+                    && getState(false).alwaysUseXhrForServerRequests) {
+                return Transport.WEBSOCKET_XHR;
+            } else {
+                return tr;
+            }
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -223,8 +229,16 @@ class PushConfigurationImpl implements PushConfiguration {
      */
     @Override
     public void setTransport(Transport transport) {
-        setParameter(PushConfigurationState.TRANSPORT_PARAM,
-                transport.getIdentifier());
+        if (transport == Transport.WEBSOCKET_XHR) {
+            getState().alwaysUseXhrForServerRequests = true;
+            // Atmosphere knows only about "websocket"
+            setParameter(PushConfigurationState.TRANSPORT_PARAM,
+                    Transport.WEBSOCKET.getIdentifier());
+        } else {
+            getState().alwaysUseXhrForServerRequests = false;
+            setParameter(PushConfigurationState.TRANSPORT_PARAM,
+                    transport.getIdentifier());
+        }
     }
 
     /*
@@ -251,6 +265,10 @@ class PushConfigurationImpl implements PushConfiguration {
      */
     @Override
     public void setFallbackTransport(Transport fallbackTransport) {
+        if (fallbackTransport == Transport.WEBSOCKET_XHR) {
+            throw new IllegalArgumentException(
+                    "WEBSOCKET_XHR can only be used as primary transport");
+        }
         setParameter(PushConfigurationState.FALLBACK_TRANSPORT_PARAM,
                 fallbackTransport.getIdentifier());
     }

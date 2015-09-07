@@ -655,7 +655,7 @@ public class VNotification extends VOverlay {
             n.show(html.toString(), VNotification.CENTERED_TOP,
                     VNotification.STYLE_SYSTEM);
         } else {
-            ApplicationConnection.redirect(url);
+            WidgetUtil.redirect(url);
         }
     }
 
@@ -674,7 +674,7 @@ public class VNotification extends VOverlay {
 
         @Override
         public void notificationHidden(HideEvent event) {
-            ApplicationConnection.redirect(url);
+            WidgetUtil.redirect(url);
         }
 
     }

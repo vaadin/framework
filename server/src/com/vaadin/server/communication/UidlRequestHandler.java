@@ -22,7 +22,6 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -32,9 +31,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
-import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
 
 import elemental.json.JsonException;
@@ -76,29 +73,12 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
             return true;
         }
 
-        checkWidgetsetVersion(request);
-        // repaint requested or session has timed out and new one is created
-        boolean repaintAll;
-
-        // TODO PUSH analyzeLayouts should be
-        // part of the message payload to make the functionality transport
-        // agnostic
-
-        // Resynchronize is sent in the payload but will still support the
-        // parameter also for compatibility reasons
-        repaintAll = (request
-                .getParameter(ApplicationConstants.URL_PARAMETER_REPAINT_ALL) != null);
-
         StringWriter stringWriter = new StringWriter();
 
         try {
             rpcHandler.handleRpc(uI, request.getReader(), request);
 
-            if (repaintAll) {
-                session.getCommunicationManager().repaintAll(uI);
-            }
-
-            writeUidl(request, response, uI, stringWriter, repaintAll);
+            writeUidl(request, response, uI, stringWriter);
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
@@ -119,28 +99,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
                 stringWriter.toString());
     }
 
-    /**
-     * Checks that the version reported by the client (widgetset) matches that
-     * of the server.
-     * 
-     * @param request
-     */
-    private void checkWidgetsetVersion(VaadinRequest request) {
-        String widgetsetVersion = request.getParameter("v-wsver");
-        if (widgetsetVersion == null) {
-            // Only check when the widgetset version is reported. It is reported
-            // in the first UIDL request (not the initial request as it is a
-            // plain GET /)
-            return;
-        }
-
-        if (!Version.getFullVersion().equals(widgetsetVersion)) {
-            getLogger().warning(
-                    String.format(Constants.WIDGETSET_MISMATCH_INFO,
-                            Version.getFullVersion(), widgetsetVersion));
-        }
-    }
-
     private void writeRefresh(VaadinRequest request, VaadinResponse response)
             throws IOException {
         String json = VaadinService.createCriticalNotificationJSON(null, null,
@@ -149,10 +107,10 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     }
 
     private void writeUidl(VaadinRequest request, VaadinResponse response,
-            UI ui, Writer writer, boolean repaintAll) throws IOException {
+            UI ui, Writer writer) throws IOException {
         openJsonMessage(writer, response);
 
-        new UidlWriter().write(ui, writer, repaintAll, false);
+        new UidlWriter().write(ui, writer, false);
 
         closeJsonMessage(writer);
     }

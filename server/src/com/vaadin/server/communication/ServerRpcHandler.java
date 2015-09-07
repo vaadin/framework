@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.Constants;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
@@ -40,6 +41,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.ServerRpc;
@@ -77,6 +79,8 @@ public class ServerRpcHandler implements Serializable {
         private final int syncId;
         private final JsonObject json;
         private final boolean resynchronize;
+        private final int clientToServerMessageId;
+        private String widgetsetVersion = null;
 
         public RpcRequest(String jsonString, VaadinRequest request) {
             json = JsonUtil.parse(jsonString);
@@ -106,7 +110,19 @@ public class ServerRpcHandler implements Serializable {
             } else {
                 resynchronize = false;
             }
+            if (json.hasKey(ApplicationConstants.WIDGETSET_VERSION_ID)) {
+                widgetsetVersion = json
+                        .getString(ApplicationConstants.WIDGETSET_VERSION_ID);
+            }
 
+            if (json.hasKey(ApplicationConstants.CLIENT_TO_SERVER_ID)) {
+                clientToServerMessageId = (int) json
+                        .getNumber(ApplicationConstants.CLIENT_TO_SERVER_ID);
+            } else {
+                getLogger()
+                        .warning("Server message without client id received");
+                clientToServerMessageId = -1;
+            }
             invocations = json.getArray(ApplicationConstants.RPC_INVOCATIONS);
         }
 
@@ -149,6 +165,15 @@ public class ServerRpcHandler implements Serializable {
         }
 
         /**
+         * Gets the id of the client to server message
+         * 
+         * @return the server message id
+         */
+        public int getClientToServerId() {
+            return clientToServerMessageId;
+        }
+
+        /**
          * Gets the entire request in JSON format, as it was received from the
          * client.
          * <p>
@@ -160,6 +185,17 @@ public class ServerRpcHandler implements Serializable {
          */
         public JsonObject getRawJson() {
             return json;
+        }
+
+        /**
+         * Gets the widget set version reported by the client
+         * 
+         * @since 7.6
+         * @return The widget set version reported by the client or null if the
+         *         message did not contain a widget set version
+         */
+        public String getWidgetsetVersion() {
+            return widgetsetVersion;
         }
     }
 
@@ -199,14 +235,72 @@ public class ServerRpcHandler implements Serializable {
                 rpcRequest.getCsrfToken())) {
             throw new InvalidUIDLSecurityKeyException("");
         }
-        handleInvocations(ui, rpcRequest.getSyncId(),
-                rpcRequest.getRpcInvocationsData());
+
+        checkWidgetsetVersion(rpcRequest.getWidgetsetVersion());
+
+        int expectedId = ui.getLastProcessedClientToServerId() + 1;
+        if (rpcRequest.getClientToServerId() != -1
+                && rpcRequest.getClientToServerId() != expectedId) {
+            // Invalid message id, skip RPC processing but force a full
+            // re-synchronization of the client as it might have not received
+            // the previous response (e.g. due to a bad connection)
+
+            // Must resync also for duplicate messages because the server might
+            // have generated a response for the first message but the response
+            // did not reach the client. When the client re-sends the message,
+            // it would only get an empty response (because the dirty flags have
+            // been cleared on the server) and would be out of sync
+            ui.getSession().getCommunicationManager().repaintAll(ui);
+
+            if (rpcRequest.getClientToServerId() < expectedId) {
+                // Just a duplicate message due to a bad connection or similar
+                // It has already been handled by the server so it is safe to
+                // ignore
+                getLogger().fine(
+                        "Ignoring old message from the client. Expected: "
+                                + expectedId + ", got: "
+                                + rpcRequest.getClientToServerId());
+            } else {
+                getLogger().warning(
+                        "Unexpected message id from the client. Expected: "
+                                + expectedId + ", got: "
+                                + rpcRequest.getClientToServerId());
+            }
+        } else {
+            // Message id ok, process RPCs
+            ui.setLastProcessedClientToServerId(expectedId);
+            handleInvocations(ui, rpcRequest.getSyncId(),
+                    rpcRequest.getRpcInvocationsData());
+        }
 
         ui.getConnectorTracker().cleanConcurrentlyRemovedConnectorIds(
                 rpcRequest.getSyncId());
 
         if (rpcRequest.isResynchronize()) {
             ui.getSession().getCommunicationManager().repaintAll(ui);
+        }
+
+    }
+
+    /**
+     * Checks that the version reported by the client (widgetset) matches that
+     * of the server.
+     * 
+     * @param widgetsetVersion
+     *            the widget set version reported by the client or null
+     */
+    private void checkWidgetsetVersion(String widgetsetVersion) {
+        if (widgetsetVersion == null) {
+            // Only check when the widgetset version is reported. It is reported
+            // in the first UIDL request (not the initial request as it is a
+            // plain GET /)
+            return;
+        }
+
+        if (!Version.getFullVersion().equals(widgetsetVersion)) {
+            getLogger().warning(
+                    String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                            Version.getFullVersion(), widgetsetVersion));
         }
     }
 

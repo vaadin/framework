@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.requesthandlers;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import com.vaadin.launcher.ApplicationRunnerServlet;
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.SystemMessages;
@@ -69,7 +72,17 @@ public class CommunicationError extends UIProvider {
 
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            VaadinService.getCurrentResponse().setStatus(400);
+                            try {
+                                // An unparseable response will cause
+                                // communication error
+                                PrintWriter writer = VaadinService
+                                        .getCurrentResponse().getWriter();
+                                writer.write("for(;;)[{FOOBAR}]");
+                                writer.flush();
+                                writer.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
             addComponent(button);

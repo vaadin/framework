@@ -36,9 +36,12 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.client.ui.upload.UploadIFrameOnloadStrategy;
+import com.vaadin.shared.ui.upload.UploadServerRpc;
 
 /**
  * 
@@ -246,7 +249,9 @@ public class VUpload extends SimplePanel {
                             t.cancel();
                         }
                         VConsole.log("VUpload:Submit complete");
-                        client.sendPendingVariableChanges();
+                        ((UploadConnector) ConnectorMap.get(client)
+                                .getConnector(VUpload.this)).getRpcProxy(
+                                UploadServerRpc.class).poll();
                     }
 
                     rebuildPanel();

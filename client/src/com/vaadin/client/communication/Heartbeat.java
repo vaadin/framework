@@ -25,7 +25,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ConnectionStatusEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
@@ -96,41 +95,24 @@ public class Heartbeat {
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
 
-                // Notify network observers about response status
-                connection.fireEvent(new ConnectionStatusEvent(status));
-
                 if (status == Response.SC_OK) {
-                    getLogger().fine("Heartbeat response OK");
-                } else if (status == 0) {
-                    getLogger().warning(
-                            "Failed sending heartbeat, server is unreachable, retrying in "
-                                    + interval + "secs.");
-                } else if (status >= 500) {
-                    getLogger().warning(
-                            "Failed sending heartbeat, see server logs, retrying in "
-                                    + interval + "secs.");
-                } else if (status == Response.SC_GONE) {
-                    connection.showSessionExpiredError(null);
-                    // If session is expired break the loop
-                    return;
+                    connection.getConnectionStateHandler().heartbeatOk();
                 } else {
-                    getLogger().warning(
-                            "Failed sending heartbeat to server. Error code: "
-                                    + status);
+                    // Handler should stop the application if heartbeat should
+                    // no longer be sent
+                    connection.getConnectionStateHandler()
+                            .heartbeatInvalidStatusCode(request, response);
                 }
 
-                // Don't break the loop
                 schedule();
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                getLogger().severe(
-                        "Exception sending heartbeat: "
-                                + exception.getMessage());
-                // Notify network observers about response status
-                connection.fireEvent(new ConnectionStatusEvent(0));
-                // Don't break the loop
+                // Handler should stop the application if heartbeat should no
+                // longer be sent
+                connection.getConnectionStateHandler().heartbeatException(
+                        request, exception);
                 schedule();
             }
         };

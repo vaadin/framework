@@ -381,8 +381,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         fails
      */
     private String getScreenshotFailureName() {
-        return getScreenshotBaseName() + "_"
-                + getUniqueIdentifier(getDesiredCapabilities())
+        return getScreenshotBaseName() + "_" + getUniqueIdentifier(null)
                 + "-failure.png";
     }
 
@@ -418,52 +417,34 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     private String getScreenshotReferenceName(String identifier,
             Integer versionOverride) {
-        String uniqueBrowserIdentifier;
-        if (versionOverride == null) {
-            uniqueBrowserIdentifier = getUniqueIdentifier(getDesiredCapabilities());
-        } else {
-            uniqueBrowserIdentifier = getUniqueIdentifier(
-                    getDesiredCapabilities(), "" + versionOverride);
-        }
-
-        // WindowMaximizeRestoreTest_Windows_InternetExplorer_8_window-1-moved-maximized-restored.png
         return getScreenshotReferenceDirectory() + File.separator
-                + getScreenshotBaseName() + "_" + uniqueBrowserIdentifier + "_"
-                + identifier + ".png";
+                + getScreenshotBaseName() + "_"
+                + getUniqueIdentifier(versionOverride) + "_" + identifier
+                + ".png";
     }
 
-    /**
-     * Returns a string which uniquely (enough) identifies this browser. Used
-     * mainly in screenshot names.
-     * 
-     * @param capabilities
-     * @param versionOverride
-     * 
-     * @return a unique string for each browser
-     */
-    private String getUniqueIdentifier(DesiredCapabilities capabilities,
-            String versionOverride) {
-        return getUniqueIdentifier(BrowserUtil.getPlatform(capabilities),
-                BrowserUtil.getBrowserIdentifier(capabilities), versionOverride);
-    }
+    private String getUniqueIdentifier(Integer versionOverride) {
+        String testNameAndParameters = testName.getMethodName();
+        // runTest-wildfly9-nginx[Windows_Firefox_24][/buffering/demo][valo]
 
-    /**
-     * Returns a string which uniquely (enough) identifies this browser. Used
-     * mainly in screenshot names.
-     * 
-     * @param capabilities
-     * 
-     * @return a unique string for each browser
-     */
-    private String getUniqueIdentifier(DesiredCapabilities capabilities) {
-        return getUniqueIdentifier(BrowserUtil.getPlatform(capabilities),
-                BrowserUtil.getBrowserIdentifier(capabilities),
-                capabilities.getVersion());
-    }
+        String parameters = testNameAndParameters.substring(
+                testNameAndParameters.indexOf("[") + 1,
+                testNameAndParameters.length() - 1);
+        // Windows_Firefox_24][/buffering/demo][valo
 
-    private String getUniqueIdentifier(String platform, String browser,
-            String version) {
-        return platform + "_" + browser + "_" + version;
+        parameters = parameters.replace("][", "_");
+        // Windows_Firefox_24_/buffering/demo_valo
+
+        parameters = parameters.replace("/", "");
+        // Windows_Firefox_24_bufferingdemo_valo
+
+        if (versionOverride != null) {
+            // Windows_Firefox_17_bufferingdemo_valo
+            parameters = parameters.replaceFirst("_"
+                    + getDesiredCapabilities().getVersion(), "_"
+                    + versionOverride);
+        }
+        return parameters;
     }
 
     /**

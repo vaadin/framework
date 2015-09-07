@@ -17,6 +17,7 @@ $v-line-height: $line-height !default;
 @import "caption/caption.scss";
 @import "colorpicker/colorpicker.scss";
 @import "common/common.scss";
+@import "common/reconnect-dialog.scss";
 @import "csslayout/csslayout.scss";
 @import "customcomponent/customcomponent.scss";
 @import "customlayout/customlayout.scss";
@@ -89,6 +90,7 @@ $v-line-height: $line-height !default;
 
 	// here for now to preserve old semantics
 	@include base-common;
+	@include base-reconnect-dialog;
 
 	@include base-layout;
 	@include base-csslayout;

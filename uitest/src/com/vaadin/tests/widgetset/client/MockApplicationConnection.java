@@ -15,16 +15,8 @@
  */
 package com.vaadin.tests.widgetset.client;
 
-import java.util.Date;
-import java.util.logging.Logger;
-
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ValueMap;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.widgetset.server.csrf.ui.CsrfTokenDisabled;
-
-import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * Mock ApplicationConnection for several issues where we need to hack it.
@@ -34,14 +26,24 @@ import elemental.json.JsonValue;
  */
 public class MockApplicationConnection extends ApplicationConnection {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(MockApplicationConnection.class.getName());
+    public MockApplicationConnection() {
+        super();
+        messageHandler = new MockServerMessageHandler();
+        messageHandler.setConnection(this);
+        messageSender = new MockServerCommunicationHandler();
+        messageSender.setConnection(this);
+    }
 
-    // The last token received from the server.
-    private String lastCsrfTokenReceiver;
+    @Override
+    public MockServerMessageHandler getMessageHandler() {
+        return (MockServerMessageHandler) super.getMessageHandler();
+    }
 
-    // The last token sent to the server.
-    private String lastCsrfTokenSent;
+    @Override
+    public MockServerCommunicationHandler getMessageSender() {
+        return (MockServerCommunicationHandler) super
+                .getMessageSender();
+    }
 
     /**
      * Provide the last token received from the server. <br/>
@@ -50,7 +52,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenReceiver() {
-        return lastCsrfTokenReceiver;
+        return getMessageHandler().lastCsrfTokenReceiver;
     }
 
     /**
@@ -60,23 +62,7 @@ public class MockApplicationConnection extends ApplicationConnection {
      * @see CsrfTokenDisabled
      */
     public String getLastCsrfTokenSent() {
-        return lastCsrfTokenSent;
-    }
-
-    @Override
-    protected void handleUIDLMessage(Date start, String jsonText, ValueMap json) {
-        lastCsrfTokenReceiver = json
-                .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
-
-        super.handleUIDLMessage(start, jsonText, json);
-    }
-
-    @Override
-    protected void doUidlRequest(String uri, JsonObject payload) {
-        JsonValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
-        lastCsrfTokenSent = jsonValue != null ? jsonValue.toJson() : null;
-
-        super.doUidlRequest(uri, payload);
+        return getMessageSender().lastCsrfTokenSent;
     }
 
 }

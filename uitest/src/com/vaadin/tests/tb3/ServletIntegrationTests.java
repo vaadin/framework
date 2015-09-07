@@ -24,7 +24,7 @@ import java.util.Set;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-import com.vaadin.tests.integration.AbstractServletIntegrationTest;
+import com.vaadin.tests.integration.AbstractIntegrationTest;
 import com.vaadin.tests.integration.ServletIntegrationJSR356WebsocketUITest;
 import com.vaadin.tests.integration.ServletIntegrationWebsocketUITest;
 import com.vaadin.tests.tb3.ServletIntegrationTests.ServletIntegrationTestSuite;
@@ -51,6 +51,7 @@ public class ServletIntegrationTests {
         notWebsocketCompatible.add("tomcat6");
         notWebsocketCompatible.add("tomcat7apacheproxy");
         notWebsocketCompatible.add("weblogic10");
+        notWebsocketCompatible.add("wildfly9-nginx");
 
         // Requires an update to 8.5.5 and a fix for
         // https://dev.vaadin.com/ticket/16354
@@ -65,7 +66,7 @@ public class ServletIntegrationTests {
     public static class ServletIntegrationTestSuite extends TB3TestSuite {
         public ServletIntegrationTestSuite(Class<?> klass)
                 throws InitializationError, IOException {
-            super(klass, AbstractServletIntegrationTest.class,
+            super(klass, AbstractIntegrationTest.class,
                     "com.vaadin.tests.integration", new String[] {},
                     new ServletTestLocator());
         }

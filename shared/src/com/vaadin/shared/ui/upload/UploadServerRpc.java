@@ -27,4 +27,12 @@ public interface UploadServerRpc extends ServerRpc {
      */
     void change(String filename);
 
+    /**
+     * Called to poll the server to see if any changes have been made e.g. when
+     * starting upload
+     * 
+     * @since
+     */
+    void poll();
+
 }

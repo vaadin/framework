@@ -70,6 +70,13 @@ public class LayoutManager {
     };
     private boolean everythingNeedsMeasure = false;
 
+    /**
+     * Sets the application connection this instance is connected to. Called
+     * internally by the framework.
+     *
+     * @param connection
+     *            the application connection this instance is connected to
+     */
     public void setConnection(ApplicationConnection connection) {
         if (this.connection != null) {
             throw new RuntimeException(
@@ -252,7 +259,7 @@ public class LayoutManager {
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
 
-        if (connection.isUpdatingState()) {
+        if (connection.getMessageHandler().isUpdatingState()) {
             // If assertions are enabled, throw an exception
             assert false : STATE_CHANGE_MESSAGE;
 
@@ -1793,7 +1800,7 @@ public class LayoutManager {
     /**
      * Clean measured sizes which are no longer needed. Only for IE8.
      */
-    protected void cleanMeasuredSizes() {
+    public void cleanMeasuredSizes() {
     }
 
     private static Logger getLogger() {

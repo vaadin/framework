@@ -58,8 +58,12 @@ public class RpcProxy {
             MethodInvocation invocation = new MethodInvocation(
                     connector.getConnectorId(), rpcInterface.getName(),
                     method.getName(), params);
-            connector.getConnection().addMethodInvocationToQueue(invocation,
-                    method.isDelayed(), method.isLastOnly());
+            ServerRpcQueue serverRpcQueue = ServerRpcQueue.get(connector
+                    .getConnection());
+            serverRpcQueue.add(invocation, method.isLastOnly());
+            if (!method.isDelayed()) {
+                serverRpcQueue.flush();
+            }
             // No RPC iface should have a return value
             return null;
         }

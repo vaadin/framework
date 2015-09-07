@@ -1,0 +1,31 @@
+@mixin valo-reconnect-dialog {
+  .v-reconnect-dialog {
+    color: white;
+    top: $v-layout-spacing-vertical;
+    right: $v-layout-spacing-horizontal;
+    max-width: 100%;
+    border-radius: 0;
+    @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
+    padding: round($v-unit-size/3) round($v-unit-size/2.5);
+
+    background-color: #444;
+    background-color: rgba(#444, .9);
+    line-height: round($v-font-size * 1.4);
+
+    text-align: center;
+    .text {
+        display: inline-block;
+        padding-left: 10px;
+    }
+
+    .spinner {
+      @include valo-spinner;
+      display: none;
+      vertical-align: middle;
+    }
+
+    &.active .spinner {
+      display: inline-block;
+    }
+  }
+}

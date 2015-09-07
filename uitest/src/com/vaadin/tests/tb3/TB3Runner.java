@@ -22,7 +22,7 @@ import java.lang.reflect.Modifier;
 import org.apache.http.client.HttpClient;
 import org.junit.runners.Parameterized;
 import org.junit.runners.model.InitializationError;
-import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.internal.ApacheHttpClient;
 import org.openqa.selenium.remote.internal.HttpClientFactory;
 
 import com.vaadin.testbench.parallel.ParallelRunner;
@@ -48,8 +48,8 @@ public class TB3Runner extends ParallelRunner {
 
         // reduce socket timeout to avoid tests hanging for three hours
         try {
-            Field field = HttpCommandExecutor.class
-                    .getDeclaredField("httpClientFactory");
+            Field field = ApacheHttpClient.Factory.class
+                    .getDeclaredField("defaultClientFactory");
             assert (Modifier.isStatic(field.getModifiers()));
             field.setAccessible(true);
             field.set(null, new HttpClientFactory() {

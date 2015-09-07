@@ -255,9 +255,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             this);
     private PushConfiguration pushConfiguration = new PushConfigurationImpl(
             this);
+    private ReconnectDialogConfiguration reconnectDialogConfiguration = new ReconnectDialogConfigurationImpl(
+            this);
 
     private NotificationConfiguration notificationConfiguration = new NotificationConfigurationImpl(
             this);
+
+    /**
+     * Tracks which message from the client should come next. First message from
+     * the client has id 0.
+     */
+    private int lastProcessedClientToServerId = -1;
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -1640,6 +1648,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
+     * Retrieves the object used for configuring the reconnect dialog.
+     * 
+     * @since 7.6
+     * @return The instance used for reconnect dialog configuration
+     */
+    public ReconnectDialogConfiguration getReconnectDialogConfiguration() {
+        return reconnectDialogConfiguration;
+    }
+
+    /**
      * Get the label that is added to the container element, where tooltip,
      * notification and dialogs are added to.
      * 
@@ -1690,5 +1708,32 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public String getEmbedId() {
         return embedId;
+    }
+
+    /**
+     * Gets the last processed server message id.
+     * 
+     * Used internally for communication tracking.
+     * 
+     * @return lastProcessedServerMessageId the id of the last processed server
+     *         message
+     * @since 7.6
+     */
+    public int getLastProcessedClientToServerId() {
+        return lastProcessedClientToServerId;
+    }
+
+    /**
+     * Sets the last processed server message id.
+     * 
+     * Used internally for communication tracking.
+     * 
+     * @param lastProcessedServerMessageId
+     *            the id of the last processed server message
+     * @since 7.6
+     */
+    public void setLastProcessedClientToServerId(
+            int lastProcessedClientToServerId) {
+        this.lastProcessedClientToServerId = lastProcessedClientToServerId;
     }
 }
