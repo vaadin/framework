@@ -63,6 +63,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -862,11 +863,7 @@ public class ApplicationConnection implements HasHandlers {
                 + ApplicationConstants.UIDL_PATH + '/');
 
         if (extraParams != null && extraParams.length() > 0) {
-            if (extraParams.equals(getRepaintAllParameters())) {
-                payload.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
-            } else {
-                uri = SharedUtil.addGetParameters(uri, extraParams);
-            }
+            uri = SharedUtil.addGetParameters(uri, extraParams);
         }
         uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
                 + "=" + configuration.getUIId());
