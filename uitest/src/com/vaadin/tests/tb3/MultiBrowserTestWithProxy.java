@@ -50,8 +50,14 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
 
     protected Integer getProxyPort() {
         if (proxyPort == null) {
-            // Assumes we can use any port >= 2000
+            // Assumes we can use any port >= 2000,
+            // except for 2049 in Firefox...
             proxyPort = availablePort.addAndGet(1);
+            if (proxyPort == 2049) {
+                // Restricted in Firefox, see
+                // http://www-archive.mozilla.org/projects/netlib/PortBanning.html#portlist
+                proxyPort = availablePort.addAndGet(1);
+            }
         }
         return proxyPort;
     }
