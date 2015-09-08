@@ -82,7 +82,7 @@ public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
         }
     }
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ValidatingSimpleJDBCConnectionPool.class
                 .getName());
     }

@@ -772,7 +772,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         }
     };
 
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ColorPickerPopup.class.getName());
     }
 }

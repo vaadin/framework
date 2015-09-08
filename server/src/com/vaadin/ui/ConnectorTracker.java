@@ -101,7 +101,7 @@ public class ConnectorTracker implements Serializable {
      * @return A logger instance for logging within this class
      *
      */
-    public static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(ConnectorTracker.class.getName());
     }
 
