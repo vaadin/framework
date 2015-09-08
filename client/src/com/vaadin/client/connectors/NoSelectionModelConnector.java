@@ -25,6 +25,9 @@ import elemental.json.JsonObject;
 
 /**
  * Connector for server-side {@link NoSelectionModel}.
+ * 
+ * @since 7.6
+ * @author Vaadin Ltd
  */
 @Connect(NoSelectionModel.class)
 public class NoSelectionModelConnector extends
