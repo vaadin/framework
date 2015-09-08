@@ -207,7 +207,7 @@ public class MessageHandler {
     /**
      * Sets the application connection this instance is connected to. Called
      * internally by the framework.
-     *
+     * 
      * @param connection
      *            the application connection this instance is connected to
      */
@@ -1683,7 +1683,7 @@ public class MessageHandler {
      * 
      * If the given string is not wrapped as expected, returns null
      * 
-     * @since
+     * @since 7.6
      * @param jsonWithWrapping
      *            the JSON received from the server
      * @return an unwrapped JSON string or null if the given string was not
