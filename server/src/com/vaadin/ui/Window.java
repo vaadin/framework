@@ -898,7 +898,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Adds a close shortcut - pressing this key while holding down all (if any)
      * modifiers specified while this Window is in focus will close the Window.
      * 
-     * @since
+     * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
@@ -922,7 +922,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Removes a close shortcut previously added with
      * {@link #addCloseShortcut(int, int...)}.
      * 
-     * @since
+     * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
@@ -945,7 +945,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * they may require. For more fine-grained control over shortcuts, use
      * {@link #removeCloseShortcut(int, int...)}.
      * 
-     * @since
+     * @since 7.6
      */
     public void removeAllCloseShortcuts() {
         for (CloseShortcut shortcut : closeShortcuts) {
@@ -957,7 +957,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Checks if a close window shortcut key has already been registered.
      * 
-     * @since
+     * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
@@ -981,7 +981,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * check if a certain combination of keys has been registered as a close
      * shortcut, use the {@link #hasCloseShortcut(int, int...)} method instead.
      * 
-     * @since
+     * @since 7.6
      * @return an unmodifiable Collection of CloseShortcut objects.
      */
     public Collection<CloseShortcut> getCloseShortcuts() {
