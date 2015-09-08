@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.SharedState;
 /**
  * SharedState object for MultiSelectionModel.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class MultiSelectionModelState extends SharedState {

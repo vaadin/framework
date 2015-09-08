@@ -467,9 +467,6 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         }
     }
 
-    /**
-     * @since
-     */
     private void endRequest() {
         getConnection().getMessageSender().endRequest();
     }

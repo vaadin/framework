@@ -178,7 +178,7 @@ public class PushHandler {
     /**
      * Suspends the given resource
      * 
-     * @since
+     * @since 7.6
      * @param resource
      *            the resource to suspend
      */

@@ -1511,7 +1511,7 @@ public class ApplicationConnection implements HasHandlers {
      * Checks if the application is in the {@link ApplicationState#RUNNING}
      * state.
      * 
-     * @since
+     * @since 7.6
      * @return true if the application is in the running state, false otherwise
      */
     public boolean isApplicationRunning() {

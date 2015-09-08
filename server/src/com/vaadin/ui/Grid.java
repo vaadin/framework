@@ -3898,7 +3898,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Resends the row data for given item id to the client.
          * 
-         * @since
+         * @since 7.6
          * @param itemId
          *            row to refresh
          */

@@ -131,7 +131,7 @@ public class GridState extends TabIndexState {
     /**
      * The key that tells whether row is selected.
      * 
-     * @since
+     * @since 7.6
      */
     public static final String JSONKEY_SELECTED = "s";
 

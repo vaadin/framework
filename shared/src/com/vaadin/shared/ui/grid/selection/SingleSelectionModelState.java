@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.SharedState;
 /**
  * SharedState object for SingleSelectionModel.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class SingleSelectionModelState extends SharedState {

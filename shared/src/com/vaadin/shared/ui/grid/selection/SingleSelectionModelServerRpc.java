@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * ServerRpc for SingleSelectionModel.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface SingleSelectionModelServerRpc extends ServerRpc {

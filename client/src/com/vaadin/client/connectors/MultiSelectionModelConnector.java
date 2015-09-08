@@ -53,7 +53,7 @@ import elemental.json.JsonObject;
 /**
  * Connector for server-side {@link MultiSelectionModel}.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 @Connect(MultiSelectionModel.class)

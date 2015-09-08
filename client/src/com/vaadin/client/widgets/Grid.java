@@ -1125,7 +1125,7 @@ public class Grid<T> extends ResizeComposite implements
      * native event, contains a {@link CellReference} instance specifying which
      * cell the event originated from.
      * 
-     * @since
+     * @since 7.6
      * @param <T>
      *            The row type of the grid
      */
@@ -1170,7 +1170,7 @@ public class Grid<T> extends ResizeComposite implements
      * A wrapper for native DOM events related to the {@link Editor Grid editor}
      * .
      * 
-     * @since
+     * @since 7.6
      * @param <T>
      *            the row type of the grid
      */
@@ -1227,7 +1227,7 @@ public class Grid<T> extends ResizeComposite implements
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
      * 
-     * @since
+     * @since 7.6
      * @param <T>
      *            the row type of the grid
      */
@@ -1243,7 +1243,7 @@ public class Grid<T> extends ResizeComposite implements
          * A handler for events related to the Grid editor. Responsible for
          * opening, moving or closing the editor based on the received event.
          * 
-         * @since
+         * @since 7.6
          * @author Vaadin Ltd
          * @param <T>
          *            the row type of the grid
@@ -2137,7 +2137,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Sets the event handler for this Editor.
          * 
-         * @since
+         * @since 7.6
          * @param handler
          *            the new event handler
          */
@@ -2148,7 +2148,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Returns the event handler of this Editor.
          * 
-         * @since
+         * @since 7.6
          * @return the current event handler
          */
         public EventHandler<T> getEventHandler() {
@@ -4594,7 +4594,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Returns the current header caption for this column
          * 
-         * @since
+         * @since 7.6
          * @return the header caption string
          */
         public String getHeaderCaption() {

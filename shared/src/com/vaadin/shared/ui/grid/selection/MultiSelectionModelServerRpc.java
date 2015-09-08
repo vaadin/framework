@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * ServerRpc for MultiSelectionModel.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface MultiSelectionModelServerRpc extends ServerRpc {

@@ -125,7 +125,7 @@ public class PushRequestHandler implements RequestHandler,
      * customize the {@link PushHandler}, e.g. to dynamically decide the suspend
      * timeout.
      * 
-     * @since
+     * @since 7.6
      * @param service
      *            the vaadin service
      * @return the push handler to use for this service

@@ -28,7 +28,7 @@ import elemental.json.JsonObject;
 /**
  * Base class for all selection model connectors.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public abstract class AbstractSelectionModelConnector<T extends SelectionModel<JsonObject>>

@@ -30,7 +30,7 @@ import com.vaadin.client.widgets.Grid.EditorDomEvent;
  * The default handler for Grid editor events. Offers several overridable
  * protected methods for easier customization.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {

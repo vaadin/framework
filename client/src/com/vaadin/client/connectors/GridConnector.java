@@ -1183,7 +1183,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     /**
      * Creates a concatenation of all columns errors for Editor.
      * 
-     * @since
+     * @since 7.6
      * @return displayed error string
      */
     private String getColumnErrors() {

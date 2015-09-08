@@ -34,7 +34,7 @@ import elemental.json.JsonObject;
 /**
  * Connector for server-side {@link SingleSelectionModel}.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 @Connect(SingleSelectionModel.class)
