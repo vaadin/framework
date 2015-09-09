@@ -1365,7 +1365,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /**
      * ItemStyleGenerator can be used to add custom styles to tree items. The
-     * CSS class name that will be added to the cell content is
+     * CSS class name that will be added to the item content is
      * <tt>v-tree-node-[style name]</tt>.
      */
     public interface ItemStyleGenerator extends Serializable {
