@@ -6,6 +6,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.ComboBox.ItemStyleGenerator;
 
 public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
 
@@ -23,6 +24,13 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
         }
     };
 
+    private Command<T, ItemStyleGenerator> itemStyleGeneratorCommand = new Command<T, ItemStyleGenerator>() {
+        @Override
+        public void execute(T c, ItemStyleGenerator value, Object data) {
+            c.setItemStyleGenerator(value);
+        }
+    };
+
     @Override
     protected Class<T> getTestClass() {
         return (Class<T>) ComboBox.class;
@@ -34,6 +42,7 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
         createItemIconSelect(CATEGORY_DATA_SOURCE);
         createInputPromptAction(CATEGORY_FEATURES);
         createFilteringModeAction(CATEGORY_FEATURES);
+        createItemStyleGeneratorAction(CATEGORY_FEATURES);
         createNewItemsAllowedAction(CATEGORY_STATE);
         createTextInputAlowedAction(CATEGORY_STATE);
     }
@@ -67,6 +76,23 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
         createSelectAction("Filtering mode", category, options, "Contains",
                 filteringModeCommand);
 
+    }
+
+    private void createItemStyleGeneratorAction(String category) {
+        LinkedHashMap<String, ItemStyleGenerator> options = new LinkedHashMap<String, ItemStyleGenerator>();
+        options.put("-", null);
+        options.put("Bold fives", new ItemStyleGenerator() {
+            @Override
+            public String getStyle(ComboBox source, Object itemId) {
+                if (String.valueOf(itemId).indexOf('5') != -1) {
+                    return "bold";
+                } else {
+                    return null;
+                }
+            }
+        });
+        createSelectAction("Item style generator", category, options, "-",
+                itemStyleGeneratorCommand);
     }
 
     private void createInputPromptAction(String category) {

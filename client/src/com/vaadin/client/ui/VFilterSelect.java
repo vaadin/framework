@@ -101,6 +101,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private final String key;
         private final String caption;
         private String untranslatedIconUri;
+        private String style;
 
         /**
          * Constructor
@@ -111,6 +112,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public FilterSelectSuggestion(UIDL uidl) {
             key = uidl.getStringAttribute("key");
             caption = uidl.getStringAttribute("caption");
+            style = uidl.getStringAttribute("style");
+
             if (uidl.hasAttribute("icon")) {
                 untranslatedIconUri = uidl.getStringAttribute("icon");
             }
@@ -170,6 +173,19 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         /**
+         * Gets the style set for this suggestion item. Styles are typically set
+         * by a server-side {@link com.vaadin.ui.ComboBox.ItemStyleGenerator}.
+         * The returned style is prefixed by <code>v-filterselect-item-</code>.
+         * 
+         * @since
+         * @return the style name to use, or <code>null</code> to not apply any
+         *         custom style.
+         */
+        public String getStyle() {
+            return style;
+        }
+
+        /**
          * Executes a selection of this item.
          */
 
@@ -194,6 +210,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
             if (!SharedUtil.equals(untranslatedIconUri,
                     other.untranslatedIconUri)) {
+                return false;
+            }
+            if (!SharedUtil.equals(style, other.style)) {
                 return false;
             }
             return true;
@@ -819,6 +838,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+                String style = s.getStyle();
+                if (style != null) {
+                    mi.addStyleName("v-filterselect-item-" + style);
+                }
                 Roles.getListitemRole().set(mi.getElement());
 
                 WidgetUtil.sinkOnloadForImages(mi.getElement());

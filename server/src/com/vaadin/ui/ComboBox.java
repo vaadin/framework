@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -48,6 +49,30 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 public class ComboBox extends AbstractSelect implements
         AbstractSelect.Filtering, FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier {
+
+    /**
+     * ItemStyleGenerator can be used to add custom styles to combo box items
+     * shown in the popup. The CSS class name that will be added to the item
+     * style names is <tt>v-filterselect-item-[style name]</tt>.
+     * 
+     * @since
+     * @see ComboBox#setItemStyleGenerator(ItemStyleGenerator)
+     */
+    public interface ItemStyleGenerator extends Serializable {
+
+        /**
+         * Called by ComboBox when an item is painted.
+         * 
+         * @param source
+         *            the source combo box
+         * @param itemId
+         *            The itemId of the item to be painted. Can be
+         *            <code>null</code> if null selection is allowed.
+         * @return The style name to add to this item. (the CSS class name will
+         *         be v-filterselect-item-[style name]
+         */
+        public String getStyle(ComboBox source, Object itemId);
+    }
 
     private String inputPrompt = null;
 
@@ -101,6 +126,8 @@ public class ComboBox extends AbstractSelect implements
      * field opens the drop down with options
      */
     private boolean textInputAllowed = true;
+
+    private ItemStyleGenerator itemStyleGenerator = null;
 
     public ComboBox() {
         initDefaults();
@@ -239,6 +266,9 @@ public class ComboBox extends AbstractSelect implements
                 target.startTag("so");
                 target.addAttribute("caption", "");
                 target.addAttribute("key", "");
+
+                paintItemStyle(target, null);
+
                 target.endTag("so");
             }
 
@@ -275,6 +305,9 @@ public class ComboBox extends AbstractSelect implements
                     // at most one item can be selected at a time
                     selectedKeys[keyIndex++] = key;
                 }
+
+                paintItemStyle(target, id);
+
                 target.endTag("so");
             }
             target.endTag("options");
@@ -309,6 +342,16 @@ public class ComboBox extends AbstractSelect implements
             isPainting = false;
         }
 
+    }
+
+    private void paintItemStyle(PaintTarget target, Object itemId)
+            throws PaintException {
+        if (itemStyleGenerator != null) {
+            String style = itemStyleGenerator.getStyle(this, itemId);
+            if (style != null && !style.isEmpty()) {
+                target.addAttribute("style", style);
+            }
+        }
     }
 
     /**
@@ -864,6 +907,32 @@ public class ComboBox extends AbstractSelect implements
      */
     public boolean isScrollToSelectedItem() {
         return scrollToSelectedItem;
+    }
+
+    /**
+     * Sets the item style generator that is used to produce custom styles for
+     * showing items in the popup. The CSS class name that will be added to the
+     * item style names is <tt>v-filterselect-item-[style name]</tt>.
+     * 
+     * @param itemStyleGenerator
+     *            the item style generator to set, or <code>null</code> to not
+     *            use any custom item styles
+     * @since
+     */
+    public void setItemStyleGenerator(ItemStyleGenerator itemStyleGenerator) {
+        this.itemStyleGenerator = itemStyleGenerator;
+        markAsDirty();
+    }
+
+    /**
+     * Gets the currently used item style generator.
+     * 
+     * @return the itemStyleGenerator the currently used item style generator,
+     *         or <code>null</code> if no generator is used
+     * @since
+     */
+    public ItemStyleGenerator getItemStyleGenerator() {
+        return itemStyleGenerator;
     }
 
 }
