@@ -40,7 +40,7 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
             // Chrome version does not necessarily match the desired version
             // because of auto updates...
             browserIdentifier = getExpectedUserAgentString(getDesiredCapabilities())
-                    + "44";
+                    + "45";
         } else {
             browserIdentifier = getExpectedUserAgentString(desiredCapabilities)
                     + desiredCapabilities.getVersion();
