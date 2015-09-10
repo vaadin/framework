@@ -264,7 +264,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     committingValueToDataSource = false;
                 }
             } else {
-                /* An invalid value and we don't allow them, throw the exception */
+                /*
+                 * An invalid value and we don't allow them, throw the exception
+                 */
                 validate();
             }
         }
@@ -459,15 +461,35 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param repaintIsNotNeeded
      *            True iff caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
+     * @throws Converter.ConversionException
+     * @throws InvalidValueException
      */
-    protected void setValue(T newFieldValue, boolean repaintIsNotNeeded)
-            throws Property.ReadOnlyException, Converter.ConversionException,
-            InvalidValueException {
+    protected void setValue(T newFieldValue, boolean repaintIsNotNeeded) {
+        setValue(newFieldValue, repaintIsNotNeeded, false);
+    }
+
+    /**
+     * Sets the value of the field.
+     * 
+     * @since
+     * @param newFieldValue
+     *            the New value of the field.
+     * @param repaintIsNotNeeded
+     *            True iff caller is sure that repaint is not needed.
+     * @param ignoreReadOnly
+     *            True iff if the read-only check should be ignored
+     * @throws Property.ReadOnlyException
+     * @throws Converter.ConversionException
+     * @throws InvalidValueException
+     */
+    protected void setValue(T newFieldValue, boolean repaintIsNotNeeded,
+            boolean ignoreReadOnly) throws Property.ReadOnlyException,
+            Converter.ConversionException, InvalidValueException {
 
         if (!SharedUtil.equals(newFieldValue, getInternalValue())) {
 
             // Read only fields can not be changed
-            if (isReadOnly()) {
+            if (!ignoreReadOnly && isReadOnly()) {
                 throw new Property.ReadOnlyException();
             }
             try {
