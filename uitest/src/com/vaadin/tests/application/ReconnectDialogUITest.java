@@ -31,6 +31,23 @@ import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     @Test
+    public void reconnectTogglesBodyStyle() throws JSchException {
+        openTestURL();
+        getButton().click();
+        disconnectProxy();
+        getButton().click();
+        waitForReconnectDialogPresent();
+        WebElement body = findElement(By.xpath("//body"));
+        Assert.assertTrue("Body should have a style name when reconnecting",
+                hasCssClass(body, "v-reconnecting"));
+        connectProxy();
+        waitForReconnectDialogToDisappear();
+        Assert.assertFalse(
+                "Body should no longer have a style name when reconnected",
+                hasCssClass(body, "v-reconnecting"));
+    }
+
+    @Test
     public void reconnectDialogShownAndDisappears() throws JSchException {
         openTestURL();
         getButton().click();

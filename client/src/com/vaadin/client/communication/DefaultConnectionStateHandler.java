@@ -365,6 +365,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
      * Called when the reconnect dialog should be hidden.
      */
     protected void hideDialog() {
+        reconnectDialog.setReconnecting(false);
         reconnectDialog.hide();
     }
 

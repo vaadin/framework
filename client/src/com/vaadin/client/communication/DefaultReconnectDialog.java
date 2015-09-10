@@ -18,6 +18,8 @@ package com.vaadin.client.communication;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,6 +40,7 @@ import com.vaadin.client.ui.VOverlay;
 public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog {
 
     private static final String STYLE_RECONNECTING = "active";
+    private static final String STYLE_BODY_RECONNECTING = "v-reconnecting";
 
     public Label label;
 
@@ -68,6 +71,12 @@ public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog 
     @Override
     public void setReconnecting(boolean reconnecting) {
         setStyleName(STYLE_RECONNECTING, reconnecting);
+        BodyElement body = Document.get().getBody();
+        if (reconnecting) {
+            body.addClassName(STYLE_BODY_RECONNECTING);
+        } else {
+            body.removeClassName(STYLE_BODY_RECONNECTING);
+        }
 
         // Click to refresh after giving up
         if (!reconnecting) {
