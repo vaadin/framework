@@ -87,4 +87,16 @@ public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
                         "2020-01-01 00:00:00+0200"),
                 getYearResolutionExpected());
     }
+
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-date-field readonly='true' resolution='year' value='2020-01-01 00:00:00+0200'/>";
+        DateField df = new DateField();
+        df.setResolution(Resolution.YEAR);
+        df.setValue(new Date(2020 - 1900, 1 - 1, 1));
+        df.setReadOnly(true);
+
+        testRead(design, df);
+        testWrite(design, df);
+    }
 }

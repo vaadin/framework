@@ -1078,7 +1078,7 @@ public class DateField extends AbstractField<Date> implements
                 Logger.getLogger(DateField.class.getName()).info(
                         "cannot parse " + design.attr("value") + " as date");
             }
-            this.setValue(date);
+            this.setValue(date, false, true);
         }
     }
 

@@ -50,4 +50,20 @@ public class NativeSelectDeclarativeTest extends
         testWrite(stripOptionTags(getBasicDesign()), getBasicExpected());
     }
 
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-native-select readonly='true'><option selected>foo</option><option>bar</option></v-native-select>";
+
+        NativeSelect ns = new NativeSelect();
+        ns.addItems("foo", "bar");
+        ns.setValue("foo");
+        ns.setReadOnly(true);
+
+        testRead(design, ns);
+
+        // Selects items are not written out by default
+        String design2 = "<v-native-select readonly='true'></v-native-select>";
+        testWrite(design2, ns);
+    }
+
 }

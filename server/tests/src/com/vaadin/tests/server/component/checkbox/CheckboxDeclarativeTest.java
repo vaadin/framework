@@ -44,4 +44,14 @@ public class CheckboxDeclarativeTest extends DeclarativeTestBase<CheckBox> {
         testRead(design, checkBox);
         testWrite(design, checkBox);
     }
+
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-check-box readonly='true' checked='true' />";
+        CheckBox checkBox = new CheckBox();
+        checkBox.setValue(true);
+        checkBox.setReadOnly(true);
+        testRead(design, checkBox);
+        testWrite(design, checkBox);
+    }
 }

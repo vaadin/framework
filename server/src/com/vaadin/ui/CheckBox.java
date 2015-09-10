@@ -221,8 +221,9 @@ public class CheckBox extends AbstractField<Boolean> {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("checked")) {
-            this.setValue(DesignAttributeHandler.readAttribute("checked",
-                    design.attributes(), Boolean.class));
+            this.setValue(
+                    DesignAttributeHandler.readAttribute("checked",
+                            design.attributes(), Boolean.class), false, true);
         }
     }
 

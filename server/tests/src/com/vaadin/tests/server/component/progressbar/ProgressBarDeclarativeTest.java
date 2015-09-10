@@ -60,4 +60,16 @@ public class ProgressBarDeclarativeTest extends
         testWrite("<v-progress-bar>", new ProgressBar());
     }
 
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-progress-bar readonly='true' value=0.5 indeterminate='true'>";
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setValue(0.5f);
+        progressBar.setReadOnly(true);
+
+        testRead(design, progressBar);
+        testWrite(design, progressBar);
+    }
+
 }
