@@ -56,4 +56,15 @@ public class RichTextAreaDeclarativeTest extends
     public void testWriteEmpty() {
         testWrite("<v-rich-text-area />", new RichTextArea());
     }
+
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-rich-text-area readonly style-name='v-richtextarea-readonly'>Hello World!</v-text-area>";
+        RichTextArea ta = new RichTextArea();
+        ta.setValue("Hello World!");
+        ta.setReadOnly(true);
+
+        testRead(design, ta);
+        testWrite(design, ta);
+    }
 }

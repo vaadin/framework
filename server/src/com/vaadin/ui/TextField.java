@@ -115,8 +115,9 @@ public class TextField extends AbstractTextField {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
         if (attr.hasKey("value")) {
-            setValue(DesignAttributeHandler.readAttribute("value", attr,
-                    String.class));
+            String newFieldValue = DesignAttributeHandler.readAttribute(
+                    "value", attr, String.class);
+            setValue(newFieldValue, false, true);
         }
     }
 

@@ -63,4 +63,19 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
         testRead(design, expected);
         testWrite(design, expected);
     }
+
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-slider readonly min=10 max=20 resolution=1 value=12.3>";
+
+        Slider expected = new Slider();
+        expected.setMin(10.0);
+        expected.setMax(20.0);
+        expected.setResolution(1);
+        expected.setValue(12.3);
+        expected.setReadOnly(true);
+
+        testRead(design, expected);
+        testWrite(design, expected);
+    }
 }

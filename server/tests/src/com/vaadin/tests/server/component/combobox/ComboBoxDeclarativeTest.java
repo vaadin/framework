@@ -57,6 +57,22 @@ public class ComboBoxDeclarativeTest extends DeclarativeTestBase<ComboBox> {
         testWrite(getBasicDesign(), getBasicExpected());
     }
 
+    @Test
+    public void testReadOnlyValue() {
+        String design = "<v-combo-box readonly value='foo'><option selected>foo</option></v-combo-box>";
+
+        ComboBox comboBox = new ComboBox();
+        comboBox.addItems("foo", "bar");
+        comboBox.setValue("foo");
+        comboBox.setReadOnly(true);
+
+        testRead(design, comboBox);
+
+        // Selects items are not written out by default
+        String design2 = "<v-combo-box readonly></v-combo-box>";
+        testWrite(design2, comboBox);
+    }
+
     private String getBasicDesign() {
         return "<v-combo-box input-prompt=\"Select something\" filtering-mode=\"off\" scroll-to-selected-item='false'>";
     }
