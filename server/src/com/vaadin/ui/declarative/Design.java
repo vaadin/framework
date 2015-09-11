@@ -59,6 +59,8 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
  */
 public class Design implements Serializable {
 
+    private static final String UTF8 = "UTF-8";
+
     /**
      * Callback for creating instances of a given component class when reading
      * designs. The default implementation, {@link DefaultComponentFactory} will
@@ -350,7 +352,7 @@ public class Design implements Serializable {
      */
     private static Document parse(InputStream html) {
         try {
-            Document doc = Jsoup.parse(html, "UTF-8", "", Parser.htmlParser());
+            Document doc = Jsoup.parse(html, UTF8, "", Parser.htmlParser());
             return doc;
         } catch (IOException e) {
             throw new DesignException("The html document cannot be parsed.");
@@ -769,7 +771,8 @@ public class Design implements Serializable {
         doc.outputSettings().indentAmount(4);
         doc.outputSettings().syntax(Syntax.html);
         doc.outputSettings().prettyPrint(true);
-        outputStream.write(doc.html().getBytes());
+        doc.outputSettings();
+        outputStream.write(doc.html().getBytes(UTF8));
     }
 
 }
