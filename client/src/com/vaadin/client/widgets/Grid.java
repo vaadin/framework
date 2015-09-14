@@ -1294,16 +1294,8 @@ public class Grid<T> extends ResizeComposite implements
         private int focusedColumnIndex = -1;
         private String styleName = null;
 
-        /*
-         * Used to track Grid horizontal scrolling
-         */
-        private HandlerRegistration scrollHandler;
-
-        /*
-         * Used to open editor once Grid has vertically scrolled to the proper
-         * position and data is available
-         */
-        private HandlerRegistration dataAvailableHandler;
+        private HandlerRegistration hScrollHandler;
+        private HandlerRegistration vScrollHandler;
 
         private final Button saveButton;
         private final Button cancelButton;
@@ -1506,21 +1498,22 @@ public class Grid<T> extends ResizeComposite implements
             this.focusedColumnIndex = columnIndex;
             state = State.ACTIVATING;
 
-            if (grid.getEscalator().getVisibleRowRange().contains(rowIndex)) {
+            final Escalator escalator = grid.getEscalator();
+            if (escalator.getVisibleRowRange().contains(rowIndex)) {
                 show(rowIndex);
             } else {
-                hideOverlay();
-                dataAvailableHandler = grid
-                        .addDataAvailableHandler(new DataAvailableHandler() {
-                            @Override
-                            public void onDataAvailable(DataAvailableEvent event) {
-                                if (event.getAvailableRows().contains(rowIndex)) {
-                                    show(rowIndex);
-                                    dataAvailableHandler.removeHandler();
-                                }
-                            }
-                        });
-                grid.scrollToRow(rowIndex, ScrollDestination.MIDDLE);
+                vScrollHandler = grid.addScrollHandler(new ScrollHandler() {
+                    @Override
+                    public void onScroll(ScrollEvent event) {
+                        if (escalator.getVisibleRowRange().contains(rowIndex)) {
+                            show(rowIndex);
+                            vScrollHandler.removeHandler();
+                        }
+                    }
+                });
+                grid.scrollToRow(rowIndex,
+                        isBuffered() ? ScrollDestination.MIDDLE
+                                : ScrollDestination.ANY);
             }
         }
 
@@ -1718,7 +1711,7 @@ public class Grid<T> extends ResizeComposite implements
             TableRowElement tr = grid.getEscalator().getBody()
                     .getRowElement(rowIndex);
 
-            scrollHandler = grid.addScrollHandler(new ScrollHandler() {
+            hScrollHandler = grid.addScrollHandler(new ScrollHandler() {
                 @Override
                 public void onScroll(ScrollEvent event) {
                     updateHorizontalScrollPosition();
@@ -1932,7 +1925,7 @@ public class Grid<T> extends ResizeComposite implements
             frozenCellWrapper.removeAllChildren();
             editorOverlay.removeFromParent();
 
-            scrollHandler.removeHandler();
+            hScrollHandler.removeHandler();
 
             clearEditorColumnErrors();
 
@@ -3730,7 +3723,7 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void setEnabled(boolean enabled) {
-            if(!enabled && isOpen()) {
+            if (!enabled && isOpen()) {
                 close();
             }
 

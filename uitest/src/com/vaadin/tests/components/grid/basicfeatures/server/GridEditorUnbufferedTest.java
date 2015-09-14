@@ -66,7 +66,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testEditorMove() {
+    public void testEditorMoveWithMouse() {
         selectMenuPath(EDIT_ITEM_5);
 
         assertEditorOpen();
@@ -79,6 +79,27 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
 
         assertEquals("Editor should be at row 10", "(10, 0)", firstFieldValue);
+    }
+
+    @Test
+    public void testEditorMoveWithKeyboard() {
+        selectMenuPath(EDIT_ITEM_100);
+
+        assertEditorOpen();
+
+        getGridElement().sendKeys(Keys.ENTER);
+
+        String firstFieldValue = getEditorWidgets().get(0)
+                .getAttribute("value");
+        assertEquals("Editor should move to row 101", "(101, 0)",
+                firstFieldValue);
+
+        for (int i = 0; i < 10; i++) {
+            getGridElement().sendKeys(Keys.SHIFT, Keys.ENTER);
+        }
+
+        firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
+        assertEquals("Editor should move to row 91", "(91, 0)", firstFieldValue);
     }
 
     @Test

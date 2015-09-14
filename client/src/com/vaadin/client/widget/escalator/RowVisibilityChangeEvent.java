@@ -17,6 +17,7 @@
 package com.vaadin.client.widget.escalator;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.vaadin.shared.ui.grid.Range;
 
 /**
  * Event fired when the range of visible rows changes e.g. because of scrolling.
@@ -31,8 +32,7 @@ public class RowVisibilityChangeEvent extends
      */
     public static final Type<RowVisibilityChangeHandler> TYPE = new Type<RowVisibilityChangeHandler>();
 
-    private final int firstVisibleRow;
-    private final int visibleRowCount;
+    private final Range visibleRows;
 
     /**
      * Creates a new row visibility change event
@@ -43,8 +43,7 @@ public class RowVisibilityChangeEvent extends
      *            the number of visible rows
      */
     public RowVisibilityChangeEvent(int firstVisibleRow, int visibleRowCount) {
-        this.firstVisibleRow = firstVisibleRow;
-        this.visibleRowCount = visibleRowCount;
+        visibleRows = Range.withLength(firstVisibleRow, visibleRowCount);
     }
 
     /**
@@ -53,7 +52,7 @@ public class RowVisibilityChangeEvent extends
      * @return the index of the first visible row
      */
     public int getFirstVisibleRow() {
-        return firstVisibleRow;
+        return visibleRows.getStart();
     }
 
     /**
@@ -62,7 +61,17 @@ public class RowVisibilityChangeEvent extends
      * @return the number of visible rows
      */
     public int getVisibleRowCount() {
-        return visibleRowCount;
+        return visibleRows.length();
+    }
+
+    /**
+     * Gets the range of visible rows.
+     * 
+     * @since
+     * @return the visible rows
+     */
+    public Range getVisibleRowRange() {
+        return visibleRows;
     }
 
     /*
