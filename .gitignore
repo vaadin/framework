@@ -85,3 +85,4 @@ scripts/*.pyc
 result
 
 .sass-cache
+phantomjsdriver.log
