@@ -35,8 +35,11 @@ if __name__ == "__main__":
 	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser
 	from DeployHelpers import deployWar
 
-	# Add command line arguments for staging repos
+	# Add command line argument for staging repos
 	parser.add_argument("--repo", type=str, help="Staging repository URL", default=None)
+
+	# Add command line agrument for ignoring failing demos
+	parser.add_argument("--ignore", type=str, help="Ignored demos", default="")
 
 	args = getArgs()
 	if hasattr(args, "artifactPath") and args.artifactPath is not None:
@@ -58,6 +61,7 @@ if __name__ == "__main__":
 				for version in pomXml.getroot().findall("./{%s}version" % (nameSpace)):
 					args.version = version.text
 	demosFailed = False
+	ignoredDemos = args.ignore.split(",")
 	
 	for demo in demos:
 		print("Validating demo %s" % (demo))
@@ -76,7 +80,8 @@ if __name__ == "__main__":
 			print("%s demo validation succeeded!" % (demo))
 		except Exception as e:
 			print("%s demo validation failed: %s" % (demo, e))
-			demosFailed = True
+			if demo not in ignoredDemos:
+				demosFailed = True
 		removeDir(demo)
 		print("")
 	if demosFailed:
