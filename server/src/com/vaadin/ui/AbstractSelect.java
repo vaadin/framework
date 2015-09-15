@@ -89,7 +89,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          * Item caption mode: Item's ID's <code>String</code> representation is
          * used as caption.
          * 
-         * @since
+         * @since 7.5.6
          */
         ID_TOSTRING,
         /**

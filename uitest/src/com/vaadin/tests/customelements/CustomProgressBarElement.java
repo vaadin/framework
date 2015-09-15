@@ -36,7 +36,7 @@ public class CustomProgressBarElement extends ProgressBarElement {
     }
 
     /**
-     * @since
+     * @since 7.5.6
      * @param indicator
      * @param string
      * @return

@@ -1810,7 +1810,7 @@ public class LayoutManager {
     /**
      * Checks if there is something waiting for a layout to take place.
      * 
-     * @since
+     * @since 7.5.6
      * @return true if there are connectors waiting for measurement or layout,
      *         false otherwise
      */

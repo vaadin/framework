@@ -177,7 +177,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * by a server-side {@link com.vaadin.ui.ComboBox.ItemStyleGenerator}.
          * The returned style is prefixed by <code>v-filterselect-item-</code>.
          * 
-         * @since
+         * @since 7.5.6
          * @return the style name to use, or <code>null</code> to not apply any
          *         custom style.
          */
