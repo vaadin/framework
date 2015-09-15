@@ -426,12 +426,8 @@ public class Escalator extends Widget implements RequiresResize,
                     position = scroll.getScrollPos();
                     // Compute offset, and adjust it with an easing curve so as movement is smoother.
                     offset = F_VEL * velocity * acceleration * easingInOutCos(velocity, MAX_VEL);
-                    // Check that offset does not over-scroll
-                    double minOff = -scroll.getScrollPos();
-                    double maxOff = scroll.getScrollSize() - scroll.getOffsetSize() + minOff;
-                    offset = Math.min(Math.max(offset, minOff), maxOff);
                     // Enable or disable inertia movement in this axis
-                    run = validSpeed(velocity) && minOff < 0 && maxOff > 0;
+                    run = validSpeed(velocity);
                     if (run) {
                         event.getNativeEvent().preventDefault();
                     }
@@ -493,26 +489,35 @@ public class Escalator extends Widget implements RequiresResize,
                     xMov.startTouch(event);
                     yMov.startTouch(event);
                     touching = true;
+                } else {
+                    touching = false;
+                    animation.cancel();
+                    acceleration = 1;
                 }
             }
 
             public void touchMove(final CustomTouchEvent event) {
-                xMov.moveTouch(event);
-                yMov.moveTouch(event);
-                xMov.validate(yMov);
-                yMov.validate(xMov);
-                moveScrollFromEvent(escalator, xMov.delta, yMov.delta, event.getNativeEvent());
+                if (touching) {
+                    xMov.moveTouch(event);
+                    yMov.moveTouch(event);
+                    xMov.validate(yMov);
+                    yMov.validate(xMov);
+                    event.getNativeEvent().preventDefault();
+                    moveScrollFromEvent(escalator, xMov.delta, yMov.delta, event.getNativeEvent());
+                }
             }
 
             public void touchEnd(final CustomTouchEvent event) {
-                xMov.endTouch(event);
-                yMov.endTouch(event);
-                xMov.validate(yMov);
-                yMov.validate(xMov);
-                // Adjust duration so as longer movements take more duration
-                boolean vert = !xMov.run || yMov.run &&  Math.abs(yMov.offset) > Math.abs(xMov.offset);
-                double delta = Math.abs((vert ? yMov : xMov).offset);
-                animation.run((int)(3 * DURATION * easingOutExp(delta)));
+                if (touching) {
+                    xMov.endTouch(event);
+                    yMov.endTouch(event);
+                    xMov.validate(yMov);
+                    yMov.validate(xMov);
+                    // Adjust duration so as longer movements take more duration
+                    boolean vert = !xMov.run || yMov.run &&  Math.abs(yMov.offset) > Math.abs(xMov.offset);
+                    double delta = Math.abs((vert ? yMov : xMov).offset);
+                    animation.run((int)(3 * DURATION * easingOutExp(delta)));
+                }
             }
 
             private double easingInOutCos(double val, double max) {
