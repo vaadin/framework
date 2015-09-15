@@ -158,7 +158,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             int colDelta = 0;
 
             if (e.getKeyCode() == KEYCODE_MOVE_VERTICAL) {
-                rowDelta += (e.getShiftKey() ? -1 : +1);
+                rowDelta = (e.getShiftKey() ? -1 : +1);
             } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
                 colDelta = (e.getShiftKey() ? -1 : +1);
             }
@@ -166,8 +166,27 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             final boolean changed = rowDelta != 0 || colDelta != 0;
 
             if (changed) {
-                editRow(event, event.getRowIndex() + rowDelta,
-                        event.getFocusedColumnIndex() + colDelta);
+
+                int columnCount = event.getGrid().getVisibleColumns().size();
+
+                int colIndex = event.getFocusedColumnIndex() + colDelta;
+                int rowIndex = event.getRowIndex();
+
+                // Handle row change with horizontal move when column goes out
+                // of range.
+                if (rowDelta == 0) {
+                    if (colIndex >= columnCount
+                            && rowIndex < event.getGrid().getDataSource()
+                                    .size() - 1) {
+                        rowDelta = 1;
+                        colIndex = 0;
+                    } else if (colIndex < 0 && rowIndex > 0) {
+                        rowDelta = -1;
+                        colIndex = columnCount - 1;
+                    }
+                }
+
+                editRow(event, rowIndex + rowDelta, colIndex);
 
                 // FIXME should be in editRow
                 event.getGrid().fireEvent(new EditorMoveEvent(cell));
