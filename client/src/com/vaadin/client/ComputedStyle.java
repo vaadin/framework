@@ -335,7 +335,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the top and bottom margin
      * 
-     * @since
+     * @since 7.5.6
      * @return the sum of the top and bottom margin
      */
     public double getMarginHeight() {
@@ -348,7 +348,7 @@ public class ComputedStyle {
     /**
      * Returns the sum of the top and bottom margin
      * 
-     * @since
+     * @since 7.5.6
      * @return the sum of the left and right margin
      */
     public double getMarginWidth() {

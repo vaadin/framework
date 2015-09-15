@@ -55,7 +55,7 @@ public class ComboBox extends AbstractSelect implements
      * shown in the popup. The CSS class name that will be added to the item
      * style names is <tt>v-filterselect-item-[style name]</tt>.
      * 
-     * @since
+     * @since 7.5.6
      * @see ComboBox#setItemStyleGenerator(ItemStyleGenerator)
      */
     public interface ItemStyleGenerator extends Serializable {
@@ -917,7 +917,7 @@ public class ComboBox extends AbstractSelect implements
      * @param itemStyleGenerator
      *            the item style generator to set, or <code>null</code> to not
      *            use any custom item styles
-     * @since
+     * @since 7.5.6
      */
     public void setItemStyleGenerator(ItemStyleGenerator itemStyleGenerator) {
         this.itemStyleGenerator = itemStyleGenerator;
@@ -929,7 +929,7 @@ public class ComboBox extends AbstractSelect implements
      * 
      * @return the itemStyleGenerator the currently used item style generator,
      *         or <code>null</code> if no generator is used
-     * @since
+     * @since 7.5.6
      */
     public ItemStyleGenerator getItemStyleGenerator() {
         return itemStyleGenerator;
