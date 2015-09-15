@@ -16,6 +16,7 @@
 package com.vaadin.client.widget.grid;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,8 +37,9 @@ import com.vaadin.client.widgets.Grid.EditorDomEvent;
 public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
     public static final int KEYCODE_OPEN = KeyCodes.KEY_ENTER;
-    public static final int KEYCODE_MOVE = KeyCodes.KEY_ENTER;
+    public static final int KEYCODE_MOVE_VERTICAL = KeyCodes.KEY_ENTER;
     public static final int KEYCODE_CLOSE = KeyCodes.KEY_ESCAPE;
+    private static final int KEYCODE_MOVE_HORIZONTAL = KeyCodes.KEY_TAB;
 
     private double lastTouchEventTime = 0;
     private int lastTouchEventX = -1;
@@ -122,11 +124,13 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     }
 
     /**
-     * Moves the editor to another row if the received event is a move event.
-     * The default implementation moves the editor to the clicked row if the
-     * event is a click; otherwise, if the event is a keydown and the keycode is
-     * {@link #KEYCODE_MOVE}, moves the editor one row up or down if the shift
-     * key is pressed or not, respectively.
+     * Moves the editor to another row or another column if the received event
+     * is a move event. The default implementation moves the editor to the
+     * clicked row if the event is a click; otherwise, if the event is a keydown
+     * and the keycode is {@link #KEYCODE_MOVE_VERTICAL}, moves the editor one
+     * row up or down if the shift key is pressed or not, respectively. Keydown
+     * event with keycode {@link #KEYCODE_MOVE_HORIZONTAL} moves the editor left
+     * or right if shift key is pressed or not, respectively.
      * 
      * @param event
      *            the received event
@@ -148,11 +152,53 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             return true;
         }
 
-        else if (e.getTypeInt() == Event.ONKEYDOWN
-                && e.getKeyCode() == KEYCODE_MOVE) {
+        else if (e.getTypeInt() == Event.ONKEYDOWN) {
 
-            editRow(event, event.getRowIndex() + (e.getShiftKey() ? -1 : +1),
-                    event.getFocusedColumnIndex());
+            int rowDelta = 0;
+            int colDelta = 0;
+
+            if (e.getKeyCode() == KEYCODE_MOVE_VERTICAL) {
+                rowDelta += (e.getShiftKey() ? -1 : +1);
+            } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
+                colDelta = (e.getShiftKey() ? -1 : +1);
+            }
+
+            final boolean changed = rowDelta != 0 || colDelta != 0;
+
+            if (changed) {
+                editRow(event, event.getRowIndex() + rowDelta,
+                        event.getFocusedColumnIndex() + colDelta);
+
+                // FIXME should be in editRow
+                event.getGrid().fireEvent(new EditorMoveEvent(cell));
+            }
+
+            return changed;
+        }
+
+        return false;
+    }
+
+    /**
+     * Moves the editor to another column if the received event is a move event.
+     * By default the editor is moved on a keydown event with keycode
+     * {@link #KEYCODE_MOVE_HORIZONTAL}. This moves the editor left or right if
+     * shift key is pressed or not, respectively.
+     * 
+     * @param event
+     *            the received event
+     * @return true if this method handled the event and nothing else should be
+     *         done, false otherwise
+     */
+    protected boolean handleBufferedMoveEvent(EditorDomEvent<T> event) {
+        Event e = event.getDomEvent();
+        final EventCellReference<T> cell = event.getCell();
+
+        if (e.getType().equals(BrowserEvents.KEYDOWN)
+                && e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
+
+            editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()
+                    + (e.getShiftKey() ? -1 : +1));
 
             // FIXME should be in editRow
             event.getGrid().fireEvent(new EditorMoveEvent(cell));
@@ -234,14 +280,25 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         final Editor<T> editor = event.getEditor();
         final boolean isBody = event.getCell().isBody();
 
+        final boolean handled;
         if (event.getGrid().isEditorActive()) {
-            return (!editor.isBuffered() && isBody && handleMoveEvent(event))
-                    || handleCloseEvent(event)
-                    // Swallow events if editor is open and buffered (modal)
-                    || editor.isBuffered();
+            handled = handleCloseEvent(event)
+                    || (!editor.isBuffered() && isBody && handleMoveEvent(event))
+                    || (editor.isBuffered() && isBody && handleBufferedMoveEvent(event));
         } else {
-            return event.getGrid().isEnabled() && isBody
+            handled = event.getGrid().isEnabled() && isBody
                     && handleOpenEvent(event);
         }
+
+        if (handled) {
+            // Prevent any defaults for handled events.
+            event.getDomEvent().preventDefault();
+        }
+
+        // Buffered mode should swallow all events, if not already handled.
+        boolean swallowEvent = event.getGrid().isEditorActive()
+                && editor.isBuffered();
+
+        return handled || swallowEvent;
     }
 }

@@ -1232,7 +1232,7 @@ public class Grid<T> extends ResizeComposite implements
      * @param <T>
      *            the row type of the grid
      */
-    public static class Editor<T> {
+    public static class Editor<T> implements DeferredWorker {
 
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
@@ -1488,14 +1488,37 @@ public class Grid<T> extends ResizeComposite implements
                         "Cannot edit row: editor is not enabled");
             }
             if (state != State.INACTIVE) {
-                if (isBuffered()) {
+                if (isBuffered() && this.rowIndex != rowIndex) {
                     throw new IllegalStateException(
                             "Cannot edit row: editor already in edit mode");
                 }
             }
+            if (columnIndex >= grid.getVisibleColumns().size()) {
+                throw new IllegalArgumentException("Edited column index "
+                        + columnIndex
+                        + " was bigger than visible column count.");
+            }
 
-            this.rowIndex = rowIndex;
+            if (this.rowIndex == rowIndex && focusedColumnIndex == columnIndex) {
+                // NO-OP
+                return;
+            }
+
+            if (focusedColumnIndex != columnIndex
+                    && columnIndex >= grid.getFrozenColumnCount()) {
+                // Scroll to new focused column.
+                grid.getEscalator().scrollToColumn(columnIndex,
+                        ScrollDestination.ANY, 0);
+            }
             this.focusedColumnIndex = columnIndex;
+
+            if (this.rowIndex == rowIndex) {
+                updateHorizontalScrollPosition();
+                focusColumn(focusedColumnIndex);
+                // No need to request anything from the editor handler.
+                return;
+            }
+            this.rowIndex = rowIndex;
             state = State.ACTIVATING;
 
             final Escalator escalator = grid.getEscalator();
@@ -1705,7 +1728,6 @@ public class Grid<T> extends ResizeComposite implements
         protected void showOverlay() {
             // Ensure overlay is hidden initially
             hideOverlay();
-
             DivElement gridElement = DivElement.as(grid.getElement());
 
             TableRowElement tr = grid.getEscalator().getBody()
@@ -1776,14 +1798,7 @@ public class Grid<T> extends ResizeComposite implements
                                 }, FocusEvent.getType()));
                     }
 
-                    if (i == focusedColumnIndex) {
-                        if (editor instanceof Focusable) {
-                            ((Focusable) editor).focus();
-                        } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
-                            ((com.google.gwt.user.client.ui.Focusable) editor)
-                                    .setFocus(true);
-                        }
-                    }
+                    focusColumn(focusedColumnIndex);
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
                     cell.addClassName(tr.getCells().getItem(i).getClassName());
@@ -1883,6 +1898,23 @@ public class Grid<T> extends ResizeComposite implements
             // Do not render over the vertical scrollbar
             editorOverlay.getStyle().setWidth(grid.escalator.getInnerWidth(),
                     Unit.PX);
+        }
+
+        private void focusColumn(int colIndex) {
+            if (colIndex < 0 || colIndex >= grid.getVisibleColumns().size()) {
+                // NO-OP
+                return;
+            }
+
+            Widget editor = getWidget(grid.getVisibleColumn(colIndex));
+            if (colIndex == focusedColumnIndex) {
+                if (editor instanceof Focusable) {
+                    ((Focusable) editor).focus();
+                } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
+                    ((com.google.gwt.user.client.ui.Focusable) editor)
+                            .setFocus(true);
+                }
+            }
         }
 
         private boolean buttonsShouldBeRenderedBelow(TableRowElement tr) {
@@ -2149,6 +2181,11 @@ public class Grid<T> extends ResizeComposite implements
          */
         public EventHandler<T> getEventHandler() {
             return eventHandler;
+        }
+
+        @Override
+        public boolean isWorkPending() {
+            return saveTimeout.isRunning() || bindTimeout.isRunning();
         }
     }
 
@@ -7738,7 +7775,8 @@ public class Grid<T> extends ResizeComposite implements
     @Override
     public boolean isWorkPending() {
         return escalator.isWorkPending() || dataIsBeingFetched
-                || autoColumnWidthsRecalculator.isScheduled();
+                || autoColumnWidthsRecalculator.isScheduled()
+                || editor.isWorkPending();
     }
 
     /**
