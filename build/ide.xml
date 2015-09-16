@@ -98,6 +98,9 @@
             <antcall target="compile-theme" inheritRefs="true">
               <param name="theme" value="tests-valo-disabled-animations" />
             </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+              <param name="theme" value="tests-valo-no-font-awesome" />
+            </antcall>
         </parallel>
     </target>
 

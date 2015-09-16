@@ -5,6 +5,7 @@
 @import "lato/lato";
 @import "lora/lora";
 
+$v-font-awesome: true !default;
 
 $fontawesome-pathPrefix: null;
   
@@ -13,8 +14,11 @@ $fontawesome-pathPrefix: null;
 }
 
 @mixin valo-fonts {
-  // Font Awesome icons from the Base theme
-  @include v-font(FontAwesome, "#{$fontawesome-pathPrefix}../base/fonts/fontawesome-webfont");
+  // Valo Icons
+  @include v-font(ValoIcons, "#{$fontawesome-pathPrefix}../valo/fonts/valoicons/valoicons-webfont");
+  @if $v-font-awesome {
+  	@include v-font(FontAwesome, "#{$fontawesome-pathPrefix}../base/fonts/fontawesome-webfont");
+  }
 }
 
 

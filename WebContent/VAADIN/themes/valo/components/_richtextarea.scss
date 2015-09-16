@@ -2,7 +2,7 @@
  *
  * @group richtextarea
  */
-$valo-richtextarea-use-font-awesome: true !default;
+$valo-richtextarea-use-valo-icons: true !default;
 
 /**
  *
@@ -45,9 +45,9 @@ $valo-richtextarea-use-font-awesome: true !default;
     @include valo-gradient($color: darken($v-background-color, 10%), $gradient: $grad, $direction: to top);
   }
 
-  @if $valo-richtextarea-use-font-awesome {
+  @if $valo-richtextarea-use-valo-icons {
 
-    // List of title attribute values and Font Awesome icons for the formatting buttons
+    // List of title attribute values and Valo Icons for the formatting buttons
     $icons:  "Toggle Bold" "\f032",
               "Toggle Italic" "\f033",
               "Toggle Underline" "\f0cd",
@@ -73,7 +73,7 @@ $valo-richtextarea-use-font-awesome: true !default;
       }
 
       div:before {
-        font-family: FontAwesome;
+        font-family: ValoIcons;
       }
 
       @each $pair in $icons {
@@ -84,7 +84,7 @@ $valo-richtextarea-use-font-awesome: true !default;
         }
       }
     }
-  } // Use FontAwesome
+  } // Use ValoIcons
 
   .#{$primary-stylename} .gwt-RichTextToolbar-bottom {
     font-size: round($v-font-size * 0.8);
