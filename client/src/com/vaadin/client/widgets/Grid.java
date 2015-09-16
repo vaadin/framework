@@ -1768,6 +1768,8 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.appendChild(cellWrapper);
             editorOverlay.appendChild(messageAndButtonsWrapper);
 
+            updateBufferedStyleName();
+
             int frozenColumns = grid.getVisibleFrozenColumnCount();
             double frozenColumnsWidth = 0;
             double cellHeight = 0;
@@ -1948,6 +1950,7 @@ public class Grid<T> extends ResizeComposite implements
             int messageAndButtonsHeight = messageAndButtonsWrapper
                     .getOffsetHeight();
             double bottomOfButtons = trPageBottom + messageAndButtonsHeight;
+
             return bottomOfButtons < tfootPageTop;
         }
 
@@ -1985,6 +1988,16 @@ public class Grid<T> extends ResizeComposite implements
 
             if (focusedColumnIndex != -1) {
                 grid.focusCell(rowIndex, focusedColumnIndex);
+            }
+        }
+
+        private void updateBufferedStyleName() {
+            if (isBuffered()) {
+                editorOverlay.removeClassName("unbuffered");
+                editorOverlay.addClassName("buffered");
+            } else {
+                editorOverlay.removeClassName("buffered");
+                editorOverlay.addClassName("unbuffered");
             }
         }
 

@@ -349,6 +349,13 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     -moz-box-sizing: border-box;
     margin-top: nth($v-grid-border, 1) * -1;
     @include box-shadow(0 0 9px rgba(0,0,0,.2));
+    
+    // Unbuffered footer needs to be 100% width to display correctly
+    &.unbuffered {
+      .#{$primaryStyleName}-editor-footer {
+        width: 100%;
+      }
+    }
   }
 
   .#{$primaryStyleName}-editor-cells {
