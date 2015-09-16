@@ -236,13 +236,21 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                                         error);
                             }
 
-                            // Editor should not be touched while there's a
-                            // request pending.
-                            if (editorHandler.currentRequest == null) {
-                                getWidget().getEditor().setEditorError(
-                                        getColumnErrors(),
-                                        columnToErrorMessage.keySet());
-                            }
+                            // Handle Editor RPC before updating error status
+                            Scheduler.get().scheduleFinally(
+                                    new ScheduledCommand() {
+
+                                        @Override
+                                        public void execute() {
+                                            updateErrorColumns();
+                                        }
+                                    });
+                        }
+
+                        public void updateErrorColumns() {
+                            getWidget().getEditor().setEditorError(
+                                    getColumnErrors(),
+                                    columnToErrorMessage.keySet());
                         }
                     });
         }

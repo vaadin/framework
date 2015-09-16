@@ -54,6 +54,13 @@ public interface EditorHandler<T> {
         public int getRowIndex();
 
         /**
+         * Returns the index of the column being focused.
+         * 
+         * @return the column index
+         */
+        public int getColumnIndex();
+
+        /**
          * Returns the row data related to the row being requested.
          * 
          * @return the row data

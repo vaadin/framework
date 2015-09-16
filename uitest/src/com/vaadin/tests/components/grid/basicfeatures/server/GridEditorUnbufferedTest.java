@@ -114,12 +114,26 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         selectMenuPath(EDIT_ITEM_5);
 
         getEditorWidgets().get(1).click();
-        getEditorWidgets().get(1).sendKeys("not a number");
+        String faultyInt = "not a number";
+        getEditorWidgets().get(1).sendKeys(faultyInt);
 
         getGridElement().getCell(10, 0).click();
 
         assertEquals("Editor should not move from row 5", "(5, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));
+
+        for (int i = 0; i < faultyInt.length(); ++i) {
+            getEditorWidgets().get(1).sendKeys(Keys.BACK_SPACE);
+        }
+
+        // FIXME: Needs to trigger one extra validation round-trip for now
+        getGridElement().sendKeys(Keys.ENTER);
+
+        getGridElement().getCell(10, 0).click();
+
+        assertEquals("Editor should not to row 10", "(10, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
+
     }
 
     @Test

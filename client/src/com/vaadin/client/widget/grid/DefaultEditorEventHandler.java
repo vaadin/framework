@@ -17,6 +17,7 @@ package com.vaadin.client.widget.grid;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
@@ -270,7 +271,9 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         // Limit colIndex between 0 and colCount - 1
         colIndex = Math.max(0, Math.min(colCount - 1, colIndex));
 
-        triggerValueChangeEvent(event);
+        if (rowIndex != event.getRowIndex()) {
+            triggerValueChangeEvent(event);
+        }
 
         event.getEditor().editRow(rowIndex, colIndex);
     }
@@ -287,9 +290,10 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         // Force a blur to cause a value change event
         Widget editorWidget = event.getEditorWidget();
         if (editorWidget != null) {
-            if (editorWidget.getElement().isOrHasChild(
-                    WidgetUtil.getFocusedElement())) {
-                WidgetUtil.getFocusedElement().blur();
+            Element focusedElement = WidgetUtil.getFocusedElement();
+            if (editorWidget.getElement().isOrHasChild(focusedElement)) {
+                focusedElement.blur();
+                focusedElement.focus();
             }
         }
     }
