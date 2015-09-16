@@ -22,9 +22,9 @@ import java.util.Collection;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -35,6 +35,7 @@ import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -573,14 +574,19 @@ public class Button extends AbstractFocusable implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
-        String content = design.html();
-        setCaption(content);
+        String content;
         // plain-text (default is html)
         Boolean plain = DesignAttributeHandler.readAttribute(
                 DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
         if (plain == null || !plain) {
             setHtmlContentAllowed(true);
+            content = design.html();
+        } else {
+            // content is not intended to be interpreted as HTML,
+            // so html entities need to be decoded
+            content = DesignFormatter.unencodeFromTextNode(design.html());
         }
+        setCaption(content);
         if (attr.hasKey("icon-alt")) {
             setIconAlternateText(DesignAttributeHandler.readAttribute(
                     "icon-alt", attr, String.class));
@@ -630,6 +636,10 @@ public class Button extends AbstractFocusable implements
         // plain-text (default is html)
         if (!isHtmlContentAllowed()) {
             design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+            // encode HTML entities
+            if (content != null) {
+                design.html(DesignFormatter.encodeForTextNode(content));
+            }
         }
         // icon-alt
         DesignAttributeHandler.writeAttribute("icon-alt", attr,

@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -23,21 +26,27 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.declarative.DesignContext;
 
 public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSingleDefaultHeader() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
                 + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" //
-                + "<thead>" //
-                + "   <tr default=''><th plain-text=''>Column1<th plain-text=''>Column2<th plain-text=''>Column3</tr>" //
-                + "</thead>" //
+                + "</colgroup>"
+                + "<thead>"
+                + "   <tr default=''>"
+                + "     <th plain-text=''>Column1</th>"
+                + "     <th plain-text=''>Column2</th>"
+                + "     <th plain-text=''>Column3</tr>"
+                + "</thead>"
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -49,15 +58,18 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSingleDefaultHTMLHeader() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>" + "</colgroup>" //
-                + "<thead>" //
-                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>" //
-                + "</thead>" //
+                + "   <col sortable='' property-id='Column3'>"
+                + "</colgroup>"
+                + "<thead>"
+                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>"
+                + "</thead>"
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -74,13 +86,14 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testNoHeaderRows() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" //
-                + "<thead />" //
+                + "</colgroup>" 
+                + "<thead />" 
                 + "</table></v-grid>";
-
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.removeHeaderRow(grid.getDefaultHeaderRow());
@@ -91,18 +104,20 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testMultipleHeadersWithColSpans() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
                 + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" //
-                + "<thead>" //
+                + "</colgroup>" 
+                + "<thead>" 
                 + "   <tr><th colspan=3>Baz</tr>"
-                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>" //
-                + "   <tr><th>Foo<th colspan=2>Bar</tr>" //
-                + "</thead>" //
+                + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>" 
+                + "   <tr><th>Foo<th colspan=2>Bar</tr>" 
+                + "</thead>" 
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -125,17 +140,19 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSingleDefaultFooter() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
                 + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" //
+                + "</colgroup>" 
                 + "<thead />" // No headers read or written
-                + "<tfoot>" //
-                + "   <tr><td plain-text=''>Column1<td plain-text=''>Column2<td plain-text=''>Column3</tr>" //
-                + "</tfoot>" //
+                + "<tfoot>" 
+                + "   <tr><td plain-text=''>Column1<td plain-text=''>Column2<td plain-text=''>Column3</tr>" 
+                + "</tfoot>" 
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -154,16 +171,19 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSingleDefaultHTMLFooter() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>" + "</colgroup>" //
+                + "   <col sortable='' property-id='Column3'>" 
+                + "</colgroup>" 
                 + "<thead />" // No headers read or written
-                + "<tfoot>" //
-                + "   <tr><td>Column1<td>Column2<td>Column3</tr>" //
-                + "</tfoot>" //
+                + "<tfoot>" 
+                + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
+                + "</tfoot>" 
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -182,19 +202,21 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testMultipleFootersWithColSpans() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
                 + "   <col sortable='' property-id='Column3'>"
-                + "</colgroup>" //
+                + "</colgroup>" 
                 + "<thead />" // No headers read or written.
-                + "<tfoot>" //
+                + "<tfoot>" 
                 + "   <tr><td colspan=3>Baz</tr>"
-                + "   <tr><td>Column1<td>Column2<td>Column3</tr>" //
-                + "   <tr><td>Foo<td colspan=2>Bar</tr>" //
-                + "</tfoot>" //
+                + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
+                + "   <tr><td>Foo<td colspan=2>Bar</tr>" 
+                + "</tfoot>" 
                 + "</table></v-grid>";
+        //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -219,15 +241,16 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testComponentInGridHeader() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" //
-                + "<thead>" //
+                + "</colgroup>" 
+                + "<thead>" 
                 + "<tr default=''><th><v-label><b>Foo</b></v-label></tr>"
-                + "</thead>"//
+                + "</thead>"
                 + "</table></v-grid>";
-
+      //@formatter:on
         Label component = new Label("<b>Foo</b>");
         component.setContentMode(ContentMode.HTML);
 
@@ -241,16 +264,17 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testComponentInGridFooter() {
-        String design = "<v-grid><table>"//
+        //@formatter:off
+        String design = "<v-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
-                + "</colgroup>" //
+                + "</colgroup>" 
                 + "<thead />" // No headers read or written
-                + "<tfoot>" //
-                + "<tr><td><v-label><b>Foo</b></v-label></tr>"//
-                + "</tfoot>" //
+                + "<tfoot>" 
+                + "<tr><td><v-label><b>Foo</b></v-label></tr>"
+                + "</tfoot>" 
                 + "</table></v-grid>";
-
+        //@formatter:on
         Label component = new Label("<b>Foo</b>");
         component.setContentMode(ContentMode.HTML);
 
@@ -261,5 +285,68 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
         testRead(design, grid, true);
         testWrite(design, grid);
+    }
+
+    @Test
+    public void testHtmlEntitiesinGridHeaderFooter() {
+        // @formatter off
+        String design = "<v-grid><table>" + "<colgroup>"
+                + "  <col sortable=\"true\" property-id=\"> test\">"
+                + "</colgroup>" + "<thead>"
+                + "  <tr><th plain-text=\"true\">&gt; Test</th></tr>"
+                + "</thead>" + "<tfoot>"
+                + "  <tr><td plain-text=\"true\">&gt; Test</td></tr>"
+                + "</tfoot>" + "<tbody />" + "</table></v-grid>";
+        // @formatter off
+        Grid grid = read(design);
+        String actualHeader = grid.getHeaderRow(0).getCell("> test").getText();
+        String actualFooter = grid.getFooterRow(0).getCell("> test").getText();
+        String expected = "> Test";
+
+        Assert.assertEquals(expected, actualHeader);
+        Assert.assertEquals(expected, actualFooter);
+
+        design = design.replace("plain-text=\"true\"", "");
+        grid = read(design);
+        actualHeader = grid.getHeaderRow(0).getCell("> test").getHtml();
+        actualFooter = grid.getFooterRow(0).getCell("> test").getHtml();
+        expected = "&gt; Test";
+
+        Assert.assertEquals(expected, actualHeader);
+        Assert.assertEquals(expected, actualFooter);
+
+        grid = new Grid();
+        grid.setColumns("test");
+        HeaderRow header = grid.addHeaderRowAt(0);
+        FooterRow footer = grid.addFooterRowAt(0);
+        grid.removeHeaderRow(grid.getDefaultHeaderRow());
+
+        // entities should be encoded when writing back, not interpreted as HTML
+        header.getCell("test").setText("&amp; Test");
+        footer.getCell("test").setText("&amp; Test");
+
+        Element root = new Element(Tag.valueOf("v-grid"), "");
+        grid.writeDesign(root, new DesignContext());
+
+        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("th")
+                .get(0).html());
+        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("td")
+                .get(0).html());
+
+        header = grid.addHeaderRowAt(0);
+        footer = grid.addFooterRowAt(0);
+
+        // entities should not be encoded, this is already given as HTML
+        header.getCell("test").setHtml("&amp; Test");
+        footer.getCell("test").setHtml("&amp; Test");
+
+        root = new Element(Tag.valueOf("v-grid"), "");
+        grid.writeDesign(root, new DesignContext());
+
+        Assert.assertEquals("&amp; Test", root.getElementsByTag("th").get(0)
+                .html());
+        Assert.assertEquals("&amp; Test", root.getElementsByTag("td").get(0)
+                .html());
+
     }
 }

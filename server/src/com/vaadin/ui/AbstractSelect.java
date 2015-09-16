@@ -55,6 +55,7 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * <p>
@@ -2232,12 +2233,13 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         String itemId;
+        String caption = DesignFormatter.unencodeFromTextNode(child.html());
         if (child.hasAttr("item-id")) {
             itemId = child.attr("item-id");
             addItem(itemId);
-            setItemCaption(itemId, child.html());
+            setItemCaption(itemId, caption);
         } else {
-            addItem(itemId = child.html());
+            addItem(itemId = caption);
         }
 
         if (child.hasAttr("icon")) {
@@ -2300,10 +2302,10 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         String caption = getItemCaption(itemId);
         if (caption != null && !caption.equals(itemId.toString())) {
-            element.html(caption);
+            element.html(DesignFormatter.encodeForTextNode(caption));
             element.attr("item-id", itemId.toString());
         } else {
-            element.html(itemId.toString());
+            element.html(DesignFormatter.encodeForTextNode(itemId.toString()));
         }
 
         Resource icon = getItemIcon(itemId);

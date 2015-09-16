@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.server.component.table;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -24,6 +25,7 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.declarative.Design;
 
 /**
  * Test declarative support for {@link Table}.
@@ -165,5 +167,31 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
         testRead(design, table);
         testWrite(design, table, true);
+    }
+    
+    @Test
+    public void testHtmlEntities() {
+        String design = "<v-table>"
+                + "<table>"
+                + "  <colgroup>"
+                + "    <col property-id=\"test\""
+                + "  </colgroup>"
+                + "  <thead>"
+                + "    <tr><th>&amp; Test</th></tr>"
+                + "  </thead>"
+                + "  <tbody>"
+                + "    <tr item-id=\"test\"><td>&amp; Test</tr>"
+                + "  </tbody>"
+                + "  <tfoot>"
+                + "    <tr><td>&amp; Test</td></tr>"
+                + "  </tfoot>"
+                + "</table>"
+                + "</v-table>";
+        Table read = read(design);
+        
+        Assert.assertEquals("& Test",
+                read.getContainerProperty("test", "test").getValue());
+        Assert.assertEquals("& Test", read.getColumnHeader("test"));
+        Assert.assertEquals("& Test", read.getColumnFooter("test"));
     }
 }

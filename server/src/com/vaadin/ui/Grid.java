@@ -108,6 +108,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -2273,7 +2274,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         setHtml(cellElement.html());
                     }
                 } else {
-                    setText(cellElement.html());
+                    // text – need to unescape HTML entities
+                    setText(DesignFormatter.unencodeFromTextNode(cellElement
+                            .html()));
                 }
             }
         }
@@ -4981,7 +4984,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /*
          * This method is a workaround for the fact that Vaadin re-applies
          * widget dimensions (height/width) on each state change event. The
-         * original design was to have setHeight an setHeightByRow be equals,
+         * original design was to have setHeight and setHeightByRow be equals,
          * and whichever was called the latest was considered in effect.
          * 
          * But, because of Vaadin always calling setHeight on the widget, this
@@ -6752,7 +6755,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Object value = datasource.getItem(itemId)
                             .getItemProperty(c.getPropertyId()).getValue();
                     tableRow.appendElement("td").append(
-                            (value != null ? value.toString() : ""));
+                            (value != null ? DesignFormatter
+                                    .encodeForTextNode(value.toString()) : ""));
                 }
             }
         }

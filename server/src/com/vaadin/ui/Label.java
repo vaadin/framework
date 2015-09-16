@@ -31,6 +31,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Label component for showing non-editable short texts.
@@ -585,13 +586,17 @@ public class Label extends AbstractComponent implements Property<String>,
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         String innerHtml = design.html();
-        if (innerHtml != null && !"".equals(innerHtml)) {
-            setValue(innerHtml);
-        }
-        if (design.hasAttr(DESIGN_ATTR_PLAIN_TEXT)) {
+        boolean plainText = design.hasAttr(DESIGN_ATTR_PLAIN_TEXT);
+        if (plainText) {
             setContentMode(ContentMode.TEXT);
         } else {
             setContentMode(ContentMode.HTML);
+        }
+        if (innerHtml != null && !"".equals(innerHtml)) {
+            if (plainText) {
+                innerHtml = DesignFormatter.unencodeFromTextNode(innerHtml);
+            }
+            setValue(innerHtml);
         }
     }
 
@@ -625,6 +630,7 @@ public class Label extends AbstractComponent implements Property<String>,
         // plain-text (default is html)
         if (getContentMode() == ContentMode.TEXT) {
             design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+            design.html(DesignFormatter.encodeForTextNode(getValue()));
         }
     }
 }

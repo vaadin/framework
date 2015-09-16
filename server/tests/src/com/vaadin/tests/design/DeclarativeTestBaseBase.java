@@ -36,6 +36,18 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.ShouldWriteDataDelegate;
 
 public abstract class DeclarativeTestBaseBase<T extends Component> {
+    private static final class AlwaysWriteDelegate implements
+            ShouldWriteDataDelegate {
+        private static final long serialVersionUID = -6345914431997793599L;
+
+        @Override
+        public boolean shouldWriteData(Component component) {
+            return true;
+        }
+    }
+
+    public static final ShouldWriteDataDelegate ALWAYS_WRITE_DATA = new AlwaysWriteDelegate();
+
     public interface EqualsAsserter<TT> {
         public void assertObjectEquals(TT o1, TT o2);
     }
@@ -55,12 +67,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
             DesignContext dc = new DesignContext();
             if (writeData) {
-                dc.setShouldWriteDataDelegate(new ShouldWriteDataDelegate() {
-                    @Override
-                    public boolean shouldWriteData(Component component) {
-                        return true;
-                    }
-                });
+                dc.setShouldWriteDataDelegate(DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
             }
             dc.setRootComponent(object);
             Design.write(dc, outputStream);
