@@ -118,14 +118,19 @@ public class WidgetSet {
         ConnectorBundleLoader loader = ConnectorBundleLoader.get();
         String bundleName = null;
         Integer t = tag;
+        String serverSideClassName = "";
         do {
-            String serverSideClassName = conf.getServerSideClassNameForTag(t);
+            serverSideClassName = conf.getServerSideClassNameForTag(t);
             bundleName = loader.getBundleForIdentifier(serverSideClassName);
 
             t = conf.getParentTag(t);
         } while (bundleName == null && t != null);
 
         if (bundleName != null && !loader.isBundleLoaded(bundleName)) {
+            getLogger().info(
+                    "Loading bundle " + bundleName
+                            + " to be able to render server side class "
+                            + serverSideClassName);
             ApplicationConfiguration.startDependencyLoading();
             loader.loadBundle(bundleName, new BundleLoadCallback() {
                 @Override
