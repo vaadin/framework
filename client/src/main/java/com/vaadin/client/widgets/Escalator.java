@@ -48,6 +48,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
@@ -319,15 +320,9 @@ public class Escalator extends Widget implements RequiresResize,
              * {@link com.google.gwt.dom.client.NativeEvent NativeEvent} isn't
              * properly populated with the correct values.
              */
-            private final static class CustomTouchEvent extends
-                    JavaScriptObject {
+            private final static class CustomTouchEvent extends NativeEvent {
                 protected CustomTouchEvent() {
                 }
-
-                public native NativeEvent getNativeEvent()
-                /*-{
-                    return this;
-                }-*/;
 
                 public native int getPageX()
                 /*-{
@@ -337,6 +332,11 @@ public class Escalator extends Widget implements RequiresResize,
                 public native int getPageY()
                 /*-{
                     return this.targetTouches[0].pageY;
+                }-*/;
+
+                public native boolean isCancelable()
+                /*-{
+                    return this.cancelable;
                 }-*/;
             }
 
@@ -389,6 +389,7 @@ public class Escalator extends Widget implements RequiresResize,
                 final List<Double> speeds = new ArrayList<Double>();
                 final ScrollbarBundle scroll;
                 double position, offset, velocity, prevPos, prevTime, delta;
+                double scrollMax;
                 boolean run, vertical;
 
                 public Movement(boolean vertical) {
@@ -401,11 +402,15 @@ public class Escalator extends Widget implements RequiresResize,
                     speeds.clear();
                     prevPos = pagePosition(event);
                     prevTime = Duration.currentTimeMillis();
+                    scrollMax = scroll.getScrollSize() - scroll.getOffsetSize();
+                    delta = 0;
                 }
 
                 public void moveTouch(CustomTouchEvent event) {
                     double pagePosition = pagePosition(event);
-                    if (pagePosition > -1) {
+                    run = false;
+                    // skip grids without scroll
+                    if (scrollMax > 1) {
                         delta = prevPos - pagePosition;
                         double now = Duration.currentTimeMillis();
                         double ellapsed = now - prevTime;
@@ -414,12 +419,21 @@ public class Escalator extends Widget implements RequiresResize,
                         // storing again
                         if (speeds.size() > 0 && !validSpeed(speeds.get(0))) {
                             speeds.clear();
-                            run = true;
                         }
                         speeds.add(0, velocity);
                         prevTime = now;
                         prevPos = pagePosition;
+                        position = scroll.getScrollPos();
                     }
+                }
+
+                public void validate(Movement other) {
+                    // We don't move the scroll if no delta, scroll position
+                    // has reached the edge, or movement in one direction is
+                    // insignificant.
+                    run = delta != 0 && inScrollRange(position + delta)
+                            && Math.abs(other.delta / delta) < F_AXIS;
+                    if (!run) delta = 0;
                 }
 
                 public void endTouch(CustomTouchEvent event) {
@@ -438,24 +452,24 @@ public class Escalator extends Widget implements RequiresResize,
                     // Enable or disable inertia movement in this axis
                     run = validSpeed(velocity);
                     if (run) {
-                        event.getNativeEvent().preventDefault();
-                    }
-                }
-
-                void validate(Movement other) {
-                    if (!run || other.velocity > 0
-                            && Math.abs(velocity / other.velocity) < F_AXIS) {
-                        delta = offset = 0;
-                        run = false;
+                        event.preventDefault();
                     }
                 }
 
                 void stepAnimation(double progress) {
-                    scroll.setScrollPos(position + offset * progress);
+                    if (run) {
+                        double p = position + offset * progress;
+                        scroll.setScrollPos(p);
+                        run = inScrollRange(p);
+                    }
+                }
+
+                boolean inScrollRange(double p) {
+                    return p > 0 && p < scrollMax;
                 }
 
                 int pagePosition(CustomTouchEvent event) {
-                    JsArray<Touch> a = event.getNativeEvent().getTouches();
+                    JsArray<Touch> a = event.getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
                 }
 
@@ -470,6 +484,11 @@ public class Escalator extends Widget implements RequiresResize,
                 public void onUpdate(double progress) {
                     xMov.stepAnimation(progress);
                     yMov.stepAnimation(progress);
+                    if (!xMov.run && !yMov.run) {
+                        // Stop animation as soon as we reach the border,
+                        // so as we do not wait to move the external scroll.
+                        cancel();
+                    }
                 }
 
                 @Override
@@ -494,14 +513,19 @@ public class Escalator extends Widget implements RequiresResize,
             };
 
             public void touchStart(final CustomTouchEvent event) {
-                if (event.getNativeEvent().getTouches().length() == 1) {
+                // Consider only one-finger gestures over the body.
+                if (eventOnBody(escalator, event)
+                        && event.getTouches().length() == 1) {
                     if (yMov == null) {
                         yMov = new Movement(true);
                         xMov = new Movement(false);
+                        // Mark this as a touch device. Useful for
+                        // fix hover styles in iOS.
+                        escalator.bodyElem.addClassName("touch");
                     }
                     if (animation.isRunning()) {
                         acceleration += F_ACC;
-                        event.getNativeEvent().preventDefault();
+                        event.preventDefault();
                         animation.cancel();
                     } else {
                         acceleration = 1;
@@ -510,6 +534,7 @@ public class Escalator extends Widget implements RequiresResize,
                     yMov.startTouch(event);
                     touching = true;
                 } else {
+                    // Cancel to allow multi-finger gestures like zoom.
                     touching = false;
                     animation.cancel();
                     acceleration = 1;
@@ -517,14 +542,22 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             public void touchMove(final CustomTouchEvent event) {
-                if (touching) {
+                if (touching && event.isCancelable()) {
                     xMov.moveTouch(event);
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
                     yMov.validate(xMov);
-                    event.getNativeEvent().preventDefault();
-                    moveScrollFromEvent(escalator, xMov.delta, yMov.delta,
-                            event.getNativeEvent());
+                    if (xMov.run) {
+                        xMov.scroll.setScrollPosByDelta(xMov.delta);
+                    }
+                    if (yMov.run) {
+                        yMov.scroll.setScrollPosByDelta(yMov.delta);
+                    }
+                    if (xMov.run || yMov.run) {
+                        // If we move the scroll prevent default, otherwise
+                        // pass the control to the device.
+                        event.preventDefault();
+                    }
                 }
             }
 
@@ -534,7 +567,7 @@ public class Escalator extends Widget implements RequiresResize,
                     yMov.endTouch(event);
                     xMov.validate(yMov);
                     yMov.validate(xMov);
-                    // Adjust duration so as longer movements take more duration
+                    // Adjust duration so as longer movements take bigger duration
                     boolean vert = !xMov.run || yMov.run
                             && Math.abs(yMov.offset) > Math.abs(xMov.offset);
                     double delta = Math.abs((vert ? yMov : xMov).offset);
@@ -556,28 +589,47 @@ public class Escalator extends Widget implements RequiresResize,
             }
         }
 
+        public static boolean eventOnBody(Escalator escalator, NativeEvent event) {
+            Element e = event.getEventTarget().<Element>cast();
+            // Consider the event if it comes from an element in the body,
+            // of from the main table (when setting position by code)
+            return TableElement.is(e)
+                    || escalator.bodyElem.isOrHasChild(e);
+        }
+
         public static void moveScrollFromEvent(final Escalator escalator,
                 final double deltaX, final double deltaY,
                 final NativeEvent event) {
 
-            if (!Double.isNaN(deltaX)) {
-                escalator.horizontalScrollbar.setScrollPosByDelta(deltaX);
+            // Prevent scrolling on Headers/Footers
+            if (!eventOnBody(escalator, event)) {
+                 return;
             }
 
-            if (!Double.isNaN(deltaY)) {
-                escalator.verticalScrollbar.setScrollPosByDelta(deltaY);
-            }
+            boolean movex = !Double.isNaN(deltaX);
+            boolean movey = !Double.isNaN(deltaY);
+            if (movex || movey) {
+                escalator.bodyElem.addClassName("scrolling");
+                if (movex) {
+                    escalator.horizontalScrollbar.setScrollPosByDelta(deltaX);
+                }
+                if (movey) {
+                    escalator.verticalScrollbar.setScrollPosByDelta(deltaY);
+                }
+                escalator.body.domSorter.reschedule();
 
-            /*
-             * TODO: only prevent if not scrolled to end/bottom. Or no? UX team
-             * needs to decide.
-             */
-            final boolean warrantedYScroll = deltaY != 0
-                    && escalator.verticalScrollbar.showsScrollHandle();
-            final boolean warrantedXScroll = deltaX != 0
-                    && escalator.horizontalScrollbar.showsScrollHandle();
-            if (warrantedYScroll || warrantedXScroll) {
-                event.preventDefault();
+                /*
+                 * TODO: only prevent if not scrolled to end/bottom. Or no? UX
+                 * team needs to decide. In touch devices movement is not
+                 * prevented when the edge is reached.
+                 */
+                final boolean warrantedYScroll = deltaY != 0
+                        && escalator.verticalScrollbar.showsScrollHandle();
+                final boolean warrantedXScroll = deltaX != 0
+                        && escalator.horizontalScrollbar.showsScrollHandle();
+                if (warrantedYScroll || warrantedXScroll) {
+                    event.preventDefault();
+                }
             }
         }
     }
@@ -2352,6 +2404,7 @@ public class Escalator extends Widget implements RequiresResize,
                                 .requestAnimationFrame(this);
                     } else {
                         waiting = false;
+                        bodyElem.removeClassName("scrolling");
                     }
                 }
             };
