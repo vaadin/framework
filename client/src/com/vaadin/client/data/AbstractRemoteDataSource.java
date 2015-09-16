@@ -763,4 +763,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             return keyToIndexMap.get(rowKey);
         }
     }
+
+    protected boolean isPinned(T row) {
+        return pinnedRows.containsKey(getRowKey(row));
+    }
 }

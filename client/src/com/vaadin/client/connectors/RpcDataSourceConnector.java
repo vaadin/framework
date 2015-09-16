@@ -236,7 +236,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         @Override
         protected void onDropFromCache(int rowIndex, JsonObject row) {
-            if (!((RowHandleImpl) getHandle(row)).isPinned()) {
+            if (!isPinned(row)) {
                 droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
             }
         }
