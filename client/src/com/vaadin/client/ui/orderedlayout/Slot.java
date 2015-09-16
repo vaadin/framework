@@ -41,11 +41,12 @@ import com.vaadin.shared.ui.AlignmentInfo;
 /**
  * Represents a slot which contains the actual widget in the layout.
  */
-public final class Slot extends SimplePanel {
+public class Slot extends SimplePanel {
 
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
-    private final VAbstractOrderedLayout layout;
+    // this must be set at construction time and not changed afterwards
+    private VAbstractOrderedLayout layout;
 
     public static final String SLOT_CLASSNAME = "v-slot";
 
@@ -90,13 +91,41 @@ public final class Slot extends SimplePanel {
     /**
      * Constructs a slot.
      * 
+     * When using this constructor, the layout and widget must be set before any
+     * other operations are performed on the slot.
+     */
+    public Slot() {
+        setStyleName(SLOT_CLASSNAME);
+    }
+
+    /**
+     * Set the layout in which this slot is. This method must be called exactly
+     * once at slot construction time when using the default constructor.
+     * 
+     * The method should normally only be called by
+     * {@link VAbstractOrderedLayout#createSlot(Widget)}.
+     * 
+     * @since
+     * @param layout
+     *            the layout containing the slot
+     */
+    public void setLayout(VAbstractOrderedLayout layout) {
+        this.layout = layout;
+    }
+
+    /**
+     * Constructs a slot.
+     * 
      * @param layout
      *            The layout to which this slot belongs
      * @param widget
      *            The widget to put in the slot
+     * @deprecated use {@link GWT#create(Class)}, {@link #setWidget(Widget)} and
+     *             {@link #setLayout(VAbstractOrderedLayout)} instead
      */
+    @Deprecated
     public Slot(VAbstractOrderedLayout layout, Widget widget) {
-        this.layout = layout;
+        setLayout(layout);
         setStyleName(SLOT_CLASSNAME);
         setWidget(widget);
     }

@@ -18,6 +18,7 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -209,8 +210,23 @@ public class VAbstractOrderedLayout extends FlowPanel {
      */
     public void removeWidget(Widget widget) {
         Slot slot = widgetToSlot.get(widget);
+        removeSlot(slot);
+    }
+
+    /**
+     * Remove a slot from the layout.
+     * 
+     * This method is called automatically by {@link #removeWidget(Widget)} and
+     * should not be called directly by the user. When overridden, the super
+     * method must be called.
+     * 
+     * @since
+     * @param Slot
+     *            to remove
+     */
+    protected void removeSlot(Slot slot) {
         remove(slot);
-        widgetToSlot.remove(widget);
+        widgetToSlot.remove(slot.getWidget());
     }
 
     /**
@@ -225,9 +241,28 @@ public class VAbstractOrderedLayout extends FlowPanel {
     public Slot getSlot(Widget widget) {
         Slot slot = widgetToSlot.get(widget);
         if (slot == null) {
-            slot = new Slot(this, widget);
+            slot = createSlot(widget);
             widgetToSlot.put(widget, slot);
         }
+        return slot;
+    }
+
+    /**
+     * Create a slot to be added to the layout.
+     * 
+     * This method is called automatically by {@link #getSlot(Widget)} when a
+     * new slot is needed. It should not be called directly by the user, but can
+     * be overridden to customize slot creation.
+     * 
+     * @since
+     * @param widget
+     *            the widget for which a slot is being created
+     * @return created Slot
+     */
+    protected Slot createSlot(Widget widget) {
+        Slot slot = GWT.create(Slot.class);
+        slot.setLayout(this);
+        slot.setWidget(widget);
         return slot;
     }
 
