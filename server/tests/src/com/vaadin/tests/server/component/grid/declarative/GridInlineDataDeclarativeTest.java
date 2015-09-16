@@ -15,8 +15,10 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.Container;
 import com.vaadin.ui.Grid;
 
 public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
@@ -32,6 +34,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tr><td>Foo</tr>" //
                 + "<tr><td>Bar</tr>" //
                 + "<tr><td>Baz</tr>" //
+                + "</tbody>"
                 + "</table></v-grid>";
 
         Grid grid = new Grid();
@@ -59,6 +62,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tbody>" //
                 + "<tr><td>Foo<td>Bar<td>Baz</tr>" //
                 + "<tr><td>My<td>Summer<td>Car</tr>" //
+                + "</tbody>"
                 + "</table></v-grid>";
 
         Grid grid = new Grid();
@@ -87,6 +91,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tbody>" //
                 + "<tr><td>Bar<td>Baz<td>Foo</tr>" //
                 + "<tr><td>Summer<td>Car<td>My</tr>" //
+                + "</tbody>"
                 + "</table></v-grid>";
 
         Grid grid = new Grid();
@@ -102,5 +107,24 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
         testWrite(design, grid, true);
         testRead(design, grid, true, true);
+    }
+    
+    @Test
+    public void testHtmlEntities() {
+        String design = "<v-grid><table>"//
+                + "<colgroup>"
+                + "   <col property-id='test' />"
+                + "</colgroup>" //
+                + "<thead />" // No headers read or written
+                + "<tbody>"
+                + "  <tr><td>&amp;Test</tr></td>"
+                + "</tbody>"
+                + "</table></v-grid>";
+        
+        Grid read = read(design);
+        Container cds = read.getContainerDataSource();
+        Assert.assertEquals("&amp;Test",
+                cds.getItem(cds.getItemIds().iterator().next())
+                        .getItemProperty("test").getValue());
     }
 }

@@ -15,10 +15,16 @@
  */
 package com.vaadin.tests.server.component.textarea;
 
+import java.io.IOException;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link TextArea}.
@@ -37,5 +43,21 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
         ta.setValue("Hello World!");
         testRead(design, ta);
         testWrite(design, ta);
+    }
+
+    @Test
+    public void testHtmlEntities() throws IOException {
+        String design = "<v-text-area>&amp; Test</v-text-area>";
+        TextArea read = read(design);
+        Assert.assertEquals("& Test", read.getValue());
+
+        read.setValue("&amp; Test");
+
+        DesignContext dc = new DesignContext();
+        Element root = new Element(Tag.valueOf("v-text-area"), "");
+        read.writeDesign(root, dc);
+
+        Assert.assertEquals("&amp;amp; Test", root.html());
+
     }
 }

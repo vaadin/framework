@@ -15,11 +15,16 @@
  */
 package com.vaadin.tests.server.component.label;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Tests declarative support for implementations of {@link Label}.
@@ -57,11 +62,11 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testPlainText() {
-        String design = "<v-label plain-text>This is only <b>text</b>"
+        String design = "<v-label plain-text>This is only &lt;b&gt;text&lt;/b&gt;"
                 + " and will contain visible tags</v-label>";
         Label l = createLabel(
-                "This is only \n<b>text</b> and will contain visible tags",
-                null, false);
+                "This is only <b>text</b> and will contain visible tags", null,
+                false);
         testRead(design, l);
         testWrite(design, l);
     }
@@ -84,6 +89,29 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
         testWrite(design, l);
     }
 
+    @Test
+    public void testHtmlEntities() {
+        String design = "<v-label plain-text=\"true\">&gt; Test</v-label>";
+        Label read = read(design);
+        Assert.assertEquals("> Test", read.getValue());
+
+        design = design.replace("plain-text=\"true\"", "");
+        read = read(design);
+        Assert.assertEquals("&gt; Test", read.getValue());
+
+        Label label = new Label("&amp; Test");
+        label.setContentMode(ContentMode.TEXT);
+
+        Element root = new Element(Tag.valueOf("v-label"), "");
+        label.writeDesign(root, new DesignContext());
+        Assert.assertEquals("&amp;amp; Test", root.html());
+
+        label.setContentMode(ContentMode.HTML);
+        root = new Element(Tag.valueOf("v-label"), "");
+        label.writeDesign(root, new DesignContext());
+        Assert.assertEquals("&amp; Test", root.html());
+    }
+
     private Label createLabel(String content, String caption, boolean html) {
         Label label = new Label();
         label.setContentMode(html ? ContentMode.HTML : ContentMode.TEXT);
@@ -91,7 +119,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
             label.setValue(content);
         }
         if (caption != null) {
-            label.setCaption(caption);
+            label.setCaption(DesignFormatter.encodeForTextNode(caption));
         }
         return label;
     }

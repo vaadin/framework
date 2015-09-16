@@ -26,6 +26,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.design.DeclarativeTestBaseBase;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.ComboBox;
@@ -255,6 +256,27 @@ public class AbstractSelectDeclarativeTest extends
                 "Multi select should be allowed.",
                 "".equals(e.attr("multi-select"))
                         || "true".equals(e.attr("multi-select")));
+    }
+
+    @Test
+    public void testHtmlEntities() {
+        String design = "<v-combo-box>"
+                + "  <option item-id=\"one\">&gt; One</option>"
+                + "  <option>&gt; Two</option>" + "</v-combo-box>";
+        AbstractSelect read = read(design);
+
+        Assert.assertEquals("> One", read.getItemCaption("one"));
+
+        AbstractSelect underTest = new ComboBox();
+        underTest.addItem("> One");
+
+        Element root = new Element(Tag.valueOf("v-combo-box"), "");
+        DesignContext dc = new DesignContext();
+        dc.setShouldWriteDataDelegate(DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        underTest.writeDesign(root, dc);
+
+        Assert.assertEquals("&gt; One", root.getElementsByTag("option").first()
+                .html());
     }
 
     public ComboBox createSingleSelectWithOnlyAttributes() {

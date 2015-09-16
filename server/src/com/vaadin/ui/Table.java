@@ -69,6 +69,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * <p>
@@ -278,7 +279,7 @@ public class Table extends AbstractSelect implements Action.Container,
         ICON_ONLY(ItemCaptionMode.ICON_ONLY),
         /**
          * Row caption mode: Item captions are read from property specified with
-         * {@link #setItemCaptionPropertyId(Object)}.
+         * {@link #setItemCaptionPropertyId(Object)} .
          */
         PROPERTY(ItemCaptionMode.PROPERTY);
 
@@ -2043,7 +2044,9 @@ public class Table extends AbstractSelect implements Action.Container,
         } else if (minPageBufferIndex < pageBufferFirstIndex) {
             newCachedRowCount -= pageBufferFirstIndex - minPageBufferIndex;
         }
-        /* calculate the internal location of the new rows within the new cache */
+        /*
+         * calculate the internal location of the new rows within the new cache
+         */
         int firstIndexInNewPageBuffer = firstIndex - pageBufferFirstIndex
                 - rowsFromBeginning;
 
@@ -6113,7 +6116,8 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             Iterator<?> propertyIt = propertyIds.iterator();
             for (Element e : elems) {
-                String columnValue = e.html();
+                String columnValue = DesignFormatter.unencodeFromTextNode(e
+                        .html());
                 Object propertyId = propertyIt.next();
                 if (header) {
                     setColumnHeader(propertyId, columnValue);
@@ -6154,7 +6158,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         Object[] data = new String[cells.size()];
         for (int c = 0; c < cells.size(); ++c) {
-            data[c] = cells.get(c).html();
+            data[c] = DesignFormatter.unencodeFromTextNode(cells.get(c).html());
         }
 
         Object itemId = addItem(data,

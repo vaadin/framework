@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server.component.button;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -22,6 +25,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link Button} and
@@ -69,6 +73,41 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
         String design = "<v-button caption=Click/>";
         String expectedWritten = "<v-button/>";
         testButtonAndNativeButton(design, true, "", expectedWritten);
+    }
+
+    @Test
+    public void testHtmlEntitiesInCaption() {
+        String designPlainText = "<v-button plain-text=\"true\">&gt; One</v-button>";
+        String expectedCaptionPlainText = "> One";
+
+        Button read = read(designPlainText);
+        Assert.assertEquals(expectedCaptionPlainText, read.getCaption());
+
+        designPlainText = designPlainText
+                .replace("v-button", "v-native-button");
+        Button nativeButton = read(designPlainText);
+        Assert.assertEquals(expectedCaptionPlainText, nativeButton.getCaption());
+
+        String designHtml = "<v-button>&gt; One</v-button>";
+        String expectedCaptionHtml = "&gt; One";
+        read = read(designHtml);
+        Assert.assertEquals(expectedCaptionHtml, read.getCaption());
+
+        designHtml = designHtml.replace("v-button", "v-native-button");
+        nativeButton = read(designHtml);
+        Assert.assertEquals(expectedCaptionHtml, nativeButton.getCaption());
+
+        read = new Button("&amp; Test");
+        read.setHtmlContentAllowed(true);
+        Element root = new Element(Tag.valueOf("v-button"), "");
+        read.writeDesign(root, new DesignContext());
+        assertEquals("&amp; Test", root.html());
+
+        read.setHtmlContentAllowed(false);
+        root = new Element(Tag.valueOf("v-button"), "");
+        read.writeDesign(root, new DesignContext());
+        assertEquals("&amp;amp; Test", root.html());
+
     }
 
     public void testButtonAndNativeButton(String design, boolean html,

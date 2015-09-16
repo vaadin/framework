@@ -28,12 +28,15 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jsoup.parser.Parser;
+
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignEnumConverter;
 import com.vaadin.ui.declarative.converters.DesignObjectConverter;
@@ -354,6 +357,54 @@ public class DesignFormatter implements Serializable {
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType) {
         return findConverterFor(sourceType, false);
+    }
+
+    /**
+     * <p>
+     * Encodes <em>some</em> special characters in a given input String to make
+     * it ready to be written as contents of a text node. WARNING: this will
+     * e.g. encode "&lt;someTag&gt;" to "&amp;lt;someTag&amp;gt;" as this method
+     * doesn't do any parsing and assumes that there are no intended HTML
+     * elements in the input. Only some entities are actually encoded:
+     * &amp;,&lt;, &gt; It's assumed that other entities are taken care of by
+     * Jsoup.
+     * </p>
+     * <p>
+     * Typically, this method will be used by components to encode data (like
+     * option items in {@link AbstractSelect}) when dumping to HTML format
+     * </p>
+     * 
+     * @since
+     * @param input
+     *            String to be encoded
+     * @return String with &amp;,&lt; and &gt; replaced with their HTML entities
+     */
+    public static String encodeForTextNode(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace("&", "&amp;").replace(">", "&gt;")
+                .replace("<", "&lt;");
+    }
+
+    /**
+     * <p>
+     * Decodes HTML entities in a text from text node and replaces them with
+     * actual characters.
+     * </p>
+     * 
+     * <p>
+     * Typically this method will be used by components to read back data (like
+     * option items in {@link AbstractSelect}) from HTML. Note that this method
+     * unencodes more characters than {@link #encodeForTextNode(String)} encodes
+     * </p>
+     * 
+     * @since
+     * @param input
+     * @return
+     */
+    public static String unencodeFromTextNode(String input) {
+        return Parser.unescapeEntities(input, false);
     }
 
 }

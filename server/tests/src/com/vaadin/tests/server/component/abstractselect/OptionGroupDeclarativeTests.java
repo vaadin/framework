@@ -128,13 +128,13 @@ public class OptionGroupDeclarativeTests extends
         og.addItems("foo", "bar", "baz", "bang");
 
         og.setItemCaption("foo", "<b>True</b>");
-        og.setItemCaption("bar", "<font color='red'>False</font>");
+        og.setItemCaption("bar", "<font color=\"red\">False</font>");
 
         //@formatter:off
         String expected = 
                 "<v-option-group>"
-                + "<option item-id=\"foo\"><b>True</b></option>"
-                + "<option item-id=\"bar\"><font color='red'>False</font></option>"
+                + "<option item-id=\"foo\">&lt;b&gt;True&lt;/b&gt;</option>"
+                + "<option item-id=\"bar\">&lt;font color=\"red\"&gt;False&lt;/font&gt;</option>"
                 + "<option>baz</option>"
                 + "<option>bang</option>"
                 + "</v-option-group>";

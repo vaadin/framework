@@ -33,6 +33,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Configures select to be used as an option group.
@@ -275,6 +276,14 @@ public class OptionGroup extends AbstractSelect implements
 
         if (!isItemEnabled(itemId)) {
             elem.attr("disabled", "");
+        }
+        if (isHtmlContentAllowed()) {
+            // need to unencode HTML entities. AbstractSelect.writeDesign can't
+            // check if HTML content is allowed, so it always encodes entities
+            // like '>', '<' and '&'; in case HTML content is allowed this is
+            // undesirable so we need to unencode entities. Entities other than
+            // '<' and '>' will be taken care by Jsoup.
+            elem.html(DesignFormatter.unencodeFromTextNode(elem.html()));
         }
 
         return elem;
