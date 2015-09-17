@@ -214,7 +214,17 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         Event e = event.getDomEvent();
         final EventCellReference<T> cell = event.getCell();
 
-        if (e.getType().equals(BrowserEvents.KEYDOWN)
+        if (e.getType().equals(BrowserEvents.CLICK)
+                && event.getRowIndex() == event.getCell().getRowIndex()) {
+            editRow(event, event.getRowIndex(), event.getCell()
+                    .getColumnIndexDOM());
+
+            // FIXME should be in editRow
+            event.getGrid().fireEvent(new EditorMoveEvent(cell));
+
+            return true;
+
+        } else if (e.getType().equals(BrowserEvents.KEYDOWN)
                 && e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
 
             editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()

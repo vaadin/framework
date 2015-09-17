@@ -49,9 +49,6 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -1797,27 +1794,6 @@ public class Grid<T> extends ResizeComposite implements
                     if (editor != null) {
                         columnToWidget.put(column, editor);
                         attachWidget(editor, cell);
-                    }
-
-                    final int currentColumnIndex = i;
-                    if (editor instanceof HasFocusHandlers) {
-                        // Use a proper focus handler if available
-                        focusHandlers.add(((HasFocusHandlers) editor)
-                                .addFocusHandler(new FocusHandler() {
-                                    @Override
-                                    public void onFocus(FocusEvent event) {
-                                        focusedColumnIndex = currentColumnIndex;
-                                    }
-                                }));
-                    } else {
-                        // Try sniffing for DOM focus events
-                        focusHandlers.add(editor.addDomHandler(
-                                new FocusHandler() {
-                                    @Override
-                                    public void onFocus(FocusEvent event) {
-                                        focusedColumnIndex = currentColumnIndex;
-                                    }
-                                }, FocusEvent.getType()));
                     }
 
                     if (i == focusedColumnIndex) {
