@@ -5,8 +5,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.Log;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.FooterClickEvent;
@@ -14,12 +14,10 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class HeaderFooterClickLeftRightMiddle extends TestBase {
-
-    private Log log = new Log(10);
+public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final Table table = new Table();
         table.setColumnReorderingAllowed(true);
         table.setContainerDataSource(createContainer());
@@ -31,7 +29,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox.addListener(new ValueChangeListener() {
+        immediateCheckbox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
@@ -42,64 +40,68 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         CheckBox headerClickListenerCheckbox = new CheckBox(
                 "Header click listener");
         headerClickListenerCheckbox.setImmediate(true);
-        headerClickListenerCheckbox.addListener(new ValueChangeListener() {
+        headerClickListenerCheckbox
+                .addValueChangeListener(new ValueChangeListener() {
 
-            private HeaderClickListener headerClickListener = new HeaderClickListener() {
+                    private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
-                @Override
-                public void headerClick(HeaderClickEvent event) {
-                    String type = event.isDoubleClick() ? "Double click"
-                            : "Click";
-                    log.log(type + " on header "
-                            + event.getPropertyId().toString() + " using "
-                            + event.getButtonName());
-                }
+                        @Override
+                        public void headerClick(HeaderClickEvent event) {
+                            String type = event.isDoubleClick() ? "Double click"
+                                    : "Click";
+                            log(type + " on header "
+                                    + event.getPropertyId().toString()
+                                    + " using " + event.getButtonName());
+                        }
 
-            };
+                    };
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table.getListeners(HeaderClickEvent.class).isEmpty()) {
-                    table.addListener(headerClickListener);
-                } else {
-                    table.removeListener(headerClickListener);
-                }
-            }
-        });
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        if (table.getListeners(HeaderClickEvent.class)
+                                .isEmpty()) {
+                            table.addHeaderClickListener(headerClickListener);
+                        } else {
+                            table.removeHeaderClickListener(headerClickListener);
+                        }
+                    }
+                });
         headerClickListenerCheckbox.setValue(true);
 
         CheckBox footerClickListenerCheckbox = new CheckBox(
                 "Footer click listener");
         footerClickListenerCheckbox.setImmediate(true);
-        footerClickListenerCheckbox.addListener(new ValueChangeListener() {
+        footerClickListenerCheckbox
+                .addValueChangeListener(new ValueChangeListener() {
 
-            private FooterClickListener footerClickListener = new FooterClickListener() {
+                    private FooterClickListener footerClickListener = new FooterClickListener() {
 
-                @Override
-                public void footerClick(FooterClickEvent event) {
-                    String type = event.isDoubleClick() ? "Double click"
-                            : "Click";
-                    log.log(type + " on footer "
-                            + event.getPropertyId().toString() + " using "
-                            + event.getButtonName());
-                }
-            };
+                        @Override
+                        public void footerClick(FooterClickEvent event) {
+                            String type = event.isDoubleClick() ? "Double click"
+                                    : "Click";
+                            log(type + " on footer "
+                                    + event.getPropertyId().toString()
+                                    + " using " + event.getButtonName());
+                        }
+                    };
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table.getListeners(FooterClickEvent.class).isEmpty()) {
-                    table.addListener(footerClickListener);
-                } else {
-                    table.removeListener(footerClickListener);
-                }
-            }
-        });
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        if (table.getListeners(FooterClickEvent.class)
+                                .isEmpty()) {
+                            table.addFooterClickListener(footerClickListener);
+                        } else {
+                            table.removeFooterClickListener(footerClickListener);
+                        }
+                    }
+                });
         footerClickListenerCheckbox.setValue(true);
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
         sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
-        sortEnabledCheckbox.addListener(new ValueChangeListener() {
+        sortEnabledCheckbox.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setSortEnabled((Boolean) event.getProperty().getValue());
@@ -110,14 +112,15 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
                 "Column reordering allowed");
         columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox.addListener(new ValueChangeListener() {
+        columnReorderingCheckbox
+                .addValueChangeListener(new ValueChangeListener() {
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setColumnReorderingAllowed((Boolean) event.getProperty()
-                        .getValue());
-            }
-        });
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        table.setColumnReorderingAllowed((Boolean) event
+                                .getProperty().getValue());
+                    }
+                });
 
         addComponent(immediateCheckbox);
         addComponent(headerClickListenerCheckbox);
@@ -125,12 +128,11 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         addComponent(sortEnabledCheckbox);
         addComponent(columnReorderingCheckbox);
         addComponent(table);
-        addComponent(log);
 
     }
 
     @Override
-    protected String getDescription() {
+    public String getDescription() {
         return "Tests the header click listener";
     }
 

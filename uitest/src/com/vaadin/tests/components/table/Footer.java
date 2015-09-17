@@ -5,7 +5,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -14,11 +15,10 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-@SuppressWarnings("serial")
-public class Footer extends TestBase {
+public class Footer extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
 
@@ -49,7 +49,7 @@ public class Footer extends TestBase {
 
         final CheckBox visible = new CheckBox("Footers Visible", true);
         visible.setImmediate(true);
-        visible.addListener(new Property.ValueChangeListener() {
+        visible.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setFooterVisible(visible.getValue());
@@ -110,7 +110,7 @@ public class Footer extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    public String getDescription() {
         return "Table with footer";
     }
 

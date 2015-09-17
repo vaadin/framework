@@ -2,14 +2,16 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 
-public class HeaderUpdateWhenNoRows extends TestBase {
+public class HeaderUpdateWhenNoRows extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final Table table = new Table("Test table");
         table.addContainerProperty("Name", String.class, null, "Name", null,
                 null);
@@ -18,14 +20,14 @@ public class HeaderUpdateWhenNoRows extends TestBase {
         table.setImmediate(true);
 
         final CheckBox showHeaders = new CheckBox("Show headers");
-        showHeaders.addListener(new ValueChangeListener() {
+        showHeaders.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (showHeaders.getValue()) {
-                    table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                    table.setColumnHeaderMode(ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
                 } else {
-                    table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+                    table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
                 }
             }
         });
@@ -38,7 +40,7 @@ public class HeaderUpdateWhenNoRows extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    public String getDescription() {
         return "The header should be updated when toggling column header mode";
     }
 
