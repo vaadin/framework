@@ -3742,7 +3742,7 @@ public class Grid<T> extends ResizeComposite implements
          * @return <code>true</code> if open, <code>false</code> if not
          */
         public boolean isOpen() {
-            return content.getParent() == rootContainer;
+            return content != null && content.getParent() == rootContainer;
         }
 
         @Override
