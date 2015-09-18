@@ -65,6 +65,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.table.CollapseMenuContent;
 import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.shared.ui.table.TableServerRpc;
@@ -6469,7 +6470,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     protected TableState getState() {
-        return (TableState) super.getState();
+        return getState(true);
+    }
+
+    @Override
+    protected TableState getState(boolean markAsDirty) {
+        return (TableState) super.getState(markAsDirty);
     }
 
     private final Logger getLogger() {
@@ -6491,5 +6497,31 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public ChildMeasurementHint getChildMeasurementHint() {
         return childMeasurementHint;
+    }
+
+    /**
+     * Sets whether only collapsible columns should be shown to the user in the
+     * column collapse menu. The default is
+     * {@link CollapseMenuContent#ALL_COLUMNS}.
+     * 
+     * 
+     * @since
+     * @param content
+     *            the desired collapsible menu content setting
+     */
+    public void setCollapseMenuContent(CollapseMenuContent content) {
+        getState().collapseMenuContent = content;
+    }
+
+    /**
+     * Checks whether only collapsible columns are shown to the user in the
+     * column collapse menu. The default is
+     * {@link CollapseMenuContent#ALL_COLUMNS} .
+     * 
+     * @since
+     * @return the current collapsible menu content setting
+     */
+    public CollapseMenuContent getCollapseMenuContent() {
+        return getState(false).collapseMenuContent;
     }
 }

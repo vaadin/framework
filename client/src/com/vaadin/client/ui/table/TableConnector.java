@@ -395,6 +395,7 @@ public class TableConnector extends AbstractFieldConnector implements
         getWidget().rendering = false;
         getWidget().headerChangedDuringUpdate = false;
 
+        getWidget().collapsibleMenuContent = getState().collapseMenuContent;
     }
 
     @Override

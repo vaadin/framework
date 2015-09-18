@@ -104,6 +104,7 @@ import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.table.CollapseMenuContent;
 import com.vaadin.shared.ui.table.TableConstants;
 
 /**
@@ -4018,10 +4019,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     cols[i++] = it.next();
                 }
             }
-            final Action[] actions = new Action[cols.length];
+            List<Action> actions = new ArrayList<Action>(cols.length);
 
             for (int i = 0; i < cols.length; i++) {
                 final String cid = (String) cols[i];
+                boolean noncollapsible = noncollapsibleColumns.contains(cid);
+
+                if (noncollapsible
+                        && collapsibleMenuContent == CollapseMenuContent.COLLAPSIBLE_COLUMNS) {
+                    continue;
+                }
+
                 final HeaderCell c = getHeaderCell(cid);
                 final VisibleColumnAction a = new VisibleColumnAction(
                         c.getColKey());
@@ -4029,12 +4037,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (!c.isEnabled()) {
                     a.setCollapsed(true);
                 }
-                if (noncollapsibleColumns.contains(cid)) {
+                if (noncollapsible) {
                     a.setNoncollapsible(true);
                 }
-                actions[i] = a;
+                actions.add(a);
             }
-            return actions;
+            return actions.toArray(new Action[actions.size()]);
         }
 
         @Override
@@ -7204,6 +7212,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean multiselectPending;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public CollapseMenuContent collapsibleMenuContent;
 
     /**
      * @return border top + border bottom of the scrollable area of table

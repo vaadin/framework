@@ -11,6 +11,8 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.table.CollapseMenuContent;
+import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -443,6 +445,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createBooleanAction("Sort enabled", CATEGORY_FEATURES, true,
                 setSortEnabledCommand);
         createColumnOptions(true);
+
+        createCollapsibleMenuContentSelect(CATEGORY_FEATURES);
     }
 
     private void createAddGeneratedColumnAction(String categoryFeatures) {
@@ -586,6 +590,19 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                     @Override
                     public void execute(T c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
+                    }
+                });
+    }
+
+    private void createCollapsibleMenuContentSelect(String category) {
+        createSelectAction("Collapsible menu content", category,
+                CollapseMenuContent.class,
+                TableConstants.DEFAULT_COLLAPSE_MENU_CONTENT,
+                new Command<T, CollapseMenuContent>() {
+                    @Override
+                    public void execute(T c, CollapseMenuContent value,
+                            Object data) {
+                        c.setCollapseMenuContent(value);
                     }
                 });
     }

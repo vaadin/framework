@@ -1,5 +1,6 @@
 package com.vaadin.tests.components;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -601,6 +602,20 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createSelectAction(caption, category, options, initialValue, command,
                 null);
 
+    }
+
+    protected <TYPE extends Enum<TYPE>> void createSelectAction(
+            String caption,
+            String category,
+            Class<TYPE> enumType,
+            TYPE initialValue,
+            com.vaadin.tests.components.ComponentTestCase.Command<T, TYPE> command) {
+        LinkedHashMap<String, TYPE> options = new LinkedHashMap<String, TYPE>();
+        for (TYPE value : EnumSet.allOf(enumType)) {
+            options.put(value.toString(), value);
+        }
+        createSelectAction(caption, category, options, initialValue.toString(),
+                command);
     }
 
     protected <TYPE> void createMultiClickAction(

@@ -45,4 +45,11 @@ public class TableConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_KEY_MAPPER_RESET = "clearKeyMap";
 
+    /**
+     * Default value for {@link TableState#collapseMenuContent}.
+     * 
+     * @since
+     */
+    public static final CollapseMenuContent DEFAULT_COLLAPSE_MENU_CONTENT = CollapseMenuContent.ALL_COLUMNS;
+
 }
