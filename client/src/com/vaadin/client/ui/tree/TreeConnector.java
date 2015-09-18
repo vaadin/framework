@@ -82,6 +82,8 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         getWidget().isNullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
+        getWidget().isHtmlContentAllowed = uidl
+                .getBooleanAttribute(TreeConstants.ATTRIBUTE_HTML_ALLOWED);
 
         if (uidl.hasAttribute("alb")) {
             getWidget().bodyActionKeys = uidl.getStringArrayAttribute("alb");
@@ -245,8 +247,13 @@ public class TreeConnector extends AbstractComponentConnector implements
                 level);
 
         String nodeKey = uidl.getStringAttribute("key");
-        treeNode.setText(uidl
-                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_CAPTION));
+        String caption = uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_CAPTION);
+        if (getWidget().isHtmlContentAllowed) {
+            treeNode.setHtml(caption);
+        } else {
+            treeNode.setText(caption);
+        }
         treeNode.key = nodeKey;
 
         getWidget().registerNode(treeNode);

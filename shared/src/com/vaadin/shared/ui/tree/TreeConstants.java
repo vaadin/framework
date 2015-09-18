@@ -33,6 +33,8 @@ public class TreeConstants implements Serializable {
     public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
     @Deprecated
     public static final String ATTRIBUTE_ACTION_ICON = ATTRIBUTE_NODE_ICON;
+    @Deprecated
+    public static final String ATTRIBUTE_HTML_ALLOWED = "htmlAllowed";
 
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 

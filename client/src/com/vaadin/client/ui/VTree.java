@@ -146,6 +146,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public boolean isNullSelectionAllowed = true;
 
     /** For internal use only. May be removed or replaced in the future. */
+    public boolean isHtmlContentAllowed = false;
+
+    /** For internal use only. May be removed or replaced in the future. */
     public boolean disabled = false;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -981,6 +984,11 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         /** For internal use only. May be removed or replaced in the future. */
         public void setText(String text) {
             DOM.setInnerText(nodeCaptionSpan, text);
+        }
+
+        /** For internal use only. May be removed or replaced in the future. */
+        public void setHtml(String html) {
+            nodeCaptionSpan.setInnerHTML(html);
         }
 
         public boolean isChildrenLoaded() {

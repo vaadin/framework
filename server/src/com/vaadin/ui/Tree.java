@@ -616,6 +616,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("dragMode", dragMode.ordinal());
             }
 
+            if (isHtmlContentAllowed()) {
+                target.addAttribute(TreeConstants.ATTRIBUTE_HTML_ALLOWED, true);
+            }
+
         }
 
         // Initialize variables
@@ -1310,6 +1314,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private DropHandler dropHandler;
 
+    private boolean htmlContentAllowed;
+
     @Override
     public void addItemClickListener(ItemClickListener listener) {
         addListener(TreeConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
@@ -1896,4 +1902,34 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         return element;
     }
+
+    /**
+     * Sets whether html is allowed in the item captions. If set to
+     * <code>true</code>, the captions are passed to the browser as html and the
+     * developer is responsible for ensuring no harmful html is used. If set to
+     * <code>false</code>, the content is passed to the browser as plain text.
+     * The default setting is <code>false</code>
+     * 
+     * @since
+     * @param htmlContentAllowed
+     *            <code>true</code> if the captions are used as html,
+     *            <code>false</code> if used as plain text
+     */
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        this.htmlContentAllowed = htmlContentAllowed;
+        markAsDirty();
+    }
+
+    /**
+     * Checks whether captions are interpreted as html or plain text.
+     * 
+     * @since
+     * @return <code>true</code> if the captions are displayed as html,
+     *         <code>false</code> if displayed as plain text
+     * @see #setHtmlContentAllowed(boolean)
+     */
+    public boolean isHtmlContentAllowed() {
+        return htmlContentAllowed;
+    }
+
 }
