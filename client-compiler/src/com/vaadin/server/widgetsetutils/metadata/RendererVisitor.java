@@ -52,7 +52,7 @@ public class RendererVisitor extends TypeVisitor {
     }
 
     private static void doRendererType(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         // The class in which createRenderer is implemented
         JClassType createRendererClass = ConnectorBundle.findInheritedMethod(
                 type, "createRenderer").getEnclosingType();
@@ -63,6 +63,12 @@ public class RendererVisitor extends TypeVisitor {
 
             JMethod getRenderer = ConnectorBundle.findInheritedMethod(type,
                     "getRenderer");
+            if (getRenderer.getEnclosingType().getQualifiedSourceName()
+                    .equals(AbstractRendererConnector.class.getCanonicalName())) {
+                logger.log(Type.ERROR, type.getQualifiedSourceName()
+                        + " must override either createRenderer or getRenderer");
+                throw new UnableToCompleteException();
+            }
             JClassType rendererType = getRenderer.getReturnType().isClass();
 
             bundle.setNeedsGwtConstructor(rendererType);

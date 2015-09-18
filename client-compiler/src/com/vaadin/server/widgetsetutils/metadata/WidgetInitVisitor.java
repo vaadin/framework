@@ -42,6 +42,16 @@ public class WidgetInitVisitor extends TypeVisitor {
             // Needs GWT constructor if createWidget is not overridden
             if (createWidgetClass.getQualifiedSourceName().equals(
                     AbstractComponentConnector.class.getCanonicalName())) {
+                if (getWidget
+                        .getEnclosingType()
+                        .getQualifiedSourceName()
+                        .equals(AbstractComponentConnector.class
+                                .getCanonicalName())) {
+                    logger.log(Type.ERROR, type.getQualifiedSourceName()
+                            + " must override either createWidget or getWidget");
+                    throw new UnableToCompleteException();
+                }
+
                 bundle.setNeedsGwtConstructor(widgetType);
 
                 // Also needs widget type to find the right GWT constructor
