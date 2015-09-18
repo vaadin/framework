@@ -28,6 +28,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
 
@@ -103,7 +104,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testValidationErrorPreventsMove() {
+    public void testValidationErrorPreventsMove() throws InterruptedException {
         // Because of "out of view" issues, we need to move this for easy access
         selectMenuPath("Component", "Columns", "Column 7", "Column 7 Width",
                 "50px");
@@ -122,10 +123,11 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         assertEquals("Editor should not move from row 5", "(5, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));
 
-        for (int i = 0; i < faultyInt.length(); ++i) {
-            getEditorWidgets().get(1).sendKeys(Keys.BACK_SPACE);
+        getEditorWidgets().get(1).sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            sleep(1500);
         }
-
+        getEditorWidgets().get(1).sendKeys("5");
         // FIXME: Needs to trigger one extra validation round-trip for now
         getGridElement().sendKeys(Keys.ENTER);
 
