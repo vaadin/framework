@@ -23,10 +23,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.BorderStyle;
 
-public class VLink extends HTML implements ClickHandler {
+public class VLink extends HTML implements ClickHandler, HasEnabled {
 
     public static final String CLASSNAME = "v-link";
 
@@ -132,6 +133,16 @@ public class VLink extends HTML implements ClickHandler {
             event.preventDefault();
         }
 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }
