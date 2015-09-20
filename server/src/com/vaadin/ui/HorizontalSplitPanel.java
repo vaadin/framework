@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.splitpanel.HorizontalSplitPanelState;
+
 /**
  * A horizontal split panel contains two components and lays them horizontally.
  * The first component is on the left side.
@@ -58,5 +60,10 @@ public class HorizontalSplitPanel extends AbstractSplitPanel {
         this();
         setFirstComponent(firstComponent);
         setSecondComponent(secondComponent);
+    }
+
+    @Override
+    protected HorizontalSplitPanelState getState() {
+        return (HorizontalSplitPanelState) super.getState();
     }
 }
