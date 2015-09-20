@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.splitpanel.VerticalSplitPanelState;
+
 /**
  * A vertical split panel contains two components and lays them vertically. The
  * first component is above the second component.
@@ -52,5 +54,10 @@ public class VerticalSplitPanel extends AbstractSplitPanel {
         this();
         setFirstComponent(firstComponent);
         setSecondComponent(secondComponent);
+    }
+
+    @Override
+    protected VerticalSplitPanelState getState() {
+        return (VerticalSplitPanelState) super.getState();
     }
 }
