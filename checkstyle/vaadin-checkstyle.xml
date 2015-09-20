@@ -232,9 +232,6 @@
             <property name="severity" value="ignore" />
         </module>
         <module name="MissingSwitchDefault" />
-        <module name="RedundantThrows">
-            <property name="severity" value="warning" />
-        </module>
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
 
