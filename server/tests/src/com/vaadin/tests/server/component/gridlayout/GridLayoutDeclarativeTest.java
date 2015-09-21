@@ -15,6 +15,10 @@
  */
 package com.vaadin.tests.server.component.gridlayout;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,6 +26,7 @@ import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
 public class GridLayoutDeclarativeTest extends
@@ -235,5 +240,23 @@ public class GridLayoutDeclarativeTest extends
         testRead(design, outer);
         testWrite(design, outer);
 
+    }
+
+    @Test
+    public void testEmptyGridLayoutWithColsAndRowsSet() throws IOException {
+        GridLayout layout = new GridLayout();
+        layout.setRows(2);
+        layout.setColumns(2);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        DesignContext context = new DesignContext();
+        context.setRootComponent(layout);
+        Design.write(context, out);
+
+        ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
+        Component component = Design.read(input);
+        GridLayout readLayout = (GridLayout) component;
+
+        Assert.assertEquals(layout.getRows(), readLayout.getRows());
     }
 }

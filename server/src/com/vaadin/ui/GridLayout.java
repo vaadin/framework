@@ -1456,8 +1456,12 @@ public class GridLayout extends AbstractLayout implements
 
         writeMargin(design, getMargin(), def.getMargin(), designContext);
 
-        if (components.isEmpty()
-                || !designContext.shouldWriteChildren(this, def)) {
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+
+        if (components.isEmpty()) {
+            writeEmptyColsAndRows(design, designContext);
             return;
         }
 
@@ -1591,6 +1595,35 @@ public class GridLayout extends AbstractLayout implements
                 j += colspan - 1;
             }
         }
+    }
+
+    /**
+     * Fills in the design with rows and empty columns. This needs to be done
+     * for empty {@link GridLayout}, because there's no other way to serialize
+     * info about number of columns and rows if there are absolutely no
+     * components in the {@link GridLayout}
+     * 
+     * @since
+     * @param design
+     * @param designContext
+     */
+    private void writeEmptyColsAndRows(Element design,
+            DesignContext designContext) {
+        int rowCount = getState(false).rows;
+        int colCount = getState(false).columns;
+
+        // only write cols and rows tags if size is not 1x1
+        if (rowCount == 1 && colCount == 1) {
+            return;
+        }
+
+        for (int i = 0; i < rowCount; i++) {
+            Element row = design.appendElement("row");
+            for (int j = 0; j < colCount; j++) {
+                row.appendElement("column");
+            }
+        }
+
     }
 
     private int getRowSpan(Component[][] compMap, int i, int j, int colspan,
