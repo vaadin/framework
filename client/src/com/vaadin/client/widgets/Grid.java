@@ -1360,6 +1360,11 @@ public class Grid<T> extends ResizeComposite implements
 
                     rowIndex = request.getRowIndex();
                     focusedColumnIndex = request.getColumnIndex();
+                    if (focusedColumnIndex >= 0) {
+                        // Update internal focus of Grid
+                        grid.focusCell(rowIndex, focusedColumnIndex);
+                    }
+
                     showOverlay();
                 }
             }
@@ -1508,11 +1513,13 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             if (this.rowIndex == rowIndex) {
-                if (focusedColumnIndex != columnIndex
-                        && columnIndex >= grid.getFrozenColumnCount()) {
-                    // Scroll to new focused column.
-                    grid.getEscalator().scrollToColumn(columnIndex,
-                            ScrollDestination.ANY, 0);
+                if (focusedColumnIndex != columnIndex) {
+                    if (columnIndex >= grid.getFrozenColumnCount()) {
+                        // Scroll to new focused column.
+                        grid.getEscalator().scrollToColumn(columnIndex,
+                                ScrollDestination.ANY, 0);
+                    }
+
                     focusedColumnIndex = columnIndex;
                 }
 
