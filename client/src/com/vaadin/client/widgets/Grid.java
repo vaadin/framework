@@ -1488,6 +1488,13 @@ public class Grid<T> extends ResizeComposite implements
                 throw new IllegalStateException(
                         "Cannot edit row: editor is not enabled");
             }
+
+            if (isWorkPending()) {
+                // Request pending a response, don't move try to start another
+                // request.
+                return;
+            }
+
             if (state != State.INACTIVE && this.rowIndex != rowIndex) {
                 if (isBuffered()) {
                     throw new IllegalStateException(
