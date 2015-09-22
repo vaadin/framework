@@ -21,6 +21,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.Grid;
@@ -46,20 +47,20 @@ public class DragAndDropHandler {
          * Called when the drag has started. The drag can be canceled by
          * returning {@code false}.
          * 
-         * @param startEvent
+         * @param e
          *            the original event that started the drag
          * @return {@code true} if the drag is OK to start, {@code false} to
          *         cancel
          */
-        boolean onDragStart(NativeEvent startEvent);
+        boolean onDragStart(Event e);
 
         /**
          * Called on drag.
          * 
-         * @param event
+         * @param e
          *            the event related to the drag
          */
-        void onDragUpdate(NativePreviewEvent event);
+        void onDragUpdate(Event e);
 
         /**
          * Called after the has ended on a drop or cancel.
@@ -77,45 +78,58 @@ public class DragAndDropHandler {
         void onDragCancel();
     }
 
-    private HandlerRegistration dragStartNativePreviewHandlerRegistration;
+    private HandlerRegistration startPreviewHandler;
     private HandlerRegistration dragHandlerRegistration;
-
+    private DragAndDropCallback callback;
     private boolean dragging;
 
-    private DragAndDropCallback callback;
+    // XXX: This is a hack to stop a click event from propagating through to the
+    // client once dragging has completed. In the Grid case, this caused
+    // erroneous selections and/or sorting events.
+    private Timer stopTimer = new Timer() {
+        @Override
+        public void run() {
+            Event.releaseCapture(RootPanel.getBodyElement());
+            if (callback != null) {
+                callback.onDragEnd();
+                callback = null;
+            }
+            if (dragHandlerRegistration != null) {
+                dragHandlerRegistration.removeHandler();
+                dragHandlerRegistration = null;
+            }
+            dragging = false;
+        }
+    };
 
-    private final NativePreviewHandler dragHandler = new NativePreviewHandler() {
+    private final NativePreviewHandler dragPreviewHandler = new NativePreviewHandler() {
 
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             if (dragging) {
                 final int typeInt = event.getTypeInt();
                 switch (typeInt) {
-                case Event.ONKEYDOWN:
-                    int keyCode = event.getNativeEvent().getKeyCode();
-                    if (keyCode == KeyCodes.KEY_ESCAPE) {
-                        // end drag if ESC is hit
-                        cancelDrag(event);
-                    }
-                    break;
                 case Event.ONMOUSEMOVE:
                 case Event.ONTOUCHMOVE:
-                    callback.onDragUpdate(event);
-                    // prevent text selection on IE
-                    event.getNativeEvent().preventDefault();
+                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
+                    break;
+                case Event.ONKEYDOWN:
+                    // End drag if ESC is pressed
+                    int keyCode = event.getNativeEvent().getKeyCode();
+                    if (keyCode == KeyCodes.KEY_ESCAPE) {
+                        cancelDrag(event);
+                    }
                     break;
                 case Event.ONTOUCHCANCEL:
                     cancelDrag(event);
                     break;
                 case Event.ONTOUCHEND:
-                    /* Avoid simulated event on drag end */
-                    event.getNativeEvent().preventDefault();
-                    //$FALL-THROUGH$
                 case Event.ONMOUSEUP:
-                    callback.onDragUpdate(event);
+                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
                     callback.onDrop();
                     stopDrag();
-                    event.cancel();
+                    break;
+                case Event.ONCLICK:
                     break;
                 default:
                     break;
@@ -123,6 +137,12 @@ public class DragAndDropHandler {
             } else {
                 stopDrag();
             }
+
+            // Kill events - as long as this thing is active, we don't want to
+            // let any event through.
+            event.getNativeEvent().stopPropagation();
+            event.getNativeEvent().preventDefault();
+            event.cancel();
         }
 
     };
@@ -142,7 +162,7 @@ public class DragAndDropHandler {
     public void onDragStartOnDraggableElement(
             final NativeEvent dragStartingEvent,
             final DragAndDropCallback callback) {
-        dragStartNativePreviewHandlerRegistration = Event
+        startPreviewHandler = Event
                 .addNativePreviewHandler(new NativePreviewHandler() {
 
                     private int startX = WidgetUtil
@@ -184,14 +204,17 @@ public class DragAndDropHandler {
                                             .getNativeEvent());
                             if (Math.abs(startX - currentX) > 3
                                     || Math.abs(startY - currentY) > 3) {
-                                removeNativePreviewHandlerRegistration();
+                                removeStartPreviewHandler();
                                 startDrag(dragStartingEvent, event, callback);
                             }
+                            event.getNativeEvent().stopPropagation();
+                            event.getNativeEvent().preventDefault();
+                            event.cancel();
                             break;
                         default:
                             // on any other events, clean up this preview
                             // listener
-                            removeNativePreviewHandlerRegistration();
+                            removeStartPreviewHandler();
                             break;
                         }
                     }
@@ -200,27 +223,22 @@ public class DragAndDropHandler {
 
     private void startDrag(NativeEvent startEvent,
             NativePreviewEvent triggerEvent, DragAndDropCallback callback) {
-        if (callback.onDragStart(startEvent)) {
+        if (callback.onDragStart(Event.as(startEvent))) {
+            this.callback = callback;
             dragging = true;
+
             // just capture something to prevent text selection in IE
             Event.setCapture(RootPanel.getBodyElement());
-            this.callback = callback;
+
             dragHandlerRegistration = Event
-                    .addNativePreviewHandler(dragHandler);
-            callback.onDragUpdate(triggerEvent);
+                    .addNativePreviewHandler(dragPreviewHandler);
+            callback.onDragUpdate(Event.as(triggerEvent.getNativeEvent()));
         }
     }
 
     private void stopDrag() {
-        dragging = false;
-        if (dragHandlerRegistration != null) {
-            dragHandlerRegistration.removeHandler();
-            dragHandlerRegistration = null;
-        }
-        Event.releaseCapture(RootPanel.getBodyElement());
-        if (callback != null) {
-            callback.onDragEnd();
-            callback = null;
+        if (!stopTimer.isRunning()) {
+            stopTimer.schedule(100);
         }
     }
 
@@ -228,14 +246,12 @@ public class DragAndDropHandler {
         callback.onDragCancel();
         callback.onDragEnd();
         stopDrag();
-        event.cancel();
-        event.getNativeEvent().preventDefault();
     }
 
-    private void removeNativePreviewHandlerRegistration() {
-        if (dragStartNativePreviewHandlerRegistration != null) {
-            dragStartNativePreviewHandlerRegistration.removeHandler();
-            dragStartNativePreviewHandlerRegistration = null;
+    private void removeStartPreviewHandler() {
+        if (startPreviewHandler != null) {
+            startPreviewHandler.removeHandler();
+            startPreviewHandler = null;
         }
     }
 }

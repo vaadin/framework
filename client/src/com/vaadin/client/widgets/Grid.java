@@ -86,6 +86,9 @@ import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
+import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
+import com.vaadin.client.ui.dd.DragHandle;
+import com.vaadin.client.ui.dd.DragHandle.DragHandleCallback;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -951,8 +954,8 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * A single cell in a grid header row. Has a textual caption.
-     * 
+     * A single cell in a grid header row. Has a caption and, if it's in a
+     * default row, a drag handle.
      */
     public static class HeaderCell extends StaticSection.StaticCell {
     }
@@ -3037,7 +3040,9 @@ public class Grid<T> extends ResizeComposite implements
 
     }
 
-    /** @see Grid#autoColumnWidthsRecalculator */
+    /**
+     * @see Grid#autoColumnWidthsRecalculator
+     */
     private class AutoColumnWidthsRecalculator {
         private double lastCalculatedInnerWidth = -1;
 
@@ -3986,7 +3991,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private AutoScroller autoScroller = new AutoScroller(this);
 
-    private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropHandler.DragAndDropCallback() {
+    private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
         private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
 
@@ -4071,10 +4076,9 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public void onDragUpdate(NativePreviewEvent event) {
-            if (event != null) {
-                clientX = WidgetUtil.getTouchOrMouseClientX(event
-                        .getNativeEvent());
+        public void onDragUpdate(Event e) {
+            if (e != null) {
+                clientX = WidgetUtil.getTouchOrMouseClientX(e);
                 autoScrollX = 0;
             }
             resolveDragElementHorizontalPosition(clientX);
@@ -4179,7 +4183,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public boolean onDragStart(NativeEvent startingEvent) {
+        public boolean onDragStart(Event e) {
             calculatePossibleDropPositions();
 
             if (possibleDropPositions.isEmpty()) {
@@ -4200,8 +4204,7 @@ public class Grid<T> extends ResizeComposite implements
 
             // start the auto scroll handler
             autoScroller.setScrollArea(60);
-            autoScroller.start(startingEvent, ScrollAxis.HORIZONTAL,
-                    autoScrollerCallback);
+            autoScroller.start(e, ScrollAxis.HORIZONTAL, autoScrollerCallback);
             return true;
         }
 
@@ -5458,22 +5461,91 @@ public class Grid<T> extends ResizeComposite implements
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
 
-                TableCellElement element = cell.getElement();
+                Element td = cell.getElement();
+                td.removeAllChildren();
+
+                Element content;
+                // Wrap text or html content in default header to isolate
+                // the content from the possible column resize drag handle
+                // next to it
+                if (metadata.getType() != GridStaticCellType.WIDGET) {
+                    content = DOM.createDiv();
+
+                    if (staticRow instanceof HeaderRow) {
+                        content.setClassName(getStylePrimaryName()
+                                + "-column-header-content");
+                        if (((HeaderRow) staticRow).isDefault()) {
+                            content.setClassName(content.getClassName() + " "
+                                    + getStylePrimaryName()
+                                    + "-column-default-header-content");
+                        }
+                    } else if (staticRow instanceof FooterRow) {
+                        content.setClassName(getStylePrimaryName()
+                                + "-column-footer-content");
+                    } else {
+                        getLogger().severe(
+                                "Unhandled static row type "
+                                        + staticRow.getClass()
+                                                .getCanonicalName());
+                    }
+
+                    td.appendChild(content);
+                } else {
+                    content = td;
+                }
+                setCustomStyleName(content, metadata.getStyleName());
+
                 switch (metadata.getType()) {
                 case TEXT:
-                    element.setInnerText(metadata.getText());
+                    content.setInnerText(metadata.getText());
                     break;
                 case HTML:
-                    element.setInnerHTML(metadata.getHtml());
+                    content.setInnerHTML(metadata.getHtml());
                     break;
                 case WIDGET:
                     preDetach(row, Arrays.asList(cell));
-                    element.setInnerHTML("");
+                    content.setInnerHTML("");
                     postAttach(row, Arrays.asList(cell));
                     break;
                 }
 
-                setCustomStyleName(element, metadata.getStyleName());
+                // XXX: Should add only once in preAttach/postAttach or when
+                // resizable status changes
+                // Only add resize handles to default header row for now
+                if (staticRow instanceof HeaderRow
+                        && ((HeaderRow) staticRow).isDefault()) {
+
+                    final int column = cell.getColumn();
+                    DragHandle dragger = new DragHandle(getStylePrimaryName()
+                            + "-column-resize-handle",
+                            new DragHandleCallback() {
+
+                                private Column<?, T> col = getVisibleColumn(column);
+                                private double initialWidth = 0;
+
+                                @Override
+                                public void onUpdate(double deltaX,
+                                        double deltaY) {
+                                    col.setWidth(initialWidth + deltaX);
+                                }
+
+                                @Override
+                                public void onStart() {
+                                    initialWidth = col.getWidthActual();
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    // NOP
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    col.setWidth(initialWidth);
+                                }
+                            });
+                    dragger.addTo(td);
+                }
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);
             }
@@ -7140,15 +7212,33 @@ public class Grid<T> extends ResizeComposite implements
          * handles details[] (translated to spacer[] for Escalator), cell[],
          * header[] and footer[]
          */
+
+        // "#header[0][0]/DRAGhANDLE"
         Element escalatorElement = escalator.getSubPartElement(subPart
                 .replaceFirst("^details\\[", "spacer["));
 
         if (escalatorElement != null) {
+
+            int detailIdx = subPart.indexOf("/");
+            if (detailIdx > 0) {
+                String detail = subPart.substring(detailIdx + 1);
+                getLogger().severe(
+                        "Looking up detail from index " + detailIdx
+                                + " onward: \"" + detail + "\"");
+                if (detail.equalsIgnoreCase("content")) {
+                    // XXX: Fix this to look up by class name!
+                    return DOM.asOld(Element.as(escalatorElement.getChild(0)));
+                }
+                if (detail.equalsIgnoreCase("draghandle")) {
+                    // XXX: Fix this to look up by class name!
+                    return DOM.asOld(Element.as(escalatorElement.getChild(1)));
+                }
+            }
+
             return DOM.asOld(escalatorElement);
         }
 
         SubPartArguments args = SubPartArguments.create(subPart);
-
         Element editor = getSubPartElementEditor(args);
         if (editor != null) {
             return DOM.asOld(editor);

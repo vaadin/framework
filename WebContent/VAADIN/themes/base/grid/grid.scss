@@ -260,6 +260,16 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     }
   }
 
+  .#{$primaryStyleName}-column-resize-handle {
+    position: absolute;
+    width: 20px;
+    top: 0px;
+    bottom: 0px;
+    right: -10px;
+    cursor: col-resize;
+    z-index: 10;
+  }
+
   // Footer
 
   .#{$primaryStyleName}-footer {
@@ -276,6 +286,18 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         border-left: none;
       }
     }
+  }
+
+  // Header and footer content
+
+  .#{$primaryStyleName}-column-header-content,
+  .#{$primaryStyleName}-column-footer-content {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // Hackish, needed to override the "v-grid-cell > *" rule above
+    line-height: $v-grid-row-height;
+    vertical-align: baseline;
   }
 
   // Decorative elements

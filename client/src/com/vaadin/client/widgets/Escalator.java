@@ -5323,8 +5323,8 @@ public class Escalator extends Widget implements RequiresResize,
             int[] indices = new int[splitArgs.length - 1];
             for (int i = 0; i < indices.length; ++i) {
                 String tmp = splitArgs[i + 1];
-                indices[i] = Integer
-                        .parseInt(tmp.substring(0, tmp.length() - 1));
+                indices[i] = Integer.parseInt(tmp.substring(0,
+                        tmp.indexOf("]", 1)));
             }
             return new SubPartArguments(type, indices);
         }

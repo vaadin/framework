@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -41,8 +42,18 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
         return grid.getHeaderCell(0, 3);
     }
 
+    private WebElement getMergedHeaderCellContent() {
+        return getMergedHeaderCell().findElement(
+                By.cssSelector("div.v-grid-column-header-content"));
+    }
+
     private GridCellElement getAgeFooterCell() {
         return grid.getFooterCell(0, 2);
+    }
+
+    private WebElement getAgeFooterCellContent() {
+        return getAgeFooterCell().findElement(
+                By.cssSelector("div.v-grid-column-footer-content"));
     }
 
     @Test
@@ -74,23 +85,23 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
         if (set) {
             assertHasStyleName(
                     "Footer cell should have the assigned 'age-footer' class name",
-                    getAgeFooterCell(), "age-footer");
+                    getAgeFooterCellContent(), "age-footer");
             assertHasStyleName(
                     "Header cell should have the assigned 'age' class name",
-                    getAgeHeaderCell(), "age");
+                    getAgeHeaderCellContent(), "age");
             assertHasStyleName(
                     "The merged header cell should have the assigned 'city-country' class name",
-                    getMergedHeaderCell(), "city-country");
+                    getMergedHeaderCellContent(), "city-country");
         } else {
             assertHasNotStyleName(
                     "Footer cell should not have the removed 'age-footer' class name",
-                    getAgeFooterCell(), "age-footer");
+                    getAgeFooterCellContent(), "age-footer");
             assertHasNotStyleName(
                     "Header cell should not have the removed 'age' class name",
-                    getAgeHeaderCell(), "age");
+                    getAgeHeaderCellContent(), "age");
             assertHasNotStyleName(
                     "Ther merged header cell should not have the removed 'city-country' class name",
-                    getMergedHeaderCell(), "city-country");
+                    getMergedHeaderCellContent(), "city-country");
         }
         assertHasStyleName(
                 "The default v-grid-cell style name should not be removed from the header cell",
@@ -131,6 +142,11 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
 
     private WebElement getAgeHeaderCell() {
         return grid.getHeaderCell(1, 2);
+    }
+
+    private WebElement getAgeHeaderCellContent() {
+        return getAgeHeaderCell().findElement(
+                By.cssSelector("div.v-grid-column-header-content"));
     }
 
     private WebElement getFooterRow() {
