@@ -4,119 +4,119 @@
   <meta name="package-mapping" content="my:com.addon.mypackage"/>
  </head>
  <body>
-  <v-vertical-layout>
+  <vaadin-vertical-layout>
       <!-- abstract component -->
-  	  <v-button primary-style-name="button" id="foo" style-name="red" caption="Some caption" icon="vaadin://themes/runo/icons/16/ok.png" description="My tooltip" error="Something went wrong" locale="en_US"></v-button>
+  	  <vaadin-button primary-style-name="button" id="foo" style-name="red" caption="Some caption" icon="vaadin://themes/runo/icons/16/ok.png" description="My tooltip" error="Something went wrong" locale="en_US"></vaadin-button>
 
       <!-- absolute layout -->
-      <v-absolute-layout>
-		<v-button :top="100px" :left="0px" :z-index=21>OK</v-button>
-		<v-button :bottom="0px" :right="0px">Cancel</v-button>
-	  </v-absolute-layout>
+      <vaadin-absolute-layout>
+		<vaadin-button :top="100px" :left="0px" :z-index=21>OK</vaadin-button>
+		<vaadin-button :bottom="0px" :right="0px">Cancel</vaadin-button>
+	  </vaadin-absolute-layout>
 	  
 	  <!--  vertical layout -->
-      <v-vertical-layout spacing margin>
-		<v-button :top>OK</v-button>
-		<v-table size-full :expand=1 />      
-      </v-vertical-layout>
+      <vaadin-vertical-layout spacing margin>
+		<vaadin-button :top>OK</vaadin-button>
+		<vaadin-table size-full :expand=1 />      
+      </vaadin-vertical-layout>
       
 	  <!--  horizontal layout -->
-      <v-horizontal-layout spacing margin>
-		<v-button :top>OK</v-button>
-		<v-table size-full :expand=1 />      
-      </v-horizontal-layout>
+      <vaadin-horizontal-layout spacing margin>
+		<vaadin-button :top>OK</vaadin-button>
+		<vaadin-table size-full :expand=1 />      
+      </vaadin-horizontal-layout>
       
 	  <!--  form layout -->
-      <v-form-layout spacing margin>
-		<v-button :top>OK</v-button>
-		<v-table size-full :expand=1 />      
-      </v-form-layout>
+      <vaadin-form-layout spacing margin>
+		<vaadin-button :top>OK</vaadin-button>
+		<vaadin-table size-full :expand=1 />      
+      </vaadin-form-layout>
 
 	  <!--  css layout -->
-      <v-css-layout>
-		<v-button>OK</v-button>
-		<v-table size-full />
-      </v-css-layout>
+      <vaadin-css-layout>
+		<vaadin-button>OK</vaadin-button>
+		<vaadin-table size-full />
+      </vaadin-css-layout>
       
       <!--  panel  -->
-      <v-panel caption="Hello world" tabindex=2 scroll-left="10" scroll-top="10">
-        <v-table size-full />
-      </v-panel>
+      <vaadin-panel caption="Hello world" tabindex=2 scroll-left="10" scroll-top="10">
+        <vaadin-table size-full />
+      </vaadin-panel>
       
       <!--  abstract field -->
-	  <v-text-field buffered validation-visible=false invalid-committed invalid-allowed=false required required-error="This is a required field" conversion-error="Input {0} cannot be parsed" tabindex=3 readonly />
+	  <vaadin-text-field buffered validation-visible=false invalid-committed invalid-allowed=false required required-error="This is a required field" conversion-error="Input {0} cannot be parsed" tabindex=3 readonly />
       <!--  abstract text field, text field -->
-      <v-text-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
+      <vaadin-text-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
 	  <!--  password field -->      
-      <v-password-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
+      <vaadin-password-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
       <!--  text area -->
-      <v-text-area rows=5 wordwrap=false >test value</v-text-area>
+      <vaadin-text-area rows=5 wordwrap=false >test value</vaadin-text-area>
       <!--  button -->
-      <v-button click-shortcut="ctrl-shift-o" disable-on-click tabindex=1 icon="http://vaadin.com/image.png" icon-alt="ok" plain-text>OK</v-button>
+      <vaadin-button click-shortcut="ctrl-shift-o" disable-on-click tabindex=1 icon="http://vaadin.com/image.png" icon-alt="ok" plain-text>OK</vaadin-button>
       <!--  native button -->
-      <v-button click-shortcut="ctrl-shift-o" disable-on-click tabindex=1 icon="http://vaadin.com/image.png" icon-alt="ok" plain-text>OK</v-button>
+      <vaadin-button click-shortcut="ctrl-shift-o" disable-on-click tabindex=1 icon="http://vaadin.com/image.png" icon-alt="ok" plain-text>OK</vaadin-button>
       
       <!-- tabsheet -->
-	  <v-tab-sheet tabindex=5>
+	  <vaadin-tab-sheet tabindex=5>
 		  <tab visible=false closable caption="My first tab">
-			<v-vertical-layout>
-				<v-text-field/>
-		    </v-vertical-layout>
+			<vaadin-vertical-layout>
+				<vaadin-text-field/>
+		    </vaadin-vertical-layout>
 		  </tab>
 		  <tab enabled=false caption="Disabled second tab">
-			<v-button>In disabled tab - can’t be shown by default</v-button>
+			<vaadin-button>In disabled tab - can’t be shown by default</vaadin-button>
 	      </tab>
 		  <tab icon="theme://../runo/icons/16/ok.png" icon-alt="Ok png from Runo - very helpful" description="Click to show a text field" style-name="red" id="uniqueDomId">
-			<v-text-field input-prompt="Icon only in tab" />
+			<vaadin-text-field input-prompt="Icon only in tab" />
 	      </tab>
-	   </v-tab-sheet>
+	   </vaadin-tab-sheet>
 
       <!-- accordion -->
-	  <v-accordion tabindex=5>
+	  <vaadin-accordion tabindex=5>
 		  <tab visible=false closable caption="My first tab">
-			<v-vertical-layout>
-				<v-text-field/>
-		    </v-vertical-layout>
+			<vaadin-vertical-layout>
+				<vaadin-text-field/>
+		    </vaadin-vertical-layout>
 		  </tab>
 		  <tab enabled=false caption="Disabled second tab">
-			<v-button>In disabled tab - can’t be shown by default</v-button>
+			<vaadin-button>In disabled tab - can’t be shown by default</vaadin-button>
 	      </tab>
 		  <tab icon="theme://../runo/icons/16/ok.png" icon-alt="Ok png from Runo - very helpful" description="Click to show a text field" style-name="red" id="uniqueDomId">
-			<v-text-field input-prompt="Icon only in tab" />
+			<vaadin-text-field input-prompt="Icon only in tab" />
 	      </tab>
-	   </v-accordion>
+	   </vaadin-accordion>
 
       <!--  abstract split panel -->
-      <v-horizontal-split-panel split-position="20px" min-split-position="0px" max-split-position="50px" locked>
-        <v-button>First slot</v-button>
-      </v-horizontal-split-panel>      
-      <v-vertical-split-panel split-position="25%" reversed>
-        <v-button :second>Second slot</v-button>
-      </v-vertical-split-panel>
-      <v-horizontal-split-panel split-position="25%" reversed>
-        <v-button>First slot</v-button>
-        <v-button>Second slot</v-button>
-      </v-horizontal-split-panel>
+      <vaadin-horizontal-split-panel split-position="20px" min-split-position="0px" max-split-position="50px" locked>
+        <vaadin-button>First slot</vaadin-button>
+      </vaadin-horizontal-split-panel>      
+      <vaadin-vertical-split-panel split-position="25%" reversed>
+        <vaadin-button :second>Second slot</vaadin-button>
+      </vaadin-vertical-split-panel>
+      <vaadin-horizontal-split-panel split-position="25%" reversed>
+        <vaadin-button>First slot</vaadin-button>
+        <vaadin-button>Second slot</vaadin-button>
+      </vaadin-horizontal-split-panel>
      
      <!--  label -->
-     <v-label>Hello world!</v-label>
-	 <v-label>This is <b><u>Rich</u></b> content!</v-label>
-	 <v-label plain-text>This is only <b>text</b> and will contain visible tags</v-label>
+     <vaadin-label>Hello world!</vaadin-label>
+	 <vaadin-label>This is <b><u>Rich</u></b> content!</vaadin-label>
+	 <vaadin-label plain-text>This is only <b>text</b> and will contain visible tags</vaadin-label>
 	 
 	 <!-- checkbox -->
-	 <v-check-box checked/>	 
+	 <vaadin-check-box checked/>	 
 
      <!-- abstract select -->
-     <v-list-select new-items-allowed multi-select
+     <vaadin-list-select new-items-allowed multi-select
        item-caption-mode="index"
        null-selection-allowed=false>
-     </v-list-select>
+     </vaadin-list-select>
 
-     <v-combo-box>
+     <vaadin-combo-box>
        <option icon="http://something/my-icon.png">First value</option>
        <option>Second value</option>
-     </v-combo-box>
+     </vaadin-combo-box>
 
-  </v-vertical-layout>
+  </vaadin-vertical-layout>
  </body>
 </html>

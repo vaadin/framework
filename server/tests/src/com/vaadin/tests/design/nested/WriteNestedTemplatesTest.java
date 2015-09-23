@@ -15,15 +15,19 @@
  */
 package com.vaadin.tests.design.nested;
 
-import com.vaadin.ui.declarative.DesignContext;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * 
@@ -43,7 +47,7 @@ public class WriteNestedTemplatesTest {
     }
 
     private Element createDesign() {
-        Element design = new Element(Tag.valueOf("v-vertical-layout"), "",
+        Element design = new Element(Tag.valueOf("vaadin-vertical-layout"), "",
                 new Attributes());
 
         DesignContext designContext = new DesignContext();

@@ -138,6 +138,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_SYNC_ID_CHECK = "syncIdCheck";
     static final String SERVLET_PARAMETER_SENDURLSASPARAMETERS = "sendUrlsAsParameters";
     static final String SERVLET_PARAMETER_PUSH_SUSPEND_TIMEOUT_LONGPOLLING = "pushLongPollingSuspendTimeout";
+    static final String SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX = "legacyDesignPrefix";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

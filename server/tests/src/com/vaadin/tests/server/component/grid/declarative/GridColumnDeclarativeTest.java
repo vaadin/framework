@@ -23,7 +23,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSimpleGridColumns() {
-        String design = "<v-grid><table>"//
+        String design = "<vaadin-grid><table>"//
                 + "<colgroup>"
                 + "   <col sortable='' width='100' property-id='Column1'>"
                 + "   <col sortable=false max-width='200' expand='2' property-id='Column2'>"
@@ -32,7 +32,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <col sortable='' hidden='' property-id='Column5'>"
                 + "</colgroup>" //
                 + "<thead />" //
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class).setWidth(100);
         grid.addColumn("Column2", String.class).setMaximumWidth(200)
@@ -53,14 +53,14 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testReadColumnsWithoutPropertyId() {
-        String design = "<v-grid><table>"//
+        String design = "<vaadin-grid><table>"//
                 + "<colgroup>"
                 + "   <col sortable=true width='100' property-id='Column1'>"
                 + "   <col sortable=true max-width='200' expand='2'>" // property-id="property-1"
                 + "   <col sortable=true min-width='15' expand='1' property-id='Column3'>"
                 + "   <col sortable=true hidden=true hidable=true hiding-toggle-caption='col 4'>" // property-id="property-3"
                 + "</colgroup>" //
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class).setWidth(100);
         grid.addColumn("property-1", String.class).setMaximumWidth(200)
@@ -75,11 +75,11 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testReadEmptyExpand() {
-        String design = "<v-grid><table>"//
+        String design = "<vaadin-grid><table>"//
                 + "<colgroup>"
                 + "   <col sortable=true expand />"
                 + "</colgroup>" //
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
 
         Grid grid = new Grid();
         grid.addColumn("property-0", String.class).setExpandRatio(1);
@@ -89,11 +89,11 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testReadColumnWithNoAttributes() {
-        String design = "<v-grid><table>"//
+        String design = "<vaadin-grid><table>"//
                 + "<colgroup>" //
                 + "   <col />" //
                 + "</colgroup>" //
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
 
         Grid grid = new Grid();
         grid.addColumn("property-0", String.class);

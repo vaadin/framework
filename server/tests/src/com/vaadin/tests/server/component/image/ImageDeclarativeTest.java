@@ -30,7 +30,7 @@ import com.vaadin.ui.Image;
 public class ImageDeclarativeTest extends DeclarativeTestBase<Image> {
 
     protected String getDesign() {
-        return "<v-image source='http://foo.bar/img.png' alt='Some random image from the theme'></v-image>";
+        return "<vaadin-image source='http://foo.bar/img.png' alt='Some random image from the theme'></vaadin-image>";
     }
 
     protected Image getExpectedResult() {
@@ -52,7 +52,7 @@ public class ImageDeclarativeTest extends DeclarativeTestBase<Image> {
 
     @Test
     public void testEmpty() {
-        testRead("<v-image />", new Image());
+        testRead("<vaadin-image />", new Image());
     }
 
 }

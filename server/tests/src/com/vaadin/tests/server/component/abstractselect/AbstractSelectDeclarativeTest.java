@@ -43,7 +43,7 @@ public class AbstractSelectDeclarativeTest extends
         DeclarativeTestBase<AbstractSelect> {
 
     public String getDesignSingleSelectNewItemsAllowed() {
-        return "<v-combo-box new-items-allowed='' item-caption-mode='icon_only'"
+        return "<vaadin-combo-box new-items-allowed='' item-caption-mode='icon_only'"
                 + " null-selection-item-id='nullIid'/>";
 
     }
@@ -58,7 +58,7 @@ public class AbstractSelectDeclarativeTest extends
     }
 
     public String getDesignMultiSelect() {
-        return "<v-list-select multi-select='' null-selection-allowed='false' new-items-allowed='' item-caption-mode='property' />";
+        return "<vaadin-list-select multi-select='' null-selection-allowed='false' new-items-allowed='' item-caption-mode='property' />";
     }
 
     public AbstractSelect getExpectedMultiSelect() {
@@ -99,8 +99,8 @@ public class AbstractSelectDeclarativeTest extends
 
     @Test(expected = DesignException.class)
     public void testReadMultipleValuesForSingleSelect() {
-        testRead("<v-list-select>" + "<option selected>1</option>"
-                + "<option selected>2</option>" + "</v-list-select>", null);
+        testRead("<vaadin-list-select>" + "<option selected>1</option>"
+                + "<option selected>2</option>" + "</vaadin-list-select>", null);
     }
 
     @Test
@@ -111,8 +111,9 @@ public class AbstractSelectDeclarativeTest extends
         ls.addItem("2");
         ls.select("1");
         ls.select("2");
-        testRead("<v-list-select multi-select>" + "<option selected>1</option>"
-                + "<option selected>2</option>" + "</v-list-select>", ls);
+        testRead("<vaadin-list-select multi-select>"
+                + "<option selected>1</option>" + "<option selected>2</option>"
+                + "</vaadin-list-select>", ls);
     }
 
     @Test
@@ -122,8 +123,9 @@ public class AbstractSelectDeclarativeTest extends
         ls.addItem("1");
         ls.addItem("2");
         ls.select("1");
-        testRead("<v-list-select multi-select>" + "<option selected>1</option>"
-                + "<option>2</option>" + "</v-list-select>", ls);
+        testRead("<vaadin-list-select multi-select>"
+                + "<option selected>1</option>" + "<option>2</option>"
+                + "</vaadin-list-select>", ls);
     }
 
     @Test
@@ -133,8 +135,8 @@ public class AbstractSelectDeclarativeTest extends
         ls.addItem("1");
         ls.addItem("2");
         ls.select("1");
-        testRead("<v-list-select>" + "<option selected>1</option>"
-                + "<option>2</option>" + "</v-list-select>", ls);
+        testRead("<vaadin-list-select>" + "<option selected>1</option>"
+                + "<option>2</option>" + "</vaadin-list-select>", ls);
     }
 
     @Test
@@ -151,10 +153,10 @@ public class AbstractSelectDeclarativeTest extends
     }
 
     private String getDesignForInlineData() {
-        return "<v-list-select>\n"
+        return "<vaadin-list-select>\n"
                 + "        <option icon='http://some.url/icon.png'>Value 1</option>\n" //
                 + "        <option selected>Value 2</option>\n"//
-                + "</v-list-select>";
+                + "</vaadin-list-select>";
     }
 
     private AbstractSelect getExpectedComponentForInlineData() {
@@ -213,7 +215,7 @@ public class AbstractSelectDeclarativeTest extends
         attributes.put("item-icon-property-id", "icon");
         attributes.put("null-selection-allowed", "");
         attributes.put("null-selection-item-id", "No items selected");
-        return new Element(Tag.valueOf("v-combo-box"), "", attributes);
+        return new Element(Tag.valueOf("vaadin-combo-box"), "", attributes);
     }
 
     private Element createDesignWithAttributesMultiSelect() {
@@ -221,13 +223,13 @@ public class AbstractSelectDeclarativeTest extends
         attributes.put("multi-select", "");
         attributes.put("item-caption-mode", "EXPLICIT");
         attributes.put("null-selection-allowed", "false");
-        return new Element(Tag.valueOf("v-list-select"), "", attributes);
+        return new Element(Tag.valueOf("vaadin-list-select"), "", attributes);
     }
 
     @Test
     public void testWriteAttributesSingleSelect() {
         ComboBox cb = createSingleSelectWithOnlyAttributes();
-        Element e = new Element(Tag.valueOf("v-combo-box"), "");
+        Element e = new Element(Tag.valueOf("vaadin-combo-box"), "");
         cb.writeDesign(e, new DesignContext());
         assertEquals("Wrong caption for the combo box.", "A combo box",
                 e.attr("caption"));
@@ -248,7 +250,7 @@ public class AbstractSelectDeclarativeTest extends
     @Test
     public void testWriteMultiListSelect() {
         ListSelect ls = createMultiSelect();
-        Element e = new Element(Tag.valueOf("v-list-select"), "");
+        Element e = new Element(Tag.valueOf("vaadin-list-select"), "");
         ls.writeDesign(e, new DesignContext());
         assertEquals("Null selection should not be allowed.", "false",
                 e.attr("null-selection-allowed"));
@@ -260,9 +262,9 @@ public class AbstractSelectDeclarativeTest extends
 
     @Test
     public void testHtmlEntities() {
-        String design = "<v-combo-box>"
+        String design = "<vaadin-combo-box>"
                 + "  <option item-id=\"one\">&gt; One</option>"
-                + "  <option>&gt; Two</option>" + "</v-combo-box>";
+                + "  <option>&gt; Two</option>" + "</vaadin-combo-box>";
         AbstractSelect read = read(design);
 
         Assert.assertEquals("> One", read.getItemCaption("one"));
@@ -270,7 +272,7 @@ public class AbstractSelectDeclarativeTest extends
         AbstractSelect underTest = new ComboBox();
         underTest.addItem("> One");
 
-        Element root = new Element(Tag.valueOf("v-combo-box"), "");
+        Element root = new Element(Tag.valueOf("vaadin-combo-box"), "");
         DesignContext dc = new DesignContext();
         dc.setShouldWriteDataDelegate(DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
         underTest.writeDesign(root, dc);

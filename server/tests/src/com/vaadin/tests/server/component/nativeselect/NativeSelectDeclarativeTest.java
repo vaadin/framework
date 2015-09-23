@@ -29,7 +29,7 @@ public class NativeSelectDeclarativeTest extends
         DeclarativeTestBase<NativeSelect> {
 
     public String getBasicDesign() {
-        return "<v-native-select><option>foo</option><option>bar</option></v-native-select>";
+        return "<vaadin-native-select><option>foo</option><option>bar</option></vaadin-native-select>";
 
     }
 
@@ -52,7 +52,7 @@ public class NativeSelectDeclarativeTest extends
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-native-select readonly><option selected>foo</option><option>bar</option></v-native-select>";
+        String design = "<vaadin-native-select readonly><option selected>foo</option><option>bar</option></vaadin-native-select>";
 
         NativeSelect ns = new NativeSelect();
         ns.addItems("foo", "bar");
@@ -62,7 +62,7 @@ public class NativeSelectDeclarativeTest extends
         testRead(design, ns);
 
         // Selects items are not written out by default
-        String design2 = "<v-native-select readonly></v-native-select>";
+        String design2 = "<vaadin-native-select readonly></vaadin-native-select>";
         testWrite(design2, ns);
     }
 

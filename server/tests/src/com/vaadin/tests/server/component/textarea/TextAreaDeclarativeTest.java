@@ -36,7 +36,7 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
 
     @Test
     public void testTextArea() {
-        String design = "<v-text-area rows=6 wordwrap=false>Hello World!</v-text-area>";
+        String design = "<vaadin-text-area rows=6 wordwrap=false>Hello World!</vaadin-text-area>";
         TextArea ta = new TextArea();
         ta.setRows(6);
         ta.setWordwrap(false);
@@ -47,14 +47,14 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
 
     @Test
     public void testHtmlEntities() throws IOException {
-        String design = "<v-text-area>&amp; Test</v-text-area>";
+        String design = "<vaadin-text-area>&amp; Test</vaadin-text-area>";
         TextArea read = read(design);
         Assert.assertEquals("& Test", read.getValue());
 
         read.setValue("&amp; Test");
 
         DesignContext dc = new DesignContext();
-        Element root = new Element(Tag.valueOf("v-text-area"), "");
+        Element root = new Element(Tag.valueOf("vaadin-text-area"), "");
         read.writeDesign(root, dc);
 
         Assert.assertEquals("&amp;amp; Test", root.html());
@@ -62,7 +62,7 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-text-area readonly rows=6 wordwrap=false>Hello World!</v-text-area>";
+        String design = "<vaadin-text-area readonly rows=6 wordwrap=false>Hello World!</vaadin-text-area>";
         TextArea ta = new TextArea();
         ta.setRows(6);
         ta.setWordwrap(false);

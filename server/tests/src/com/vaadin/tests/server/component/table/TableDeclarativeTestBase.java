@@ -36,7 +36,7 @@ public abstract class TableDeclarativeTestBase extends
     }
 
     protected String getTag() {
-        return "v-table";
+        return "vaadin-table";
     }
 
     protected void compareBody(Table read, Table expected) {

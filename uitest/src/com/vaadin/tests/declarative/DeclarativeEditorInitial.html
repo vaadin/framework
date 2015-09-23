@@ -1,23 +1,23 @@
-<v-vertical-layout size-full margin spacing>
-    <v-horizontal-layout spacing margin width-full>   
-        <v-label size-auto>POTUS Database</v-label>
-        <v-button :expand>Add new</v-button>
-    </v-horizontal-layout>
-    <v-table _id="potusList" :expand selectable size-full />
-    <v-vertical-layout _id="form" spacing margin>
-        <v-horizontal-layout spacing>   
-            <v-text-field caption="First Name" width="300px" />
-            <v-text-field caption="Last Name" width="300px" />
-        </v-horizontal-layout>
-        <v-horizontal-layout spacing>   
-            <v-combo-box caption="Party" width="300px" />
-            <v-popup-date-field caption="Took Office" />
-            <v-popup-date-field caption="Left Office" />
-        </v-horizontal-layout>
-        <v-horizontal-layout spacing width-full>  
-            <v-button style-name="primary">Save</v-button>
-            <v-button>Revert</v-button>
-            <v-button :expand :right>Delete</v-button>
-        </v-horizontal-layout>
-    </v-vertical-layout>
-</v-vertical-layout>
+<vaadin-vertical-layout size-full margin spacing>
+    <vaadin-horizontal-layout spacing margin width-full>   
+        <vaadin-label size-auto>POTUS Database</vaadin-label>
+        <vaadin-button :expand>Add new</vaadin-button>
+    </vaadin-horizontal-layout>
+    <vaadin-table _id="potusList" :expand selectable size-full />
+    <vaadin-vertical-layout _id="form" spacing margin>
+        <vaadin-horizontal-layout spacing>   
+            <vaadin-text-field caption="First Name" width="300px" />
+            <vaadin-text-field caption="Last Name" width="300px" />
+        </vaadin-horizontal-layout>
+        <vaadin-horizontal-layout spacing>   
+            <vaadin-combo-box caption="Party" width="300px" />
+            <vaadin-popup-date-field caption="Took Office" />
+            <vaadin-popup-date-field caption="Left Office" />
+        </vaadin-horizontal-layout>
+        <vaadin-horizontal-layout spacing width-full>  
+            <vaadin-button style-name="primary">Save</vaadin-button>
+            <vaadin-button>Revert</vaadin-button>
+            <vaadin-button :expand :right>Delete</vaadin-button>
+        </vaadin-horizontal-layout>
+    </vaadin-vertical-layout>
+</vaadin-vertical-layout>

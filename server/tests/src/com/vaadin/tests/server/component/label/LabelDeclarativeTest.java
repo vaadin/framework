@@ -36,7 +36,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testEmpty() {
-        String design = "<v-label />";
+        String design = "<vaadin-label />";
         Label l = new Label();
         l.setContentMode(ContentMode.HTML);
         testRead(design, l);
@@ -45,7 +45,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testDefault() {
-        String design = "<v-label>Hello world!</v-label>";
+        String design = "<vaadin-label>Hello world!</vaadin-label>";
         Label l = createLabel("Hello world!", null, true);
         testRead(design, l);
         testWrite(design, l);
@@ -53,7 +53,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testRich() {
-        String design = "<v-label>This is <b><u>Rich</u></b> content!</v-label>";
+        String design = "<vaadin-label>This is <b><u>Rich</u></b> content!</vaadin-label>";
         Label l = createLabel("This is \n<b><u>Rich</u></b> content!", null,
                 true);
         testRead(design, l);
@@ -62,8 +62,8 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testPlainText() {
-        String design = "<v-label plain-text>This is only &lt;b&gt;text&lt;/b&gt;"
-                + " and will contain visible tags</v-label>";
+        String design = "<vaadin-label plain-text>This is only &lt;b&gt;text&lt;/b&gt;"
+                + " and will contain visible tags</vaadin-label>";
         Label l = createLabel(
                 "This is only <b>text</b> and will contain visible tags", null,
                 false);
@@ -73,8 +73,8 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testContentAndCaption() {
-        String design = "<v-label caption='This is a label'>This is <b><u>Rich</u></b> "
-                + "content!</v-label>";
+        String design = "<vaadin-label caption='This is a label'>This is <b><u>Rich</u></b> "
+                + "content!</vaadin-label>";
         Label l = createLabel("This is \n<b><u>Rich</u></b> content!",
                 "This is a label", true);
         testRead(design, l);
@@ -83,7 +83,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testCaption() {
-        String design = "<v-label caption='This is a label' />";
+        String design = "<vaadin-label caption='This is a label' />";
         Label l = createLabel(null, "This is a label", true);
         testRead(design, l);
         testWrite(design, l);
@@ -91,7 +91,7 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
 
     @Test
     public void testHtmlEntities() {
-        String design = "<v-label plain-text=\"true\">&gt; Test</v-label>";
+        String design = "<vaadin-label plain-text=\"true\">&gt; Test</vaadin-label>";
         Label read = read(design);
         Assert.assertEquals("> Test", read.getValue());
 
@@ -102,12 +102,12 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
         Label label = new Label("&amp; Test");
         label.setContentMode(ContentMode.TEXT);
 
-        Element root = new Element(Tag.valueOf("v-label"), "");
+        Element root = new Element(Tag.valueOf("vaadin-label"), "");
         label.writeDesign(root, new DesignContext());
         Assert.assertEquals("&amp;amp; Test", root.html());
 
         label.setContentMode(ContentMode.HTML);
-        root = new Element(Tag.valueOf("v-label"), "");
+        root = new Element(Tag.valueOf("vaadin-label"), "");
         label.writeDesign(root, new DesignContext());
         Assert.assertEquals("&amp; Test", root.html());
     }

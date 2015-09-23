@@ -33,17 +33,17 @@ public class CustomLayoutDeclarativeTest extends
 
     @Test
     public void testEmpty() {
-        String design = "<v-custom-layout>";
+        String design = "<vaadin-custom-layout>";
         CustomLayout expected = new CustomLayout();
         test(design, expected);
     }
 
     @Test
     public void testWithChildren() {
-        String design = "<v-custom-layout>" + //
-                "<v-button plain-text :location='b'></v-button>" + //
-                "<v-label plain-text :location='l'></v-label>" + //
-                "</v-custom-layout>";
+        String design = "<vaadin-custom-layout>" + //
+                "<vaadin-button plain-text :location='b'></vaadin-button>" + //
+                "<vaadin-label plain-text :location='l'></vaadin-label>" + //
+                "</vaadin-custom-layout>";
 
         CustomLayout expected = new CustomLayout();
         expected.addComponent(new Button(), "b");
@@ -54,7 +54,7 @@ public class CustomLayoutDeclarativeTest extends
 
     @Test
     public void testWithOneChild() {
-        String design = "<v-custom-layout><v-button plain-text></v-button></v-custom-layout>";
+        String design = "<vaadin-custom-layout><vaadin-button plain-text></vaadin-button></vaadin-custom-layout>";
 
         CustomLayout expected = new CustomLayout();
         expected.addComponent(new Button());
@@ -64,17 +64,17 @@ public class CustomLayoutDeclarativeTest extends
 
     @Test
     public void testWithTemplate() {
-        String design = "<v-custom-layout template-name='template.html'></v-custom-layout>";
+        String design = "<vaadin-custom-layout template-name='template.html'></vaadin-custom-layout>";
         CustomLayout expected = new CustomLayout("template.html");
         test(design, expected);
     }
 
     @Test
     public void testWithDuplicateLocations() {
-        String design = "<v-custom-layout>" + //
-                "<v-button plain-text :location='foo'></v-button>" + //
-                "<v-label plain-text :location='foo'></v-label>" + //
-                "</v-custom-layout>";
+        String design = "<vaadin-custom-layout>" + //
+                "<vaadin-button plain-text :location='foo'></vaadin-button>" + //
+                "<vaadin-label plain-text :location='foo'></vaadin-label>" + //
+                "</vaadin-custom-layout>";
 
         CustomLayout expected = new CustomLayout();
         expected.addComponent(new Button(), "foo");
@@ -82,9 +82,9 @@ public class CustomLayoutDeclarativeTest extends
 
         testRead(design, expected);
 
-        String written = "<v-custom-layout>" + //
-                "<v-label plain-text :location='foo'></v-label>" + //
-                "</v-custom-layout>";
+        String written = "<vaadin-custom-layout>" + //
+                "<vaadin-label plain-text :location='foo'></vaadin-label>" + //
+                "</vaadin-custom-layout>";
 
         testWrite(written, expected);
     }

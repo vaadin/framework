@@ -29,7 +29,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testAllAbstractColorPickerFeatures() {
-        String design = "<v-color-picker color='#fafafa' default-caption-enabled='' position='100,100'"
+        String design = "<vaadin-color-picker color='#fafafa' default-caption-enabled='' position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         ColorPicker colorPicker = new ColorPicker();
@@ -50,7 +50,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testEmptyColorPicker() {
-        String design = "<v-color-picker />";
+        String design = "<vaadin-color-picker />";
         ColorPicker colorPicker = new ColorPicker();
         testRead(design, colorPicker);
         testWrite(design, colorPicker);
@@ -58,7 +58,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testAllAbstractColorPickerAreaFeatures() {
-        String design = "<v-color-picker-area color='#fafafa' default-caption-enabled='' position='100,100'"
+        String design = "<vaadin-color-picker-area color='#fafafa' default-caption-enabled='' position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         AbstractColorPicker colorPicker = new ColorPickerArea();
@@ -79,7 +79,7 @@ public class AbstractColorPickerDeclarativeTest extends
 
     @Test
     public void testEmptyColorPickerArea() {
-        String design = "<v-color-picker-area />";
+        String design = "<vaadin-color-picker-area />";
         AbstractColorPicker colorPicker = new ColorPickerArea();
         testRead(design, colorPicker);
         testWrite(design, colorPicker);

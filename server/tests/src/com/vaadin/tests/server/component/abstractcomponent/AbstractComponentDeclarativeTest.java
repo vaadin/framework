@@ -62,14 +62,14 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testEmptyDesign() {
-        String design = "<v-label>";
+        String design = "<vaadin-label>";
         testRead(design, component);
         testWrite(design, component);
     }
 
     @Test
     public void testProperties() {
-        String design = "<v-label id=\"testId\" primary-style-name=\"test-style\" "
+        String design = "<vaadin-label id=\"testId\" primary-style-name=\"test-style\" "
                 + "caption=\"test-caption\" locale=\"fi_FI\" description=\"test-description\" "
                 + "error=\"<div>test-error</div>\" immediate=\"\"/>";
         component.setId("testId");
@@ -89,8 +89,8 @@ public class AbstractComponentDeclarativeTest extends
     public void testReadImmediate() {
         // Additional tests for the immediate property, including
         // explicit immediate values
-        String[] design = { "<v-label/>", "<v-label immediate=\"false\"/>",
-                "<v-label immediate=\"true\"/>", "<v-label immediate=\"\"/>" };
+        String[] design = { "<vaadin-label/>", "<vaadin-label immediate=\"false\"/>",
+                "<vaadin-label immediate=\"true\"/>", "<vaadin-label immediate=\"\"/>" };
         Boolean[] explicitImmediate = { null, Boolean.FALSE, Boolean.TRUE,
                 Boolean.TRUE };
         boolean[] immediate = { false, false, true, true };
@@ -105,7 +105,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testExternalIcon() {
-        String design = "<v-label icon=\"http://example.com/example.gif\"/>";
+        String design = "<vaadin-label icon=\"http://example.com/example.gif\"/>";
         component
                 .setIcon(new ExternalResource("http://example.com/example.gif"));
         testRead(design, component);
@@ -114,7 +114,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testThemeIcon() {
-        String design = "<v-label icon=\"theme://example.gif\"/>";
+        String design = "<vaadin-label icon=\"theme://example.gif\"/>";
         component.setIcon(new ThemeResource("example.gif"));
         testRead(design, component);
         testWrite(design, component);
@@ -122,7 +122,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testFileResourceIcon() {
-        String design = "<v-label icon=\"img/example.gif\"/>";
+        String design = "<vaadin-label icon=\"img/example.gif\"/>";
         component.setIcon(new FileResource(new File("img/example.gif")));
         testRead(design, component);
         testWrite(design, component);
@@ -130,7 +130,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthAndHeight() {
-        String design = "<v-label width=\"70%\" height=\"12px\"/>";
+        String design = "<vaadin-label width=\"70%\" height=\"12px\"/>";
         component.setWidth("70%");
         component.setHeight("12px");
         testRead(design, component);
@@ -139,7 +139,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testSizeFull() {
-        String design = "<v-label size-full=\"\"/>";
+        String design = "<vaadin-label size-full=\"\"/>";
         component.setSizeFull();
         testRead(design, component);
         testWrite(design, component);
@@ -147,7 +147,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testSizeAuto() {
-        String design = "<v-label size-auto=\"\"/>";
+        String design = "<vaadin-label size-auto=\"\"/>";
         component.setSizeUndefined();
         testRead(design, component);
         testWrite(design, component);
@@ -155,7 +155,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testHeightFull() {
-        String design = "<v-label height-full=\"\"/ width=\"20px\"/>";
+        String design = "<vaadin-label height-full=\"\"/ width=\"20px\"/>";
         component.setHeight("100%");
         component.setWidth("20px");
         testRead(design, component);
@@ -164,7 +164,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testHeightAuto() {
-        String design = "<v-horizontal-split-panel height-auto=\"\"/ width=\"20px\" >";
+        String design = "<vaadin-horizontal-split-panel height-auto=\"\"/ width=\"20px\" >";
         // we need to have default height of 100% -> use split panel
         AbstractComponent component = new HorizontalSplitPanel();
         component.setHeight(null);
@@ -175,7 +175,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthFull() {
-        String design = "<v-button width-full=\"\"/ height=\"20px\">Foo</button>";
+        String design = "<vaadin-button width-full=\"\"/ height=\"20px\">Foo</button>";
         AbstractComponent component = new Button();
         component.setCaptionAsHtml(true);
         component.setCaption("Foo");
@@ -187,7 +187,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthAuto() {
-        String design = "<v-label height=\"20px\"/ width-auto=\"\"/>";
+        String design = "<vaadin-label height=\"20px\"/ width-auto=\"\"/>";
         component.setCaptionAsHtml(false);
         component.setHeight("20px");
         component.setWidth(null);
@@ -197,7 +197,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testResponsive() {
-        String design = "<v-label responsive =\"\"/>";
+        String design = "<vaadin-label responsive =\"\"/>";
         Responsive.makeResponsive(component);
         testRead(design, component);
         testWrite(design, component);
@@ -205,7 +205,7 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testResponsiveFalse() {
-        String design = "<v-label responsive =\"false\"/>";
+        String design = "<vaadin-label responsive =\"false\"/>";
         // Only test read as the attribute responsive=false would not be written
         testRead(design, component);
     }
@@ -223,7 +223,7 @@ public class AbstractComponentDeclarativeTest extends
     private Element createDesign(String key, String value) {
         Attributes attributes = new Attributes();
         attributes.put(key, value);
-        Element node = new Element(Tag.valueOf("v-label"), "", attributes);
+        Element node = new Element(Tag.valueOf("vaadin-label"), "", attributes);
         return node;
     }
 

@@ -34,7 +34,7 @@ public class PopupDateFieldDeclarativeTest extends
         DeclarativeTestBase<PopupDateField> {
 
     private String getBasicDesign() {
-        return "<v-popup-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></v-popup-date-field>";
+        return "<vaadin-popup-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></vaadin-popup-date-field>";
     }
 
     private PopupDateField getBasicExpected() {

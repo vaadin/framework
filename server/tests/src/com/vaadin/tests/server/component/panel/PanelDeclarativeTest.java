@@ -32,10 +32,10 @@ public class PanelDeclarativeTest extends DeclarativeTestBase<Panel> {
 
     @Test
     public void testFeatures() {
-        String design = "<v-panel id=panelId caption=\"A panel\" tabindex=2 scroll-left=10 "
+        String design = "<vaadin-panel id=panelId caption=\"A panel\" tabindex=2 scroll-left=10 "
                 + "scroll-top=20 width=200px height=150px> "
-                + "<v-vertical-layout width=300px height=400px /> "
-                + "</v-panel>";
+                + "<vaadin-vertical-layout width=300px height=400px /> "
+                + "</vaadin-panel>";
         Panel p = new Panel();
         p.setId("panelId");
         p.setCaption("A panel");
@@ -56,7 +56,7 @@ public class PanelDeclarativeTest extends DeclarativeTestBase<Panel> {
     public void testWithMoreThanOneChild() {
         // Check that attempting to have two components in a panel causes a
         // DesignException.
-        String design = "<v-panel> <v-vertical-layout/> <v-horizontal-layout/> </v-panel>";
+        String design = "<vaadin-panel> <vaadin-vertical-layout/> <vaadin-horizontal-layout/> </vaadin-panel>";
         testRead(design, null);
     }
 }

@@ -33,7 +33,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
     @Test
     public void testAttributes() {
-        String design = "<v-tree-table animations-enabled=''>";
+        String design = "<vaadin-tree-table animations-enabled=''>";
         TreeTable table = getTable();
         table.setAnimationsEnabled(true);
 
@@ -43,7 +43,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
     @Test
     public void testHierarchy() {
-        String design = "<v-tree-table>" //
+        String design = "<vaadin-tree-table>" //
                 + "<table>" //
                 + "<colgroup><col property-id=''></colgroup>" //
                 + "<tbody>" //
@@ -57,7 +57,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
                 + "    <tr depth=1 item-id='2.1'><td></tr>" //
                 + "</tbody>" //
                 + "</table>" //
-                + "</v-tree-table>";
+                + "</vaadin-tree-table>";
 
         TreeTable table = getTable();
         table.addContainerProperty("", String.class, "");
@@ -83,7 +83,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
     @Test
     public void testCollapsed() {
-        String design = "<v-tree-table>" //
+        String design = "<vaadin-tree-table>" //
                 + "  <table>" //
                 + "    <colgroup><col property-id=''></colgroup>" //
                 + "    <tbody>" //
@@ -92,7 +92,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
                 + "          <tr depth=2 item-id='1.1.1'><td></tr>" //
                 + "    </tbody>" //
                 + "  </table>" //
-                + "</v-tree-table>";
+                + "</vaadin-tree-table>";
 
         TreeTable table = getTable();
         table.addContainerProperty("", String.class, "");
@@ -116,12 +116,12 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
     }
 
     protected void assertMalformed(String hierarchy) {
-        String design = "<v-tree-table>" //
+        String design = "<vaadin-tree-table>" //
                 + "  <table>" //
                 + "    <colgroup><col property-id=''></colgroup>" //
                 + "    <tbody>" + hierarchy + "</tbody>" //
                 + "  </table>" //
-                + "</v-tree-table>";
+                + "</vaadin-tree-table>";
 
         try {
             read(design);
@@ -151,6 +151,6 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
     @Override
     protected String getTag() {
-        return "v-tree-table";
+        return "vaadin-tree-table";
     }
 }

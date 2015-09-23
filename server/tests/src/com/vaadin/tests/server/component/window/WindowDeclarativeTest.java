@@ -38,7 +38,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
     @Test
     public void testDefault() {
-        String design = "<v-window>";
+        String design = "<vaadin-window>";
 
         Window expected = new Window();
 
@@ -49,14 +49,14 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     @Test
     public void testFeatures() {
 
-        String design = "<v-window position='100,100' window-mode='maximized' "
+        String design = "<vaadin-window position='100,100' window-mode='maximized' "
                 + "center modal='' resizable=false resize-lazy='' closable=false draggable=false "
                 + "close-shortcut='ctrl-alt-escape' "
                 + "assistive-prefix='Hello' assistive-postfix='World' assistive-role='alertdialog' "
                 + "tab-stop-enabled='' "
                 + "tab-stop-top-assistive-text='Do not move above the window' "
                 + "tab-stop-bottom-assistive-text='End of window'>"
-                + "</v-window>";
+                + "</vaadin-window>";
 
         Window expected = new Window();
 
@@ -106,7 +106,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         expected.addCloseShortcut(KeyCode.ARROW_RIGHT, ModifierKey.CTRL);
 
         // Test validity
-        String design = "<v-window close-shortcut='escape spacebar ctrl-alt-left ctrl-right' />";
+        String design = "<vaadin-window close-shortcut='escape spacebar ctrl-alt-left ctrl-right' />";
         testRead(design, expected);
         testWrite(design, expected);
 
@@ -114,7 +114,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         expected.removeCloseShortcut(KeyCode.SPACEBAR);
 
         // Test again
-        design = "<v-window close-shortcut='escape ctrl-alt-left ctrl-right' />";
+        design = "<vaadin-window close-shortcut='escape ctrl-alt-left ctrl-right' />";
         testRead(design, expected);
         testWrite(design, expected);
 
@@ -133,7 +133,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
     protected void assertInvalidPosition(String position) {
         try {
-            read("<v-window position='" + position + "'>");
+            read("<vaadin-window position='" + position + "'>");
             Assert.fail("Invalid position '" + position + "' should throw");
         } catch (Exception e) {
             // expected
@@ -143,8 +143,8 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     @Test
     public void testChildContent() {
 
-        String design = "<v-window>" + createElement(new Button("OK"))
-                + "</v-window>";
+        String design = "<vaadin-window>" + createElement(new Button("OK"))
+                + "</vaadin-window>";
 
         Window expected = new Window();
         expected.setContent(new Button("OK"));
@@ -156,8 +156,8 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     @Test(expected = DesignException.class)
     public void testMultipleContentChildren() {
 
-        String design = "<v-window>" + createElement(new Label("Hello"))
-                + createElement(new Button("OK")) + "</v-window>";
+        String design = "<vaadin-window>" + createElement(new Label("Hello"))
+                + createElement(new Button("OK")) + "</vaadin-window>";
 
         read(design);
     }
@@ -168,7 +168,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         Label assistive1 = new Label("Assistive text");
         Label assistive2 = new Label("More assistive text");
 
-        String design = "<v-window>"
+        String design = "<vaadin-window>"
                 + createElement(assistive1).attr(":assistive-description", "")
                 + createElement(new Button("OK"))
                 + createElement(assistive2).attr(":assistive-description", "");
@@ -179,7 +179,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
         testRead(design, expected);
 
-        String written = "<v-window>" + createElement(new Button("OK"))
+        String written = "<vaadin-window>" + createElement(new Button("OK"))
                 + createElement(assistive1).attr(":assistive-description", "")
                 + createElement(assistive2).attr(":assistive-description", "");
 

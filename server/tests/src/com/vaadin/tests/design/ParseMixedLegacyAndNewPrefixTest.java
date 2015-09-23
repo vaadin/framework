@@ -13,28 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.passwordfield;
+package com.vaadin.tests.design;
+
+import java.io.ByteArrayInputStream;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.declarative.Design;
 
 /**
- * 
- * @since
- * @author Vaadin Ltd
+ * Parse mixed content with legacy and new prefixes (not a required feature but
+ * works).
  */
-public class PasswordFieldDeclarativeTest extends
-        DeclarativeTestBase<PasswordField> {
-
+public class ParseMixedLegacyAndNewPrefixTest {
     @Test
-    public void testReadOnlyValue() {
-        String design = "<vaadin-password-field readonly=\"\" value=\"test value\"/>";
-        PasswordField tf = new PasswordField();
-        tf.setValue("test value");
-        tf.setReadOnly(true);
-        testRead(design, tf);
-        testWrite(design, tf);
+    public void parseMixedContent() {
+        Design.read(new ByteArrayInputStream(
+                "<v-vertical-layout><vaadin-label /></v-vertical-layout>"
+                        .getBytes()));
     }
 }

@@ -42,7 +42,7 @@ public class InvalidTagNames {
 
     @Test(expected = DesignException.class)
     public void onlyPrefix() {
-        readDesign("<v->foo</v->");
+        readDesign("<vaadin->foo</vaadin->");
     }
 
     @Test
@@ -55,7 +55,7 @@ public class InvalidTagNames {
 
     @Test(expected = DesignException.class)
     public void unknownClass() {
-        readDesign("<v-unknownbutton>foo</v-unknownbutton>");
+        readDesign("<vaadin-unknownbutton>foo</vaadin-unknownbutton>");
     }
 
     @Test(expected = DesignException.class)
@@ -65,31 +65,31 @@ public class InvalidTagNames {
 
     // @Test(expected = DesignException.class)
     // This is a side effect of not actively checking for invalid input. Will be
-    // parsed currently as <v-button> (this should not be considered API)
+    // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagEndsInDash() {
-        Component c = readDesign("<v-button-></v-button->");
+        Component c = readDesign("<vaadin-button-></vaadin-button->");
         Assert.assertTrue(c.getClass() == Button.class);
     }
 
     // @Test(expected = DesignException.class)
     // This is a side effect of not actively checking for invalid input. Will be
-    // parsed currently as <v-button> (this should not be considered API)
+    // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagEndsInTwoDashes() {
-        Component c = readDesign("<v-button--></v-button-->");
+        Component c = readDesign("<vaadin-button--></vaadin-button-->");
         Assert.assertTrue(c.getClass() == Button.class);
     }
 
     // @Test(expected = DesignException.class)
     // This is a side effect of not actively checking for invalid input. Will be
-    // parsed currently as <v-button> (this should not be considered API)
+    // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagWithTwoDashes() {
-        Component c = readDesign("<v--button></v--button>");
+        Component c = readDesign("<vaadin--button></vaadin--button>");
         Assert.assertTrue(c.getClass() == Button.class);
     }
 
     @Test(expected = DesignException.class)
     public void specialCharacters() {
-        readDesign("<v-button-&!#></v-button-&!#>");
+        readDesign("<vaadin-button-&!#></vaadin-button-&!#>");
     }
 
     private Component readDesign(String string) {

@@ -33,7 +33,7 @@ public class AbstractTextFieldDeclarativeTest extends
 
     @Test
     public void testAttributes() {
-        String design = "<v-text-field null-representation=this-is-null "
+        String design = "<vaadin-text-field null-representation=this-is-null "
                 + "null-setting-allowed='' maxlength=5 columns=3 "
                 + "input-prompt=input text-change-event-mode=eager "
                 + "text-change-timeout=100 />";

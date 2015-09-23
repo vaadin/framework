@@ -32,10 +32,10 @@ public class AbsoluteLayoutDeclarativeTest extends
 
     @Test
     public void testAbsoluteLayoutFeatures() {
-        String design = "<v-absolute-layout caption=\"test-layout\">"
-                + "<v-button :top='100px' :left='0px' :z-index=21>OK</v-button>"
-                + "<v-button :bottom='0px' :right='0px'>Cancel</v-button>"
-                + "</v-absolute-layout>";
+        String design = "<vaadin-absolute-layout caption=\"test-layout\">"
+                + "<vaadin-button :top='100px' :left='0px' :z-index=21>OK</vaadin-button>"
+                + "<vaadin-button :bottom='0px' :right='0px'>Cancel</vaadin-button>"
+                + "</vaadin-absolute-layout>";
         AbsoluteLayout layout = new AbsoluteLayout();
         layout.setCaption("test-layout");
         Button b1 = new Button("OK");
@@ -51,7 +51,7 @@ public class AbsoluteLayoutDeclarativeTest extends
 
     @Test
     public void testEmpty() {
-        String design = "<v-absolute-layout/>";
+        String design = "<vaadin-absolute-layout/>";
         AbsoluteLayout layout = new AbsoluteLayout();
         testRead(design, layout);
         testWrite(design, layout);

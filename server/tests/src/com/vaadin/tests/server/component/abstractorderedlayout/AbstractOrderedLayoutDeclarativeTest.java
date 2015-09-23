@@ -42,7 +42,7 @@ public class AbstractOrderedLayoutDeclarativeTest extends
 
     @Test
     public void testMargins() {
-        testMargins("v-vertical-layout");
+        testMargins("vaadin-vertical-layout");
     }
 
     @Test
@@ -74,8 +74,8 @@ public class AbstractOrderedLayoutDeclarativeTest extends
     }
 
     private String getDesign(float expandRatio, String... alignments) {
-        String result = "<v-vertical-layout caption=test-layout>";
-        result += "<v-label caption=test-label ";
+        String result = "<vaadin-vertical-layout caption=test-layout>";
+        result += "<vaadin-label caption=test-label ";
         String ratioString = expandRatio == 1.0f ? "\"\"" : String
                 .valueOf(expandRatio);
         if (expandRatio != 0) {
@@ -86,7 +86,7 @@ public class AbstractOrderedLayoutDeclarativeTest extends
                 result += " " + alignment + "=\"\"";
             }
         }
-        result += "></v-label><v-button ";
+        result += "></vaadin-label><vaadin-button ";
         if (expandRatio != 0) {
             result += ":expand=" + ratioString;
         }
@@ -95,7 +95,7 @@ public class AbstractOrderedLayoutDeclarativeTest extends
                 result += " " + alignment + "=\"\"";
             }
         }
-        result += "></v-button></v-vertical-layout>";
+        result += "></vaadin-button></vaadin-vertical-layout>";
         return result;
     }
 

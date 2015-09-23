@@ -24,13 +24,13 @@ public class GridStructureDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testReadEmptyGrid() {
-        String design = "<v-grid />";
+        String design = "<vaadin-grid />";
         testRead(design, new Grid(), false);
     }
 
     @Test
     public void testEmptyGrid() {
-        String design = "<v-grid></v-grid>";
+        String design = "<vaadin-grid></vaadin-grid>";
         Grid expected = new Grid();
         testWrite(design, expected);
         testRead(design, expected, true);
@@ -38,13 +38,13 @@ public class GridStructureDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test(expected = DesignException.class)
     public void testMalformedGrid() {
-        String design = "<v-grid><v-label /></v-grid>";
+        String design = "<vaadin-grid><vaadin-label /></vaadin-grid>";
         testRead(design, new Grid());
     }
 
     @Test(expected = DesignException.class)
     public void testGridWithNoColGroup() {
-        String design = "<v-grid><table><thead><tr><th>Foo</tr></thead></table></v-grid>";
+        String design = "<vaadin-grid><table><thead><tr><th>Foo</tr></thead></table></vaadin-grid>";
         testRead(design, new Grid());
     }
 }

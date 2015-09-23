@@ -29,7 +29,7 @@ import com.vaadin.ui.Link;
  */
 public class LinkDeclarativeTest extends DeclarativeTestBase<Link> {
     private String getBasicDesign() {
-        return "<v-link href='http://vaadin.com' target='vaadin-window' target-height=500"
+        return "<vaadin-link href='http://vaadin.com' target='vaadin-window' target-height=500"
                 + " target-width=800 target-border='none' />";
     }
 
@@ -55,12 +55,12 @@ public class LinkDeclarativeTest extends DeclarativeTestBase<Link> {
 
     @Test
     public void testReadEmpty() {
-        testRead("<v-link />", new Link());
+        testRead("<vaadin-link />", new Link());
     }
 
     @Test
     public void testWriteEmpty() {
-        testWrite("<v-link />", new Link());
+        testWrite("<vaadin-link />", new Link());
     }
 
 }

@@ -30,9 +30,9 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
     public void testEmptyPopupView() {
         PopupView component = new PopupView();
         Component popup = component.getContent().getPopupComponent();
-        String design = "<v-popup-view><popup-content>"
+        String design = "<vaadin-popup-view><popup-content>"
                 + new DesignContext().createElement(popup)
-                + "</popup-content></v-popup-view>";
+                + "</popup-content></vaadin-popup-view>";
         testWrite(design, component);
         testRead(design, component);
     }
@@ -48,12 +48,12 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
         component.setHideOnMouseOut(true);
         component.setPopupVisible(true);
         // hide-on-mouse-out is true by default. not seen in design
-        String design = "<v-popup-view popup-visible=''>" //
+        String design = "<vaadin-popup-view popup-visible=''>" //
                 + "Click <u>here</u> to open"
                 + "<popup-content>"
                 + new DesignContext().createElement(verticalLayout)
                 + "</popup-content>" //
-                + "</v-popup-view>";
+                + "</vaadin-popup-view>";
         testWrite(design, component);
         testRead(design, component);
     }
@@ -63,11 +63,11 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
         final Label label = new Label("Foo");
         PopupView component = new PopupView("Click Me!", label);
         component.setHideOnMouseOut(false);
-        String design = "<v-popup-view hide-on-mouse-out='false'>" //
+        String design = "<vaadin-popup-view hide-on-mouse-out='false'>" //
                 + "Click Me!"
                 + "<popup-content>"
                 + new DesignContext().createElement(label) + "</popup-content>" //
-                + "</v-popup-view>";
+                + "</vaadin-popup-view>";
         testWrite(design, component);
         testRead(design, component);
     }

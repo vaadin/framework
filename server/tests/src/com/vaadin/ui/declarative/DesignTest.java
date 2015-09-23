@@ -90,7 +90,7 @@ public class DesignTest {
 
     private String getHtmlLabelValue(String html) {
         Document document = Jsoup.parse(html);
-        Element label = document.select("v-label").get(0);
+        Element label = document.select("vaadin-label").get(0);
 
         StringBuilder builder = new StringBuilder();
         for (Node child : label.childNodes()) {

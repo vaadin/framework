@@ -24,9 +24,9 @@ public class RichTextAreaDeclarativeTest extends
         DeclarativeTestBase<RichTextArea> {
 
     private String getBasicDesign() {
-        return "<v-rich-text-area null-representation='' null-setting-allowed=''>\n"
+        return "<vaadin-rich-text-area null-representation='' null-setting-allowed=''>\n"
                 + "\n      <b>Header</b> <br/>Some text\n      "
-                + "</v-rich-text-area>";
+                + "</vaadin-rich-text-area>";
     }
 
     private RichTextArea getBasicExpected() {
@@ -49,17 +49,17 @@ public class RichTextAreaDeclarativeTest extends
 
     @Test
     public void testReadEmpty() {
-        testRead("<v-rich-text-area />", new RichTextArea());
+        testRead("<vaadin-rich-text-area />", new RichTextArea());
     }
 
     @Test
     public void testWriteEmpty() {
-        testWrite("<v-rich-text-area />", new RichTextArea());
+        testWrite("<vaadin-rich-text-area />", new RichTextArea());
     }
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-rich-text-area readonly style-name='v-richtextarea-readonly'>Hello World!</v-text-area>";
+        String design = "<vaadin-rich-text-area readonly style-name='v-richtextarea-readonly'>Hello World!</vaadin-text-area>";
         RichTextArea ta = new RichTextArea();
         ta.setValue("Hello World!");
         ta.setReadOnly(true);

@@ -28,7 +28,7 @@ public class VideoDeclarativeTest extends DeclarativeTestBase<Video> {
 
     @Test
     public void testEmptyVideo() {
-        String design = "<v-video />";
+        String design = "<vaadin-video />";
         Video audio = new Video();
         testRead(design, audio);
         testWrite(design, audio);
@@ -36,13 +36,13 @@ public class VideoDeclarativeTest extends DeclarativeTestBase<Video> {
 
     @Test
     public void testVideoMultipleSources() {
-        String design = "<v-video muted='' show-controls='false'>"
+        String design = "<vaadin-video muted='' show-controls='false'>"
                 + "some <b>text</b>" //
                 + "<source href='http://foo.pl' />"
                 + "<source href='https://bar.pl' />" //
                 + "<source href='ohai' />" //
                 + "<poster href='http://foo.pl/poster' />" //
-                + "</v-video>";
+                + "</vaadin-video>";
         Video video = new Video();
         video.setAltText("some <b>text</b>");
         video.setAutoplay(false);

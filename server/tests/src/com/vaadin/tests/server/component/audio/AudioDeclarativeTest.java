@@ -35,7 +35,7 @@ public class AudioDeclarativeTest extends DeclarativeTestBase<Audio> {
 
     @Test
     public void testEmptyAudio() {
-        String design = "<v-audio />";
+        String design = "<vaadin-audio />";
         Audio audio = new Audio();
         testRead(design, audio);
         testWrite(design, audio);
@@ -43,12 +43,12 @@ public class AudioDeclarativeTest extends DeclarativeTestBase<Audio> {
 
     @Test
     public void testAudioMultipleSources() {
-        String design = "<v-audio muted='' show-controls='false'>"
+        String design = "<vaadin-audio muted='' show-controls='false'>"
                 + "some <b>text</b>" //
                 + "<source href='http://foo.pl' />"
                 + "<source href='https://bar.pl' />" //
                 + "<source href='ohai' />" //
-                + "</v-audio>";
+                + "</vaadin-audio>";
         Audio audio = new Audio();
         audio.setAltText("some <b>text</b>");
         audio.setAutoplay(false);

@@ -43,10 +43,10 @@ public class FlashDeclarativeTest extends DeclarativeTestBase<Flash> {
     };
 
     protected String getDesign() {
-        return "<v-flash standby='Please wait' archive='arch' codebase='foo' codetype='bar' >"
+        return "<vaadin-flash standby='Please wait' archive='arch' codebase='foo' codetype='bar' >"
                 + "  <parameter name='baz' value='foo' />\n" //
                 + "  <parameter name='foo' value='bar' />\n" //
-                + "</v-flash>"; //
+                + "</vaadin-flash>"; //
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FlashDeclarativeTest extends DeclarativeTestBase<Flash> {
 
     @Test
     public void testEmpty() {
-        testRead("<v-flash />", new Flash());
+        testRead("<vaadin-flash />", new Flash());
     }
 
 }

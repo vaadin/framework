@@ -33,7 +33,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testSingleDefaultHeader() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -45,7 +45,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "     <th plain-text=''>Column2</th>"
                 + "     <th plain-text=''>Column3</tr>"
                 + "</thead>"
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
@@ -59,7 +59,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testSingleDefaultHTMLHeader() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -68,7 +68,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "<thead>"
                 + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>"
                 + "</thead>"
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
@@ -87,13 +87,14 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testNoHeaderRows() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "</colgroup>" 
                 + "<thead />" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.removeHeaderRow(grid.getDefaultHeaderRow());
@@ -105,7 +106,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testMultipleHeadersWithColSpans() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -116,8 +117,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <tr default=''><th>Column1<th>Column2<th>Column3</tr>" 
                 + "   <tr><th>Foo<th colspan=2>Bar</tr>" 
                 + "</thead>" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -141,7 +143,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testSingleDefaultFooter() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -151,8 +153,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tfoot>" 
                 + "   <tr><td plain-text=''>Column1<td plain-text=''>Column2<td plain-text=''>Column3</tr>" 
                 + "</tfoot>" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -172,7 +175,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testSingleDefaultHTMLFooter() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -182,8 +185,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tfoot>" 
                 + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
                 + "</tfoot>" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -203,7 +207,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testMultipleFootersWithColSpans() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "   <col sortable='' property-id='Column2'>"
@@ -215,8 +219,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
                 + "   <tr><td>Column1<td>Column2<td>Column3</tr>" 
                 + "   <tr><td>Foo<td colspan=2>Bar</tr>" 
                 + "</tfoot>" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Grid grid = new Grid();
         grid.addColumn("Column1", String.class);
         grid.addColumn("Column2", String.class);
@@ -242,15 +247,16 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testComponentInGridHeader() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "</colgroup>" 
                 + "<thead>" 
-                + "<tr default=''><th><v-label><b>Foo</b></v-label></tr>"
+                + "<tr default=''><th><vaadin-label><b>Foo</b></vaadin-label></tr>"
                 + "</thead>"
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
       //@formatter:on
+
         Label component = new Label("<b>Foo</b>");
         component.setContentMode(ContentMode.HTML);
 
@@ -265,16 +271,17 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testComponentInGridFooter() {
         //@formatter:off
-        String design = "<v-grid><table>"
+        String design = "<vaadin-grid><table>"
                 + "<colgroup>"
                 + "   <col sortable='' property-id='Column1'>"
                 + "</colgroup>" 
                 + "<thead />" // No headers read or written
                 + "<tfoot>" 
-                + "<tr><td><v-label><b>Foo</b></v-label></tr>"
+                + "<tr><td><vaadin-label><b>Foo</b></vaadin-label></tr>"
                 + "</tfoot>" 
-                + "</table></v-grid>";
+                + "</table></vaadin-grid>";
         //@formatter:on
+
         Label component = new Label("<b>Foo</b>");
         component.setContentMode(ContentMode.HTML);
 
@@ -289,15 +296,21 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testHtmlEntitiesinGridHeaderFooter() {
-        // @formatter off
-        String design = "<v-grid><table>" + "<colgroup>"
+        //@formatter:off
+        String design = "<vaadin-grid><table>"
+                + "<colgroup>"
                 + "  <col sortable=\"true\" property-id=\"> test\">"
-                + "</colgroup>" + "<thead>"
+                + "</colgroup>"
+                + "<thead>"
                 + "  <tr><th plain-text=\"true\">&gt; Test</th></tr>"
-                + "</thead>" + "<tfoot>"
+                + "</thead>"
+                + "<tfoot>"
                 + "  <tr><td plain-text=\"true\">&gt; Test</td></tr>"
-                + "</tfoot>" + "<tbody />" + "</table></v-grid>";
-        // @formatter off
+                + "</tfoot>"
+                + "<tbody />"
+                + "</table></vaadin-grid>";
+        //@formatter:on
+
         Grid grid = read(design);
         String actualHeader = grid.getHeaderRow(0).getCell("> test").getText();
         String actualFooter = grid.getFooterRow(0).getCell("> test").getText();
@@ -325,7 +338,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         header.getCell("test").setText("&amp; Test");
         footer.getCell("test").setText("&amp; Test");
 
-        Element root = new Element(Tag.valueOf("v-grid"), "");
+        Element root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
         Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("th")
@@ -340,7 +353,7 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         header.getCell("test").setHtml("&amp; Test");
         footer.getCell("test").setHtml("&amp; Test");
 
-        root = new Element(Tag.valueOf("v-grid"), "");
+        root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
         Assert.assertEquals("&amp; Test", root.getElementsByTag("th").get(0)

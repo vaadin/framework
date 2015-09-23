@@ -32,7 +32,7 @@ public class TreeDeclarativeTest extends DeclarativeTestBase<Tree> {
 
     @Test
     public void testDragMode() {
-        String design = "<v-tree drag-mode='node' />";
+        String design = "<vaadin-tree drag-mode='node' />";
 
         Tree tree = new Tree();
         tree.setDragMode(TreeDragMode.NODE);
@@ -43,13 +43,13 @@ public class TreeDeclarativeTest extends DeclarativeTestBase<Tree> {
 
     @Test
     public void testEmpty() {
-        testRead("<v-tree />", new Tree());
-        testWrite("<v-tree />", new Tree());
+        testRead("<vaadin-tree />", new Tree());
+        testWrite("<vaadin-tree />", new Tree());
     }
 
     @Test
     public void testNodes() {
-        String design = "<v-tree>" //
+        String design = "<vaadin-tree>" //
                 + "  <node text='Node'/>" //
                 + "  <node text='Parent'>" //
                 + "    <node text='Child'>" //
@@ -57,7 +57,7 @@ public class TreeDeclarativeTest extends DeclarativeTestBase<Tree> {
                 + "    </node>" //
                 + "  </node>" //
                 + "  <node text='With icon' icon='http://example.com/icon.png'/>" //
-                + "</v-tree>";
+                + "</vaadin-tree>";
 
         Tree tree = new Tree();
 

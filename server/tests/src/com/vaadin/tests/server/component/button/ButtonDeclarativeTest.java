@@ -38,73 +38,74 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
 
     @Test
     public void testEmptyPlainText() {
-        String design = "<v-button plain-text=''></v-button>";
+        String design = "<vaadin-button plain-text=''></vaadin-button>";
         testButtonAndNativeButton(design, false, "");
     }
 
     @Test
     public void testPlainTextCaption() {
-        String design = "<v-button plain-text=''>Click</v-button>";
+        String design = "<vaadin-button plain-text=''>Click</vaadin-button>";
         testButtonAndNativeButton(design, false, "Click");
     }
 
     @Test
     public void testEmptyHtml() {
-        String design = "<v-button />";
+        String design = "<vaadin-button />";
         testButtonAndNativeButton(design, true, "");
     }
 
     @Test
     public void testHtmlCaption() {
-        String design = "<v-button><b>Click</b></v-button>";
+        String design = "<vaadin-button><b>Click</b></vaadin-button>";
         testButtonAndNativeButton(design, true, "<b>Click</b>");
     }
 
     @Test
     public void testWithCaptionAttribute() {
         // The caption attribute should be ignored
-        String design = "<v-button caption=Caption>Click</v-button>";
-        String expectedWritten = "<v-button>Click</v-button>";
+        String design = "<vaadin-button caption=Caption>Click</vaadin-button>";
+        String expectedWritten = "<vaadin-button>Click</vaadin-button>";
         testButtonAndNativeButton(design, true, "Click", expectedWritten);
     }
 
     @Test
     public void testWithOnlyCaptionAttribute() {
-        String design = "<v-button caption=Click/>";
-        String expectedWritten = "<v-button/>";
+        String design = "<vaadin-button caption=Click/>";
+        String expectedWritten = "<vaadin-button/>";
         testButtonAndNativeButton(design, true, "", expectedWritten);
     }
 
     @Test
     public void testHtmlEntitiesInCaption() {
-        String designPlainText = "<v-button plain-text=\"true\">&gt; One</v-button>";
+        String designPlainText = "<vaadin-button plain-text=\"true\">&gt; One</vaadin-button>";
         String expectedCaptionPlainText = "> One";
 
         Button read = read(designPlainText);
         Assert.assertEquals(expectedCaptionPlainText, read.getCaption());
 
-        designPlainText = designPlainText
-                .replace("v-button", "v-native-button");
+        designPlainText = designPlainText.replace("vaadin-button",
+                "vaadin-native-button");
         Button nativeButton = read(designPlainText);
         Assert.assertEquals(expectedCaptionPlainText, nativeButton.getCaption());
 
-        String designHtml = "<v-button>&gt; One</v-button>";
+        String designHtml = "<vaadin-button>&gt; One</vaadin-button>";
         String expectedCaptionHtml = "&gt; One";
         read = read(designHtml);
         Assert.assertEquals(expectedCaptionHtml, read.getCaption());
 
-        designHtml = designHtml.replace("v-button", "v-native-button");
+        designHtml = designHtml
+                .replace("vaadin-button", "vaadin-native-button");
         nativeButton = read(designHtml);
         Assert.assertEquals(expectedCaptionHtml, nativeButton.getCaption());
 
         read = new Button("&amp; Test");
         read.setHtmlContentAllowed(true);
-        Element root = new Element(Tag.valueOf("v-button"), "");
+        Element root = new Element(Tag.valueOf("vaadin-button"), "");
         read.writeDesign(root, new DesignContext());
         assertEquals("&amp; Test", root.html());
 
         read.setHtmlContentAllowed(false);
-        root = new Element(Tag.valueOf("v-button"), "");
+        root = new Element(Tag.valueOf("vaadin-button"), "");
         read.writeDesign(root, new DesignContext());
         assertEquals("&amp;amp; Test", root.html());
 
@@ -124,9 +125,9 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
         testRead(expectedWritten, b);
         testWrite(expectedWritten, b);
         // Test NativeButton
-        design = design.replace("v-button", "v-native-button");
-        expectedWritten = expectedWritten
-                .replace("v-button", "v-native-button");
+        design = design.replace("vaadin-button", "vaadin-native-button");
+        expectedWritten = expectedWritten.replace("vaadin-button",
+                "vaadin-native-button");
         NativeButton nb = new NativeButton();
         nb.setCaptionAsHtml(html);
         nb.setCaption(caption);
@@ -136,8 +137,8 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
 
     @Test
     public void testAttributes() {
-        String design = "<v-button tabindex=3 plain-text='' icon-alt=OK "
-                + "click-shortcut=shift-ctrl-o></v-button>";
+        String design = "<vaadin-button tabindex=3 plain-text='' icon-alt=OK "
+                + "click-shortcut=shift-ctrl-o></vaadin-button>";
         Button b = new Button("");
         b.setTabIndex(3);
         b.setIconAlternateText("OK");

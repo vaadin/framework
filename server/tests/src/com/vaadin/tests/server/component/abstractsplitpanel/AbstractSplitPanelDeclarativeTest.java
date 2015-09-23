@@ -37,10 +37,10 @@ public class AbstractSplitPanelDeclarativeTest extends
 
     @Test
     public void testWithBothChildren() {
-        String design = "<v-horizontal-split-panel split-position=20.5% "
+        String design = "<vaadin-horizontal-split-panel split-position=20.5% "
                 + "min-split-position=20% max-split-position=50px locked='' "
-                + "reversed=\"\"> <v-table /> <v-vertical-layout />"
-                + "</v-horizontal-split-panel>";
+                + "reversed=\"\"> <vaadin-table /> <vaadin-vertical-layout />"
+                + "</vaadin-horizontal-split-panel>";
         AbstractSplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(20.5f, Unit.PERCENTAGE, true);
         sp.setMinSplitPosition(20, Unit.PERCENTAGE);
@@ -54,8 +54,8 @@ public class AbstractSplitPanelDeclarativeTest extends
 
     @Test
     public void testWithFirstChild() {
-        String design = "<v-vertical-split-panel><v-table caption=\"First slot\"/>"
-                + "</v-vertical-split-panel>";
+        String design = "<vaadin-vertical-split-panel><vaadin-table caption=\"First slot\"/>"
+                + "</vaadin-vertical-split-panel>";
         AbstractSplitPanel sp = new VerticalSplitPanel();
         Table t = new Table();
         t.setCaption("First slot");
@@ -66,8 +66,8 @@ public class AbstractSplitPanelDeclarativeTest extends
 
     @Test
     public void testWithSecondChild() {
-        String design = "<v-horizontal-split-panel><v-button :second>Second slot</v-button>"
-                + "</v-vertical-split-panel>";
+        String design = "<vaadin-horizontal-split-panel><vaadin-button :second>Second slot</vaadin-button>"
+                + "</vaadin-vertical-split-panel>";
         AbstractSplitPanel sp = new HorizontalSplitPanel();
         Button b = new Button("Second slot");
         b.setCaptionAsHtml(true);
@@ -78,7 +78,7 @@ public class AbstractSplitPanelDeclarativeTest extends
 
     @Test
     public void testEmpty() {
-        String design = "<v-horizontal-split-panel/>";
+        String design = "<vaadin-horizontal-split-panel/>";
         AbstractSplitPanel sp = new HorizontalSplitPanel();
         testRead(design, sp);
         testWrite(design, sp);

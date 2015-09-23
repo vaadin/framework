@@ -39,7 +39,7 @@ public class UploadDeclarativeTest extends DeclarativeTestBase<Upload> {
     }
 
     private String getBasicDesign() {
-        return "<v-upload button-caption='Send the file' tabindex=5 />";
+        return "<vaadin-upload button-caption='Send the file' tabindex=5 />";
     }
 
     private Upload getBasicExpected() {
@@ -51,11 +51,11 @@ public class UploadDeclarativeTest extends DeclarativeTestBase<Upload> {
 
     @Test
     public void testReadEmpty() {
-        testRead("<v-upload />", new Upload());
+        testRead("<vaadin-upload />", new Upload());
     }
 
     @Test
     public void testWriteEmpty() {
-        testWrite("<v-upload />", new Upload());
+        testWrite("<vaadin-upload />", new Upload());
     }
 }

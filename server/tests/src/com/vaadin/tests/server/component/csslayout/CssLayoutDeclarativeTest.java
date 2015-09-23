@@ -33,11 +33,11 @@ public class CssLayoutDeclarativeTest extends DeclarativeTestBase<CssLayout> {
 
     @Test
     public void testNoChildren() {
-        String design = "<v-css-layout />";
+        String design = "<vaadin-css-layout />";
         CssLayout layout = new CssLayout();
         testRead(design, layout);
         testWrite(design, layout);
-        design = "<v-css-layout caption=\"A caption\"/>";
+        design = "<vaadin-css-layout caption=\"A caption\"/>";
         layout = new CssLayout();
         layout.setCaption("A caption");
         testRead(design, layout);
@@ -46,8 +46,8 @@ public class CssLayoutDeclarativeTest extends DeclarativeTestBase<CssLayout> {
 
     @Test
     public void testFeatures() {
-        String design = "<v-css-layout caption=test-layout><v-label caption=test-label />"
-                + "<v-button>test-button</v-button></v-css-layout>";
+        String design = "<vaadin-css-layout caption=test-layout><vaadin-label caption=test-label />"
+                + "<vaadin-button>test-button</vaadin-button></vaadin-css-layout>";
         CssLayout layout = new CssLayout();
         layout.setCaption("test-layout");
         Label l = new Label();

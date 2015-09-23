@@ -34,7 +34,7 @@ public class GridLayoutDeclarativeTest extends
 
     @Test
     public void testMargins() {
-        testMargins("v-grid-layout");
+        testMargins("vaadin-grid-layout");
     }
 
     @Test
@@ -47,13 +47,13 @@ public class GridLayoutDeclarativeTest extends
         b2.setCaptionAsHtml(true);
         b3.setCaptionAsHtml(true);
         b4.setCaptionAsHtml(true);
-        String design = "<v-grid-layout><row>" //
+        String design = "<vaadin-grid-layout><row>" //
                 + "<column expand=1>" + writeChild(b1) + "</column>" //
                 + "<column expand=3>" + writeChild(b2) + "</column>" //
                 + "</row><row>" //
                 + "<column>" + writeChild(b3) + "</column>" //
                 + "<column>" + writeChild(b4) + "</column>" //
-                + "</row></v-grid-layout>";
+                + "</row></vaadin-grid-layout>";
         GridLayout gl = new GridLayout(2, 2);
         gl.addComponent(b1);
         gl.addComponent(b2);
@@ -69,10 +69,10 @@ public class GridLayoutDeclarativeTest extends
     public void testOneBigComponentGridLayout() {
         Button b1 = new Button("Button 0,0 -> 1,1");
         b1.setCaptionAsHtml(true);
-        String design = "<v-grid-layout><row>" //
+        String design = "<vaadin-grid-layout><row>" //
                 + "<column colspan=2 rowspan=2>" + writeChild(b1) + "</column>" //
                 + "</row><row expand=2>" //
-                + "</row></v-grid-layout>";
+                + "</row></vaadin-grid-layout>";
         GridLayout gl = new GridLayout(2, 2);
         gl.addComponent(b1, 0, 0, 1, 1);
         gl.setRowExpandRatio(1, 2);
@@ -121,7 +121,7 @@ public class GridLayoutDeclarativeTest extends
         // 4 4 - 2 6
         // - - 7 7 6
 
-        String design = "<v-grid-layout><row>" //
+        String design = "<vaadin-grid-layout><row>" //
                 + "<column colspan=3>" + writeChild(b1) + "</column>" //
                 + "<column rowspan=4>" + writeChild(b2) + "</column>" //
                 + "<column rowspan=2>" + writeChild(b3) + "</column>" //
@@ -135,7 +135,7 @@ public class GridLayoutDeclarativeTest extends
                 + "</row><row>" //
                 + "<column colspan=2 />" // Empty placeholder
                 + "<column colspan=2>" + writeChild(b7) + "</column>" //
-                + "</row></v-grid-layout>";
+                + "</row></vaadin-grid-layout>";
         testWrite(design, gl);
         testRead(design, gl);
     }
@@ -148,14 +148,14 @@ public class GridLayoutDeclarativeTest extends
         gl.addComponent(b1, 4, 0, 4, 4);
         gl.setColumnExpandRatio(2, 2.0f);
 
-        String design = "<v-grid-layout><row>" //
+        String design = "<vaadin-grid-layout><row>" //
                 + "<column colspan=4 rowspan=5 expand='0,0,2,0' />" //
                 + "<column rowspan=5>" + writeChild(b1) + "</column>" //
                 + "</row><row>" //
                 + "</row><row>" //
                 + "</row><row>" //
                 + "</row><row>" //
-                + "</row></v-grid-layout>";
+                + "</row></vaadin-grid-layout>";
         testWrite(design, gl);
         testRead(design, gl);
     }
@@ -168,14 +168,14 @@ public class GridLayoutDeclarativeTest extends
         gl.addComponent(b1, 0, 0, 0, 4);
         gl.setColumnExpandRatio(4, 2.0f);
 
-        String design = "<v-grid-layout><row>" //
+        String design = "<vaadin-grid-layout><row>" //
                 + "<column rowspan=5>" + writeChild(b1) + "</column>" //
                 + "<column colspan=4 rowspan=5 expand='0,0,0,2' />" //
                 + "</row><row>" //
                 + "</row><row>" //
                 + "</row><row>" //
                 + "</row><row>" //
-                + "</row></v-grid-layout>";
+                + "</row></vaadin-grid-layout>";
         testWrite(design, gl);
         testRead(design, gl);
     }
@@ -183,7 +183,7 @@ public class GridLayoutDeclarativeTest extends
     @Test
     public void testEmptyGridLayout() {
         GridLayout gl = new GridLayout();
-        String design = "<v-grid-layout />";
+        String design = "<vaadin-grid-layout />";
         testWrite(design, gl);
         testRead(design, gl);
     }
@@ -214,21 +214,21 @@ public class GridLayoutDeclarativeTest extends
         String design = "<!DOCTYPE html>" + //
                 "<html>" + //
                 " <body> " + //
-                "  <v-grid-layout> " + //
+                "  <vaadin-grid-layout> " + //
                 "   <row> " + //
                 "    <column> " + //
-                "     <v-grid-layout> " + //
+                "     <vaadin-grid-layout> " + //
                 "      <row> " + //
                 "       <column> " + //
-                "        <v-button>" + //
+                "        <vaadin-button>" + //
                 "          Button " + //
-                "        </v-button> " + //
+                "        </vaadin-button> " + //
                 "       </column> " + //
                 "      </row> " + //
-                "     </v-grid-layout> " + //
+                "     </vaadin-grid-layout> " + //
                 "    </column> " + //
                 "   </row> " + //
-                "  </v-grid-layout>  " + //
+                "  </vaadin-grid-layout>  " + //
                 " </body>" + //
                 "</html>";
         GridLayout outer = new GridLayout();

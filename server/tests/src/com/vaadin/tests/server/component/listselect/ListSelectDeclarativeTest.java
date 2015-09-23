@@ -31,8 +31,8 @@ public class ListSelectDeclarativeTest extends DeclarativeTestBase<ListSelect> {
     }
 
     private String getWithOptionsDesign() {
-        return "<v-list-select rows=10>\n" + "        <option>Male</option>\n"
-                + "        <option>Female</option>\n" + "</v-list-select>\n"
+        return "<vaadin-list-select rows=10>\n" + "        <option>Male</option>\n"
+                + "        <option>Female</option>\n" + "</vaadin-list-select>\n"
                 + "";
     }
 
@@ -54,7 +54,7 @@ public class ListSelectDeclarativeTest extends DeclarativeTestBase<ListSelect> {
     }
 
     private String getBasicDesign() {
-        return "<v-list-select caption='Hello' />";
+        return "<vaadin-list-select caption='Hello' />";
     }
 
     @Test

@@ -30,12 +30,12 @@ public class CalendarDeclarativeTest extends DeclarativeTestBase<Calendar> {
 
     @Test
     public void testEmpty() {
-        verifyDeclarativeDesign("<v-calendar></v-calendar>", new Calendar());
+        verifyDeclarativeDesign("<vaadin-calendar></vaadin-calendar>", new Calendar());
     }
 
     @Test
     public void testCalendarAllFeatures() throws ParseException {
-        String design = "<v-calendar start-date='2014-11-17' end-date='2014-11-23' "
+        String design = "<vaadin-calendar start-date='2014-11-17' end-date='2014-11-23' "
                 + "first-visible-day-of-week=2 last-visible-day-of-week=5 "
                 + "time-zone='EST' time-format='12h' first-visible-hour-of-day=8 "
                 + "last-visible-hour-of-day=18 weekly-caption-format='mmm MM/dd' />";

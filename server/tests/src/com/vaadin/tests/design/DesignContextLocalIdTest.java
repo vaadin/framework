@@ -101,7 +101,7 @@ public class DesignContextLocalIdTest {
             Element e = ctx.createElement(ctr);
             assertEquals("Unexpected child local id for "
                     + ctr.getClass().getSimpleName(), "button-id", e
-                    .getElementsByTag("v-button").first().attr("_id"));
+                    .getElementsByTag("vaadin-button").first().attr("_id"));
         }
 
         SingleComponentContainer[] sctrs = { new Window(), new Panel() };
@@ -111,7 +111,7 @@ public class DesignContextLocalIdTest {
             Element e = ctx.createElement(ctr);
             assertEquals("Unexpected child local id for "
                     + ctr.getClass().getSimpleName(), "button-id", e
-                    .getElementsByTag("v-button").first().attr("_id"));
+                    .getElementsByTag("vaadin-button").first().attr("_id"));
         }
     }
 

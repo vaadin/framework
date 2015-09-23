@@ -145,18 +145,18 @@ public class LocaleTest {
         html.appendChild(doc.createElement("head"));
         Element body = doc.createElement("body");
         html.appendChild(body);
-        Element evLayout = doc.createElement("v-vertical-layout");
+        Element evLayout = doc.createElement("vaadin-vertical-layout");
         evLayout.attr("locale", "en_US");
         body.appendChild(evLayout);
-        Element ehLayout = doc.createElement("v-horizontal-layout");
+        Element ehLayout = doc.createElement("vaadin-horizontal-layout");
         evLayout.appendChild(ehLayout);
-        Element eb1 = doc.createElement("v-button");
+        Element eb1 = doc.createElement("vaadin-button");
         eb1.attr("locale", "en_US");
         ehLayout.appendChild(eb1);
-        Element eb2 = doc.createElement("v-button");
+        Element eb2 = doc.createElement("vaadin-button");
         eb2.attr("locale", "en_GB");
         ehLayout.appendChild(eb2);
-        Element eb3 = doc.createElement("v-button");
+        Element eb3 = doc.createElement("vaadin-button");
         ehLayout.appendChild(eb3);
 
         // parse the created document and check the constructed component

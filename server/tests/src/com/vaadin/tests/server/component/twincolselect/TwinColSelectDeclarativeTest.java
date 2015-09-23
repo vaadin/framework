@@ -31,11 +31,11 @@ public class TwinColSelectDeclarativeTest extends
         DeclarativeTestBase<TwinColSelect> {
 
     public String getBasicDesign() {
-        return "<v-twin-col-select rows=5 right-column-caption='Selected values' left-column-caption='Unselected values'>\n"
+        return "<vaadin-twin-col-select rows=5 right-column-caption='Selected values' left-column-caption='Unselected values'>\n"
                 + "        <option>First item</option>\n"
                 + "        <option selected>Second item</option>\n"
                 + "        <option selected>Third item</option>\n"
-                + "</v-twin-col-select>";
+                + "</vaadin-twin-col-select>";
 
     }
 
@@ -63,12 +63,12 @@ public class TwinColSelectDeclarativeTest extends
 
     @Test
     public void testReadEmpty() {
-        testRead("<v-twin-col-select />", new TwinColSelect());
+        testRead("<vaadin-twin-col-select />", new TwinColSelect());
     }
 
     @Test
     public void testWriteEmpty() {
-        testWrite("<v-twin-col-select />", new TwinColSelect());
+        testWrite("<vaadin-twin-col-select />", new TwinColSelect());
     }
 
 }

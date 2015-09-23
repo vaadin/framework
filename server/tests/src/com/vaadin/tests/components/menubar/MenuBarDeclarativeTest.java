@@ -38,14 +38,14 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testReadWrite() throws IOException {
-        String design = "<v-menu-bar auto-open='' tabindex=5>"
+        String design = "<vaadin-menu-bar auto-open='' tabindex=5>"
                 + "<menu checkable=''>Save</menu>"
                 + "<menu description='Open a file'>Open</menu>"
                 + "<menu disabled=''>Close</menu>"
                 + "<menu icon='http://foo.bar/ico.png'>Help</menu>"
                 + "<menu visible='false'>About</menu>"
                 + "<menu>Sub<menu>Item</menu></menu>"
-                + "<menu more>WTF?!</menu>" + "</v-menu-bar>";
+                + "<menu more>WTF?!</menu>" + "</vaadin-menu-bar>";
         MenuBar bar = new MenuBar();
         bar.setAutoOpen(true);
         bar.setHtmlContentAllowed(true);
@@ -69,7 +69,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testTicketSpec1() throws IOException {
-        String design = "<v-menu-bar auto-open='' plain-text tabindex=5> "
+        String design = "<vaadin-menu-bar auto-open='' plain-text tabindex=5> "
                 + "<menu>File"
                 + "<menu>Save</menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
@@ -85,7 +85,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "</menu>" //
                 + "</menu>" //
                 + "<menu more icon=\"theme://icon.png\">foo</menu>"
-                + "</v-menu-bar>";
+                + "</vaadin-menu-bar>";
         // for one reason or another, no component has a correct .equals
         // implementation, which makes tests a bit annoying
         MenuBar menuBar = new MenuBar();
@@ -120,12 +120,12 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testTicketSpec2() throws IOException {
-        String design = "<v-menu-bar>"
+        String design = "<vaadin-menu-bar>"
                 + "<menu><b>File</b>"
                 + "<menu><font style=\"color: red\">Save</font></menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
                 + "<menu separator='' />" + "<menu disabled=''>Exit</menu>" //
-                + "</menu></v-menu-bar>";
+                + "</menu></vaadin-menu-bar>";
         MenuBar menuBar = new MenuBar();
         menuBar.setHtmlContentAllowed(true);
         MenuItem fileMenu = menuBar.addItem("<b>File</b>", null);

@@ -31,7 +31,7 @@ public class BrowserFrameDeclarativeTest extends
         DeclarativeTestBase<BrowserFrame> {
 
     protected String getDesign() {
-        return "<v-browser-frame source='http://foo.bar/some.html' />";
+        return "<vaadin-browser-frame source='http://foo.bar/some.html' />";
     }
 
     protected BrowserFrame getExpectedResult() {
@@ -52,6 +52,6 @@ public class BrowserFrameDeclarativeTest extends
 
     @Test
     public void testEmpty() {
-        testRead("<v-browser-frame/>", new BrowserFrame());
+        testRead("<vaadin-browser-frame/>", new BrowserFrame());
     }
 }

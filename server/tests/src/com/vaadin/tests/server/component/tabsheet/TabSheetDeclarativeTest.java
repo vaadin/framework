@@ -35,10 +35,10 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
 
     @Test
     public void testFeatures() {
-        String design = "<v-tab-sheet tabindex=5><tab caption=test-caption "
+        String design = "<vaadin-tab-sheet tabindex=5><tab caption=test-caption "
                 + "visible=false closable='' enabled=false icon=http://www.vaadin.com/test.png"
                 + " icon-alt=OK description=test-desc style-name=test-style "
-                + "id=test-id><v-text-field/></tab></v-tab-sheet>";
+                + "id=test-id><vaadin-text-field/></tab></vaadin-tab-sheet>";
         TabSheet ts = new TabSheet();
         ts.setTabIndex(5);
         TextField tf = new TextField();
@@ -59,7 +59,7 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
 
     @Test
     public void testSelected() {
-        String design = "<v-tab-sheet><tab selected=''><v-text-field/></tab></v-tab-sheet>";
+        String design = "<vaadin-tab-sheet><tab selected=''><vaadin-text-field/></tab></vaadin-tab-sheet>";
         TabSheet ts = new TabSheet();
         TextField tf = new TextField();
         ts.addTab(tf);
@@ -70,10 +70,10 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
 
     @Test
     public void tabsNotShown() {
-        String design = "<v-tab-sheet tabs-visible=\"false\">\n"
+        String design = "<vaadin-tab-sheet tabs-visible=\"false\">\n"
                 + "  <tab caption=\"My Tab\" selected=\"\">\n"
-                + "    <v-label>My Content</v-label>\n" + "  </tab>\n"
-                + "</v-tab-sheet>\n";
+                + "    <vaadin-label>My Content</vaadin-label>\n" + "  </tab>\n"
+                + "</vaadin-tab-sheet>\n";
         TabSheet ts = new TabSheet();
         ts.setTabsVisible(false);
         Label l = new Label("My Content", ContentMode.HTML);

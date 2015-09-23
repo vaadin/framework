@@ -74,7 +74,7 @@ public class ComponentFactoryTest {
             }
         });
 
-        Design.read(new ByteArrayInputStream("<v-label />".getBytes()));
+        Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
 
         Assert.assertEquals("There should be one message logged", 1,
                 messages.size());
@@ -93,7 +93,7 @@ public class ComponentFactoryTest {
             }
         });
 
-        Design.read(new ByteArrayInputStream("<v-label />".getBytes()));
+        Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
     }
 
     @Test(expected = DesignException.class)
@@ -108,7 +108,7 @@ public class ComponentFactoryTest {
             }
         });
 
-        Design.read(new ByteArrayInputStream("<v-label />".getBytes()));
+        Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
     }
 
     @Test

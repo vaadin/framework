@@ -29,9 +29,9 @@ public class DragAndDropWrapperDeclarativeTest extends
     @Test
     public void testDefaultDnDWrapper() {
         Button okButton = new Button("OK");
-        String input = "<v-drag-and-drop-wrapper>"
+        String input = "<vaadin-drag-and-drop-wrapper>"
                 + new DesignContext().createElement(okButton)
-                + "</v-drag-and-drop-wrapper>";
+                + "</vaadin-drag-and-drop-wrapper>";
         DragAndDropWrapper wrapper = new DragAndDropWrapper(okButton);
         testWrite(input, wrapper);
         testRead(input, wrapper);
@@ -40,9 +40,9 @@ public class DragAndDropWrapperDeclarativeTest extends
     @Test
     public void testNoDragImage() {
         Button okButton = new Button("OK");
-        String input = "<v-drag-and-drop-wrapper drag-start-mode='wrapper'>"
+        String input = "<vaadin-drag-and-drop-wrapper drag-start-mode='wrapper'>"
                 + new DesignContext().createElement(okButton)
-                + "</v-drag-and-drop-wrapper>";
+                + "</vaadin-drag-and-drop-wrapper>";
         DragAndDropWrapper wrapper = new DragAndDropWrapper(okButton);
         wrapper.setDragStartMode(DragStartMode.WRAPPER);
         testWrite(input, wrapper);
@@ -53,10 +53,10 @@ public class DragAndDropWrapperDeclarativeTest extends
     public void testWithDragImage() {
         Button dragImage = new Button("Cancel");
         Button okButton = new Button("OK");
-        String input = "<v-drag-and-drop-wrapper drag-start-mode='component_other'>"
+        String input = "<vaadin-drag-and-drop-wrapper drag-start-mode='component_other'>"
                 + new DesignContext().createElement(okButton)
                 + new DesignContext().createElement(dragImage).attr(
-                        ":drag-image", "") + "</v-drag-and-drop-wrapper>";
+                        ":drag-image", "") + "</vaadin-drag-and-drop-wrapper>";
         DragAndDropWrapper wrapper = new DragAndDropWrapper(okButton);
         wrapper.setDragStartMode(DragStartMode.COMPONENT_OTHER);
         wrapper.setDragImageComponent(dragImage);

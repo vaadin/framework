@@ -31,7 +31,7 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
 
     @Test
     public void testDefault() {
-        String design = "<v-slider>";
+        String design = "<vaadin-slider>";
 
         Slider expected = new Slider();
 
@@ -41,7 +41,7 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
 
     @Test
     public void testHorizontal() {
-        String design = "<v-slider min=10 max=20 resolution=1 value=12.3>";
+        String design = "<vaadin-slider min=10 max=20 resolution=1 value=12.3>";
 
         Slider expected = new Slider();
         expected.setMin(10.0);
@@ -55,7 +55,7 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
 
     @Test
     public void testVertical() {
-        String design = "<v-slider vertical>";
+        String design = "<vaadin-slider vertical>";
 
         Slider expected = new Slider();
         expected.setOrientation(SliderOrientation.VERTICAL);
@@ -66,7 +66,7 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-slider readonly min=10 max=20 resolution=1 value=12.3>";
+        String design = "<vaadin-slider readonly min=10 max=20 resolution=1 value=12.3>";
 
         Slider expected = new Slider();
         expected.setMin(10.0);

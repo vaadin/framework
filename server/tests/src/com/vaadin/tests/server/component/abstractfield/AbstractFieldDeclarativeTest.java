@@ -33,7 +33,7 @@ public class AbstractFieldDeclarativeTest extends
 
     @Test
     public void testPlainText() {
-        String design = "<v-text-field buffered='' validation-visible='false' invalid-committed=''"
+        String design = "<vaadin-text-field buffered='' validation-visible='false' invalid-committed=''"
                 + " invalid-allowed='false' required='' required-error='This is a required field'"
                 + " conversion-error='Input {0} cannot be parsed' tabindex=3 readonly=''/>";
         AbstractField tf = new TextField();
@@ -61,7 +61,7 @@ public class AbstractFieldDeclarativeTest extends
     public void testModelReadOnly() {
         // Test that read only value coming from property data source is not
         // written to design.
-        String design = "<v-text-field value=test></v-text-field>";
+        String design = "<vaadin-text-field value=test></vaadin-text-field>";
         AbstractField component = new TextField();
         ObjectProperty<String> property = new ObjectProperty<String>("test");
         property.setReadOnly(true);

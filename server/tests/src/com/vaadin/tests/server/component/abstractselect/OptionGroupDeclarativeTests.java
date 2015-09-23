@@ -35,7 +35,7 @@ public class OptionGroupDeclarativeTests extends
     @Test
     public void testBasicSyntax() {
 
-        String expected = "<v-option-group />";
+        String expected = "<vaadin-option-group />";
         testReadWrite(expected);
 
     }
@@ -47,12 +47,12 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<v-option-group>"
+                "<vaadin-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
                 + "<option>baz</option>"
                 + "<option>bang</option>"
-                + "</v-option-group>";
+                + "</vaadin-option-group>";
         //@formatter:on
 
         testReadWrite(expected);
@@ -67,12 +67,12 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<v-option-group>"
+                "<vaadin-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
                 + "<option disabled>baz</option>"
                 + "<option>bang</option>"
-                + "</v-option-group>";
+                + "</vaadin-option-group>";
         //@formatter:on
 
         testReadWrite(expected);
@@ -87,12 +87,12 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<v-option-group>"
+                "<vaadin-option-group>"
                 + "<option>foo</option>"
                 + "<option icon='theme://foobar.png'>bar</option>"
                 + "<option>baz</option>"
                 + "<option>bang</option>"
-                + "</v-option-group>";
+                + "</vaadin-option-group>";
         //@formatter:on
 
         testReadWrite(expected);
@@ -111,12 +111,12 @@ public class OptionGroupDeclarativeTests extends
 
         //@formatter:off
         String expected = 
-                "<v-option-group html-content-allowed=''>"
+                "<vaadin-option-group html-content-allowed=''>"
                 + "<option item-id=\"foo\"><b>True</b></option>"
                 + "<option item-id=\"bar\"><font color='red'>False</font></option>"
                 + "<option>baz</option>"
                 + "<option>bang</option>"
-                + "</v-option-group>";
+                + "</vaadin-option-group>";
         //@formatter:on
 
         testReadWrite(expected);
@@ -131,13 +131,13 @@ public class OptionGroupDeclarativeTests extends
         og.setItemCaption("bar", "<font color=\"red\">False</font>");
 
         //@formatter:off
-        String expected = 
-                "<v-option-group>"
+        String expected =
+                "<vaadin-option-group>"
                 + "<option item-id=\"foo\">&lt;b&gt;True&lt;/b&gt;</option>"
                 + "<option item-id=\"bar\">&lt;font color=\"red\"&gt;False&lt;/font&gt;</option>"
                 + "<option>baz</option>"
                 + "<option>bang</option>"
-                + "</v-option-group>";
+                + "</vaadin-option-group>";
         //@formatter:on
 
         testReadWrite(expected);

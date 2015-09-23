@@ -37,7 +37,7 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
     @Test
     public void testBasicAttributes() {
 
-        String design = "<v-grid editable='' rows=20 frozen-columns=-1 "
+        String design = "<vaadin-grid editable='' rows=20 frozen-columns=-1 "
                 + "editor-save-caption='Tallenna' editor-cancel-caption='Peruuta' column-reordering-allowed=''>";
 
         Grid grid = new Grid();
@@ -55,8 +55,8 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
 
     @Test
     public void testFrozenColumnsAttributes() {
-        String design = "<v-grid frozen-columns='2'><table>" //
-                + "<colgroup><col><col><col></colgroup></table></v-grid>";
+        String design = "<vaadin-grid frozen-columns='2'><table>" //
+                + "<colgroup><col><col><col></colgroup></table></vaadin-grid>";
 
         Grid grid = new Grid();
         grid.addColumn("property-0", String.class);
@@ -69,15 +69,15 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
 
     @Test
     public void testSelectionMode() {
-        String design = "<v-grid selection-mode='none'>";
+        String design = "<vaadin-grid selection-mode='none'>";
         assertSame(NoSelectionModel.class, read(design).getSelectionModel()
                 .getClass());
 
-        design = "<v-grid selection-mode='single'>";
+        design = "<vaadin-grid selection-mode='single'>";
         assertSame(SingleSelectionModel.class, read(design).getSelectionModel()
                 .getClass());
 
-        design = "<v-grid selection-mode='multi'>";
+        design = "<vaadin-grid selection-mode='multi'>";
         assertSame(MultiSelectionModel.class, read(design).getSelectionModel()
                 .getClass());
     }

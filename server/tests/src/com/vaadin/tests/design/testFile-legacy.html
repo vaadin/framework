@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta name="package-mapping" content="my:com.addon.mypackage"/>
+ </head>
+ <body>
+  <v-vertical-layout width="500px">
+   <v-horizontal-layout>
+    <v-label plain-text caption="FooBar"></v-label>
+    <v-native-button _id=firstButton>Native click me</v-native-button>
+	<v-native-button id = secondButton _id="localID">Another button</v-native-button>
+	<v-native-button>Yet another button</v-native-button>
+    <v-button plain-text width = "150px">Click me</v-button>
+   </v-horizontal-layout>
+   <v-text-field caption = "Text input"/>
+   <v-text-area caption = "Text area" height="200px" width="300px"/>
+  </v-vertical-layout>
+ </body>
+</html>

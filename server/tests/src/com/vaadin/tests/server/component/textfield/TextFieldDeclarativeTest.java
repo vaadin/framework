@@ -30,7 +30,7 @@ public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
 
     @Test
     public void testEmpty() {
-        String design = "<v-text-field/>";
+        String design = "<vaadin-text-field/>";
         TextField tf = new TextField();
         testRead(design, tf);
         testWrite(design, tf);
@@ -38,7 +38,7 @@ public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
 
     @Test
     public void testValue() {
-        String design = "<v-text-field value=\"test value\"/>";
+        String design = "<vaadin-text-field value=\"test value\"/>";
         TextField tf = new TextField();
         tf.setValue("test value");
         testRead(design, tf);
@@ -47,7 +47,7 @@ public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-text-field readonly=\"\" value=\"test value\"/>";
+        String design = "<vaadin-text-field readonly=\"\" value=\"test value\"/>";
         TextField tf = new TextField();
         tf.setValue("test value");
         tf.setReadOnly(true);

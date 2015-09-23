@@ -38,7 +38,7 @@ public class ComboBoxDeclarativeTest extends DeclarativeTestBase<ComboBox> {
     }
 
     private String getReadOnlyWithOptionsDesign() {
-        return "<v-combo-box text-input-allowed='false'><option>Hello</option><option>World</option></v-combo-box>";
+        return "<vaadin-combo-box text-input-allowed='false'><option>Hello</option><option>World</option></vaadin-combo-box>";
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ComboBoxDeclarativeTest extends DeclarativeTestBase<ComboBox> {
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<v-combo-box readonly value='foo'><option selected>foo</option></v-combo-box>";
+        String design = "<vaadin-combo-box readonly value='foo'><option selected>foo</option></vaadin-combo-box>";
 
         ComboBox comboBox = new ComboBox();
         comboBox.addItems("foo", "bar");
@@ -69,12 +69,12 @@ public class ComboBoxDeclarativeTest extends DeclarativeTestBase<ComboBox> {
         testRead(design, comboBox);
 
         // Selects items are not written out by default
-        String design2 = "<v-combo-box readonly></v-combo-box>";
+        String design2 = "<vaadin-combo-box readonly></vaadin-combo-box>";
         testWrite(design2, comboBox);
     }
 
     private String getBasicDesign() {
-        return "<v-combo-box input-prompt=\"Select something\" filtering-mode=\"off\" scroll-to-selected-item='false'>";
+        return "<vaadin-combo-box input-prompt=\"Select something\" filtering-mode=\"off\" scroll-to-selected-item='false'>";
     }
 
     private ComboBox getBasicExpected() {

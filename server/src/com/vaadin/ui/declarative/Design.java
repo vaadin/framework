@@ -193,7 +193,7 @@ public class Design implements Serializable {
                 ComponentFactory componentFactory, DesignContext context) {
             // Extract the package and class names.
             // Otherwise, get the full class name using the prefix to package
-            // mapping. Example: "v-vertical-layout" ->
+            // mapping. Example: "vaadin-vertical-layout" ->
             // "com.vaadin.ui.VerticalLayout"
             String[] parts = tagName.split("-", 2);
             if (parts.length < 2) {
@@ -211,8 +211,8 @@ public class Design implements Serializable {
                 // Split will ignore trailing and multiple dashes but that
                 // should be
                 // ok
-                // <v-button--> will be resolved to <v-button>
-                // <v--button> will be resolved to <v-button>
+                // <vaadin-button--> will be resolved to <vaadin-button>
+                // <vaadin--button> will be resolved to <vaadin-button>
                 className += SharedUtil.capitalize(classNamePart);
             }
             String qualifiedClassName = packageName + "." + className;
