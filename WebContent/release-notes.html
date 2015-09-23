@@ -95,9 +95,13 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Completely new reconnect dialog</li>
-            <li>Grid unbuffered editing</li>
-            <li>Grid keyboard navigation enhancement</li>
+            <li>New configurable client-server reconnect handling and warning dialogs</li>
+            <li>Grid line-based editing and unbuffered datasource binding</li>
+            <li>More fluent Grid scrolling for touch devices</li>
+            <li>Configurable keyboard, touch and mouse navigation support for Grid editor</li>
+            <li>Declarative HTML serialization enhancements for Vaadin Designer 1.0</li>
+            <li>Better handling of closing a window with keyboard shortcuts</li>
+            <li>Column collapsing events for Table</li>
         </ul>
 
         <p>
@@ -108,18 +112,19 @@
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>Window close shortcuts have been changed, and ESCAPE is no longer a hard-coded default, but rather a soft one,
-                and can be removed. If the <pre>close-shortcut</pre> attribute of the <pre>v-window</pre> element is present,
-                it must list all close shortcuts, including ESCAPE, separated by whitespace. Existing, unchanged code should
-                behave as before. See ticket <a href="https://dev.vaadin.com/ticket/17383">#17383</a> for more information 
-                on the reasoning behind the change.</li>
+            <li>Window.setCloseShortcut() is now deprecated. ESCAPE is no longer a hard-coded default, but rather a soft one, and
+                can be removed. If the close-shortcut attribute of the v-windowelement is present, it must list all close
+                shortcuts, including ESCAPE, separated by whitespace. Existing, unchanged code should behave as before.
+                See ticket <a href="https://dev.vaadin.com/ticket/17383">#17383</a> for more information on the reasoning
+                behind the change.</li>
             <li>Grid SelectionModels are now Extensions. This update removes all selection related variables and API from 
-            GridConnector, GridState, GridServerRpc and GridClientRpc</li>
+                GridConnector, GridState, GridServerRpc and GridClientRpc</li>
             <li>StringToEnumConverter now explicitly supports Enum types with custom toString() implementations.
                 This may affect applications that relied on the undefined behavior in previous versions.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
+            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with 7.6. Please use version 4.1.0 or above.</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
@@ -137,24 +142,23 @@
             <br />
             The most prominent limitations are:
             <ul>
-	            <li>HTTP proxies can prevent push requests from working
-	            properly. To mitigate the issues, avoid using streaming
-	            and configure your proxy so it allows response headers
-	            to pass through before the whole response is received. 
-	            <a href="http://dev.vaadin.com/ticket/17075">#17075</a>
-	            should make long-polling work seamlessly with all proxies.
-	            </li>
-	            <li>HTTP session can not be invalidated while using
-	                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
-	            </li>
-	            <li>Cookies are not available while using websockets (<a
-	                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
-	            </li>
-	            <li>Push is currently not supported in portals (See <a
-	                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
-	            </li>
+                <li>Push is currently not supported in portals (See <a
+                    href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+                </li>
+                <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
+                     nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be 
+                     used to bypass these limitations.
+                     <br />
+                     See tickets <a href="https://dev.vaadin.com/ticket/11808">#11808</a> and
+                     <a href="https://dev.vaadin.com/ticket/11721">#11721</a>
+                </li>
             </ul>
             </li>
+            <li>Google App Engine has some limitations. Please consult Vaadin Wiki:
+                <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+support+for+Google+App+Engine">Vaadin support for Google App Engine</a>
+            </li>
+            <li>Grid does not support adding components to cells. Instead light-weight Renderers can be
+                used to present and edit data.</li>
         </ul>
 
         <h2 id="vaadin">Vaadin Installation</h2>
@@ -173,20 +177,21 @@
         </p>
 
         <ul>
-            <li>If using Maven, define it as a dependency or use
-                any of the available archetypes (only <tt>vaadin-application</tt>
-                is available for Vaadin 7 at the time of this release)
-                to create a new project
+            <li><strong>Maven dependecy.</strong>If using Maven, define it as a dependency or use
+                any of the available archetypes to create a new project. More information at 
+                <a href="https://vaadin.com/maven">https://vaadin.com/maven</a>
             </li>
 
-            <li>If using Eclipse, use the Vaadin Plugin for
-                Eclipse, which automatically downloads the Vaadin
-                libraries.
+            <li><strong>IDE Plugins.</strong>If using Eclipse, use the 
+                <a href="http://vaadin.com/eclipse">Vaadin Plugin for Eclipse</a>, which automatically 
+                downloads the Vaadin libraries. For NetBeans 8.0 and 7.4, use the 
+                <a href="http://plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans">official Vaadin plugin</a>
+                that provides Maven based wizards and code completion support for Vaadin development.
             </li>
         </ul>
 
         <p>
-            It is also available as a ZIP package downloadable from <a
+            Vaadin Framework is also available as a ZIP package downloadable from <a
                 href="http://vaadin.com/download">Vaadin Download
                 page</a>.
         </p>
@@ -373,79 +378,6 @@
                     Liferay Control Panel for Vaadin</a> for easy widget set compilation.</t>
         </p>
 
-        <h2 id="gae">
-            Notes and Limitations for Google App Engine
-            </h4>
-        </h2>
-
-        <p>The following instructions and limitations apply when you
-            run a Vaadin application under the Google App Engine.</p>
-
-        <ul>
-            <li>
-                <p>
-                    Applications must use <b>GAEVaadinServlet</b>
-                    instead of <b>VaadinServlet</b> in
-                    <tt>web.xml</tt>
-                    .
-                </p>
-            </li>
-
-            <li>
-                <p>
-                    Session support must be enabled in
-                    <tt>appengine-web.xml</tt>
-                    :
-                </p> <pre>    &lt;sessions-enabled&gt;true&lt;/sessions-enabled&gt;</pre>
-            </li>
-
-            <li>
-                <p>Avoid using the session for storage, usual App
-                    Engine limitations apply (no synchronization, that
-                    is, unreliable).</p>
-            </li>
-
-            <li>
-                <p>
-                    Vaadin uses memcache for mutex, the key is of the
-                    form
-                    <tt>_vmutex&lt;sessionid&gt;</tt>
-                    .
-                </p>
-            </li>
-
-            <li>
-                <p>
-                    The Vaadin <b>VaadinSession</b> class is serialized
-                    separately into memcache and datastore; the memcache
-                    key is
-                    <tt>_vac&lt;sessionid&gt;</tt>
-                    and the datastore entity kind is
-                    <tt>_vac</tt>
-                    with identifiers of the type
-                    <tt>_vac&lt;sessionid&gt;</tt>
-                    .
-                </p>
-            </li>
-
-            <li>
-                <p>
-                    DO NOT update application state when serving an <b>ConnectorResource</b>
-                    (such as <b>ClassResource</b>.<i>getStream()</i>).
-                </p>
-            </li>
-
-            <li>
-                <p>The application remains locked during uploads - a
-                    progress bar is not possible</p>
-            </li>
-        </ul>
-
-        <p>
-            For other known problems, see open tickets at developer site
-            <a href="http://dev.vaadin.com/">dev.vaadin.com</a>.
-        </p>
-
         <h2 id="supportedversions">Supported Technologies</h2>
 
         <p>
@@ -500,12 +432,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-38</li>
+            <li>Mozilla Firefox 18-40</li>
             <li>Mozilla Firefox 17 ESR, 24 ESR, 31 ESR, 38 ESR</li>
-            <li>Internet Explorer 8-11</li>
+            <li>Internet Explorer 8-11, Edge</li>
             <li>Safari 6-8</li>
-            <li>Opera 16-29</li>
-            <li>Google Chrome 23-42</li>
+            <li>Opera 16-31</li>
+            <li>Google Chrome 23-45</li>
         </ul>
 
         <p>

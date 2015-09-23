@@ -105,7 +105,7 @@ public class Slot extends SimplePanel {
      * The method should normally only be called by
      * {@link VAbstractOrderedLayout#createSlot(Widget)}.
      * 
-     * @since
+     * @since 7.6
      * @param layout
      *            the layout containing the slot
      */

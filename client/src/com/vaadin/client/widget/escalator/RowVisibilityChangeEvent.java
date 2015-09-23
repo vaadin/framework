@@ -67,7 +67,7 @@ public class RowVisibilityChangeEvent extends
     /**
      * Gets the range of visible rows.
      * 
-     * @since
+     * @since 7.6
      * @return the visible rows
      */
     public Range getVisibleRowRange() {

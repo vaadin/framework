@@ -220,7 +220,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * should not be called directly by the user. When overridden, the super
      * method must be called.
      * 
-     * @since
+     * @since 7.6
      * @param Slot
      *            to remove
      */
@@ -254,7 +254,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * new slot is needed. It should not be called directly by the user, but can
      * be overridden to customize slot creation.
      * 
-     * @since
+     * @since 7.6
      * @param widget
      *            the widget for which a slot is being created
      * @return created Slot
