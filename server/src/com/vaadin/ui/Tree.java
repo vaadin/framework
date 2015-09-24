@@ -61,6 +61,7 @@ import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.shared.ui.tree.TreeServerRpc;
+import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -1973,4 +1974,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return htmlContentAllowed;
     }
 
+    @Override
+    protected TreeState getState() {
+        return (TreeState) super.getState();
+    }
 }

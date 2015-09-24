@@ -15,9 +15,14 @@
  */
 package com.vaadin.shared.ui.optiongroup;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
-public class OptionGroupState extends AbstractFieldState {
+/**
+ * Shared state for the OptionGroup component.
+ * 
+ * @since
+ */
+public class OptionGroupState extends AbstractSelectState {
     {
         primaryStyleName = "v-select-optiongroup";
     }

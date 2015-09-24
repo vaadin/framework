@@ -23,6 +23,7 @@ import org.jsoup.nodes.Element;
 import com.vaadin.data.Property;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -307,5 +308,10 @@ public class RichTextArea extends AbstractField<String> implements
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         design.html(getValue());
+    }
+
+    @Override
+    protected RichTextAreaState getState() {
+        return (RichTextAreaState) super.getState();
     }
 }

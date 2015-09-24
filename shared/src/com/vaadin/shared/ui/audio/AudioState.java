@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.tree;
+package com.vaadin.shared.ui.audio;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.shared.ui.AbstractMediaState;
 
 /**
- * Shared state for the Table component.
+ * Shared state for the Audio component.
  * 
  * @since
  */
-public class TreeState extends AbstractSelectState {
+public class AudioState extends AbstractMediaState {
+
     {
-        primaryStyleName = "v-tree";
+        primaryStyleName = "v-audio";
     }
 }

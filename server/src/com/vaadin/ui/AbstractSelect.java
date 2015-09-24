@@ -54,6 +54,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -2328,5 +2329,10 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         return element;
+    }
+
+    @Override
+    protected AbstractSelectState getState() {
+        return (AbstractSelectState) super.getState();
     }
 }

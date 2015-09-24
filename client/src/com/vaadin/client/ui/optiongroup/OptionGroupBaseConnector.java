@@ -24,6 +24,7 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VNativeButton;
 import com.vaadin.client.ui.VOptionGroupBase;
 import com.vaadin.client.ui.VTextField;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
 public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         implements Paintable {
@@ -107,5 +108,10 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
     @Override
     public VOptionGroupBase getWidget() {
         return (VOptionGroupBase) super.getWidget();
+    }
+
+    @Override
+    public AbstractSelectState getState() {
+        return (AbstractSelectState) super.getState();
     }
 }

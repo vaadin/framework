@@ -8,12 +8,14 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.Tree;
 
 public class TreeTest {
@@ -140,6 +142,37 @@ public class TreeTest {
 
         Object expandedItemId = expandedItemIdField.get(tree);
         assertNull(expandedItemId);
+    }
+
+    @Test
+    public void getState_treeHasCustomState() {
+        TestTree table = new TestTree();
+        TreeState state = table.getState();
+        Assert.assertEquals("Unexpected state class", TreeState.class,
+                state.getClass());
+    }
+
+    @Test
+    public void getPrimaryStyleName_treeHasCustomPrimaryStyleName() {
+        Tree table = new Tree();
+        TreeState state = new TreeState();
+        Assert.assertEquals("Unexpected primary style name",
+                state.primaryStyleName, table.getPrimaryStyleName());
+    }
+
+    @Test
+    public void treeStateHasCustomPrimaryStyleName() {
+        TreeState state = new TreeState();
+        Assert.assertEquals("Unexpected primary style name", "v-tree",
+                state.primaryStyleName);
+    }
+
+    private static class TestTree extends Tree {
+
+        @Override
+        public TreeState getState() {
+            return super.getState();
+        }
     }
 
 }

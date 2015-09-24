@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
+import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
 /**
@@ -38,6 +39,29 @@ public class UploadTest {
         } catch (Exception e) {
         }
         Assert.assertFalse(upload.isUploading());
+    }
+
+    @Test
+    public void getState_uploadHasCustomState() {
+        TestUpload upload = new TestUpload();
+        UploadState state = upload.getState();
+        Assert.assertEquals("Unexpected state class", UploadState.class,
+                state.getClass());
+    }
+
+    @Test
+    public void getPrimaryStyleName_uploadHasCustomPrimaryStyleName() {
+        Upload upload = new Upload();
+        UploadState state = new UploadState();
+        Assert.assertEquals("Unexpected primary style name",
+                state.primaryStyleName, upload.getPrimaryStyleName());
+    }
+
+    @Test
+    public void uploadStateHasCustomPrimaryStyleName() {
+        UploadState state = new UploadState();
+        Assert.assertEquals("Unexpected primary style name", "v-upload",
+                state.primaryStyleName);
     }
 
     private static class TestStreamingErrorEvent implements StreamingErrorEvent {
@@ -74,6 +98,11 @@ public class UploadTest {
         @Override
         public StreamVariable getStreamVariable() {
             return super.getStreamVariable();
+        }
+
+        @Override
+        public UploadState getState() {
+            return super.getState();
         }
 
         @Override

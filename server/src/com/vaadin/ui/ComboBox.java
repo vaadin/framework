@@ -35,6 +35,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 
 /**
@@ -381,6 +382,11 @@ public class ComboBox extends AbstractSelect implements
      */
     public boolean isTextInputAllowed() {
         return textInputAllowed;
+    }
+
+    @Override
+    protected ComboBoxState getState() {
+        return (ComboBoxState) super.getState();
     }
 
     /**

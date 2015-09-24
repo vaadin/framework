@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.shared.ui.treetable.TreeTableState;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.TreeTable;
 
@@ -62,11 +63,39 @@ public class TreeTableTest {
         }
     }
 
+    @Test
+    public void getState_treeTableHasCustomState() {
+        TestTreeTable table = new TestTreeTable();
+        TreeTableState state = table.getState();
+        Assert.assertEquals("Unexpected state class", TreeTableState.class,
+                state.getClass());
+    }
+
+    @Test
+    public void getPrimaryStyleName_treeTableHasCustomPrimaryStyleName() {
+        TreeTable table = new TreeTable();
+        TreeTableState state = new TreeTableState();
+        Assert.assertEquals("Unexpected primary style name",
+                state.primaryStyleName, table.getPrimaryStyleName());
+    }
+
+    @Test
+    public void treeTableStateHasCustomPrimaryStyleName() {
+        TreeTableState state = new TreeTableState();
+        Assert.assertEquals("Unexpected primary style name", "v-table",
+                state.primaryStyleName);
+    }
+
     private static class TestTreeTable extends TreeTable {
 
         @Override
         protected boolean rowHeadersAreEnabled() {
             return super.rowHeadersAreEnabled();
+        }
+
+        @Override
+        public TreeTableState getState() {
+            return super.getState();
         }
     }
 }

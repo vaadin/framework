@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
 public class NativeSelectTest {
 
@@ -43,6 +44,21 @@ public class NativeSelectTest {
     @Test
     public void rpcRegisteredConstructorStringContainer() {
         assertFocusRpcRegistered(new NativeSelect("foo", new IndexedContainer()));
+    }
+
+    @Test
+    public void getState_listSelectHasCustomState() {
+        TestNativeSelect select = new TestNativeSelect();
+        AbstractSelectState state = select.getState();
+        Assert.assertEquals("Unexpected state class",
+                AbstractSelectState.class, state.getClass());
+    }
+
+    private static class TestNativeSelect extends NativeSelect {
+        @Override
+        public AbstractSelectState getState() {
+            return super.getState();
+        }
     }
 
     private void assertFocusRpcRegistered(NativeSelect s) {

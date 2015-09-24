@@ -22,6 +22,7 @@ import com.vaadin.data.Container;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
+import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 
 /**
  * Multiselect component with two lists: left side for available items and right
@@ -203,6 +204,11 @@ public class TwinColSelect extends AbstractSelect {
      */
     public String getLeftColumnCaption() {
         return leftColumnCaption;
+    }
+
+    @Override
+    protected TwinColSelectState getState() {
+        return (TwinColSelectState) super.getState();
     }
 
 }

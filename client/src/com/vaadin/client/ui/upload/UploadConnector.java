@@ -28,6 +28,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
 import com.vaadin.shared.ui.upload.UploadServerRpc;
+import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
 @Connect(Upload.class)
@@ -102,5 +103,10 @@ public class UploadConnector extends AbstractComponentConnector implements
     @Override
     public VUpload getWidget() {
         return (VUpload) super.getWidget();
+    }
+
+    @Override
+    public UploadState getState() {
+        return (UploadState) super.getState();
     }
 }

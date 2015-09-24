@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 
 /**
  * FormLayout is used by {@link Form} to layout fields. It may also be used
@@ -70,5 +71,10 @@ public class FormLayout extends AbstractOrderedLayout {
     @Deprecated
     public float getExpandRatio(Component component) {
         return super.getExpandRatio(component);
+    }
+
+    @Override
+    protected FormLayoutState getState() {
+        return (FormLayoutState) super.getState();
     }
 }

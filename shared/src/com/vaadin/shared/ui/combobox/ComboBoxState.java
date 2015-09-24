@@ -15,9 +15,14 @@
  */
 package com.vaadin.shared.ui.combobox;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
-public class ComboBoxState extends AbstractFieldState {
+/**
+ * Shared state for the ComboBox component.
+ * 
+ * @since
+ */
+public class ComboBoxState extends AbstractSelectState {
     {
         primaryStyleName = "v-filterselect";
     }

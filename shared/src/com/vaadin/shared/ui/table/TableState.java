@@ -15,9 +15,14 @@
  */
 package com.vaadin.shared.ui.table;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
-public class TableState extends AbstractFieldState {
+/**
+ * Shared state for the Table component.
+ * 
+ * @since
+ */
+public class TableState extends AbstractSelectState {
     {
         primaryStyleName = "v-table";
     }

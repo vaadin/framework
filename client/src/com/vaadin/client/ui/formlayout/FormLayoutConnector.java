@@ -30,15 +30,15 @@ import com.vaadin.client.ui.VFormLayout.ErrorFlag;
 import com.vaadin.client.ui.VFormLayout.VFormLayoutTable;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Connect(FormLayout.class)
 public class FormLayoutConnector extends AbstractLayoutConnector {
 
     @Override
-    public AbstractOrderedLayoutState getState() {
-        return (AbstractOrderedLayoutState) super.getState();
+    public FormLayoutState getState() {
+        return (FormLayoutState) super.getState();
     }
 
     @Override

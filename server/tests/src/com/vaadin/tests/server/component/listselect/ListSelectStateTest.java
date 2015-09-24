@@ -13,17 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.tree;
+package com.vaadin.tests.server.component.listselect;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.ui.ListSelect;
 
 /**
- * Shared state for the Table component.
+ * Tests for ListSelect State.
  * 
- * @since
  */
-public class TreeState extends AbstractSelectState {
-    {
-        primaryStyleName = "v-tree";
+public class ListSelectStateTest {
+
+    @Test
+    public void getState_listSelectHasCustomState() {
+        TestListSelect select = new TestListSelect();
+        AbstractSelectState state = select.getState();
+        Assert.assertEquals("Unexpected state class",
+                AbstractSelectState.class, state.getClass());
     }
+
+    private static class TestListSelect extends ListSelect {
+        @Override
+        public AbstractSelectState getState() {
+            return super.getState();
+        }
+    }
+
 }

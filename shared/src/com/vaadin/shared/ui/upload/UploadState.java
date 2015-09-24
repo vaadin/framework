@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.tree;
+package com.vaadin.shared.ui.upload;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
- * Shared state for the Table component.
+ * Shared state for the Upload component.
  * 
  * @since
  */
-public class TreeState extends AbstractSelectState {
+public class UploadState extends AbstractComponentState {
+
     {
-        primaryStyleName = "v-tree";
+        primaryStyleName = "v-upload";
     }
 }

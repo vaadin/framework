@@ -24,6 +24,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.MediaBaseConnector;
 import com.vaadin.client.ui.VAudio;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.audio.AudioState;
 import com.vaadin.ui.Audio;
 
 @Connect(Audio.class)
@@ -37,6 +38,11 @@ public class AudioConnector extends MediaBaseConnector {
     @Override
     protected String getDefaultAltHtml() {
         return "Your browser does not support the <code>audio</code> element.";
+    }
+
+    @Override
+    public AudioState getState() {
+        return (AudioState) super.getState();
     }
 
     @Override

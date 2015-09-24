@@ -41,6 +41,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.treetable.TreeTableConstants;
+import com.vaadin.shared.ui.treetable.TreeTableState;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
@@ -971,5 +972,10 @@ public class TreeTable extends Table implements Hierarchical {
         DesignAttributeHandler.writeAttribute("collapsed", tr.attributes(),
                 isCollapsed(itemId), true, boolean.class);
         return tr;
+    }
+
+    @Override
+    protected TreeTableState getState() {
+        return (TreeTableState) super.getState();
     }
 }

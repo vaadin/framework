@@ -32,6 +32,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
+import com.vaadin.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
@@ -287,5 +288,10 @@ public class OptionGroup extends AbstractSelect implements
         }
 
         return elem;
+    }
+
+    @Override
+    protected OptionGroupState getState() {
+        return (OptionGroupState) super.getState();
     }
 }

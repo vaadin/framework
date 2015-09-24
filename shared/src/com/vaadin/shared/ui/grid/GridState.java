@@ -137,6 +137,10 @@ public class GridState extends TabIndexState {
      */
     public static final String JSONKEY_SELECTED = "s";
 
+    {
+        primaryStyleName = "v-grid";
+    }
+
     /**
      * Columns in grid.
      */
@@ -197,4 +201,5 @@ public class GridState extends TabIndexState {
     /** Whether the columns can be reordered */
     @DelegateToWidget
     public boolean columnReorderingAllowed;
+
 }

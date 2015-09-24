@@ -27,6 +27,7 @@ import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.RichTextArea;
 
@@ -134,5 +135,10 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
             }
             getWidget().rta.setHeight(editorHeight + "px");
         }
+    }
+
+    @Override
+    public RichTextAreaState getState() {
+        return (RichTextAreaState) super.getState();
     }
 }

@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.audio.AudioState;
 
 /**
  * The Audio component translates into an HTML5 &lt;audio&gt; element and as
@@ -63,5 +64,10 @@ public class Audio extends AbstractMedia {
         setCaption(caption);
         setSource(source);
         setShowControls(true);
+    }
+
+    @Override
+    protected AudioState getState() {
+        return (AudioState) super.getState();
     }
 }

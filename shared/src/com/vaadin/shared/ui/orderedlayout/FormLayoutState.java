@@ -13,17 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.tree;
-
-import com.vaadin.shared.ui.select.AbstractSelectState;
+package com.vaadin.shared.ui.orderedlayout;
 
 /**
- * Shared state for the Table component.
+ * Shared state for the FormLayout component.
  * 
  * @since
  */
-public class TreeState extends AbstractSelectState {
+public class FormLayoutState extends AbstractOrderedLayoutState {
+
     {
-        primaryStyleName = "v-tree";
+        primaryStyleName = "v-formlayout";
     }
 }

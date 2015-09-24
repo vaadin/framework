@@ -68,6 +68,7 @@ import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.shared.ui.table.TableServerRpc;
+import com.vaadin.shared.ui.table.TableState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -1033,8 +1034,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * </p>
      * 
      * <p>
-     * If Table has height set ({@link #setHeight(float, Unit)} ) the client side
-     * may update the page length automatically the correct value.
+     * If Table has height set ({@link #setHeight(float, Unit)} ) the client
+     * side may update the page length automatically the correct value.
      * </p>
      * 
      * @param pageLength
@@ -6453,6 +6454,11 @@ public class Table extends AbstractSelect implements Action.Container,
         public Table getComponent() {
             return (Table) super.getComponent();
         }
+    }
+
+    @Override
+    protected TableState getState() {
+        return (TableState) super.getState();
     }
 
     private final Logger getLogger() {

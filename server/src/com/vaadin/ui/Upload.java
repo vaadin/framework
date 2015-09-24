@@ -31,6 +31,7 @@ import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
 import com.vaadin.shared.ui.upload.UploadServerRpc;
+import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -1191,5 +1192,10 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         }
         return super.getListeners(eventType);
+    }
+
+    @Override
+    protected UploadState getState() {
+        return (UploadState) super.getState();
     }
 }

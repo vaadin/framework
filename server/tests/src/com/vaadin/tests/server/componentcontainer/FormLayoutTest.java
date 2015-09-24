@@ -3,8 +3,10 @@ package com.vaadin.tests.server.componentcontainer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
@@ -53,6 +55,29 @@ public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
         assertOrder(l, new int[] { 0, 1, 2, 3 });
     }
 
+    @Test
+    public void getState_formLayoutHasCustomState() {
+        TestFormLayout layout = new TestFormLayout();
+        FormLayoutState state = layout.getState();
+        Assert.assertEquals("Unexpected state class", FormLayoutState.class,
+                state.getClass());
+    }
+
+    @Test
+    public void getPrimaryStyleName_formLayoutHasCustomPrimaryStyleName() {
+        FormLayout layout = new FormLayout();
+        FormLayoutState state = new FormLayoutState();
+        Assert.assertEquals("Unexpected primary style name",
+                state.primaryStyleName, layout.getPrimaryStyleName());
+    }
+
+    @Test
+    public void formLayoutStateHasCustomPrimaryStyleName() {
+        FormLayoutState state = new FormLayoutState();
+        Assert.assertEquals("Unexpected primary style name", "v-formlayout",
+                state.primaryStyleName);
+    }
+
     private void assertOrder(Layout layout, int[] indices) {
         Iterator<?> i = layout.iterator();
         try {
@@ -66,6 +91,14 @@ public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
             assertFalse("Too many components in layout", i.hasNext());
         } catch (NoSuchElementException e) {
             fail("Too few components in layout");
+        }
+    }
+
+    private static class TestFormLayout extends FormLayout {
+
+        @Override
+        public FormLayoutState getState() {
+            return super.getState();
         }
     }
 

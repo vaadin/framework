@@ -15,9 +15,14 @@
  */
 package com.vaadin.shared.ui.twincolselect;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.select.AbstractSelectState;
 
-public class TwinColSelectState extends AbstractFieldState {
+/**
+ * Shared state for the TwinColSelect component.
+ * 
+ * @since
+ */
+public class TwinColSelectState extends AbstractSelectState {
     {
         primaryStyleName = "v-select-twincol";
     }
