@@ -226,7 +226,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       .valo-menuitems {
         @include valo-menu-style;
         position: fixed;
-        z-index: 200;
+        z-index: 9000;
         top: $v-unit-size;
         bottom: 0;
         height: auto;
