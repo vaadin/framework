@@ -17,10 +17,14 @@ package com.vaadin.ui.renderers;
 
 import com.vaadin.server.AbstractJavaScriptExtension;
 import com.vaadin.server.JavaScriptCallbackHelper;
+import com.vaadin.server.JsonCodec;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.ui.Grid.AbstractRenderer;
 import com.vaadin.ui.JavaScriptFunction;
+
+import elemental.json.Json;
+import elemental.json.JsonValue;
 
 /**
  * Base class for Renderers with all client-side logic implemented using
@@ -141,10 +145,13 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
 
     /**
      * Invoke a named function that the connector JavaScript has added to the
-     * JavaScript connector wrapper object. The arguments should only contain
-     * data types that can be represented in JavaScript including primitives,
-     * their boxed types, arrays, String, List, Set, Map, Connector and
-     * JavaBeans.
+     * JavaScript connector wrapper object. The arguments can be any boxed
+     * primitive type, String, {@link JsonValue} or arrays of any other
+     * supported type. Complex types (e.g. List, Set, Map, Connector or any
+     * JavaBean type) must be explicitly serialized to a {@link JsonValue}
+     * before sending. This can be done either with
+     * {@link JsonCodec#encode(Object, JsonValue, java.lang.reflect.Type, com.vaadin.ui.ConnectorTracker)}
+     * or using the factory methods in {@link Json}.
      * 
      * @param name
      *            the name of the function
