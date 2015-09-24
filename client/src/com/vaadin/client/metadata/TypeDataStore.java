@@ -366,7 +366,8 @@ public class TypeDataStore {
     private static native boolean hasNoLayout(JavaScriptObject typeData,
             String beanName, String propertyName)
     /*-{
-        return typeData[beanName][propertyName].noLayout !== undefined;
+        // Data is not available for Javascript state object properties as GWT knows nothing about them
+        return typeData[beanName][propertyName] && typeData[beanName][propertyName].noLayout !== undefined;
     }-*/;
 
     private static native Object getJsPropertyValue(JavaScriptObject typeData,
