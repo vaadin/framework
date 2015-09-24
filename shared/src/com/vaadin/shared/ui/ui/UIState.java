@@ -116,6 +116,7 @@ public class UIState extends TabIndexState {
 
         public boolean alwaysUseXhrForServerRequests = false;
         public PushMode mode = PushMode.DISABLED;
+        public String pushUrl = null;
         public Map<String, String> parameters = new HashMap<String, String>();
         {
             parameters
