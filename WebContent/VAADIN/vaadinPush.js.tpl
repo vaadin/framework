@@ -1,3 +1,4 @@
+(function(define) {
 @jquery.js@
 window.jQueryVaadin = window.jQuery.noConflict(true);
 (function(jQuery, undefined) {
@@ -6,3 +7,4 @@ window.jQueryVaadin = window.jQuery.noConflict(true);
 if (window.console) {
 	window.console.log("Vaadin push loaded");
 }
+})();
