@@ -1819,7 +1819,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
-    abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
+    public abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
             implements Serializable {
 
         /**
@@ -1828,8 +1828,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param <CELLTYPE>
          *            the type of the cells in the row
          */
-        abstract static class StaticRow<CELLTYPE extends StaticCell> implements
-                Serializable {
+        public abstract static class StaticRow<CELLTYPE extends StaticCell>
+                implements Serializable {
 
             private RowState rowState = new RowState();
             protected StaticSection<?> section;
