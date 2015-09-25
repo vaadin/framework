@@ -51,9 +51,72 @@ public class WrappedPortletSession implements WrappedSession {
         return session.getAttribute(name);
     }
 
+    /**
+     * Returns the object bound with the specified name in this session, or
+     * <code>null</code> if no object is bound under the name in the given
+     * scope.
+     *
+     * @param name
+     *            a string specifying the name of the object
+     * @param scope
+     *            session scope of this attribute
+     *
+     * @return the object with the specified name
+     *
+     * @exception java.lang.IllegalStateException
+     *                if this method is called on an invalidated session, or the
+     *                scope is unknown to the container.
+     * @exception java.lang.IllegalArgumentException
+     *                if name is <code>null</code>.
+     * 
+     * @see PortletSession#getAttribute(String, int)
+     * @see PortletSession#PORTLET_SCOPE
+     * @see PortletSession#APPLICATION_SCOPE
+     * 
+     * @since
+     */
+    public Object getAttribute(String name, int scope) {
+        return session.getAttribute(name, scope);
+    }
+
     @Override
     public void setAttribute(String name, Object value) {
         session.setAttribute(name, value);
+    }
+
+    /**
+     * Binds an object to this session in the given scope, using the name
+     * specified. If an object of the same name in this scope is already bound
+     * to the session, that object is replaced.
+     *
+     * <p>
+     * If the value is <code>null</code>, this has the same effect as calling
+     * <code>removeAttribute()</code>.
+     *
+     *
+     * @param name
+     *            the name to which the object is bound; this cannot be
+     *            <code>null</code>.
+     * @param value
+     *            the object to be bound
+     * @param scope
+     *            session scope of this attribute
+     *
+     * @exception java.lang.IllegalStateException
+     *                if this method is called on a session which has been
+     *                invalidated
+     * @exception java.lang.IllegalArgumentException
+     *                if name is <code>null</code> or scope is unknown to the
+     *                container.
+     * 
+     * @see PortletSession#setAttribute(String, Object, int)
+     * @see PortletSession#PORTLET_SCOPE
+     * @see PortletSession#APPLICATION_SCOPE
+     * 
+     * @since
+     */
+    public void setAttribute(String name, Object value, int scope) {
+        session.setAttribute(name, value, scope);
     }
 
     /**
@@ -68,6 +131,24 @@ public class WrappedPortletSession implements WrappedSession {
     @Override
     public Set<String> getAttributeNames() {
         return WrappedHttpSession.enumerationToSet(session.getAttributeNames());
+    }
+
+    /**
+     * Gets the current set of attribute names bound to this session in the
+     * given scope.
+     * 
+     * @param scope
+     *            session scope of the attribute names
+     * @return an unmodifiable set of the current attribute names in the given
+     *         scope
+     * 
+     * @see PortletSession#getAttributeNames()
+     * 
+     * @since
+     */
+    public Set<String> getAttributeNames(int scope) {
+        return WrappedHttpSession.enumerationToSet(session
+                .getAttributeNames(scope));
     }
 
     @Override
@@ -98,6 +179,31 @@ public class WrappedPortletSession implements WrappedSession {
     @Override
     public void removeAttribute(String name) {
         session.removeAttribute(name);
+    }
+
+    /**
+     * Removes the object bound with the specified name and the given scope from
+     * this session. If the session does not have an object bound with the
+     * specified name, this method does nothing.
+     * 
+     * @param name
+     *            the name of the object to be removed from this session
+     * @param scope
+     *            session scope of this attribute
+     *
+     * @exception java.lang.IllegalStateException
+     *                if this method is called on a session which has been
+     *                invalidated
+     * @exception java.lang.IllegalArgumentException
+     *                if name is <code>null</code>.
+     * @see PortletSession#removeAttribute(String, int)
+     * @see PortletSession#PORTLET_SCOPE
+     * @see PortletSession#APPLICATION_SCOPE
+     * 
+     * @since
+     */
+    public void removeAttribute(String name, int scope) {
+        session.removeAttribute(name, scope);
     }
 
     @Override
