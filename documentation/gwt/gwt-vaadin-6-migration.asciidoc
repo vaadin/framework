@@ -1,0 +1,58 @@
+---
+title: Migrating from Vaadin 6
+order: 12
+layout: page
+---
+
+[[gwt.vaadin-6-migration]]
+= Migrating from Vaadin 6
+
+((("Vaadin 6 Migration", "add-ons", id="term.gwt.vaadin-6-migration", range="startofrange")))
+
+
+The client-side architecture was redesigned almost entirely in Vaadin 7. In
+Vaadin 6, state synchronization was done explicitly by serializing and
+deserializing the state on the server- and client-side. In Vaadin 7, the
+serialization is handled automatically by the framework using state objects.
+
+In Vaadin 6, a server-side component serialized its state to the client-side
+using the [interfacename]#Paintable# interface in the client-side and
+deserialized the state through the [interfacename]#VariableOwner# interface. In
+Vaadin 7, these are done through the [interfacename]#ClientConnector# interface.
+
+On the client-side, a widget deserialized its state through the
+[interfacename]#Paintable# interface and sent state changes through the
+[interfacename]#ApplicationConnection# object. In Vaadin 7, these are replaced
+with the [interfacename]#ServerConnector#.
+
+In addition to state synchronization, Vaadin 7 has an RPC mechanism that can be
+used for communicating events. They are especially useful for events that are
+not associated with a state change, such as a button click.
+
+The framework ensures that the connector hierarchy and states are up-to-date
+when listeners are called.
+
+[[gwt.vaadin-6-migration.quick]]
+== Quick (and Dirty) Migration
+
+Vaadin 7 has a compatibility layer that allows quick conversion of a widget.
+
+. Create a connector class, such as [classname]#MyConnector#, that extends
+[classname]#LegacyConnector#. Implement the [methodname]#getWidget()# method.
+
+. Move the [literal]#++@ClientWidget(MyWidget.class)++# from the server-side
+component, say [classname]#MyComponent#, to the [classname]#MyConnector# class
+and make it [literal]#++@Connect(MyComponent.class)++#.
+
+. Have the server-side component implement the LegacyComponent interface to enable
+compatibility handling.
+
+. Remove any calls to [literal]#++super.paintContent()++#
+
+. Update any imports on the client-side
+
+
+
+(((range="endofrange", startref="term.gwt.vaadin-6-migration")))
+
+

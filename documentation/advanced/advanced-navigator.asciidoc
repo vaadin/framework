@@ -1,0 +1,289 @@
+---
+title: Navigating in an Application
+order: 9
+layout: page
+---
+
+[[advanced.navigator]]
+= Navigating in an Application
+
+Plain Vaadin applications do not have normal web page navigation as they usually
+run on a single page, as all Ajax applications do. Quite commonly, however,
+applications have different views between which the user should be able to
+navigate. The [classname]#Navigator# in Vaadin can be used for most cases of
+navigation. Views managed by the navigator automatically get a distinct URI
+fragment, which can be used to be able to bookmark the views and their states
+and to go back and forward in the browser history.
+
+[[advanced.navigator.navigating]]
+== Setting Up for Navigation
+
+The [classname]#Navigator# class manages a collection of __views__ that
+implement the [interfacename]#View# interface. The views can be either
+registered beforehand or acquired from a __view provider__. When registering,
+the views must have a name identifier and be added to a navigator with
+[methodname]#addView()#. You can register new views at any point. Once
+registered, you can navigate to them with [methodname]#navigateTo()#.
+
+[classname]#Navigator# manages navigation in a component container, which can be
+either a [interfacename]#ComponentContainer# (most layouts) or a
+[interfacename]#SingleComponentContainer# ( [classname]#UI#, [classname]#Panel#,
+or [classname]#Window#). The component container is managed through a
+[interfacename]#ViewDisplay#. Two view displays are defined:
+[classname]#ComponentContainerViewDisplay# and
+[classname]#SingleComponentContainerViewDisplay#, for the respective component
+container types. Normally, you can let the navigator create the view display
+internally, as we do in the example below, but you can also create it yourself
+to customize it.
+
+Let us consider the following UI with two views: start and main. Here, we define
+their names with enums to be typesafe. We manage the navigation with the UI
+class itself, which is a [interfacename]#SingleComponentContainer#.
+
+
+[source, java]
+----
+public class NavigatorUI extends UI {
+    Navigator navigator;
+    protected static final String MAINVIEW = "main";
+
+    @Override
+    protected void init(VaadinRequest request) {
+        getPage().setTitle("Navigation Example");
+        
+        // Create a navigator to control the views
+        navigator = new Navigator(this, this);
+        
+        // Create and register the views
+        navigator.addView("", new StartView());
+        navigator.addView(MAINVIEW, new MainView());
+    }
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
+
+The [classname]#Navigator# automatically sets the URI fragment of the
+application URL. It also registers a [interfacename]#URIFragmentChangedListener#
+in the page
+
+ifdef::web[]
+(see <<dummy/../../../framework/advanced/advanced-urifu#advanced.urifu,"Managing
+URI
+Fragments">>)
+endif::web[]
+ to show the view identified by the URI fragment if entered or navigated to in
+the browser. This also enables browser navigation history in the application.
+
+[[advanced.navigator.navigating.viewprovider]]
+=== View Providers
+
+You can create new views dynamically using a __view provider__ that implements
+the [interfacename]#ViewProvider# interface. A provider is registered in
+[classname]#Navigator# with [methodname]#addProvider()#.
+
+The [methodname]#ClassBasedViewProvider# is a view provider that can dynamically
+create new instances of a specified view class based on the view name.
+
+The [methodname]#StaticViewProvider# returns an existing view instance based on
+the view name. The [methodname]#addView()# in [classname]#Navigator# is actually
+just a shorthand for creating a static view provider for each registered view.
+
+
+[[advanced.navigator.navigating.viewchangelistener]]
+=== View Change Listeners
+
+You can handle view changes also by implementing a
+[interfacename]#ViewChangeListener# and adding it to a [classname]#Navigator#.
+When a view change occurs, a listener receives a [classname]#ViewChangeEvent#
+object, which has references to the old and the activated view, the name of the
+activated view, as well as the fragment parameters.
+
+
+
+[[advanced.navigator.view]]
+== Implementing a View
+
+Views can be any objects that implement the [interfacename]#View# interface.
+When the [methodname]#navigateTo()# is called for the navigator, or the
+application is opened with the URI fragment associated with the view, the
+navigator switches to the view and calls its [methodname]#enter()# method.
+
+To continue with the example, consider the following simple start view that just
+lets the user to navigate to the main view. It only pops up a notification when
+the user navigates to it and displays the navigation button.
+
+
+[source, java]
+----
+/** A start view for navigating to the main view */
+public class StartView extends VerticalLayout implements View {
+    public StartView() {
+        setSizeFull();
+
+        Button button = new Button("Go to Main View",
+                new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                navigator.navigateTo(MAINVIEW);
+            }
+        });
+        addComponent(button);
+        setComponentAlignment(button, Alignment.MIDDLE_CENTER);
+    }        
+        
+    @Override
+    public void enter(ViewChangeEvent event) {
+        Notification.show("Welcome to the Animal Farm");
+    }
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
+
+You can initialize the view content in the constructor, as was done in the
+example above, or in the [methodname]#enter()# method. The advantage with the
+latter method is that the view is attached to the view container as well as to
+the UI at that time, which is not the case in the constructor.
+
+
+[[advanced.navigator.urifragment]]
+== Handling URI Fragment Path
+
+URI fragment part of a URL is the part after a hash [literal]#++#++# character.
+Is used for within-UI URLs, because it is the only part of the URL that can be
+changed with JavaScript from within a page without reloading the page. The URLs
+with URI fragments can be used for hyperlinking and bookmarking, as well as
+browser history, just like any other URLs. In addition, an exclamation mark
+[literal]#++#!++# after the hash marks that the page is a stateful AJAX page,
+which can be crawled by search engines. Crawling requires that the application
+also responds to special URLs to get the searchable content. URI fragments are
+managed by [classname]#Page#, which provides a low-level API.
+
+URI fragments can be used with [classname]#Navigator# in two ways: for
+navigating to a view and to a state within a view. The URI fragment accepted by
+[methodname]#navigateTo()# can have the view name at the root, followed by
+fragment parameters after a slash (" [literal]#++/++#"). These parameters are
+passed to the [methodname]#enter()# method in the [interfacename]#View#.
+
+In the following example, we implement within-view navigation. Here we use the
+following declarative design for the view:
+
+
+[source, html]
+----
+<v-vertical-layout size-full>
+  <v-horizontal-layout size-full :expand>
+    <v-panel caption="List of Equals" height-full width-auto>
+      <v-vertical-layout _id="menuContent" width-auto margin/>
+    </v-panel>
+
+    <v-panel _id="equalPanel" caption="An Equal" size-full :expand/>
+  </v-horizontal-layout>
+
+  <v-button _id="logout">Logout</v-button>
+</v-vertical-layout>
+----
+
+The view's logic code would be as follows:
+
+
+[source, java]
+----
+/** Main view with a menu (with declarative layout design) */
+@DesignRoot
+public class MainView extends VerticalLayout implements View {
+    // Menu navigation button listener
+    class ButtonListener implements Button.ClickListener {
+        String menuitem;
+        public ButtonListener(String menuitem) {
+            this.menuitem = menuitem;
+        }
+
+        @Override
+        public void buttonClick(ClickEvent event) {
+            // Navigate to a specific state
+            navigator.navigateTo(MAINVIEW + "/" + menuitem);
+        }
+    }
+    
+    VerticalLayout menuContent;
+    Panel equalPanel;
+    Button logout;
+
+    public MainView() {
+        Design.read(this);
+
+        menuContent.addComponent(new Button("Pig",
+                  new ButtonListener("pig")));
+        menuContent.addComponent(new Button("Cat",
+                  new ButtonListener("cat")));
+        menuContent.addComponent(new Button("Dog",      
+                  new ButtonListener("dog")));
+        menuContent.addComponent(new Button("Reindeer",
+                  new ButtonListener("reindeer")));
+        menuContent.addComponent(new Button("Penguin",
+                  new ButtonListener("penguin")));
+        menuContent.addComponent(new Button("Sheep",
+                  new ButtonListener("sheep")));
+
+        // Allow going back to the start
+        logout.addClickListener(event -> // Java 8
+            navigator.navigateTo(""));
+    }        
+    
+    @DesignRoot
+    class AnimalViewer extends VerticalLayout {
+        Label watching;
+        Embedded pic;
+        Label back;
+        
+        public AnimalViewer(String animal) {
+            Design.read(this);
+            
+            watching.setValue("You are currently watching a " +
+                              animal);
+            pic.setSource(new ThemeResource(
+                "img/" + animal + "-128px.png"));
+            back.setValue("and " + animal +
+                " is watching you back");
+        }
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+        if (event.getParameters() == null
+            || event.getParameters().isEmpty()) {
+            equalPanel.setContent(
+                new Label("Nothing to see here, " +
+                          "just pass along."));
+            return;
+        } else
+            equalPanel.setContent(new AnimalViewer(
+                event.getParameters()));
+    }
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
+
+The animal sub-view would have the following declarative design:
+
+
+[source, html]
+----
+<v-vertical-layout size-full>
+  <v-label _id="watching" size-auto :middle :center/>
+  <v-embedded _id="pic" :middle :center :expand/>
+  <v-label _id="back" size-auto :middle :center/>
+</v-vertical-layout>
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
+
+The main view is shown in <<figure.advanced.navigator.mainview>>. At this point,
+the URL would be [literal]#++http://localhost:8080/myapp#!main/reindeer++#.
+
+[[figure.advanced.navigator.mainview]]
+.Navigator Main View
+image::img/navigator-mainview.png[]
+
+
+
+

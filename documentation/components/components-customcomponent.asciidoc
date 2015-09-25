@@ -1,0 +1,87 @@
+---
+title: Composition with CustomComponent
+order: 31
+layout: page
+---
+
+[[components.customcomponent]]
+= Composition with [classname]#CustomComponent#
+
+The ease of making new user interface components is one of the core features of
+Vaadin. Typically, you simply combine existing built-in components to produce
+composite components. In many applications, such composite components make up
+the majority of the user interface.
+
+As described earlier in
+<<dummy/../../../framework/application/application-architecture#application.architecture.composition,"Compositing
+Components">>, you have two basic ways to create a composite - either by
+extending a layout component or the [classname]#CustomComponent#, which
+typically wraps around a layout component. The benefit of wrapping a layout
+composite in [classname]#CustomComponent# is mainly encapsulation - hiding the
+implementation details of the composition. Otherwise, a user of the composite
+could rely on implementation details, which would create an unwanted dependency.
+
+To create a composite, you need to inherit the [classname]#CustomComponent# and
+set the __composition root__ component in the constructor. The composition root
+is typically a layout component that contains other components.
+
+For example:
+
+
+[source, java]
+----
+class MyComposite extends CustomComponent {
+    public MyComposite(String message) {
+        // A layout structure used for composition
+        Panel panel = new Panel("My Custom Component");
+        VerticalLayout panelContent = new VerticalLayout();
+        panelContent.setMargin(true); // Very useful
+        panel.setContent(panelContent);
+        
+        // Compose from multiple components
+        Label label = new Label(message);
+        label.setSizeUndefined(); // Shrink
+        panelContent.addComponent(label);
+        panelContent.addComponent(new Button("Ok"));
+
+        // Set the size as undefined at all levels
+        panelContent.setSizeUndefined();
+        panel.setSizeUndefined();
+        setSizeUndefined();
+
+        // The composition root MUST be set
+        setCompositionRoot(panel);
+    }
+}
+----
+
+Take note of the sizing when trying to make a customcomponent that shrinks to
+fit the contained components. You have to set the size as undefined at all
+levels; the sizing of the composite component and the composition root are
+separate.
+
+You can use the component as follows:
+
+
+[source, java]
+----
+MyComposite mycomposite = new MyComposite("Hello");
+----
+
+The rendered component is shown in <<figure.components.customcomponent>>.
+
+[[figure.components.customcomponent]]
+.A Custom Composite Component
+image::img/customcomponent-example1.png[]
+
+You can also inherit any other components, such as layouts, to attain similar
+composition. ((("Google Web
+Toolkit")))
+Even further, you can create entirely new low-level components, by integrating
+pure client-side components or by extending the client-side functionality of
+built-in components. Development of new components is covered in
+<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+with the Server-Side">>.
+
+
+

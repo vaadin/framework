@@ -1,0 +1,757 @@
+---
+title: Common Component Features
+order: 3
+layout: page
+---
+
+[[components.features]]
+= Common Component Features
+
+The component base classes and interfaces provide a large number of features.
+Let us look at some of the most commonly needed features. Features not
+documented here can be found from the Java API Reference.
+
+The interface defines a number of properties, which you can retrieve or
+manipulate with the corresponding setters and getters.
+
+[[components.features.caption]]
+== Caption
+
+((("caption property")))
+((("Component interface", "caption")))
+A caption is an explanatory textual label accompanying a user interface
+component, usually shown above, left of, or inside the component. The contents
+of a caption are automatically quoted, so no raw HTML can be rendered in a
+caption.
+
+The caption text can usually be given as the first parameter of a constructor of
+a component or with [methodname]#setCaption()#.
+
+
+[source, java]
+----
+// New text field with caption "Name"
+TextField name = new TextField("Name");
+layout.addComponent(name);
+----
+
+The caption of a component is, by default, managed and displayed by the layout
+component or component container inside which the component is placed. For
+example, the [classname]#VerticalLayout# component shows the captions
+left-aligned above the contained components, while the [classname]#FormLayout#
+component shows the captions on the left side of the vertically laid components,
+with the captions and their associated components left-aligned in their own
+columns. The [classname]#CustomComponent# does not manage the caption of its
+composition root, so if the root component has a caption, it will not be
+rendered.
+
+[[figure.components.features.caption.layoutmanaged]]
+.Caption Management by [classname]#VerticalLayout# and [classname]#FormLayout#.
+image::img/features-caption-layoutmanaged.png[]
+
+Some components, such as [classname]#Button# and [classname]#Panel#, manage the
+caption themselves and display it inside the component.
+
+Icon (see <<components.features.icon>>) is closely related to caption and is
+usually displayed horizontally before or after it, depending on the component
+and the containing layout. Also the required indicator in field components is
+usually shown before or after the caption.
+
+An alternative way to implement a caption is to use another component as the
+caption, typically a [classname]#Label#, a [classname]#TextField#, or a
+[classname]#Panel#. A [classname]#Label#, for example, allows highlighting a
+shortcut key with HTML markup or to bind the caption to a data source. The
+[classname]#Panel# provides an easy way to add both a caption and a border
+around a component.
+
+=== CSS Style Rules
+
+
+[source, css]
+----
+.v-caption {}
+  .v-captiontext {}
+  .v-caption-clearelem {}
+  .v-required-field-indicator {}
+----
+
+A caption is be rendered inside an HTML element that has the
+[literal]#++v-caption++# CSS style class. The containing layout may enclose a
+caption inside other caption-related elements.
+
+Some layouts put the caption text in a [literal]#++v-captiontext++# element. A
+[literal]#++v-caption-clearelem++# is used in some layouts to clear a CSS
+[literal]#++float++# property in captions. An optional required indicator in
+field components is contained in a separate element with
+[literal]#++v-required-field-indicator++# style.
+
+
+
+[[components.features.description]]
+== Description and Tooltips
+
+((("description property")))
+((("Component interface", "description")))
+((("tooltips")))
+All components (that inherit [classname]#AbstractComponent#) have a description
+separate from their caption. The description is usually shown as a tooltip that
+appears when the mouse pointer hovers over the component for a short time.
+
+You can set the description with [methodname]#setDescription()# and retrieve
+with [methodname]#getDescription()#.
+
+
+[source, java]
+----
+Button button = new Button("A Button");
+button.setDescription("This is the tooltip");
+----
+
+The tooltip is shown in <<figure.components.tooltip.plain>>.
+
+[[figure.components.tooltip.plain]]
+.Component Description as a Tooltip
+image::img/tooltip-plain-withpointer-hi.png[]
+
+A description is rendered as a tooltip in most components.
+
+When a component error has been set with [methodname]#setComponentError()#, the
+error is usually also displayed in the tooltip, below the description.
+Components that are in error state will also display the error indicator. See
+<<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
+Indicator and Message">>.
+
+The description is actually not plain text, but you can use HTML tags to format
+it. Such a rich text description can contain any HTML elements, including
+images.
+
+
+[source, java]
+----
+button.setDescription(
+    "<h2><img src=\"../VAADIN/themes/sampler/icons/comment_yellow.gif\"/>"+
+    "A richtext tooltip</h2>"+
+    "<ul>"+
+    "  <li>Use rich formatting with HTML</li>"+
+    "  <li>Include images from themes</li>"+
+    "  <li>etc.</li>"+
+    "</ul>");
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.description.richtext[on-line example, window="_blank"].
+
+The result is shown in <<figure.components.tooltip.richtext>>.
+
+[[figure.components.tooltip.richtext]]
+.A Rich Text Tooltip
+image::img/tooltip-richtext-withpointer-hi.png[]
+
+Notice that the setter and getter are defined for all fields in the
+[classname]#Field# interface, not for all components in the
+[classname]#Component# interface.
+
+
+[[components.features.enabled]]
+== Enabled
+
+((("enabled property")))
+((("Component interface", "enabled")))
+The __enabled__ property controls whether the user can actually use the
+component. A disabled component is visible, but grayed to indicate the disabled
+state.
+
+Components are always enabled by default. You can disable a component with
+[methodname]#setEnabled(false)#.
+
+
+[source, java]
+----
+Button enabled = new Button("Enabled");
+enabled.setEnabled(true); // The default
+layout.addComponent(enabled);
+        
+Button disabled = new Button("Disabled");
+disabled.setEnabled(false);
+layout.addComponent(disabled);
+----
+
+<<figure.components.features.enabled.simple>> shows the enabled and disabled
+buttons.
+
+[[figure.components.features.enabled.simple]]
+.An Enabled and Disabled [classname]#Button#
+image::img/features-enabled-simple.png[]
+
+A disabled component is automatically put in read-only state. No client
+interaction with such a component is sent to the server and, as an important
+security feature, the server-side components do not receive state updates from
+the client in the read-only state. This feature exists in all built-in
+components in Vaadin and is automatically handled for all [classname]#Field#
+components for the field property value. For custom widgets, you need to make
+sure that the read-only state is checked on the server-side for all
+safety-critical variables.
+
+=== CSS Style Rules
+
+Disabled components have the [literal]#++v-disabled++# CSS style in addition to
+the component-specific style. To match a component with both the styles, you
+have to join the style class names with a dot as done in the example below.
+
+
+[source, css]
+----
+.v-textfield.v-disabled {
+    border: dotted;
+}
+----
+
+This would make the border of all disabled text fields dotted.
+
+
+//TODO This may change to
+$v-button-disabled-opacity
+In Valo theme, the opacity of disabled components is specified with the
+$v-disabled-opacity parameter
+
+ifdef::web[]
+, as described in
+<<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common
+Settings">>
+endif::web[]
+.
+
+
+[[components.features.icon]]
+== Icon
+
+((("icon property")))
+((("Component interface", "icon")))
+An icon is an explanatory graphical label accompanying a user interface
+component, usually shown above, left of, or inside the component. Icon is
+closely related to caption (see <<components.features.caption>>) and is usually
+displayed horizontally before or after it, depending on the component and the
+containing layout.
+
+The icon of a component can be set with the [methodname]#setIcon()# method. The
+image is provided as a resource, perhaps most typically a
+[classname]#ThemeResource#.
+
+
+[source, java]
+----
+// Component with an icon from a custom theme
+TextField name = new TextField("Name");
+name.setIcon(new ThemeResource("icons/user.png"));
+layout.addComponent(name);
+        
+// Component with an icon from another theme ('runo')
+Button ok = new Button("OK");
+ok.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
+layout.addComponent(ok);
+----
+
+The icon of a component is, by default, managed and displayed by the layout
+component or component container in which the component is placed. For example,
+the [classname]#VerticalLayout# component shows the icons left-aligned above the
+contained components, while the [classname]#FormLayout# component shows the
+icons on the left side of the vertically laid components, with the icons and
+their associated components left-aligned in their own columns. The
+[classname]#CustomComponent# does not manage the icon of its composition root,
+so if the root component has an icon, it will not be rendered.
+
+[[figure.components.features.icon]]
+.Displaying an Icon from a Theme Resource.
+image::img/features-icon.png[]
+
+Some components, such as [classname]#Button# and [classname]#Panel#, manage the
+icon themselves and display it inside the component.
+
+In addition to image resources, you can use __font icons__, which are icons
+included in special fonts, but which are handled as special resources. See
+<<dummy/../../../framework/themes/themes-fonticon#themes.fonticon,"Font Icons">>
+for more details.
+
+=== CSS Style Rules
+
+An icon will be rendered inside an HTML element that has the
+[literal]#++v-icon++# CSS style class. The containing layout may enclose an icon
+and a caption inside elements related to the caption, such as
+[literal]#++v-caption++#.
+
+
+
+[[components.features.locale]]
+== Locale
+
+((("locale property", "in [classname]#Component#")))
+((("Component interface", "locale")))
+The locale property defines the country and language used in a component. You
+can use the locale information in conjunction with an internationalization
+scheme to acquire localized resources. Some components, such as
+[classname]#DateField#, use the locale for component localization.
+
+You can set the locale of a component (or the application) with
+[methodname]#setLocale()# as follows:
+
+
+[source, java]
+----
+// Component for which the locale is meaningful
+InlineDateField date = new InlineDateField("Datum");
+        
+// German language specified with ISO 639-1 language
+// code and ISO 3166-1 alpha-2 country code. 
+date.setLocale(new Locale("de", "DE"));
+        
+date.setResolution(Resolution.DAY);
+layout.addComponent(date);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.simple[on-line example, window="_blank"].
+
+The resulting date field is shown in
+<<figure.components.features.locale.simple>>.
+
+[[figure.components.features.locale.simple]]
+.Set Locale for [classname]#InlineDateField#
+image::img/features-locale-simple.png[]
+
+ifdef::web[]
+[[components.features.locale.get]]
+=== Getting the Locale
+
+((("[methodname]#getLocale()#")))
+You can get the locale of a component with [methodname]#getLocale()#. If the
+locale is undefined for a component, that is, not explicitly set, the locale of
+the parent component is used. If none of the parent components have a locale
+set, the locale of the UI is used, and if that is not set, the default system
+locale is set, as given by [methodname]#Locale.getDefault()#.
+
+The [methodname]#getLocale()# returns null if the component is not yet attached
+to the UI, which is usually the case in most constructors, so it is a bit
+awkward to use it for internationalization. You can get the locale in
+[methodname]#attach()#, as shown in the following example:
+
+
+[source, java]
+----
+Button cancel = new Button() {
+    @Override
+    public void attach() {
+        super.attach();
+        ResourceBundle bundle = ResourceBundle.getBundle(
+            MyAppCaptions.class.getName(), getLocale());
+        setCaption(bundle.getString(MyAppCaptions.CancelKey));
+    }
+};
+layout.addComponent(cancel);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.get-attach[on-line example, window="_blank"].
+
+However, it is normally a better practice to use the locale of the current UI to
+get the localized resource right when the component is created.
+
+
+[source, java]
+----
+// Captions are stored in MyAppCaptions resource bundle
+// and the UI object is known in this context.
+ResourceBundle bundle =
+    ResourceBundle.getBundle(MyAppCaptions.class.getName(),
+        UI.getCurrent().getLocale());
+        
+// Get a localized resource from the bundle
+Button cancel =
+    new Button(bundle.getString(MyAppCaptions.CancelKey));
+layout.addComponent(cancel);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.get-ui[on-line example, window="_blank"].
+
+endif::web[]
+
+ifdef::web[]
+[[component.features.locale.selecting]]
+=== Selecting a Locale
+
+A common task in many applications is selecting a locale. This is done in the
+following example with a [classname]#ComboBox#, which gets the available locales
+in Java.
+
+
+[source, java]
+----
+// The locale in which we want to have the language
+// selection list
+Locale displayLocale = Locale.ENGLISH;
+        
+// All known locales
+final Locale[] locales = Locale.getAvailableLocales();
+        
+// Allow selecting a language. We are in a constructor of a
+// CustomComponent, so preselecting the current
+// language of the application can not be done before
+// this (and the selection) component are attached to
+// the application.
+final ComboBox select = new ComboBox("Select a language") {
+    @Override
+    public void attach() {
+        super.attach();
+        setValue(getLocale());
+    }
+};
+for (int i=0; i<locales.length; i++) {
+    select.addItem(locales[i]);
+    select.setItemCaption(locales[i],
+                          locales[i].getDisplayName(displayLocale));
+    
+    // Automatically select the current locale
+    if (locales[i].equals(getLocale()))
+        select.setValue(locales[i]);
+}
+layout.addComponent(select);
+
+// Locale code of the selected locale
+final Label localeCode = new Label("");
+layout.addComponent(localeCode);
+
+// A date field which language the selection will change
+final InlineDateField date =
+    new InlineDateField("Calendar in the selected language");
+date.setResolution(Resolution.DAY);
+layout.addComponent(date);
+        
+// Handle language selection
+select.addValueChangeListener(new Property.ValueChangeListener() {
+    public void valueChange(ValueChangeEvent event) {
+        Locale locale = (Locale) select.getValue();
+        date.setLocale(locale);
+        localeCode.setValue("Locale code: " +
+                            locale.getLanguage() + "_" +
+                            locale.getCountry());
+    }
+});
+select.setImmediate(true);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.selection[on-line example, window="_blank"].
+
+The user interface is shown in <<figure.components.features.locale.selection>>.
+
+[[figure.components.features.locale.selection]]
+.Selecting a Locale
+image::img/features-locale-selection.png[]
+
+endif::web[]
+
+
+[[components.features.readonly]]
+== Read-Only
+
+((("read-only property")))
+((("Component interface", "read-only")))
+The property defines whether the value of a component can be changed. The
+property is mainly applicable to [classname]#Field# components, as they have a
+value that can be edited by the user.
+
+
+[source, java]
+----
+TextField readwrite = new TextField("Read-Write");
+readwrite.setValue("You can change this");
+readwrite.setReadOnly(false); // The default
+layout.addComponent(readwrite);
+        
+TextField readonly = new TextField("Read-Only");
+readonly.setValue("You can't touch this!");
+readonly.setReadOnly(true);
+layout.addComponent(readonly);
+----
+
+The resulting read-only text field is shown in
+<<figure.components.features.readonly.simple>>.
+
+[[figure.components.features.readonly.simple]]
+.A Read-Only Component.
+image::img/features-readonly-simple.png[]
+
+Setting a layout or some other component container as read-only does not usually
+make the contained components read-only recursively. This is different from, for
+example, the disabled state, which is usually applied recursively.
+
+Notice that the value of a selection component is the selection, not its items.
+A read-only selection component doesn't therefore allow its selection to be
+changed, but other changes are possible. For example, if you have a read-only
+[classname]#Table# in editable mode, its contained fields and the underlying
+data model can still be edited, and the user could sort it or reorder the
+columns.
+
+Client-side state modifications will not be communicated to the server-side and,
+more importantly, server-side field components will not accept changes to the
+value of a read-only [classname]#Field# component. The latter is an important
+security feature, because a malicious user can not fabricate state changes in a
+read-only field. This is handled at the level of [classname]#AbstractField# in
+[methodname]#setValue()#, so you can not change the value programmatically
+either. Calling [methodname]#setValue()# on a read-only field results in
+[classname]#Property.ReadOnlyException#.
+
+Also notice that while the read-only status applies automatically to the
+property value of a field, it does not apply to other component variables. A
+read-only component can accept some other variable changes from the client-side
+and some of such changes could be acceptable, such as change in the scroll bar
+position of a [classname]#Table#. Custom widgets should check the read-only
+state for variables bound to business
+data.////
+TODO: Note this also in the Advanced: Security section and possibly also in the
+GWT
+chapter.
+////
+
+=== CSS Style Rules
+
+Setting a normally editable component to read-only state can change its
+appearance to disallow editing the value. In addition to CSS styling, also the
+HTML structure can change. For example, [classname]#TextField# loses the edit
+box and appears much like a [classname]#Label#.
+
+A read-only component will have the [literal]#++v-readonly++# style. The
+following CSS rule would make the text in all read-only [classname]#TextField#
+components appear in italic.
+
+
+[source, css]
+----
+.v-textfield.v-readonly {
+    font-style: italic;
+}
+----
+
+
+
+[[components.features.stylename]]
+== Style Name
+
+((("style name property")))
+((("Component interface", "style name")))
+The __style name__ property defines one or more custom CSS style class names for
+the component. The [methodname]#getStyleName()# returns the current style names
+as a space-separated list. The [methodname]#setStyleName()# replaces all the
+styles with the given style name or a space-separated list of style names. You
+can also add and remove individual style names with [methodname]#addStylename()#
+and [methodname]#removeStyleName()#. A style name must be a valid CSS style
+name.
+
+
+[source, java]
+----
+Label label = new Label("This text has a lot of style");
+label.addStyleName("mystyle");
+layout.addComponent(label);
+----
+
+The style name will appear in the component's HTML element in two forms:
+literally as given and prefixed with the component-specific style name. For
+example, if you add a style name [literal]#++mystyle++# to a
+[classname]#Button#, the component would get both [literal]#++mystyle++# and
+[literal]#++v-button-mystyle++# styles. Neither form may conflict with built-in
+style names of Vaadin. For example, [literal]#++focus++# style would conflict
+with a built-in style of the same name, and an [literal]#++content++# style for
+a [classname]#Panel# component would conflict with the built-in
+[literal]#++v-panel-content++# style.
+
+The following CSS rule would apply the style to any component that has the
+[literal]#++mystyle++# style.
+
+
+[source, css]
+----
+.mystyle {
+    font-family: fantasy;
+    font-style:  italic;
+    font-size:   25px;
+    font-weight: bolder;
+    line-height: 30px;
+}
+----
+
+The resulting styled component is shown in
+<<figure.components.features.stylename>>
+
+[[figure.components.features.stylename]]
+.Component with a Custom Style
+image::img/features-stylename-simple.png[]
+
+
+[[components.features.visible]]
+== Visible
+
+((("visible property")))
+((("Component interface", "visible")))
+Components can be hidden by setting the __visible__ property to __false__. Also
+the caption, icon and any other component features are made hidden. Hidden
+components are not just invisible, but their content is not communicated to the
+browser at all. That is, they are not made invisible cosmetically with only CSS
+rules. This feature is important for security if you have components that
+contain security-critical information that must only be shown in specific
+application states.
+
+
+[source, java]
+----
+TextField invisible = new TextField("No-see-um");
+invisible.setValue("You can't see this!");
+invisible.setVisible(false);
+layout.addComponent(invisible);
+----
+
+The resulting invisible component is shown in
+<<figure.components.features.visible.simple>>.
+
+[[figure.components.features.visible.simple]]
+.An Invisible Component.
+image::img/features-visible-simple.png[]
+
+Beware that invisible beings can leave footprints. The containing layout cell
+that holds the invisible component will not go away, but will show in the layout
+as extra empty space. Also expand ratios work just like if the component was
+visible - it is the layout cell that expands, not the component.
+
+If you need to make a component only cosmetically invisible, you should use a
+custom theme to set it [literal]#++display: none++# style. This is mainly useful
+for some special components that have effects even when made invisible in CSS.
+If the hidden component has undefined size and is enclosed in a layout that also
+has undefined size, the containing layout will collapse when the component
+disappears. If you want to have the component keep its size, you have to make it
+invisible by setting all its font and other attributes to be transparent. In
+such cases, the invisible content of the component can be made visible easily in
+the browser.
+
+A component made invisible with the __visible__ property has no particular CSS
+style class to indicate that it is hidden. The element does exist though, but
+has [literal]#++display: none++# style, which overrides any CSS styling.
+
+
+[[components.features.sizeable]]
+== Sizing Components
+
+((("[classname]#Sizeable# interface")))
+Vaadin components are sizeable; not in the sense that they were fairly large or
+that the number of the components and their features are sizeable, but in the
+sense that you can make them fairly large on the screen if you like, or small or
+whatever size.
+
+The [classname]#Sizeable# interface, shared by all components, provides a number
+of manipulation methods and constants for setting the height and width of a
+component in absolute or relative units, or for leaving the size undefined.
+
+The size of a component can be set with [methodname]#setWidth()# and
+[methodname]#setHeight()# methods. The methods take the size as a floating-point
+value. You need to give the unit of the measure as the second parameter for the
+above methods. The available units are listed in
+<<components.features.sizeable.units.table>> below.
+
+
+[source, java]
+----
+mycomponent.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+mycomponent.setWidth(400, Sizeable.UNITS_PIXELS);
+----
+
+Alternatively, you can speficy the size as a string. The format of such a string
+must follow the HTML/CSS standards for specifying measures.
+
+
+[source, java]
+----
+mycomponent.setWidth("100%");
+mycomponent.setHeight("400px");
+----
+
+The " [literal]#++100%++#" percentage value makes the component take all
+available size in the particular direction (see the description of
+[parameter]#Sizeable.UNITS_PERCENTAGE# in the table below). You can also use the
+shorthand method [methodname]#setSizeFull()# to set the size to 100% in both
+directions.
+
+The size can be __undefined__ in either or both dimensions, which means that the
+component will take the minimum necessary space. Most components have undefined
+size by default, but some layouts have full size in horizontal direction. You
+can set the height or width as undefined with
+[parameter]#Sizeable.SIZE_UNDEFINED# parameter for [methodname]#setWidth()# and
+[methodname]#setHeight()#.
+
+You always need to keep in mind that __a layout with undefined size may not
+contain components with defined relative size__, such as "full size". See
+<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
+Size">> for details.
+
+The <<components.features.sizeable.units.table>> lists the available units and
+their codes defined in the [classname]#Sizeable# interface.
+
+[[components.features.sizeable.units.table]]
+.Size Units
+
+|===============
+|[parameter]#Unit.PIXELS#|px|The__pixel__is the basic hardware-specific measure of one physical display pixel.
+|[parameter]#Unit.POINTS#|pt|The__point__is a typographical unit, which is usually defined as 1/72 inches or about 0.35 mm. However, on displays the size can vary significantly depending on display metrics.
+|[parameter]#Unit.PICAS#|pc|The__pica__is a typographical unit, defined as 12 points, or 1/7 inches or about 4.233 mm. On displays, the size can vary depending on display metrics.
+|[parameter]#Unit.EM#|em|A unit relative to the used font, the width of the upper-case "M" letter.
+|[parameter]#Unit.EX#|ex|A unit relative to the used font, the height of the lower-case "x" letter.
+|[parameter]#Unit.MM#|mm|A physical length unit, millimeters on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
+|[parameter]#Unit.CM#|cm|A physical length unit,__centimeters__on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
+|[parameter]#Unit.INCH#|in|A physical length unit,__inches__on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
+|[parameter]#Unit.PERCENTAGE#|%|A relative percentage of the available size. For example, for the top-level layout[parameter]#100%#would be the full width or height of the browser window. The percentage value must be between 0 and 100.
+
+|===============
+
+
+
+If a component inside [classname]#HorizontalLayout# or
+[classname]#VerticalLayout# has full size in the namesake direction of the
+layout, the component will expand to take all available space not needed by the
+other components. See
+<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
+Size">> for details.
+
+
+== Managing Input Focus
+
+When the user clicks on a component, the component gets the __input focus__,
+which is indicated by highlighting according to style definitions. If the
+component allows inputting text, the focus and insertion point are indicated by
+a cursor. Pressing the Tab key moves the focus to the component next in the
+__focus order__.
+
+Focusing is supported by all [classname]#Field# components and also by
+[classname]#Upload#.
+
+The focus order or __tab index__ of a component is defined as a positive integer
+value, which you can set with [methodname]#setTabIndex()# and get with
+[methodname]#getTabIndex()#. The tab index is managed in the context of the page
+in which the components are contained. The focus order can therefore jump
+between two any lower-level component containers, such as sub-windows or panels.
+
+The default focus order is determined by the natural hierarchical order of
+components in the order in which they were added under their parents. The
+default tab index is 0 (zero).
+
+Giving a negative integer as the tab index removes the component from the focus
+order entirely.
+
+=== CSS Style Rules
+
+The component having the focus will have an additional style class with the
+[literal]#++-focus++# suffix. For example, a [classname]#TextField#, which
+normally has the [literal]#++v-textfield++# style, would additionally have the
+[literal]#++v-textfield-focus++# style.
+
+For example, the following would make a text field blue when it has focus.
+
+
+[source, css]
+----
+.v-textfield-focus {
+    background: lightblue;
+}
+----
+
+
+
+
+

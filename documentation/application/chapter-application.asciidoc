@@ -1,0 +1,25 @@
+[[application]]
+== Writing a Server-Side Web Application
+
+This chapter provides the fundamentals of server-side web application
+development with Vaadin, concentrating on the basic elements of an application
+from a practical point-of-view.
+
+
+include::application-overview.asciidoc[leveloffset=+2]
+
+include::application-architecture.asciidoc[leveloffset=+2]
+
+include::application-declarative.asciidoc[leveloffset=+2]
+
+include::application-events.asciidoc[leveloffset=+2]
+
+include::application-resources.asciidoc[leveloffset=+2]
+
+include::application-errors.asciidoc[leveloffset=+2]
+
+include::application-notifications.asciidoc[leveloffset=+2]
+
+include::application-lifecycle.asciidoc[leveloffset=+2]
+
+include::application-environment.asciidoc[leveloffset=+2]

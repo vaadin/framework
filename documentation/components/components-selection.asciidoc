@@ -1,0 +1,468 @@
+---
+title: Selection Components
+order: 5
+layout: page
+---
+
+[[components.selection]]
+= Selection Components
+
+Vaadin offers many alternative ways for selecting one or more items. The core
+library includes the following selection components, all based on the
+[classname]#AbstractSelect# class:
+
+[classname]#ComboBox#(Section<<dummy/../../../framework/components/components-combobox#components.combobox,"ComboBox">>):: A drop-down list with a text box, where the user can type text to find matching items. The component also provides an input prompt and the user can enter new items.
+[classname]#ListSelect#(Section<<dummy/../../../framework/components/components-listselect#components.listselect,"ListSelect">>):: A vertical list box for selecting items in either single or multiple selection mode.
+[classname]#NativeSelect#(Section<<dummy/../../../framework/components/components-nativeselect#components.nativeselect,"NativeSelect">>):: Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode. This uses the [literal]#++<select>++# element in HTML.
+[classname]#OptionGroup#(Section<<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>):: Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
+[classname]#TwinColSelect#(Section<<dummy/../../../framework/components/components-twincolselect#components.twincolselect,"TwinColSelect">>):: Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
+
+
+In addition, the [classname]#Tree#, [classname]#Table#, and
+[classname]#TreeTable# components allow special forms of selection. They also
+inherit the [classname]#AbstractSelect#.
+
+[[components.selection.databinding]]
+== Binding Selection Components to Data
+
+The selection components are strongly coupled with the Vaadin Data Model,
+described in
+<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
+Components to Data">>. The selectable items in all selection components are
+objects that implement the [classname]#Item# interface. The items are contained
+in a [classname]#Container#.
+
+All selection components are containers themselves and simply forward all
+container operations to the underlying container data source. You can give the
+container in the constructor or set it set
+[methodname]#setContainerDataSource()#. This is further described in
+<<dummy/../../../framework/datamodel/datamodel-container#datamodel.container.intro,"Basic
+Use of Containers">>.
+
+
+[source, java]
+----
+// Have a container data source of some kind
+IndexedContainer container = new IndexedContainer();
+container.addContainerProperty("name", String.class, null);
+...
+
+// Create a selection component bound to the container
+OptionGroup group = new OptionGroup("My Select", container);
+----
+
+If you do not bind a selection component to a container data source, a default
+container is used. It is usually either an [classname]#IndexedContainer# or a
+[classname]#HierarchicalContainer#.
+
+The current selection of a selection component is bound to the
+[classname]#Property# interface, so you can get the current selection as the
+value of the selection component. Also selection changes are handled as value
+change events, as is described later.
+
+
+[[components.selection.adding]]
+== Adding New Items
+
+New items are added with the [methodname]#addItem()# method defined in the
+[classname]#Container# interface, described in
+<<dummy/../../../framework/datamodel/datamodel-container#datamodel.container.intro,"Basic
+Use of Containers">>.
+
+
+[source, java]
+----
+// Create a selection component
+ComboBox select = new ComboBox("My ComboBox");
+
+// Add items with given item IDs
+select.addItem("Mercury");
+select.addItem("Venus");
+select.addItem("Earth");
+----
+
+The [methodname]#addItem()# method creates an empty [classname]#Item#, which is
+identified by its __item identifier__ (IID) object, given as the parameter. This
+item ID is by default used also as the caption of the item, as described in more
+detail later.
+
+We emphasize that [methodname]#addItem()# is a factory method that __takes an
+item ID, not the actual item__ as the parameter - the item is returned by the
+method. The item is of a type that is specific to the container and has itself
+little relevance for most selection components, as the properties of an item may
+not be used in any way (except in [classname]#Table#), only the item ID.
+
+The item identifier is typically a string, in which case it can be used as the
+caption, but can be any object type. We could as well have given integers for
+the item identifiers and set the captions explicitly with
+[methodname]#setItemCaption()#. You could also add an item with the
+parameterless [methodname]#addItem()#, which returns an automatically generated
+item ID.
+
+
+[source, java]
+----
+// Create a selection component
+ComboBox select = new ComboBox("My Select");
+
+// Add an item with a generated ID
+Object itemId = select.addItem();
+select.setItemCaption(itemId, "The Sun");
+
+// Select the item
+select.setValue(itemId);
+----
+
+Some container types may support passing the actual data object to the add
+method. For example, you can add items to a [classname]#BeanItemContainer# with
+[methodname]#addBean()#. Such implementations can use a separate item ID object,
+or the data object itself as the item ID, as is done in [methodname]#addBean()#.
+In the latter case you can not depend on the default way of acquiring the item
+caption; see the description of the different caption modes later.
+
+The next section describes the different options for determining the item
+captions.
+
+
+[[components.selection.captions]]
+== Item Captions
+
+The displayed captions of items in a selection component can be set explicitly
+with [methodname]#setItemCaption()# or determined from the item IDs or item
+properties. The caption determination is defined with the __caption mode__, any
+of the modes in the [classname]#AbstractSelect.ItemCaptionMode# enum, which you
+can set with [methodname]#setItemCaptionMode()#. The default mode is
+[parameter]#EXPLICIT_DEFAULTS_ID#, which uses the item identifiers for the
+captions, unless given explicitly.
+
+In addition to a caption, an item can have an icon. The icon is set with
+[methodname]#setItemIcon()#.
+
+The caption modes defined in [classname]#ItemCaptionMode# are the following:
+
+EXPLICIT_DEFAULTS_ID:: This is the default caption mode and its flexibility allows using it in most
+cases. By default, the item identifier will be used as the caption. The
+identifier object does not necessarily have to be a string; the caption is
+retrieved with [methodname]#toString()# method. If the caption is specified
+explicitly with [methodname]#setItemCaption()#, it overrides the item
+identifier.
+
+
++
+[source, java]
+----
+// Create a selection component
+ComboBox select = new ComboBox("Moons of Mars");
+select.setItemCaptionMode(ItemCaptionMode.EXPLICIT_DEFAULTS_ID);
+
+// Use the item ID also as the caption of this item
+select.addItem(new Integer(1));
+
+// Set item caption for this item explicitly
+select.addItem(2); // same as "new Integer(2)"
+select.setItemCaption(2, "Deimos");
+----
+EXPLICIT:: Captions must be explicitly specified with [methodname]#setItemCaption()#. If
+they are not, the caption will be empty. Such items with empty captions will
+nevertheless be displayed in the selection component as empty items. If they
+have an icon, they will be visible.
+
+ICON_ONLY:: Only icons are shown, captions are hidden.
+
+ID:: String representation of the item identifier object is used as caption. This is
+useful when the identifier is a string, and also when the identifier is an
+complex object that has a string representation. For example:
+
+
++
+[source, java]
+----
+ComboBox select = new ComboBox("Inner Planets");
+select.setItemCaptionMode(ItemCaptionMode.ID);
+
+// A class that implements toString()
+class PlanetId extends Object implements Serializable {
+    String planetName;
+
+    PlanetId (String name) {
+        planetName = name;
+    }
+    public String toString () {
+        return "The Planet " + planetName;
+    }
+}
+
+// Use such objects as item identifiers
+String planets[] = {"Mercury", "Venus", "Earth", "Mars"};
+for (int i=0; i<planets.length; i++)
+    select.addItem(new PlanetId(planets[i]));
+----
+INDEX:: Index number of item is used as caption. This caption mode is applicable only to
+data sources that implement the [classname]#Container.Indexed# interface. If the
+interface is not available, the component will throw a
+[classname]#ClassCastException#. The [classname]#AbstractSelect# itself does not
+implement this interface, so the mode is not usable without a separate data
+source. An [classname]#IndexedContainer#, for example, would work.
+
+ITEM:: [classname]#String# representation of item, acquired with
+[methodname]#toString()#, is used as the caption. This is applicable mainly when
+using a custom [classname]#Item# class, which also requires using a custom
+[classname]#Container# that is used as a data source for the selection
+component.
+
+PROPERTY:: Item captions are read from the [classname]#String# representation of the
+property with the identifier specified with
+[methodname]#setItemCaptionPropertyId()#. This is useful, for example, when you
+have a container that you use as the data source for the selection component,
+and you want to use a specific property for caption.
+
++
+In the example below, we bind a selection component to a bean container and use
+a property of the bean as the caption.
+
+
++
+[source, java]
+----
+/** A bean with a "name" property. */
+public class Planet implements Serializable {
+    int    id;
+    String name;
+    
+    public Planet(int id, String name) {
+        this.id   = id;
+        this.name = name;
+    }
+
+    ... setters and getters ...    
+}
+
+public void captionproperty(VerticalLayout layout) {
+    // Have a bean container to put the beans in
+    BeanItemContainer<Planet> container =
+        new BeanItemContainer<Planet>(Planet.class);
+
+    // Put some example data in it
+    container.addItem(new Planet(1, "Mercury"));
+    container.addItem(new Planet(2, "Venus"));
+    container.addItem(new Planet(3, "Earth"));
+    container.addItem(new Planet(4, "Mars"));
+
+    // Create a selection component bound to the container
+    ComboBox select = new ComboBox("Planets", container);
+
+    // Set the caption mode to read the caption directly
+    // from the 'name' property of the bean
+    select.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+    select.setItemCaptionPropertyId("name");
+
+    ...
+----
+
+
+
+[[components.selection.getset]]
+== Getting and Setting Selection
+
+A selection component provides the current selection as the property of the
+component (with the [classname]#Property# interface). The property value is an
+item identifier object that identifies the selected item. You can get the
+identifier with [methodname]#getValue()# of the [classname]#Property# interface.
+
+You can select an item with the corresponding [methodname]#setValue()# method.
+In multiselect mode, the property will be an unmodifiable set of item
+identifiers. If no item is selected, the property will be [parameter]#null# in
+single selection mode or an empty collection in multiselect mode.
+
+The [classname]#ComboBox# and [classname]#NativeSelect# will show empty
+selection when no actual item is selected. This is the __null selection item
+identifier__. You can set an alternative ID with
+[methodname]#setNullSelectionItemId()#. Setting the alternative null ID is
+merely a visual text; the [methodname]#getValue()# will still return
+[parameter]#null# value if no item is selected, or an empty set in multiselect
+mode.
+
+
+[[components.selection.valuechange]]
+== Handling Selection Changes
+
+The item identifier of the currently selected item will be set as the property
+of the selection component. You can access it with the [methodname]#getValue()#
+method of the [classname]#Property# interface of the component. Also, when
+handling selection changes with a [classname]#Property.ValueChangeListener#, the
+[classname]#ValueChangeEvent# will have the selected item as the property of the
+event, accessible with the [methodname]#getProperty()# method.
+
+
+[source, java]
+----
+// Create a selection component with some items
+ComboBox select = new ComboBox("My Select");
+select.addItems("Io", "Europa", "Ganymedes", "Callisto");
+        
+// Handle selection change
+select.addValueChangeListener(event -> // Java 8
+    layout.addComponent(new Label("Selected " +
+        event.getProperty().getValue())));
+----
+
+The result of user interaction is shown in
+<<figure.components.selection.valuechange>>.
+
+[[figure.components.selection.valuechange]]
+.Selected Item
+image::img/select-selected1.png[]
+
+
+[[components.selection.newitems]]
+== Allowing Adding New Items
+
+Some selection components can allow the user to add new items. Currently, only
+[classname]#ComboBox# allows it, when the user types in a value and presses
+Enter. You need to enable the mode with [methodname]#setNewItemsAllowed(true)#.
+Setting the component also in immediate mode may be necessary, as otherwise the
+item would not be added immediately when the user interacts with the component,
+but after some other component causes a server
+request.////
+TODO This could be a
+bug
+////
+
+
+[source, java]
+----
+myselect.setNewItemsAllowed(true);
+myselect.setImmediate(true);
+----
+
+The user interface for adding new items depends on the selection component. The
+regular [classname]#ComboBox# component allows you to simply type the new item
+in the combo box and hit Enter to add it.
+
+Adding new items is not possible if the selection component is read-only or is
+bound to a [classname]#Container# that does not allow adding new items. An
+attempt to do so may result in an exception.
+
+[[components.selection.newitems.handling]]
+=== Handling New Items
+
+Adding new items is handled by a [interfacename]#NewItemHandler#, which gets the
+item caption string as parameter for the [methodname]#addNewItem()# method. The
+default implementation, [classname]#DefaultNewItemHandler#, checks for read-only
+state, adds the item using the entered caption as the item ID, and if the
+selection component gets the captions from a property, copies the caption to
+that property. It also selects the item. The default implementation may not be
+suitable for all container types, in which case you need to define a custom
+handler. For example, a [classname]#BeanItemContainer# expects the items to have
+the bean object itself as the ID, not a string.
+
+ifdef::web[]
+
+[source, java]
+----
+// Have a bean container to put the beans in
+final BeanItemContainer<Planet> container =
+    new BeanItemContainer<Planet>(Planet.class);
+
+// Put some example data in it
+container.addItem(new Planet(1, "Mercury"));
+container.addItem(new Planet(2, "Venus"));
+container.addItem(new Planet(3, "Earth"));
+container.addItem(new Planet(4, "Mars"));
+
+final ComboBox select =
+    new ComboBox("Select or Add a Planet", container);
+select.setNullSelectionAllowed(false);
+        
+// Use the name property for item captions
+select.setItemCaptionPropertyId("name");
+        
+// Allow adding new items
+select.setNewItemsAllowed(true);
+select.setImmediate(true);
+
+// Custom handling for new items
+select.setNewItemHandler(new NewItemHandler() {
+    @Override
+    public void addNewItem(String newItemCaption) {
+        // Create a new bean - can't set all properties
+        Planet newPlanet = new Planet(0, newItemCaption);
+        container.addBean(newPlanet);
+        
+        // Remember to set the selection to the new item
+        select.select(newPlanet);
+        
+        Notification.show("Added new planet called " +
+                          newItemCaption);
+    }
+});
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.combobox.newitemhandler[on-line example, window="_blank"].
+endif::web[]
+
+
+
+[[components.selection.multiple]]
+== Multiple Selection
+
+Some selection components, such as [classname]#OptionGroup# and
+[classname]#ListSelect# support a multiple selection mode, which you can enable
+with [methodname]#setMultiSelect()#. For [classname]#TwinColSelect#, which is
+especially intended for multiple selection, it is enabled by default.
+
+
+[source, java]
+----
+myselect.setMultiSelect(true);
+----
+
+As in single selection mode, the property value of the component indicates the
+selection. In multiple selection mode, however, the property value is a
+[classname]#Collection# of the item IDs of the currently selected items. You can
+get and set the property with the [methodname]#getValue()# and
+[methodname]#setValue()# methods as usual.
+
+A change in the selection will trigger a [classname]#ValueChangeEvent#, which
+you can handle with a [classname]#Propery.ValueChangeListener#. As usual, you
+should use [methodname]#setImmediate(true)# to trigger the event immediately
+when the user changes the selection. The following example shows how to handle
+selection changes with a listener.
+
+
+[source, java]
+----
+// A selection component with some items
+ListSelect select = new ListSelect("My Selection");
+select.addItems("Mercury", "Venus", "Earth",
+    "Mars", "Jupiter", "Saturn", "Uranus", "Neptune");
+
+// Multiple selection mode
+select.setMultiSelect(true);
+
+// Feedback on value changes
+select.addValueChangeListener(
+    new Property.ValueChangeListener() {
+    public void valueChange(ValueChangeEvent event) {
+        // Some feedback
+        layout.addComponent(new Label("Selected: " +
+            event.getProperty().getValue().toString()));
+    }
+});
+select.setImmediate(true);
+----
+
+
+[[components.selection.item-icons]]
+== Item Icons
+
+You can set an icon for each item with [methodname]#setItemIcon()#, or define an
+item property that provides the icon resource with
+[methodname]#setItemIconPropertyId()#, in a fashion similar to captions. Notice,
+however, that icons are not supported in [classname]#NativeSelect#,
+[classname]#TwinColSelect#, and some other selection components and modes. This
+is because HTML does not support images inside the native [literal]#++select++#
+elements. Icons are also not really visually applicable.
+
+
+
+

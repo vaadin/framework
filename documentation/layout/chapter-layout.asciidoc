@@ -1,0 +1,124 @@
+[[layout]]
+== Managing Layout
+
+ifdef::web[]
+Ever since the ancient xeroxians invented graphical user interfaces, programmers
+have wanted to make GUI programming ever easier for themselves. Solutions
+started simple. When GUIs appeared on PC desktops, practically all screens were
+of the VGA type and fixed into 640x480 size. Mac or X Window System on UNIX were
+not much different. Everyone was so happy with such awesome graphics resolutions
+that they never thought that an application would have to work on a radically
+different screen size. At worst, screens could only grow, they thought, giving
+more space for more windows. In the 80s, the idea of having a computer screen in
+your pocket was simply not realistic. Hence, the GUI APIs allowed placing UI
+components using screen coordinates. Visual Basic and some other systems
+provided an easy way for the designer to drag and drop components on a
+fixed-sized window. One would have thought that at least translators would have
+complained about the awkwardness of such a solution, but apparently they were
+not, as non-engineers, heard or at least cared about. At best, engineers could
+throw at them a resource editor that would allow them to resize the UI
+components by hand. Such was the spirit back then.
+endif::web[]
+
+ifdef::web[]
+After the web was born, layout design was doomed to change for ever. At first,
+layout didn't matter much, as everyone was happy with plain headings,
+paragraphs, and a few hyperlinks here and there. Designers of HTML wanted the
+pages to run on any screen size. The screen size was actually not pixels but
+rows and columns of characters, as the baby web was really just hyper __text__,
+not graphics. That was soon to be changed. The first GUI-based browser, NCSA
+Mosaic, launched a revolution that culminated in Netscape Navigator. Suddenly,
+people who had previously been doing advertisement brochures started writing
+HTML. This meant that layout design had to be easy not just for programmers, but
+also allow the graphics designer to do his or her job without having to know a
+thing about programming. The W3C committee designing web standards came up with
+the CSS (Cascading Style Sheet) specification, which allowed trivial separation
+of appearance from content. Later versions of HTML followed, XHTML and HTML 5
+appeared, as did countless other standards.
+endif::web[]
+
+ifdef::web[]
+Page description and markup languages are a wonderful solution for static
+presentations, such as books and most web pages. Real applications, however,
+need to have more control. They need to be able to change the state of user
+interface components and even their layout on the run. This creates a need to
+separate the presentation from content on exactly the right
+level.////
+Vaadin provides a solution for this, using themes and CSS, but let us first look
+at what Java did for UI
+programming.
+////
+////
+Changing the layout steps right on the feet of the graphics designers, so we
+have a conflict. We will discuss this conflict later, but let us first look at
+what Java did for UI
+programming.
+////
+endif::web[]
+
+ifdef::web[]
+Thanks to the attack of graphics designers, desktop applications were, when it
+comes to appearance, far behind web design. Sun Microsystems had come in 1995
+with a new programming language, Java, for writing cross-platform desktop
+applications. Java's original graphical user interface toolkit, AWT (Abstract
+Windowing Toolkit), was designed to work on multiple operating systems as well
+as embedded in web browsers. One of the special aspects of AWT was the layout
+manager, which allowed user interface components to be flexible, growing and
+shrinking as needed. This made it possible for the user to resize the windows of
+an application flexibly and also served the needs of localization, as text
+strings were not limited to some fixed size in pixels. It became even possible
+to resize the pixel size of fonts, and the rest of the layout adapted to the new
+size.
+endif::web[]
+
+Layout management of Vaadin is a direct successor of the web-based concept for
+separation of content and appearance and of the Java AWT solution for binding
+the layout and user interface components into objects in programs. Vaadin layout
+components allow you to position your UI components on the screen in a
+hierarchical fashion, much like in conventional Java UI toolkits such as AWT,
+Swing, or SWT. In addition, you can approach the layout from the direction of
+the web with the [classname]#CustomLayout# component, which you can use to write
+your layout as a template in HTML that provides locations of any contained
+components. The [classname]#AbsoluteLayout# allows the old-style pixel-position
+based layouting, but it also supports percentual values, which makes it usable
+for scalable layouts. It is also useful as an area on which the user can
+position items with drag and drop.
+
+ifdef::web[]
+The moral of the story is that, because Vaadin is intended for web applications,
+appearance is of high importance. The solutions have to be the best of both
+worlds and satisfy artists of both kind: code and graphics. On the API side, the
+layout is controlled by UI components, particularly the layout components. On
+the visual side, it is controlled by themes. Themes can contain any HTML, Sass,
+CSS, and JavaScript that you or your web artists create to make people feel good
+about your software.
+endif::web[]
+
+
+include::layout-overview.asciidoc[leveloffset=+2]
+
+include::layout-root-layout.asciidoc[leveloffset=+2]
+
+include::layout-orderedlayout.asciidoc[leveloffset=+2]
+
+include::layout-gridlayout.asciidoc[leveloffset=+2]
+
+include::layout-formlayout.asciidoc[leveloffset=+2]
+
+include::layout-panel.asciidoc[leveloffset=+2]
+
+include::layout-sub-window.asciidoc[leveloffset=+2]
+
+include::layout-splitpanel.asciidoc[leveloffset=+2]
+
+include::layout-tabsheet.asciidoc[leveloffset=+2]
+
+include::layout-accordion.asciidoc[leveloffset=+2]
+
+include::layout-absolutelayout.asciidoc[leveloffset=+2]
+
+include::layout-csslayout.asciidoc[leveloffset=+2]
+
+include::layout-settings.asciidoc[leveloffset=+2]
+
+include::layout-customlayout.asciidoc[leveloffset=+2]

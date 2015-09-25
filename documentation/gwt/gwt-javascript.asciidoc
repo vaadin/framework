@@ -1,0 +1,299 @@
+---
+title: Integrating JavaScript Components and Extensions
+order: 13
+layout: page
+---
+
+[[gwt.javascript]]
+= Integrating JavaScript Components and Extensions
+
+((("JavaScript integration", id="term.gwt.javascript", range="startofrange")))
+
+
+Vaadin allows simplified integration of pure JavaScript components, as well as
+component and UI extensions. The JavaScript connector code is published from the
+server-side. As the JavaScript integration does not involve GWT programming, no
+widget set compilation is needed.
+
+[[gwt.javascript.example]]
+== Example JavaScript Library
+
+There are many kinds of component libraries for JavaScript. In the following, we
+present a simple library that provides one object-oriented JavaScript component.
+We use this example later to show how to integrate it with a server-side Vaadin
+component.
+
+The example library includes a single [classname]#MyComponent# component,
+defined in [filename]#mylibrary.js#.
+
+
+----
+// Define the namespace
+var mylibrary = mylibrary || {};
+
+mylibrary.MyComponent = function (element) {
+	element.innerHTML =
+		"<div class='caption'>Hello, world!</div>" +
+		"<div class='textinput'>Enter a value: " +
+		"<input type='text' name='value'/>" +
+		"<input type='button' value='Click'/>" +
+		"</div>";
+
+	// Style it
+	element.style.border = "thin solid red";
+	element.style.display = "inline-block";
+
+	// Getter and setter for the value property
+	this.getValue = function () {
+		return element.
+		    getElementsByTagName("input")[0].value;
+	};
+	this.setValue = function (value) {
+		element.getElementsByTagName("input")[0].value =
+		    value;
+	};
+
+	// Default implementation of the click handler
+	this.click = function () {
+		alert("Error: Must implement click() method");
+	};
+
+	// Set up button click
+	var button = element.getElementsByTagName("input")[1];
+	var self = this; // Can't use this inside the function
+	button.onclick = function () {
+		self.click();
+	};
+};
+----
+
+When used in an HTML page, the library would be included with the following
+definition:
+
+
+----
+<script type="text/javascript"
+        src="mylibrary.js"></script>
+----
+
+You could then use it anywhere in the HTML document as follows:
+
+
+----
+<!-- Placeholder for the component -->    
+<div id="foo"></div>
+    
+<!-- Create the component and bind it to the placeholder -->
+<script type="text/javascript">
+    window.foo = new mylibrary.MyComponent(
+            document.getElementById("foo"));
+    window.foo.click = function () {
+        alert("Value is " + this.getValue());
+    }
+</script>
+----
+
+[[figure.gwt.javascript.example]]
+.A JavaScript Component Example
+image::img/javascript-component.png[]
+
+You could interact with the component with JavaScript for example as follows:
+
+
+----
+<a href="javascript:foo.setValue('New value')">Click here</a>
+----
+
+
+[[gwt.javascript.server-side]]
+== A Server-Side API for a JavaScript Component
+
+To begin integrating such a JavaScript component, you would need to sketch a bit
+how it would be used from a server-side Vaadin application. The component should
+support writing the value as well as listening for changes to it.
+
+
+----
+final MyComponent mycomponent = new MyComponent();
+
+// Set the value from server-side
+mycomponent.setValue("Server-side value");
+
+// Process a value input by the user from the client-side
+mycomponent.addValueChangeListener(
+        new MyComponent.ValueChangeListener() {
+    @Override
+    public void valueChange() {
+        Notification.show("Value: " + mycomponent.getValue());
+    }
+});
+
+layout.addComponent(mycomponent);
+----
+
+[[gwt.javascript.server-side.component]]
+=== Basic Server-Side Component
+
+A JavaScript component extends the [classname]#AbstractJavaScriptComponent#,
+which handles the shared state and RPC for the component.
+
+
+----
+package com.vaadin.book.examples.client.js;
+
+@JavaScript({"mylibrary.js", "mycomponent-connector.js"})
+public class MyComponent extends AbstractJavaScriptComponent {
+    public interface ValueChangeListener extends Serializable {
+        void valueChange();
+    }
+    ArrayList<ValueChangeListener> listeners =
+            new ArrayList<ValueChangeListener>();
+    public void addValueChangeListener(
+                   ValueChangeListener listener) {
+        listeners.add(listener);
+    }
+    
+    public void setValue(String value) {
+        getState().value = value;
+    }
+    
+    public String getValue() {
+        return getState().value;
+    }
+
+    @Override
+    protected MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+}
+----
+
+Notice later when creating the JavaScript connector that its name must match the
+package name of this server-side class.
+
+The shared state of the component is as follows:
+
+
+----
+public class MyComponentState extends JavaScriptComponentState {
+    public String value;
+}
+----
+
+If the member variables are private, you need to have public setters and getters
+for them, which you can use in the component.
+
+
+
+[[gwt.javascript.connector]]
+== Defining a JavaScript Connector
+
+A JavaScript connector is a function that initializes the JavaScript component
+and handles communication between the server-side and the JavaScript code.//TOD
+Clarify -
+code?
+
+A connector is defined as a connector initializer function that is added to the
+[literal]#++window++# object. The name of the function must match the
+server-side class name, with the full package path. Instead of the Java dot
+notation for the package name, underscores need to be used as separators.
+
+The Vaadin client-side framework adds a number of methods to the connector
+function. The [methodname]#this.getElement()# method returns the HTML DOM
+element of the component. The [methodname]#this.getState()# returns a shared
+state object with the current state as synchronized from the server-side.
+
+
+----
+window.com_vaadin_book_examples_client_js_MyComponent =
+function() {
+    // Create the component
+    var mycomponent =
+        new mylibrary.MyComponent(this.getElement());
+    
+    // Handle changes from the server-side
+    this.onStateChange = function() {
+        mycomponent.setValue(this.getState().value);
+    };
+
+    // Pass user interaction to the server-side
+    var self = this;
+    mycomponent.click = function() {
+        self.onClick(mycomponent.getValue());
+    };
+};
+----
+
+In the above example, we pass user interaction using the JavaScript RPC
+mechanism, as described in the next section.
+
+
+[[gwt.javascript.rpc]]
+== RPC from JavaScript to Server-Side
+
+User interaction with the JavaScript component has to be passed to the
+server-side using an RPC (Remote Procedure Call) mechanism. The JavaScript RPC
+mechanism is almost equal to regular client-side widgets, as described in
+<<dummy/../../../framework/gwt/gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
+Server-Side">>.
+
+[[gwt.javascript.rpc.handling]]
+=== Handling RPC Calls on the Server-Side
+
+Let us begin with the RPC function registration on the server-side. RPC calls
+are handled on the server-side in function handlers that implement the
+[interfacename]#JavaScriptFunction# interface. A server-side function handler is
+registered with the [methodname]#addFunction()# method in
+[classname]#AbstractJavaScriptComponent#. The server-side registration actually
+defines a JavaScript method that is available in the client-side connector
+object.
+
+Continuing from the server-side [classname]#MyComponent# example we defined
+earlier, we add a constructor to it that registers the function.
+
+
+----
+public MyComponent() {
+    addFunction("onClick", new JavaScriptFunction() {
+        @Override
+        public void call(JsonArray arguments) {
+            getState().setValue(arguments.getString(0));
+            for (ValueChangeListener listener: listeners)
+                listener.valueChange();
+        }
+    });
+}
+----
+
+
+[[gwt.javascript.rpc.calling]]
+=== Making an RPC Call from JavaScript
+
+An RPC call is made simply by calling the RPC method in the connector. In the
+constructor function of the JavaScript connector, you could write as follows
+(the complete connector code was given earlier):
+
+
+----
+window.com_vaadin_book_examples_gwt_js_MyComponent =
+    function() {
+        ...
+        var connector = this;
+        mycomponent.click = function() {
+            connector.onClick(mycomponent.getValue());
+        };
+    };
+----
+
+Here, the [literal]#++mycomponent.click++# is a function in the example
+JavaScript library, as described in <<gwt.javascript.example>>. The
+[methodname]#onClick()# is the method we defined on the server-side. We pass a
+simple string parameter in the call.
+
+You can pass anything that is valid in JSON notation in the parameters.
+
+
+
+(((range="endofrange", startref="term.gwt.javascript")))
+
+

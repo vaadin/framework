@@ -1,0 +1,156 @@
+---
+title: Link
+order: 8
+layout: page
+---
+
+[[components.link]]
+= [classname]#Link#
+
+The [classname]#Link# component allows making hyperlinks. References to
+locations are represented as resource objects, explained in
+<<dummy/../../../framework/application/application-resources#application.resources,"Images
+and Other Resources">>. The [classname]#Link# is a regular HTML hyperlink, that
+is, an [literal]#++<a href>++# anchor element that is handled natively by the
+browser. Unlike when clicking a [classname]#Button#, clicking a
+[classname]#Link# does not cause an event on the server-side.
+
+Links to an arbitrary URL can be made by using an [classname]#ExternalResource#
+as follows:
+
+
+[source, java]
+----
+// Textual link
+Link link = new Link("Click Me!",
+        new ExternalResource("http://vaadin.com/"));
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.basic[on-line example, window="_blank"].
+
+You can use [methodname]#setIcon()# to make image links as follows:
+
+
+[source, java]
+----
+// Image link
+Link iconic = new Link(null,
+        new ExternalResource("http://vaadin.com/"));
+iconic.setIcon(new ThemeResource("img/nicubunu_Chain.png"));
+
+// Image + caption
+Link combo = new Link("To appease both literal and visual",
+        new ExternalResource("http://vaadin.com/"));
+combo.setIcon(new ThemeResource("img/nicubunu_Chain.png"));
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.basic[on-line example, window="_blank"].
+
+The resulting links are shown in <<figure.components.link.basic>>. You could add
+a " [literal]#++display: block++#" style for the icon element to place the
+caption below it.
+
+[[figure.components.link.basic]]
+.[classname]#Link# Example
+image::img/link.png[]
+
+With the simple constructor used in the above example, the resource is opened in
+the current window. Using the constructor that takes the target window as a
+parameter, or by setting the target window with [methodname]#setTargetName()#,
+you can open the resource in another window, such as a popup browser window/tab.
+As the target name is an HTML [literal]#++target++# string managed by the
+browser, the target can be any window, including windows not managed by the
+application itself. You can use the special underscored target names, such as
+[literal]#++_blank++# to open the link to a new browser window or tab.
+
+
+[source, java]
+----
+// Hyperlink to a given URL
+Link link = new Link("Take me a away to a faraway land",
+        new ExternalResource("http://vaadin.com/"));
+
+// Open the URL in a new window/tab
+link.setTargetName("_blank");
+        
+// Indicate visually that it opens in a new window/tab
+link.setIcon(new ThemeResource("icons/external-link.png"));
+link.addStyleName("icon-after-caption");
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
+
+Normally, the link icon is before the caption. You can have it right of the
+caption by reversing the text direction in the containing element.
+
+
+[source, css]
+----
+/* Position icon right of the link caption. */
+.icon-after-caption {
+    direction: rtl;
+}
+/* Add some padding around the icon. */
+.icon-after-caption .v-icon {
+    padding: 0 3px;
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
+
+The resulting link is shown in <<figure.components.link.new-window>>.
+
+[[figure.components.link.new-window]]
+.Link That Opens a New Window
+image::img/link-new.png[]
+
+With the [literal]#++_blank++# target, a normal new browser window is opened. If
+you wish to open it in a popup window (or tab), you need to give a size for the
+window with [methodname]#setTargetWidth()# and [methodname]#setTargetHeight()#.
+You can control the window border style with [methodname]#setTargetBorder()#,
+which takes any of the defined border styles [parameter]#TARGET_BORDER_DEFAULT#,
+[parameter]#TARGET_BORDER_MINIMAL#, and [parameter]#TARGET_BORDER_NONE#. The
+exact result depends on the browser.
+
+
+[source, java]
+----
+// Open the URL in a popup
+link.setTargetName("_blank");
+link.setTargetBorder(Link.TARGET_BORDER_NONE);
+link.setTargetHeight(300);
+link.setTargetWidth(400);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
+
+In addition to the [classname]#Link# component, Vaadin allows alternative ways
+to make hyperlinks. The [classname]#Button# component has a
+[parameter]#Reindeer.BUTTON_LINK# style name that makes it look like a
+hyperlink, while handling clicks in a server-side click listener instead of in
+the browser. Also, you can make hyperlinks (or any other HTML) in a
+[classname]#Label# in HTML content mode.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-link { }
+  a { }
+    .v-icon {}
+    span {}
+----
+
+The overall style for the [classname]#Link# component is [literal]#++v-link++#.
+The root element contains the [literal]#++<a href>++# hyperlink anchor. Inside
+the anchor are the icon, with [literal]#++v-icon++# style, and the caption in a
+text span.
+
+Hyperlink anchors have a number of __pseudo-classes__ that are active at
+different times. An unvisited link has [literal]#++a:link++# class and a visited
+link [literal]#++a:visited++#. When the mouse pointer hovers over the link, it
+will have a:hover, and when the mouse button is being pressed over the link, the
+[literal]#++a:active++# class. When combining the pseudo-classes in a selector,
+please notice that [literal]#++a:hover++# must come after an
+[literal]#++a:link++# and [literal]#++a:visited++#, and [literal]#++a:active++#
+after the [literal]#++a:hover++#.
+
+
+
+

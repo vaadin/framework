@@ -1,0 +1,96 @@
+---
+title: Request Handlers
+order: 4
+layout: page
+---
+
+[[advanced.requesthandler]]
+= Request Handlers
+
+Request handlers are useful for catching request parameters or generating
+dynamic content, such as HTML, images, PDF, or other content. You can provide
+HTTP content also with stream resources, as described in
+<<dummy/../../../framework/application/application-resources#application.resources.stream,"Stream
+Resources">>. The stream resources, however, are only usable from within a
+Vaadin application, such as in an [classname]#Image# component. Request handlers
+allow responding to HTTP requests made with the application URL, including GET
+or POST parameters. You could also use a separate servlet to generate dynamic
+content, but a request handler is associated with the user session and it can
+easily access data associated with the session and the user.
+
+To handle requests, you need to implement the [interfacename]#RequestHandler#
+interface. The [methodname]#handleRequest()# method gets the session, request,
+and response objects as parameters.
+
+If the handler writes a response, it must return [literal]#++true++#. This stops
+running other possible request handlers. Otherwise, it should return
+[literal]#++false++# so that another handler could return a response.
+Eventually, if no other handler writes a response, a UI will be created and
+initialized.
+
+In the following example, we catch requests for a sub-path in the URL for the
+servlet and write a plain text response. The servlet path consists of the
+context path and the servlet (sub-)path. Any additional path is passed to the
+request handler in the [parameter]#pathInfo# of the request. For example, if the
+full path is [filename]#/myapp/myui/rhexample#, the path info will be
+[filename]#/rhexample#. Also, request parameters are available.
+
+
+[source, java]
+----
+// A request handler for generating some content
+VaadinSession.getCurrent().addRequestHandler(
+        new RequestHandler() {
+    @Override
+    public boolean handleRequest(VaadinSession session,
+                                 VaadinRequest request,
+                                 VaadinResponse response)
+            throws IOException {
+        if ("/rhexample".equals(request.getPathInfo())) {
+            // Generate a plain text document
+            response.setContentType("text/plain");
+            response.getWriter().append(
+               "Here's some dynamically generated content.\n");
+            response.getWriter().format(Locale.ENGLISH,
+               "Time: %Tc\n", new Date());
+            
+            // Use shared session data
+            response.getWriter().format("Session data: %s\n",
+                session.getAttribute("mydata"));
+            
+            return true; // We wrote a response
+        } else
+            return false; // No response was written
+    }
+});
+----
+
+A request handler can be used by embedding it in a page or opening a new page
+with a link or a button. In the following example, we pass some data to the
+handler through a session attribute.
+
+
+[source, java]
+----
+// Input some shared data in the session
+TextField dataInput = new TextField("Some data");
+dataInput.addValueChangeListener(event ->
+    VaadinSession.getCurrent().setAttribute("mydata",
+        event.getProperty().getValue()));
+dataInput.setValue("Here's some");
+
+// Determine the base path for the servlet
+String servletPath = VaadinServlet.getCurrent()
+        .getServletContext().getContextPath()
+        + "/book"; // Servlet
+
+// Display the page in a pop-up window
+Link open = new Link("Click to Show the Page",
+    new ExternalResource(servletPath + "/rhexample"),
+    "_blank", 500, 350, BorderStyle.DEFAULT);
+
+layout.addComponents(dataInput, open);
+----
+
+
+

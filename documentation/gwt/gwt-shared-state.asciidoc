@@ -1,0 +1,296 @@
+---
+title: Shared State
+order: 5
+layout: page
+---
+
+[[gwt.shared-state]]
+= Shared State
+
+The basic communication from a server-side component to its the client-side
+widget counterpart is handled using a __shared state__. The shared state is
+serialized transparently. It should be considered read-only on the client-side,
+as it is not serialized back to the server-side.
+
+A shared state object simply needs to extend the
+[classname]#AbstractComponentState#. The member variables should normally be
+declared as public.
+
+
+----
+public class MyComponentState extends AbstractComponentState {
+    public String text;
+}
+----
+
+A shared state should never contain any logic. If the members have private
+visibility for some reason, you can also use public setters and getters, in
+which case the property must not be public.
+
+[[gwt.shared-state.location]]
+== Location of Shared-State Classes
+
+The shared-state classes are used by both server- and client-side classes, but
+widget set compilation requires that they must be located in a client-side
+source package. The default location is under a [filename]#client# package under
+the package of the [filename]#.gwt.xml# descriptor. If you wish to organize the
+shared classes separately from other client-side code, you can define separate
+client-side source packages for pure client-side classes and any shared classes.
+In addition to shared state classes, shared classes could include enumerations
+and other classes needed by shared-state or RPC communication.
+
+For example, you could have the following definitions in the
+[filename]#.gwt.xml# descriptor:
+
+
+----
+    <source path="client" />
+    <source path="shared" />
+----
+
+The paths are relative to the package containing the descriptor.
+
+
+[[gwt.shared-state.component]]
+== Accessing Shared State on Server-Side
+
+A server-side component can access the shared state with the
+[methodname]#getState()# method. It is required that you override the base
+implementation with one that returns the shared state object cast to the proper
+type, as follows:
+
+
+----
+@Override
+public MyComponentState getState() {
+    return (MyComponentState) super.getState();
+}
+----
+
+You can then use the [methodname]#getState()# to access the shared state object
+with the proper type.
+
+
+----
+public MyComponent() {
+    getState().setText("This is the initial state");
+    ....
+}
+----
+
+
+[[gwt.shared-state.connector]]
+== Handing Shared State in a Connector
+
+A connector can access a shared state with the [methodname]#getState()# method.
+The access should be read-only. It is required that you override the base
+implementation with one that returns the proper shared state type, as follows:
+
+
+----
+@Override
+public MyComponentState getState() {
+    return (MyComponentState) super.getState();
+}
+----
+
+State changes made on the server-side are communicated transparently to the
+client-side. When a state change occurs, the [methodname]#onStateChanged()#
+method in the connector is called. You should should always call the superclass
+method before anything else to handle changes to common component properties.
+
+
+----
+@Override
+public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+		
+    // Copy the state properties to the widget properties
+    final String text = getState().getText();
+    getWidget().setText(text);
+}
+----
+
+The crude [methodname]#onStateChanged()# method is called when any of the state
+properties is changed, allowing you to have even complex logic in how you
+manipulate the widget according to the state changes. In most cases, however,
+you can handle the property changes more easily and also more efficiently by
+using instead the [classname]#@OnStateChange# annotation on the handler methods
+for each property, as described next in <<gwt.shared-state.onstatechange>>, or
+by delegating the property value directly to the widget, as described in
+<<gwt.shared-state.delegatetowidget>>.
+
+ifdef::web[]
+The processing phases of state changes are described in more detail in
+<<dummy/../../../framework/gwt/gwt-advanced#gwt.advanced.phases,"Client-Side
+Processing Phases">>.
+endif::web[]
+
+
+[[gwt.shared-state.onstatechange]]
+== Handling Property State Changes with [classname]#@OnStateChange#
+
+The [classname]#@OnStateChange# annotation can be used to mark a connector
+method that handles state change on a particular property, given as parameter
+for the annotation. In addition to higher clarity, this avoids handling all
+property changes if a state change occurs in only one or some of them. However,
+if a state change can occur in multiple properties, you can only use this
+technique if the properties do not have interaction that prevents handling them
+separately in arbitrary order.
+
+We can replace the [methodname]#onStateChange()# method in the earlier connector
+example with the following:
+
+
+----
+@OnStateChange("text")
+void updateText() {
+    getWidget().setText(getState().text);
+}
+----
+
+If the shared state property and the widget property have same name and do not
+require any type conversion, as is the case in the above example, you could
+simplify this even further by using the [classname]#@DelegateToWidget#
+annotation for the shared state property, as described in
+<<gwt.shared-state.delegatetowidget>>.
+
+
+[[gwt.shared-state.delegatetowidget]]
+== Delegating State Properties to Widget
+
+The [classname]#@DelegateToWidget# annotation for a shared state property
+defines automatic delegation of the property value to the corresponding widget
+property of the same name and type, by calling the respective setter for the
+property in the widget.
+
+
+----
+public class MyComponentState extends AbstractComponentState {
+    @DelegateToWidget
+    public String text;
+}
+----
+
+This is equivalent to handling the state change in the connector, as done in the
+example in <<gwt.shared-state.onstatechange>>.
+
+If you want to delegate a shared state property to a widget property of another
+name, you can give the property name as a string parameter for the annotation.
+
+
+----
+public class MyComponentState extends AbstractComponentState {
+    @DelegateToWidget("description")
+    public String text;
+}
+----
+
+
+[[gwt.shared-state.referring]]
+== Referring to Components in Shared State
+
+While you can pass any regular Java objects through a shared state, referring to
+another component requires special handling because on the server-side you can
+only refer to a server-side component, while on the client-side you only have
+widgets. References to components can be made by referring to their connectors
+(all server-side components implement the [interfacename]#Connector# interface).
+
+
+----
+public class MyComponentState extends AbstractComponentState {
+    public Connector otherComponent;
+}
+----
+
+You could then access the component on the server-side as follows:
+
+
+----
+public class MyComponent {
+    public void MyComponent(Component otherComponent) {
+        getState().otherComponent = otherComponent;
+    }
+
+    public Component getOtherComponent() {
+        return (Component)getState().otherComponent;
+    }
+
+    // And the cast method
+    @Override
+    public MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+}
+----
+
+On the client-side, you should cast it in a similar fashion to a
+[classname]#ComponentConnector#, or possibly to the specific connector type if
+it is known.
+
+
+[[gwt.shared-state.resource]]
+== Sharing Resources
+
+Resources, which commonly are references to icons or other images, are another
+case of objects that require special handling. A [interfacename]#Resource#
+object exists only on the server-side and on the client-side you have an URL to
+the resource. You need to use the [methodname]#setResource()# and
+[methodname]#getResource()# on the server-side to access a resource, which is
+serialized to the client-side separately.
+
+Let us begin with the server-side API:
+
+
+----
+public class MyComponent extends AbstractComponent {
+    ...
+
+    public void setMyIcon(Resource myIcon) {
+        setResource("myIcon", myIcon);
+    }
+
+    public Resource getMyIcon() {
+        return getResource("myIcon");
+    }
+}
+----
+
+On the client-side, you can then get the URL of the resource with
+[methodname]#getResourceUrl()#.
+
+
+----
+@Override
+public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+    ...
+	
+    // Get the resource URL for the icon
+    getWidget().setMyIcon(getResourceUrl("myIcon"));
+}
+----
+
+The widget could then use the URL, for example, as follows:
+
+
+----
+public class MyWidget extends Label {
+    ...
+    
+    Element imgElement = null;
+    
+    public void setMyIcon(String url) {
+        if (imgElement == null) {
+            imgElement = DOM.createImg();
+            getElement().appendChild(imgElement);
+        }
+        
+        DOM.setElementAttribute(imgElement, "src", url);
+    }
+}
+----
+
+
+
+
