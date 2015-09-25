@@ -504,8 +504,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param service
      *            The service associated with the sessio
      * @return The attribute name used for storing the session
+     * @since
      */
-    private static String getSessionAttributeName(VaadinService service) {
+    protected static String getSessionAttributeName(VaadinService service) {
         return VaadinSession.class.getName() + "." + service.getServiceName();
     }
 
@@ -536,8 +537,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * Updates the transient session lock from VaadinService.
+     * 
+     * @since
      */
-    private void refreshLock() {
+    protected void refreshLock() {
         assert lock == null || lock == service.getSessionLock(session) : "Cannot change the lock from one instance to another";
         assert hasLock(service, session);
         lock = service.getSessionLock(session);
@@ -814,6 +817,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Checks if the current thread has exclusive access to this VaadinSession
      *
      * @return true if the thread has exclusive access, false otherwise
+     * @since
      */
     public boolean hasLock() {
         ReentrantLock l = ((ReentrantLock) getLockInstance());
@@ -825,8 +829,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * WrappedSession.
      *
      * @return true if this thread has exclusive access, false otherwise
+     * @since
      */
-    private static boolean hasLock(VaadinService service, WrappedSession session) {
+    protected static boolean hasLock(VaadinService service,
+            WrappedSession session) {
         ReentrantLock l = (ReentrantLock) service.getSessionLock(session);
         return l.isHeldByCurrentThread();
     }

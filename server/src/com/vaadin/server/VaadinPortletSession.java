@@ -316,4 +316,15 @@ public class VaadinPortletSession extends VaadinSession {
                     "Portlet mode can only be changed from a portlet request");
         }
     }
+
+    @Override
+    public void storeInSession(VaadinService service, WrappedSession session) {
+        assert hasLock(service, session);
+        ((WrappedPortletSession) session).setAttribute(
+                getSessionAttributeName(service), this,
+                PortletSession.APPLICATION_SCOPE);
+
+        refreshLock();
+    }
+
 }
