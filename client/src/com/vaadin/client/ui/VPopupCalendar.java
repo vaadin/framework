@@ -212,6 +212,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     protected void onDetach() {
         super.onDetach();
         descriptionForAssisitveDevicesElement.removeFromParent();
+        closeCalendarPanel();
     }
 
     @SuppressWarnings("deprecation")
