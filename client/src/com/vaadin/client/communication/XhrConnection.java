@@ -151,14 +151,6 @@ public class XhrConnection {
                             + Util.round(Profiler.getRelativeTimeMillis()
                                     - requestStartTime, 3) + "ms");
 
-            String contentType = response.getHeader("Content-Type");
-            if (contentType == null
-                    || !contentType.startsWith("application/json")) {
-                getConnectionStateHandler().xhrInvalidContent(
-                        new XhrConnectionError(request, payload, response));
-                return;
-            }
-
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
 
