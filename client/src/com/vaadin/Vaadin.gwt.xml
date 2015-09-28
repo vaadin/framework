@@ -80,6 +80,12 @@
         <when-property-is value="ie10" name="user.agent" />
     </replace-with>
 
+    <replace-with
+        class="com.vaadin.client.communication.DefaultConnectionStateHandler">
+        <when-type-is
+            class="com.vaadin.client.communication.ConnectionStateHandler" />
+    </replace-with>
+
     <!-- Make Sass linking available -->
     <define-linker name="sass"
         class="com.vaadin.sass.linker.SassLinker" />

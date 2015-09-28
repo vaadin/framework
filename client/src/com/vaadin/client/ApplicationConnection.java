@@ -45,7 +45,6 @@ import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.ConnectionStateHandler;
-import com.vaadin.client.communication.DefaultConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.MessageHandler;
 import com.vaadin.client.communication.MessageSender;
@@ -360,8 +359,7 @@ public class ApplicationConnection implements HasHandlers {
         tooltip = GWT.create(VTooltip.class);
         loadingIndicator = GWT.create(VLoadingIndicator.class);
         serverRpcQueue = GWT.create(ServerRpcQueue.class);
-        connectionStateHandler = GWT
-                .create(DefaultConnectionStateHandler.class);
+        connectionStateHandler = GWT.create(ConnectionStateHandler.class);
         messageHandler = GWT.create(MessageHandler.class);
         messageSender = GWT.create(MessageSender.class);
     }
