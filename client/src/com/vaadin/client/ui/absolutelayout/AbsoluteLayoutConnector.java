@@ -74,16 +74,6 @@ public class AbsoluteLayoutConnector extends
         }
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ui.AbstractComponentConnector#init()
-     */
-    @Override
-    protected void init() {
-        super.init();
-    }
-
     /**
      * Returns the deepest nested child component which contains "element". The
      * child component is also returned if "element" is part of its caption.

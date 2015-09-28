@@ -26,11 +26,6 @@ import com.vaadin.shared.ui.flash.FlashState;
 public class FlashConnector extends AbstractComponentConnector {
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     public VFlash getWidget() {
         return (VFlash) super.getWidget();
     }

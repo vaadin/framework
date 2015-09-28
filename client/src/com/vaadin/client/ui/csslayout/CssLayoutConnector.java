@@ -64,16 +64,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.client.ui.AbstractComponentConnector#init()
-     */
-    @Override
-    protected void init() {
-        super.init();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.client.ui.AbstractLayoutConnector#getState()
      */
     @Override

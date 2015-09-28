@@ -26,11 +26,6 @@ import com.vaadin.shared.ui.browserframe.BrowserFrameState;
 public class BrowserFrameConnector extends AbstractComponentConnector {
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     public VBrowserFrame getWidget() {
         return (VBrowserFrame) super.getWidget();
     }

@@ -32,11 +32,6 @@ import com.vaadin.ui.Link;
 public class LinkConnector extends AbstractComponentConnector {
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     public LinkState getState() {
         return (LinkState) super.getState();
     }

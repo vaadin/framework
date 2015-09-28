@@ -18,12 +18,16 @@ package com.vaadin.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.StyleConstants;
@@ -31,6 +35,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
@@ -39,11 +44,15 @@ import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ContextClickRpc;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
+
+    private HandlerRegistration contextHandler = null;
 
     private Widget widget;
 
@@ -62,6 +71,42 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * Default constructor
      */
     public AbstractComponentConnector() {
+    }
+
+    @OnStateChange("registeredEventListeners")
+    void handleContextClickListenerChange() {
+        if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
+            contextHandler = getWidget().addDomHandler(
+                    new ContextMenuHandler() {
+                        @Override
+                        public void onContextMenu(ContextMenuEvent event) {
+                            sendContextClickEvent(event);
+                        }
+                    }, ContextMenuEvent.getType());
+        } else if (contextHandler != null
+                && !hasEventListener(EventId.CONTEXT_CLICK)) {
+            contextHandler.removeHandler();
+            contextHandler = null;
+        }
+    }
+
+    /**
+     * This method sends the context menu event to the server-side. Can be
+     * overridden to provide extra information through an alternative RPC
+     * interface.
+     * 
+     * @since
+     * @param event
+     */
+    protected void sendContextClickEvent(ContextMenuEvent event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // The default context click implementation only provides the mouse
+        // coordinates relative to root element of widget.
+        getRpcProxy(ContextClickRpc.class).contextClick(
+                MouseEventDetailsBuilder.buildMouseEventDetails(
+                        event.getNativeEvent(), getWidget().getElement()));
     }
 
     /**

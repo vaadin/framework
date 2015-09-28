@@ -52,11 +52,6 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
     private String resourceUrl;
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         // if theme has changed the resourceUrl may need to be updated

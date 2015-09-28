@@ -34,6 +34,9 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
+import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.ContextClickEvent.ContextClickListener;
+import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
@@ -49,6 +52,9 @@ import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
+import com.vaadin.shared.ContextClickRpc;
+import com.vaadin.shared.EventId;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Field.ValueChangeEvent;
@@ -67,7 +73,7 @@ import com.vaadin.util.ReflectTools;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractComponent extends AbstractClientConnector
-        implements Component {
+        implements Component, ContextClickNotifier {
 
     /* Private members */
 
@@ -1389,6 +1395,30 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         }
         return false;
+    }
+
+    @Override
+    public void addContextClickListener(ContextClickListener listener) {
+        // Register default Context Click RPC if needed. This RPC won't be
+        // called if there are no listeners on the server-side. A client-side
+        // connector can override this and use a different RPC channel.
+        if (getRpcManager(ContextClickRpc.class.getName()) == null) {
+            registerRpc(new ContextClickRpc() {
+                @Override
+                public void contextClick(MouseEventDetails details) {
+                    fireEvent(new ContextClickEvent(AbstractComponent.this,
+                            details));
+                }
+            });
+        }
+
+        addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener,
+                ContextClickEvent.CONTEXT_CLICK_METHOD);
+    }
+
+    @Override
+    public void removeContextClickListener(ContextClickListener listener) {
+        removeListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener);
     }
 
     private static final Logger getLogger() {
