@@ -24,7 +24,14 @@ public class ResponsiveStyles extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new ResponsiveStylesDesign());
+        ResponsiveStylesDesign design = new ResponsiveStylesDesign();
+        setContent(design);
+
+        boolean collapsed = request.getParameter("collapsed") != null;
+
+        design.collapsed.setVisible(collapsed);
+        design.narrow.setVisible(!collapsed);
+        design.wide.setVisible(!collapsed);
     }
 
 }

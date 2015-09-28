@@ -1033,15 +1033,13 @@ public class ValoTheme {
      * Set the <em><b>primary</b></em> style name of a Label or a Button to this
      * style name to create an application logo. The logo is designed to be
      * placed inside a {@link #MENU_PART} layout.
-     * </p>
      *
      * <p>
      * The text content of the logo should be very short, since the logo area
      * only shows approximately three letters. Using one of the
      * {@link FontAwesome} icons is a good way to quickly create a logo for your
      * application.
-     * </p>
-     * </p>
+     * <p>
      *
      * <h4>Example</h4>
      *
@@ -1053,4 +1051,26 @@ public class ValoTheme {
      */
     public static final String MENU_LOGO = "valo-menu-logo";
 
+    /**
+     * Add this style name to your {@link #UI_WITH_MENU responsive}
+     * {@link #MENU_ROOT valo menu} element to make it appear automatically on
+     * hover - without adding any code.
+     * <p>
+     * The menu will appear on mouse over on desktop, or when tapping on touch
+     * devices.
+     * <p>
+     * <h4>Example</h4>
+     *
+     * <pre>
+     * HorizontalLayout menu = new HorizontalLayout();
+     * Responsive.makeResponsive(menu);
+     * menu.addStyleName(ValoTheme.UI_WITH_MENU);
+     *
+     * CssLayout menuArea = new CssLayout();
+     * menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
+     * menuArea.addStyleName(ValoTheme.MENU_APPEAR_ON_HOVER);
+     * menu.addComponent(menuArea);
+     * </pre>
+     */
+    public static final String MENU_APPEAR_ON_HOVER = "valo-menu-hover";
 }
