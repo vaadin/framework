@@ -1,56 +1,84 @@
 <!DOCTYPE html>
 <html>
  <body>
-  <v-vertical-layout primary-style-name="v-verticallayout" spacing="true" size-auto="true" margin="true">
-   <v-css-layout caption="801-1100px = narrow menu" width="801px" height="200px">
+  <v-vertical-layout size-auto="true">
+  <v-vertical-layout spacing="true" size-auto="true" margin="true">
+
+   <v-css-layout _id="narrow" caption="801-1100px = narrow menu" width="801px" height="200px">
     <v-horizontal-layout style-name="valo-menu-responsive" responsive="true" size-full="true">
      <v-css-layout style-name="valo-menu">
       <v-css-layout style-name="valo-menu-part">
-       <v-horizontal-layout style-name="valo-menu-title" width-full="true" _id="menuTitle2">
-        <v-label size-auto="true" _id="menuTitleLabel2" :middle="" :expand="">
+       <v-horizontal-layout style-name="valo-menu-title" width-full="true" >
+        <v-label size-auto="true"  :middle="" :expand="">
           The
          <strong>Application</strong>
         </v-label>
        </v-horizontal-layout>
-       <v-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text="" _id="menuToggle2">
+       <v-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text="" >
          Menu
        </v-button>
-       <v-css-layout style-name="valo-menuitems" _id="menuItems2">
-        <v-button icon="fonticon://FontAwesome/f01c" primary-style-name="valo-menu-item" _id="inboxButton2">
+       <v-css-layout style-name="valo-menuitems" >
+        <v-button icon="fonticon://FontAwesome/f01c" primary-style-name="valo-menu-item" >
           Inbox
          <span class="valo-menu-badge">7</span>
         </v-button>
        </v-css-layout>
       </v-css-layout>
      </v-css-layout>
-     <v-vertical-layout spacing="true" margin="true" _id="content2" :expand=""></v-vertical-layout>
+     <v-vertical-layout spacing="true" margin="true"  :expand=""></v-vertical-layout>
     </v-horizontal-layout>
    </v-css-layout>
    
-   <v-css-layout caption="Over 1100px = wide menu" width="1101px" height="200px">
+   <v-css-layout _id="wide" caption="Over 1100px = wide menu" width="1101px" height="200px">
     <v-horizontal-layout style-name="valo-menu-responsive" responsive="true" size-full="true">
      <v-css-layout style-name="valo-menu">
       <v-css-layout style-name="valo-menu-part">
-       <v-horizontal-layout style-name="valo-menu-title" width-full="true" _id="menuTitle3">
-        <v-label size-auto="true" _id="menuTitleLabel3" :middle="" :expand="">
+       <v-horizontal-layout style-name="valo-menu-title" width-full="true" >
+        <v-label size-auto="true"  :middle="" :expand="">
           The
          <strong>Application</strong>
         </v-label>
        </v-horizontal-layout>
-       <v-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text="" _id="menuToggle3">
+       <v-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text="" >
          Menu
        </v-button>
-       <v-css-layout style-name="valo-menuitems" _id="menuItems3">
-        <v-button icon="fonticon://FontAwesome/f01c" primary-style-name="valo-menu-item" _id="inboxButton3">
+       <v-css-layout style-name="valo-menuitems" >
+        <v-button icon="fonticon://FontAwesome/f01c" primary-style-name="valo-menu-item" >
           Inbox
          <span class="valo-menu-badge">7</span>
         </v-button>
        </v-css-layout>
       </v-css-layout>
      </v-css-layout>
-     <v-vertical-layout spacing="true" margin="true" _id="content3" :expand=""></v-vertical-layout>
+     <v-vertical-layout spacing="true" margin="true"  :expand=""></v-vertical-layout>
     </v-horizontal-layout>
    </v-css-layout>
+ </v-vertical-layout>  
+      <v-css-layout _id="collapsed" caption="Collapsed menu w/ hover" width="500px" height="200px">
+    <v-horizontal-layout style-name="valo-menu-responsive" responsive="true" size-full="true">
+     <v-css-layout style-name="valo-menu valo-menu-hover">
+      <v-css-layout style-name="valo-menu-part">
+       <v-horizontal-layout style-name="valo-menu-title" width-full="true">
+        <v-label size-auto="true" :middle="" :expand="">
+          The
+         <strong>Application</strong>
+        </v-label>
+       </v-horizontal-layout>
+       <v-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text="">
+         Menu
+       </v-button>
+       <v-css-layout style-name="valo-menuitems">
+        <v-button icon="fonticon://FontAwesome/f01c" primary-style-name="valo-menu-item" >
+          Inbox
+         <span class="valo-menu-badge">7</span>
+        </v-button>
+       </v-css-layout>
+      </v-css-layout>
+     </v-css-layout>
+     <v-vertical-layout spacing="true" margin="true"  :expand=""></v-vertical-layout>
+    </v-horizontal-layout>
+   </v-css-layout>
+   
   </v-vertical-layout>
  </body>
 </html>

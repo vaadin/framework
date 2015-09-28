@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -30,11 +31,18 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class ResponsiveStylesTest extends MultiBrowserTest {
 
+    /**
+     * Use this parameter to test the collapsed menu state.
+     */
+    public static final String COLLAPSED_MENU_TEST_PARAM = "collapsed";
+
     private static final String MENU_STYLENAME = "valo-menu";
     private static final int NARROW_ELEMENT_INDEX = 0;
     private static final int NARROW_WIDTH = 112;
     private static final int WIDE_ELEMENT_INDEX = 1;
     private static final int WIDE_WIDTH = 146;
+
+    private static final String TOGGLE_STYLENAME = "valo-menu-toggle";
 
     /**
      * Tests that valo-menu-responsive can be used in any element on the page,
@@ -58,5 +66,29 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
         assertThat(wideWidth, equalTo(WIDE_WIDTH));
 
         compareScreen("defaultMenuWidths");
+    }
+
+    /**
+     * Tests that the valo-menu-hover style makes the menu appear on mouseover.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testValoMenuResponsiveHover() throws Exception {
+        openTestURL(COLLAPSED_MENU_TEST_PARAM);
+
+        compareScreen("collapsedMenu");
+
+        List<WebElement> toggles = findElements(
+                com.vaadin.testbench.By.className(TOGGLE_STYLENAME));
+
+        // Only one menu in the collapsed example
+        WebElement toggle = toggles.get(0);
+
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(toggle);
+        actions.perform();
+
+        compareScreen("expandedMenu");
     }
 }
