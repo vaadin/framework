@@ -62,6 +62,7 @@ public class HeaderFooterClickLeftRightMiddleTest extends MultiBrowserTest {
 
         table.getFooterCell(1).doubleClick();
         assertAnyLogText("8. Double click on footer col2 using left",
+                "9. Double click on footer col2 using left",
                 "10. Double click on footer col2 using left");
     }
 

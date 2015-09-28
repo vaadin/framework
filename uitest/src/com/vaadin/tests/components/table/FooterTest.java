@@ -50,13 +50,13 @@ public class FooterTest extends MultiBrowserTest {
 
         TableElement table = $(TableElement.class).first();
 
-        TestBenchElement footer0 = table.getFooterCell(0);
-        TestBenchElement footer1 = table.getFooterCell(1);
-        TestBenchElement footer2 = table.getFooterCell(2);
+        TestBenchElement footer1 = table.getFooterCell(0);
+        TestBenchElement footer2 = table.getFooterCell(1);
+        TestBenchElement footer3 = table.getFooterCell(2);
 
-        assertEquals("Footer1", footer0.getText());
-        assertEquals("Footer2", footer1.getText());
-        assertEquals("Footer3", footer2.getText());
+        assertEquals("Footer1", footer1.getText());
+        assertEquals("Footer2", footer2.getText());
+        assertEquals("Footer3", footer3.getText());
 
         CheckBoxElement checkBox = $(CheckBoxElement.class).first();
         checkBox.click();
@@ -75,13 +75,13 @@ public class FooterTest extends MultiBrowserTest {
 
         table = $(TableElement.class).first();
 
-        footer0 = table.getFooterCell(0);
-        footer1 = table.getFooterCell(1);
-        footer2 = table.getFooterCell(2);
+        footer1 = table.getFooterCell(0);
+        footer2 = table.getFooterCell(1);
+        footer3 = table.getFooterCell(2);
 
-        assertEquals("Footer1", footer0.getText());
-        assertEquals("Footer2", footer1.getText());
-        assertEquals("Footer3", footer2.getText());
+        assertEquals("Footer1", footer1.getText());
+        assertEquals("Footer2", footer2.getText());
+        assertEquals("Footer3", footer3.getText());
 
         // open table column selector menu
         table.findElement(By.className("v-table-column-selector")).click();
@@ -105,45 +105,51 @@ public class FooterTest extends MultiBrowserTest {
 
         TextFieldElement tf = $(TextFieldElement.class).first();
         tf.clear();
+        waitUntiltextFieldIsChangedTo(tf, "");
         tf.sendKeys("fuu");
+        waitUntiltextFieldIsChangedTo(tf, "fuu");
         ButtonElement button = $(ButtonElement.class).first();
         button.click();
         table = $(TableElement.class).first();
-        footer0 = table.getFooterCell(0);
-        assertEquals("fuu", footer0.getText());
+        footer1 = table.getFooterCell(0);
+        assertEquals("fuu", footer1.getText());
 
         tf = $(TextFieldElement.class).get(1);
         tf.clear();
+        waitUntiltextFieldIsChangedTo(tf, "");
         tf.sendKeys("bar");
+        waitUntiltextFieldIsChangedTo(tf, "bar");
         button = $(ButtonElement.class).get(1);
         button.click();
         table = $(TableElement.class).first();
-        footer1 = table.getFooterCell(1);
-        assertEquals("bar", footer1.getText());
+        footer2 = table.getFooterCell(1);
+        assertEquals("bar", footer2.getText());
 
         tf = $(TextFieldElement.class).get(2);
         tf.clear();
-        tf.sendKeys("");
+        waitUntiltextFieldIsChangedTo(tf, "");
         button = $(ButtonElement.class).get(2);
         button.click();
         table = $(TableElement.class).first();
-        footer2 = table.getFooterCell(2);
-        assertEquals("", footer2.getText().trim());
+        footer3 = table.getFooterCell(2);
+        assertEquals("", footer3.getText().trim());
 
         TextFieldElement tf1 = $(TextFieldElement.class).first();
         tf1.clear();
+        waitUntiltextFieldIsChangedTo(tf1, "");
         tf1.sendKeys("Footer1");
+        waitUntiltextFieldIsChangedTo(tf1, "Footer1");
 
         TextFieldElement tf2 = $(TextFieldElement.class).get(1);
         tf2.clear();
+        waitUntiltextFieldIsChangedTo(tf2, "");
         tf2.sendKeys("Footer2");
+        waitUntiltextFieldIsChangedTo(tf2, "Footer2");
 
         TextFieldElement tf3 = $(TextFieldElement.class).get(2);
         tf3.clear();
+        waitUntiltextFieldIsChangedTo(tf3, "");
         tf3.sendKeys("Footer3");
-
-        waitUntiltextFieldIsChangedTo(tf1, "Footer1");
-        waitUntiltextFieldIsChangedTo(tf2, "Footer2");
         waitUntiltextFieldIsChangedTo(tf3, "Footer3");
 
         button = $(ButtonElement.class).first();
@@ -158,8 +164,8 @@ public class FooterTest extends MultiBrowserTest {
         waitUntilFooterCellIsChangedTo(2, "Footer3");
 
         table = $(TableElement.class).first();
-        footer0 = table.getFooterCell(0);
-        assertEquals("Footer1", footer0.getText());
+        footer1 = table.getFooterCell(0);
+        assertEquals("Footer1", footer1.getText());
 
         if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
             // excluded IE8 since its screenshots varies from run-to-run
