@@ -161,11 +161,6 @@ public class GridClientRenderers extends MultiBrowserTest {
         String colorRed = "rgba(255, 0, 0, 1)";
         String colorWhite = "rgba(255, 255, 255, 1)";
         String colorDark = "rgba(239, 240, 241, 1)";
-        if (BrowserUtil.isChrome(desiredCapabilities)) {
-            colorRed = "rgb(255, 0, 0)";
-            colorWhite = "rgb(255, 255, 255)";
-            colorDark = "rgb(239, 240, 241)";
-        }
 
         openTestURL();
 
