@@ -132,7 +132,7 @@ public class UIState extends TabIndexState {
         public String dialogTextGaveUp = "Server connection lost.";
         public int reconnectAttempts = 10000;
         public int reconnectInterval = 5000;
-        public int dialogGracePeriod = 1000;
+        public int dialogGracePeriod = 400;
         public boolean dialogModal = false;
     }
 
