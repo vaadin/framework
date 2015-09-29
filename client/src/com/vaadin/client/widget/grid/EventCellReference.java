@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
-import com.vaadin.client.widgets.Grid.Section;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * A data class which contains information which identifies a cell being the

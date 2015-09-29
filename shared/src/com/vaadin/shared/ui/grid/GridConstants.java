@@ -27,6 +27,13 @@ import java.io.Serializable;
 public final class GridConstants implements Serializable {
 
     /**
+     * Enum describing different sections of Grid.
+     */
+    public enum Section {
+        HEADER, BODY, FOOTER
+    }
+
+    /**
      * Default padding in pixels when scrolling programmatically, without an
      * explicitly defined padding value.
      */

@@ -20,6 +20,7 @@ import java.util.List;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * Client-to-server RPC interface for the Grid component
@@ -68,6 +69,24 @@ public interface GridServerRpc extends ServerRpc {
      *            mouse event details
      */
     void itemClick(String rowKey, String columnId, MouseEventDetails details);
+
+    /**
+     * Informs the server that a context click has happened inside of Grid.
+     * 
+     * @since
+     * @param rowIndex
+     *            index of clicked row in Grid section
+     * @param rowKey
+     *            a key identifying the clicked item
+     * @param columnId
+     *            column id identifying the clicked property
+     * @param section
+     *            grid section (header, footer, body)
+     * @param details
+     *            mouse event details
+     */
+    void contextClick(int rowIndex, String rowKey, String columnId,
+            Section section, MouseEventDetails details);
 
     /**
      * Informs the server that the columns of the Grid have been reordered.

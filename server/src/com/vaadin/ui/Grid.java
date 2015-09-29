@@ -68,6 +68,7 @@ import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
@@ -92,6 +93,7 @@ import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -383,6 +385,73 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            An event providing more information about the error
          */
         void commitError(CommitErrorEvent event);
+    }
+
+    /**
+     * ContextClickEvent for the Grid Component.
+     * 
+     * @since
+     */
+    public static class GridContextClickEvent extends ContextClickEvent {
+
+        private final Object itemId;
+        private final int rowIndex;
+        private final Object propertyId;
+        private final Section section;
+
+        public GridContextClickEvent(Grid source,
+                MouseEventDetails mouseEventDetails, Section section,
+                int rowIndex, Object itemId, Object propertyId) {
+            super(source, mouseEventDetails);
+            this.itemId = itemId;
+            this.propertyId = propertyId;
+            this.section = section;
+            this.rowIndex = rowIndex;
+        }
+
+        /**
+         * Returns the item id of context clicked row.
+         * 
+         * @return item id of clicked row; <code>null</code> if header or footer
+         */
+        public Object getItemId() {
+            return itemId;
+        }
+
+        /**
+         * Returns property id of clicked column.
+         * 
+         * @return property id
+         */
+        public Object getPropertyId() {
+            return propertyId;
+        }
+
+        /**
+         * Return the clicked section of Grid.
+         * 
+         * @return section of grid
+         */
+        public Section getSection() {
+            return section;
+        }
+
+        /**
+         * Returns the clicked row index relative to Grid section. In the body
+         * of the Grid the index is the item index in the Container. Header and
+         * Footer rows for index can be fetched with
+         * {@link Grid#getHeaderRow(int)} and {@link Grid#getFooterRow(int)}.
+         * 
+         * @return row index in section
+         */
+        public int getRowIndex() {
+            return rowIndex;
+        }
+
+        @Override
+        public Grid getComponent() {
+            return (Grid) super.getComponent();
+        }
     }
 
     /**
@@ -4238,6 +4307,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             public void editorClose(String rowKey) {
                 fireEvent(new EditorCloseEvent(Grid.this, getKeyMapper().get(
                         rowKey)));
+            }
+
+            @Override
+            public void contextClick(int rowIndex, String rowKey,
+                    String columnId, Section section, MouseEventDetails details) {
+                Object itemId = null;
+                if (rowKey != null) {
+                    itemId = getKeyMapper().get(rowKey);
+                }
+
+                fireEvent(new GridContextClickEvent(Grid.this, details,
+                        section, rowIndex, itemId,
+                        getPropertyIdByColumnId(columnId)));
             }
         });
 

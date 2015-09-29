@@ -17,6 +17,7 @@ package com.vaadin.client.connectors;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;

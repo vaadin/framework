@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.WidgetUtil;
@@ -33,7 +34,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.Section;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * An abstract superclass for renderers that render clickable widgets. Click

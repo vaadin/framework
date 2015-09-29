@@ -20,7 +20,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridDoubleClickHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
-import com.vaadin.client.widgets.Grid.Section;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * Represents native mouse double click event in Grid.

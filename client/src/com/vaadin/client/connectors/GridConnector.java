@@ -32,6 +32,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -54,6 +55,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
+import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -77,6 +79,7 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
@@ -84,6 +87,7 @@ import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState;
@@ -1186,6 +1190,27 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         return super.getTooltipInfo(element);
+    }
+
+    @Override
+    protected void sendContextClickEvent(ContextMenuEvent event) {
+        EventCellReference<JsonObject> eventCell = getWidget().getEventCell();
+
+        Section section = eventCell.getSection();
+        String rowKey = null;
+        if (eventCell.isBody()) {
+            rowKey = getRowKey(eventCell.getRow());
+        }
+
+        String columnId = getColumnId(eventCell.getColumn());
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent());
+
+        getRpcProxy(GridServerRpc.class).contextClick(eventCell.getRowIndex(),
+                rowKey, columnId, section, details);
+
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     /**

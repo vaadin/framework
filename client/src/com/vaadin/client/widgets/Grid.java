@@ -165,6 +165,7 @@ import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
@@ -216,13 +217,6 @@ public class Grid<T> extends ResizeComposite implements
         com.google.gwt.user.client.ui.Focusable, HasWidgets, HasEnabled {
 
     private static final String SELECT_ALL_CHECKBOX_CLASSNAME = "-select-all-checkbox";
-
-    /**
-     * Enum describing different sections of Grid.
-     */
-    public enum Section {
-        HEADER, BODY, FOOTER
-    }
 
     /**
      * Abstract base class for Grid header and footer sections.

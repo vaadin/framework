@@ -20,7 +20,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridClickHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
-import com.vaadin.client.widgets.Grid.Section;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * Represents native mouse click event in Grid.

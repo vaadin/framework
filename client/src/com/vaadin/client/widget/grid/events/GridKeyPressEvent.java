@@ -20,7 +20,7 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.AbstractGridKeyEvent;
-import com.vaadin.client.widgets.Grid.Section;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * Represents native key press event in Grid.
