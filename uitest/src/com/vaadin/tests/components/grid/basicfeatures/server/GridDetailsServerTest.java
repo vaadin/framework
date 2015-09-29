@@ -59,7 +59,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void openVisibleDetails() {
+    public void openWithNoGenerator() {
         try {
             getGridElement().getDetails(0);
             fail("Expected NoSuchElementException");
@@ -67,14 +67,6 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
             // expected
         }
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        getGridElement().getDetails(0);
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void closeVisibleDetails() {
-        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-
         getGridElement().getDetails(0);
     }
 
@@ -220,7 +212,6 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
 
         assertEquals("Two", getGridElement().getDetails(0).getText());
-
     }
 
     @Test

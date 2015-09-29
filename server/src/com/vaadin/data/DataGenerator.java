@@ -47,11 +47,11 @@ public interface DataGenerator extends Serializable {
 
     /**
      * Informs the DataGenerator that an item id has been dropped and is no
-     * longer needed.
+     * longer needed. This method should clean up any unneeded stored data
+     * related to the item.
      * 
      * @param itemId
      *            removed item id
      */
     public void destroyData(Object itemId);
-
 }

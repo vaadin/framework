@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
-import com.google.gwt.thirdparty.guava.common.collect.Maps;
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -43,14 +40,10 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -220,167 +213,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
     }
 
-    /**
-     * A class that makes detail component related internal communication
-     * possible between {@link RpcDataProviderExtension} and grid.
-     * 
-     * @since 7.5.0
-     * @author Vaadin Ltd
-     */
-    // TODO this should probably be a static nested class
-    public final class DetailComponentManager implements DataGenerator {
-        /**
-         * This map represents all the components that have been requested for
-         * each item id.
-         * <p>
-         * Normally this map is consistent with what is displayed in the
-         * component hierarchy (and thus the DOM). The only time this map is out
-         * of sync with the DOM is between the any calls to
-         * {@link #createDetails(Object)} or {@link #destroyDetails(Object)},
-         * and {@link GridClientRpc#setDetailsConnectorChanges(Set)}.
-         * <p>
-         * This is easily checked: if {@link #unattachedComponents} is
-         * {@link Collection#isEmpty() empty}, then this field is consistent
-         * with the connector hierarchy.
-         */
-        private final Map<Object, Component> visibleDetailsComponents = Maps
-                .newHashMap();
-
-        /**
-         * Keeps tabs on all the details that did not get a component during
-         * {@link #createDetails(Object)}.
-         */
-        private final Set<Object> emptyDetails = Sets.newHashSet();
-
-        private Grid grid;
-
-        /**
-         * Creates a details component by the request of the client side, with
-         * the help of the user-defined {@link DetailsGenerator}.
-         * <p>
-         * Also keeps internal bookkeeping up to date.
-         * 
-         * @param itemId
-         *            the item id for which to create the details component.
-         *            Assumed not <code>null</code> and that a component is not
-         *            currently present for this item previously
-         * @throws IllegalStateException
-         *             if the current details generator provides a component
-         *             that was manually attached, or if the same instance has
-         *             already been provided
-         */
-        public void createDetails(Object itemId) throws IllegalStateException {
-            assert itemId != null : "itemId was null";
-
-            if (visibleDetailsComponents.containsKey(itemId)
-                    || emptyDetails.contains(itemId)) {
-                // Don't overwrite existing components
-                return;
-            }
-
-            RowReference rowReference = new RowReference(grid);
-            rowReference.set(itemId);
-
-            DetailsGenerator detailsGenerator = grid.getDetailsGenerator();
-            Component details = detailsGenerator.getDetails(rowReference);
-            if (details != null) {
-                if (details.getParent() != null) {
-                    String name = detailsGenerator.getClass().getName();
-                    throw new IllegalStateException(name
-                            + " generated a details component that already "
-                            + "was attached. (itemId: " + itemId
-                            + ", component: " + details + ")");
-                }
-
-                visibleDetailsComponents.put(itemId, details);
-
-                details.setParent(grid);
-                grid.markAsDirty();
-
-                assert !emptyDetails.contains(itemId) : "Bookeeping thinks "
-                        + "itemId is empty even though we just created a "
-                        + "component for it (" + itemId + ")";
-            } else {
-                emptyDetails.add(itemId);
-            }
-
-        }
-
-        /**
-         * Destroys correctly a details component, by the request of the client
-         * side.
-         * <p>
-         * Also keeps internal bookkeeping up to date.
-         * 
-         * @param itemId
-         *            the item id for which to destroy the details component
-         */
-        public void destroyDetails(Object itemId) {
-            emptyDetails.remove(itemId);
-
-            Component removedComponent = visibleDetailsComponents
-                    .remove(itemId);
-            if (removedComponent == null) {
-                return;
-            }
-
-            removedComponent.setParent(null);
-            grid.markAsDirty();
-        }
-
-        /**
-         * Gets all details components that are currently attached to the grid.
-         * <p>
-         * Used internally by the Grid object.
-         * 
-         * @return all details components that are currently attached to the
-         *         grid
-         */
-        public Collection<Component> getComponents() {
-            Set<Component> components = new HashSet<Component>(
-                    visibleDetailsComponents.values());
-            return components;
-        }
-
-        public void refresh(Object itemId) {
-            destroyDetails(itemId);
-            createDetails(itemId);
-        }
-
-        void setGrid(Grid grid) {
-            if (this.grid != null) {
-                throw new IllegalStateException("Grid may injected only once.");
-            }
-            this.grid = grid;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @since 7.6
-         */
-        @Override
-        public void generateData(Object itemId, Item item, JsonObject rowData) {
-            if (visibleDetails.contains(itemId)) {
-                // Double check to be sure details component exists.
-                detailComponentManager.createDetails(itemId);
-                Component detailsComponent = visibleDetailsComponents
-                        .get(itemId);
-                rowData.put(
-                        GridState.JSONKEY_DETAILS_VISIBLE,
-                        (detailsComponent != null ? detailsComponent
-                                .getConnectorId() : ""));
-            }
-        }
-
-        @Override
-        public void destroyData(Object itemId) {
-            if (visibleDetails.contains(itemId)) {
-                destroyDetails(itemId);
-            }
-        }
-    }
-
     private final Indexed container;
 
     private DataProviderRpc rpc;
@@ -404,49 +236,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             else {
-
-                /*
-                 * Clear everything we have in view, and let the client
-                 * re-request for whatever it needs.
-                 * 
-                 * Why this shortcut? Well, since anything could've happened, we
-                 * don't know what has happened. There are a lot of use-cases we
-                 * can cover at once with this carte blanche operation:
-                 * 
-                 * 1) Grid is scrolled somewhere in the middle and all the
-                 * rows-inview are removed. We need a new pageful.
-                 * 
-                 * 2) Grid is scrolled somewhere in the middle and none of the
-                 * visible rows are removed. We need no new rows.
-                 * 
-                 * 3) Grid is scrolled all the way to the bottom, and the last
-                 * rows are being removed. Grid needs to scroll up and request
-                 * for more rows at the top.
-                 * 
-                 * 4) Grid is scrolled pretty much to the bottom, and the last
-                 * rows are being removed. Grid needs to be aware that some
-                 * scrolling is needed, but not to compensate for all the
-                 * removed rows. And it also needs to request for some more rows
-                 * to the top.
-                 * 
-                 * 5) Some ranges of rows are removed from view. We need to
-                 * collapse the gaps with existing rows and load the missing
-                 * rows.
-                 * 
-                 * 6) The ultimate use case! Grid has 1.5 pages of rows and
-                 * scrolled a bit down. One page of rows is removed. We need to
-                 * make sure that new rows are loaded, but not all old slots are
-                 * occupied, since the page can't be filled with new row data.
-                 * It also needs to be scrolled to the top.
-                 * 
-                 * So, it's easier (and safer) to do the simple thing instead of
-                 * taking all the corner cases into account.
-                 */
-
-                for (Object itemId : visibleDetails) {
-                    detailComponentManager.destroyDetails(itemId);
-                }
-
                 /* Mark as dirty to push changes in beforeClientResponse */
                 bareItemSetTriggeredSizeChange = true;
                 markAsDirty();
@@ -468,15 +257,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /** Size possibly changed with a bare ItemSetChangeEvent */
     private boolean bareItemSetTriggeredSizeChange = false;
-
-    /**
-     * This map represents all the details that are user-defined as visible.
-     * This does not reflect the status in the DOM.
-     */
-    // TODO this should probably be inside DetailComponentManager
-    private final Set<Object> visibleDetails = new HashSet<Object>();
-
-    private final DetailComponentManager detailComponentManager = new DetailComponentManager();
 
     private final Set<DataGenerator> dataGenerators = new LinkedHashSet<DataGenerator>();
 
@@ -515,7 +295,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         addDataGenerator(activeItemHandler);
-        addDataGenerator(detailComponentManager);
     }
 
     /**
@@ -612,7 +391,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the key mapper for columns
      */
     public void extend(Grid component) {
-        detailComponentManager.setGrid(component);
         super.extend(component);
     }
 
@@ -808,72 +586,5 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     protected Grid getGrid() {
         return (Grid) getParent();
-    }
-
-    /**
-     * Marks a row's details to be visible or hidden.
-     * <p>
-     * If that row is currently in the client side's cache, this information
-     * will be sent over to the client.
-     * 
-     * @since 7.5.0
-     * @param itemId
-     *            the id of the item of which to change the details visibility
-     * @param visible
-     *            <code>true</code> to show the details, <code>false</code> to
-     *            hide
-     */
-    public void setDetailsVisible(Object itemId, boolean visible) {
-        if (visible) {
-            visibleDetails.add(itemId);
-
-            /*
-             * This might be an issue with a huge number of open rows, but as of
-             * now this works in most of the cases.
-             */
-            detailComponentManager.createDetails(itemId);
-        } else {
-            visibleDetails.remove(itemId);
-
-            detailComponentManager.destroyDetails(itemId);
-        }
-
-        updateRowData(itemId);
-    }
-
-    /**
-     * Checks whether the details for a row is marked as visible.
-     * 
-     * @since 7.5.0
-     * @param itemId
-     *            the id of the item of which to check the visibility
-     * @return <code>true</code> iff the detials are visible for the item. This
-     *         might return <code>true</code> even if the row is not currently
-     *         visible in the DOM
-     */
-    public boolean isDetailsVisible(Object itemId) {
-        return visibleDetails.contains(itemId);
-    }
-
-    /**
-     * Refreshes all visible detail sections.
-     * 
-     * @since 7.5.0
-     */
-    public void refreshDetails() {
-        for (Object itemId : ImmutableSet.copyOf(visibleDetails)) {
-            detailComponentManager.refresh(itemId);
-            updateRowData(itemId);
-        }
-    }
-
-    /**
-     * Gets the detail component manager for this data provider
-     * 
-     * @since 7.5.0
-     * @return the detail component manager
-     * */
-    public DetailComponentManager getDetailComponentManager() {
-        return detailComponentManager;
     }
 }

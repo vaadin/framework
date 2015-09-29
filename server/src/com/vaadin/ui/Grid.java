@@ -42,6 +42,7 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
@@ -57,7 +58,6 @@ import com.vaadin.data.DataGenerator;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
-import com.vaadin.data.RpcDataProviderExtension.DetailComponentManager;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -281,15 +281,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         };
 
         /**
-         * This method is called for whenever a new details row needs to be
-         * generated.
+         * This method is called for whenever a details row needs to be shown on
+         * the client. Grid removes all of its references to details components
+         * when they are no longer displayed on the client-side and will
+         * re-request once needed again.
          * <p>
          * <em>Note:</em> If a component gets generated, it may not be manually
-         * attached anywhere, nor may it be a reused instance &ndash; each
-         * invocation of this method should produce a unique and isolated
-         * component instance. Essentially, this should mostly be a
-         * self-contained fire-and-forget method, as external references to the
-         * generated component might cause unexpected behavior.
+         * attached anywhere. The same details component can not be displayed
+         * for multiple different rows.
          * 
          * @param rowReference
          *            the reference for the row for which to generate details
@@ -297,6 +296,225 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *         the details empty.
          */
         Component getDetails(RowReference rowReference);
+    }
+
+    /**
+     * A class that manages details components by calling
+     * {@link DetailsGenerator} as needed. Details components are attached by
+     * this class when the {@link RpcDataProviderExtension} is sending data to
+     * the client. Details components are detached and forgotten when client
+     * informs that it has dropped the corresponding item.
+     * 
+     * @since
+     */
+    private final static class DetailComponentManager extends
+            AbstractGridExtension implements DataGenerator {
+
+        /**
+         * The user-defined details generator.
+         * 
+         * @see #setDetailsGenerator(DetailsGenerator)
+         */
+        private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
+
+        /**
+         * This map represents all details that are currently visible on the
+         * client. Details components get destroyed once they scroll out of
+         * view.
+         */
+        private final Map<Object, Component> itemIdToDetailsComponent = Maps
+                .newHashMap();
+
+        /**
+         * Set of item ids that got <code>null</code> from DetailsGenerator when
+         * {@link DetailsGenerator#getDetails(RowReference)} was called.
+         */
+        private final Set<Object> emptyDetails = new HashSet<Object>();
+
+        /**
+         * Set of item IDs for all open details rows. Contains even the ones
+         * that are not currently visible on the client.
+         */
+        private final Set<Object> openDetails = new HashSet<Object>();
+
+        public DetailComponentManager(Grid grid) {
+            super(grid);
+        }
+
+        /**
+         * Creates a details component with the help of the user-defined
+         * {@link DetailsGenerator}.
+         * <p>
+         * This method attaches created components to the parent {@link Grid}.
+         * 
+         * @param itemId
+         *            the item id for which to create the details component.
+         * @throws IllegalStateException
+         *             if the current details generator provides a component
+         *             that was manually attached.
+         */
+        private void createDetails(Object itemId) throws IllegalStateException {
+            assert itemId != null : "itemId was null";
+
+            if (itemIdToDetailsComponent.containsKey(itemId)
+                    || emptyDetails.contains(itemId)) {
+                // Don't overwrite existing components
+                return;
+            }
+
+            RowReference rowReference = new RowReference(getParentGrid());
+            rowReference.set(itemId);
+
+            DetailsGenerator detailsGenerator = getParentGrid()
+                    .getDetailsGenerator();
+            Component details = detailsGenerator.getDetails(rowReference);
+            if (details != null) {
+                if (details.getParent() != null) {
+                    String name = detailsGenerator.getClass().getName();
+                    throw new IllegalStateException(name
+                            + " generated a details component that already "
+                            + "was attached. (itemId: " + itemId
+                            + ", component: " + details + ")");
+                }
+
+                itemIdToDetailsComponent.put(itemId, details);
+
+                addComponentToGrid(details);
+
+                assert !emptyDetails.contains(itemId) : "Bookeeping thinks "
+                        + "itemId is empty even though we just created a "
+                        + "component for it (" + itemId + ")";
+            } else {
+                emptyDetails.add(itemId);
+            }
+
+        }
+
+        /**
+         * Destroys a details component correctly.
+         * <p>
+         * This method will detach the component from parent {@link Grid}.
+         * 
+         * @param itemId
+         *            the item id for which to destroy the details component
+         */
+        private void destroyDetails(Object itemId) {
+            emptyDetails.remove(itemId);
+
+            Component removedComponent = itemIdToDetailsComponent
+                    .remove(itemId);
+            if (removedComponent == null) {
+                return;
+            }
+
+            removeComponentFromGrid(removedComponent);
+        }
+
+        /**
+         * Recreates all visible details components.
+         */
+        public void refreshDetails() {
+            Set<Object> visibleItemIds = new HashSet<Object>(
+                    itemIdToDetailsComponent.keySet());
+            for (Object itemId : visibleItemIds) {
+                destroyDetails(itemId);
+                createDetails(itemId);
+                refreshRow(itemId);
+            }
+        }
+
+        /**
+         * Sets details visiblity status of given item id.
+         * 
+         * @param itemId
+         *            item id to set
+         * @param visible
+         *            <code>true</code> if visible; <code>false</code> if not
+         */
+        public void setDetailsVisible(Object itemId, boolean visible) {
+            if ((visible && openDetails.contains(itemId))
+                    || (!visible && !openDetails.contains(itemId))) {
+                return;
+            }
+
+            if (visible) {
+                openDetails.add(itemId);
+                refreshRow(itemId);
+            } else {
+                openDetails.remove(itemId);
+                destroyDetails(itemId);
+                refreshRow(itemId);
+            }
+        }
+
+        @Override
+        public void generateData(Object itemId, Item item, JsonObject rowData) {
+            // DetailComponentManager should not send anything if details
+            // generator is the default null version.
+            if (openDetails.contains(itemId)
+                    && !detailsGenerator.equals(DetailsGenerator.NULL)) {
+                // Double check to be sure details component exists.
+                createDetails(itemId);
+
+                Component detailsComponent = itemIdToDetailsComponent
+                        .get(itemId);
+                rowData.put(
+                        GridState.JSONKEY_DETAILS_VISIBLE,
+                        (detailsComponent != null ? detailsComponent
+                                .getConnectorId() : ""));
+            }
+        }
+
+        @Override
+        public void destroyData(Object itemId) {
+            if (openDetails.contains(itemId)) {
+                destroyDetails(itemId);
+            }
+        }
+
+        /**
+         * Sets a new details generator for row details.
+         * <p>
+         * The currently opened row details will be re-rendered.
+         * 
+         * @param detailsGenerator
+         *            the details generator to set
+         * @throws IllegalArgumentException
+         *             if detailsGenerator is <code>null</code>;
+         */
+        public void setDetailsGenerator(DetailsGenerator detailsGenerator)
+                throws IllegalArgumentException {
+            if (detailsGenerator == null) {
+                throw new IllegalArgumentException(
+                        "Details generator may not be null");
+            } else if (detailsGenerator == this.detailsGenerator) {
+                return;
+            }
+
+            this.detailsGenerator = detailsGenerator;
+
+            refreshDetails();
+        }
+
+        /**
+         * Gets the current details generator for row details.
+         * 
+         * @return the detailsGenerator the current details generator
+         */
+        public DetailsGenerator getDetailsGenerator() {
+            return detailsGenerator;
+        }
+
+        /**
+         * Checks whether details are visible for the given item.
+         * 
+         * @param itemId
+         *            the id of the item for which to check details visibility
+         * @return <code>true</code> iff the details are visible
+         */
+        public boolean isDetailsVisible(Object itemId) {
+            return openDetails.contains(itemId);
+        }
     }
 
     /**
@@ -4119,6 +4337,30 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected void refreshRow(Object itemId) {
             getParentGrid().datasourceExtension.updateRowData(itemId);
         }
+
+        /**
+         * Informs the parent Grid that this Extension wants to add a child
+         * component to it.
+         * 
+         * @since
+         * @param c
+         *            component
+         */
+        protected void addComponentToGrid(Component c) {
+            getParentGrid().addComponent(c);
+        }
+
+        /**
+         * Informs the parent Grid that this Extension wants to remove a child
+         * component from it.
+         * 
+         * @since
+         * @param c
+         *            component
+         */
+        protected void removeComponentFromGrid(Component c) {
+            getParentGrid().removeComponent(c);
+        }
     }
 
     /**
@@ -4241,14 +4483,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     private EditorErrorHandler editorErrorHandler = new DefaultEditorErrorHandler();
 
-    /**
-     * The user-defined details generator.
-     * 
-     * @see #setDetailsGenerator(DetailsGenerator)
-     */
-    private DetailsGenerator detailsGenerator = DetailsGenerator.NULL;
-
     private DetailComponentManager detailComponentManager = null;
+
+    private Set<Component> extensionComponents = new HashSet<Component>();
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionListener.class, "select", SelectionEvent.class);
@@ -4637,8 +4874,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         datasourceExtension.extend(this);
         datasourceExtension.addDataGenerator(new RowDataGenerator());
 
-        detailComponentManager = datasourceExtension
-                .getDetailComponentManager();
+        detailComponentManager = new DetailComponentManager(this);
 
         /*
          * selectionModel == null when the invocation comes from the
@@ -6093,6 +6329,18 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         return footer.isVisible();
     }
 
+    private void addComponent(Component c) {
+        extensionComponents.add(c);
+        c.setParent(this);
+        markAsDirty();
+    }
+
+    private void removeComponent(Component c) {
+        extensionComponents.remove(c);
+        c.setParent(null);
+        markAsDirty();
+    }
+
     @Override
     public Iterator<Component> iterator() {
         // This is a hash set to avoid adding header/footer components inside
@@ -6123,7 +6371,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         componentList.addAll(getEditorFields());
 
-        componentList.addAll(detailComponentManager.getComponents());
+        componentList.addAll(extensionComponents);
 
         return componentList.iterator();
     }
@@ -6818,16 +7066,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public void setDetailsGenerator(DetailsGenerator detailsGenerator)
             throws IllegalArgumentException {
-        if (detailsGenerator == null) {
-            throw new IllegalArgumentException(
-                    "Details generator may not be null");
-        } else if (detailsGenerator == this.detailsGenerator) {
-            return;
-        }
-
-        this.detailsGenerator = detailsGenerator;
-
-        datasourceExtension.refreshDetails();
+        detailComponentManager.setDetailsGenerator(detailsGenerator);
     }
 
     /**
@@ -6837,7 +7076,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @return the detailsGenerator the current details generator
      */
     public DetailsGenerator getDetailsGenerator() {
-        return detailsGenerator;
+        return detailComponentManager.getDetailsGenerator();
     }
 
     /**
@@ -6851,10 +7090,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            to hide them
      */
     public void setDetailsVisible(Object itemId, boolean visible) {
-        if (DetailsGenerator.NULL.equals(detailsGenerator)) {
-            return;
-        }
-        datasourceExtension.setDetailsVisible(itemId, visible);
+        detailComponentManager.setDetailsVisible(itemId, visible);
     }
 
     /**
@@ -6866,7 +7102,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @return <code>true</code> iff the details are visible
      */
     public boolean isDetailsVisible(Object itemId) {
-        return datasourceExtension.isDetailsVisible(itemId);
+        return detailComponentManager.isDetailsVisible(itemId);
     }
 
     private static SelectionMode getDefaultSelectionMode() {

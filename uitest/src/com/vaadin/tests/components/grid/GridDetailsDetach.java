@@ -26,6 +26,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -79,6 +80,7 @@ public class GridDetailsDetach extends AbstractTestUI {
         final Grid grid = new Grid(container);
         grid.setColumnOrder("name", "amount", "count");
         grid.setSizeFull();
+        grid.setSelectionMode(SelectionMode.NONE);
 
         grid.setDetailsGenerator(new DetailsGenerator() {
             @Override

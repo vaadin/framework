@@ -231,10 +231,12 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     private Map<Object, Panel> detailsMap = new HashMap<Object, Panel>();
 
     private final DetailsGenerator persistingDetailsGenerator = new DetailsGenerator() {
+
         @Override
         public Component getDetails(RowReference rowReference) {
             Object itemId = rowReference.getItemId();
             if (!detailsMap.containsKey(itemId)) {
+
                 Panel panel = new Panel();
                 panel.setContent(new Label("One"));
                 detailsMap.put(itemId, panel);
