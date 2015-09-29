@@ -546,6 +546,16 @@ public class MessageHandler {
                         .getTime());
                 totalProcessingTime += lastProcessingTime;
                 if (bootstrapTime == 0) {
+
+                    double fetchStart = getFetchStartTime();
+                    if (fetchStart != 0) {
+                        int time = (int) (Duration.currentTimeMillis() - fetchStart);
+                        getLogger().log(
+                                Level.INFO,
+                                "First response processed " + time
+                                        + " ms after fetchStart");
+                    }
+
                     bootstrapTime = calculateBootstrapTime();
                     if (Profiler.isEnabled() && bootstrapTime != -1) {
                         Profiler.logBootstrapTimings();
@@ -1746,5 +1756,14 @@ public class MessageHandler {
     public static ValueMap parseWrappedJson(String wrappedJsonText) {
         return parseJson(stripJSONWrapping(wrappedJsonText));
     }
+
+    private static final native double getFetchStartTime()
+    /*-{
+        if ($wnd.performance && $wnd.performance.timing && $wnd.performance.timing.fetchStart) {
+            return $wnd.performance.timing.fetchStart;
+        } else {
+            return 0;
+        }
+    }-*/;
 
 }
