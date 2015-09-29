@@ -127,8 +127,7 @@ public class DragHandle {
 
             @Override
             public void onDragEnd() {
-                removeDraggingStyle();
-                userCallback.onComplete();
+                // NOP, handled in onDrop and onDragCancel
             }
 
             @Override

@@ -1201,6 +1201,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }
                 });
+        createBooleanAction("All columns resizable", "Columns", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        for (Column col : grid.getColumns()) {
+                            col.setResizable(value);
+                        }
+
+                    }
+                });
 
         createClickAction("All columns expanding, Col 0 has max width of 30px",
                 "Columns", new Command<Grid, Boolean>() {

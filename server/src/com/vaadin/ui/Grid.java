@@ -4267,10 +4267,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 if (rowKey != null) {
                     itemId = getKeyMapper().get(rowKey);
                 }
-
                 fireEvent(new GridContextClickEvent(Grid.this, details,
                         section, rowIndex, itemId,
                         getPropertyIdByColumnId(columnId)));
+            }
+
+            @Override
+            public void columnResized(String id, double pixels) {
+                final Column column = getColumnByColumnId(id);
+                if (column != null && column.isResizable()) {
+                    column.getState().width = pixels;
+                }
             }
         });
 

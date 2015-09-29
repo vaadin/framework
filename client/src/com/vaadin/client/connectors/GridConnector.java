@@ -193,6 +193,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             return null;
         }
 
+        @Override
+        protected void setWidth(double pixels, boolean userOriginated) {
+            super.setWidth(pixels, userOriginated);
+            if (userOriginated) {
+                getRpcProxy(GridServerRpc.class).columnResized(id, pixels);
+            }
+        }
+
         private AbstractFieldConnector getEditorConnector() {
             return editorConnector;
         }

@@ -76,7 +76,7 @@ public interface GridServerRpc extends ServerRpc {
             List<String> oldColumnOrder);
 
     /**
-     * Informs the server that the column's visibility has been changed.
+     * Informs the server that a column's visibility has been changed.
      * 
      * @since 7.5.0
      * @param id
@@ -89,4 +89,15 @@ public interface GridServerRpc extends ServerRpc {
      */
     void columnVisibilityChanged(String id, boolean hidden,
             boolean userOriginated);
+
+    /**
+     * Informs the server that a column has been resized by the user.
+     * 
+     * @since
+     * @param id
+     *            the id of the column
+     * @param pixels
+     *            the new width of the column in pixels
+     */
+    void columnResized(String id, double pixels);
 }
