@@ -27,7 +27,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
                 + "<colgroup>"
                 + "   <col sortable='' width='100' property-id='Column1'>"
                 + "   <col sortable=false max-width='200' expand='2' property-id='Column2'>"
-                + "   <col sortable='' editable=false min-width='15' expand='1' property-id='Column3'>"
+                + "   <col sortable='' editable=false resizable=false min-width='15' expand='1' property-id='Column3'>"
                 + "   <col sortable='' hidable='' hiding-toggle-caption='col 4' property-id='Column4'>"
                 + "   <col sortable='' hidden='' property-id='Column5'>"
                 + "</colgroup>" //
@@ -38,9 +38,9 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
         grid.addColumn("Column2", String.class).setMaximumWidth(200)
                 .setExpandRatio(2).setSortable(false);
         grid.addColumn("Column3", String.class).setMinimumWidth(15)
-                .setExpandRatio(1).setEditable(false);
+                .setExpandRatio(1).setEditable(false).setResizable(false);
         grid.addColumn("Column4", String.class).setHidable(true)
-                .setHidingToggleCaption("col 4");
+                .setHidingToggleCaption("col 4").setResizable(true);
         grid.addColumn("Column5", String.class).setHidden(true);
 
         // Remove the default header

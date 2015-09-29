@@ -1005,6 +1005,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         column.setSortable(state.sortable);
 
+        column.setResizable(state.resizable);
+
         column.setHeaderCaption(state.headerCaption);
 
         column.setHidden(state.hidden);

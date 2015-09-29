@@ -4559,6 +4559,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean editable = true;
 
+        private boolean resizable = true;
+
         private boolean hidden = false;
 
         private boolean hidable = false;
@@ -4817,13 +4819,14 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Enables sort indicators for the grid.
-         * <p>
-         * <b>Note:</b>The API can still sort the column even if this is set to
-         * <code>false</code>.
+         * Sets whether the column should be sortable by the user. The grid can
+         * be sorted by a sortable column by clicking or tapping the column's
+         * default header. Programmatic sorting using the Grid#sort methods is
+         * not affected by this setting.
          * 
          * @param sortable
-         *            <code>true</code> when column sort indicators are visible.
+         *            {@code true} if the user should be able to sort the
+         *            column, {@code false} otherwise
          * @return the column itself
          */
         public Column<C, T> setSortable(boolean sortable) {
@@ -4833,17 +4836,56 @@ public class Grid<T> extends ResizeComposite implements
                     grid.refreshHeader();
                 }
             }
-
             return this;
         }
 
         /**
-         * Are sort indicators shown for the column.
+         * Returns whether the user can sort the grid by this column.
+         * <p>
+         * <em>Note:</em> it is possible to sort by this column programmatically
+         * using the Grid#sort methods regardless of the returned value.
          * 
-         * @return <code>true</code> if the column is sortable
+         * @return {@code true} if the column is sortable by the user,
+         *         {@code false} otherwise
          */
         public boolean isSortable() {
             return sortable;
+        }
+
+        /**
+         * Sets whether this column can be resized by the user.
+         * 
+         * @since
+         * 
+         * @param resizable
+         *            {@code true} if this column should be resizable,
+         *            {@code false} otherwise
+         */
+        public Column<C, T> setResizable(boolean resizable) {
+            if (this.resizable != resizable) {
+                this.resizable = resizable;
+                if (grid != null) {
+                    grid.refreshHeader();
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Returns whether this column can be resized by the user. Default is
+         * {@code true}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically resized using
+         * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
+         * of the returned value.
+         * 
+         * @since
+         * 
+         * @return {@code true} if this column is resizable, {@code false}
+         *         otherwise
+         */
+        public boolean isResizable() {
+            return resizable;
         }
 
         /**
@@ -4855,8 +4897,9 @@ public class Grid<T> extends ResizeComposite implements
          *            <code>true</code> to hide the column, <code>false</code>
          *            to show
          */
-        public void setHidden(boolean hidden) {
+        public Column<C, T> setHidden(boolean hidden) {
             setHidden(hidden, false);
+            return this;
         }
 
         private void setHidden(boolean hidden, boolean userOriginated) {
@@ -4895,11 +4938,11 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Is this column hidden. Default is {@code false}.
+         * Returns whether this column is hidden. Default is {@code false}.
          * 
          * @since 7.5.0
-         * @return <code>true</code> if the column is currently hidden,
-         *         <code>false</code> otherwise
+         * @return {@code true} if the column is currently hidden, {@code false}
+         *         otherwise
          */
         public boolean isHidden() {
             return hidden;
@@ -4914,14 +4957,15 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> if the user can hide this column,
-         *            <code>false</code> if not
+         *            {@code true} the user can hide this column, {@code false}
+         *            otherwise
          */
-        public void setHidable(boolean hidable) {
+        public Column<C, T> setHidable(boolean hidable) {
             if (this.hidable != hidable) {
                 this.hidable = hidable;
                 grid.columnHider.updateColumnHidable(this);
             }
+            return this;
         }
 
         /**
@@ -4951,11 +4995,12 @@ public class Grid<T> extends ResizeComposite implements
          * @param hidingToggleCaption
          *            the caption for the hiding toggle for this column
          */
-        public void setHidingToggleCaption(String hidingToggleCaption) {
+        public Column<C, T> setHidingToggleCaption(String hidingToggleCaption) {
             this.hidingToggleCaption = hidingToggleCaption;
             if (isHidable()) {
                 grid.columnHider.updateHidingToggle(this);
             }
+            return this;
         }
 
         /**
@@ -5512,7 +5557,8 @@ public class Grid<T> extends ResizeComposite implements
                 // XXX: Should add only once in preAttach/postAttach or when
                 // resizable status changes
                 // Only add resize handles to default header row for now
-                if (staticRow instanceof HeaderRow
+                if (columns.get(cell.getColumn()).isResizable()
+                        && staticRow instanceof HeaderRow
                         && ((HeaderRow) staticRow).isDefault()) {
 
                     final int column = cell.getColumn();

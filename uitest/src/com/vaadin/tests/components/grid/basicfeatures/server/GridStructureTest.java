@@ -40,17 +40,6 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 public class GridStructureTest extends GridBasicFeaturesTest {
 
     @Test
-    public void testResizeHandlesPresent() {
-        openTestURL();
-
-        // Test that all column headers contain resize handles
-        for (int i = 0; i < GridBasicFeatures.COLUMNS; ++i) {
-            assertFalse(getGridElement().getHeaderCell(0, i).findElement(
-                    By.cssSelector("div.v-grid-column-resize-handle")) == null);
-        }
-    }
-
-    @Test
     public void testRemovingAllColumns() {
         setDebug(true);
         openTestURL();

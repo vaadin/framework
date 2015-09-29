@@ -3192,15 +3192,22 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Sets whether the column should be sortable by the user. The grid can
-         * be sorted by a sortable column by clicking or tapping the column's
-         * default header. Programmatic sorting using the Grid.sort methods is
+         * Sets whether this column is sortable by the user. The grid can be
+         * sorted by a sortable column by clicking or tapping the column's
+         * default header. Programmatic sorting using the Grid#sort methods is
          * not affected by this setting.
          * 
          * @param sortable
-         *            <code>true</code> if the user should be able to sort the
-         *            column, false otherwise
+         *            {@code true} if the user should be able to sort the
+         *            column, {@code false} otherwise
          * @return the column itself
+         * 
+         * @throws IllegalStateException
+         *             if the data source of the Grid does not implement
+         *             {@link Sortable}
+         * @throws IllegalStateException
+         *             if the data source does not support sorting by the
+         *             property associated with this column
          */
         public Column setSortable(boolean sortable) {
             checkColumnIsAttached();
@@ -3227,9 +3234,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Returns whether the user is able to sort the grid by this column.
+         * Returns whether the user can sort the grid by this column.
+         * <p>
+         * <em>Note:</em> it is possible to sort by this column programmatically
+         * using the Grid#sort methods regardless of the returned value.
          * 
-         * @return true if the column is sortable by the user, false otherwise
+         * @return {@code true} if the column is sortable by the user,
+         *         {@code false} otherwise
          */
         public boolean isSortable() {
             return state.sortable;
@@ -3486,7 +3497,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Is this column hidden. Default is {@code false}.
+         * Returns whether this column is hidden. Default is {@code false}.
          * 
          * @since 7.5.0
          * @return <code>true</code> if the column is currently hidden,
@@ -3497,11 +3508,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Set whether it is possible for the user to hide this column or not.
-         * Default is {@code false}.
-         * <p>
-         * <em>Note:</em> it is still possible to hide the column
-         * programmatically using {@link #setHidden(boolean)}
+         * Sets whether this column can be hidden by the user. Hidable columns
+         * can be hidden and shown via the sidebar menu.
          * 
          * @since 7.5.0
          * @param hidable
@@ -3518,7 +3526,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         /**
-         * Is it possible for the the user to hide this column. Default is
+         * Returns whether this column can be hidden by the user. Default is
          * {@code false}.
          * <p>
          * <em>Note:</em> the column can be programmatically hidden using
@@ -3530,6 +3538,38 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         public boolean isHidable() {
             return getState().hidable;
+        }
+
+        /**
+         * Sets whether this column can be resized by the user.
+         * 
+         * @since
+         * @param resizable
+         *            {@code true} if this column should be resizable,
+         *            {@code false} otherwise
+         */
+        public Column setResizable(boolean resizable) {
+            if (resizable != getState().resizable) {
+                getState().resizable = resizable;
+                grid.markAsDirty();
+            }
+            return this;
+        }
+
+        /**
+         * Returns whether this column can be resized by the user. Default is
+         * {@code true}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically resized using
+         * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
+         * of the returned value.
+         * 
+         * @since
+         * @return {@code true} if this column is resizable, {@code false}
+         *         otherwise
+         */
+        public boolean isResizable() {
+            return getState().resizable;
         }
 
         /**
@@ -3546,11 +3586,25 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected void writeDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
             GridColumnState def = new GridColumnState();
+
+            DesignAttributeHandler.writeAttribute("property-id", attributes,
+                    getPropertyId(), null, Object.class);
+
             // Sortable is a special attribute that depends on the container.
             DesignAttributeHandler.writeAttribute("sortable", attributes,
                     isSortable(), null, boolean.class);
             DesignAttributeHandler.writeAttribute("editable", attributes,
                     isEditable(), def.editable, boolean.class);
+            DesignAttributeHandler.writeAttribute("resizable", attributes,
+                    isResizable(), def.resizable, boolean.class);
+
+            DesignAttributeHandler.writeAttribute("hidable", attributes,
+                    isHidable(), def.hidable, boolean.class);
+            DesignAttributeHandler.writeAttribute("hidden", attributes,
+                    isHidden(), def.hidden, boolean.class);
+            DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
+                    attributes, getHidingToggleCaption(), null, String.class);
+
             DesignAttributeHandler.writeAttribute("width", attributes,
                     getWidth(), def.width, Double.class);
             DesignAttributeHandler.writeAttribute("min-width", attributes,
@@ -3559,14 +3613,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     getMaximumWidth(), def.maxWidth, Double.class);
             DesignAttributeHandler.writeAttribute("expand", attributes,
                     getExpandRatio(), def.expandRatio, Integer.class);
-            DesignAttributeHandler.writeAttribute("hidable", attributes,
-                    isHidable(), def.hidable, boolean.class);
-            DesignAttributeHandler.writeAttribute("hidden", attributes,
-                    isHidden(), def.hidden, boolean.class);
-            DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
-                    attributes, getHidingToggleCaption(), null, String.class);
-            DesignAttributeHandler.writeAttribute("property-id", attributes,
-                    getPropertyId(), null, Object.class);
         }
 
         /**
@@ -3585,11 +3631,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 setSortable(DesignAttributeHandler.readAttribute("sortable",
                         attributes, boolean.class));
             }
-
             if (design.hasAttr("editable")) {
                 setEditable(DesignAttributeHandler.readAttribute("editable",
                         attributes, boolean.class));
             }
+            if (design.hasAttr("resizable")) {
+                setResizable(DesignAttributeHandler.readAttribute("resizable",
+                        attributes, boolean.class));
+            }
+
             if (design.hasAttr("hidable")) {
                 setHidable(DesignAttributeHandler.readAttribute("hidable",
                         attributes, boolean.class));
@@ -3602,6 +3652,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 setHidingToggleCaption(DesignAttributeHandler.readAttribute(
                         "hiding-toggle-caption", attributes, String.class));
             }
+
             // Read size info where necessary.
             if (design.hasAttr("width")) {
                 setWidth(DesignAttributeHandler.readAttribute("width",

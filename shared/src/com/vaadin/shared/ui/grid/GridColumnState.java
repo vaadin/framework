@@ -58,7 +58,7 @@ public class GridColumnState implements Serializable {
     public Connector editorConnector;
 
     /**
-     * Are sorting indicators shown for a column. Default is false.
+     * Whether this column is sortable by the user
      */
     public boolean sortable = false;
 
@@ -77,10 +77,10 @@ public class GridColumnState implements Serializable {
      */
     public double minWidth = GridConstants.DEFAULT_MIN_WIDTH;
 
-    /** Is the column currently hidden. */
+    /** Whether this column is currently hidden. */
     public boolean hidden = false;
 
-    /** Can the column be hidden by the UI. */
+    /** Whether the column can be hidden by the user. */
     public boolean hidable = false;
 
     /** The caption for the column hiding toggle. */
@@ -88,4 +88,7 @@ public class GridColumnState implements Serializable {
 
     /** Column header caption */
     public String headerCaption;
+
+    /** Whether this column is resizable by the user. */
+    public boolean resizable = true;
 }

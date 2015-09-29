@@ -1008,6 +1008,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, c);
 
+            createBooleanAction("Resizable", getColumnProperty(c), true,
+                    new Command<Grid, Boolean>() {
+
+                        @Override
+                        public void execute(Grid grid, Boolean value,
+                                Object columnIndex) {
+                            Object propertyId = getColumnProperty((Integer) columnIndex);
+                            Column column = grid.getColumn(propertyId);
+                            column.setResizable(value);
+                        }
+                    }, c);
+
             createBooleanAction("Hidable", getColumnProperty(c),
                     isColumnHidableByDefault(c), new Command<Grid, Boolean>() {
                         @Override
@@ -1165,6 +1177,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }, c);
         }
+
+        createBooleanAction("All columns resizable", "Columns", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        for (Column col : grid.getColumns()) {
+                            col.setResizable(value);
+                        }
+
+                    }
+                });
+
         createBooleanAction("All columns hidable", "Columns", false,
                 new Command<Grid, Boolean>() {
 
