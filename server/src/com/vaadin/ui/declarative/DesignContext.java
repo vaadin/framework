@@ -30,6 +30,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.server.Constants;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.declarative.Design.ComponentFactory;
@@ -41,10 +44,21 @@ import com.vaadin.ui.declarative.Design.ComponentMapper;
  * mappings from local ids, global ids and captions to components , as well as a
  * mapping between prefixes and package names (such as "v" -> "com.vaadin.ui").
  * 
+ * Vaadin versions 7.5.7 and later support reading designs with either "v" or
+ * "vaadin" as the prefix, but only write "v" by default. Writing with the new
+ * prefix can be activated with value {@code false} for the property or context
+ * parameter {@link Constants#SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX}. Vaadin
+ * 7.6 and later will use "vaadin" as the default prefix.
+ * 
  * @since 7.4
  * @author Vaadin Ltd
  */
 public class DesignContext implements Serializable {
+
+    private static final String LEGACY_PREFIX = "v";
+    private static final String VAADIN_PREFIX = "vaadin";
+
+    private static final String VAADIN_UI_PACKAGE = "com.vaadin.ui";
 
     // cache for object instances
     private static Map<Class<?>, Component> instanceCache = new ConcurrentHashMap<Class<?>, Component>();
@@ -67,23 +81,24 @@ public class DesignContext implements Serializable {
     // namespace mappings
     private Map<String, String> packageToPrefix = new HashMap<String, String>();
     private Map<String, String> prefixToPackage = new HashMap<String, String>();
-    // prefix names for which no package-mapping element will be created in the
-    // html tree (this includes at least "v" which is always taken to refer
-    // to "com.vaadin.ui".
-    private Map<String, String> defaultPrefixes = new HashMap<String, String>();
 
     // component creation listeners
     private List<ComponentCreationListener> listeners = new ArrayList<ComponentCreationListener>();
 
     private ShouldWriteDataDelegate shouldWriteDataDelegate = ShouldWriteDataDelegate.DEFAULT;
 
+    // this cannot be static because of testability issues
+    private Boolean legacyDesignPrefix = null;
+
     public DesignContext(Document doc) {
         this.doc = doc;
         // Initialize the mapping between prefixes and package names.
-        defaultPrefixes.put("v", "com.vaadin.ui");
-        for (String prefix : defaultPrefixes.keySet()) {
-            String packageName = defaultPrefixes.get(prefix);
-            addPackagePrefix(prefix, packageName);
+        if (isLegacyPrefixEnabled()) {
+            addPackagePrefix(LEGACY_PREFIX, VAADIN_UI_PACKAGE);
+            prefixToPackage.put(VAADIN_PREFIX, VAADIN_UI_PACKAGE);
+        } else {
+            addPackagePrefix(VAADIN_PREFIX, VAADIN_UI_PACKAGE);
+            prefixToPackage.put(LEGACY_PREFIX, VAADIN_UI_PACKAGE);
         }
     }
 
@@ -259,6 +274,11 @@ public class DesignContext implements Serializable {
     /**
      * Creates a two-way mapping between a prefix and a package name.
      * 
+     * Note that modifying the mapping for {@value #VAADIN_UI_PACKAGE} may
+     * invalidate the backwards compatibility mechanism supporting reading such
+     * components with either {@value #LEGACY_PREFIX} or {@value #VAADIN_PREFIX}
+     * as prefix.
+     * 
      * @param prefix
      *            the prefix name without an ending dash (for instance, "v" is
      *            by default used for "com.vaadin.ui")
@@ -288,7 +308,11 @@ public class DesignContext implements Serializable {
      *         registered
      */
     public String getPackagePrefix(String packageName) {
-        return packageToPrefix.get(packageName);
+        if (VAADIN_UI_PACKAGE.equals(packageName)) {
+            return isLegacyPrefixEnabled() ? LEGACY_PREFIX : VAADIN_PREFIX;
+        } else {
+            return packageToPrefix.get(packageName);
+        }
     }
 
     /**
@@ -396,7 +420,7 @@ public class DesignContext implements Serializable {
         for (String prefix : getPackagePrefixes()) {
             // Only store the prefix-name mapping if it is not a default mapping
             // (such as "v" -> "com.vaadin.ui")
-            if (defaultPrefixes.get(prefix) == null) {
+            if (!VAADIN_PREFIX.equals(prefix) && !LEGACY_PREFIX.equals(prefix)) {
                 Node newNode = doc.createElement("meta");
                 newNode.attr("name", "package-mapping");
                 String prefixToPackageName = prefix + ":" + getPackage(prefix);
@@ -404,6 +428,31 @@ public class DesignContext implements Serializable {
                 head.appendChild(newNode);
             }
         }
+    }
+
+    /**
+     * Check whether the legacy prefix "v" or the default prefix "vaadin" should
+     * be used when writing designs. The property or context parameter
+     * {@link Constants#SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX} can be used to
+     * switch to the legacy prefix.
+     * 
+     * @since
+     * @return true to use the legacy prefix, false by default
+     */
+    protected boolean isLegacyPrefixEnabled() {
+        if (legacyDesignPrefix != null) {
+            return legacyDesignPrefix.booleanValue();
+        }
+        if (VaadinService.getCurrent() == null) {
+            // This will happen at least in JUnit tests.
+            return true;
+        }
+        DeploymentConfiguration configuration = VaadinService.getCurrent()
+                .getDeploymentConfiguration();
+        legacyDesignPrefix = configuration.getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX, "true")
+                .equals("true");
+        return legacyDesignPrefix.booleanValue();
     }
 
     /**
@@ -511,9 +560,19 @@ public class DesignContext implements Serializable {
         Component component = componentMapper.tagToComponent(tag,
                 Design.getComponentFactory(), this);
 
-        assert tag.equals(componentMapper.componentToTag(component, this));
+        assert tagEquals(tag, componentMapper.componentToTag(component, this));
 
         return component;
+    }
+
+    private boolean tagEquals(String tag1, String tag2) {
+        return tag1.equals(tag2)
+                || (hasVaadinPrefix(tag1) && hasVaadinPrefix(tag2));
+    }
+
+    private boolean hasVaadinPrefix(String tag) {
+        return tag.startsWith(LEGACY_PREFIX + "-")
+                || tag.startsWith(VAADIN_PREFIX + "-");
     }
 
     /**
