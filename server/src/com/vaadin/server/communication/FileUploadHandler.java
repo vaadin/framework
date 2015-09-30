@@ -450,10 +450,13 @@ public class FileUploadHandler implements RequestHandler {
             session.unlock();
         }
         try {
+            // Store ui reference so we can do cleanup even if connector is
+            // detached in some event handler
+            UI ui = connector.getUI();
             boolean forgetVariable = streamToReceiver(session, inputStream,
                     streamVariable, filename, mimeType, contentLength);
             if (forgetVariable) {
-                cleanStreamVariable(session, connector, variableName);
+                cleanStreamVariable(session, ui, connector, variableName);
             }
         } catch (Exception e) {
             session.lock();
@@ -684,15 +687,13 @@ public class FileUploadHandler implements RequestHandler {
         out.close();
     }
 
-    private void cleanStreamVariable(VaadinSession session,
+    private void cleanStreamVariable(VaadinSession session, final UI ui,
             final ClientConnector owner, final String variableName) {
         session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
-                owner.getUI()
-                        .getConnectorTracker()
-                        .cleanStreamVariable(owner.getConnectorId(),
-                                variableName);
+                ui.getConnectorTracker().cleanStreamVariable(
+                        owner.getConnectorId(), variableName);
             }
         });
     }
