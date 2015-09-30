@@ -35,9 +35,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         //@formatter:off
         String design = "<v-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable='' property-id='Column1'>"
-                + "   <col sortable='' property-id='Column2'>"
-                + "   <col sortable='' property-id='Column3'>"
+                + "   <col sortable=true property-id='Column1'>"
+                + "   <col sortable=true property-id='Column2'>"
+                + "   <col sortable=true property-id='Column3'>"
                 + "</colgroup>"
                 + "<thead>"
                 + "   <tr default='true'>"
