@@ -1756,13 +1756,7 @@ public class Escalator extends Widget implements RequiresResize,
 
             Element row = root.getFirstChildElement();
             while (row != null) {
-                // IF there is a rounding error when summing the columns, we
-                // need to round the tr width up to ensure that columns fit and
-                // do not wrap
-                // E.g.122.95+123.25+103.75+209.25+83.52+88.57+263.45+131.21+126.85+113.13=1365.9299999999998
-                // For this we must set 1365.93 or the last column will wrap
-                row.getStyle().setWidth(WidgetUtil.roundSizeUp(rowWidth),
-                        Unit.PX);
+                row.getStyle().setWidth(rowWidth, Unit.PX);
                 row = row.getNextSiblingElement();
             }
         }
