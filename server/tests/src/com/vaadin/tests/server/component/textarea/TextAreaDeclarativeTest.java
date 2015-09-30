@@ -58,17 +58,6 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
         read.writeDesign(root, dc);
 
         Assert.assertEquals("&amp;amp; Test", root.html());
-    }
 
-    @Test
-    public void testReadOnlyValue() {
-        String design = "<v-text-area readonly rows=6 wordwrap=false>Hello World!</v-text-area>";
-        TextArea ta = new TextArea();
-        ta.setRows(6);
-        ta.setWordwrap(false);
-        ta.setValue("Hello World!");
-        ta.setReadOnly(true);
-        testRead(design, ta);
-        testWrite(design, ta);
     }
 }

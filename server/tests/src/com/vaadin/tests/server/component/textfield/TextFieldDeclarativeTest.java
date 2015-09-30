@@ -44,14 +44,4 @@ public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
         testRead(design, tf);
         testWrite(design, tf);
     }
-
-    @Test
-    public void testReadOnlyValue() {
-        String design = "<v-text-field readonly=\"\" value=\"test value\"/>";
-        TextField tf = new TextField();
-        tf.setValue("test value");
-        tf.setReadOnly(true);
-        testRead(design, tf);
-        testWrite(design, tf);
-    }
 }

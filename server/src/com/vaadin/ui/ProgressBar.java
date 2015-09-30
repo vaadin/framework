@@ -159,9 +159,8 @@ public class ProgressBar extends AbstractField<Float> implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
-            setValue(
-                    DesignAttributeHandler.readAttribute("value",
-                            design.attributes(), Float.class), false, true);
+            setValue(DesignAttributeHandler.readAttribute("value",
+                    design.attributes(), Float.class));
         }
     }
 

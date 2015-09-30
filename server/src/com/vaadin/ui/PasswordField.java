@@ -94,7 +94,7 @@ public class PasswordField extends AbstractTextField {
         Attributes attr = design.attributes();
         if (attr.hasKey("value")) {
             setValue(DesignAttributeHandler.readAttribute("value", attr,
-                    String.class), false, true);
+                    String.class));
         }
     }
 

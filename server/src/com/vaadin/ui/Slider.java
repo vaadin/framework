@@ -370,10 +370,9 @@ public class Slider extends AbstractField<Double> {
         if (attr.hasKey("vertical")) {
             setOrientation(SliderOrientation.VERTICAL);
         }
-        if (attr.hasKey("value")) {
-            Double newFieldValue = DesignAttributeHandler.readAttribute(
-                    "value", attr, Double.class);
-            setValue(newFieldValue, false, true);
+        if (!attr.get("value").isEmpty()) {
+            setValue(DesignAttributeHandler.readAttribute("value", attr,
+                    Double.class));
         }
     }
 

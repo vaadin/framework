@@ -34,10 +34,8 @@ import org.jsoup.nodes.Element;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
@@ -703,28 +701,22 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded
      *            True if caller is sure that repaint is not needed.
-     * @param ignoreReadOnly
-     *            True if read-only check should be omitted.
      * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object,
      *      java.lang.Boolean)
      */
     @Override
-    protected void setValue(Object newFieldValue, boolean repaintIsNotNeeded,
-            boolean ignoreReadOnly)
-            throws com.vaadin.data.Property.ReadOnlyException,
-            ConversionException, InvalidValueException {
+    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+            throws Property.ReadOnlyException {
+
         if (isMultiSelect()) {
-            if (newFieldValue == null) {
-                super.setValue(new LinkedHashSet<Object>(), repaintIsNotNeeded,
-                        ignoreReadOnly);
-            } else if (Collection.class.isAssignableFrom(newFieldValue
-                    .getClass())) {
+            if (newValue == null) {
+                super.setValue(new LinkedHashSet<Object>(), repaintIsNotNeeded);
+            } else if (Collection.class.isAssignableFrom(newValue.getClass())) {
                 super.setValue(new LinkedHashSet<Object>(
-                        (Collection<?>) newFieldValue), repaintIsNotNeeded,
-                        ignoreReadOnly);
+                        (Collection<?>) newValue), repaintIsNotNeeded);
             }
-        } else if (newFieldValue == null || items.containsId(newFieldValue)) {
-            super.setValue(newFieldValue, repaintIsNotNeeded, ignoreReadOnly);
+        } else if (newValue == null || items.containsId(newValue)) {
+            super.setValue(newValue, repaintIsNotNeeded);
         }
     }
 
@@ -2204,9 +2196,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
         if (!selected.isEmpty()) {
             if (isMultiSelect()) {
-                setValue(selected, false, true);
+                setValue(selected);
             } else if (selected.size() == 1) {
-                setValue(selected.iterator().next(), false, true);
+                setValue(selected.iterator().next());
             } else {
                 throw new DesignException(
                         "Multiple values selected for a single select component");
