@@ -135,11 +135,6 @@ public class AtmospherePushConnection implements PushConnection {
      */
     private Command pendingDisconnectCommand;
 
-    /**
-     * The url to use for push requests
-     */
-    private String url;
-
     public AtmospherePushConnection() {
     }
 
@@ -185,12 +180,7 @@ public class AtmospherePushConnection implements PushConnection {
             config.setStringValue(param,
                     pushConfiguration.parameters.get(param));
         }
-        if (pushConfiguration.pushUrl != null) {
-            url = pushConfiguration.pushUrl;
-        } else {
-            url = ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.PUSH_PATH;
-        }
+
         runWhenAtmosphereLoaded(new Command() {
             @Override
             public void execute() {
@@ -205,7 +195,9 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     private void connect() {
-        String baseUrl = connection.translateVaadinUri(url);
+        String baseUrl = connection
+                .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                        + ApplicationConstants.PUSH_PATH);
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 

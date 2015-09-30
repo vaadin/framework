@@ -139,29 +139,6 @@ public interface PushConfiguration extends Serializable {
      */
     public void setParameter(String parameter, String value);
 
-    /**
-     * Sets the URL to use for push requests.
-     * <p>
-     * This is only used when overriding the URL to use. Setting this to null
-     * (the default) will use the default URL.
-     * 
-     * @since
-     * @param pushUrl
-     *            The push URL to use
-     */
-    public void setPushUrl(String pushUrl);
-
-    /**
-     * Returns the URL to use for push requests.
-     * <p>
-     * This is only used when overriding the URL to use. Returns null (the
-     * default) when the default URL is used.
-     * 
-     * @since
-     * @return the URL to use for push requests, or null to use to default
-     */
-    public String getPushUrl();
-
 }
 
 class PushConfigurationImpl implements PushConfiguration {
@@ -220,16 +197,6 @@ class PushConfigurationImpl implements PushConfiguration {
             // Nothing to do here if disabling push;
             // the client will close the connection
         }
-    }
-
-    @Override
-    public void setPushUrl(String pushUrl) {
-        getState().pushUrl = pushUrl;
-    }
-
-    @Override
-    public String getPushUrl() {
-        return getState(false).pushUrl;
     }
 
     /*
