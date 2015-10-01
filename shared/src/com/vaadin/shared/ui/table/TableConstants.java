@@ -18,6 +18,13 @@ package com.vaadin.shared.ui.table;
 import java.io.Serializable;
 
 public class TableConstants implements Serializable {
+    /**
+     * Enum describing different sections of Table.
+     */
+    public enum Section {
+        HEADER, BODY, FOOTER
+    }
+
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";

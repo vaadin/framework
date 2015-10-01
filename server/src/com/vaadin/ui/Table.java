@@ -46,6 +46,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -65,6 +66,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.table.TableConstants;
+import com.vaadin.shared.ui.table.TableConstants.Section;
+import com.vaadin.shared.ui.table.TableServerRpc;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -595,6 +598,18 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Table() {
         setRowHeaderMode(ROW_HEADER_MODE_HIDDEN);
+
+        registerRpc(new TableServerRpc() {
+
+            @Override
+            public void contextClick(String rowKey, String colKey,
+                    Section section, MouseEventDetails details) {
+                Object itemId = itemIdMapper.get(rowKey);
+                Object propertyId = columnIdMap.get(colKey);
+                fireEvent(new TableContextClickEvent(Table.this, details,
+                        itemId, propertyId, section));
+            }
+        });
     }
 
     /**
@@ -6375,6 +6390,57 @@ public class Table extends AbstractSelect implements Action.Container,
         result.add("current-page-first-item-id");
         result.add("current-page-first-item-index");
         return result;
+    }
+
+    /* Context Click handling */
+
+    public static class TableContextClickEvent extends ContextClickEvent {
+
+        private final Object itemId;
+        private final Object propertyId;
+        private final Section section;
+
+        public TableContextClickEvent(Table source,
+                MouseEventDetails mouseEventDetails, Object itemId,
+                Object propertyId, Section section) {
+            super(source, mouseEventDetails);
+
+            this.itemId = itemId;
+            this.propertyId = propertyId;
+            this.section = section;
+        }
+
+        /**
+         * Returns the item id of context clicked row.
+         * 
+         * @return item id of clicked row; <code>null</code> if header or footer
+         */
+        public Object getItemId() {
+            return itemId;
+        }
+
+        /**
+         * Returns the property id of context clicked column.
+         * 
+         * @return property id
+         */
+        public Object getPropertyId() {
+            return propertyId;
+        }
+
+        /**
+         * Returns the clicked section of Table.
+         * 
+         * @return section of Table
+         */
+        public Section getSection() {
+            return section;
+        }
+
+        @Override
+        public Table getComponent() {
+            return (Table) super.getComponent();
+        }
     }
 
     private final Logger getLogger() {

@@ -22,7 +22,9 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -32,6 +34,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasComponentsConnector;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
@@ -41,9 +44,14 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VScrollTable.ContextMenuDetails;
+import com.vaadin.client.ui.VScrollTable.FooterCell;
+import com.vaadin.client.ui.VScrollTable.HeaderCell;
 import com.vaadin.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.table.TableConstants;
+import com.vaadin.shared.ui.table.TableConstants.Section;
+import com.vaadin.shared.ui.table.TableServerRpc;
 import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
@@ -72,6 +80,59 @@ public class TableConnector extends AbstractFieldConnector implements
     public void onUnregister() {
         super.onUnregister();
         getWidget().onUnregister();
+    }
+
+    @Override
+    protected void sendContextClickEvent(ContextMenuEvent event) {
+        EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+        if (!Element.is(eventTarget)) {
+            super.sendContextClickEvent(event);
+            return;
+        }
+        Element e = Element.as(eventTarget);
+
+        Section section;
+        String colKey;
+        String rowKey = null;
+        if (getWidget().tFoot.getElement().isOrHasChild(e)) {
+            section = Section.FOOTER;
+            FooterCell w = WidgetUtil.findWidget(e, FooterCell.class);
+            colKey = w.getColKey();
+        } else if (getWidget().tHead.getElement().isOrHasChild(e)) {
+            section = Section.HEADER;
+            HeaderCell w = WidgetUtil.findWidget(e, HeaderCell.class);
+            colKey = w.getColKey();
+        } else if (getWidget().scrollBody.getElement().isOrHasChild(e)) {
+            section = Section.BODY;
+            VScrollTableRow w = WidgetUtil.findWidget(e, VScrollTableRow.class);
+            rowKey = w.getKey();
+            colKey = getWidget().tHead.getHeaderCell(
+                    getElementIndex(e, w.getElement())).getColKey();
+        } else {
+            super.sendContextClickEvent(event);
+            return;
+        }
+
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent());
+
+        // Prevent browser default context menu
+        event.preventDefault();
+        event.stopPropagation();
+
+        getRpcProxy(TableServerRpc.class).contextClick(rowKey, colKey, section,
+                details);
+    }
+
+    private int getElementIndex(Element e,
+            com.google.gwt.user.client.Element element) {
+        int i = 0;
+        Element current = element.getFirstChildElement();
+        while (!current.isOrHasChild(e)) {
+            current = current.getNextSiblingElement();
+            ++i;
+        }
+        return i;
     }
 
     /*
