@@ -104,7 +104,7 @@ public class TableConnector extends AbstractFieldConnector implements
             colKey = w.getColKey();
         } else if (getWidget().scrollBody.getElement().isOrHasChild(e)) {
             section = Section.BODY;
-            VScrollTableRow w = WidgetUtil.findWidget(e, VScrollTableRow.class);
+            VScrollTableRow w = getScrollTableRow(e);
             rowKey = w.getKey();
             colKey = getWidget().tHead.getHeaderCell(
                     getElementIndex(e, w.getElement())).getColKey();
@@ -122,6 +122,10 @@ public class TableConnector extends AbstractFieldConnector implements
 
         getRpcProxy(TableServerRpc.class).contextClick(rowKey, colKey, section,
                 details);
+    }
+
+    protected VScrollTableRow getScrollTableRow(Element e) {
+        return WidgetUtil.findWidget(e, VScrollTableRow.class);
     }
 
     private int getElementIndex(Element e,

@@ -143,4 +143,9 @@ public class TreeTableConnector extends TableConnector {
 
         return info;
     }
+
+    @Override
+    protected VScrollTableRow getScrollTableRow(Element e) {
+        return WidgetUtil.findWidget(e, VTreeTableRow.class);
+    }
 }
