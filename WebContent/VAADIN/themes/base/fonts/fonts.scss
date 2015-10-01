@@ -1,9 +1,14 @@
+$v-font-awesome: true !default; // Set to false to exclude Font Awesome
+
 @mixin fonts {
 	@include fonticons;
+	@include v-font(ThemeIcons, themeicons-webfont);
 }
 
 @mixin fonticons {
-	@include v-font(FontAwesome, fontawesome-webfont);
+	@if $v-font-awesome {
+		@include v-font(FontAwesome, fontawesome-webfont);
+	}
 }
 
 @mixin v-font($font-family, $file-name) {

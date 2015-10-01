@@ -378,7 +378,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * @group tabsheet
  */
 @mixin valo-tabsheet-scroller-prev-icon-style {
-  font-family: ValoIcons;
+  font-family: ThemeIcons;
   content: "\f053";
 }
 
@@ -389,7 +389,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * @group tabsheet
  */
 @mixin valo-tabsheet-scroller-next-icon-style {
-  font-family: ValoIcons;
+  font-family: ThemeIcons;
   content: "\f054";
 }
 

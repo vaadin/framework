@@ -7,13 +7,14 @@
 # Generated from FontAwesome 4.1:
 # https://github.com/FortAwesome/Font-Awesome/raw/v4.1.0/fonts/FontAwesome.otf
 
-# Download the font to WebContent/VAADIN/themes/valo/fonts/valoicons and run
+# Download the font to WebContent/VAADIN/themes/base/fonts/ and run
 # the script there
 
 Open("FontAwesome.otf")
 
-# Icons used in Valo
-Select(0uf00c)
+# Icons used in themes
+Select(0u0020)
+SelectMore(0uf00c)
 SelectMore(0uf013)
 SelectMore(0uf032)
 SelectMore(0uf033)
@@ -29,6 +30,7 @@ SelectMore(0uf05e)
 SelectMore(0uf073)
 SelectMore(0uf078)
 SelectMore(0uf0c1)
+SelectMore(0uf0c9)
 SelectMore(0uf0ca)
 SelectMore(0uf0cb)
 SelectMore(0uf0cc)
@@ -52,7 +54,8 @@ SelectMore(0uf141)
 SelectInvert()
 DetachAndRemoveGlyphs()
 
-Generate("valoicons.otf")
+Generate("themeicons.otf")
 
-# valoicons.otf converted to webfonts using http://www.fontsquirrel.com/tools/webfont-generator and valoicons-generator_config.txt
+# themeicons.otf converted to webfonts using http://www.fontsquirrel.com/tools/webfont-generator and
+# themeicons-generator_config.txt
 

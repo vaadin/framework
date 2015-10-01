@@ -290,7 +290,7 @@ $v-tree-expand-animation-enabled: false !default;
  */
 @mixin valo-tree-collapsed-icon-style {
   content: "\f0da";
-  font-family: ValoIcons;
+  font-family: ThemeIcons;
 }
 
 /**
@@ -303,6 +303,6 @@ $v-tree-expand-animation-enabled: false !default;
 @mixin valo-tree-expanded-icon-style ($force: false) {
   @if $v-tree-animations-enabled == false or $force {
     content: "\f0d7";
-    font-family: ValoIcons;
+    font-family: ThemeIcons;
   }
 }

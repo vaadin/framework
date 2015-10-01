@@ -73,7 +73,7 @@ $valo-richtextarea-use-valo-icons: true !default;
       }
 
       div:before {
-        font-family: ValoIcons;
+        font-family: ThemeIcons;
       }
 
       @each $pair in $icons {
@@ -84,7 +84,7 @@ $valo-richtextarea-use-valo-icons: true !default;
         }
       }
     }
-  } // Use ValoIcons
+  } // Use ThemeIcons
 
   .#{$primary-stylename} .gwt-RichTextToolbar-bottom {
     font-size: round($v-font-size * 0.8);
