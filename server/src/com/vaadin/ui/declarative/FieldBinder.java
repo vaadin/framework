@@ -18,7 +18,6 @@ package com.vaadin.ui.declarative;
 import java.beans.IntrospectionException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.vaadin.ui.Component;
-import com.vaadin.util.ReflectTools;
 
 /**
  * Binder utility that binds member fields of a design class instance to given
@@ -84,15 +82,13 @@ public class FieldBinder implements Serializable {
         List<String> unboundFields = new ArrayList<String>();
         for (Field f : fieldMap.values()) {
             try {
-                Object value = ReflectTools.getJavaFieldValue(bindTarget, f);
+                Object value = getFieldValue(bindTarget, f);
                 if (value == null) {
                     unboundFields.add(f.getName());
                 }
             } catch (IllegalArgumentException e) {
                 throw new FieldBindingException("Could not get field value", e);
             } catch (IllegalAccessException e) {
-                throw new FieldBindingException("Could not get field value", e);
-            } catch (InvocationTargetException e) {
                 throw new FieldBindingException("Could not get field value", e);
             }
         }
@@ -192,15 +188,14 @@ public class FieldBinder implements Serializable {
                 return false;
             }
             // validate that the field is not set
-            Object fieldValue = ReflectTools.getJavaFieldValue(bindTarget,
-                    field);
+            Object fieldValue = getFieldValue(bindTarget, field);
             if (fieldValue != null) {
                 getLogger().fine(
                         "The field \"" + fieldName
                                 + "\" was already mapped. Ignoring.");
             } else {
                 // set the field value
-                ReflectTools.setJavaFieldValue(bindTarget, field, instance);
+                field.set(bindTarget, instance);
             }
             return true;
         } catch (IllegalAccessException e) {
@@ -209,10 +204,16 @@ public class FieldBinder implements Serializable {
         } catch (IllegalArgumentException e) {
             throw new FieldBindingException("Field binding failed for "
                     + identifier, e);
-        } catch (InvocationTargetException e) {
-            throw new FieldBindingException("Field binding failed for "
-                    + identifier, e);
         }
+    }
+
+    private Object getFieldValue(Object object, Field field)
+            throws IllegalArgumentException, IllegalAccessException {
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+
+        return field.get(object);
     }
 
     /**
