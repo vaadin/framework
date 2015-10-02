@@ -154,6 +154,9 @@ public class AbsoluteLayout extends AbstractLayout implements
      */
     private void addComponent(Component c, ComponentPosition position)
             throws IllegalArgumentException {
+        if (equals(c.getParent())) {
+            removeComponent(c);
+        }
         /*
          * Create position instance and add it to componentToCoordinates map. We
          * need to do this before we call addComponent so the attachListeners
