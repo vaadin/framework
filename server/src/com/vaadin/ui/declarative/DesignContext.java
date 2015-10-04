@@ -436,7 +436,7 @@ public class DesignContext implements Serializable {
      * {@link Constants#SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX} can be used to
      * switch to the legacy prefix.
      * 
-     * @since
+     * @since 7.5.7
      * @return true to use the legacy prefix, false by default
      */
     protected boolean isLegacyPrefixEnabled() {

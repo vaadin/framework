@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * TODO Document me!
@@ -137,6 +138,14 @@ public interface Constants {
     static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
     static final String SERVLET_PARAMETER_SYNC_ID_CHECK = "syncIdCheck";
     static final String SERVLET_PARAMETER_SENDURLSASPARAMETERS = "sendUrlsAsParameters";
+    /**
+     * Name of system or context property to write declarative syntax with the
+     * old "v-" prefix or with the new "vaadin-" prefix. The default value
+     * depends on the Vaadin branch used.
+     * 
+     * @see DesignContext
+     * @since 7.5.7
+     */
     static final String SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX = "legacyDesignPrefix";
 
     // Configurable parameter names

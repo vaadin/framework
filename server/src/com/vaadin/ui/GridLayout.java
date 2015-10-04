@@ -1603,7 +1603,6 @@ public class GridLayout extends AbstractLayout implements
      * info about number of columns and rows if there are absolutely no
      * components in the {@link GridLayout}
      * 
-     * @since
      * @param design
      * @param designContext
      */

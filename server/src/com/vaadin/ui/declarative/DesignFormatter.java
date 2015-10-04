@@ -374,7 +374,7 @@ public class DesignFormatter implements Serializable {
      * option items in {@link AbstractSelect}) when dumping to HTML format
      * </p>
      * 
-     * @since
+     * @since 7.5.7
      * @param input
      *            String to be encoded
      * @return String with &amp;,&lt; and &gt; replaced with their HTML entities
@@ -399,7 +399,7 @@ public class DesignFormatter implements Serializable {
      * unencodes more characters than {@link #encodeForTextNode(String)} encodes
      * </p>
      * 
-     * @since
+     * @since 7.5.7
      * @param input
      * @return
      */
