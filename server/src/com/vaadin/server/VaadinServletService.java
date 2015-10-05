@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
@@ -36,37 +35,11 @@ import com.vaadin.ui.UI;
 public class VaadinServletService extends VaadinService {
     private final VaadinServlet servlet;
 
-    private boolean atmosphereAvailable = checkAtmosphereSupport();
-
-    /**
-     * Keeps track of whether a warning about missing push support has already
-     * been logged. This is used to avoid spamming the log with the same message
-     * every time a new UI is bootstrapped.
-     */
-    private boolean pushWarningLogged = false;
-
     public VaadinServletService(VaadinServlet servlet,
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
-    }
-
-    private static boolean checkAtmosphereSupport() {
-        String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
-        if (rawVersion == null) {
-            return false;
-        }
-
-        if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
-            getLogger().log(
-                    Level.WARNING,
-                    Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                    new Object[] {
-                            Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
-                            rawVersion });
-        }
-        return true;
     }
 
     @Override
@@ -75,7 +48,7 @@ public class VaadinServletService extends VaadinService {
         List<RequestHandler> handlers = super.createRequestHandlers();
         handlers.add(0, new ServletBootstrapHandler());
         handlers.add(new ServletUIInitHandler());
-        if (atmosphereAvailable) {
+        if (isAtmosphereAvailable()) {
             try {
                 handlers.add(new PushRequestHandler(this));
             } catch (ServiceException e) {
@@ -86,7 +59,6 @@ public class VaadinServletService extends VaadinService {
                         .log(Level.WARNING,
                                 "Error initializing Atmosphere. Push will not work.",
                                 e);
-                atmosphereAvailable = false;
             }
         }
         return handlers;
@@ -271,17 +243,4 @@ public class VaadinServletService extends VaadinService {
         return Logger.getLogger(VaadinServletService.class.getName());
     }
 
-    @Override
-    public boolean ensurePushAvailable() {
-        if (atmosphereAvailable) {
-            return true;
-        } else {
-            if (!pushWarningLogged) {
-                pushWarningLogged = true;
-                getLogger().log(Level.WARNING,
-                        Constants.ATMOSPHERE_MISSING_ERROR);
-            }
-            return false;
-        }
-    }
 }

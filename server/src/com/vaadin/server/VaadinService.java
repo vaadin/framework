@@ -52,6 +52,7 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.FutureAccess;
 import com.vaadin.server.VaadinSession.State;
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
@@ -132,6 +133,8 @@ public abstract class VaadinService implements Serializable {
     private ClassLoader classLoader;
 
     private Iterable<RequestHandler> requestHandlers;
+
+    private boolean atmosphereAvailable = checkAtmosphereSupport();
 
     /**
      * Keeps track of whether a warning about missing push support has already
@@ -1625,13 +1628,43 @@ public abstract class VaadinService implements Serializable {
      *         is not available.
      */
     public boolean ensurePushAvailable() {
-        if (!pushWarningEmitted) {
-            pushWarningEmitted = true;
-            getLogger().log(Level.WARNING, Constants.PUSH_NOT_SUPPORTED_ERROR,
-                    getClass().getSimpleName());
+        if (atmosphereAvailable) {
+            return true;
+        } else {
+            if (!pushWarningEmitted) {
+                pushWarningEmitted = true;
+                getLogger().log(Level.WARNING,
+                        Constants.ATMOSPHERE_MISSING_ERROR);
+            }
+            return false;
         }
-        // Not supported by default for now, sublcasses may override
-        return false;
+    }
+
+    private static boolean checkAtmosphereSupport() {
+        String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
+        if (rawVersion == null) {
+            return false;
+        }
+
+        if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
+            getLogger().log(
+                    Level.WARNING,
+                    Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
+                    new Object[] {
+                            Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
+                            rawVersion });
+        }
+        return true;
+    }
+
+    /**
+     * Checks whether Atmosphere is avilable for use
+     * 
+     * @since
+     * @return true if Atmosphere is available, false otherwise
+     */
+    protected boolean isAtmosphereAvailable() {
+        return atmosphereAvailable;
     }
 
     /**
