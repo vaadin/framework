@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import static org.easymock.EasyMock.and;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +32,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +44,8 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.ColumnResizeEvent;
+import com.vaadin.ui.Grid.ColumnResizeListener;
 import com.vaadin.ui.TextField;
 
 public class GridColumns {
@@ -353,5 +360,35 @@ public class GridColumns {
         firstColumn.setHeaderCaption("headerCaption");
         assertEquals("hidingToggleCaption",
                 firstColumn.getHidingToggleCaption());
+    }
+
+    @Test
+    public void testColumnSetWidthFiresResizeEvent() {
+        final Column firstColumn = grid.getColumns().get(0);
+
+        // prepare a listener mock that captures the argument
+        ColumnResizeListener mock = EasyMock
+                .createMock(ColumnResizeListener.class);
+        Capture<ColumnResizeEvent> capturedEvent = new Capture<ColumnResizeEvent>();
+        mock.columnResize(and(capture(capturedEvent),
+                isA(ColumnResizeEvent.class)));
+        EasyMock.expectLastCall().once();
+
+        // Tell it to wait for the call
+        EasyMock.replay(mock);
+
+        // Cause a resize event
+        grid.addColumnResizeListener(mock);
+        firstColumn.setWidth(firstColumn.getWidth() + 10);
+
+        // Verify the method was called
+        EasyMock.verify(mock);
+
+        // Asserts on the captured event
+        ColumnResizeEvent event = capturedEvent.getValue();
+        assertEquals("Event column was not first column.", firstColumn,
+                event.getColumn());
+        assertFalse("Event should not be userOriginated",
+                event.isUserOriginated());
     }
 }

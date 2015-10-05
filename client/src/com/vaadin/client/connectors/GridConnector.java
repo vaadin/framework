@@ -62,6 +62,8 @@ import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnResizeEvent;
+import com.vaadin.client.widget.grid.events.ColumnResizeHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
@@ -191,14 +193,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
 
             return null;
-        }
-
-        @Override
-        protected void setWidth(double pixels, boolean userOriginated) {
-            super.setWidth(pixels, userOriginated);
-            if (userOriginated) {
-                getRpcProxy(GridServerRpc.class).columnResized(id, pixels);
-            }
         }
 
         private AbstractFieldConnector getEditorConnector() {
@@ -479,6 +473,21 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
+    private ColumnResizeHandler<JsonObject> columnResizeHandler = new ColumnResizeHandler<JsonObject>() {
+
+        @Override
+        public void onColumnResize(ColumnResizeEvent<JsonObject> event) {
+            if (!columnsUpdatedFromState) {
+                Column<?, JsonObject> column = event.getColumn();
+                if (column instanceof CustomGridColumn) {
+                    getRpcProxy(GridServerRpc.class).columnResized(
+                            ((CustomGridColumn) column).id,
+                            column.getWidthActual());
+                }
+            }
+        }
+    };
+
     private class CustomDetailsGenerator implements DetailsGenerator {
 
         private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
@@ -750,6 +759,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().addColumnReorderHandler(columnReorderHandler);
         getWidget().addColumnVisibilityChangeHandler(
                 columnVisibilityChangeHandler);
+        getWidget().addColumnResizeHandler(columnResizeHandler);
 
         ConnectorFocusAndBlurHandler.addHandlers(this);
 

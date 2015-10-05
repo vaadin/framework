@@ -60,6 +60,8 @@ import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ColumnReorderEvent;
 import com.vaadin.ui.Grid.ColumnReorderListener;
+import com.vaadin.ui.Grid.ColumnResizeEvent;
+import com.vaadin.ui.Grid.ColumnResizeListener;
 import com.vaadin.ui.Grid.ColumnVisibilityChangeEvent;
 import com.vaadin.ui.Grid.ColumnVisibilityChangeListener;
 import com.vaadin.ui.Grid.DetailsGenerator;
@@ -354,8 +356,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         grid.addSortListener(new SortListener() {
             @Override
             public void sort(SortEvent event) {
+                log("SortEvent: isUserOriginated? " + event.isUserOriginated());
+            }
+        });
 
-                log("SortOrderChangeEvent: isUserOriginated? "
+        grid.addColumnResizeListener(new ColumnResizeListener() {
+
+            @Override
+            public void columnResize(ColumnResizeEvent event) {
+                log("ColumnResizeEvent : isUserOriginated? "
                         + event.isUserOriginated());
             }
         });

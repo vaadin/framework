@@ -124,6 +124,8 @@ import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
+import com.vaadin.client.widget.grid.events.ColumnResizeEvent;
+import com.vaadin.client.widget.grid.events.ColumnResizeHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
@@ -4761,17 +4763,13 @@ public class Grid<T> extends ResizeComposite implements
          *            the width in pixels or negative for auto sizing
          */
         public Column<C, T> setWidth(double pixels) {
-            setWidth(pixels, false);
-            return this;
-        }
-
-        protected void setWidth(double pixels, boolean userOriginated) {
             if (!WidgetUtil.pixelValuesEqual(widthUser, pixels)) {
                 widthUser = pixels;
                 if (!isHidden()) {
                     scheduleColumnWidthRecalculator();
                 }
             }
+            return this;
         }
 
         void doSetWidth(double pixels) {
@@ -5578,7 +5576,7 @@ public class Grid<T> extends ResizeComposite implements
                                 @Override
                                 public void onUpdate(double deltaX,
                                         double deltaY) {
-                                    col.setWidth(initialWidth + deltaX, false);
+                                    col.setWidth(initialWidth + deltaX);
                                 }
 
                                 @Override
@@ -5588,12 +5586,12 @@ public class Grid<T> extends ResizeComposite implements
 
                                 @Override
                                 public void onComplete() {
-                                    col.setWidth(col.getWidthActual(), true);
+                                    fireEvent(new ColumnResizeEvent<T>(col));
                                 }
 
                                 @Override
                                 public void onCancel() {
-                                    col.setWidth(initialWidth, false);
+                                    col.setWidth(initialWidth);
                                 }
                             });
                     dragger.addTo(td);
@@ -7927,6 +7925,20 @@ public class Grid<T> extends ResizeComposite implements
     public HandlerRegistration addColumnVisibilityChangeHandler(
             ColumnVisibilityChangeHandler<T> handler) {
         return addHandler(handler, ColumnVisibilityChangeEvent.getType());
+    }
+
+    /**
+     * Register a column resize handler to this Grid. The event for this handler
+     * is fired when the Grid's columns are resized.
+     * 
+     * @since
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addColumnResizeHandler(
+            ColumnResizeHandler<T> handler) {
+        return addHandler(handler, ColumnResizeEvent.getType());
     }
 
     /**

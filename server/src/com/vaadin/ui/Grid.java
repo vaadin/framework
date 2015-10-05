@@ -541,6 +541,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @since 7.5.0
      */
     public interface ColumnReorderListener extends Serializable {
+
         /**
          * Called when the columns of the grid have been reordered.
          * 
@@ -557,9 +558,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static class ColumnReorderEvent extends Component.Event {
 
-        /**
-         * Is the column reorder related to this event initiated by the user
-         */
         private final boolean userOriginated;
 
         /**
@@ -585,6 +583,163 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             return userOriginated;
         }
 
+    }
+
+    /**
+     * An event listener for column resize events in the Grid.
+     * 
+     * @since
+     */
+    public interface ColumnResizeListener extends Serializable {
+
+        /**
+         * Called when the columns of the grid have been resized.
+         * 
+         * @param event
+         *            An event providing more information
+         */
+        void columnResize(ColumnResizeEvent event);
+    }
+
+    /**
+     * An event that is fired when a column is resized, either programmatically
+     * or by the user.
+     * 
+     * @since
+     */
+    public static class ColumnResizeEvent extends Component.Event {
+
+        private final Column column;
+        private final boolean userOriginated;
+
+        /**
+         * 
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnResizeEvent(Grid source, Column column,
+                boolean userOriginated) {
+            super(source);
+            this.column = column;
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns the column that was resized.
+         * 
+         * @return the resized column.
+         */
+        public Column getColumn() {
+            return column;
+        }
+
+        /**
+         * Returns <code>true</code> if the column resize was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         * 
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+
+    }
+
+    /**
+     * Interface for an editor event listener
+     */
+    public interface EditorListener extends Serializable {
+
+        public static final Method EDITOR_OPEN_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorOpened",
+                        EditorOpenEvent.class);
+        public static final Method EDITOR_MOVE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorMoved",
+                        EditorMoveEvent.class);
+        public static final Method EDITOR_CLOSE_METHOD = ReflectTools
+                .findMethod(EditorListener.class, "editorClosed",
+                        EditorCloseEvent.class);
+
+        /**
+         * Called when an editor is opened
+         * 
+         * @param e
+         *            an editor open event object
+         */
+        public void editorOpened(EditorOpenEvent e);
+
+        /**
+         * Called when an editor is reopened without closing it first
+         * 
+         * @param e
+         *            an editor move event object
+         */
+        public void editorMoved(EditorMoveEvent e);
+
+        /**
+         * Called when an editor is closed
+         * 
+         * @param e
+         *            an editor close event object
+         */
+        public void editorClosed(EditorCloseEvent e);
+
+    }
+
+    /**
+     * Base class for editor related events
+     */
+    public static abstract class EditorEvent extends Component.Event {
+
+        private Object itemID;
+
+        protected EditorEvent(Grid source, Object itemID) {
+            super(source);
+            this.itemID = itemID;
+        }
+
+        /**
+         * Get the item (row) for which this editor was opened
+         */
+        public Object getItem() {
+            return itemID;
+        }
+
+    }
+
+    /**
+     * This event gets fired when an editor is opened
+     */
+    public static class EditorOpenEvent extends EditorEvent {
+
+        public EditorOpenEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is opened while another row is being
+     * edited (i.e. editor focus moves elsewhere)
+     */
+    public static class EditorMoveEvent extends EditorEvent {
+
+        public EditorMoveEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
+    }
+
+    /**
+     * This event gets fired when an editor is dismissed or closed by other
+     * means.
+     */
+    public static class EditorCloseEvent extends EditorEvent {
+
+        public EditorCloseEvent(Grid source, Object itemID) {
+            super(source, itemID);
+        }
     }
 
     /**
@@ -2955,22 +3110,41 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         "Pixel width should be greated than 0 (in "
                                 + toString() + ")");
             }
-            state.width = pixelWidth;
-            grid.markAsDirty();
+            if (state.width != pixelWidth) {
+                state.width = pixelWidth;
+                grid.markAsDirty();
+                grid.fireColumnResizeEvent(this, false);
+            }
             return this;
         }
 
         /**
-         * Marks the column width as undefined meaning that the grid is free to
-         * resize the column based on the cell contents and available space in
-         * the grid.
+         * Returns whether this column has an undefined width.
+         * 
+         * @since
+         * @return whether the width is undefined
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public boolean isWidthUndefined() {
+            checkColumnIsAttached();
+            return state.width < 0;
+        }
+
+        /**
+         * Marks the column width as undefined. An undefined width means the
+         * grid is free to resize the column based on the cell contents and
+         * available space in the grid.
          * 
          * @return the column itself
          */
         public Column setWidthUndefined() {
             checkColumnIsAttached();
-            state.width = -1;
-            grid.markAsDirty();
+            if (!isWidthUndefined()) {
+                state.width = -1;
+                grid.markAsDirty();
+                grid.fireColumnResizeEvent(this, false);
+            }
             return this;
         }
 
@@ -4086,6 +4260,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             .findMethod(ColumnReorderListener.class, "columnReorder",
                     ColumnReorderEvent.class);
 
+    private static final Method COLUMN_RESIZE_METHOD = ReflectTools
+            .findMethod(ColumnResizeListener.class, "columnResize",
+                    ColumnResizeEvent.class);
+
     private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
             .findMethod(ColumnVisibilityChangeListener.class,
                     "columnVisibilityChanged",
@@ -4276,6 +4454,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 final Column column = getColumnByColumnId(id);
                 if (column != null && column.isResizable()) {
                     column.getState().width = pixels;
+                    fireColumnResizeEvent(column, true);
                 }
             }
         });
@@ -5372,6 +5551,30 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     public void removeColumnReorderListener(ColumnReorderListener listener) {
         removeListener(ColumnReorderEvent.class, listener,
                 COLUMN_REORDER_METHOD);
+    }
+
+    private void fireColumnResizeEvent(Column column, boolean userOriginated) {
+        fireEvent(new ColumnResizeEvent(this, column, userOriginated));
+    }
+
+    /**
+     * Registers a new column resize listener.
+     * 
+     * @param listener
+     *            the listener to register
+     */
+    public void addColumnResizeListener(ColumnResizeListener listener) {
+        addListener(ColumnResizeEvent.class, listener, COLUMN_RESIZE_METHOD);
+    }
+
+    /**
+     * Removes a previously registered column resize listener.
+     * 
+     * @param listener
+     *            the listener to remove
+     */
+    public void removeColumnResizeListener(ColumnResizeListener listener) {
+        removeListener(ColumnResizeEvent.class, listener, COLUMN_RESIZE_METHOD);
     }
 
     /**

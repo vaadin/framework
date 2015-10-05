@@ -16,10 +16,13 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -83,5 +86,17 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         assertEquals("Header resize handle present", resizable,
                 cell.isElementPresent(By
                         .cssSelector("div.v-grid-column-resize-handle")));
+    }
+
+    @Test
+    public void testResizeFirstColumn() {
+        GridCellElement headerCell = getGridElement().getHeaderCell(0, 0);
+        Dimension size = headerCell.getSize();
+        new Actions(getDriver())
+                .moveToElement(headerCell, size.getWidth() - 1,
+                        size.getHeight() / 2).clickAndHold()
+                .moveByOffset(-10, 0).release().perform();
+        assertTrue("Log did not contain a resize event.",
+                logContainsText("ColumnResizeEvent : isUserOriginated? true"));
     }
 }

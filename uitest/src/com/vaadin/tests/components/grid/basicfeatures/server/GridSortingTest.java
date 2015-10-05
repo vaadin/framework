@@ -379,7 +379,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Find a message in the log
         List<WebElement> userOriginatedMessages = getDriver()
                 .findElements(
-                        By.xpath("//div[@id='Log']//*[contains(text(),'SortOrderChangeEvent: isUserOriginated')]"));
+                        By.xpath("//div[@id='Log']//*[contains(text(),'SortEvent: isUserOriginated')]"));
 
         Collections.sort(userOriginatedMessages, new Comparator<WebElement>() {
             @Override
