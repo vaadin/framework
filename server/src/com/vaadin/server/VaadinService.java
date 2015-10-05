@@ -756,7 +756,7 @@ public abstract class VaadinService implements Serializable {
 
         VaadinSession.setCurrent(session);
 
-        session.storeInSession(this, request.getWrappedSession());
+        storeSession(session, request.getWrappedSession());
 
         // Initial WebBrowser data comes from the request
         session.getBrowser().updateRequestDetails(request);
@@ -824,7 +824,7 @@ public abstract class VaadinService implements Serializable {
         }
 
         if (session != null) {
-            vaadinSession.removeFromSession(this);
+            removeSession(session);
         }
     }
 
@@ -834,8 +834,7 @@ public abstract class VaadinService implements Serializable {
         final WrappedSession session = getWrappedSession(request,
                 allowSessionCreation);
 
-        VaadinSession vaadinSession = VaadinSession
-                .getForSession(this, session);
+        VaadinSession vaadinSession = loadSession(session);
 
         if (vaadinSession == null) {
             return null;
@@ -987,8 +986,7 @@ public abstract class VaadinService implements Serializable {
      */
     public UI findUI(VaadinRequest request) {
         // getForSession asserts that the lock is held
-        VaadinSession session = VaadinSession.getForSession(this,
-                request.getWrappedSession());
+        VaadinSession session = loadSession(request.getWrappedSession());
 
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
@@ -1075,7 +1073,7 @@ public abstract class VaadinService implements Serializable {
                 service.setSessionLock(newSession,
                         serviceSession.getLockInstance());
 
-                serviceSession.storeInSession(service, newSession);
+                service.storeSession(serviceSession, newSession);
                 serviceSession.setAttribute(PRESERVE_UNBOUND_SESSION_ATTRIBUTE,
                         null);
             }
@@ -1159,7 +1157,7 @@ public abstract class VaadinService implements Serializable {
                  * already been removed from the HttpSession and we do not have
                  * to do it again
                  */
-                session.removeFromSession(this);
+                removeSession(session.getSession());
             }
 
             /*
@@ -1883,4 +1881,113 @@ public abstract class VaadinService implements Serializable {
             throw e;
         }
     }
+
+    /**
+     * Called when the VaadinSession should be stored.
+     * <p>
+     * By default stores the VaadinSession in the underlying HTTP session.
+     * 
+     * @since
+     * @param session
+     *            the VaadinSession to store
+     * @param wrappedSession
+     *            the underlying HTTP session
+     */
+    protected void storeSession(VaadinSession session,
+            WrappedSession wrappedSession) {
+        assert VaadinSession.hasLock(this, wrappedSession);
+        writeToHttpSession(wrappedSession, session);
+        session.refreshTransients(wrappedSession, this);
+    }
+
+    /**
+     * Performs the actual write of the VaadinSession to the underlying HTTP
+     * session after sanity checks have been performed.
+     * <p>
+     * Called by {@link #storeSession(VaadinSession, WrappedSession)}
+     * 
+     * @since
+     * @param wrappedSession
+     *            the underlying HTTP session
+     * @param session
+     *            the VaadinSession to store
+     */
+    protected void writeToHttpSession(WrappedSession wrappedSession,
+            VaadinSession session) {
+        wrappedSession.setAttribute(getSessionAttributeName(), session);
+    }
+
+    /**
+     * Called when the VaadinSession should be loaded from the underlying HTTP
+     * session
+     * 
+     * @since
+     * @param wrappedSession
+     *            the underlying HTTP session
+     * @return the VaadinSession in the HTTP session or null if not found
+     */
+    protected VaadinSession loadSession(WrappedSession wrappedSession) {
+        assert VaadinSession.hasLock(this, wrappedSession);
+
+        VaadinSession vaadinSession = readFromHttpSession(wrappedSession);
+        if (vaadinSession == null) {
+            return null;
+        }
+        vaadinSession.refreshTransients(wrappedSession, this);
+        return vaadinSession;
+    }
+
+    /**
+     * Performs the actual read of the VaadinSession from the underlying HTTP
+     * session after sanity checks have been performed.
+     * <p>
+     * Called by {@link #loadSession(WrappedSession)}.
+     * 
+     * @param wrappedSession
+     *            the underlying HTTP session
+     * @since
+     * @return the VaadinSession or null if no session was found
+     */
+    protected VaadinSession readFromHttpSession(WrappedSession wrappedSession) {
+        return (VaadinSession) wrappedSession
+                .getAttribute(getSessionAttributeName());
+    }
+
+    /**
+     * Called when the VaadinSession should be removed from the underlying HTTP
+     * session
+     * 
+     * @since
+     * @param wrappedSession
+     *            the underlying HTTP session
+     */
+    public void removeSession(WrappedSession wrappedSession) {
+        assert VaadinSession.hasLock(this, wrappedSession);
+        removeFromHttpSession(wrappedSession);
+    }
+
+    /**
+     * Performs the actual removal of the VaadinSession from the underlying HTTP
+     * session after sanity checks have been performed
+     * 
+     * @since
+     * @param wrappedSession
+     *            the underlying HTTP session
+     */
+    protected void removeFromHttpSession(WrappedSession wrappedSession) {
+        wrappedSession.removeAttribute(getSessionAttributeName());
+
+    }
+
+    /**
+     * Returns the name used for storing the VaadinSession in the underlying
+     * HTTP session
+     * 
+     * @since
+     * @return the attribute name used for storing the VaadinSession
+     */
+    protected String getSessionAttributeName() {
+        return VaadinSession.class.getName() + "." + getServiceName();
+    }
+
 }

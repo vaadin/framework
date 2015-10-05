@@ -200,7 +200,7 @@ public class VaadinPortletServiceTests {
             when(mockLock.isHeldByCurrentThread()).thenReturn(true);
 
             WrappedSession emptyWrappedSession = Mockito
-                    .mock(WrappedSession.class);
+                    .mock(WrappedPortletSession.class);
             when(emptyWrappedSession.getAttribute("null.lock")).thenReturn(
                     mockLock);
             VaadinRequest requestWithUIIDSet = Mockito

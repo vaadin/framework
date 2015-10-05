@@ -437,24 +437,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            The wrapped HTTP session for the user
      * @return A VaadinSession instance for the service, session combination or
      *         null if none was found.
-     * @deprecated As of 7.0. Should be moved to a separate session storage
-     *             class some day.
+     * @deprecated as of 7.6, call
+     *             {@link VaadinService#loadSession(WrappedSession)} instead
      */
     @Deprecated
     public static VaadinSession getForSession(VaadinService service,
             WrappedSession underlyingSession) {
-        assert hasLock(service, underlyingSession);
-
-        VaadinSession vaadinSession = (VaadinSession) underlyingSession
-                .getAttribute(getSessionAttributeName(service));
-        if (vaadinSession == null) {
-            return null;
-        }
-
-        vaadinSession.session = underlyingSession;
-        vaadinSession.service = service;
-        vaadinSession.refreshLock();
-        return vaadinSession;
+        return service.loadSession(underlyingSession);
     }
 
     /**
@@ -488,26 +477,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param service
      *            The service this session is associated with
-     * @deprecated As of 7.0. Should be moved to a separate session storage
-     *             class some day.
+     * @deprecated as of 7.6, call
+     *             {@link VaadinService#removeSession(WrappedSession)} instead
      */
     @Deprecated
     public void removeFromSession(VaadinService service) {
-        assert hasLock();
-        session.removeAttribute(getSessionAttributeName(service));
-    }
-
-    /**
-     * Retrieves the name of the attribute used for storing a VaadinSession for
-     * the given service.
-     *
-     * @param service
-     *            The service associated with the sessio
-     * @return The attribute name used for storing the session
-     * @since
-     */
-    protected static String getSessionAttributeName(VaadinService service) {
-        return VaadinSession.class.getName() + "." + service.getServiceName();
+        service.removeSession(session);
     }
 
     /**
@@ -517,30 +492,19 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            The service this session is associated with
      * @param session
      *            The HTTP session this VaadinSession should be stored in
-     * @deprecated As of 7.0. Should be moved to a separate session storage
-     *             class some day.
+     * @deprecated as of 7.6, call
+     *             {@link VaadinService#storeSession(VaadinSession, WrappedSession)}
+     *             instead
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
-        assert hasLock(service, session);
-        session.setAttribute(getSessionAttributeName(service), this);
-
-        /*
-         * GAEVaadinServlet passes newly deserialized sessions here, which means
-         * that these transient fields need to be populated to avoid NPE from
-         * refreshLock().
-         */
-        this.service = service;
-        this.session = session;
-        refreshLock();
+        service.storeSession(this, session);
     }
 
     /**
      * Updates the transient session lock from VaadinService.
-     * 
-     * @since
      */
-    protected void refreshLock() {
+    private void refreshLock() {
         assert lock == null || lock == service.getSessionLock(session) : "Cannot change the lock from one instance to another";
         assert hasLock(service, session);
         lock = service.getSessionLock(session);
@@ -1468,6 +1432,25 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } else {
             return getUIById(uiId.intValue());
         }
+    }
+
+    /**
+     * Refreshes the transient fields of the session to ensure they are up to
+     * date.
+     * <p>
+     * Called internally by the framework.
+     * 
+     * @since
+     * @param wrappedSession
+     *            the session this VaadinSession is stored in
+     * @param vaadinService
+     *            the service associated with this VaadinSession
+     */
+    public void refreshTransients(WrappedSession wrappedSession,
+            VaadinService vaadinService) {
+        session = wrappedSession;
+        service = vaadinService;
+        refreshLock();
     }
 
 }

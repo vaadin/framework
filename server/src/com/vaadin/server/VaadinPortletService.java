@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import javax.portlet.EventRequest;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 
 import com.vaadin.server.VaadinPortlet.RequestType;
@@ -344,4 +345,29 @@ public class VaadinPortletService extends VaadinService {
         getLogger().finest("A user session has expired");
     }
 
+    private WrappedPortletSession getWrappedPortletSession(
+            WrappedSession wrappedSession) {
+        return (WrappedPortletSession) wrappedSession;
+    }
+
+    @Override
+    protected void writeToHttpSession(WrappedSession wrappedSession,
+            VaadinSession session) {
+        getWrappedPortletSession(wrappedSession).setAttribute(
+                getSessionAttributeName(), session,
+                PortletSession.APPLICATION_SCOPE);
+    }
+
+    @Override
+    protected VaadinSession readFromHttpSession(WrappedSession wrappedSession) {
+        return (VaadinSession) getWrappedPortletSession(wrappedSession)
+                .getAttribute(getSessionAttributeName(),
+                        PortletSession.APPLICATION_SCOPE);
+    }
+
+    @Override
+    protected void removeFromHttpSession(WrappedSession wrappedSession) {
+        getWrappedPortletSession(wrappedSession).removeAttribute(
+                getSessionAttributeName(), PortletSession.APPLICATION_SCOPE);
+    }
 }

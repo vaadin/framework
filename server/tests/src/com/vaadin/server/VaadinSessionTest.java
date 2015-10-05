@@ -93,7 +93,7 @@ public class VaadinSessionTest {
         };
 
         session = new VaadinSession(mockService);
-        session.storeInSession(mockService, mockWrappedSession);
+        mockService.storeSession(session, mockWrappedSession);
 
         ui = new UI() {
             Page page = new Page(this, getState(false).pageState) {

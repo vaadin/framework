@@ -349,9 +349,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                VaadinSession applicationContext = (VaadinSession) ois
-                        .readObject();
-                applicationContext.storeInSession(getService(),
+                VaadinSession vaadinSession = (VaadinSession) ois.readObject();
+                getService().storeSession(vaadinSession,
                         new WrappedHttpSession(session));
             } catch (IOException e) {
                 getLogger().log(
@@ -396,8 +395,7 @@ public class GAEVaadinServlet extends VaadinServlet {
         if (wrappedSession == null) {
             return;
         }
-        VaadinSession serviceSession = VaadinSession.getForSession(
-                getService(), wrappedSession);
+        VaadinSession serviceSession = getService().loadSession(wrappedSession);
         if (serviceSession == null) {
             return;
         }
@@ -408,7 +406,7 @@ public class GAEVaadinServlet extends VaadinServlet {
          */
         serviceSession.setAttribute(
                 VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE, Boolean.TRUE);
-        serviceSession.removeFromSession(getService());
+        getService().removeSession(serviceSession.getSession());
 
         // Remove preservation marker
         serviceSession.setAttribute(
