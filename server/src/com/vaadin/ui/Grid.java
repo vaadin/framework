@@ -42,9 +42,6 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.google.gwt.thirdparty.guava.common.collect.Maps;
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
-import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.ItemSetChangeEvent;
@@ -322,8 +319,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * client. Details components get destroyed once they scroll out of
          * view.
          */
-        private final Map<Object, Component> itemIdToDetailsComponent = Maps
-                .newHashMap();
+        private final Map<Object, Component> itemIdToDetailsComponent = new HashMap<Object, Component>();
 
         /**
          * Set of item ids that got <code>null</code> from DetailsGenerator when
@@ -1810,16 +1806,16 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             boolean changed = false;
             Set<Object> selectedRows = new HashSet<Object>(itemIds);
             final Collection<Object> oldSelection = getSelectedRows();
-            SetView<?> added = Sets.difference(selectedRows, selection);
+            Set<Object> added = getDifference(selectedRows, selection);
             if (!added.isEmpty()) {
                 changed = true;
-                selection.addAll(added.immutableCopy());
+                selection.addAll(added);
             }
 
-            SetView<?> removed = Sets.difference(selection, selectedRows);
+            Set<Object> removed = getDifference(selection, selectedRows);
             if (!removed.isEmpty()) {
                 changed = true;
-                selection.removeAll(removed.immutableCopy());
+                selection.removeAll(removed);
             }
 
             if (changed) {
@@ -1829,6 +1825,23 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             updateAllSelectedState();
 
             return changed;
+        }
+
+        /**
+         * Compares two sets and returns a set containing all values that are
+         * present in the first, but not in the second.
+         * 
+         * @param set1
+         *            first item set
+         * @param set2
+         *            second item set
+         * @return all values from set1 which are not present in set2
+         */
+        private static Set<Object> getDifference(Set<Object> set1,
+                Set<Object> set2) {
+            Set<Object> diff = new HashSet<Object>(set1);
+            diff.removeAll(set2);
+            return diff;
         }
 
         @Override
