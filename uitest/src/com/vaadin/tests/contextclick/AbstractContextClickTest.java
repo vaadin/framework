@@ -18,7 +18,10 @@ package com.vaadin.tests.contextclick;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
@@ -27,10 +30,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("contextclick")
 public abstract class AbstractContextClickTest extends MultiBrowserTest {
+
+    private Pattern defaultLog = Pattern
+            .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
@@ -67,15 +74,25 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
 
         Point l = component.getLocation();
 
-        int drift = 0;
-        // IE 10 and 11 report different Y location.
-        if (BrowserUtil.isIE(getDesiredCapabilities(), 10)
-                || BrowserUtil.isIE(getDesiredCapabilities(), 11)) {
-            drift = 1;
-        }
+        Matcher matcher = defaultLog.matcher(getLogRow(0));
+        Assert.assertTrue(
+                "Log row content did not match default listener output: "
+                        + getLogRow(0), matcher.find());
 
-        assertEquals(index + ". ContextClickEvent: (" + (l.getX() + 10) + ", "
-                + (l.getY() + 10 + drift) + ")", getLogRow(0));
+        int xCoord = Integer.parseInt(matcher.group(1));
+        int yCoord = Integer.parseInt(matcher.group(2));
+
+        int xExpected = l.getX() + 10;
+        int yExpected = l.getY() + 10;
+
+        Assert.assertTrue(
+                "X Coordinate differs too much from expected. Expected: "
+                        + xExpected + ", actual: " + xCoord,
+                Math.abs(xExpected - xCoord) <= 1);
+        Assert.assertTrue(
+                "Y Coordinate differs too much from expected. Expected: "
+                        + yExpected + ", actual: " + yCoord,
+                Math.abs(yExpected - yCoord) <= 1);
     }
 
     protected void addOrRemoveDefaultListener() {
@@ -89,15 +106,34 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
     }
 
     /**
-     * Performs a context click followed by a regular click. This prevents
-     * browser context menu from blocking future operations.
+     * Performs a context click on given element at coordinates 10, 10 followed
+     * by a regular click. This prevents browser context menu from blocking
+     * future operations.
      * 
      * @param e
      *            web element
      */
     protected void contextClick(WebElement e) {
-        new Actions(getDriver()).moveToElement(e, 10, 10).contextClick()
-                .perform();
-        new Actions(getDriver()).moveToElement(e, 5, 5).click().perform();
+        contextClick(e, 10, 10);
     }
+
+    /**
+     * Performs a context click on given element at given coordinates followed
+     * by a regular click. This prevents browser context menu from blocking
+     * future operations.
+     * 
+     * @param e
+     *            web element
+     * @param xCoord
+     *            x coordinate
+     * @param yCoord
+     *            y coordinate
+     */
+    protected void contextClick(WebElement e, int xCoord, int yCoord) {
+        new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
+                .contextClick().perform();
+        new Actions(getDriver()).moveToElement(e, xCoord - 5, yCoord - 5)
+                .click().perform();
+    }
+
 }

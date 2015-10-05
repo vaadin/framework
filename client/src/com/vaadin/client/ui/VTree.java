@@ -1088,9 +1088,10 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
+
+                    event.stopPropagation();
+                    event.preventDefault();
                 }
-                event.stopPropagation();
-                event.preventDefault();
             }
         }
 

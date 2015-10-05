@@ -22,8 +22,11 @@ import java.util.Set;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
@@ -33,9 +36,11 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VTree;
 import com.vaadin.client.ui.VTree.TreeNode;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.tree.TreeConstants;
+import com.vaadin.shared.ui.tree.TreeServerRpc;
 import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.Tree;
 
@@ -373,4 +378,25 @@ public class TreeConnector extends AbstractComponentConnector implements
         return true;
     }
 
+    @Override
+    protected void sendContextClickEvent(ContextMenuEvent event) {
+        EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+        if (!Element.is(eventTarget)) {
+            return;
+        }
+
+        Element e = Element.as(eventTarget);
+        String key = null;
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent());
+
+        if (getWidget().body.getElement().isOrHasChild(e)) {
+            TreeNode t = WidgetUtil.findWidget(e, TreeNode.class);
+            if (t != null) {
+                key = t.key;
+            }
+        }
+
+        getRpcProxy(TreeServerRpc.class).contextClick(key, details);
+    }
 }

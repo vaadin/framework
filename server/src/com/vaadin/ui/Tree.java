@@ -38,6 +38,7 @@ import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -59,6 +60,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
+import com.vaadin.shared.ui.tree.TreeServerRpc;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -74,6 +76,32 @@ import com.vaadin.util.ReflectTools;
 @SuppressWarnings({ "serial", "deprecation" })
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickNotifier, DragSource, DropTarget {
+
+    public static class TreeContextClickEvent extends ContextClickEvent {
+
+        private final Object itemId;
+
+        public TreeContextClickEvent(Tree source, Object itemId,
+                MouseEventDetails mouseEventDetails) {
+            super(source, mouseEventDetails);
+            this.itemId = itemId;
+        }
+
+        @Override
+        public Tree getComponent() {
+            return (Tree) super.getComponent();
+        }
+
+        /**
+         * Returns the item id of context clicked row.
+         * 
+         * @return item id of clicked row; <code>null</code> if no row is
+         *         present at the location
+         */
+        public Object getItemId() {
+            return itemId;
+        }
+    }
 
     /* Private members */
 
@@ -154,6 +182,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public Tree() {
         this(null);
+
+        registerRpc(new TreeServerRpc() {
+            @Override
+            public void contextClick(String rowKey, MouseEventDetails details) {
+                fireEvent(new TreeContextClickEvent(Tree.this,
+                        itemIdMapper.get(rowKey), details));
+            }
+        });
     }
 
     /**
