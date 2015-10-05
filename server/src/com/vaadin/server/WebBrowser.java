@@ -496,7 +496,9 @@ public class WebBrowser implements Serializable {
         locale = request.getLocale();
         address = request.getRemoteAddr();
         secureConnection = request.isSecure();
-        String agent = request.getHeader("user-agent");
+        // Headers are case insensitive according to the specifiation but are
+        // case sensitive in Weblogic portal...
+        String agent = request.getHeader("User-Agent");
 
         if (agent != null) {
             browserApplication = agent;

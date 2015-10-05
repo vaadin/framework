@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -103,7 +104,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         @Override
         public String getParameter(String name) {
             String parameter = super.getParameter(name);
-            if (parameter == null) {
+            if (parameter == null && getOriginalRequest() != null) {
                 parameter = getOriginalRequest().getParameter(name);
             }
             return parameter;
@@ -111,23 +112,36 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
         @Override
         public String getRemoteAddr() {
-            return getOriginalRequest().getRemoteAddr();
+            if (getOriginalRequest() != null) {
+                return getOriginalRequest().getRemoteAddr();
+            } else {
+                return super.getRemoteAddr();
+            }
+
         }
 
         @Override
         public String getRemoteHost() {
-            return getOriginalRequest().getRemoteHost();
+            if (getOriginalRequest() != null) {
+                return getOriginalRequest().getRemoteHost();
+            } else {
+                return super.getRemoteHost();
+            }
         }
 
         @Override
         public int getRemotePort() {
-            return getOriginalRequest().getRemotePort();
+            if (getOriginalRequest() != null) {
+                return getOriginalRequest().getRemotePort();
+            } else {
+                return super.getRemotePort();
+            }
         }
 
         @Override
         public String getHeader(String name) {
             String header = super.getHeader(name);
-            if (header == null) {
+            if (header == null && getOriginalRequest() != null) {
                 header = getOriginalRequest().getHeader(name);
             }
             return header;
@@ -136,7 +150,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         @Override
         public Enumeration<String> getHeaderNames() {
             Enumeration<String> headerNames = super.getHeaderNames();
-            if (headerNames == null) {
+            if (headerNames == null && getOriginalRequest() != null) {
                 headerNames = getOriginalRequest().getHeaderNames();
             }
             return headerNames;
@@ -145,7 +159,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         @Override
         public Enumeration<String> getHeaders(String name) {
             Enumeration<String> headers = super.getHeaders(name);
-            if (headers == null) {
+            if (headers == null && getOriginalRequest() != null) {
                 headers = getOriginalRequest().getHeaders(name);
             }
             return headers;
@@ -154,7 +168,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         @Override
         public Map<String, String[]> getParameterMap() {
             Map<String, String[]> parameterMap = super.getParameterMap();
-            if (parameterMap == null) {
+            if (parameterMap == null && getOriginalRequest() != null) {
                 parameterMap = getOriginalRequest().getParameterMap();
             }
             return parameterMap;
@@ -302,6 +316,47 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "WebSphere Portal request not detected.");
+            }
+        }
+    }
+
+    /**
+     * Portlet request for WebSphere Portal.
+     */
+    public static class VaadinWebLogicPortalRequest extends
+            VaadinHttpAndPortletRequest {
+        private static boolean warningLogged = false;
+
+        private static Method servletRequestMethod = null;
+
+        public VaadinWebLogicPortalRequest(PortletRequest request,
+                VaadinPortletService vaadinService) {
+            super(request, vaadinService);
+        }
+
+        @Override
+        protected HttpServletRequest getServletRequest(PortletRequest request) {
+            try {
+                if (servletRequestMethod == null) {
+                    Class<?> portletRequestClass = Class
+                            .forName("com.bea.portlet.container.PortletRequestImpl");
+                    servletRequestMethod = portletRequestClass
+                            .getDeclaredMethod("getInternalRequest",
+                                    new Class[] {});
+                    servletRequestMethod.setAccessible(true);
+                }
+
+                return (HttpServletRequest) servletRequestMethod
+                        .invoke(request);
+            } catch (Exception e) {
+                if (!warningLogged) {
+                    warningLogged = true;
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "Could not determine underlying servlet request for WebLogic Portal portlet request",
+                                    e);
+                }
+                return null;
             }
         }
     }
@@ -498,6 +553,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
         if (portalInfo.contains("websphere portal")) {
             return new VaadinWebSpherePortalRequest(request, service);
+        }
+        if (portalInfo.contains("weblogic portal")) {
+            return new VaadinWebLogicPortalRequest(request, service);
         }
 
         return new VaadinPortletRequest(request, service);
