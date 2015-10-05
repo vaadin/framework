@@ -1131,6 +1131,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
+        public void destroyData(Object itemId) {
+            // NO-OP
+        }
+
+        @Override
         protected Object getItemId(String rowKey) {
             return rowKey != null ? super.getItemId(rowKey) : null;
         }
@@ -1879,6 +1884,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
                     .encodeValue(modelValue, renderer, converter, getLocale()));
+        }
+
+        @Override
+        public void destroyData(Object itemId) {
+            // NO-OP
         }
     }
 

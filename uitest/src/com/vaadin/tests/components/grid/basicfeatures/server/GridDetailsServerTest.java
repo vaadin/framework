@@ -23,9 +23,9 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
@@ -48,8 +48,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
             "Component", "Details", "Generators", "NULL" };
     private static final String[] DETAILS_GENERATOR_WATCHING = new String[] {
             "Component", "Details", "Generators", "\"Watching\"" };
-    private static final String[] DETAILS_GENERATOR_HIERARCHICAL = new String[] {
-            "Component", "Details", "Generators", "Hierarchical" };
+    private static final String[] DETAILS_GENERATOR_PERSISTING = new String[] {
+            "Component", "Details", "Generators", "Persisting" };
     private static final String[] CHANGE_HIERARCHY = new String[] {
             "Component", "Details", "Generators", "- Change Component" };
 
@@ -187,8 +187,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void hierarchyChangesWorkInDetails() {
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+    public void persistingChangesWorkInDetails() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         assertEquals("One", getGridElement().getDetails(0).getText());
         selectMenuPath(CHANGE_HIERARCHY);
@@ -196,14 +196,31 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void hierarchyChangesWorkInDetailsWhileOutOfView() {
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+    public void persistingChangesWorkInDetailsWhileOutOfView() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         assertEquals("One", getGridElement().getDetails(0).getText());
         scrollGridVerticallyTo(10000);
         selectMenuPath(CHANGE_HIERARCHY);
         scrollGridVerticallyTo(0);
         assertEquals("Two", getGridElement().getDetails(0).getText());
+    }
+
+    @Test
+    public void persistingChangesWorkInDetailsWhenNotAttached() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        assertEquals("One", getGridElement().getDetails(0).getText());
+
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+        assertFalse("Details should be detached", getGridElement()
+                .isElementPresent(By.vaadin("#details[0]")));
+
+        selectMenuPath(CHANGE_HIERARCHY);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+
+        assertEquals("Two", getGridElement().getDetails(0).getText());
+
     }
 
     @Test
@@ -215,7 +232,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_shownDetails() {
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         assertTrue("Details should contain 'One' at first", getGridElement()
                 .getDetails(0).getText().contains("One"));
@@ -237,7 +254,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showAfter() {
         scrollGridVerticallyTo(1000);
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(0);
@@ -249,7 +266,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showBefore() {
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(1000);
@@ -261,7 +278,7 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
 
     @Test
     public void swappingDetailsGenerators_whileDetailsScrolledOut_showBeforeAndAfter() {
-        selectMenuPath(DETAILS_GENERATOR_HIERARCHICAL);
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         scrollGridVerticallyTo(1000);

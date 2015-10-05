@@ -98,7 +98,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             // Remove still active rows that were "dropped"
             droppedItems.removeAll(itemIds);
-            internalDropActiveItems(droppedItems);
+            internalDropItems(droppedItems);
             droppedItems.clear();
         }
 
@@ -112,15 +112,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public void dropActiveItem(Object itemId) {
             if (activeItemMap.containsKey(itemId)) {
                 droppedItems.add(itemId);
-            }
-        }
-
-        private void internalDropActiveItems(Collection<Object> itemIds) {
-            for (Object itemId : droppedItems) {
-                assert activeItemMap.containsKey(itemId) : "Item ID should exist in the activeItemMap";
-
-                activeItemMap.remove(itemId).removeListener();
-                keyMapper.remove(itemId);
             }
         }
 
@@ -147,6 +138,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
             rowData.put(GridState.JSONKEY_ROWKEY, keyMapper.key(itemId));
         }
 
+        @Override
+        public void destroyData(Object itemId) {
+            keyMapper.remove(itemId);
+            GridValueChangeListener removed = activeItemMap.remove(itemId);
+
+            if (removed != null) {
+                removed.removeListener();
+            }
+        }
     }
 
     /**
@@ -370,6 +370,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         GridState.JSONKEY_DETAILS_VISIBLE,
                         (detailsComponent != null ? detailsComponent
                                 .getConnectorId() : ""));
+            }
+        }
+
+        @Override
+        public void destroyData(Object itemId) {
+            if (visibleDetails.contains(itemId)) {
+                destroyDetails(itemId);
             }
         }
     }
@@ -734,8 +741,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public void setParent(ClientConnector parent) {
         if (parent == null) {
             // We're being detached, release various listeners
-            activeItemHandler.internalDropActiveItems(activeItemHandler
-                    .getActiveItemIds());
+            internalDropItems(activeItemHandler.getActiveItemIds());
 
             if (container instanceof ItemSetChangeNotifier) {
                 ((ItemSetChangeNotifier) container)
@@ -747,6 +753,20 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     "Grid is the only accepted parent type");
         }
         super.setParent(parent);
+    }
+
+    /**
+     * Informs all DataGenerators than an item id has been dropped.
+     * 
+     * @param droppedItemIds
+     *            collection of dropped item ids
+     */
+    private void internalDropItems(Collection<Object> droppedItemIds) {
+        for (Object itemId : droppedItemIds) {
+            for (DataGenerator generator : dataGenerators) {
+                generator.destroyData(itemId);
+            }
+        }
     }
 
     /**

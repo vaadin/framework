@@ -20,10 +20,12 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import com.vaadin.data.Container.Filter;
@@ -190,8 +192,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
     };
 
-    private Panel detailsPanel;
-
     private final DetailsGenerator detailedDetailsGenerator = new DetailsGenerator() {
         @Override
         public Component getDetails(final RowReference rowReference) {
@@ -230,12 +230,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
     };
 
-    private final DetailsGenerator hierarchicalDetailsGenerator = new DetailsGenerator() {
+    private Map<Object, Panel> detailsMap = new HashMap<Object, Panel>();
+
+    private final DetailsGenerator persistingDetailsGenerator = new DetailsGenerator() {
         @Override
         public Component getDetails(RowReference rowReference) {
-            detailsPanel = new Panel();
-            detailsPanel.setContent(new Label("One"));
-            return detailsPanel;
+            Object itemId = rowReference.getItemId();
+            if (!detailsMap.containsKey(itemId)) {
+                Panel panel = new Panel();
+                panel.setContent(new Label("One"));
+                detailsMap.put(itemId, panel);
+            }
+            return detailsMap.get(itemId);
         }
     };
 
@@ -1514,18 +1520,21 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 watchingDetailsGenerator);
         createClickAction("Detailed", "Generators", swapDetailsGenerator,
                 detailedDetailsGenerator);
-        createClickAction("Hierarchical", "Generators", swapDetailsGenerator,
-                hierarchicalDetailsGenerator);
+        createClickAction("Persisting", "Generators", swapDetailsGenerator,
+                persistingDetailsGenerator);
 
         createClickAction("- Change Component", "Generators",
                 new Command<Grid, Void>() {
                     @Override
                     public void execute(Grid c, Void value, Object data) {
-                        Label label = (Label) detailsPanel.getContent();
-                        if (label.getValue().equals("One")) {
-                            detailsPanel.setContent(new Label("Two"));
-                        } else {
-                            detailsPanel.setContent(new Label("One"));
+                        for (Object id : detailsMap.keySet()) {
+                            Panel panel = detailsMap.get(id);
+                            Label label = (Label) panel.getContent();
+                            if (label.getValue().equals("One")) {
+                                panel.setContent(new Label("Two"));
+                            } else {
+                                panel.setContent(new Label("One"));
+                            }
                         }
                     }
                 }, null);

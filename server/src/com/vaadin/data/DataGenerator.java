@@ -18,7 +18,6 @@ package com.vaadin.data;
 import java.io.Serializable;
 
 import com.vaadin.ui.Grid.AbstractGridExtension;
-import com.vaadin.ui.Grid.AbstractRenderer;
 
 import elemental.json.JsonObject;
 
@@ -26,8 +25,8 @@ import elemental.json.JsonObject;
  * Interface for {@link AbstractGridExtension}s that allows adding data to row
  * objects being sent to client by the {@link RpcDataProviderExtension}.
  * <p>
- * {@link AbstractRenderer} implements this interface to provide encoded data to
- * client for {@link Renderer}s automatically.
+ * This class also provides a way to remove any unneeded data once the data
+ * object is no longer used on the client-side.
  * 
  * @since 7.6
  * @author Vaadin Ltd
@@ -45,5 +44,14 @@ public interface DataGenerator extends Serializable {
      *            row object being sent to client
      */
     public void generateData(Object itemId, Item item, JsonObject rowData);
+
+    /**
+     * Informs the DataGenerator that an item id has been dropped and is no
+     * longer needed.
+     * 
+     * @param itemId
+     *            removed item id
+     */
+    public void destroyData(Object itemId);
 
 }
