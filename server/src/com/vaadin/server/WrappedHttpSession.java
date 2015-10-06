@@ -27,8 +27,8 @@ import javax.servlet.http.HttpSession;
  * Wrapper for {@link HttpSession}.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
+ * @see WrappedSession
  */
 public class WrappedHttpSession implements WrappedSession {
 

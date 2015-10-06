@@ -21,11 +21,11 @@ import java.util.Set;
 import javax.portlet.PortletSession;
 
 /**
- * Wrapper for
+ * Wrapper for {@link PortletSession}.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
+ * @see WrappedSession
  */
 public class WrappedPortletSession implements WrappedSession {
 
