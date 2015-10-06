@@ -19,11 +19,13 @@ demos = {
 	"dashboard" : "https://github.com/vaadin/dashboard-demo.git",
 	"parking" : "https://github.com/vaadin/parking-demo.git",
 	"addressbook" : "https://github.com/vaadin/addressbook.git",
-	"grid-gwt" : "https://github.com/vaadin/grid-gwt.git"
+	"grid-gwt" : "https://github.com/vaadin/grid-gwt.git",
+	"sampler" : "demos/sampler"
+#	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }
 
-def checkout(folder, url):
-	Repo.clone_from(url, join(resultPath, folder))
+def checkout(folder, url, repoBranch = "master"):
+	Repo.clone_from(url, join(resultPath, folder), branch = repoBranch)
 
 if __name__ == "__main__":
 	# Do imports.	
@@ -66,7 +68,11 @@ if __name__ == "__main__":
 	for demo in demos:
 		print("Validating demo %s" % (demo))
 		try:
-			checkout(demo, demos[demo])
+			repo = demos[demo]
+			if (isinstance(repo, tuple)):
+				checkout(demo, repo[0], repo[1])
+			else:
+				checkout(demo, repo)
 			if hasattr(args, "repo") and args.repo is not None:
 				updateRepositories(join(resultPath, demo), args.repo)
 			mavenValidate(demo, logFile=getLogFile(demo))
