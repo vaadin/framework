@@ -44,7 +44,7 @@ public class TooltipPositionTest extends MultiBrowserTest {
             throws Exception {
         openTestURL();
 
-        waitForElementVisible(By.cssSelector(".v-tooltip"));
+        waitForElementPresent(By.cssSelector(".v-tooltip"));
         WebElement tooltip = driver.findElement(By.cssSelector(".v-tooltip"));
 
         Assert.assertTrue(
