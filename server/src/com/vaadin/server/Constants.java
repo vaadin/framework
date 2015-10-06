@@ -19,9 +19,9 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * TODO Document me!
+ * Internal constants used by both the client and the server side framework
  * 
- * @author peholmst
+ * @since 6.2
  * 
  */
 public interface Constants {
