@@ -20,7 +20,19 @@ import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -462,6 +474,8 @@ public class VTooltip extends VOverlay {
             // tooltip
             closeTimer.cancel();
             closing = false;
+        } else if (type == Event.ONMOUSEOUT) {
+            tooltipEventHandler.handleOnMouseOut(DOM.eventGetTarget(event));
         }
     }
 
@@ -481,7 +495,8 @@ public class VTooltip extends VOverlay {
     }
 
     private class TooltipEventHandler implements MouseMoveHandler,
-            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler {
+            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler,
+            MouseOutHandler {
 
         /**
          * Marker for handling of tooltip through focus
@@ -629,6 +644,39 @@ public class VTooltip extends VOverlay {
             handledByFocus = isFocused;
             currentElement = element;
         }
+
+        @Override
+        public void onMouseOut(MouseOutEvent moe) {
+            Element element = WidgetUtil.getElementUnderMouse(moe
+                    .getNativeEvent());
+            handleOnMouseOut(element);
+        }
+
+        private void handleOnMouseOut(Element element) {
+            if (element == null) {
+                // hide if mouse is outside of browser window
+                handleHideEvent();
+            } else {
+                Widget owner = getOwner();
+                if (owner != null && !owner.getElement().isOrHasChild(element)
+                        && !hasCommonOwner(owner, element)) {
+                    // hide if mouse is no longer within the UI nor an overlay
+                    // that belongs to the UI, e.g. a Window
+                    handleHideEvent();
+                }
+            }
+        }
+
+        private boolean hasCommonOwner(Widget owner, Element element) {
+            ComponentConnector connector = Util.findPaintable(
+                    getApplicationConnection(), element);
+            if (connector != null && connector.getConnection() != null
+                    && connector.getConnection().getUIConnector() != null) {
+                return owner.equals(connector.getConnection().getUIConnector()
+                        .getWidget());
+            }
+            return false;
+        }
     }
 
     private final TooltipEventHandler tooltipEventHandler = new TooltipEventHandler();
@@ -641,6 +689,7 @@ public class VTooltip extends VOverlay {
      */
     public void connectHandlersToWidget(Widget widget) {
         Profiler.enter("VTooltip.connectHandlersToWidget");
+        widget.addDomHandler(tooltipEventHandler, MouseOutEvent.getType());
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
         widget.addDomHandler(tooltipEventHandler, MouseDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
