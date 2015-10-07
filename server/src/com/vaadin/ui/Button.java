@@ -584,7 +584,7 @@ public class Button extends AbstractFocusable implements
         } else {
             // content is not intended to be interpreted as HTML,
             // so html entities need to be decoded
-            content = DesignFormatter.unencodeFromTextNode(design.html());
+            content = DesignFormatter.decodeFromTextNode(design.html());
         }
         setCaption(content);
         if (attr.hasKey("icon-alt")) {

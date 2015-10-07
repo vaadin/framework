@@ -403,11 +403,11 @@ public class DesignFormatter implements Serializable {
      * unencodes more characters than {@link #encodeForTextNode(String)} encodes
      * </p>
      * 
-     * @since 7.5.7
+     * @since
      * @param input
      * @return
      */
-    public static String unencodeFromTextNode(String input) {
+    public static String decodeFromTextNode(String input) {
         return Parser.unescapeEntities(input, false);
     }
 

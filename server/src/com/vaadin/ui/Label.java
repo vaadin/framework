@@ -594,7 +594,7 @@ public class Label extends AbstractComponent implements Property<String>,
         }
         if (innerHtml != null && !"".equals(innerHtml)) {
             if (plainText) {
-                innerHtml = DesignFormatter.unencodeFromTextNode(innerHtml);
+                innerHtml = DesignFormatter.decodeFromTextNode(innerHtml);
             }
             setValue(innerHtml);
         }

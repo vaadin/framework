@@ -2241,7 +2241,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         String itemId;
-        String caption = DesignFormatter.unencodeFromTextNode(child.html());
+        String caption = DesignFormatter.decodeFromTextNode(child.html());
         if (child.hasAttr("item-id")) {
             itemId = child.attr("item-id");
             addItem(itemId);

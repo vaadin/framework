@@ -146,7 +146,7 @@ public class TextArea extends AbstractTextField {
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        setValue(DesignFormatter.unencodeFromTextNode(design.html()), false,
+        setValue(DesignFormatter.decodeFromTextNode(design.html()), false,
                 true);
     }
 

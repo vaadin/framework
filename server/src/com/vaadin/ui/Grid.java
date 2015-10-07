@@ -2354,7 +2354,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     }
                 } else {
                     // text – need to unescape HTML entities
-                    setText(DesignFormatter.unencodeFromTextNode(cellElement
+                    setText(DesignFormatter.decodeFromTextNode(cellElement
                             .html()));
                 }
             }

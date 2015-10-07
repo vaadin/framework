@@ -283,7 +283,7 @@ public class OptionGroup extends AbstractSelect implements
             // like '>', '<' and '&'; in case HTML content is allowed this is
             // undesirable so we need to unencode entities. Entities other than
             // '<' and '>' will be taken care by Jsoup.
-            elem.html(DesignFormatter.unencodeFromTextNode(elem.html()));
+            elem.html(DesignFormatter.decodeFromTextNode(elem.html()));
         }
 
         return elem;

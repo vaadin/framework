@@ -6217,7 +6217,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             Iterator<?> propertyIt = propertyIds.iterator();
             for (Element e : elems) {
-                String columnValue = DesignFormatter.unencodeFromTextNode(e
+                String columnValue = DesignFormatter.decodeFromTextNode(e
                         .html());
                 Object propertyId = propertyIt.next();
                 if (header) {
@@ -6259,7 +6259,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         Object[] data = new String[cells.size()];
         for (int c = 0; c < cells.size(); ++c) {
-            data[c] = DesignFormatter.unencodeFromTextNode(cells.get(c).html());
+            data[c] = DesignFormatter.decodeFromTextNode(cells.get(c).html());
         }
 
         Object itemId = addItem(data,
