@@ -41,20 +41,26 @@ import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
+import com.vaadin.server.communication.PortletListenerNotifier;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 /**
- * TODO Write documentation, fix JavaDoc tags.
+ * An implementation of {@link VaadinSession} for JSR-286 portlet environments.
  * 
  * This is automatically registered as a {@link HttpSessionBindingListener} when
  * {@link PortletSession#setAttribute()} is called with the context as value.
  * 
- * @author peholmst
+ * Only the documented parts of this class should be considered as stable public
+ * API.
  * 
- * @deprecated As of 7.0. Will likely change or be removed in a future version
+ * Note also that some methods and/or nested interfaces might move to
+ * {@link VaadinPortletService} in future minor or major versions of Vaadin. In
+ * these cases, a deprecated redirection for backwards compatibility will be
+ * used in VaadinPortletSession for a transition period.
+ * 
+ * @since 7.0
  */
-@Deprecated
 @SuppressWarnings("serial")
 public class VaadinPortletSession extends VaadinSession {
 
@@ -76,6 +82,11 @@ public class VaadinPortletSession extends VaadinSession {
         super(service);
     }
 
+    /**
+     * Returns the underlying portlet session.
+     * 
+     * @return portlet session
+     */
     public PortletSession getPortletSession() {
         WrappedSession wrappedSession = getSession();
         PortletSession session = ((WrappedPortletSession) wrappedSession)
@@ -94,20 +105,42 @@ public class VaadinPortletSession extends VaadinSession {
         }
     }
 
+    /**
+     * Returns the JSR-286 portlet configuration that provides access to the
+     * portlet context and init parameters.
+     * 
+     * @return portlet configuration
+     */
     public PortletConfig getPortletConfig() {
         VaadinPortletResponse response = (VaadinPortletResponse) CurrentInstance
                 .get(VaadinResponse.class);
         return response.getService().getPortlet().getPortletConfig();
     }
 
+    /**
+     * Adds a listener for various types of portlet requests.
+     * 
+     * @param listener
+     *            to add
+     */
     public void addPortletListener(PortletListener listener) {
         portletListeners.add(listener);
     }
 
+    /**
+     * Removes a portlet request listener registered with
+     * {@link #addPortletListener(PortletListener)}.
+     * 
+     * @param listener
+     *            to remove
+     */
     public void removePortletListener(PortletListener listener) {
         portletListeners.remove(listener);
     }
 
+    /**
+     * For internal use by the framework only - API subject to change.
+     */
     public void firePortletRenderRequest(UI uI, RenderRequest request,
             RenderResponse response) {
         for (PortletListener l : new ArrayList<PortletListener>(
@@ -117,6 +150,9 @@ public class VaadinPortletSession extends VaadinSession {
         }
     }
 
+    /**
+     * For internal use by the framework only - API subject to change.
+     */
     public void firePortletActionRequest(UI uI, ActionRequest request,
             ActionResponse response) {
         String key = request.getParameter(ActionRequest.ACTION_NAME);
@@ -143,6 +179,9 @@ public class VaadinPortletSession extends VaadinSession {
         }
     }
 
+    /**
+     * For internal use by the framework only - API subject to change.
+     */
     public void firePortletEventRequest(UI uI, EventRequest request,
             EventResponse response) {
         for (PortletListener l : new ArrayList<PortletListener>(
@@ -151,6 +190,9 @@ public class VaadinPortletSession extends VaadinSession {
         }
     }
 
+    /**
+     * For internal use by the framework only - API subject to change.
+     */
     public void firePortletResourceRequest(UI uI, ResourceRequest request,
             ResourceResponse response) {
         for (PortletListener l : new ArrayList<PortletListener>(
@@ -159,6 +201,22 @@ public class VaadinPortletSession extends VaadinSession {
         }
     }
 
+    /**
+     * Listener interface for the various types of JSR-286 portlet requests. The
+     * listener methods are called by the request handler
+     * {@link PortletListenerNotifier} after the session is locked and the
+     * corresponding UI has been found (if already created) but before other
+     * request processing takes place.
+     * 
+     * Direct rendering of output is not possible in a portlet listener and the
+     * JSR-286 limitations on allowed operations in each phase or portlet
+     * request processing must be respected by the listeners.
+     * 
+     * Note that internal action requests used by the framework to trigger
+     * events or set shared parameters do not call the action request listener
+     * but will result in a later event or render request that will trigger the
+     * corresponding listener.
+     */
     public interface PortletListener extends Serializable {
 
         public void handleRenderRequest(RenderRequest request,
@@ -177,7 +235,13 @@ public class VaadinPortletSession extends VaadinSession {
     /**
      * Creates a new action URL.
      * 
+     * Creating an action URL is only supported when processing a suitable
+     * request (render or resource request, including normal Vaadin UIDL
+     * processing) and will return null if not processing a suitable request.
+     * 
      * @param action
+     *            the action parameter (javax.portlet.action parameter value in
+     *            JSR-286)
      * @return action URL or null if called outside a MimeRequest (outside a
      *         UIDL request or similar)
      */
@@ -198,6 +262,8 @@ public class VaadinPortletSession extends VaadinSession {
      * 
      * Internally, an action may be created and opened, as an event cannot be
      * sent directly from all types of requests.
+     * 
+     * Sending portlet events from background threads is not supported.
      * 
      * The event destinations and values need to be kept in the context until
      * sent. Any memory leaks if the action fails are limited to the session.
@@ -247,6 +313,9 @@ public class VaadinPortletSession extends VaadinSession {
      * Internally, an action may be created and opened, as shared parameters
      * cannot be set directly from all types of requests.
      * 
+     * Setting shared render parameters from background threads is not
+     * supported.
+     * 
      * The parameters and values need to be kept in the context until sent. Any
      * memory leaks if the action fails are limited to the session.
      * 
@@ -291,6 +360,10 @@ public class VaadinPortletSession extends VaadinSession {
     /**
      * Sets the portlet mode. This may trigger a new render request.
      * 
+     * Currently, this is only supported when working with a
+     * {@link StateAwareResponse} (an action request or an event request).
+     * Portlet mode change in background threads is not supported.
+     * 
      * Portlet modes used by a portlet need to be declared in portlet.xml .
      * 
      * @param uI
@@ -300,6 +373,8 @@ public class VaadinPortletSession extends VaadinSession {
      * @throws PortletModeException
      *             if the portlet mode is not allowed for some reason
      *             (configuration, permissions etc.)
+     * @throws IllegalStateException
+     *             if not processing a request of the correct type
      */
     public void setPortletMode(UI uI, PortletMode portletMode)
             throws IllegalStateException, PortletModeException {
@@ -307,7 +382,8 @@ public class VaadinPortletSession extends VaadinSession {
         if (response instanceof MimeResponse) {
             PortletURL url = ((MimeResponse) response).createRenderURL();
             url.setPortletMode(portletMode);
-            throw new RuntimeException("UI.open has not yet been implemented");
+            throw new IllegalStateException(
+                    "Portlet mode change is currently only supported when processing event and action requests");
             // UI.open(new ExternalResource(url.toString()));
         } else if (response instanceof StateAwareResponse) {
             ((StateAwareResponse) response).setPortletMode(portletMode);
