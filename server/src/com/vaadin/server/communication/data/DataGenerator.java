@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data;
+package com.vaadin.server.communication.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Item;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 
 import elemental.json.JsonObject;

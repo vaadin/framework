@@ -19,8 +19,8 @@ import java.lang.reflect.Field;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.communication.data.RpcDataProviderExtension;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
