@@ -11,11 +11,11 @@ Vaadin offers many alternative ways for selecting one or more items. The core
 library includes the following selection components, all based on the
 [classname]#AbstractSelect# class:
 
-[classname]#ComboBox#(Section<<dummy/../../../framework/components/components-combobox#components.combobox,"ComboBox">>):: A drop-down list with a text box, where the user can type text to find matching items. The component also provides an input prompt and the user can enter new items.
-[classname]#ListSelect#(Section<<dummy/../../../framework/components/components-listselect#components.listselect,"ListSelect">>):: A vertical list box for selecting items in either single or multiple selection mode.
-[classname]#NativeSelect#(Section<<dummy/../../../framework/components/components-nativeselect#components.nativeselect,"NativeSelect">>):: Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode. This uses the [literal]#++<select>++# element in HTML.
-[classname]#OptionGroup#(Section<<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>):: Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
-[classname]#TwinColSelect#(Section<<dummy/../../../framework/components/components-twincolselect#components.twincolselect,"TwinColSelect">>):: Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
+[classname]#ComboBox# (Section <<dummy/../../../framework/components/components-combobox#components.combobox,"ComboBox">>):: A drop-down list with a text box, where the user can type text to find matching items. The component also provides an input prompt and the user can enter new items.
+[classname]#ListSelect# (Section <<dummy/../../../framework/components/components-listselect#components.listselect,"ListSelect">>):: A vertical list box for selecting items in either single or multiple selection mode.
+[classname]#NativeSelect# (Section<<dummy/../../../framework/components/components-nativeselect#components.nativeselect,"NativeSelect">>):: Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode. This uses the [literal]#++<select>++# element in HTML.
+[classname]#OptionGroup# (Section <<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>):: Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
+[classname]#TwinColSelect# (Section <<dummy/../../../framework/components/components-twincolselect#components.twincolselect,"TwinColSelect">>):: Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
 
 
 In addition, the [classname]#Tree#, [classname]#Table#, and
