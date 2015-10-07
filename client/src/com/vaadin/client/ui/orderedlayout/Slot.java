@@ -93,6 +93,8 @@ public class Slot extends SimplePanel {
      * 
      * When using this constructor, the layout and widget must be set before any
      * other operations are performed on the slot.
+     * 
+     * @since 7.6
      */
     public Slot() {
         setStyleName(SLOT_CLASSNAME);

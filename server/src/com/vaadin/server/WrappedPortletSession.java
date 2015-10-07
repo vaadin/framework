@@ -73,7 +73,7 @@ public class WrappedPortletSession implements WrappedSession {
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
      * 
-     * @since
+     * @since 7.6
      */
     public Object getAttribute(String name, int scope) {
         return session.getAttribute(name, scope);
@@ -113,7 +113,7 @@ public class WrappedPortletSession implements WrappedSession {
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
      * 
-     * @since
+     * @since 7.6
      */
     public void setAttribute(String name, Object value, int scope) {
         session.setAttribute(name, value, scope);
@@ -144,7 +144,7 @@ public class WrappedPortletSession implements WrappedSession {
      * 
      * @see PortletSession#getAttributeNames()
      * 
-     * @since
+     * @since 7.6
      */
     public Set<String> getAttributeNames(int scope) {
         return WrappedHttpSession.enumerationToSet(session
@@ -200,7 +200,7 @@ public class WrappedPortletSession implements WrappedSession {
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
      * 
-     * @since
+     * @since 7.6
      */
     public void removeAttribute(String name, int scope) {
         session.removeAttribute(name, scope);

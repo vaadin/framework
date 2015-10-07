@@ -5776,7 +5776,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * This event is fired when the collapse state of a column changes
+     * This event is fired when the collapse state of a column changes.
+     * 
+     * @since 7.6
      */
     public static class ColumnCollapseEvent extends Component.Event {
 
@@ -5810,6 +5812,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Interface for listening to column collapse events.
+     * 
+     * @since 7.6
      */
     public interface ColumnCollapseListener extends Serializable {
 
@@ -5867,6 +5871,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * Adds a column collapse listener to the Table. A column collapse listener
      * is called when the collapsed state of a column changes.
      * 
+     * @since 7.6
+     * 
      * @param listener
      *            The listener to attach
      */
@@ -5877,7 +5883,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a column reorder listener from the Table.
-     * 
+     *
+     * @since 7.6
      * @param listener
      *            The listener to remove
      */

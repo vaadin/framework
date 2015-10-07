@@ -28,6 +28,8 @@ public final class GridConstants implements Serializable {
 
     /**
      * Enum describing different sections of Grid.
+     * 
+     * @since 7.6
      */
     public enum Section {
         HEADER, BODY, FOOTER

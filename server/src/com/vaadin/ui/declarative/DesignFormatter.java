@@ -403,7 +403,7 @@ public class DesignFormatter implements Serializable {
      * unencodes more characters than {@link #encodeForTextNode(String)} encodes
      * </p>
      * 
-     * @since
+     * @since 7.6
      * @param input
      * @return
      */

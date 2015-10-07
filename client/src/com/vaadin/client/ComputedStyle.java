@@ -151,6 +151,7 @@ public class ComputedStyle {
      * 
      * Returns NaN if the property cannot be converted to a double
      * 
+     * @since 7.5.1
      * @param name
      *            the property to retrieve
      * @return the double value of the property

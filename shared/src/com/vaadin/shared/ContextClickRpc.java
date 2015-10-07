@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * Client-to-server RPC interface for context click events
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface ContextClickRpc extends ServerRpc {

@@ -20,6 +20,8 @@ import java.io.Serializable;
 public class TableConstants implements Serializable {
     /**
      * Enum describing different sections of Table.
+     * 
+     * @since 7.6
      */
     public enum Section {
         HEADER, BODY, FOOTER

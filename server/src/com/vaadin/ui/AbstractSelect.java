@@ -699,6 +699,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * multiselect mode all collections of id:s can be assigned.
      * </p>
      * 
+     * @since 7.5.7
      * @param newValue
      *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded

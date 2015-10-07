@@ -390,6 +390,8 @@ public class Profiler {
      * Returns time relative to the particular page load time. The value should
      * not be used directly but rather difference between two values returned by
      * this method should be used to compare measurements.
+     * 
+     * @since 7.6
      */
     public static double getRelativeTimeMillis() {
         return RELATIVE_TIME_SUPPLIER.getRelativeTime();

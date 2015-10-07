@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.table.TableConstants.Section;
 /**
  * Client-to-server RPC interface for the Table component
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface TableServerRpc extends ServerRpc {

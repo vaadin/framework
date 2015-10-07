@@ -48,7 +48,7 @@ public interface GridServerRpc extends ServerRpc {
     /**
      * Informs the server that a context click has happened inside of Grid.
      * 
-     * @since
+     * @since 7.6
      * @param rowIndex
      *            index of clicked row in Grid section
      * @param rowKey

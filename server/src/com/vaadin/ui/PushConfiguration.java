@@ -145,7 +145,7 @@ public interface PushConfiguration extends Serializable {
      * This is only used when overriding the URL to use. Setting this to null
      * (the default) will use the default URL.
      * 
-     * @since
+     * @since 7.6
      * @param pushUrl
      *            The push URL to use
      */
@@ -157,7 +157,7 @@ public interface PushConfiguration extends Serializable {
      * This is only used when overriding the URL to use. Returns null (the
      * default) when the default URL is used.
      * 
-     * @since
+     * @since 7.6
      * @return the URL to use for push requests, or null to use to default
      */
     public String getPushUrl();

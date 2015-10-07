@@ -95,7 +95,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * overridden to provide extra information through an alternative RPC
      * interface.
      * 
-     * @since
+     * @since 7.6
      * @param event
      */
     protected void sendContextClickEvent(ContextMenuEvent event) {

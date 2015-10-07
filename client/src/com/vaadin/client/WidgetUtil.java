@@ -562,6 +562,7 @@ public class WidgetUtil {
      * Gets the border-box width for the given element, i.e. element width +
      * border + padding.
      * 
+     * @since 7.5.1
      * @param element
      *            The element to check
      * @return The border-box width for the element
@@ -612,6 +613,7 @@ public class WidgetUtil {
      * Gets the border-box height for the given element, i.e. element height +
      * border + padding.
      * 
+     * @since 7.5.1
      * @param element
      *            The element to check
      * @return The border-box height for the element

@@ -390,7 +390,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * ContextClickEvent for the Grid Component.
      * 
-     * @since
+     * @since 7.6
      */
     public static class GridContextClickEvent extends ContextClickEvent {
 
@@ -1801,6 +1801,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Abstract base class for Grid header and footer sections.
      * 
+     * @since 7.6
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
@@ -3721,6 +3722,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * given converter and renderer. This method is public only for testing
          * purposes.
          * 
+         * @since 7.6
          * @param renderer
          *            the renderer to use
          * @param converter

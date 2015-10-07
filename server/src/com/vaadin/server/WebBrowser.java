@@ -128,6 +128,7 @@ public class WebBrowser implements Serializable {
     /**
      * Tests whether the user is using Edge.
      * 
+     * @since 7.5.3
      * @return true if the user is using Edge, false if the user is not using
      *         Edge or if no information on the browser is present
      */

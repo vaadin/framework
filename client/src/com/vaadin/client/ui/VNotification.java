@@ -606,6 +606,7 @@ public class VNotification extends VOverlay {
      * If both message and caption are null, redirects the user to the url
      * immediately
      * 
+     * @since 7.5.1
      * @param connection
      *            A reference to the ApplicationConnection
      * @param caption

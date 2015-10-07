@@ -391,6 +391,7 @@ public class VBrowserDetails implements Serializable {
     /**
      * Tests if the browser is Edge.
      * 
+     * @since 7.5.3
      * @return true if it is Edge, false otherwise
      */
     public boolean isEdge() {

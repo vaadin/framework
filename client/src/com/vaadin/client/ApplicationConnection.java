@@ -42,6 +42,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.ConnectionStateHandler;
@@ -1202,6 +1203,7 @@ public class ApplicationConnection implements HasHandlers {
      * Sets a resource that has been pre-loaded via UIDL, such as custom
      * layouts.
      * 
+     * @since 7.6
      * @param name
      *            identifier of the resource to Set
      * @param resource
@@ -1578,6 +1580,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the server RPC queue for this application
      * 
+     * @since 7.6
      * @return the server RPC queue
      */
     public ServerRpcQueue getServerRpcQueue() {
@@ -1587,6 +1590,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the communication error handler for this application
      * 
+     * @since 7.6
      * @return the server RPC queue
      */
     public ConnectionStateHandler getConnectionStateHandler() {
@@ -1596,6 +1600,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the (server to client) message handler for this application
      * 
+     * @since 7.6
      * @return the message handler
      */
     public MessageHandler getMessageHandler() {
@@ -1605,6 +1610,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the server rpc manager for this application
      * 
+     * @since 7.6
      * @return the server rpc manager
      */
     public RpcManager getRpcManager() {
@@ -1614,6 +1620,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the (client to server) message sender for this application
      * 
+     * @since 7.6
      * @return the message sender
      */
     public MessageSender getMessageSender() {
@@ -1621,6 +1628,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
+     * @since 7.6
      * @return the widget set
      */
     public WidgetSet getWidgetSet() {

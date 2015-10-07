@@ -471,7 +471,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /**
      * Sets the value of the field.
      * 
-     * @since
+     * @since 7.5.7
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded

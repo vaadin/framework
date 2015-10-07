@@ -1178,6 +1178,8 @@ public class Util {
 
     /**
      * Round {@code num} up to {@code exp} decimal positions.
+     * 
+     * @since 7.6
      */
     public static native double round(double num, int exp)
     /*-{

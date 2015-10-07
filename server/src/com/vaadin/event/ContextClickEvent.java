@@ -27,7 +27,7 @@ import com.vaadin.util.ReflectTools;
  * Context click event fired by a {@link Component}. ContextClickEvent happens
  * when context click happens on the client-side inside the Component.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public class ContextClickEvent extends ClickEvent {

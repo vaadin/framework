@@ -135,6 +135,8 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the parameter used to transmit the id of the client to server
      * messages.
+     * 
+     * @since 7.6
      */
     public static final String CLIENT_TO_SERVER_ID = "clientId";
 
@@ -151,6 +153,8 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the parameter used for sending the widget set version to the
      * server
+     * 
+     * @since 7.6
      */
     public static final String WIDGETSET_VERSION_ID = "wsver";
 

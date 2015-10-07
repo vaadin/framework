@@ -781,7 +781,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Checks if the current thread has exclusive access to this VaadinSession
      *
      * @return true if the thread has exclusive access, false otherwise
-     * @since
+     * @since 7.1
      */
     public boolean hasLock() {
         ReentrantLock l = ((ReentrantLock) getLockInstance());
@@ -793,7 +793,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * WrappedSession.
      *
      * @return true if this thread has exclusive access, false otherwise
-     * @since
+     * @since 7.6
      */
     protected static boolean hasLock(VaadinService service,
             WrappedSession session) {

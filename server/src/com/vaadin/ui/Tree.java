@@ -1946,7 +1946,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * <code>false</code>, the content is passed to the browser as plain text.
      * The default setting is <code>false</code>
      * 
-     * @since
+     * @since 7.6
      * @param htmlContentAllowed
      *            <code>true</code> if the captions are used as html,
      *            <code>false</code> if used as plain text
@@ -1959,7 +1959,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Checks whether captions are interpreted as html or plain text.
      * 
-     * @since
+     * @since 7.6
      * @return <code>true</code> if the captions are displayed as html,
      *         <code>false</code> if displayed as plain text
      * @see #setHtmlContentAllowed(boolean)

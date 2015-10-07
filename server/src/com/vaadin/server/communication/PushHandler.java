@@ -517,6 +517,7 @@ public class PushHandler {
      * timeout to a value smaller than the proxy timeout so that the server is
      * aware of a reconnect taking place.
      * 
+     * @since 7.6
      * @param suspendTimeout
      *            the timeout to use for suspended AtmosphereResources
      */
@@ -527,6 +528,7 @@ public class PushHandler {
     /**
      * Gets the timeout used for suspend calls when using long polling.
      * 
+     * @since 7.6
      * @return the timeout to use for suspended AtmosphereResources
      */
     public int getLongPollingSuspendTimeout() {

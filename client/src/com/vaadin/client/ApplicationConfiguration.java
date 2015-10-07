@@ -603,7 +603,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * 
+     * @since 7.6
      * @param c
      */
     public static void runWhenDependenciesLoaded(Command c) {

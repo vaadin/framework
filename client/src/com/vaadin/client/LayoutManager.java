@@ -990,6 +990,7 @@ public class LayoutManager {
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * 
+     * @since 7.5.1
      * @param element
      *            the element to get the measured size for
      * @return the measured outer height (including margins, paddings and
@@ -1017,6 +1018,7 @@ public class LayoutManager {
      * The value returned by this method is always rounded up. To get the exact
      * outer width, use {@link #getOuterWidthDouble(Element)}
      * 
+     * @since 7.5.1
      * @param element
      *            the element to get the measured size for
      * @return the measured outer width (including margins, paddings and
@@ -1094,6 +1096,7 @@ public class LayoutManager {
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * 
+     * @since 7.5.1
      * @param element
      *            the element to get the measured size for
      * @return the measured inner height (excluding margins, paddings and
@@ -1146,6 +1149,7 @@ public class LayoutManager {
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * 
+     * @since 7.5.1
      * @param element
      *            the element to get the measured size for
      * @return the measured inner width (excluding margins, paddings and
