@@ -23,8 +23,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusUtil;
-import com.vaadin.client.widget.grid.events.EditorMoveEvent;
-import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widgets.Grid.Editor;
 import com.vaadin.client.widgets.Grid.EditorDomEvent;
 
@@ -114,9 +112,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
             editRow(event, cell.getRowIndex(), cell.getColumnIndexDOM());
 
-            // FIXME should be in editRow
-            event.getGrid().fireEvent(new EditorOpenEvent(cell));
-
             event.getDomEvent().preventDefault();
 
             return true;
@@ -146,9 +141,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         if (e.getTypeInt() == Event.ONCLICK) {
 
             editRow(event, cell.getRowIndex(), cell.getColumnIndexDOM());
-
-            // FIXME should be in editRow
-            event.getGrid().fireEvent(new EditorMoveEvent(cell));
 
             return true;
         }
@@ -188,9 +180,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 }
 
                 editRow(event, rowIndex + rowDelta, colIndex);
-
-                // FIXME should be in editRow
-                event.getGrid().fireEvent(new EditorMoveEvent(cell));
             }
 
             return changed;
@@ -219,9 +208,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             editRow(event, event.getRowIndex(), event.getCell()
                     .getColumnIndexDOM());
 
-            // FIXME should be in editRow
-            event.getGrid().fireEvent(new EditorMoveEvent(cell));
-
             return true;
 
         } else if (e.getType().equals(BrowserEvents.KEYDOWN)
@@ -229,9 +215,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
             editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()
                     + (e.getShiftKey() ? -1 : +1));
-
-            // FIXME should be in editRow
-            event.getGrid().fireEvent(new EditorMoveEvent(cell));
 
             return true;
         }

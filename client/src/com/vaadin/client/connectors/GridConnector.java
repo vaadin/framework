@@ -64,10 +64,6 @@ import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
-import com.vaadin.client.widget.grid.events.EditorCloseEvent;
-import com.vaadin.client.widget.grid.events.EditorEventHandler;
-import com.vaadin.client.widget.grid.events.EditorMoveEvent;
-import com.vaadin.client.widget.grid.events.EditorOpenEvent;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.sort.SortEvent;
@@ -751,32 +747,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
-
-        getWidget().addEditorEventHandler(new EditorEventHandler() {
-            @Override
-            public void onEditorOpen(EditorOpenEvent e) {
-                if (hasEventListener(GridConstants.EDITOR_OPEN_EVENT_ID)) {
-                    String rowKey = getRowKey((JsonObject) e.getRow());
-                    getRpcProxy(GridServerRpc.class).editorOpen(rowKey);
-                }
-            }
-
-            @Override
-            public void onEditorMove(EditorMoveEvent e) {
-                if (hasEventListener(GridConstants.EDITOR_MOVE_EVENT_ID)) {
-                    String rowKey = getRowKey((JsonObject) e.getRow());
-                    getRpcProxy(GridServerRpc.class).editorMove(rowKey);
-                }
-            }
-
-            @Override
-            public void onEditorClose(EditorCloseEvent e) {
-                if (hasEventListener(GridConstants.EDITOR_CLOSE_EVENT_ID)) {
-                    String rowKey = getRowKey((JsonObject) e.getRow());
-                    getRpcProxy(GridServerRpc.class).editorClose(rowKey);
-                }
-            }
-        });
 
         layout();
     }

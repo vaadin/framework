@@ -123,9 +123,6 @@ import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
 import com.vaadin.client.widget.grid.events.ColumnReorderHandler;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeEvent;
 import com.vaadin.client.widget.grid.events.ColumnVisibilityChangeHandler;
-import com.vaadin.client.widget.grid.events.EditorCloseEvent;
-import com.vaadin.client.widget.grid.events.EditorEvent;
-import com.vaadin.client.widget.grid.events.EditorEventHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
 import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
@@ -1586,7 +1583,6 @@ public class Grid<T> extends ResizeComposite implements
             focusedColumnIndex = -1;
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
             updateSelectionCheckboxesAsNeeded(true);
-            grid.fireEvent(new EditorCloseEvent(grid.eventCell));
         }
 
         private void updateSelectionCheckboxesAsNeeded(boolean isEnabled) {
@@ -6356,19 +6352,6 @@ public class Grid<T> extends ResizeComposite implements
 
     public Editor<T> getEditor() {
         return editor;
-    }
-
-    /**
-     * Add handler for editor open/move/close events
-     * 
-     * @param handler
-     *            editor handler object
-     * @return a {@link HandlerRegistration} object that can be used to remove
-     *         the event handler
-     */
-    public HandlerRegistration addEditorEventHandler(EditorEventHandler handler) {
-        return addHandler(handler, EditorEvent.TYPE);
-
     }
 
     protected Escalator getEscalator() {

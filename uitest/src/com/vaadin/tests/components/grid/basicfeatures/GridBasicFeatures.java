@@ -63,10 +63,6 @@ import com.vaadin.ui.Grid.ColumnReorderListener;
 import com.vaadin.ui.Grid.ColumnVisibilityChangeEvent;
 import com.vaadin.ui.Grid.ColumnVisibilityChangeListener;
 import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.EditorCloseEvent;
-import com.vaadin.ui.Grid.EditorListener;
-import com.vaadin.ui.Grid.EditorMoveEvent;
-import com.vaadin.ui.Grid.EditorOpenEvent;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -1418,29 +1414,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     @Override
                     public void execute(Grid c, String value, Object data) {
                         c.setEditorCancelCaption("ʃǝɔuɐↃ");
-                    }
-                }, null);
-
-        createClickAction("Add editor state listener", "Editor",
-                new Command<Grid, String>() {
-                    @Override
-                    public void execute(Grid grid, String value, Object data) {
-                        grid.addEditorListener(new EditorListener() {
-                            @Override
-                            public void editorOpened(EditorOpenEvent e) {
-                                log("Editor opened");
-                            }
-
-                            @Override
-                            public void editorMoved(EditorMoveEvent e) {
-                                log("Editor moved");
-                            }
-
-                            @Override
-                            public void editorClosed(EditorCloseEvent e) {
-                                log("Editor closed");
-                            }
-                        });
                     }
                 }, null);
 
