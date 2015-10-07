@@ -25,8 +25,6 @@ public class TableContextClickTest extends TableContextClickTestBase {
 
     @Test
     public void testBodyContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         assertTypedContextClickListener(1);
@@ -34,8 +32,6 @@ public class TableContextClickTest extends TableContextClickTestBase {
 
     @Test
     public void testHeaderContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         contextClick($(TableElement.class).first().getHeaderCell(0));
@@ -53,8 +49,6 @@ public class TableContextClickTest extends TableContextClickTestBase {
 
     @Test
     public void testFooterContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         contextClick($(TableElement.class).first().getFooterCell(0));

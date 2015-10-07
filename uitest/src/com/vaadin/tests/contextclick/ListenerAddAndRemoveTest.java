@@ -21,8 +21,6 @@ public class ListenerAddAndRemoveTest extends TableContextClickTestBase {
 
     @Test
     public void testAddAndRemoveListeners() {
-        openTestURL();
-
         // Add typed listener
         addOrRemoveTypedListener();
 

@@ -905,7 +905,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * Should the "native events" be enabled for Internet Explorer 11.
+     * Should the "native events" be enabled for Internet Explorer.
      * <p>
      * Native events sometimes cause failure in clicking on buttons/checkboxes
      * but are possibly needed for some operations.
@@ -913,7 +913,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * @return true, to use "native events", false to use generated Javascript
      *         events
      */
-    protected boolean useNativeEventsForIE11() {
+    protected boolean useNativeEventsForIE() {
         return true;
     }
 

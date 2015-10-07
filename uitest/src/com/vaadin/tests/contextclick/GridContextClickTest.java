@@ -24,8 +24,6 @@ import com.vaadin.testbench.elements.GridElement;
 public class GridContextClickTest extends AbstractContextClickTest {
     @Test
     public void testBodyContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getCell(0, 0));
@@ -43,8 +41,6 @@ public class GridContextClickTest extends AbstractContextClickTest {
 
     @Test
     public void testHeaderContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getHeaderCell(0, 0));
@@ -62,8 +58,6 @@ public class GridContextClickTest extends AbstractContextClickTest {
 
     @Test
     public void testFooterContextClickWithTypedListener() {
-        openTestURL();
-
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getFooterCell(0, 0));

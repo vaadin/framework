@@ -96,13 +96,9 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                         InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
                         false);
             }
-            if (BrowserUtil.isIE(desiredCapabilities, 11)) {
-                // Only for IE 11 for now, can be expanded to other versions if
-                // they have the same problems
-                if (!useNativeEventsForIE11()) {
-                    desiredCapabilities.setCapability(
-                            InternetExplorerDriver.NATIVE_EVENTS, false);
-                }
+            if (!useNativeEventsForIE()) {
+                desiredCapabilities.setCapability(
+                        InternetExplorerDriver.NATIVE_EVENTS, false);
             }
         }
 

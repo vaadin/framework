@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
@@ -40,14 +41,22 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
             .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
 
     @Override
+    protected boolean useNativeEventsForIE() {
+        return false;
+    }
+
+    @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         return getBrowsersSupportingContextMenu();
     }
 
+    @Before
+    public void setUp() {
+        openTestURL();
+    }
+
     @Test
     public void testDefaultListener() {
-        openTestURL();
-
         addOrRemoveDefaultListener();
 
         assertDefaultContextClickListener(1);

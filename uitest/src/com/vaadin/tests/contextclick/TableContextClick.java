@@ -29,6 +29,7 @@ public class TableContextClick extends
         Table table = new Table();
         table.setContainerDataSource(PersonContainer.createWithTestData());
         table.setFooterVisible(true);
+        table.setHeight("400px");
         return table;
     }
 
