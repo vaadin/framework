@@ -12,6 +12,8 @@ import org.junit.Test;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 
 public class TabSheetTest {
@@ -220,5 +222,65 @@ public class TabSheetTest {
         assertEquals(false, tabSheet.getTab(lbl3).isEnabled());
         assertEquals("description", tab1.getDescription());
         assertEquals(1, tabSheet.getTabPosition(tabSheet.getTab(lbl3)));
+    }
+
+    @Test
+    public void testSelectedTabChangeEvent_whenComponentReplaced() {
+
+        // given
+        final class SelectedTabExpectedComponentListener
+                implements SelectedTabChangeListener {
+
+            private Component actualComponent;
+
+            @Override
+            public void selectedTabChange(SelectedTabChangeEvent event) {
+                actualComponent = event.getTabSheet().getSelectedTab();
+
+            }
+
+            public void assertActualComponentIs(Component expectedComponent) {
+                assertEquals(expectedComponent, actualComponent);
+                actualComponent = null;
+            }
+        }
+        TabSheet tabSheet = new TabSheet();
+        final Label lbl1 = new Label("aaa");
+        final Label lbl2 = new Label("bbb");
+        final Label lbl3 = new Label("ccc");
+        final Label lbl4 = new Label("ddd");
+        tabSheet.addComponent(lbl1);
+        tabSheet.addComponent(lbl2);
+        tabSheet.addComponent(lbl3);
+        tabSheet.setSelectedTab(lbl2);
+        SelectedTabExpectedComponentListener listener = new SelectedTabExpectedComponentListener();
+        tabSheet.addSelectedTabChangeListener(listener);
+
+        // when selected tab is replaced with new Component
+        tabSheet.replaceComponent(lbl2, lbl4);
+
+        // then
+        listener.assertActualComponentIs(lbl4);
+        assertEquals(lbl4, tabSheet.getSelectedTab());
+
+        // when not selected tab is replaced with new Component
+        tabSheet.replaceComponent(lbl1, lbl2);
+
+        // then
+        assertEquals(lbl4, tabSheet.getSelectedTab());
+
+        // when not selected tab is replaced with existing Component
+        tabSheet.replaceComponent(lbl2, lbl3);
+
+        // then
+        assertEquals(lbl4, tabSheet.getSelectedTab());
+
+        // when selected tab is replaced with existing Component (locations are
+        // just swapped)
+        tabSheet.replaceComponent(lbl4, lbl3);
+
+        // then
+        listener.assertActualComponentIs(lbl3);
+        assertEquals(lbl3, tabSheet.getSelectedTab());        
     }
 }

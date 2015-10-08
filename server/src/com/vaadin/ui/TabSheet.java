@@ -736,6 +736,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         if (oldLocation == -1) {
             addComponent(newComponent);
         } else if (newLocation == -1) {
+            if (selected == oldComponent) {
+                setSelected(null);
+            }
             removeComponent(oldComponent);
             newTab = addTab(newComponent, oldLocation);
 
@@ -752,6 +755,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
             if (selectAfterInserting) {
                 setSelected(newComponent);
+                //SelectedTabChangeEvent should be fired here as selected Tab is changed.
+                //Other cases are handled implicitly by removeComponent() and addComponent()addTab()
+                fireSelectedTabChange();
             }
 
             // Tab associations are not changed, but metadata is swapped between
