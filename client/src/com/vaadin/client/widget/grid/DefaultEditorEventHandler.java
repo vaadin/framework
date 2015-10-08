@@ -154,6 +154,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 rowDelta = (e.getShiftKey() ? -1 : +1);
             } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
                 colDelta = (e.getShiftKey() ? -1 : +1);
+                // Prevent tab out of Grid Editor
+                event.getDomEvent().preventDefault();
             }
 
             final boolean changed = rowDelta != 0 || colDelta != 0;
@@ -201,10 +203,10 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      */
     protected boolean handleBufferedMoveEvent(EditorDomEvent<T> event) {
         Event e = event.getDomEvent();
-        final EventCellReference<T> cell = event.getCell();
 
         if (e.getType().equals(BrowserEvents.CLICK)
                 && event.getRowIndex() == event.getCell().getRowIndex()) {
+
             editRow(event, event.getRowIndex(), event.getCell()
                     .getColumnIndexDOM());
 
@@ -212,6 +214,9 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
         } else if (e.getType().equals(BrowserEvents.KEYDOWN)
                 && e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
+
+            // Prevent tab out of Grid Editor
+            event.getDomEvent().preventDefault();
 
             editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()
                     + (e.getShiftKey() ? -1 : +1));
@@ -304,11 +309,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         } else {
             handled = event.getGrid().isEnabled() && isBody
                     && handleOpenEvent(event);
-        }
-
-        if (handled) {
-            // Prevent any defaults for handled events.
-            event.getDomEvent().preventDefault();
         }
 
         // Buffered mode should swallow all events, if not already handled.

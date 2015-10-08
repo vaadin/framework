@@ -23,6 +23,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -72,4 +73,20 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
                 hasCssClass(dateField, "v-datefield-error"));
     }
 
+    @Test
+    public void testCheckboxInEditorWorks() {
+        GridCellElement ritaBirthdate = grid.getCell(2, 3);
+        // Open editor row
+        new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
+
+        // Get CheckBox
+        GridEditorElement editor = grid.getEditor();
+        CheckBoxElement cb = editor.getField(5).wrap(CheckBoxElement.class);
+
+        // Check values
+        String value = cb.getValue();
+        cb.click(5, 5);
+        Assert.assertNotEquals("Checkbox value did not change", value,
+                cb.getValue());
+    }
 }
