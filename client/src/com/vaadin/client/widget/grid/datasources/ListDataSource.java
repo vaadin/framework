@@ -134,7 +134,7 @@ public class ListDataSource<T> implements DataSource<T> {
 
         @Override
         public boolean contains(Object o) {
-            return contains(o);
+            return ds.contains(o);
         }
 
         @Override
@@ -150,7 +150,7 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         @SuppressWarnings("hiding")
         public <T> T[] toArray(T[] a) {
-            return toArray(a);
+            return ds.toArray(a);
         }
 
         @Override
