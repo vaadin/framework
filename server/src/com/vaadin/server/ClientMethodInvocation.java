@@ -38,7 +38,7 @@ public class ClientMethodInvocation implements Serializable,
     private final ClientConnector connector;
     private final String interfaceName;
     private final String methodName;
-    private final Object[] parameters;
+    private transient Object[] parameters;
     private Type[] parameterTypes;
 
     // used for sorting calls between different connectors in the same UI
@@ -102,6 +102,7 @@ public class ClientMethodInvocation implements Serializable,
         // that is Serializable. On deserialization (readObject-method below)
         // the process should be reversed.
 
+        Object[] serializedParameters = new Object[parameters.length];
         // Easy way for implementing serialization & deserialization is by
         // writing/parsing the object's content as string.
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -109,12 +110,15 @@ public class ClientMethodInvocation implements Serializable,
             if (type instanceof Class<?>) {
                 Class<?> clazz = (Class<?>) type;
                 if (JsonArray.class.isAssignableFrom(clazz)) {
-                    parameters[i] = JsonUtil
+                    serializedParameters[i] = JsonUtil
                             .stringify((JsonArray) parameters[i]);
+                } else {
+                    serializedParameters[i] = parameters[i];
                 }
             }
         }
         stream.defaultWriteObject();
+        stream.writeObject(serializedParameters);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException,
@@ -122,6 +126,7 @@ public class ClientMethodInvocation implements Serializable,
         // Reverses the serialization done in writeObject. Basically just
         // parsing the serialized type back to the non-serializable type.
         stream.defaultReadObject();
+        parameters = (Object[]) stream.readObject();
         for (int i = 0; i < parameterTypes.length; i++) {
             Type type = parameterTypes[i];
             if (type instanceof Class<?>) {

@@ -24,13 +24,16 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ClientMethodInvocation;
 import com.vaadin.server.JavaScriptCallbackHelper;
+import com.vaadin.server.JsonCodec;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
+import elemental.json.JsonValue;
 import elemental.json.impl.JsonUtil;
 
 public class ClientMethodSerializationTest extends TestCase {
@@ -110,6 +113,33 @@ public class ClientMethodSerializationTest extends TestCase {
                     + e.getMessage());
         }
         return output;
+    }
+
+    public void testSerializeTwice() {
+        String name = "javascriptFunctionName";
+        String[] arguments = { "1", "2", "3" };
+        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null,
+                Object[].class, null).getEncodedValue();
+        ClientConnector connector = null;
+
+        ClientMethodInvocation original = new ClientMethodInvocation(connector,
+                "interfaceName", JAVASCRIPT_CALLBACK_METHOD, new Object[] {
+                        name, args });
+
+        ClientMethodInvocation copy = (ClientMethodInvocation) serializeAndDeserialize(original);
+        assertEquals(copy.getMethodName(), original.getMethodName());
+        assertEquals(copy.getParameters().length,
+                original.getParameters().length);
+        for (int i = 0; i < copy.getParameters().length; i++) {
+            Object originalParameter = original.getParameters()[i];
+            Object copyParameter = copy.getParameters()[i];
+            if (originalParameter instanceof JsonValue) {
+                assertEquals(((JsonValue) originalParameter).toJson(),
+                        ((JsonValue) copyParameter).toJson());
+            } else {
+                assertEquals(originalParameter, copyParameter);
+            }
+        }
     }
 
 }
