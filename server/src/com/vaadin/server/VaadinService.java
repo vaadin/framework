@@ -1660,7 +1660,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Checks whether Atmosphere is avilable for use
      * 
-     * @since
+     * @since 7.6
      * @return true if Atmosphere is available, false otherwise
      */
     protected boolean isAtmosphereAvailable() {
@@ -1920,7 +1920,7 @@ public abstract class VaadinService implements Serializable {
      * <p>
      * By default stores the VaadinSession in the underlying HTTP session.
      * 
-     * @since
+     * @since 7.6
      * @param session
      *            the VaadinSession to store
      * @param wrappedSession
@@ -1939,7 +1939,7 @@ public abstract class VaadinService implements Serializable {
      * <p>
      * Called by {@link #storeSession(VaadinSession, WrappedSession)}
      * 
-     * @since
+     * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
      * @param session
@@ -1954,7 +1954,7 @@ public abstract class VaadinService implements Serializable {
      * Called when the VaadinSession should be loaded from the underlying HTTP
      * session
      * 
-     * @since
+     * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
      * @return the VaadinSession in the HTTP session or null if not found
@@ -1978,7 +1978,7 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param wrappedSession
      *            the underlying HTTP session
-     * @since
+     * @since 7.6
      * @return the VaadinSession or null if no session was found
      */
     protected VaadinSession readFromHttpSession(WrappedSession wrappedSession) {
@@ -1990,7 +1990,7 @@ public abstract class VaadinService implements Serializable {
      * Called when the VaadinSession should be removed from the underlying HTTP
      * session
      * 
-     * @since
+     * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
      */
@@ -2003,7 +2003,7 @@ public abstract class VaadinService implements Serializable {
      * Performs the actual removal of the VaadinSession from the underlying HTTP
      * session after sanity checks have been performed
      * 
-     * @since
+     * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
      */
@@ -2016,7 +2016,7 @@ public abstract class VaadinService implements Serializable {
      * Returns the name used for storing the VaadinSession in the underlying
      * HTTP session
      * 
-     * @since
+     * @since 7.6
      * @return the attribute name used for storing the VaadinSession
      */
     protected String getSessionAttributeName() {

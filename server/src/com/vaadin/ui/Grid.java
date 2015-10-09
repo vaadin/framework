@@ -3716,7 +3716,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets whether this column can be resized by the user.
          * 
-         * @since
+         * @since 7.6
          * @param resizable
          *            {@code true} if this column should be resizable,
          *            {@code false} otherwise
@@ -3737,7 +3737,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
          * of the returned value.
          * 
-         * @since
+         * @since 7.6
          * @return {@code true} if this column is resizable, {@code false}
          *         otherwise
          */

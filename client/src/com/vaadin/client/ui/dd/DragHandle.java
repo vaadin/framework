@@ -32,7 +32,7 @@ import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
  * general, event-providing interface that this component is based on, see
  * {@link DragAndDropHandler}.
  * 
- * @since
+ * @since 7.6
  */
 public class DragHandle {
 

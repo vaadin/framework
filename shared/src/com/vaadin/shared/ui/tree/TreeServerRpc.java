@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * Client-to-server RPC interface for the Tree component
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface TreeServerRpc extends ServerRpc {

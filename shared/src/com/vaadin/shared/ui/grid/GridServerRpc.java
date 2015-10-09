@@ -93,7 +93,7 @@ public interface GridServerRpc extends ServerRpc {
     /**
      * Informs the server that a column has been resized by the user.
      * 
-     * @since
+     * @since 7.6
      * @param id
      *            the id of the column
      * @param pixels

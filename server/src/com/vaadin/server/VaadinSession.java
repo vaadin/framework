@@ -1440,7 +1440,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * <p>
      * Called internally by the framework.
      * 
-     * @since
+     * @since 7.6
      * @param wrappedSession
      *            the session this VaadinSession is stored in
      * @param vaadinService
