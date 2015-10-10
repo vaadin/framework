@@ -772,7 +772,7 @@ public class Slot extends SimplePanel {
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        if (DOM.eventGetType(event) == Event.ONLOAD
+        if (DOM.eventGetType(event) == Event.ONLOAD && icon != null
                 && icon.getElement() == DOM.eventGetTarget(event)) {
             if (layout.getLayoutManager() != null) {
                 layout.getLayoutManager().layoutLater();
