@@ -153,8 +153,8 @@ public class StatementHelper implements Serializable {
                 return;
             }
 
-            throw new SQLException("Data type not supported by SQLContainer: "
-                    + dataType.getClass().toString());
+            throw new SQLException("Data type for parameter " + i
+                    + " not supported by SQLContainer: " + dataType.getName());
         }
     }
 
