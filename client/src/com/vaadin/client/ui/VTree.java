@@ -710,7 +710,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
 
-            if (type == Event.ONLOAD && target == icon.getElement()) {
+            if (type == Event.ONLOAD && icon != null && target == icon.getElement()) {
                 iconLoaded.trigger();
             }
 
