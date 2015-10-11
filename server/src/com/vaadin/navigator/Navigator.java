@@ -551,15 +551,77 @@ public class Navigator implements Serializable {
     protected void navigateTo(View view, String viewName, String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
-        if (!fireBeforeViewChange(event)) {
+        boolean navigationAllowed = beforeViewChange(event);
+        if (!navigationAllowed) {
             // #10901. Revert URL to previous state if back-button navigation
             // was canceled
-            if (currentNavigationState != null) {
-                getStateManager().setState(currentNavigationState);
-            }
+            revertNavigation();
             return;
         }
 
+        updateNavigationState(event);
+
+        if (getDisplay() != null) {
+            getDisplay().showView(view);
+        }
+
+        switchView(event);
+
+        view.enter(event);
+
+        fireAfterViewChange(event);
+    }
+
+    /**
+     * Check whether view change is allowed by view change listeners (
+     * {@link ViewChangeListener#beforeViewChange(ViewChangeEvent)}).
+     * 
+     * This method can be overridden to extend the behavior, and should not be
+     * called directly except by {@link #navigateTo(View, String, String)}.
+     * 
+     * @since 7.6
+     * @param event
+     *            the event to fire as the before view change event
+     * @return true if view change is allowed
+     */
+    protected boolean beforeViewChange(ViewChangeEvent event) {
+        return fireBeforeViewChange(event);
+    }
+
+    /**
+     * Revert the changes to the navigation state. When navigation fails, this
+     * method can be called by {@link #navigateTo(View, String, String)} to
+     * revert the URL fragment to point to the previous view to which navigation
+     * succeeded.
+     * 
+     * This method should only be called by
+     * {@link #navigateTo(View, String, String)}. Normally it should not be
+     * overridden, but can be by frameworks that need to hook into view change
+     * cancellations of this type.
+     * 
+     * @since 7.6
+     */
+    protected void revertNavigation() {
+        if (currentNavigationState != null) {
+            getStateManager().setState(currentNavigationState);
+        }
+    }
+
+    /**
+     * Update the internal state of the navigator (parameters, previous
+     * successful URL fragment navigated to) when navigation succeeds.
+     * 
+     * Normally this method should not be overridden nor called directly from
+     * application code, but it can be called by a custom implementation of
+     * {@link #navigateTo(View, String, String)}.
+     * 
+     * @since 7.6
+     * @param event
+     *            a view change event with details of the change
+     */
+    protected void updateNavigationState(ViewChangeEvent event) {
+        String viewName = event.getViewName();
+        String parameters = event.getParameters();
         if (null != viewName && getStateManager() != null) {
             String navigationState = viewName;
             if (!parameters.isEmpty()) {
@@ -570,15 +632,23 @@ public class Navigator implements Serializable {
                 currentNavigationState = navigationState;
             }
         }
+    }
 
-        if (display != null) {
-            display.showView(view);
-        }
-
-        view.enter(event);
-        currentView = view;
-
-        fireAfterViewChange(event);
+    /**
+     * Update the internal state of the navigator to reflect the actual
+     * switching of views.
+     * 
+     * This method should only be called by
+     * {@link #navigateTo(View, String, String)} between showing the view and
+     * calling {@link View#enter(ViewChangeEvent)}. If this method is
+     * overridden, the overriding version must call the super method.
+     * 
+     * @since 7.6
+     * @param event
+     *            a view change event with details of the change
+     */
+    protected void switchView(ViewChangeEvent event) {
+        currentView = event.getNewView();
     }
 
     /**
@@ -640,6 +710,15 @@ public class Navigator implements Serializable {
 
     public UI getUI() {
         return ui;
+    }
+
+    /**
+     * Return the currently active view.
+     *
+     * @return current view
+     */
+    public View getCurrentView() {
+        return currentView;
     }
 
     /**
