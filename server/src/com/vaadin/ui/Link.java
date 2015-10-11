@@ -90,8 +90,8 @@ public class Link extends AbstractComponent {
      *            the Border style of the target window.
      * 
      */
-    public Link(String caption, Resource resource, String targetName,
-            int width, int height, BorderStyle border) {
+    public Link(String caption, Resource resource, String targetName, int width,
+            int height, BorderStyle border) {
         setCaption(caption);
         setResource(resource);
         setTargetName(targetName);
@@ -212,12 +212,12 @@ public class Link extends AbstractComponent {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("target")) {
-            setTargetName(DesignAttributeHandler.getFormatter().parse(
-                    design.attr("target"), String.class));
+            setTargetName(DesignAttributeHandler.getFormatter()
+                    .parse(design.attr("target"), String.class));
         }
         if (design.hasAttr("href")) {
-            setResource(DesignAttributeHandler.getFormatter().parse(
-                    design.attr("href"), Resource.class));
+            setResource(DesignAttributeHandler.getFormatter()
+                    .parse(design.attr("href"), Resource.class));
         }
     }
 
@@ -236,6 +236,9 @@ public class Link extends AbstractComponent {
         Collection<String> a = super.getCustomAttributes();
         a.add("target-name");
         a.add("resource");
+        // Add custom attributes, see #19107
+        a.add("target");
+        a.add("href");
         return a;
     }
 }
