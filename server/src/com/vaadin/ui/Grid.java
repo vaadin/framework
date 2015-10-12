@@ -302,7 +302,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * the client. Details components are detached and forgotten when client
      * informs that it has dropped the corresponding item.
      * 
-     * @since
+     * @since 7.6
      */
     private final static class DetailComponentManager extends
             AbstractGridExtension implements DataGenerator {
@@ -802,7 +802,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * An event listener for column resize events in the Grid.
      * 
-     * @since
+     * @since 7.6
      */
     public interface ColumnResizeListener extends Serializable {
 
@@ -819,7 +819,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * An event that is fired when a column is resized, either programmatically
      * or by the user.
      * 
-     * @since
+     * @since 7.6
      */
     public static class ColumnResizeEvent extends Component.Event {
 
@@ -3352,7 +3352,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns whether this column has an undefined width.
          * 
-         * @since
+         * @since 7.6
          * @return whether the width is undefined
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
@@ -4355,7 +4355,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Informs the parent Grid that this Extension wants to add a child
          * component to it.
          * 
-         * @since
+         * @since 7.6
          * @param c
          *            component
          */
@@ -4367,7 +4367,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Informs the parent Grid that this Extension wants to remove a child
          * component from it.
          * 
-         * @since
+         * @since 7.6
          * @param c
          *            component
          */

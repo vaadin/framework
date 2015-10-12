@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface ColumnResizeHandler<T> extends EventHandler {

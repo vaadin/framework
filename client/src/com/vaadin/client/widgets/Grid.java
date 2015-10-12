@@ -7931,7 +7931,7 @@ public class Grid<T> extends ResizeComposite implements
      * Register a column resize handler to this Grid. The event for this handler
      * is fired when the Grid's columns are resized.
      * 
-     * @since
+     * @since 7.6
      * @param handler
      *            the handler for the event
      * @return the registration for the event
