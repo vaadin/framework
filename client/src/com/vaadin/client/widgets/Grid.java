@@ -3191,8 +3191,6 @@ public class Grid<T> extends ResizeComposite implements
 
             openCloseButton = new Button();
 
-            setEnabled(grid.isEnabled());
-
             openCloseButton.addClickHandler(openCloseButtonHandler);
 
             rootContainer.add(openCloseButton);
