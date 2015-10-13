@@ -1,0 +1,286 @@
+---
+title: Responsive Themes
+order: 10
+layout: page
+---
+
+[[themes.responsive]]
+= Responsive Themes
+
+((("[classname]#responsive# extension", id="term.themes.responsive", range="startofrange")))
+
+
+((("CSS selections")))
+((("extension")))
+Vaadin includes support for responsive design which enables size range
+conditions in CSS selectors, allowing conditional CSS rules that respond to size
+changes in the browser window on the client-side.
+
+ifdef::web[]
+See the link:https://vaadin.com/blog/-/blogs/3126636[Vaadin Blog article on
+Responsive design] for some additional
+information.
+endif::web[]
+
+You can use the [classname]#Responsive# extension to extend either a component,
+typically a layout, or the entire UI. You specify the component by the static
+[methodname]#makeResponsive()# method.
+
+
+----
+// Have some component with an appropriate style name
+Label c = new Label("Here be text");
+c.addStyleName("myresponsive");
+content.addComponent(c);
+        
+// Enable Responsive CSS selectors for the component
+Responsive.makeResponsive(c);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.basic[on-line example, window="_blank"].
+
+You can now use [literal]#++width-range++# and [literal]#++height-range++#
+conditions in CSS selectors as follows:
+
+
+----
+/* Basic settings for all sizes */
+.myresponsive {
+    padding: 5px;
+    line-height: 36pt;
+}
+    
+/* Small size */
+.myresponsive[width-range~="0-300px"] {
+    background: orange;
+    font-size: 16pt;
+}
+
+/* Medium size */
+.myresponsive[width-range~="301px-600px"] {
+    background: azure;
+    font-size: 24pt;
+}
+
+/* Anything bigger */
+.myresponsive[width-range~="601px-"] {
+    background: palegreen;
+    font-size: 36pt;
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.basic[on-line example, window="_blank"].
+
+You can have overlapping size ranges, in which case all the selectors matching
+the current size are enabled.
+
+ifdef::web[]
+Note that responsive themes currently
+link:https://dev.vaadin.com/ticket/16249[do not work together with] stylesheets
+or widget sets loaded from a different domain than the Vaadin application. Such
+resources must be loaded from the same domain as the application. The problem
+occurs only in Firefox. A SecurityError is shown in the debug window. The
+limitation concerns stylesheets such as for web fonts served from external
+sites, as described in
+<<dummy/../../../framework/themes/themes-fonts#themes.fonts.webfonts,"Loading
+Web Fonts">>.
+endif::web[]
+
+ifdef::web[]
+[[themes.responsive.wrap]]
+== Flexible Wrapping
+
+You can use the [classname]#CssLayout# to have automatic wrap-around when the
+components in the layout would go off right side of the layout. Components that
+wrap must, however, have either undefined or fixed width, and thereby can not
+utilize the full area of the screen. With the [classname]#Responsive# extension,
+you can have more flexible wrap-around that gives the component tiles maximum
+width.
+
+In the following, we have a text and image box, which are laid out horizontally
+with 50-50 sizing if the screen is wide enough, but wrap to a vertical layout if
+the screen is narrow.
+
+
+----
+CssLayout layout = new CssLayout();
+layout.setWidth("100%");
+layout.addStyleName("flexwrap");
+content.addComponent(layout);
+        
+// Enable Responsive CSS selectors for the layout
+Responsive.makeResponsive(layout);
+
+Label title = new Label("Space is big, really big");
+title.addStyleName("title");
+layout.addComponent(title);
+
+Label description = new Label("This is a " +
+    "long description of the image shown " +
+    "on the right or below, depending on the " +
+    "screen width. The text here could continue long.");
+description.addStyleName("itembox");
+description.setSizeUndefined();
+layout.addComponent(description);
+        
+Image image = new Image(null,
+        new ThemeResource("img/planets/Earth.jpg"));
+image.addStyleName("itembox");
+layout.addComponent(image);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.flexwrap[on-line example, window="_blank"].
+
+The SCSS could be as follows:
+
+
+----
+/* Various general settings */
+.flexwrap {
+    background: black;
+    color: white;
+
+    .title {
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+        padding: 5px;
+    }
+    
+    .itembox {
+        white-space: normal;
+        vertical-align: top;
+    }
+    
+    .itembox.v-label {padding: 5px}
+}
+    
+.flexwrap[width-range~="0-499px"] {
+    .itembox {width: 100%}
+}
+    
+.flexwrap[width-range~="500px-"] {
+    .itembox {width: 50%}
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.flexwrap[on-line example, window="_blank"].
+
+The layout in the wide mode is shown in <<figure.theme.responsive.flexwrap>>.
+
+[[figure.theme.responsive.flexwrap]]
+.Flexible Wrapping
+image::img/addon-responsive-flexwrap.png[]
+
+You could also play with the [literal]#++display: block++# vs
+[literal]#++display: inline-block++# properties.
+
+Notice that, while the [classname]#Responsive# extension makes it possible to do
+various CSS trickery with component sizes, the normal rules for component and
+layout sizes apply, as described in
+<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
+Size">> and elsewhere, and you should always check the size behaviour of the
+components. In the above example, we set the label to have undefined width,
+which disables word wrap, so we had to re-enable it.
+
+endif::web[]
+
+ifdef::web[]
+[[themes.responsive.display]]
+== Toggling the Display Property
+
+((("display (CSS
+property)")))
+The [literal]#++display++# property allows especially powerful ways to offer
+radically different UIs for different screen sizes by enabling and disabling UI
+elements as needed. For example, you could disable some parts of the UI when the
+space gets too small, but bring forth navigation buttons that, when clicked, add
+component styles to switch to the hidden parts.
+
+In the following, we simply show alternative components based on screen width:
+
+
+----
+CssLayout layout = new CssLayout();
+layout.setWidth("100%");
+layout.addStyleName("toggledisplay");
+content.addComponent(layout);
+        
+// Enable Responsive CSS selectors for the layout
+Responsive.makeResponsive(layout);
+
+Label enoughspace =
+    new Label("This space is big, mindbogglingly big");
+enoughspace.addStyleName("enoughspace");
+layout.addComponent(enoughspace);
+        
+Label notenoughspace = new Label("Quite small space");
+notenoughspace.addStyleName("notenoughspace");
+layout.addComponent(notenoughspace);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.display[on-line example, window="_blank"].
+
+The SCSS could be as follows:
+
+
+----
+/* Common settings */
+.toggledisplay {
+    .enoughspace, .notenoughspace {
+        color: white;
+        padding: 5px;
+    }
+    
+    .notenoughspace { /* Really small */
+        background: red;
+        font-weight: normal;
+        font-size: 10px;
+        line-height: 15px;
+    }
+
+    .enoughspace { /* Really big */
+        background: darkgreen;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+    }
+}
+    
+/* Quite little space */
+.toggledisplay[width-range~="0-499px"] {
+    .enoughspace    {display: none}
+}
+    
+/* Plenty of space */
+.toggledisplay[width-range~="500px-"] {
+    .notenoughspace {display: none}
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.display[on-line example, window="_blank"].
+
+endif::web[]
+
+ifdef::web[]
+[[themes.responsive.demos]]
+== Responsive Demos
+
+You can find a simple responsive demo at
+link:http://demo.vaadin.com/responsive/[demo.vaadin.com/responsive]. It
+demonstrates the flexible wrapping technique described in
+<<themes.responsive.wrap>>.
+
+The
+link:http://demo.vaadin.com/book-examples-vaadin7/book/#themes.responsive.basic[Book
+Examples] demo provides the examples given in this chapter, as well as some
+others.
+
+((("Parking
+demo")))
+((("TouchKit", "Parking
+demo")))
+The Parking demo for TouchKit, mentioned in
+<<dummy/../../../mobile/mobile-overview.asciidoc#mobile.overview,"Mobile
+Applications with TouchKit">>, uses a responsive theme to adapt to mobile
+devices with different screen sizes and when the screen orientation changes.
+
+endif::web[]
+
+(((range="endofrange", startref="term.themes.responsive")))
+
+

@@ -1,0 +1,90 @@
+---
+title: Overview
+order: 1
+layout: page
+---
+
+[[clientsideapp.overview]]
+= Overview
+
+Vaadin allows developing client-side modules that run in the browser.
+Client-side modules can use all the GWT widgets and some Vaadin-specific
+widgets, as well as the same themes as server-side Vaadin applications.
+Client-side applications run in the browser, even with no further server
+communications. When paired with a server-side service to gain access to data
+storage and server-side business logic, client-side applications can be
+considered "fat clients", in comparison to the "thin client" approach of the
+server-side Vaadin applications. The services can use the same back-end services
+as server-side Vaadin applications. Fat clients are useful for a range of
+purposes when you have a need for highly responsive UI logic, such as for games
+or for serving a huge number of clients with possibly stateless server-side
+code.
+
+[[figure.clientsideapp.overview.architecture]]
+.Client-Side Application Architecture
+image::img/clientsideapp-architecture-hi.png[]
+
+A client-side application is defined as a __module__, which has an
+__entry-point__ class. Its [methodname]#onModuleLoad()# method is executed when
+the JavaScript of the compiled module is loaded in the browser.
+
+Consider the following client-side application:
+
+
+----
+public class HelloWorld implements EntryPoint {
+    @Override
+    public void onModuleLoad() {
+        RootPanel.get().add(new Label("Hello, world!"));
+    }
+}
+----
+
+The user interface of a client-side application is built under a HTML __root
+element__, which can be accessed by [methodname]#RootPanel.get()#. The purpose
+and use of the entry-point is documented in more detail in
+<<dummy/../../../framework/clientsideapp/clientsideapp-entrypoint#clientsideapp.entrypoint,"Client-Side
+Module Entry-Point">>. The user interface is built from __widgets__
+hierarchically, just like with server-side Vaadin UIs. The built-in widgets and
+their relationships are catalogued in
+<<dummy/../../../framework/clientsidewidgets/clientsidewidgets-overview.asciidoc#clientsidewidgets.overview,"Client-Side
+Widgets">>. You can also use many of the widgets in Vaadin add-ons that have
+them, or make your own.
+
+A client-side module is defined in a __module descriptor__, as described in
+<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+Module Descriptor">>. A module is compiled from Java to JavaScript using the
+Vaadin Compiler, of which use was described in
+<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
+a Client-Side Module">>. The
+<<dummy/../../../framework/clientsideapp/clientsideapp-compiling#clientsideapp.compiling,"Compiling
+and Running a Client-Side Application">> in this chapter gives further
+information about compiling client-side applications. The resulting JavaScript
+can be loaded to any web page, as described in
+<<dummy/../../../framework/clientsideapp/clientsideapp-loading#clientsideapp.loading,"Loading
+a Client-Side Application">>.
+
+The client-side user interface can be built declaratively using the included
+__UI
+Binder__////
+, as described in &lt;xref
+linkend="clientsideapp.uibinder"/&gt;
+////
+.
+
+The servlet for processing RPC calls from the client-side can be generated
+automatically using the included compiler.
+
+Even with regular server-side Vaadin applications, it may be useful to provide
+an off-line mode if the connection is closed. An off-line mode can persist data
+in a local store in the browser, thereby avoiding the need for server-side
+storage, and transmit the data to the server when the connection is again
+available. Such a pattern is commonly used with Vaadin
+TouchKit.////
+Use of a client-side application to provide an off-line mode is described in
+&lt;xref
+linkend="clientsideapp.offline"/&gt;.
+////
+
+
+

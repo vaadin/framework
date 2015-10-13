@@ -1,0 +1,20 @@
+---
+title: Component Containers
+order: 9
+layout: page
+---
+
+[[gwt.componentcontainer]]
+= Component Containers
+
+Component containers, such as layout components, are a special group of
+components that require some consideration. In addition to handling state, they
+need to manage communicating the hierarchy of their contained components to the
+other side.
+
+The easiest way to implement a component container is extend the
+[classname]#AbstractComponentContainer#, which handles the synchronization of
+the container server-side components to the client-side.
+
+
+

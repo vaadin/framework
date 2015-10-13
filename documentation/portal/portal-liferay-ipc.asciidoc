@@ -1,0 +1,361 @@
+---
+title: Vaadin IPC for Liferay
+order: 6
+layout: page
+---
+
+[[portal.liferay-ipc]]
+= Vaadin IPC for Liferay
+
+((("IPC add-on", id="term.portal.liferay-ipc", range="startofrange")))
+
+
+Portlets rarely live alone. A page can contain multiple portlets and when the
+user interacts with one portlet, you may need to have the other portlets react
+to the change immediately. This is not normally possible with Vaadin portlets,
+as Vaadin applications need to get an Ajax request from the client-side to
+change their user interface. On the other hand, the regular inter-portlet
+communication (IPC) mechanism in Portlet 2.0 Specification requires a complete
+page reload, but that is not appropriate with Vaadin or in general Ajax
+applications, which do not require a page reload. One solution is to communicate
+between the portlets on the server-side and then use a server-push mechanism to
+update the client-side.
+
+The Vaadin IPC for Liferay Add-on takes another approach by communicating
+between the portlets through the client-side. Events (messages) are sent through
+the [classname]#LiferayIPC# component and the client-side widget relays them to
+the other portlets, as illustrated in
+<<figure.portal.liferay-ipc.architecture>>.
+
+[[figure.portal.liferay-ipc.architecture]]
+.Vaadin IPC for Liferay Architecture
+image::img/liferay-ipc-architecture-hi.png[]
+
+Vaadin IPC for Liferay uses the Liferay JavaScript event API for client-side
+inter-portlet communication, so you can communicate just as easily with other
+Liferay portlets.
+
+Notice that you can use this communication only between portlets on the same
+page.
+
+<<figure.portal.liferay-ipc.demo>> shows Vaadin IPC for Liferay in action.
+Entering a new item in one portlet is updated interactively in the other.
+
+[[figure.portal.liferay-ipc.demo]]
+.Vaadin IPC Add-on Demo with Two Portlets
+image::img/liferay-ipc-demo-annotated-lo.png[]
+
+[[portal.liferay-ipc.installation]]
+== Installing the Add-on
+
+The Vaadin IPC for Liferay add-on is available from the Vaadin Directory as well
+as from a Maven repository. To download the installation package or find out the
+Maven or Ivy dependency, see the
+link:https://vaadin.com/directory#addon/vaadin-ipc-for-liferay[add-on page at
+Vaadin Directory], and install the add-on as described in
+<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+Vaadin Add-ons">>.
+
+The contents of the installation package are as follows:
+
+[filename]#vaadin-ipc-for-liferay-x.x.x.jar#:: The add-on JAR in the installation package must be installed in the [filename]#WEB-INF/lib# directory under the root context. The location depends on the server - for example in Liferay running in Tomcat it is located under the [filename]#webapps/ROOT# folder of the server.
+[filename]#doc#:: The documentation folder includes a [filename]#README.TXT# file that describes the contents of the installation package briefly, and [filename]#licensing.txt# and [filename]#license-asl-2.0.txt#, which describe the licensing under the Apache License 2.0. Under the [filename]#doc/api# folder is included the complete JavaDoc API documentation for the add-on.
+[filename]#vaadin-ipc-for-liferay-x.x.x-demo.war#:: A WAR containing demo portlets. After installing the add-on library and compiling the widget set, as described below, you can deploy the WAR to Liferay and add the two demo portlets to a page, as shown in <<figure.portal.liferay-ipc.demo>>. The source of the demo is available at link:http://dev.vaadin.com/svn/addons/IPCforLiferay/trunk/demo/src/com/vaadin/addon/ipcforliferay/demo/[dev.vaadin.com/svn/addons/IPCforLiferay/trunk/].
+
+
+The add-on contains a widget set, which you must compile into the Vaadin widget
+set installed in the portal.
+
+
+[[portal.liferay-ipc.communication]]
+== Basic Communication
+
+[classname]#LiferayIPC# is an invisible user interface component that can be
+used to send messages between two or more Vaadin portlets. You add it to an
+application layout as you would any regular user interface component.
+
+
+----
+LiferayIPC liferayipc = new LiferayIPC();
+layout.addComponent(liferayipc);
+----
+
+You should be careful not to remove the invisible component from the portlet
+later if you modify the layout of the portlet.
+
+The component can be used both for sending and receiving messages, as described
+next.
+
+[[portal.liferay-ipc.communication.sending]]
+=== Sending Events
+
+You can send an event (a message) with the [methodname]#sendEvent()# method,
+which takes an event ID and the message data as parameters. The event is
+broadcast to all listening portlets. The event ID is a string that can be used
+to identify the recipient of an event or the event type.
+
+
+----
+liferayipc.sendEvent("hello", "This is Data");
+----
+
+If you need to send more complex data, you need to format or serialize it to a
+string representation as described in <<portal.liferay-ipc.serialization>>.
+
+
+[[portal.liferay-ipc.communication.receiving]]
+=== Receiving Events
+
+A portlet wishing to receive events (messages) from other portlets needs to
+register a listener in the component with [methodname]#addListener()#. The
+listener receives the messages in a [classname]#LiferayIPCEvent# object.
+Filtering events by the ID is built in into the listener handler, you give the
+listened event ID as the first parameter for the [methodname]#addListener()#.
+The actual message data is held in the [parameter]#data# property, which you can
+read with [methodname]#getData()#.
+
+
+----
+liferayipc.addListener("hello", new LiferayIPCEventListener() {
+    public void eventReceived(LiferayIPCEvent event) {
+        // Do something with the message data
+        String data = event.getData();
+        Notification.show("Received hello: " + data);
+    }
+});
+----
+
+A listener added to a [classname]#LiferayIPC# can be removed with
+[methodname]#removeListener()#.
+
+
+
+[[portal.liferay-ipc.concerns]]
+== Considerations
+
+Both security and efficiency should be considered with inter-portlet
+communications when using the Vaadin IPC for Liferay.
+
+[[portal.liferay-ipc.concerns.security]]
+=== Browser Security
+
+As the message data is passed through the client-side (browser), any code
+running in the browser has access to the data. You should be careful not to
+expose any security-critical data in client-side messaging. Also, malicious code
+running in the browser could alter or fake messages. Sanitization can help with
+the latter problem and encryption to solve the both issues. You can also share
+the sensitive data through session attributes or a database and use the
+client-side IPC only to notify that the data is available.
+
+
+[[portal.liferay-ipc.concerns.efficiency]]
+=== Efficiency
+
+Sending data through the browser requires loading and sending it in HTTP
+requests. The data is held in the memory space of the browser, and handling
+large data in the client-side JavaScript code can take time. Noticeably large
+message data can therefore reduce the responsiveness of the application and
+could, in extreme cases, go over browser limits for memory consumption or
+JavaScript execution time.
+
+
+
+[[portal.liferay-ipc.attributes]]
+== Communication Through Session Attributes
+
+In many cases, such as when considering security or efficiency, it is better to
+pass the bulk data on the server-side and use the client-side IPC only for
+notifying the other portlet(s) that the data is available. Session attributes
+are a conveninent way of sharing data on the server-side. You can also share
+objects through them, not just strings.
+
+The session variables have a __scope__, which should be
+[parameter]#APPLICATION_SCOPE#. The "application" refers to the scope of the
+Java web application (WAR) that contains the portlets.
+
+If the communicating portlets are in the same Java web application (WAR), no
+special configuration is needed. You can also communicate between portlets in
+different WARs, in which case you need to disable the
+[parameter]#private-session-attributes# parameter in
+[filename]#liferay-portlet.xml# by setting it to [literal]#++false++#. Please
+see Liferay documentation for more information regarding the configuration.
+
+You can also share Java objects between the portlets in the same WAR, not just
+strings. If the portlets are in different WARs, they normally have different
+class loaders, which could cause incompatibilities, so you can only communicate
+with strings and any object data needs to be serialized.
+
+Session attributes are accessible through the [classname]#PortletSession#
+object, which you can access through the portlet context from the Vaadin
+[classname]#Application# class.
+
+
+----
+Person person = new Person(firstname, lastname, age);
+...
+
+PortletSession session =
+        ((PortletApplicationContext2)getContext()).
+            getPortletSession();
+
+// Share the object
+String key = "IPCDEMO_person";
+session.setAttribute(key, person,
+                     PortletSession.APPLICATION_SCOPE);
+
+// Notify that it's available
+liferayipc.sendEvent("ipc_demodata_available", key);
+----
+
+You can then receive the attribute in a [classname]#LiferayIPCEventListener# as
+follows:
+
+
+----
+public void eventReceived(LiferayIPCEvent event) {
+    String key = event.getData();
+
+    PortletSession session =
+            ((PortletApplicationContext2)getContext()).
+                getPortletSession();
+
+    // Get the object reference
+    Person person = (Person) session.getAttribute(key);
+
+    // We can now use the object in our application
+    BeanItem<Person> item = new BeanItem<Person> (person);
+    form.setItemDataSource(item);
+}
+----
+
+Notice that changes to a shared object bound to a user interface component are
+not updated automatically if it is changed in another portlet. The issue is the
+same as with double-binding in general.
+
+
+[[portal.liferay-ipc.serialization]]
+== Serializing and Encoding Data
+
+The IPC events support transmitting only plain strings, so if you have object or
+other non-string data, you need to format or serialize it to a string
+representation. For example, the demo application formats the trivial data model
+as a semicolon-separated list as follows:
+
+
+----
+private void sendPersonViaClient(String firstName,
+                                 String lastName, int age) {
+    liferayIPC_1.sendEvent("newPerson", firstName + ";" +
+                           lastName + ";" + age);
+}
+----
+
+You can use standard Java serialization for any classes that implement the
+[interfacename]#Serializable# interface. The transmitted data may not include
+any control characters, so you also need to encode the string, for example by
+using Base64 encoding.
+
+
+----
+// Some serializable object
+MyBean mybean = new MyBean();
+...
+
+// Serialize
+ByteArrayOutputStream baostr = new ByteArrayOutputStream();
+ObjectOutputStream oostr;
+try {
+    oostr = new ObjectOutputStream(baostr);
+    oostr.writeObject(mybean); // Serialize the object
+    oostr.close();
+} catch (IOException e) {
+    Notification.show("IO PAN!"); // Complain
+}
+
+// Encode
+BASE64Encoder encoder = new BASE64Encoder();
+String encoded = encoder.encode(baostr.toByteArray());
+
+// Send the IPC event to other portlet(s)
+liferayipc.sendEvent("mybeanforyou", encoded);
+----
+
+You can then deserialize such a message at the receiving end as follows:
+
+
+----
+public void eventReceived(LiferayIPCEvent event) {
+    String encoded = event.getData();
+
+    // Decode and deserialize it    
+    BASE64Decoder decoder = new BASE64Decoder();
+    try {
+        byte[] data = decoder.decodeBuffer(encoded);
+        ObjectInputStream ois =
+                new ObjectInputStream( 
+                        new ByteArrayInputStream(data));
+
+        // The deserialized bean
+        MyBean deserialized = (MyBean) ois.readObject();
+        ois.close();
+
+        ... do something with the bean ...
+
+    } catch (IOException e) {
+        e.printStackTrace(); // Handle somehow
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace(); // Handle somehow
+    }
+}
+----
+
+
+[[portal.liferay-ipc.nonvaadin]]
+== Communicating with Non-Vaadin Portlets
+
+You can use the Vaadin IPC for Liferay to communicate also between a Vaadin
+application and other portlets, such as JSP portlets. The add-on passes the
+events as regular Liferay JavaScript events. The demo WAR includes two JSP
+portlets that demonstrate the communication.
+
+When sending events from non-Vaadin portlet, fire the event using the JavaScript
+[methodname]#Liferay.fire()# method with an event ID and message. For example,
+in JSP you could have:
+
+
+----
+<%@ taglib uri="http://java.sun.com/portlet_2_0"
+           prefix="portlet" %>
+<portlet:defineObjects />
+
+<script>
+function send_message() {
+    Liferay.fire('hello', "Hello, I'm here!");
+}
+</script>
+
+<input type="button" value="Send message"
+       onclick="send_message()" />
+----
+
+You can receive events using a Liferay JavaScript event handler. You define the
+handler with the [methodname]#on()# method in the Liferay object. It takes the
+event ID and a callback function as its parameters. Again in JSP you could have:
+
+
+----
+<%@ taglib uri="http://java.sun.com/portlet_2_0"
+           prefix="portlet" %>
+<portlet:defineObjects />
+
+<script>
+Liferay.on('hello', function(event, data) {
+    alert("Hello: " + data);
+});
+</script>
+----
+
+
+(((range="endofrange", startref="term.portal.liferay-ipc")))
+
+

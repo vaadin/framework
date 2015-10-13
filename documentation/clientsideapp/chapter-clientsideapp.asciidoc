@@ -1,0 +1,16 @@
+[[clientsideapp]]
+== Client-Side Applications
+
+This chapter describes how to develop client-side Vaadin applications.
+
+__We only give a brief introduction to the topic in this book. Please refer to
+the GWT documentation for a more complete treatment of the many GWT features.__
+
+
+include::clientsideapp-overview.asciidoc[leveloffset=+2]
+
+include::clientsideapp-entrypoint.asciidoc[leveloffset=+2]
+
+include::clientsideapp-compiling.asciidoc[leveloffset=+2]
+
+include::clientsideapp-loading.asciidoc[leveloffset=+2]

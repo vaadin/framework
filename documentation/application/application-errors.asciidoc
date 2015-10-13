@@ -1,0 +1,189 @@
+---
+title: Handling Errors
+order: 6
+layout: page
+---
+
+[[application.errors]]
+= Handling Errors
+
+[[application.errors.error-indicator]]
+== Error Indicator and Message
+
+All components have a built-in error indicator that is turned on if validating
+the component fails, and can be set explicitly with
+[methodname]#setComponentError()#. Usually, the error indicator is placed right
+of the component caption. The error indicator is part of the component caption,
+so its placement is usually managed by the layout in which the component is
+contained, but some components handle it themselves. Hovering the mouse pointer
+over the field displays the error message.
+
+
+[source, java]
+----
+textfield.setComponentError(new UserError("Bad value"));
+button.setComponentError(new UserError("Bad click"));
+----
+
+The result is shown in <<figure.application.errors.error-indicator>>.
+
+[[figure.application.errors.error-indicator]]
+.Error Indicator Active
+image::img/errorindicator-example2.png[]
+
+
+ifdef::web[]
+[[application.errors.systemmessages]]
+== Customizing System Messages
+
+System messages are notifications that indicate a major invalid state that
+usually requires restarting the application. Session timeout is perhaps the most
+typical such state.
+
+System messages are strings managed in the [classname]#SystemMessages# class.
+
+sessionExpired:: ((("session",
+"expiration")))
+((("session",
+"timeout")))
+The Vaadin session expired. A session expires if no server requests are made
+during the session timeout period. The session timeout can be configured with
+the [parameter]#session-timeout# parameter in [filename]#web.xml#, as described
+in
+<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
+a web.xml Deployment Descriptor">>.
+
+communicationError:: An unspecified communication problem between the Vaadin Client-Side Engine and
+the application server. The server may be unavailable or there is some other
+problem.
+
+authenticationError:: This error occurs if 401 (Unauthorized) response to a request is received from
+the server.
+
+internalError:: A serious internal problem, possibly indicating a bug in Vaadin Client-Side
+Engine or in some custom client-side code.
+
+outOfSync:: The client-side state is invalid with respect to server-side state.
+
+cookiesDisabled:: Informs the user that cookies are disabled in the browser and the application
+does not work without them.
+
+
+
+Each message has four properties: a short caption, the actual message, a URL to
+which to redirect after displaying the message, and property indicating whether
+the notification is enabled.
+
+Additional details may be written (in English) to the debug console window
+described in
+<<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
+and Window">>.
+
+You can override the default system messages by setting the
+[interfacename]#SystemMessagesProvider# in the [classname]#VaadinService#. You
+need to implement the [methodname]#getSystemMessages()# method, which should
+return a [classname]#SystemMessages# object. The easiest way to customize the
+messages is to use a [classname]#CustomizedSystemMessages# object.
+
+You can set the system message provider in the
+[methodname]#servletInitialized()# method of a custom servlet class, for example
+as follows:
+
+
+[source, java]
+----
+getService().setSystemMessagesProvider(
+    new SystemMessagesProvider() {
+    @Override 
+    public SystemMessages getSystemMessages(
+        SystemMessagesInfo systemMessagesInfo) {
+        CustomizedSystemMessages messages =
+                new CustomizedSystemMessages();
+        messages.setCommunicationErrorCaption("Comm Err");
+        messages.setCommunicationErrorMessage("This is bad.");
+        messages.setCommunicationErrorNotificationEnabled(true);
+        messages.setCommunicationErrorURL("http://vaadin.com/");
+        return messages;
+    }
+});
+----
+
+See
+<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
+Servlet, Portlet, and Service">> for information about customizing Vaadin
+servlets.
+
+endif::web[]
+
+ifdef::web[]
+[[application.errors.unchecked-exceptions]]
+== Handling Uncaught Exceptions 
+
+Handling events can result in exceptions either in the application logic or in
+the framework itself, but some of them may not be caught properly by the
+application. Any such exceptions are eventually caught by the framework. It
+delegates the exceptions to the [classname]#DefaultErrorHandler#, which displays
+the error as a component error, that is, with a small red "!" -sign (depending
+on the theme). If the user hovers the mouse pointer over it, the entire
+backtrace of the exception is shown in a large tooltip box, as illustrated in
+<<figure.application.errors.unchecked-exceptions>>.
+
+[[figure.application.errors.unchecked-exceptions]]
+.Uncaught Exception in Component Error Indicator
+image::img/errorindicator-exception.png[]
+
+You can customize the default error handling by implementing a custom
+[interfacename]#ErrorHandler# and enabling it with
+[methodname]#setErrorHandler()# in any of the components in the component
+hierarchy, including the [classname]#UI#, or in the [classname]#VaadinSession#
+object. You can either implement the [interfacename]#ErrorHandler# or extend the
+[classname]#DefaultErrorHandler#. In the following example, we modify the
+behavior of the default handler.
+
+
+[source, java]
+----
+// Here's some code that produces an uncaught exception 
+final VerticalLayout layout = new VerticalLayout();
+final Button button = new Button("Click Me!",
+    new Button.ClickListener() {
+    public void buttonClick(ClickEvent event) {
+        ((String)null).length(); // Null-pointer exception
+    }
+});
+layout.addComponent(button);
+
+// Configure the error handler for the UI
+UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
+    @Override
+    public void error(com.vaadin.server.ErrorEvent event) {
+        // Find the final cause
+        String cause = "<b>The click failed because:</b><br/>";
+        for (Throwable t = event.getThrowable(); t != null;
+             t = t.getCause())
+            if (t.getCause() == null) // We're at final cause
+                cause += t.getClass().getName() + "<br/>";
+        
+        // Display the error message in a custom fashion
+        layout.addComponent(new Label(cause, ContentMode.HTML));
+           
+        // Do the default error handling (optional)
+        doDefault(event);
+    } 
+});
+----
+
+The above example also demonstrates how to dig up the final cause from the cause
+stack.
+
+When extending [classname]#DefaultErrorHandler#, you can call
+[methodname]#doDefault()# as was done above to run the default error handling,
+such as set the component error for the component where the exception was
+thrown. See the source code of the implementation for more details. You can call
+[methodname]#findAbstractComponent(event)# to find the component that caused the
+error. If the error is not associated with a component, it returns null.
+
+endif::web[]
+
+
+

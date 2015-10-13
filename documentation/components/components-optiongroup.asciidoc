@@ -1,0 +1,141 @@
+---
+title: OptionGroup
+order: 19
+layout: page
+---
+
+[[components.optiongroup]]
+= [classname]#OptionGroup#
+
+[classname]#OptionGroup# is a selection component that allows selection from a
+group of radio buttons in single selection mode. In multiple selection mode, the
+items show up as check boxes. The common selection component features are
+described in
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection
+Components">>.
+
+[[figure.components.optiongroup]]
+.Option Button Group in Single and Multiple Selection Mode
+image::img/optiongroup-basic.png[]
+
+Option group is by default in single selection mode. Multiple selection is
+enabled with [methodname]#setMultiSelect()#.
+
+
+[source, java]
+----
+// A single-select radio button group
+OptionGroup single = new OptionGroup("Single Selection");
+single.addItems("Single", "Sola", "Yksi");
+
+// A multi-select check box group
+OptionGroup multi = new OptionGroup("Multiple Selection");
+multi.setMultiSelect(true);
+multi.addItems("Many", "Muchos", "Monta");
+----
+
+<<figure.components.optiongroup>> shows the [classname]#OptionGroup# in both
+single and multiple selection mode.
+
+You can also create check boxes individually using the [classname]#CheckBox#
+class, as described in
+<<dummy/../../../framework/components/components-checkbox#components.checkbox,"CheckBox">>.
+The advantages of the [classname]#OptionGroup# component are that as it
+maintains the individual check box objects, you can get an array of the
+currently selected items easily, and that you can easily change the appearance
+of a single component.
+
+[[components.optiongroup.disabling]]
+== Disabling Items
+
+You can disable individual items in an [classname]#OptionGroup# with
+[methodname]#setItemEnabled()#. The user can not select or deselect disabled
+items in multi-select mode, but in single-select mode the use can change the
+selection from a disabled to an enabled item. The selections can be changed
+programmatically regardless of whether an item is enabled or disabled. You can
+find out whether an item is enabled with [methodname]#isItemEnabled()#.
+
+The [methodname]#setItemEnabled()# identifies the item to be disabled by its
+item ID.
+
+
+[source, java]
+----
+// Have an option group with some items
+OptionGroup group = new OptionGroup("My Disabled Group");
+group.addItems("One", "Two", "Three");
+
+// Disable one item by its item ID
+group.setItemEnabled("Two", false);
+----
+
+The item IDs are also used for the captions in this example. The result is shown
+in <<figure.components.optiongroup.disabling>>.
+
+[[figure.components.optiongroup.disabling]]
+.[classname]#OptionGroup# with a Disabled Item
+image::img/optiongroup-disabling.png[]
+
+Setting an item as disabled turns on the [literal]#++v-disabled++# style for it.
+
+
+[[components.optiongroup.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-select-optiongroup {}
+  .v-select-option.v-checkbox {}
+  .v-select-option.v-radiobutton {}
+----
+
+The [literal]#++v-select-optiongroup++# is the overall style for the component.
+Each check box will have the [literal]#++v-checkbox++# style, borrowed from the
+[classname]#CheckBox# component, and each radio button the
+[literal]#++v-radiobutton++# style. Both the radio buttons and check boxes will
+also have the [literal]#++v-select-option++# style that allows styling
+regardless of the option type. Disabled items have additionally the
+[literal]#++v-disabled++# style.
+
+[[components.optiongroup.css.horizontal]]
+=== Horizontal Layout
+
+The options are normally laid out vertically. You can use horizontal layout by
+setting [literal]#++display: inline-block++# for the options. The
+[literal]#++nowrap++# setting for the overall element prevents wrapping if there
+is not enough horizontal space in the layout, or if the horizontal width is
+undefined.
+
+
+[source, css]
+----
+/* Lay the options horizontally */
+.v-select-optiongroup-horizontal .v-select-option {
+    display: inline-block;
+}
+
+/* Avoid wrapping if the layout is too tight */
+.v-select-optiongroup-horizontal {
+    white-space: nowrap;
+}
+
+/* Some extra spacing is needed */
+.v-select-optiongroup-horizontal
+  .v-select-option.v-radiobutton {
+    padding-right: 10px;
+}
+----
+
+Use of the above rules requires setting a custom [literal]#++horizontal++# style
+name for the component. The result is shown in
+<<figure.components.optiongroup.horizontal>>.
+
+[[figure.components.optiongroup.horizontal]]
+.Horizontal [classname]#OptionGroup#
+image::img/optiongroup-horizontal.png[]
+
+
+
+
+

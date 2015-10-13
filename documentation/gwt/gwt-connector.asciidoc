@@ -1,0 +1,93 @@
+---
+title: Integrating the Two Sides with a Connector
+order: 4
+layout: page
+---
+
+[[gwt.connector]]
+= Integrating the Two Sides with a Connector
+
+A client-side widget is integrated with a server-side component with a
+__connector__. A connector is a client-side class that communicates changes to
+the widget state and events to the server-side.
+
+A connector normally gets the state of the server-side component by the __shared
+state__, described later in
+<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+State">>.
+
+[[gwt.connector.basic]]
+== A Basic Connector
+
+The basic tasks of a connector is to hook up to the widget and handle events
+from user interaction and changes received from the server. A connector also has
+a number of routine infrastructure methods which need to be implemented.
+
+
+----
+@Connect(MyComponent.class)
+public class MyComponentConnector
+        extends AbstractComponentConnector {
+
+    @Override
+    public MyComponentWidget getWidget() {
+        return (MyComponentWidget) super.getWidget();
+    }
+
+    @Override
+    public MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent)
+    {
+        super.onStateChanged(stateChangeEvent);
+        
+        // Do something useful
+        final String text = getState().text;
+        getWidget().setText(text);
+    }
+}
+----
+
+Here, we handled state change with the crude [methodname]#onStateChanged()#
+method that is called when any of the state properties is changed. A finer and
+simpler handling is achieved by using the [classname]#@OnStateChange# annotation
+on a handler method for each property, or by [classname]#@DelegateToWidget# on a
+shared state property, as described later in
+<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+State">>.
+
+
+[[gwt.connector.communication]]
+== Communication with the Server-Side
+
+The main task of a connector is to communicate user interaction with the widget
+to the server-side and receive state changes from the server-side and relay them
+to the widget.
+
+Server-to-client communication is normally done using a __shared state__, as
+described in
+<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+State">>, as well as RPC calls. The serialization of the state data is handled
+completely transparently.
+
+ifdef::web[]
+Once the client-side engine receives the changes from the server, it reacts to
+them by creating and notifying connectors that in turn manage widgets. This is
+described in
+<<dummy/../../../framework/gwt/gwt-advanced#gwt.advanced.phases,"Client-Side
+Processing Phases">> in more
+detail.
+endif::web[]
+
+For client-to-server communication, a connector can make remote procedure calls
+(RPC) to the server-side. Also, the server-side component can make RPC calls to
+the connector. For a thorough description of the RPC mechanism, refer to
+<<dummy/../../../framework/gwt/gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
+Server-Side">>.
+
+
+
+

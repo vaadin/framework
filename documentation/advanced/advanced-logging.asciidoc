@@ -1,0 +1,137 @@
+---
+title: Logging
+order: 13
+layout: page
+---
+
+[[advanced.logging]]
+= Logging
+
+(((, id="term.advanced.logging", range="startofrange")))
+
+
+You can do logging in Vaadin application using the standard
+[package]#java.util.logging# facilities. Configuring logging is as easy as
+putting a file named [filename]#logging.properties# in the default package of
+your Vaadin application ( [filename]#src# in an Eclipse project or
+[filename]#src/main/java# or [filename]#src/main/resources# in a Maven project).
+This file is read by the [classname]#Logger# class when a new instance of it is
+initialize.
+
+[[advanced.logging.tomcat]]
+== Logging in Apache Tomcat
+
+For logging Vaadin applications deployed in Apache Tomcat, you do not need to do
+anything special to log to the same place as Tomcat itself. If you need to write
+the Vaadin application related messages elsewhere, just add a custom
+[filename]#logging.properties# file to the default package of your Vaadin
+application.
+
+If you would like to pipe the log messages through another logging solution, see
+<<advanced.logging.slf4j>> below.
+
+
+[[advanced.logging.liferay]]
+== Logging in Liferay
+
+Liferay mutes logging through [package]#java.util.logging# by default. In order
+to enable logging, you need to add a [filename]#logging.properties# file of your
+own to the default package of your Vaadin application. This file should define
+at least one destination where to save the log messages.
+
+You can also log through SLF4J, which is used in and bundled with Liferay.
+Follow the instructions in <<advanced.logging.slf4j>>.
+
+
+[[advanced.logging.slf4j]]
+== Piping to Log4j using SLF4J
+
+((("Log4j")))
+((("SLF4J")))
+Piping output from [package]#java.util.logging# to Log4j is easy with SLF4J (
+http://slf4j.org/). The basic way to go about this is to add the SLF4J JAR file
+as well as the [filename]#jul-to-slf4j.jar# file, which implements the bridge
+from [package]#java.util.logging#, to SLF4J. You will also need to add a third
+logging implementation JAR file, that is, [filename]#slf4j-log4j12-x.x.x.jar#,
+to log the actual messages using Log4j. For more info on this, please visit the
+SLF4J site.
+
+In order to get the [package]#java.util.logging# to SLF4J bridge installed, you
+need to add the following snippet of code to your [classname]#UI# class at the
+very top://TODO: Sure it's UI class and not the
+servlet?
+
+
+[source, java]
+----
+  static {
+    SLF4JBridgeHandler.install();
+  }
+----
+
+This will make sure that the bridge handler is installed and working before
+Vaadin starts to process any logging calls.
+
+
+[WARNING]
+.Please note!
+====
+This can seriously impact on the cost of disabled logging statements (60-fold
+increase) and a measurable impact on enabled log statements (20% overall
+increase). However, Vaadin doesn't log very much, so the effect on performance
+will be negligible.
+
+====
+
+
+
+
+[[advanced.logging.core]]
+== Using Logger
+
+You can do logging with a simple pattern where you register a static logger
+instance in each class that needs logging, and use this logger wherever logging
+is needed in the class. For example:
+
+
+[source, java]
+----
+public class MyClass {
+  private final static Logger logger =
+          Logger.getLogger(MyClass.class.getName());
+  
+  public void myMethod() {
+    try {
+      // do something that might fail
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, "FAILED CATASTROPHICALLY!", e);
+    } 
+  }
+}
+----
+
+((("static")))
+((("memory
+leak")))
+((("PermGen")))
+Having a [literal]#++static++# logger instance for each class needing logging
+saves a bit of memory and time compared to having a logger for every logging
+class instance. However, it could cause the application to leak PermGen memory
+with some application servers when redeploying the application. The problem is
+that the [classname]#Logger# may maintain hard references to its instances. As
+the [classname]#Logger# class is loaded with a classloader shared between
+different web applications, references to classes loaded with a per-application
+classloader would prevent garbage-collecting the classes after redeploying,
+hence leaking memory. As the size of the PermGen memory where class object are
+stored is fixed, the leakage will lead to a server crash after many
+redeployments. The issue depends on the way how the server manages classloaders,
+on the hardness of the back-references, and may also be different between Java 6
+and 7. So, if you experience PermGen issues, or want to play it on the safe
+side, you should consider using non-static [classname]#Logger# instances.//As
+discussed in Forum thread 1175841
+(24.2.2012).
+
+
+(((range="endofrange", startref="term.advanced.logging")))
+
+

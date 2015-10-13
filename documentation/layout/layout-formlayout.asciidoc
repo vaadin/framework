@@ -1,0 +1,94 @@
+---
+title: FormLayout
+order: 5
+layout: page
+---
+
+[[layout.formlayout]]
+= [classname]#FormLayout#
+
+[classname]#FormLayout# lays the components and their captions out in two
+columns, with optional indicators for required fields and errors that can be
+shown for each field. The field captions can have an icon in addition to the
+text. [classname]#FormLayout# is an ordered layout and much like
+[classname]#VerticalLayout#. For description of margins, spacing, and other
+features in ordered layouts, see
+<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout,"VerticalLayout
+and HorizontalLayout">>.
+
+The following example shows typical use of [classname]#FormLayout# in a form:
+
+
+[source, java]
+----
+FormLayout form = new FormLayout();
+TextField tf1 = new TextField("Name");
+tf1.setIcon(FontAwesome.USER);
+tf1.setRequired(true);
+tf1.addValidator(new NullValidator("Must be given", false));
+form.addComponent(tf1);
+        
+TextField tf2 = new TextField("Street address");
+tf2.setIcon(FontAwesome.ROAD);
+form.addComponent(tf2);
+        
+TextField tf3 = new TextField("Postal code");
+tf3.setIcon(FontAwesome.ENVELOPE);
+tf3.addValidator(new IntegerRangeValidator("Doh!", 1, 99999));
+form.addComponent(tf3);
+----
+
+The resulting layout will look as follows. The error message shows in a tooptip
+when you hover the mouse pointer over the error indicator.
+
+[[figure.layout.formlayout]]
+.A [classname]#FormLayout# Layout for Forms
+image::img/formlayout-example1.png[]
+
+[[layout.formlayout.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-formlayout {}
+.v-formlayout .v-caption {}
+
+/* Columns in a field row. */
+.v-formlayout-contentcell {} /* Field content. */
+.v-formlayout-captioncell {} /* Field caption. */
+.v-formlayout-errorcell {}   /* Field error indicator. */
+
+/* Overall style of field rows. */
+.v-formlayout-row {}
+.v-formlayout-firstrow {}
+.v-formlayout-lastrow {}
+
+/* Required field indicator. */
+.v-formlayout .v-required-field-indicator {}
+.v-formlayout-captioncell .v-caption
+        .v-required-field-indicator {}
+
+/* Error indicator. */
+.v-formlayout-cell .v-errorindicator {}
+.v-formlayout-error-indicator .v-errorindicator {}
+----
+
+The top-level element of [classname]#FormLayout# has the
+[literal]#++v-formlayout++# style. The layout is tabular with three columns: the
+caption column, the error indicator column, and the field column. These can be
+styled with [literal]#++v-formlayout-captioncell++#,
+[literal]#++v-formlayout-errorcell++#, and
+[literal]#++v-formlayout-contentcell++#, respectively. While the error indicator
+is shown as a dedicated column, the indicator for required fields is currently
+shown as a part of the caption column.
+
+For information on setting margins and spacing, see also
+<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout.spacing,"Spacing
+in Ordered Layouts">> and
+<<dummy/../../../framework/layout/layout-settings#layout.settings.margins,"Layout
+Margins">>.
+
+
+
+

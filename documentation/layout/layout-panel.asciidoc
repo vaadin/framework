@@ -1,0 +1,137 @@
+---
+title: Panel
+order: 6
+layout: page
+---
+
+[[layout.panel]]
+= [classname]#Panel#
+
+[classname]#Panel# is a single-component container with a frame around the
+content. It has an optional caption and an icon which are handled by the panel
+itself, not its containing layout. The panel itself does not manage the caption
+of its contained component. You need to set the content with
+[methodname]#setContent()#.
+
+[classname]#Panel# has 100% width and undefined height by default. This
+corresponds with the default sizing of [classname]#VerticalLayout#, which is
+perhaps most commonly used as the content of a [classname]#Panel#. If the width
+or height of a panel is undefined, the content must have a corresponding
+undefined or fixed size in the same direction to avoid a sizing paradox.
+
+
+[source, java]
+----
+Panel panel = new Panel("Astronomer Panel");
+panel.addStyleName("mypanelexample");
+panel.setSizeUndefined(); // Shrink to fit content
+layout.addComponent(panel);
+        
+// Create the content
+FormLayout content = new FormLayout();
+content.addStyleName("mypanelcontent");
+content.addComponent(new TextField("Participant"));
+content.addComponent(new TextField("Organization"));
+content.setSizeUndefined(); // Shrink to fit
+content.setMargin(true);
+panel.setContent(content);
+----
+
+The resulting layout is shown in <<figure.layout.panel>>.
+
+[[figure.layout.panel]]
+.A [classname]#Panel#
+image::img/panel.png[]
+
+[[layout.panel.scrolling]]
+== Scrolling the Panel Content
+
+((("scroll bars", id="term.layout.panel.scrolling.scrollbars", range="startofrange")))
+
+
+Normally, if a panel has undefined size in a direction, as it has by default
+vertically, it will fit the size of the content and grow as the content grows.
+However, if it has a fixed or percentual size and its content becomes too big to
+fit in the content area, a scroll bar will appear for the particular direction.
+Scroll bars in a [classname]#Panel# are handled natively by the browser with the
+[literal]#++overflow: auto++# property in CSS. (((overflow CSS
+property)))
+
+In the following example, we have a 300 pixels wide and very high
+[classname]#Image# component as the panel content.
+
+
+[source, java]
+----
+// Display an image stored in theme
+Image image = new Image(null,
+    new ThemeResource("img/Ripley_Scroll-300px.jpg"));
+        
+// To enable scrollbars, the size of the panel content
+// must not be relative to the panel size
+image.setSizeUndefined(); // Actually the default
+
+// The panel will give it scrollbars.
+Panel panel = new Panel("Scroll");
+panel.setWidth("300px");
+panel.setHeight("300px");
+panel.setContent(image);
+
+layout.addComponent(panel);
+----
+
+The result is shown in <<figure.layout.panel.scrolling>>. Notice that also the
+horizontal scrollbar has appeared even though the panel has the same width as
+the content (300 pixels) - the 300px width for the panel includes the panel
+border and vertical scrollbar.
+
+[[figure.layout.panel.scrolling]]
+.Panel with Scroll Bars
+image::img/panel-scrolling.png[]
+
+((("[interfacename]#Scrollable#", id="term.layout.panel.scrolling.scrollable", range="startofrange")))
+
+
+[[layout.panel.scrolling.programmatic]]
+=== Programmatic Scrolling
+
+[classname]#Panel# implements the [interfacename]#Scrollable# interface to allow
+programmatic scrolling. You can set the scroll position in pixels with
+[methodname]#setScrollTop()# and [methodname]#setScrollLeft()#. You can also get
+the scroll position set previously, but scrolling the panel in the browser does
+not update the scroll position to the server-side.
+
+(((range="endofrange", startref="term.layout.panel.scrolling.scrollable")))
+(((range="endofrange", startref="term.layout.panel.scrolling.scrollbars")))
+
+
+ifdef::web[]
+[[layout.panel.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-panel {}
+.v-panel-caption {}
+.v-panel-nocaption {}
+.v-panel-content {}
+.v-panel-deco {}
+----
+
+The entire panel has [literal]#++v-panel++# style. A panel consists of three
+parts: the caption, content, and bottom decorations (shadow). These can be
+styled with [literal]#++v-panel-caption++#, [literal]#++v-panel-content++#, and
+[literal]#++v-panel-deco++#, respectively. If the panel has no caption, the
+caption element will have the style [literal]#++v-panel-nocaption++#.
+
+The built-in [literal]#++light++# style in the Reindeer and Runo themes has no
+borders or border decorations for the [classname]#Panel#. You can use the
+[parameter]#Reindeer.PANEL_LIGHT# and [parameter]#Runo.PANEL_LIGHT# constants to
+add the style to a panel. Other themes may also provide the light and other
+styles for [classname]#Panel# as well.
+
+endif::web[]
+
+
+
