@@ -363,10 +363,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         });
 
         grid.addColumnResizeListener(new ColumnResizeListener() {
-
             @Override
             public void columnResize(ColumnResizeEvent event) {
-                log("ColumnResizeEvent : isUserOriginated? "
+                log("ColumnResizeEvent: isUserOriginated? "
                         + event.isUserOriginated());
             }
         });
@@ -1189,17 +1188,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, c);
         }
 
-        createBooleanAction("All columns resizable", "Columns", false,
+        createClickAction("All columns auto width", "Columns",
                 new Command<Grid, Boolean>() {
 
                     @Override
                     public void execute(Grid c, Boolean value, Object data) {
                         for (Column col : grid.getColumns()) {
-                            col.setResizable(value);
+                            col.setWidthUndefined();
                         }
 
                     }
-                });
+                }, null);
 
         createBooleanAction("All columns hidable", "Columns", false,
                 new Command<Grid, Boolean>() {

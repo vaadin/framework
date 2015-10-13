@@ -5582,6 +5582,14 @@ public class Grid<T> extends ResizeComposite implements
                                 @Override
                                 public void onStart() {
                                     initialWidth = col.getWidthActual();
+
+                                    for (Column<?, T> c : getColumns()) {
+                                        if (c.getWidth() < 0) {
+                                            c.setWidth(c.getWidthActual());
+                                            fireEvent(new ColumnResizeEvent<T>(
+                                                    c));
+                                        }
+                                    }
                                 }
 
                                 @Override

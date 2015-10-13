@@ -4705,6 +4705,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 if (column != null && column.isResizable()) {
                     column.getState().width = pixels;
                     fireColumnResizeEvent(column, true);
+                    markAsDirty();
                 }
             }
         });
