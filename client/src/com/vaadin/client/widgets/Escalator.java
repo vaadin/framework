@@ -1872,7 +1872,7 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         public void autodetectRowHeightLater() {
-            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
                 @Override
                 public void execute() {
                     if (defaultRowHeightShouldBeAutodetected && isAttached()) {
@@ -5940,7 +5940,7 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
             @Override
             public void execute() {
                 validateScrollDestination(destination, padding);
@@ -6011,7 +6011,7 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
             @Override
             public void execute() {
                 validateScrollDestination(destination, padding);
@@ -6429,7 +6429,7 @@ public class Escalator extends Widget implements RequiresResize,
     @Override
     public boolean isWorkPending() {
         return body.domSorter.waiting || verticalScrollbar.isWorkPending()
-                || horizontalScrollbar.isWorkPending();
+                || horizontalScrollbar.isWorkPending() || layoutIsScheduled;
     }
 
     @Override
