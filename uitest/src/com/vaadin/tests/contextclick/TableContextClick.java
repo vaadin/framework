@@ -18,6 +18,9 @@ package com.vaadin.tests.contextclick;
 import com.vaadin.data.Item;
 import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.tests.util.PersonContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableContextClickEvent;
 
@@ -49,5 +52,19 @@ public class TableContextClick extends
         }
         log("ContextClickEvent value: " + value + ", propertyId: " + propertyId
                 + ", section: " + event.getSection());
+    }
+
+    @Override
+    protected HorizontalLayout createContextClickControls() {
+        HorizontalLayout controls = super.createContextClickControls();
+        controls.addComponent(new Button("Remove all content",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        testComponent.getContainerDataSource().removeAllItems();
+                    }
+                }));
+        return controls;
     }
 }

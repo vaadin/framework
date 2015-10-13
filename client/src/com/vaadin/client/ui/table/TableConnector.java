@@ -86,13 +86,12 @@ public class TableConnector extends AbstractFieldConnector implements
     protected void sendContextClickEvent(ContextMenuEvent event) {
         EventTarget eventTarget = event.getNativeEvent().getEventTarget();
         if (!Element.is(eventTarget)) {
-            super.sendContextClickEvent(event);
             return;
         }
         Element e = Element.as(eventTarget);
 
         Section section;
-        String colKey;
+        String colKey = null;
         String rowKey = null;
         if (getWidget().tFoot.getElement().isOrHasChild(e)) {
             section = Section.FOOTER;
@@ -102,15 +101,21 @@ public class TableConnector extends AbstractFieldConnector implements
             section = Section.HEADER;
             HeaderCell w = WidgetUtil.findWidget(e, HeaderCell.class);
             colKey = w.getColKey();
-        } else if (getWidget().scrollBody.getElement().isOrHasChild(e)) {
-            section = Section.BODY;
-            VScrollTableRow w = getScrollTableRow(e);
-            rowKey = w.getKey();
-            colKey = getWidget().tHead.getHeaderCell(
-                    getElementIndex(e, w.getElement())).getColKey();
         } else {
-            super.sendContextClickEvent(event);
-            return;
+            section = Section.BODY;
+            if (getWidget().scrollBody.getElement().isOrHasChild(e)) {
+                VScrollTableRow w = getScrollTableRow(e);
+                /*
+                 * if w is null because we've clicked on an empty area, we will
+                 * let rowKey and colKey be null too, which will then lead to
+                 * the server side returning a null object.
+                 */
+                if (w != null) {
+                    rowKey = w.getKey();
+                    colKey = getWidget().tHead.getHeaderCell(
+                            getElementIndex(e, w.getElement())).getColKey();
+                }
+            }
         }
 
         MouseEventDetails details = MouseEventDetailsBuilder

@@ -6420,7 +6420,8 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Returns the item id of context clicked row.
          * 
-         * @return item id of clicked row; <code>null</code> if header or footer
+         * @return item id of clicked row; <code>null</code> if header, footer
+         *         or empty area of Table
          */
         public Object getItemId() {
             return itemId;
@@ -6429,7 +6430,8 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Returns the property id of context clicked column.
          * 
-         * @return property id
+         * @return property id; or <code>null</code> if we've clicked on the
+         *         empty area of the Table
          */
         public Object getPropertyId() {
             return propertyId;

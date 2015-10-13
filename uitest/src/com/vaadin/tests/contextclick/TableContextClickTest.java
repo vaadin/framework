@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
 
 public class TableContextClickTest extends TableContextClickTestBase {
@@ -61,6 +62,19 @@ public class TableContextClickTest extends TableContextClickTestBase {
 
         assertEquals(
                 "2. ContextClickEvent value: null, propertyId: lastName, section: FOOTER",
+                getLogRow(0));
+    }
+
+    @Test
+    public void testContextClickInEmptyTable() {
+        addOrRemoveTypedListener();
+
+        $(ButtonElement.class).caption("Remove all content").first().click();
+
+        contextClick($(TableElement.class).first(), 100, 100);
+
+        assertEquals(
+                "1. ContextClickEvent value: , propertyId: null, section: BODY",
                 getLogRow(0));
     }
 

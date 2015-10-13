@@ -18,6 +18,9 @@ package com.vaadin.tests.contextclick;
 import com.vaadin.data.Item;
 import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.tests.util.PersonContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table.TableContextClickEvent;
 import com.vaadin.ui.TreeTable;
 
@@ -29,6 +32,7 @@ public class TreeTableContextClick extends
         TreeTable treeTable = new TreeTable();
         treeTable.setContainerDataSource(PersonContainer.createWithTestData());
         treeTable.setFooterVisible(true);
+        treeTable.setHeight("400px");
         return treeTable;
     }
 
@@ -50,4 +54,17 @@ public class TreeTableContextClick extends
                 + ", section: " + event.getSection());
     }
 
+    @Override
+    protected HorizontalLayout createContextClickControls() {
+        HorizontalLayout controls = super.createContextClickControls();
+        controls.addComponent(new Button("Remove all content",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        testComponent.getContainerDataSource().removeAllItems();
+                    }
+                }));
+        return controls;
+    }
 }
