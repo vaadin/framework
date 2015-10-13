@@ -70,6 +70,3 @@ installation of add-ons is described in
 Vaadin Add-ons">>. Notice that unlike with most regular add-on components, you
 do not need to compile a widget set for add-ons that include just data model
 implementations.
-
-
-
