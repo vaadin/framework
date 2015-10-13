@@ -122,6 +122,10 @@
             <li>StringToEnumConverter now explicitly supports Enum types with custom toString() implementations.
                 This may affect applications that relied on the undefined behavior in previous versions.</li>
             <li>The Section enumeration from client-side of the Grid has been moved to GridConstants</li>
+            <li>The order in which AttachEvents are fired has been changed. When attaching a component with child components,
+                events are now fired first for the children and last for the root component. The order is thus the same as
+                the order in which custom code in overridden Component.attach methods would be executed. Please refer to
+                ticket <a href="https://dev.vaadin.com/ticket/16348">#16348</a> for more information on this change.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
