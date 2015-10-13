@@ -102,6 +102,8 @@
             <li>Declarative HTML serialization enhancements for Vaadin Designer 1.0</li>
             <li>Better handling of closing a window with keyboard shortcuts</li>
             <li>Column collapsing events for Table</li>
+            <li>Most Components fire a ContextClickEvent when the user tries to open a context menu.
+                This event is specialised to contain some extra context for Grid, Table, TreeTable and Tree</li>
         </ul>
 
         <p>
@@ -126,6 +128,10 @@
                 events are now fired first for the children and last for the root component. The order is thus the same as
                 the order in which custom code in overridden Component.attach methods would be executed. Please refer to
                 ticket <a href="https://dev.vaadin.com/ticket/16348">#16348</a> for more information on this change.</li>
+            <li>Jsoup library version 1.8.3 is incompatible with the version 1.8.1 used in early 7.6 alphas and 7.5. This might 
+                cause problems with external libraries compiled against said versions.</li>
+            <li>Declarative format is now using "vaadin-" as a default prefix instead of the "v-" prefix used in 7.5. 
+                This default can be changed in deployment configuration.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
