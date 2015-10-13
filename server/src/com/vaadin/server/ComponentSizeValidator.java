@@ -705,7 +705,6 @@ public class ComponentSizeValidator implements Serializable {
                 map.put(object, cl);
                 return;
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 getLogger().log(Level.FINER,
                         "An exception occurred while validating sizes.", e);
             }

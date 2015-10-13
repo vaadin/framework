@@ -291,13 +291,10 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     @Override
     public void markAsDirty() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public ClientConnector getParent() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -309,31 +306,23 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     @Override
     public void markAsDirtyRecursive() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void attach() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void detach() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public Collection<Extension> getExtensions() {
-        // TODO Auto-generated method stub
         return Collections.emptySet();
     }
 
     @Override
     public void removeExtension(Extension extension) {
-        // TODO Auto-generated method stub
     }
 
     private Logger getLogger() {
@@ -352,7 +341,6 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     @Override
     public JsonObject encodeState() {
-        // TODO Auto-generated method stub
         return null;
     }
 
