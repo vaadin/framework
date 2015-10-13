@@ -1188,7 +1188,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         Section section = eventCell.getSection();
         String rowKey = null;
-        if (eventCell.isBody()) {
+        if (eventCell.isBody() && eventCell.getRow() != null) {
             rowKey = getRowKey(eventCell.getRow());
         }
 

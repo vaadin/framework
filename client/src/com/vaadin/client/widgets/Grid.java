@@ -6982,7 +6982,11 @@ public class Grid<T> extends ResizeComposite implements
 
                     cell = new Cell(rowIndex, colIndex, cellElement);
                 } else {
-                    // Click in a place that does not have a column.
+                    if (escalator.getElement().isOrHasChild(e)) {
+                        eventCell.set(new Cell(-1, -1, null), Section.BODY);
+                        // Fire native events.
+                        super.onBrowserEvent(event);
+                    }
                     return;
                 }
             }

@@ -19,9 +19,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 
 public class GridContextClickTest extends AbstractContextClickTest {
+
     @Test
     public void testBodyContextClickWithTypedListener() {
         addOrRemoveTypedListener();
@@ -71,6 +73,20 @@ public class GridContextClickTest extends AbstractContextClickTest {
         assertEquals(
                 "2. ContextClickEvent value: , propertyId: lastName, section: FOOTER",
                 getLogRow(0));
+    }
+
+    @Test
+    public void testContextClickInEmptyGrid() {
+        addOrRemoveTypedListener();
+
+        $(ButtonElement.class).caption("Remove all content").first().click();
+
+        contextClick($(GridElement.class).first(), 100, 100);
+
+        assertEquals(
+                "1. ContextClickEvent value: , propertyId: null, section: BODY",
+                getLogRow(0));
+
     }
 
 }

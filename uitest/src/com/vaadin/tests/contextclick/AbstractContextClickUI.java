@@ -23,6 +23,7 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 
 @Theme("valo")
 public abstract class AbstractContextClickUI<T extends AbstractComponent, E extends ContextClickEvent>
@@ -79,14 +80,21 @@ public abstract class AbstractContextClickUI<T extends AbstractComponent, E exte
         testComponent.setId("testComponent");
 
         addComponent(testComponent);
-
-        addComponent(new Button("Add/Remove default listener",
-                new ListenerHandler(defaultListener)));
-        addComponent(new Button("Add/Remove typed listener",
-                new ListenerHandler(typedListener)));
+        addComponent(createContextClickControls());
     }
 
     protected abstract T createTestComponent();
 
     protected abstract void handleContextClickEvent(E event);
+
+    protected HorizontalLayout createContextClickControls() {
+        HorizontalLayout contextClickControls = new HorizontalLayout();
+        contextClickControls.addComponent(new Button(
+                "Add/Remove default listener", new ListenerHandler(
+                        defaultListener)));
+        contextClickControls
+                .addComponent(new Button("Add/Remove typed listener",
+                        new ListenerHandler(typedListener)));
+        return contextClickControls;
+    }
 }

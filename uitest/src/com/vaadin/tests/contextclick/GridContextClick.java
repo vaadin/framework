@@ -18,8 +18,11 @@ package com.vaadin.tests.contextclick;
 import com.vaadin.data.Item;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.tests.util.PersonContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridContextClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 
 public class GridContextClick extends
         AbstractContextClickUI<Grid, GridContextClickEvent> {
@@ -34,7 +37,8 @@ public class GridContextClick extends
                 "phoneNumber", "address.streetAddress", "address.postalCode",
                 "address.city");
 
-        grid.setSizeFull();
+        grid.setWidth("100%");
+        grid.setHeight("400px");
 
         return grid;
     }
@@ -57,5 +61,19 @@ public class GridContextClick extends
         }
         log("ContextClickEvent value: " + value + ", propertyId: " + propertyId
                 + ", section: " + event.getSection());
+    }
+
+    @Override
+    protected HorizontalLayout createContextClickControls() {
+        HorizontalLayout controls = super.createContextClickControls();
+        controls.addComponent(new Button("Remove all content",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        testComponent.getContainerDataSource().removeAllItems();
+                    }
+                }));
+        return controls;
     }
 }

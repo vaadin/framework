@@ -49,13 +49,19 @@ public class EventCellReference<T> extends CellReference<T> {
      */
     public void set(Cell targetCell, Section section) {
         Grid<T> grid = getGrid();
-        int row = targetCell.getRow();
-        int columnIndexDOM = targetCell.getColumn();
-        Column<?, T> column = grid.getVisibleColumns().get(columnIndexDOM);
 
+        int columnIndexDOM = targetCell.getColumn();
+        Column<?, T> column = null;
+        if (columnIndexDOM >= 0
+                && columnIndexDOM < grid.getVisibleColumns().size()) {
+            column = grid.getVisibleColumns().get(columnIndexDOM);
+        }
+
+        int row = targetCell.getRow();
         // Row objects only make sense for body section of Grid.
         T rowObject;
-        if (section == Section.BODY) {
+        if (section == Section.BODY && row >= 0
+                && row < grid.getDataSource().size()) {
             rowObject = grid.getDataSource().getRow(row);
         } else {
             rowObject = null;

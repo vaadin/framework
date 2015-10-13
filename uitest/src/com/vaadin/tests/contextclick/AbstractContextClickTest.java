@@ -79,7 +79,9 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         AbstractComponentElement component = $(AbstractComponentElement.class)
                 .id("testComponent");
 
-        contextClick(component);
+        int x = 20;
+        int y = 20;
+        contextClick(component, x, y);
 
         Point l = component.getLocation();
 
@@ -91,8 +93,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         int xCoord = Integer.parseInt(matcher.group(1));
         int yCoord = Integer.parseInt(matcher.group(2));
 
-        int xExpected = l.getX() + 10;
-        int yExpected = l.getY() + 10;
+        int xExpected = l.getX() + x;
+        int yExpected = l.getY() + y;
 
         Assert.assertTrue(
                 "X Coordinate differs too much from expected. Expected: "
