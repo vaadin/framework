@@ -1033,7 +1033,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * </p>
      * 
      * <p>
-     * If Table has height set ({@link #setHeight(float, int)} ) the client side
+     * If Table has height set ({@link #setHeight(float, Unit)} ) the client side
      * may update the page length automatically the correct value.
      * </p>
      * 
@@ -2527,8 +2527,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see #getPropertyValue(Object, Object, Property)
      * 
-     * @param oldVisibleComponents
-     *            a set of components that should be unregistered.
+     * @param component
+     *            component that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
         getLogger().log(
@@ -2598,7 +2598,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the row header mode.
      * 
      * @return the Row header mode.
-     * @see #setRowHeaderMode(int)
+     * @see #setRowHeaderMode
      */
     public RowHeaderMode getRowHeaderMode() {
         return rowHeaderMode;
@@ -2830,10 +2830,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Gets items ids from a range of key values
      * 
-     * @param startRowKey
+     * @param itemId
      *            The start key
-     * @param endRowKey
-     *            The end key
+     * @param length
+     *            amount of items to be retrieved
      * @return
      */
     private LinkedHashSet<Object> getItemIdsInRange(Object itemId,
@@ -6399,8 +6399,11 @@ public class Table extends AbstractSelect implements Action.Container,
         return result;
     }
 
-    /* Context Click handling */
-
+    /**
+     * ContextClickEvent for the Table Component.
+     *
+     * @since 7.6
+     */
     public static class TableContextClickEvent extends ContextClickEvent {
 
         private final Object itemId;

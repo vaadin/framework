@@ -77,6 +77,11 @@ import com.vaadin.util.ReflectTools;
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickNotifier, DragSource, DropTarget {
 
+    /**
+     * ContextClickEvent for the Tree Component.
+     *
+     * @since 7.6
+     */
     public static class TreeContextClickEvent extends ContextClickEvent {
 
         private final Object itemId;

@@ -2050,7 +2050,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * the cells in the row for which a {@link CellDescriptionGenerator cell
      * description} is not generated.
      * 
-     * @see Grid#setRowDescriptionGenerator(CellDescriptionGenerator)
+     * @see Grid#setRowDescriptionGenerator
      * 
      * @since 7.6
      */
@@ -5828,8 +5828,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the
-     * {@link com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper
-     * DataProviderKeyMapper} being used by the data source.
+     * {@link KeyMapper } being used by the data source.
      * 
      * @return the key mapper being used by the data source
      */
