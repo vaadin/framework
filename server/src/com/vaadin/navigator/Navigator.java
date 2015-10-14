@@ -365,9 +365,9 @@ public class Navigator implements Serializable {
         }
     }
 
-    private final UI ui;
-    private final NavigationStateManager stateManager;
-    private final ViewDisplay display;
+    private UI ui;
+    private NavigationStateManager stateManager;
+    private ViewDisplay display;
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
@@ -457,15 +457,54 @@ public class Navigator implements Serializable {
      *            The UI to which this Navigator is attached.
      * @param stateManager
      *            The NavigationStateManager keeping track of the active view
-     *            and enabling bookmarking and direct navigation
+     *            and enabling bookmarking and direct navigation or null to use
+     *            the default implementation
      * @param display
      *            The ViewDisplay used to display the views handled by this
      *            navigator
      */
     public Navigator(UI ui, NavigationStateManager stateManager,
             ViewDisplay display) {
+        init(ui, stateManager, display);
+    }
+
+    /**
+     * Creates a navigator. This method is for use by dependency injection
+     * frameworks etc. and must be followed by a call to
+     * {@link #init(UI, NavigationStateManager, ViewDisplay)} before use.
+     */
+    protected Navigator() {
+    }
+
+    /**
+     * Initializes a navigator created with the no arguments constructor.
+     * <p>
+     * When a custom navigation state manager is not needed, use null to create
+     * a default one based on URI fragments.
+     * <p>
+     * Navigation is automatically initiated after {@code UI.init()} if a
+     * navigator was created. If at a later point changes are made to the
+     * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
+     * be explicitly called to ensure the current view matches the navigation
+     * state.
+     *
+     * @param ui
+     *            The UI to which this Navigator is attached.
+     * @param stateManager
+     *            The NavigationStateManager keeping track of the active view
+     *            and enabling bookmarking and direct navigation or null for
+     *            default
+     * @param display
+     *            The ViewDisplay used to display the views handled by this
+     *            navigator
+     */
+    protected void init(UI ui, NavigationStateManager stateManager,
+            ViewDisplay display) {
         this.ui = ui;
         this.ui.setNavigator(this);
+        if (stateManager == null) {
+            stateManager = new UriFragmentManager(ui.getPage());
+        }
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
