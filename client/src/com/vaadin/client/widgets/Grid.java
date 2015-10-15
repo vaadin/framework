@@ -54,6 +54,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.event.dom.client.MouseEvent;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -71,6 +73,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -85,6 +88,7 @@ import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
 import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.ui.dd.DragHandle;
@@ -3579,25 +3583,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private final Grid<?> grid;
 
-        private NativePreviewHandler clickOutsideToCloseHandler = new NativePreviewHandler() {
-
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                if (event.getTypeInt() != Event.ONMOUSEDOWN) {
-                    return;
-                }
-
-                // Click outside the panel
-                EventTarget clickTarget = event.getNativeEvent()
-                        .getEventTarget();
-                if (!rootContainer.getElement().isOrHasChild(
-                        Element.as(clickTarget))) {
-                    close();
-                }
-            }
-        };
-
-        private HandlerRegistration clickOutsideToCloseHandlerRegistration;
+        private VOverlay overlay;
 
         private Sidebar(Grid<?> grid) {
             this.grid = grid;
@@ -3623,6 +3609,8 @@ public class Grid<T> extends ResizeComposite implements
                     return removed;
                 }
             };
+
+            createOverlay();
 
             menuBar = new MenuBar(true) {
 
@@ -3684,6 +3672,25 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
+         * Creates and initializes the overlay.
+         */
+        private void createOverlay() {
+            overlay = GWT.create(VOverlay.class);
+            overlay.setAutoHideEnabled(true);
+            overlay.setOwner(grid);
+            overlay.addStyleDependentName("popup");
+            overlay.add(content);
+            overlay.addAutoHidePartner(rootContainer.getElement());
+            overlay.addCloseHandler(new CloseHandler<PopupPanel>() {
+                @Override
+                public void onClose(CloseEvent<PopupPanel> event) {
+                    removeStyleName("open");
+                    addStyleName("closed");
+                }
+            });
+        }
+
+        /**
          * Opens the sidebar if not yet opened. Opening the sidebar has no
          * effect if it is empty.
          */
@@ -3691,9 +3698,7 @@ public class Grid<T> extends ResizeComposite implements
             if (!isOpen() && isInDOM()) {
                 addStyleName("open");
                 removeStyleName("closed");
-                rootContainer.add(content);
-                clickOutsideToCloseHandlerRegistration = Event
-                        .addNativePreviewHandler(clickOutsideToCloseHandler);
+                overlay.showRelativeTo(rootContainer);
             }
         }
 
@@ -3701,17 +3706,7 @@ public class Grid<T> extends ResizeComposite implements
          * Closes the sidebar if not yet closed.
          */
         public void close() {
-            if (isOpen()) {
-                removeStyleName("open");
-                addStyleName("closed");
-                content.removeFromParent();
-                // adjust open button to header height when closed
-                setHeightToHeaderCellHeight();
-                if (clickOutsideToCloseHandlerRegistration != null) {
-                    clickOutsideToCloseHandlerRegistration.removeHandler();
-                    clickOutsideToCloseHandlerRegistration = null;
-                }
-            }
+            overlay.hide();
         }
 
         /**
@@ -3720,12 +3715,13 @@ public class Grid<T> extends ResizeComposite implements
          * @return <code>true</code> if open, <code>false</code> if not
          */
         public boolean isOpen() {
-            return content != null && content.getParent() == rootContainer;
+            return overlay != null && overlay.isShowing();
         }
 
         @Override
         public void setStylePrimaryName(String styleName) {
             super.setStylePrimaryName(styleName);
+            overlay.setStylePrimaryName(styleName);
             content.setStylePrimaryName(styleName + "-content");
             openCloseButton.setStylePrimaryName(styleName + "-button");
             if (isOpen()) {
@@ -3735,6 +3731,18 @@ public class Grid<T> extends ResizeComposite implements
                 removeStyleName("open");
                 addStyleName("closed");
             }
+        }
+
+        @Override
+        public void addStyleName(String style) {
+            super.addStyleName(style);
+            overlay.addStyleName(style);
+        }
+
+        @Override
+        public void removeStyleName(String style) {
+            super.removeStyleName(style);
+            overlay.removeStyleName(style);
         }
 
         private void setHeightToHeaderCellHeight() {

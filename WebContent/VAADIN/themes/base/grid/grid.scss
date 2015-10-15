@@ -100,6 +100,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     padding: 0;
     z-index: 5;
 
+    &.#{$primaryStyleName}-sidebar-popup {
+      right: auto;
+    }
+
     .#{$primaryStyleName}-sidebar-button {
       background: transparent;
       border: none;

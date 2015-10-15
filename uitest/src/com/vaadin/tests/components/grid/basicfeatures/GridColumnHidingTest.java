@@ -188,12 +188,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testColumnHidability_onTriggerColumnHidability_showsSidebarButton() {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarOpenButton();
         assertNull(sidebar);
 
         toggleHidableColumnAPI(0);
 
-        sidebar = getSidebar();
+        sidebar = getSidebarOpenButton();
         assertNotNull(sidebar);
     }
 
@@ -998,7 +998,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     }
 
     private void verifyColumnHidingTogglesOrder(int... indices) {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarPopup();
         List<WebElement> elements = sidebar.findElements(By
                 .className("column-hiding-toggle"));
         for (int i = 0; i < indices.length; i++) {
@@ -1015,36 +1015,23 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     }
 
     private void verifySidebarOpened() {
-        WebElement sidebar = getSidebar();
-        assertTrue(sidebar.getAttribute("class").contains("open"));
+        WebElement sidebar = getSidebarPopupIfPresent();
+        assertNotNull(sidebar);
     }
 
     private void verifySidebarClosed() {
-        WebElement sidebar = getSidebar();
-        assertFalse(sidebar.getAttribute("class").contains("open"));
+        WebElement sidebar = getSidebarPopupIfPresent();
+        assertNull(sidebar);
     }
 
     private void verifySidebarNotVisible() {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarOpenButton();
         assertNull(sidebar);
     }
 
     private void verifySidebarVisible() {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarOpenButton();
         assertNotNull(sidebar);
-    }
-
-    @Override
-    protected WebElement getSidebar() {
-        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
-        return elements.isEmpty() ? null : elements.get(0);
-    }
-
-    @Override
-    protected WebElement getSidebarOpenButton() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-button"));
-        return elements.isEmpty() ? null : elements.get(0);
     }
 
     /**
@@ -1053,7 +1040,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
      */
     @Override
     protected WebElement getColumnHidingToggle(int columnIndex) {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarPopup();
         List<WebElement> elements = sidebar.findElements(By
                 .className("column-hiding-toggle"));
         for (WebElement e : elements) {

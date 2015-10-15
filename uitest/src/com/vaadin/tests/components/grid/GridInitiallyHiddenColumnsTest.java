@@ -50,6 +50,8 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
 
     }
 
+    // TODO: as to the getX methods reuse ones from GridBasicFeaturesTest?
+
     protected WebElement getSidebarOpenButton(GridElement grid) {
         List<WebElement> elements = grid.findElements(By
                 .className("v-grid-sidebar-button"));
@@ -73,7 +75,8 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     }
 
     protected WebElement getSidebar(GridElement grid) {
-        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 

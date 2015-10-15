@@ -30,24 +30,23 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     @Test
     public void testSidebarWithHidableColumn() {
         openTestURL();
-        CustomGridElement gridElement = getGridElement();
 
         Assert.assertEquals("Sidebar should not be initially present", 0,
-                countBySelector(".v-grid-sidebar"));
+                countBySelector(".v-grid-sidebar-button"));
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
 
-        gridElement.findElement(By.className("v-grid-sidebar-button")).click();
+        getSidebarOpenButton().click();
 
-        WebElement toggle = gridElement.findElement(By
-                .className("column-hiding-toggle"));
+        WebElement toggle = getSidebarPopup().findElement(
+                By.className("column-hiding-toggle"));
 
         Assert.assertEquals("Column 0 should be togglable", "Header (0,0)",
                 toggle.getText());
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
         Assert.assertEquals("Sidebar should disappear without toggable column",
-                0, countBySelector(".v-grid-sidebar"));
+                0, countBySelector(".v-grid-sidebar-button"));
 
     }
 
@@ -60,8 +59,8 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
         gridElement.findElement(By.className("v-grid-sidebar-button")).click();
 
-        WebElement sidebarItem = gridElement.findElement(By
-                .cssSelector(".v-grid-sidebar-content .gwt-MenuItem"));
+        WebElement sidebarItem = getSidebarPopup().findElement(
+                By.cssSelector(".v-grid-sidebar-content .gwt-MenuItem"));
 
         sidebarItem.click();
 
@@ -84,7 +83,6 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     @Test
     public void testBasicSidebarOrder() {
         openTestURL();
-        CustomGridElement gridElement = getGridElement();
 
         // First add custom content
         selectMenuPath("Component", "Sidebar", "Add separator to end");
@@ -101,7 +99,6 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     @Test
     public void testSidebarOrderAbuse() {
         openTestURL();
-        CustomGridElement gridElement = getGridElement();
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
         selectMenuPath("Component", "Columns", "Column 1", "Hidable");
@@ -125,7 +122,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     }
 
     private void assertSidebarMenuItems(String... items) {
-        List<WebElement> menuItems = getGridElement().findElements(
+        List<WebElement> menuItems = getSidebarPopup().findElements(
                 By.cssSelector(".v-grid-sidebar-content td"));
 
         Assert.assertEquals("Expected " + items.length + " menu items",
@@ -145,8 +142,6 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     }
 
     private int countBySelector(String cssSelector) {
-        return getGridElement().findElements(By.cssSelector(cssSelector))
-                .size();
+        return findElements(By.cssSelector(cssSelector)).size();
     }
-
 }

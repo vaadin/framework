@@ -217,8 +217,19 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 .contains("focused"));
     }
 
-    protected WebElement getSidebar() {
-        List<WebElement> elements = findElements(By.className("v-grid-sidebar"));
+    protected WebElement getSidebarPopup() {
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-popup"));
+        if (elements.isEmpty()) {
+            getSidebarOpenButton().click();
+            elements = findElements(By.className("v-grid-sidebar-popup"));
+        }
+        return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    protected WebElement getSidebarPopupIfPresent() {
+        List<WebElement> elements = findElements(By
+                .className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
@@ -233,7 +244,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
      * index, or null if not found.
      */
     protected WebElement getColumnHidingToggle(int columnIndex) {
-        WebElement sidebar = getSidebar();
+        WebElement sidebar = getSidebarPopup();
         List<WebElement> elements = sidebar.findElements(By
                 .className("column-hiding-toggle"));
         for (WebElement e : elements) {
