@@ -72,4 +72,8 @@
     background: #e7e9ea;
   }
 
+  .#{$primaryStyleName}-column-header-content, .#{$primaryStyleName}-column-footer-content {
+    line-height: $v-grid-header-row-height;
+  }
+
 }
