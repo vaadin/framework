@@ -566,7 +566,8 @@ public class Button extends AbstractComponent implements
      * typically to prevent (accidental) extra clicks on a button.
      * <p>
      * Note that this is only used when the click comes from the user, not when
-     * calling {@link #click()}.
+     * calling {@link #click()} method programmatically. Also, if developer
+     * wants to re-enable the button, it needs to be done programmatically.
      * </p>
      * 
      * @param disableOnClick
