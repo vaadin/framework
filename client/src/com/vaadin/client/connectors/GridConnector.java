@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -1183,7 +1183,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
-    protected void sendContextClickEvent(ContextMenuEvent event) {
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
         EventCellReference<JsonObject> eventCell = getWidget().getEventCell();
 
         Section section = eventCell.getSection();
@@ -1193,14 +1194,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         String columnId = getColumnId(eventCell.getColumn());
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent());
 
         getRpcProxy(GridServerRpc.class).contextClick(eventCell.getRowIndex(),
                 rowKey, columnId, section, details);
-
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /**

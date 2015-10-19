@@ -24,7 +24,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -34,7 +33,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasComponentsConnector;
-import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
@@ -83,8 +81,9 @@ public class TableConnector extends AbstractFieldConnector implements
     }
 
     @Override
-    protected void sendContextClickEvent(ContextMenuEvent event) {
-        EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
+
         if (!Element.is(eventTarget)) {
             return;
         }
@@ -117,13 +116,6 @@ public class TableConnector extends AbstractFieldConnector implements
                 }
             }
         }
-
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent());
-
-        // Prevent browser default context menu
-        event.preventDefault();
-        event.stopPropagation();
 
         getRpcProxy(TableServerRpc.class).contextClick(rowKey, colKey, section,
                 details);

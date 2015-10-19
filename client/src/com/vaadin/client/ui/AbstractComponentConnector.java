@@ -18,9 +18,18 @@ package com.vaadin.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,6 +55,7 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ContextClickRpc;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 
@@ -67,6 +77,19 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     private JsArrayString styleNames = JsArrayString.createArray().cast();
 
+    private Timer longTouchTimer;
+
+    // TODO encapsulate into a nested class
+    private HandlerRegistration touchStartHandler;
+    private HandlerRegistration touchMoveHandler;
+    private HandlerRegistration touchEndHandler;
+    private int touchStartX;
+    private int touchStartY;
+
+    // long touch event delay
+    // TODO replace with global constant for accessibility
+    private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 250;
+
     /**
      * Default constructor
      */
@@ -80,14 +103,184 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     new ContextMenuHandler() {
                         @Override
                         public void onContextMenu(ContextMenuEvent event) {
-                            sendContextClickEvent(event);
+                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
+                                    event.getNativeEvent(), getWidget()
+                                            .getElement());
+
+                            event.preventDefault();
+                            event.stopPropagation();
+                            sendContextClickEvent(mouseEventDetails, event
+                                    .getNativeEvent().getEventTarget());
                         }
                     }, ContextMenuEvent.getType());
+
+            // if the widget has a contextclick listener, add touch support as
+            // well.
+
+            registerTouchHandlers();
+
         } else if (contextHandler != null
                 && !hasEventListener(EventId.CONTEXT_CLICK)) {
             contextHandler.removeHandler();
             contextHandler = null;
+
+            // remove the touch handlers as well
+            unregisterTouchHandlers();
+
         }
+    }
+
+    /**
+     * The new default behaviour is for long taps to fire a contextclick event
+     * if there's a contextclick listener attached to the component.
+     * 
+     * If you do not want this in your component, override this with a blank
+     * method to get rid of said behaviour.
+     * 
+     * @since 7.6
+     */
+    protected void unregisterTouchHandlers() {
+        touchStartHandler.removeHandler();
+        touchStartHandler = null;
+        touchMoveHandler.removeHandler();
+        touchMoveHandler = null;
+        touchEndHandler.removeHandler();
+        touchEndHandler = null;
+    }
+
+    /**
+     * The new default behaviour is for long taps to fire a contextclick event
+     * if there's a contextclick listener attached to the component.
+     * 
+     * If you do not want this in your component, override this with a blank
+     * method to get rid of said behaviour.
+     * 
+     * @since 7.6
+     */
+    protected void registerTouchHandlers() {
+        touchStartHandler = getWidget().addDomHandler(new TouchStartHandler() {
+
+            @Override
+            public void onTouchStart(final TouchStartEvent event) {
+
+                /*
+                 * we need to build mouseEventDetails eagerly - the event won't
+                 * be guaranteed to be around when the timer executes. At least
+                 * this was the case with iOS devices.
+                 */
+
+                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
+                        event.getNativeEvent(), getWidget().getElement());
+
+                final EventTarget eventTarget = event.getNativeEvent()
+                        .getEventTarget();
+
+                longTouchTimer = new Timer() {
+
+                    @Override
+                    public void run() {
+                        cancelParentTouchTimers(); // we're handling this event,
+                                                   // our parent components
+                                                   // don't need to bother with
+                                                   // it anymore.
+                        // The default context click
+                        // implementation only provides the
+                        // mouse coordinates relative to root
+                        // element of widget.
+
+                        sendContextClickEvent(mouseEventDetails, eventTarget);
+
+                    }
+                };
+
+                Touch touch = event.getChangedTouches().get(0);
+                touchStartX = touch.getClientX();
+                touchStartY = touch.getClientY();
+
+                longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+
+            }
+        }, TouchStartEvent.getType());
+
+        touchMoveHandler = getWidget().addDomHandler(new TouchMoveHandler() {
+
+            @Override
+            public void onTouchMove(TouchMoveEvent event) {
+                if (isSignificantMove(event)) {
+                    // Moved finger before the context menu timer
+                    // expired, so let the browser handle the event.
+                    cancelTouchTimer();
+                }
+
+            }
+
+            // mostly copy-pasted code from VScrollTable
+            // TODO refactor main logic to a common class
+            private boolean isSignificantMove(TouchMoveEvent event) {
+                if (longTouchTimer == null) {
+                    // no touch start
+                    return false;
+                }
+
+                // Calculate the distance between touch start and the current
+                // touch
+                // position
+                Touch touch = event.getChangedTouches().get(0);
+                int deltaX = touch.getClientX() - touchStartX;
+                int deltaY = touch.getClientY() - touchStartY;
+                int delta = deltaX * deltaX + deltaY * deltaY;
+
+                // Compare to the square of the significant move threshold to
+                // remove the need for a square root
+                if (delta > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD
+                        * TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
+                    return true;
+                }
+                return false;
+            }
+        }, TouchMoveEvent.getType());
+
+        touchEndHandler = getWidget().addDomHandler(new TouchEndHandler() {
+
+            @Override
+            public void onTouchEnd(TouchEndEvent event) {
+                // cancel the timer so the event doesn't fire
+                cancelTouchTimer();
+
+            }
+        }, TouchEndEvent.getType());
+    }
+
+    /**
+     * If a long touch event timer is running, cancel it.
+     * 
+     * @since 7.6
+     */
+    private void cancelTouchTimer() {
+        if (longTouchTimer != null) {
+            longTouchTimer.cancel();
+        }
+    }
+
+    /**
+     * Cancel the timer recursively for parent components that have timers
+     * running
+     * 
+     * @since 7.6
+     */
+    private void cancelParentTouchTimers() {
+        ServerConnector parent = getParent();
+
+        // we have to account for the parent being something other than an
+        // abstractcomponent. getParent returns null for the root element.
+
+        while (parent != null) {
+            if (parent instanceof AbstractComponentConnector) {
+                ((AbstractComponentConnector) parent).cancelTouchTimer();
+            }
+            parent = parent.getParent();
+        }
+
     }
 
     /**
@@ -98,15 +291,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      * @param event
      */
-    protected void sendContextClickEvent(ContextMenuEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
 
         // The default context click implementation only provides the mouse
         // coordinates relative to root element of widget.
-        getRpcProxy(ContextClickRpc.class).contextClick(
-                MouseEventDetailsBuilder.buildMouseEventDetails(
-                        event.getNativeEvent(), getWidget().getElement()));
+        getRpcProxy(ContextClickRpc.class).contextClick(details);
     }
 
     /**

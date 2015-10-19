@@ -23,10 +23,8 @@ import java.util.Set;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
@@ -379,16 +377,14 @@ public class TreeConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    protected void sendContextClickEvent(ContextMenuEvent event) {
-        EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
         if (!Element.is(eventTarget)) {
             return;
         }
 
         Element e = Element.as(eventTarget);
         String key = null;
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent());
 
         if (getWidget().body.getElement().isOrHasChild(e)) {
             TreeNode t = WidgetUtil.findWidget(e, TreeNode.class);
