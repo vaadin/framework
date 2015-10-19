@@ -367,15 +367,17 @@ public class RpcDataProviderExtension extends AbstractExtension {
         for (int i = 0; i < newRange.length() && i + diff < itemIds.size(); ++i) {
             Object itemId = itemIds.get(i + diff);
 
-            rows.set(i, getRowData(getGrid().getColumns(), itemId));
+            Item item = container.getItem(itemId);
+
+            rows.set(i, getRowData(getGrid().getColumns(), itemId, item));
         }
         rpc.setRowData(firstRowToPush, rows);
 
         activeItemHandler.addActiveItems(itemIds);
     }
 
-    private JsonObject getRowData(Collection<Column> columns, Object itemId) {
-        Item item = container.getItem(itemId);
+    private JsonObject getRowData(Collection<Column> columns, Object itemId,
+            Item item) {
 
         final JsonObject rowObject = Json.createObject();
         for (DataGenerator dg : dataGenerators) {
@@ -497,12 +499,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return;
         }
 
+        List<Column> columns = getGrid().getColumns();
         JsonArray rowData = Json.createArray();
         int i = 0;
         for (Object itemId : itemIds) {
             if (activeItemHandler.getActiveItemIds().contains(itemId)) {
-                JsonObject row = getRowData(getGrid().getColumns(), itemId);
-                rowData.set(i++, row);
+                Item item = container.getItem(itemId);
+                if (item != null) {
+                    JsonObject row = getRowData(columns, itemId, item);
+                    rowData.set(i++, row);
+                }
             }
         }
         rpc.updateRowData(rowData);

@@ -1396,6 +1396,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         ds.removeAllItems();
                     }
                 }, null);
+
+        createClickAction("Remove selected rows", "Body rows",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        // Usually you'd deselect all the rows before removing
+                        // them. It is done this way to test for #19152
+                        for (Object itemId : c.getSelectedRows()) {
+                            ds.removeItem(itemId);
+                        }
+                        c.select(null);
+                    }
+                }, null);
     }
 
     protected void createEditorActions() {

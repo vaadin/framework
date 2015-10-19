@@ -382,6 +382,20 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
                 selectAll.isSelected());
     }
 
+    @Test
+    public void testRemoveSelectedRow() {
+        openTestURL();
+
+        setSelectionModelSingle();
+        getGridElement().getCell(0, 0).click();
+
+        selectMenuPath("Component", "Body rows", "Remove selected rows");
+
+        assertFalse(
+                "Unexpected NullPointerException when removing selected rows",
+                logContainsText("Exception occured, java.lang.NullPointerException: null"));
+    }
+
     private void waitUntilCheckBoxValue(final WebElement checkBoxElememnt,
             final boolean expectedValue) {
         waitUntil(new ExpectedCondition<Boolean>() {
