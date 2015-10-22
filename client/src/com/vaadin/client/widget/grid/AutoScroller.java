@@ -610,22 +610,25 @@ public class AutoScroller {
         }
     }
 
-    private double getFrozenColumnsWidth() {
-        double value = getMultiSelectColumnWidth();
-        for (int i = 0; i < grid.getFrozenColumnCount(); i++) {
+    public double getFrozenColumnsWidth() {
+        double value = 0;
+
+        for (int i = 0; i < getRealFrozenColumnCount(); i++) {
             value += grid.getColumn(i).getWidthActual();
         }
+
         return value;
     }
 
-    private double getMultiSelectColumnWidth() {
-        if (grid.getFrozenColumnCount() >= 0
-                && grid.getSelectionModel().getSelectionColumnRenderer() != null) {
-            // frozen checkbox column is present
-            return getTheadElement().getFirstChildElement()
-                    .getFirstChildElement().getOffsetWidth();
+    private int getRealFrozenColumnCount() {
+        if (grid.getFrozenColumnCount() < 0) {
+            return 0;
+        } else if (grid.getSelectionModel().getSelectionColumnRenderer() != null) {
+            // includes the selection column
+            return grid.getFrozenColumnCount() + 1;
+        } else {
+            return grid.getFrozenColumnCount();
         }
-        return 0.0;
     }
 
     private double getMaxScrollLeft() {

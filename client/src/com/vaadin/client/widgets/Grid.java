@@ -3420,7 +3420,7 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void setEnabled(boolean enabled) {
-            if(!enabled && isOpen()) {
+            if (!enabled && isOpen()) {
                 close();
             }
 
@@ -3743,7 +3743,8 @@ public class Grid<T> extends ResizeComposite implements
 
             dropMarkerLeft += autoScrollX;
 
-            final double frozenColumnsWidth = getFrozenColumnsWidth();
+            final double frozenColumnsWidth = autoScroller
+                    .getFrozenColumnsWidth();
             final double rightBoundaryForDrag = getSidebarBoundaryComparedTo(dropMarkerLeft);
             final int visibleColumns = getVisibleColumns().size();
 
@@ -3786,7 +3787,8 @@ public class Grid<T> extends ResizeComposite implements
                     .min(sidebarBoundary, gridBoundary);
 
             // Do not show on left of the frozen columns (even if scrolled)
-            final int frozenColumnsWidth = (int) getFrozenColumnsWidth();
+            final int frozenColumnsWidth = (int) autoScroller
+                    .getFrozenColumnsWidth();
 
             left = Math.max(frozenColumnsWidth, Math.min(left, rightBoundary));
 
@@ -3949,25 +3951,6 @@ public class Grid<T> extends ResizeComposite implements
             autoScroller.stop();
         }
 
-        private double getFrozenColumnsWidth() {
-            double value = getMultiSelectColumnWidth();
-            for (int i = 0; i < getFrozenColumnCount(); i++) {
-                value += getColumn(i).getWidthActual();
-            }
-            return value;
-        }
-
-        private double getMultiSelectColumnWidth() {
-            if (getSelectionModel().getSelectionColumnRenderer() != null) {
-                // frozen checkbox column is present, it is always the first
-                // column
-                return escalator.getHeader().getElement()
-                        .getFirstChildElement().getFirstChildElement()
-                        .getOffsetWidth();
-            }
-            return 0.0;
-        }
-
         /**
          * Returns the amount of frozen columns. The selection column is always
          * considered frozen, since it can't be moved.
@@ -4068,7 +4051,7 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            double position = getFrozenColumnsWidth();
+            double position = autoScroller.getFrozenColumnsWidth();
             // iterate column indices and add possible drop positions
             for (int i = frozenColumns; i < getColumnCount(); i++) {
                 Column<?, T> column = getColumn(i);
