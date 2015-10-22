@@ -79,7 +79,14 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
 
     @Test
     public void testResizeFirstColumn() {
-        dragResizeColumn(0, -10);
+        dragResizeColumn(0, -1, -10);
+        assertTrue("Log should contain a resize event",
+                logContainsText("ColumnResizeEvent: isUserOriginated? true"));
+    }
+
+    @Test
+    public void testDragHandleStraddlesColumns() {
+        dragResizeColumn(0, 4, -10);
         assertTrue("Log should contain a resize event",
                 logContainsText("ColumnResizeEvent: isUserOriginated? true"));
     }
@@ -87,19 +94,19 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
     @Test
     public void testColumnPixelSizesSetOnResize() {
         selectMenuPath("Component", "Columns", "All columns auto width");
-        dragResizeColumn(0, -10);
+        dragResizeColumn(0, -1, -10);
         for (String msg : getLogs()) {
             assertTrue("Log should contain a resize event",
                     msg.contains("ColumnResizeEvent: isUserOriginated? true"));
         }
     }
 
-    private void dragResizeColumn(int columnIndex, int offset) {
+    private void dragResizeColumn(int columnIndex, int posX, int offset) {
         GridCellElement headerCell = getGridElement().getHeaderCell(0,
                 columnIndex);
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() - 1,
+                .moveToElement(headerCell, size.getWidth() + posX,
                         size.getHeight() / 2).clickAndHold()
                 .moveByOffset(offset, 0).release().perform();
     }

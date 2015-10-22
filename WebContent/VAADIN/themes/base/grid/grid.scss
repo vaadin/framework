@@ -262,10 +262,10 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
 
   .#{$primaryStyleName}-column-resize-handle {
     position: absolute;
-    width: 20px;
+    width: 12px;
     top: 0px;
     bottom: 0px;
-    right: -10px;
+    right: -6px;
     cursor: col-resize;
     z-index: 10;
   }
@@ -288,7 +288,14 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     }
   }
 
-  // Header and footer content
+  // Header and footer
+
+  .#{$primaryStyleName}-header,
+  .#{$primaryStyleName}-footer {
+    .#{$primaryStyleName}-cell {
+      overflow: visible;
+    }
+  }
 
   .#{$primaryStyleName}-column-header-content,
   .#{$primaryStyleName}-column-footer-content {
