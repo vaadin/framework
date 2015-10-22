@@ -109,6 +109,15 @@
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
+    <servlet>
+        <servlet-name>RPCLogger</servlet-name>
+        <servlet-class>com.vaadin.tests.rpclogger.RPCLoggerServlet</servlet-class>
+        <init-param>
+            <param-name>ui</param-name>
+            <param-value>com.vaadin.tests.rpclogger.RPCLoggerUI</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
 
     <servlet>
         <!-- This servlet is a separate instance for the sole purpose of 
@@ -200,6 +209,11 @@
     <servlet-mapping>
         <servlet-name>CommErrorEmulator</servlet-name>
         <url-pattern>/commerror/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RPCLogger</servlet-name>
+        <url-pattern>/rpclogger/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
