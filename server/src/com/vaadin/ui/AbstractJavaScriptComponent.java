@@ -45,8 +45,11 @@ import elemental.json.JsonValue;
  * own user interface.
  * <p>
  * The initialization function will be called with <code>this</code> pointing to
- * a connector wrapper object providing integration to Vaadin with the following
- * functions:
+ * a connector wrapper object providing integration to Vaadin. Please note that
+ * in JavaScript, <code>this</code> is not necessarily defined inside callback
+ * functions and it might therefore be necessary to assign the reference to a
+ * separate variable, e.g. <code>var self = this;</code>. The following
+ * functions are provided by the connector wrapper object:
  * <ul>
  * <li><code>getConnectorId()</code> - returns a string with the id of the
  * connector.</li>

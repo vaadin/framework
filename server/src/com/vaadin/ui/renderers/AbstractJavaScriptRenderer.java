@@ -48,8 +48,12 @@ import elemental.json.JsonValue;
  * functionality specific for renderers.
  * <p>
  * The initialization function will be called with <code>this</code> pointing to
- * a connector wrapper object providing integration to Vaadin with the following
- * functions:
+ * a connector wrapper object providing integration to Vaadin. Please note that
+ * in JavaScript, <code>this</code> is not necessarily defined inside callback
+ * functions and it might therefore be necessary to assign the reference to a
+ * separate variable, e.g. <code>var self = this;</code>. In addition to the
+ * extension functions described for {@link AbstractJavaScriptExtension}, the
+ * connector wrapper object also provides this function:
  * <ul>
  * <li><code>getRowKey(rowIndex)</code> - Gets a unique identifier for the row
  * at the given index. This identifier can be used on the server to retrieve the
