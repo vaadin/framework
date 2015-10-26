@@ -15,6 +15,11 @@
  */
 package com.vaadin.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -33,6 +38,7 @@ import org.junit.Test;
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.server.communication.UIInitHandler;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -95,22 +101,7 @@ public class VaadinSessionTest {
         session = new VaadinSession(mockService);
         mockService.storeSession(session, mockWrappedSession);
 
-        ui = new UI() {
-            Page page = new Page(this, getState(false).pageState) {
-                @Override
-                public void init(VaadinRequest request) {
-                }
-            };
-
-            @Override
-            protected void init(VaadinRequest request) {
-            }
-
-            @Override
-            public Page getPage() {
-                return page;
-            }
-        };
+        ui = new MockPageUI();
         vaadinRequest = new VaadinServletRequest(
                 EasyMock.createMock(HttpServletRequest.class), mockService) {
             @Override
@@ -248,5 +239,81 @@ public class VaadinSessionTest {
                 "'valueUnbound' method may not call 'close' "
                         + "method for closing session", 1,
                 vaadinSession.getCloseCount());
+    }
+
+    // Can't define as an anonymous class since it would have a reference to
+    // VaadinSessionTest.this which isn't serializable
+    private static class MockPageUI extends UI {
+        Page page = new Page(this, getState(false).pageState) {
+            @Override
+            public void init(VaadinRequest request) {
+            }
+        };
+
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+
+        @Override
+        public Page getPage() {
+            return page;
+        }
+    }
+
+    private static class SerializationTestLabel extends Label {
+        private transient VaadinSession session = VaadinSession.getCurrent();
+
+        private void readObject(ObjectInputStream in) throws IOException,
+                ClassNotFoundException {
+            in.defaultReadObject();
+            session = VaadinSession.getCurrent();
+        }
+    }
+
+    @Test
+    public void threadLocalsWhenDeserializing() throws Exception {
+        VaadinSession.setCurrent(session);
+        session.lock();
+        SerializationTestLabel label = new SerializationTestLabel();
+        Assert.assertEquals("Session should be set when instance is created",
+                session, label.session);
+
+        ui.setContent(label);
+        int uiId = ui.getUIId();
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bos);
+        out.writeObject(session);
+        out.close();
+
+        session.unlock();
+
+        CurrentInstance.clearAll();
+
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
+                bos.toByteArray()));
+
+        VaadinSession deserializedSession = (VaadinSession) in.readObject();
+
+        Assert.assertNull(
+                "Current session shouldn't leak from deserialisation",
+                VaadinSession.getCurrent());
+
+        Assert.assertNotSame("Should get a new session", session,
+                deserializedSession);
+
+        // Restore http session and service instance so the session can be
+        // locked
+        deserializedSession.refreshTransients(mockWrappedSession, mockService);
+        deserializedSession.lock();
+
+        UI deserializedUi = deserializedSession.getUIById(uiId);
+        SerializationTestLabel deserializedLabel = (SerializationTestLabel) deserializedUi
+                .getContent();
+
+        Assert.assertEquals(
+                "Current session should be available in SerializationTestLabel.readObject",
+                deserializedSession, deserializedLabel.session);
+        deserializedSession.unlock();
     }
 }

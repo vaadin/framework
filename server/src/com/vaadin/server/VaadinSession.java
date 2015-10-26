@@ -1410,8 +1410,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     private void readObject(ObjectInputStream stream) throws IOException,
             ClassNotFoundException {
-        stream.defaultReadObject();
-        pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+        Map<Class<?>, CurrentInstance> old = CurrentInstance.setCurrent(this);
+        try {
+            stream.defaultReadObject();
+            pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+        } finally {
+            CurrentInstance.restoreInstances(old);
+        }
     }
 
     /**
