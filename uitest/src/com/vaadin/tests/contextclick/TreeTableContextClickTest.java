@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.contextclick;
 
-import org.openqa.selenium.interactions.Actions;
 
 public class TreeTableContextClickTest extends TableContextClickTest {
 
@@ -23,10 +22,4 @@ public class TreeTableContextClickTest extends TableContextClickTest {
     protected Class<?> getUIClass() {
         return TreeTableContextClick.class;
     }
-
-    @Override
-    protected void contextClick(org.openqa.selenium.WebElement e) {
-        new Actions(getDriver()).moveToElement(e, 10, 10).contextClick()
-                .perform();
-    };
 }

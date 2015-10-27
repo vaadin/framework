@@ -33,6 +33,7 @@ public class TreeTableContextClick extends
         treeTable.setContainerDataSource(PersonContainer.createWithTestData());
         treeTable.setFooterVisible(true);
         treeTable.setHeight("400px");
+        treeTable.setWidth("100%");
         return treeTable;
     }
 
