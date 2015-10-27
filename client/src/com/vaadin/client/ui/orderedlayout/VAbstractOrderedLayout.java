@@ -209,8 +209,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * @return
      */
     public void removeWidget(Widget widget) {
-        Slot slot = widgetToSlot.get(widget);
-        removeSlot(slot);
+        Slot slot = widgetToSlot.remove(widget);
+        if (slot != null) {
+            removeSlot(slot);
+        }
     }
 
     /**
@@ -226,7 +228,6 @@ public class VAbstractOrderedLayout extends FlowPanel {
      */
     protected void removeSlot(Slot slot) {
         remove(slot);
-        widgetToSlot.remove(slot.getWidget());
     }
 
     /**
