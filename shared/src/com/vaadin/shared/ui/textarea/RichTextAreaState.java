@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
  * 
  * Shared state for the RichTextArea component.
  * 
- * @since
+ * @since 7.6
  */
 public class RichTextAreaState extends AbstractTextFieldState {
 

@@ -20,7 +20,7 @@ import com.vaadin.shared.AbstractComponentState;
 /**
  * Shared state for the Upload component.
  * 
- * @since
+ * @since 7.6
  */
 public class UploadState extends AbstractComponentState {
 

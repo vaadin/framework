@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.select.AbstractSelectState;
 /**
  * Shared state for the Table component.
  * 
- * @since
+ * @since 7.0
  */
 public class TreeState extends AbstractSelectState {
     {

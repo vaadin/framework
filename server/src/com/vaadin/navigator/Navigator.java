@@ -472,6 +472,8 @@ public class Navigator implements Serializable {
      * Creates a navigator. This method is for use by dependency injection
      * frameworks etc. and must be followed by a call to
      * {@link #init(UI, NavigationStateManager, ViewDisplay)} before use.
+     * 
+     * @since 7.6
      */
     protected Navigator() {
     }
@@ -488,6 +490,7 @@ public class Navigator implements Serializable {
      * be explicitly called to ensure the current view matches the navigation
      * state.
      *
+     * @since 7.6
      * @param ui
      *            The UI to which this Navigator is attached.
      * @param stateManager
@@ -754,6 +757,7 @@ public class Navigator implements Serializable {
     /**
      * Return the currently active view.
      *
+     * @since 7.6
      * @return current view
      */
     public View getCurrentView() {

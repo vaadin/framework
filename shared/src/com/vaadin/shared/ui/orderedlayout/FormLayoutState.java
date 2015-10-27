@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.orderedlayout;
 /**
  * Shared state for the FormLayout component.
  * 
- * @since
+ * @since 7.6
  */
 public class FormLayoutState extends AbstractOrderedLayoutState {
 

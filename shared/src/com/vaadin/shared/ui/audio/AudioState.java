@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.AbstractMediaState;
 /**
  * Shared state for the Audio component.
  * 
- * @since
+ * @since 7.6
  */
 public class AudioState extends AbstractMediaState {
 

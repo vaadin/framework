@@ -20,7 +20,7 @@ import com.vaadin.shared.AbstractFieldState;
 /**
  * Shared state for the AbstractSelect component.
  * 
- * @since
+ * @since 7.6
  */
 public class AbstractSelectState extends AbstractFieldState {
 

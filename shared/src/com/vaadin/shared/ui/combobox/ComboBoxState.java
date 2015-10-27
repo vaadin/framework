@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.select.AbstractSelectState;
 /**
  * Shared state for the ComboBox component.
  * 
- * @since
+ * @since 7.0
  */
 public class ComboBoxState extends AbstractSelectState {
     {
