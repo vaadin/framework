@@ -268,6 +268,13 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     right: -6px;
     cursor: col-resize;
     z-index: 10;
+
+    // TODO should refactor into a mixin
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   // Footer
