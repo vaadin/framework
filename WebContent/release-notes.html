@@ -95,15 +95,23 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>New configurable client-server reconnect handling and warning dialogs</li>
-            <li>Grid line-based editing and unbuffered datasource binding</li>
+            <li>New configurable client-server automatic reconnect handling and warning dialogs</li>
+            <li>Grid columns can be resized by the user</li>
+            <li>Grid non-modal editor mode and unbuffered datasource binding</li>
             <li>More fluent Grid scrolling for touch devices</li>
+            <li>Better customizability of Grid (data generators for communication, customizable selection models etc.)</li>
             <li>Configurable keyboard, touch and mouse navigation support for Grid editor</li>
             <li>Declarative HTML serialization enhancements for Vaadin Designer 1.0</li>
             <li>Better handling of closing a window with keyboard shortcuts</li>
             <li>Column collapsing events for Table</li>
             <li>Most Components fire a ContextClickEvent when the user tries to open a context menu.
-                This event is specialised to contain some extra context for Grid, Table, TreeTable and Tree</li>
+                This event is specialised to contain some extra context for Grid, Table, TreeTable and Tree,
+                and used by the <a href="https://vaadin.com/addon/vaadin-contextmenu">ContextMenu add-on</a>.</li>
+            <li>New push transport mode WEBSOCKET_XHR (WebSockets from server to client, XHR from client to
+                server) which allows setting of cookies, using request scopes with CDI/Spring etc.</li>
+            <li>Navigator is more extensible and can be used with dependency injection</li>
+            <li>It is possible to customize the push URL using PushConfiguration.setPushUrl().
+                This enables implementing some push related add-ons such as push on portals.</li>
         </ul>
 
         <p>
