@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
@@ -85,10 +86,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private HandlerRegistration touchEndHandler;
     private int touchStartX;
     private int touchStartY;
+    private boolean preventNextTouchEnd = false;
+
+    protected int SIGNIFICANT_MOVE_THRESHOLD = 20; // pixels
 
     // long touch event delay
     // TODO replace with global constant for accessibility
-    private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 250;
+    private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
 
     /**
      * Default constructor
@@ -117,7 +121,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             // if the widget has a contextclick listener, add touch support as
             // well.
 
-            registerTouchHandlers();
+            if (shouldHandleLongTap()) {
+                registerTouchHandlers();
+            }
 
         } else if (contextHandler != null
                 && !hasEventListener(EventId.CONTEXT_CLICK)) {
@@ -140,12 +146,18 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     protected void unregisterTouchHandlers() {
-        touchStartHandler.removeHandler();
-        touchStartHandler = null;
-        touchMoveHandler.removeHandler();
-        touchMoveHandler = null;
-        touchEndHandler.removeHandler();
-        touchEndHandler = null;
+        if (touchStartHandler != null) {
+            touchStartHandler.removeHandler();
+            touchStartHandler = null;
+        }
+        if (touchMoveHandler != null) {
+            touchMoveHandler.removeHandler();
+            touchMoveHandler = null;
+        }
+        if (touchEndHandler != null) {
+            touchEndHandler.removeHandler();
+            touchEndHandler = null;
+        }
     }
 
     /**
@@ -155,6 +167,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * If you do not want this in your component, override this with a blank
      * method to get rid of said behaviour.
      * 
+     * Some Vaadin Components already handle the long tap as a context menu.
+     * This method is unnecessary for those.
+     * 
      * @since 7.6
      */
     protected void registerTouchHandlers() {
@@ -162,6 +177,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
             @Override
             public void onTouchStart(final TouchStartEvent event) {
+                if (longTouchTimer != null && longTouchTimer.isRunning()) {
+                    return;
+                }
 
                 /*
                  * we need to build mouseEventDetails eagerly - the event won't
@@ -189,7 +207,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                         // element of widget.
 
                         sendContextClickEvent(mouseEventDetails, eventTarget);
-
+                        preventNextTouchEnd = true;
                     }
                 };
 
@@ -232,8 +250,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
                 // Compare to the square of the significant move threshold to
                 // remove the need for a square root
-                if (delta > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD
-                        * TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
+                if (delta > SIGNIFICANT_MOVE_THRESHOLD
+                        * SIGNIFICANT_MOVE_THRESHOLD) {
                     return true;
                 }
                 return false;
@@ -247,8 +265,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 // cancel the timer so the event doesn't fire
                 cancelTouchTimer();
 
+                if (preventNextTouchEnd) {
+                    event.preventDefault();
+                    preventNextTouchEnd = false;
+                }
             }
         }, TouchEndEvent.getType());
+    }
+
+    protected boolean shouldHandleLongTap() {
+        final BrowserInfo browserInfo = BrowserInfo.get();
+        return browserInfo.isTouchDevice() && !browserInfo.isAndroid();
     }
 
     /**
