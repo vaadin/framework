@@ -167,10 +167,10 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Sets the second component of this split panel. Depending on the direction
-     * the second component is shown at the bottom or to the left.
+     * the second component is shown at the bottom or to the right.
      * 
      * @param c
-     *            The component to use as first component
+     *            The component to use as second component
      */
     public void setSecondComponent(Component c) {
         if (getSecondComponent() == c) {
