@@ -216,6 +216,60 @@ public class CalendarBasicsTest {
                 calendar.isClientChangeAllowed());
     }
 
+    // regression test to ensure old functionality is not broken
+    @Test
+    public void defaultFirstDayOfWeek() {
+        Calendar calendar = new Calendar();
+        calendar.setLocale(Locale.GERMAN);
+        // simulating consequences of markAsDirty
+        calendar.beforeClientResponse(true);
+        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
+                .getFirstDayOfWeek());
+    }
+
+    @Test
+    public void customFirstDayOfWeek() {
+        Calendar calendar = new Calendar();
+        calendar.setLocale(Locale.GERMAN);
+        calendar.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
+
+        // simulating consequences of markAsDirty
+        calendar.beforeClientResponse(true);
+        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
+                .getFirstDayOfWeek());
+    }
+
+    @Test
+    public void customFirstDayOfWeekCanSetEvenBeforeLocale() {
+        Calendar calendar = new Calendar();
+        calendar.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
+
+        calendar.setLocale(Locale.GERMAN);
+        // simulating consequences of markAsDirty
+        calendar.beforeClientResponse(true);
+        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
+                .getFirstDayOfWeek());
+    }
+
+    @Test
+    public void customFirstDayOfWeekSetNullRestoresDefault() {
+        Calendar calendar = new Calendar();
+        calendar.setLocale(Locale.GERMAN);
+        calendar.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
+        calendar.setFirstDayOfWeek(null);
+        // simulating consequences of markAsDirty
+        calendar.beforeClientResponse(true);
+        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
+                .getFirstDayOfWeek());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void customFirstDayOfWeekValidation() {
+        Calendar calendar = new Calendar();
+        int someWrongDayOfWeek = 10;
+        calendar.setFirstDayOfWeek(someWrongDayOfWeek);
+    }
+
     private static class TestCalendar extends Calendar {
         TestCalendar(boolean connectorEnabled) {
             isConnectorEnabled = connectorEnabled;

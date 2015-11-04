@@ -220,6 +220,8 @@ public class Calendar extends AbstractComponent implements
      */
     private CalendarServerRpcImpl rpc = new CalendarServerRpcImpl();
 
+    private Integer customFirstDayOfWeek;
+
     /**
      * Returns the logger for the calendar
      */
@@ -426,6 +428,10 @@ public class Calendar extends AbstractComponent implements
 
         } else {
             currentCalendar = java.util.Calendar.getInstance(getLocale());
+        }
+
+        if (customFirstDayOfWeek != null) {
+            currentCalendar.setFirstDayOfWeek(customFirstDayOfWeek);
         }
     }
 
@@ -1281,9 +1287,8 @@ public class Calendar extends AbstractComponent implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarEvents.EventChangeListener#eventChange
-     * (com.vaadin.addon.calendar.ui.CalendarEvents.EventChange)
+     * @see com.vaadin.addon.calendar.ui.CalendarEvents.EventChangeListener#
+     * eventChange (com.vaadin.addon.calendar.ui.CalendarEvents.EventChange)
      */
     @Override
     public void eventSetChange(EventSetChangeEvent changeEvent) {
@@ -1440,9 +1445,8 @@ public class Calendar extends AbstractComponent implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.CalendarEventNotifier
-     * #getHandler(java.lang.String)
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * CalendarEventNotifier #getHandler(java.lang.String)
      */
     @Override
     public EventListener getHandler(String eventId) {
@@ -1991,5 +1995,26 @@ public class Calendar extends AbstractComponent implements
         customAttributes.add("start-date");
         customAttributes.add("end-date");
         return customAttributes;
+    }
+
+    /**
+     * Allow setting first day of week depending on Locale. Set to null if you
+     * want first day of week depend on locale
+     * 
+     * @since
+     * @param dayOfWeek
+     */
+    public void setFirstDayOfWeek(Integer dayOfWeek) {
+        int minimalSupported = java.util.Calendar.SUNDAY;
+        int maximalSupported = java.util.Calendar.SATURDAY;
+        if (dayOfWeek != null
+                && (dayOfWeek < minimalSupported || dayOfWeek > maximalSupported)) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Day of week must be between %s and %s. Actually received: %s",
+                            minimalSupported, maximalSupported, dayOfWeek));
+        }
+        customFirstDayOfWeek = dayOfWeek;
+        markAsDirty();
     }
 }

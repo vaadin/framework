@@ -108,6 +108,7 @@ public class CalendarTest extends UI {
     private CheckBox hideWeekendsButton;
 
     private CheckBox readOnlyButton;
+    private ComboBox customFirstDayOfWeekSelect;
 
     private TextField captionField;
 
@@ -221,10 +222,12 @@ public class CalendarTest extends UI {
             setLocale(Locale.getDefault());
         }
 
-        // Initialize locale, timezone and timeformat selects.
+        // Initialize locale, timezone, timeformat and custom first day of week
+        // selects.
         localeSelect = createLocaleSelect();
         timeZoneSelect = createTimeZoneSelect();
         formatSelect = createCalendarFormatSelect();
+        customFirstDayOfWeekSelect = createCustomFirstDayOfWeekSelect();
 
         initCalendar();
         initLayoutContent();
@@ -359,6 +362,7 @@ public class CalendarTest extends UI {
         controlPanel.addComponent(localeSelect);
         controlPanel.addComponent(timeZoneSelect);
         controlPanel.addComponent(formatSelect);
+        controlPanel.addComponent(customFirstDayOfWeekSelect);
         controlPanel.addComponent(hideWeekendsButton);
         controlPanel.addComponent(readOnlyButton);
         controlPanel.addComponent(disabledButton);
@@ -770,6 +774,39 @@ public class CalendarTest extends UI {
         return s;
     }
 
+    private ComboBox createCustomFirstDayOfWeekSelect() {
+        ComboBox comboBox = new ComboBox("First day of week");
+
+        comboBox.addContainerProperty("caption", String.class, "");
+        comboBox.setItemCaptionPropertyId("caption");
+
+        comboBox.setImmediate(true);
+
+        Item defaultItem = comboBox.addItem(DEFAULT_ITEMID);
+        defaultItem.getItemProperty("caption").setValue("Default by locale");
+
+        Item sunday = comboBox.addItem(java.util.Calendar.SUNDAY);
+        sunday.getItemProperty("caption").setValue("Sunday");
+
+        Item monday = comboBox.addItem(java.util.Calendar.MONDAY);
+        monday.getItemProperty("caption").setValue("Monday");
+
+        comboBox.select(DEFAULT_ITEMID);
+        comboBox.setNullSelectionAllowed(false);
+
+        comboBox.addValueChangeListener(new ValueChangeListener() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                updateCalendarFirstDayOfWeek(event.getProperty().getValue());
+            }
+        });
+
+        return comboBox;
+    }
+
     private ComboBox createLocaleSelect() {
         ComboBox s = new ComboBox("Locale");
         s.addContainerProperty("caption", String.class, "");
@@ -829,6 +866,20 @@ public class CalendarTest extends UI {
         }
 
         calendarComponent.setTimeFormat(calFormat);
+    }
+
+    private void updateCalendarFirstDayOfWeek(Object firstDayOfWeek) {
+        Integer firstDayOfWeekValue = null;
+        if (firstDayOfWeek instanceof Integer) {
+            firstDayOfWeekValue = (Integer) firstDayOfWeek;
+            calendarComponent.setFirstDayOfWeek(firstDayOfWeekValue);
+        } else {
+            // it means 'Default by locale has been selected'
+            calendarComponent.setFirstDayOfWeek(null);
+        }
+
+        // if we need we may update also field of this test 'calendar' which
+        // also keeps first day of week
     }
 
     private String getLocaleItemCaption(Locale l) {
