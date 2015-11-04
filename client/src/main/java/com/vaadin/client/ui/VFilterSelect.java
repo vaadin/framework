@@ -1871,6 +1871,18 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             // currentPage = -1; // forget the page
         }
+
+        if (getSelectedCaption() != null && newKey.equals("")) {
+            // In scrollToPage(false) mode selecting null seems to be broken
+            // if current selection is not on first page. The above clause is so
+            // hard to interpret that new clause added here :-(
+            selectedOptionKey = newKey;
+            explicitSelectedCaption = null;
+            client.updateVariable(paintableId, "selected",
+                    new String[] { selectedOptionKey }, immediate);
+            afterUpdateClientVariables();
+        }
+
         suggestionPopup.hide();
     }
 
@@ -2326,6 +2338,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      */
     boolean preventNextBlurEventInIE = false;
 
+    private String explicitSelectedCaption;
+
     /*
      * (non-Javadoc)
      * 
@@ -2366,7 +2380,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         focused = false;
         if (!readonly) {
             if (selectedOptionKey == null) {
-                setPromptingOn();
+                if (explicitSelectedCaption != null) {
+                    setPromptingOff(explicitSelectedCaption);
+                } else {
+                    setPromptingOn();
+                }
             } else if (currentSuggestion != null) {
                 setPromptingOff(currentSuggestion.caption);
             }
@@ -2573,6 +2591,31 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public boolean isWorkPending() {
         return waitingForFilteringResponse
                 || suggestionPopup.lazyPageScroller.isRunning();
+    }
+
+    /**
+     * Sets the caption of selected item, if "scroll to page" is disabled.
+     * This method is meant for internal use and may change in future versions.
+     * 
+     * @since 7.7
+     * @param selectedCaption
+     *            the caption of selected item
+     */
+    public void setSelectedCaption(String selectedCaption) {
+        explicitSelectedCaption = selectedCaption;
+        if (selectedCaption != null) {
+            setPromptingOff(selectedCaption);
+        }
+    }
+
+    /**
+     * This method is meant for internal use and may change in future versions.
+     * 
+     * @since 7.7
+     * @return the caption of selected item, if "scroll to page" is disabled
+     */
+    public String getSelectedCaption() {
+        return explicitSelectedCaption;
     }
 
 }
