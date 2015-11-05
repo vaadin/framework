@@ -23,7 +23,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
@@ -42,6 +44,28 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
 
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        Profiler.enter("ComboBoxConnector.onStateChanged update content");
+
+        getWidget().readonly = isReadOnly();
+        getWidget().updateReadOnly();
+
+        getWidget().immediate = getState().immediate;
+
+        getWidget().setTextInputEnabled(getState().textInputAllowed);
+
+        if (getState().inputPrompt != null) {
+            getWidget().inputPrompt = getState().inputPrompt;
+        } else {
+            getWidget().inputPrompt = "";
+        }
+
+        Profiler.leave("ComboBoxConnector.onStateChanged update content");
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -54,19 +78,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
-
         if (!isRealUpdate(uidl)) {
             return;
         }
-
-        // Inverse logic here to make the default case (text input enabled)
-        // work without additional UIDL messages
-        boolean noTextInput = uidl
-                .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT);
-        getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
@@ -75,8 +89,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().filteringmode = FilteringMode.valueOf(uidl
                     .getStringAttribute("filteringmode"));
         }
-
-        getWidget().immediate = getState().immediate;
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
@@ -87,21 +99,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         if (uidl.hasAttribute("pagelength")) {
             getWidget().pageLength = uidl.getIntAttribute("pagelength");
-        }
-
-        if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
-            // input prompt changed from server
-            getWidget().inputPrompt = uidl
-                    .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
-        } else {
-            getWidget().inputPrompt = "";
-        }
-
-        if (uidl.hasAttribute("suggestionPopupWidth")) {
-            getWidget().suggestionPopupWidth = uidl
-                    .getStringAttribute("suggestionPopupWidth");
-        } else {
-            getWidget().suggestionPopupWidth = null;
         }
 
         if (uidl.hasAttribute("suggestionPopupWidth")) {
@@ -195,8 +192,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                     && uidl.hasAttribute("selectedCaption")) {
                 // scrolling to correct page is disabled, caption is passed as a
                 // special parameter
-                getWidget().setSelectedCaption(
-                        uidl.getStringAttribute("selectedCaption"));
+                getWidget().setSelectedCaption(uidl
+                        .getStringAttribute("selectedCaption"));
             } else {
                 resetSelection();
             }
@@ -329,13 +326,13 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // just clear the input if the value has changed from something
                 // else to null
                 if (getWidget().selectedOptionKey != null
-                        || (getWidget().allowNewItem && !getWidget().tb
-                                .getValue().isEmpty())) {
+                        || (getWidget().allowNewItem
+                                && !getWidget().tb.getValue().isEmpty())) {
 
                     boolean openedPopupWithNonScrollingMode = (getWidget().popupOpenerClicked
                             && getWidget().getSelectedCaption() != null);
                     if (!openedPopupWithNonScrollingMode) {
-                    getWidget().tb.setValue("");
+                        getWidget().tb.setValue("");
                     } else {
                         getWidget().tb
                                 .setValue(getWidget().getSelectedCaption());

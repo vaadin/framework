@@ -34,7 +34,6 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 
@@ -74,8 +73,6 @@ public class ComboBox extends AbstractSelect implements
          */
         public String getStyle(ComboBox source, Object itemId);
     }
-
-    private String inputPrompt = null;
 
     /**
      * Holds value of property pageLength. 0 disables paging.
@@ -166,7 +163,7 @@ public class ComboBox extends AbstractSelect implements
      * @return the current input prompt, or null if not enabled
      */
     public String getInputPrompt() {
-        return inputPrompt;
+        return getState(false).inputPrompt;
     }
 
     /**
@@ -177,8 +174,7 @@ public class ComboBox extends AbstractSelect implements
      *            the desired input prompt, or null to disable
      */
     public void setInputPrompt(String inputPrompt) {
-        this.inputPrompt = inputPrompt;
-        markAsDirty();
+        getState().inputPrompt = inputPrompt;
     }
 
     private boolean isFilteringNeeded() {
@@ -190,15 +186,6 @@ public class ComboBox extends AbstractSelect implements
     public void paintContent(PaintTarget target) throws PaintException {
         isPainting = true;
         try {
-            if (inputPrompt != null) {
-                target.addAttribute(ComboBoxConstants.ATTR_INPUTPROMPT,
-                        inputPrompt);
-            }
-
-            if (!textInputAllowed) {
-                target.addAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT, true);
-            }
-
             // clear caption change listeners
             getCaptionChangeListener().clear();
 
@@ -375,8 +362,7 @@ public class ComboBox extends AbstractSelect implements
      *            selection
      */
     public void setTextInputAllowed(boolean textInputAllowed) {
-        this.textInputAllowed = textInputAllowed;
-        markAsDirty();
+        getState().textInputAllowed = textInputAllowed;
     }
 
     /**
@@ -388,12 +374,17 @@ public class ComboBox extends AbstractSelect implements
      * @return
      */
     public boolean isTextInputAllowed() {
-        return textInputAllowed;
+        return getState(false).textInputAllowed;
     }
 
     @Override
     protected ComboBoxState getState() {
         return (ComboBoxState) super.getState();
+    }
+
+    @Override
+    protected ComboBoxState getState(boolean markAsDirty) {
+        return (ComboBoxState) super.getState(markAsDirty);
     }
 
     /**
