@@ -29,6 +29,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
@@ -87,6 +88,13 @@ public class ComboBox extends AbstractSelect implements
                     prevfilterstring = null;
                 }
             }
+        }
+    };
+
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+        @Override
+        protected void fireEvent(Event event) {
+            ComboBox.this.fireEvent(event);
         }
     };
 
@@ -161,6 +169,7 @@ public class ComboBox extends AbstractSelect implements
      */
     private void init() {
         registerRpc(rpc);
+        registerRpc(focusBlurRpc);
 
         setNewItemsAllowed(false);
         setImmediate(true);
@@ -745,14 +754,6 @@ public class ComboBox extends AbstractSelect implements
             }
             requestRepaint();
         }
-
-        if (variables.containsKey(FocusEvent.EVENT_ID)) {
-            fireEvent(new FocusEvent(this));
-        }
-        if (variables.containsKey(BlurEvent.EVENT_ID)) {
-            fireEvent(new BlurEvent(this));
-        }
-
     }
 
     @Override
