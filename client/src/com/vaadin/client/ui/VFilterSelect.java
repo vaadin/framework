@@ -62,9 +62,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
@@ -74,6 +72,7 @@ import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
+import com.vaadin.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
@@ -128,6 +127,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
+            ApplicationConnection client = connector.getConnection();
             final Icon icon = client.getIcon(client
                     .translateVaadinUri(untranslatedIconUri));
             if (icon != null) {
@@ -169,6 +169,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @return
          */
         public String getIconUri() {
+            ApplicationConnection client = connector.getConnection();
             return client.translateVaadinUri(untranslatedIconUri);
         }
 
@@ -882,10 +883,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 }
                 // null is not visible on pages != 0, and not visible when
                 // filtering: handle separately
-                client.updateVariable(paintableId, "filter", "", false);
-                client.updateVariable(paintableId, "page", 0, false);
-                client.updateVariable(paintableId, "selected", new String[] {},
-                        immediate);
+                connector.requestFirstPage();
                 afterUpdateClientVariables();
 
                 suggestionPopup.hide();
@@ -934,8 +932,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                      * Store last sent new item string to avoid double sends
                      */
                     lastNewItemString = enteredItemValue;
-                    client.updateVariable(paintableId, "newitem",
-                            enteredItemValue, immediate);
+                    connector.sendNewItem(enteredItemValue);
                     afterUpdateClientVariables();
                 }
             } else if (item != null
@@ -1173,7 +1170,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private IconWidget selectedItemIcon;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public ApplicationConnection client;
+    public ComboBoxConnector connector;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String paintableId;
@@ -1188,9 +1185,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String selectedOptionKey;
@@ -1460,8 +1454,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         waitingForFilteringResponse = true;
-        client.updateVariable(paintableId, "filter", filter, false);
-        client.updateVariable(paintableId, "page", page, immediate);
+        connector.requestPage(filter, page);
         afterUpdateClientVariables();
 
         lastFilter = filter;
@@ -1582,8 +1575,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
-            client.updateVariable(paintableId, "selected",
-                    new String[] { selectedOptionKey }, immediate);
+            connector.sendSelection(new String[] { selectedOptionKey });
             afterUpdateClientVariables();
 
             // currentPage = -1; // forget the page
@@ -1610,7 +1602,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
             }
-            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            selectedItemIcon = new IconWidget(connector.getConnection()
+                    .getIcon(iconUri));
             // Older IE versions don't scale icon correctly if DOM
             // contains height and width attributes.
             selectedItemIcon.getElement().removeAttribute("height");
@@ -1922,6 +1915,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // If a focus event is not going to be sent, send the options
                 // request immediately; otherwise queue in the same burst as the
                 // focus event. Fixes #8321.
+                ApplicationConnection client = connector.getConnection();
                 boolean immediate = focused
                         || !client.hasEventListeners(this, EventId.FOCUS);
                 filterOptions(-1, "", immediate);
@@ -2018,13 +2012,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         addStyleDependentName("focus");
 
+        ApplicationConnection client = connector.getConnection();
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
             afterUpdateClientVariables();
         }
 
-        ComponentConnector connector = ConnectorMap.get(client).getConnector(
-                this);
         client.getVTooltip().showAssistive(
                 connector.getTooltipInfo(getElement()));
     }
@@ -2082,6 +2075,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         removeStyleDependentName("focus");
 
+        ApplicationConnection client = connector.getConnection();
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(paintableId, EventId.BLUR, "", true);
             afterUpdateClientVariables();
@@ -2111,10 +2105,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public void updateRootWidth() {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
-                this);
-
-        if (paintable.isUndefinedWidth()) {
+        if (connector.isUndefinedWidth()) {
 
             /*
              * When the select has a undefined with we need to check that we are
