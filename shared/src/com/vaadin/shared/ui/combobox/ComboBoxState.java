@@ -26,4 +26,22 @@ public class ComboBoxState extends AbstractSelectState {
     {
         primaryStyleName = "v-filterselect";
     }
+
+    /**
+     * If text input is not allowed, the ComboBox behaves like a pretty
+     * NativeSelect - the user can not enter any text and clicking the text
+     * field opens the drop down with options.
+     * 
+     * @since
+     */
+    public boolean textInputAllowed = true;
+
+    /**
+     * A textual prompt that is displayed when the select would otherwise be
+     * empty, to prompt the user for input.
+     * 
+     * @since
+     */
+    public String inputPrompt = null;
+
 }

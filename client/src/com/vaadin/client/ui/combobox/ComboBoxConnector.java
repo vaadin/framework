@@ -23,13 +23,14 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
@@ -41,6 +42,28 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        Profiler.enter("ComboBoxConnector.onStateChanged update content");
+
+        getWidget().readonly = isReadOnly();
+        getWidget().updateReadOnly();
+
+        getWidget().immediate = getState().immediate;
+
+        getWidget().setTextInputEnabled(getState().textInputAllowed);
+
+        if (getState().inputPrompt != null) {
+            getWidget().inputPrompt = getState().inputPrompt;
+        } else {
+            getWidget().inputPrompt = "";
+        }
+
+        Profiler.leave("ComboBoxConnector.onStateChanged update content");
+    }
 
     /*
      * (non-Javadoc)
@@ -54,19 +77,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
-
         if (!isRealUpdate(uidl)) {
             return;
         }
-
-        // Inverse logic here to make the default case (text input enabled)
-        // work without additional UIDL messages
-        boolean noTextInput = uidl
-                .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT);
-        getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
@@ -75,8 +88,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().filteringmode = FilteringMode.valueOf(uidl
                     .getStringAttribute("filteringmode"));
         }
-
-        getWidget().immediate = getState().immediate;
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
@@ -87,14 +98,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         if (uidl.hasAttribute("pagelength")) {
             getWidget().pageLength = uidl.getIntAttribute("pagelength");
-        }
-
-        if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
-            // input prompt changed from server
-            getWidget().inputPrompt = uidl
-                    .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
-        } else {
-            getWidget().inputPrompt = "";
         }
 
         getWidget().suggestionPopup.updateStyleNames(uidl, getState());
