@@ -31,6 +31,8 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
+import com.vaadin.shared.EventId;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
@@ -44,6 +46,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
             this);
+
+    protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy.create(
+            FocusAndBlurServerRpc.class, this);
 
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
@@ -451,6 +456,48 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     public void sendSelection(String[] selection) {
         getConnection().updateVariable(getConnectorId(), "selected", selection,
                 immediate);
+    }
+
+    /**
+     * Notify the server that the combo box received focus.
+     * 
+     * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
+     * moment.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     * @return true if an event was sent (there are registered listeners), false
+     *         otherwise
+     */
+    public boolean sendFocusEvent() {
+        boolean registeredListeners = hasEventListener(EventId.FOCUS);
+        if (registeredListeners) {
+            focusAndBlurRpc.focus();
+        }
+        return registeredListeners;
+    }
+
+    /**
+     * Notify the server that the combo box lost focus.
+     * 
+     * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
+     * moment.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     * @return true if an event was sent (there are registered listeners), false
+     *         otherwise
+     */
+    public boolean sendBlurEvent() {
+        boolean registeredListeners = hasEventListener(EventId.BLUR);
+        if (registeredListeners) {
+            focusAndBlurRpc.blur();
+        }
+        return registeredListeners;
     }
 
 }

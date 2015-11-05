@@ -2217,9 +2217,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // If a focus event is not going to be sent, send the options
                 // request immediately; otherwise queue in the same burst as the
                 // focus event. Fixes #8321.
-                ApplicationConnection client = connector.getConnection();
                 boolean immediate = focused
-                        || !client.hasEventListeners(this, EventId.FOCUS);
+                        || !connector.hasEventListener(EventId.FOCUS);
                 filterOptions(-1, "", immediate);
                 popupOpenerClicked = true;
                 lastFilter = "";
@@ -2314,14 +2313,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         addStyleDependentName("focus");
 
-        ApplicationConnection client = connector.getConnection();
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
-            client.updateVariable(paintableId, EventId.FOCUS, "", true);
+        if (connector.sendFocusEvent()) {
             afterUpdateClientVariables();
         }
 
-        client.getVTooltip().showAssistive(
-                connector.getTooltipInfo(getElement()));
+        connector.getConnection().getVTooltip()
+                .showAssistive(connector.getTooltipInfo(getElement()));
     }
 
     /**
@@ -2383,9 +2380,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         removeStyleDependentName("focus");
 
-        ApplicationConnection client = connector.getConnection();
-        if (client.hasEventListeners(this, EventId.BLUR)) {
-            client.updateVariable(paintableId, EventId.BLUR, "", true);
+        if (connector.sendBlurEvent()) {
             afterUpdateClientVariables();
         }
     }
