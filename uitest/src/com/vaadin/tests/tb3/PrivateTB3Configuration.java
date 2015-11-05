@@ -22,16 +22,19 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 
 import org.junit.Assert;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.annotations.RunOnHub;
 import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 
 /**
  * Provides values for parameters which depend on where the test is run.
@@ -95,6 +98,35 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         super.setup();
+    }
+
+    @Override
+    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+        super.setDesiredCapabilities(desiredCapabilities);
+
+        if (BrowserUtil.isIE(desiredCapabilities)) {
+            if (requireWindowFocusForIE()) {
+                desiredCapabilities.setCapability(
+                        InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+            }
+            if (!usePersistentHoverForIE()) {
+                desiredCapabilities.setCapability(
+                        InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
+                        false);
+            }
+            if (!useNativeEventsForIE()) {
+                desiredCapabilities.setCapability(
+                        InternetExplorerDriver.NATIVE_EVENTS, false);
+            }
+        }
+
+        desiredCapabilities.setCapability("project", "Vaadin Framework");
+        desiredCapabilities.setCapability("build", String.format("%s / %s",
+                getDeploymentHostname(), Calendar.getInstance().getTime()));
+        desiredCapabilities.setCapability(
+                "name",
+                String.format("%s.%s", getClass().getCanonicalName(),
+                        testName.getMethodName()));
     }
 
     protected static DesiredCapabilities getRunLocallyCapabilities() {

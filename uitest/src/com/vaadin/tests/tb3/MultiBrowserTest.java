@@ -17,14 +17,11 @@
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.testbench.parallel.BrowserUtil;
 
 /**
  * Base class for tests which should be run on all supported browsers. The test
@@ -80,35 +77,6 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // and selenium.
         return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
                 Browser.FIREFOX, Browser.CHROME);
-    }
-
-    @Override
-    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
-        super.setDesiredCapabilities(desiredCapabilities);
-
-        if (BrowserUtil.isIE(desiredCapabilities)) {
-            if (requireWindowFocusForIE()) {
-                desiredCapabilities.setCapability(
-                        InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-            }
-            if (!usePersistentHoverForIE()) {
-                desiredCapabilities.setCapability(
-                        InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
-                        false);
-            }
-            if (!useNativeEventsForIE()) {
-                desiredCapabilities.setCapability(
-                        InternetExplorerDriver.NATIVE_EVENTS, false);
-            }
-        }
-
-        desiredCapabilities.setCapability("project", "Vaadin Framework");
-        desiredCapabilities.setCapability("build", String.format("%s / %s",
-                getDeploymentHostname(), Calendar.getInstance().getTime()));
-        desiredCapabilities.setCapability(
-                "name",
-                String.format("%s.%s", getClass().getCanonicalName(),
-                        testName.getMethodName()));
     }
 
     @Override
