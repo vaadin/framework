@@ -49,6 +49,14 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
 
+    private boolean immediate;
+
+    @Override
+    protected void init() {
+        super.init();
+        getWidget().connector = this;
+    }
+
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
@@ -58,7 +66,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().readonly = isReadOnly();
         getWidget().updateReadOnly();
 
-        getWidget().immediate = getState().immediate;
+        immediate = getState().immediate;
 
         getWidget().setTextInputEnabled(getState().textInputAllowed);
 
@@ -80,7 +88,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
-        getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
         if (!isRealUpdate(uidl)) {
@@ -374,6 +381,77 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         super.setWidgetEnabled(widgetEnabled);
         getWidget().enabled = widgetEnabled;
         getWidget().tb.setEnabled(widgetEnabled);
+    }
+
+    /*
+     * These methods exist to move communications out of VFilterSelect, and may
+     * be refactored/removed in the future
+     */
+
+    /**
+     * Send a message about a newly created item to the server.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     * @param itemValue
+     *            user entered string value for the new item
+     */
+    public void sendNewItem(String itemValue) {
+        getConnection().updateVariable(getConnectorId(), "newitem", itemValue,
+                immediate);
+    }
+
+    /**
+     * Send a message to the server to request the first page of items without
+     * filtering or selection.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     */
+    public void requestFirstPage() {
+        getConnection().updateVariable(getConnectorId(), "filter", "", false);
+        getConnection().updateVariable(getConnectorId(), "page", 0, false);
+        getConnection().updateVariable(getConnectorId(), "selected",
+                new String[] {}, immediate);
+    }
+
+    /**
+     * Send a message to the server to request a page of items with a given
+     * filter.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     * @param filter
+     *            the current filter string
+     * @param page
+     *            the page number to get
+     */
+    public void requestPage(String filter, int page) {
+        getConnection().updateVariable(getConnectorId(), "filter", filter,
+                false);
+        getConnection().updateVariable(getConnectorId(), "page", page,
+                immediate);
+    }
+
+    /**
+     * Send a message to the server updating the current selection.
+     * 
+     * This method is for internal use only and may be removed in future
+     * versions.
+     * 
+     * @since
+     * @param selection
+     *            the current selection
+     */
+    public void sendSelection(String[] selection) {
+        getConnection().updateVariable(getConnectorId(), "selected", selection,
+                immediate);
     }
 
 }
