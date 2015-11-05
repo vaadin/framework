@@ -34,6 +34,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 
@@ -73,6 +74,10 @@ public class ComboBox extends AbstractSelect implements
          */
         public String getStyle(ComboBox source, Object itemId);
     }
+
+    private ComboBoxServerRpc rpc = new ComboBoxServerRpc() {
+
+    };
 
     /**
      * Holds value of property pageLength. 0 disables paging.
@@ -121,28 +126,31 @@ public class ComboBox extends AbstractSelect implements
     private ItemStyleGenerator itemStyleGenerator = null;
 
     public ComboBox() {
-        initDefaults();
+        init();
     }
 
     public ComboBox(String caption, Collection<?> options) {
         super(caption, options);
-        initDefaults();
+        init();
     }
 
     public ComboBox(String caption, Container dataSource) {
         super(caption, dataSource);
-        initDefaults();
+        init();
     }
 
     public ComboBox(String caption) {
         super(caption);
-        initDefaults();
+        init();
     }
 
     /**
-     * Initialize the ComboBox with default settings
+     * Initialize the ComboBox with default settings and register client to
+     * server RPC implementation.
      */
-    private void initDefaults() {
+    private void init() {
+        registerRpc(rpc);
+
         setNewItemsAllowed(false);
         setImmediate(true);
     }
