@@ -386,8 +386,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      *            user entered string value for the new item
      */
     public void sendNewItem(String itemValue) {
-        getConnection().updateVariable(getConnectorId(), "newitem", itemValue,
-                immediate);
+        rpc.createNewItem(itemValue);
     }
 
     /**
