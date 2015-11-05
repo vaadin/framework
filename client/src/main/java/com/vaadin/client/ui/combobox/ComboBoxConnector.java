@@ -25,6 +25,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -32,6 +33,7 @@ import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
@@ -39,6 +41,9 @@ import com.vaadin.ui.ComboBox;
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractFieldConnector implements
         Paintable, SimpleManagedLayout {
+
+    protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
+            this);
 
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
