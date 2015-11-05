@@ -904,6 +904,19 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return true;
     }
 
+    /**
+     * Should the "native events" be enabled for Internet Explorer.
+     * <p>
+     * Native events sometimes cause failure in clicking on buttons/checkboxes
+     * but are possibly needed for some operations.
+     * 
+     * @return true, to use "native events", false to use generated Javascript
+     *         events
+     */
+    protected boolean useNativeEventsForIE() {
+        return true;
+    }
+
     // FIXME: Remove this once TB4 getRemoteControlName works properly
     private RemoteWebDriver getRemoteDriver() {
         WebDriver d = getDriver();

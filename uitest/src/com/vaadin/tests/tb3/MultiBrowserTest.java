@@ -96,6 +96,10 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                         InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
                         false);
             }
+            if (!useNativeEventsForIE()) {
+                desiredCapabilities.setCapability(
+                        InternetExplorerDriver.NATIVE_EVENTS, false);
+            }
         }
 
         desiredCapabilities.setCapability("project", "Vaadin Framework");
