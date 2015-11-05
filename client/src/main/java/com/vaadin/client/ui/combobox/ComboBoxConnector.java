@@ -23,7 +23,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
@@ -35,12 +37,34 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
-public class ComboBoxConnector extends AbstractFieldConnector
-        implements Paintable, SimpleManagedLayout {
+public class ComboBoxConnector extends AbstractFieldConnector implements
+        Paintable, SimpleManagedLayout {
 
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        Profiler.enter("ComboBoxConnector.onStateChanged update content");
+
+        getWidget().readonly = isReadOnly();
+        getWidget().updateReadOnly();
+
+        getWidget().immediate = getState().immediate;
+
+        getWidget().setTextInputEnabled(getState().textInputAllowed);
+
+        if (getState().inputPrompt != null) {
+            getWidget().inputPrompt = getState().inputPrompt;
+        } else {
+            getWidget().inputPrompt = "";
+        }
+
+        Profiler.leave("ComboBoxConnector.onStateChanged update content");
+    }
 
     /*
      * (non-Javadoc)
@@ -54,30 +78,17 @@ public class ComboBoxConnector extends AbstractFieldConnector
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
-
         if (!isRealUpdate(uidl)) {
             return;
         }
-
-        // Inverse logic here to make the default case (text input enabled)
-        // work without additional UIDL messages
-        boolean noTextInput = uidl
-                .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(
-                        ComboBoxConstants.ATTR_NO_TEXT_INPUT);
-        getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = FilteringMode
-                    .valueOf(uidl.getStringAttribute("filteringmode"));
+            getWidget().filteringmode = FilteringMode.valueOf(uidl
+                    .getStringAttribute("filteringmode"));
         }
-
-        getWidget().immediate = getState().immediate;
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
@@ -88,14 +99,6 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
         if (uidl.hasAttribute("pagelength")) {
             getWidget().pageLength = uidl.getIntAttribute("pagelength");
-        }
-
-        if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
-            // input prompt changed from server
-            getWidget().inputPrompt = uidl
-                    .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
-        } else {
-            getWidget().inputPrompt = "";
         }
 
         if (uidl.hasAttribute("suggestionPopupWidth")) {
@@ -185,8 +188,8 @@ public class ComboBoxConnector extends AbstractFieldConnector
                     && uidl.hasAttribute("selectedCaption")) {
                 // scrolling to correct page is disabled, caption is passed as a
                 // special parameter
-                getWidget().tb
-                        .setText(uidl.getStringAttribute("selectedCaption"));
+                getWidget().tb.setText(uidl
+                        .getStringAttribute("selectedCaption"));
             } else {
                 resetSelection();
             }
@@ -274,16 +277,16 @@ public class ComboBoxConnector extends AbstractFieldConnector
             if (!getWidget().waitingForFilteringResponse
                     || getWidget().popupOpenerClicked) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
-                        || suggestion.getReplacementString()
-                                .equals(getWidget().tb.getText())
+                        || suggestion.getReplacementString().equals(
+                                getWidget().tb.getText())
                         || oldSuggestionTextMatchTheOldSelection) {
                     // Update text field if we've got a new
                     // selection
                     // Also update if we've got the same text to
                     // retain old text selection behavior
                     // OR if selected item caption is changed.
-                    getWidget()
-                            .setPromptingOff(suggestion.getReplacementString());
+                    getWidget().setPromptingOff(
+                            suggestion.getReplacementString());
                     getWidget().selectedOptionKey = suggestionKey;
                 }
             }
@@ -296,8 +299,8 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     private boolean isWidgetsCurrentSelectionTextInTextBox() {
         return getWidget().currentSuggestion != null
-                && getWidget().currentSuggestion.getReplacementString()
-                        .equals(getWidget().tb.getText());
+                && getWidget().currentSuggestion.getReplacementString().equals(
+                        getWidget().tb.getText());
     }
 
     private void resetSelection() {
@@ -319,8 +322,8 @@ public class ComboBoxConnector extends AbstractFieldConnector
                 // just clear the input if the value has changed from something
                 // else to null
                 if (getWidget().selectedOptionKey != null
-                        || (getWidget().allowNewItem
-                                && !getWidget().tb.getValue().isEmpty())) {
+                        || (getWidget().allowNewItem && !getWidget().tb
+                                .getValue().isEmpty())) {
                     getWidget().tb.setValue("");
                 }
             }
