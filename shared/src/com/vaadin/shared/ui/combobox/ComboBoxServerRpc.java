@@ -23,5 +23,12 @@ import com.vaadin.shared.communication.ServerRpc;
  * @since
  */
 public interface ComboBoxServerRpc extends ServerRpc {
-
+    /**
+     * Create a new item in the combo box. This method can only be used when the
+     * ComboBox is configured to allow the creation of new items by the user.
+     * 
+     * @param itemValue
+     *            user entered string value for the new item
+     */
+    public void createNewItem(String itemValue);
 }
