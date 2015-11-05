@@ -76,7 +76,18 @@ public class ComboBox extends AbstractSelect implements
     }
 
     private ComboBoxServerRpc rpc = new ComboBoxServerRpc() {
-
+        @Override
+        public void createNewItem(String itemValue) {
+            if (isNewItemsAllowed()) {
+                // New option entered (and it is allowed)
+                if (itemValue != null && itemValue.length() > 0) {
+                    getNewItemHandler().addNewItem(itemValue);
+                    // rebuild list
+                    filterstring = null;
+                    prevfilterstring = null;
+                }
+            }
+        }
     };
 
     /**
@@ -733,15 +744,6 @@ public class ComboBox extends AbstractSelect implements
                 filterstring = filterstring.toLowerCase(getLocale());
             }
             requestRepaint();
-        } else if (isNewItemsAllowed()) {
-            // New option entered (and it is allowed)
-            final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
-                getNewItemHandler().addNewItem(newitem);
-                // rebuild list
-                filterstring = null;
-                prevfilterstring = null;
-            }
         }
 
         if (variables.containsKey(FocusEvent.EVENT_ID)) {
