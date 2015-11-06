@@ -31,4 +31,12 @@ public interface ComboBoxServerRpc extends ServerRpc {
      *            user entered string value for the new item
      */
     public void createNewItem(String itemValue);
+
+    /**
+     * Set the current selection.
+     * 
+     * @param item
+     *            the id of a single item or null to deselect the current value
+     */
+    public void setSelectedItem(String item);
 }

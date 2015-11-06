@@ -404,10 +404,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * @since
      */
     public void requestFirstPage() {
+        sendSelection(null);
         getConnection().updateVariable(getConnectorId(), "filter", "", false);
-        getConnection().updateVariable(getConnectorId(), "page", 0, false);
-        getConnection().updateVariable(getConnectorId(), "selected",
-                new String[] {}, immediate);
+        getConnection().updateVariable(getConnectorId(), "page", 0, true);
     }
 
     /**
@@ -440,9 +439,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * @param selection
      *            the current selection
      */
-    public void sendSelection(String[] selection) {
-        getConnection().updateVariable(getConnectorId(), "selected", selection,
-                immediate);
+    public void sendSelection(String selection) {
+        rpc.setSelectedItem(selection);
     }
 
     /**
