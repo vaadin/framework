@@ -1575,7 +1575,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
-            connector.sendSelection(new String[] { selectedOptionKey });
+            connector.sendSelection(selectedOptionKey);
             afterUpdateClientVariables();
 
             // currentPage = -1; // forget the page
