@@ -89,6 +89,20 @@ public class ComboBox extends AbstractSelect implements
                 }
             }
         }
+
+        @Override
+        public void setSelectedItem(String item) {
+            if (item == null) {
+                setValue(null, true);
+            } else {
+                final Object id = itemIdMapper.get(item);
+                if (id != null && id.equals(getNullSelectionItemId())) {
+                    setValue(null, true);
+                } else {
+                    setValue(id, true);
+                }
+            }
+        }
     };
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
@@ -267,8 +281,7 @@ public class ComboBox extends AbstractSelect implements
 
             boolean nullFilteredOut = isFilteringNeeded();
             // null option is needed and not filtered out, even if not on
-            // current
-            // page
+            // current page
             boolean nullOptionVisible = needNullSelectOption
                     && !nullFilteredOut;
 
@@ -734,29 +747,6 @@ public class ComboBox extends AbstractSelect implements
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Not calling super.changeVariables due the history of select
         // component hierarchy
-
-        // Selection change
-        if (variables.containsKey("selected")) {
-            final String[] ka = (String[]) variables.get("selected");
-
-            // Single select mode
-            if (ka.length == 0) {
-
-                // Allows deselection only if the deselected item is visible
-                final Object current = getValue();
-                final Collection<?> visible = getVisibleItemIds();
-                if (visible != null && visible.contains(current)) {
-                    setValue(null, true);
-                }
-            } else {
-                final Object id = itemIdMapper.get(ka[0]);
-                if (id != null && id.equals(getNullSelectionItemId())) {
-                    setValue(null, true);
-                } else {
-                    setValue(id, true);
-                }
-            }
-        }
 
         String newFilter;
         if ((newFilter = (String) variables.get("filter")) != null) {

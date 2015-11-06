@@ -1858,7 +1858,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
-            connector.sendSelection(new String[] { selectedOptionKey });
+            connector.sendSelection(selectedOptionKey);
             afterUpdateClientVariables();
 
             // currentPage = -1; // forget the page
@@ -1870,7 +1870,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             // hard to interpret that new clause added here :-(
             selectedOptionKey = newKey;
             explicitSelectedCaption = null;
-            connector.sendSelection(new String[] { selectedOptionKey });
+            connector.sendSelection(selectedOptionKey);
             afterUpdateClientVariables();
         }
 
