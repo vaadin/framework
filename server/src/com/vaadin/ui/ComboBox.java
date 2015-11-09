@@ -221,6 +221,31 @@ public class ComboBox extends AbstractSelect implements
                 && getFilteringMode() != FilteringMode.OFF;
     }
 
+    /**
+     * A class representing an item in a ComboBox for server to client
+     * communication. This class is for internal use only and subject to change.
+     * 
+     * @since
+     */
+    private static class ComboBoxItem implements Serializable {
+        String key = "";
+        String caption = "";
+        String style = null;
+        Resource icon = null;
+
+        // constructor for a null item
+        public ComboBoxItem() {
+        }
+
+        public ComboBoxItem(String key, String caption, String style,
+                Resource icon) {
+            this.key = key;
+            this.caption = caption;
+            this.style = style;
+            this.icon = icon;
+        }
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         isPainting = true;
@@ -254,8 +279,6 @@ public class ComboBox extends AbstractSelect implements
             // Paints the options and create array of selected id keys
             int keyIndex = 0;
 
-            target.startTag("options");
-
             if (currentPage < 0) {
                 optionRequest = false;
                 currentPage = 0;
@@ -281,14 +304,12 @@ public class ComboBox extends AbstractSelect implements
             final boolean paintNullSelection = needNullSelectOption
                     && currentPage == 0 && !nullFilteredOut;
 
+            List<ComboBoxItem> items = new ArrayList<ComboBoxItem>();
+
             if (paintNullSelection) {
-                target.startTag("so");
-                target.addAttribute("caption", "");
-                target.addAttribute("key", "");
-
-                paintItemStyle(target, null);
-
-                target.endTag("so");
+                ComboBoxItem item = new ComboBoxItem();
+                item.style = getItemStyle(null);
+                items.add(item);
             }
 
             final Iterator<?> i = options.iterator();
@@ -308,24 +329,31 @@ public class ComboBox extends AbstractSelect implements
                 final String key = itemIdMapper.key(id);
                 final String caption = getItemCaption(id);
                 final Resource icon = getItemIcon(id);
+
                 getCaptionChangeListener().addNotifierForItem(id);
 
-                // Paints the option
-                target.startTag("so");
-                if (icon != null) {
-                    target.addAttribute("icon", icon);
-                }
-                target.addAttribute("caption", caption);
-                if (id != null && id.equals(getNullSelectionItemId())) {
-                    target.addAttribute("nullselection", true);
-                }
-                target.addAttribute("key", key);
+                // Prepare to paint the option
+                ComboBoxItem item = new ComboBoxItem(key, caption,
+                        getItemStyle(id), icon);
+                items.add(item);
                 if (keyIndex < selectedKeys.length && isSelected(id)) {
                     // at most one item can be selected at a time
                     selectedKeys[keyIndex++] = key;
                 }
+            }
 
-                paintItemStyle(target, id);
+            // paint the items
+            target.startTag("options");
+            for (ComboBoxItem item : items) {
+                target.startTag("so");
+                if (item.icon != null) {
+                    target.addAttribute("icon", item.icon);
+                }
+                target.addAttribute("caption", item.caption);
+                target.addAttribute("key", item.key);
+                if (item.style != null) {
+                    target.addAttribute("style", item.style);
+                }
 
                 target.endTag("so");
             }
@@ -363,14 +391,11 @@ public class ComboBox extends AbstractSelect implements
 
     }
 
-    private void paintItemStyle(PaintTarget target, Object itemId)
-            throws PaintException {
+    private String getItemStyle(Object itemId) throws PaintException {
         if (itemStyleGenerator != null) {
-            String style = itemStyleGenerator.getStyle(this, itemId);
-            if (style != null && !style.isEmpty()) {
-                target.addAttribute("style", style);
-            }
+            return itemStyleGenerator.getStyle(this, itemId);
         }
+        return null;
     }
 
     /**
