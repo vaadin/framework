@@ -103,6 +103,19 @@ public class ComboBox extends AbstractSelect implements
                 }
             }
         }
+
+        @Override
+        public void requestPage(String filter, int page) {
+            filterstring = filter;
+            if (filterstring != null) {
+                filterstring = filterstring.toLowerCase(getLocale());
+            }
+            currentPage = page;
+
+            // TODO this should trigger a data-only update instead of a full
+            // repaint
+            requestRepaint();
+        }
     };
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
@@ -718,16 +731,7 @@ public class ComboBox extends AbstractSelect implements
         // Not calling super.changeVariables due the history of select
         // component hierarchy
 
-        String newFilter;
-        if ((newFilter = (String) variables.get("filter")) != null) {
-            // this is a filter request
-            currentPage = ((Integer) variables.get("page")).intValue();
-            filterstring = newFilter;
-            if (filterstring != null) {
-                filterstring = filterstring.toLowerCase(getLocale());
-            }
-            requestRepaint();
-        }
+        // all the client to server requests are now handled by RPC
     }
 
     @Override
