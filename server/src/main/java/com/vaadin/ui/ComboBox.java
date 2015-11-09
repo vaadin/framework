@@ -115,8 +115,6 @@ public class ComboBox extends AbstractSelect implements
     // Current page when the user is 'paging' trough options
     private int currentPage = -1;
 
-    private FilteringMode filteringMode = FilteringMode.STARTSWITH;
-
     private String filterstring;
     private String prevfilterstring;
 
@@ -216,7 +214,7 @@ public class ComboBox extends AbstractSelect implements
 
     private boolean isFilteringNeeded() {
         return filterstring != null && filterstring.length() > 0
-                && filteringMode != FilteringMode.OFF;
+                && getFilteringMode() != FilteringMode.OFF;
     }
 
     @Override
@@ -253,8 +251,6 @@ public class ComboBox extends AbstractSelect implements
                 target.addAttribute("suggestionPopupWidth",
                         suggestionPopupWidth);
             }
-
-            target.addAttribute("filteringmode", getFilteringMode().toString());
 
             // Paints the options and create array of selected id keys
             int keyIndex = 0;
@@ -452,7 +448,7 @@ public class ComboBox extends AbstractSelect implements
 
         Filterable filterable = (Filterable) container;
 
-        Filter filter = buildFilter(filterstring, filteringMode);
+        Filter filter = buildFilter(filterstring, getFilteringMode());
 
         // adding and removing filters leads to extraneous item set
         // change events from the underlying container, but the ComboBox does
@@ -707,7 +703,7 @@ public class ComboBox extends AbstractSelect implements
             } else {
                 caption = caption.toLowerCase(getLocale());
             }
-            switch (filteringMode) {
+            switch (getFilteringMode()) {
             case CONTAINS:
                 if (caption.indexOf(filterstring) > -1) {
                     filteredOptions.add(itemId);
@@ -750,12 +746,12 @@ public class ComboBox extends AbstractSelect implements
 
     @Override
     public void setFilteringMode(FilteringMode filteringMode) {
-        this.filteringMode = filteringMode;
+        getState().filteringMode = filteringMode;
     }
 
     @Override
     public FilteringMode getFilteringMode() {
-        return filteringMode;
+        return getState(false).filteringMode;
     }
 
     @Override
@@ -889,7 +885,8 @@ public class ComboBox extends AbstractSelect implements
      * 
      * @see #getPopupWidth()
      * @since 7.7
-     * @param width the width
+     * @param width
+     *            the width
      */
     public void setPopupWidth(String width) {
         suggestionPopupWidth = width;
