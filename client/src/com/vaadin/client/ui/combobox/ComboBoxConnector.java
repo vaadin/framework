@@ -392,8 +392,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     public void requestFirstPage() {
         sendSelection(null);
-        getConnection().updateVariable(getConnectorId(), "filter", "", false);
-        getConnection().updateVariable(getConnectorId(), "page", 0, true);
+        requestPage("", 0);
     }
 
     /**
@@ -410,10 +409,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      *            the page number to get
      */
     public void requestPage(String filter, int page) {
-        getConnection().updateVariable(getConnectorId(), "filter", filter,
-                false);
-        getConnection().updateVariable(getConnectorId(), "page", page,
-                immediate);
+        rpc.requestPage(filter, page);
     }
 
     /**

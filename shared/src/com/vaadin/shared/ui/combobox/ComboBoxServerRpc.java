@@ -39,4 +39,15 @@ public interface ComboBoxServerRpc extends ServerRpc {
      *            the id of a single item or null to deselect the current value
      */
     public void setSelectedItem(String item);
+
+    /**
+     * Request the server to send a page of the item list.
+     * 
+     * @param filter
+     *            filter string interpreted according to the current filtering
+     *            mode
+     * @param page
+     *            zero based page number
+     */
+    public void requestPage(String filter, int page);
 }
