@@ -39,7 +39,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
         ComboBox componentContainerSelect = new ComboBox("Container") {
             {
-                pageLength = 0;
+                setPageLength(0);
             }
         };
         componentContainerSelect.setId("componentContainerSelect");

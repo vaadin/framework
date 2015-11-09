@@ -1454,9 +1454,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public ComboBoxConnector connector;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String paintableId;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public int currentPage;
 
     /**
