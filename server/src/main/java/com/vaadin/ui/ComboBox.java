@@ -112,11 +112,6 @@ public class ComboBox extends AbstractSelect implements
         }
     };
 
-    /**
-     * Holds value of property pageLength. 0 disables paging.
-     */
-    protected int pageLength = 10;
-
     // Current page when the user is 'paging' trough options
     private int currentPage = -1;
 
@@ -231,11 +226,6 @@ public class ComboBox extends AbstractSelect implements
             // clear caption change listeners
             getCaptionChangeListener().clear();
 
-            // The tab ordering number
-            if (getTabIndex() != 0) {
-                target.addAttribute("tabindex", getTabIndex());
-            }
-
             // If the field is modified, but not committed, set modified
             // attribute
             if (isModified()) {
@@ -258,8 +248,6 @@ public class ComboBox extends AbstractSelect implements
             // Constructs selected keys array
             String[] selectedKeys = new String[(getValue() == null
                     && getNullSelectionItemId() == null ? 0 : 1)];
-
-            target.addAttribute("pagelength", pageLength);
 
             if (suggestionPopupWidth != null) {
                 target.addAttribute("suggestionPopupWidth",
@@ -449,7 +437,7 @@ public class ComboBox extends AbstractSelect implements
     protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
         Container container = getContainerDataSource();
 
-        if (pageLength == 0 && !isFilteringNeeded()) {
+        if (getPageLength() == 0 && !isFilteringNeeded()) {
             // no paging or filtering: return all items
             filteredSize = container.size();
             assert filteredSize >= 0;
@@ -571,7 +559,7 @@ public class ComboBox extends AbstractSelect implements
      */
     private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
 
-        if (pageLength != 0 && options.size() > pageLength) {
+        if (getPageLength() != 0 && options.size() > getPageLength()) {
 
             int indexToEnsureInView = -1;
 
@@ -616,7 +604,7 @@ public class ComboBox extends AbstractSelect implements
             int size) {
         // Not all options are visible, find out which ones are on the
         // current "page".
-        int first = currentPage * pageLength;
+        int first = currentPage * getPageLength();
         if (needNullSelectOption && currentPage > 0) {
             first--;
         }
@@ -643,7 +631,7 @@ public class ComboBox extends AbstractSelect implements
     private int getLastItemIndexOnCurrentPage(boolean needNullSelectOption,
             int size, int first) {
         // page length usable for non-null items
-        int effectivePageLength = pageLength
+        int effectivePageLength = getPageLength()
                 - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
         return Math.min(size - 1, first + effectivePageLength - 1);
     }
@@ -671,12 +659,12 @@ public class ComboBox extends AbstractSelect implements
             int indexToEnsureInView, int size) {
         if (indexToEnsureInView != -1) {
             int newPage = (indexToEnsureInView + (needNullSelectOption ? 1 : 0))
-                    / pageLength;
+                    / getPageLength();
             page = newPage;
         }
         // adjust the current page if beyond the end of the list
-        if (page * pageLength > size) {
-            page = (size + (needNullSelectOption ? 1 : 0)) / pageLength;
+        if (page * getPageLength() > size) {
+            page = (size + (needNullSelectOption ? 1 : 0)) / getPageLength();
         }
         return page;
     }
@@ -870,7 +858,7 @@ public class ComboBox extends AbstractSelect implements
      * @return the pageLength
      */
     public int getPageLength() {
-        return pageLength;
+        return getState(false).pageLength;
     }
 
     /**
@@ -891,8 +879,7 @@ public class ComboBox extends AbstractSelect implements
      *            the pageLength to set
      */
     public void setPageLength(int pageLength) {
-        this.pageLength = pageLength;
-        markAsDirty();
+        getState().pageLength = pageLength;
     }
 
     /**

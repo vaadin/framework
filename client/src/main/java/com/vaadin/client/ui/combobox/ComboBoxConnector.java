@@ -81,6 +81,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().inputPrompt = "";
         }
 
+        getWidget().pageLength = getState().pageLength;
+
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
     }
 
@@ -92,9 +94,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Save details
-        getWidget().paintableId = uidl.getId();
-
         if (!isRealUpdate(uidl)) {
             return;
         }
