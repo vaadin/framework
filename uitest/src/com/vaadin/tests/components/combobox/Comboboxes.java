@@ -78,7 +78,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
     public class PageLength0ComboBox extends ComboBox {
         public PageLength0ComboBox() {
             super();
-            pageLength = 0;
+            setPageLength(0);
         }
     }
 
