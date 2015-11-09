@@ -115,7 +115,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().suggestionPopupWidth = null;
         }
 
-        getWidget().suggestionPopup.updateStyleNames(uidl, getState());
+        getWidget().suggestionPopup.updateStyleNames(getState());
 
         getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
         getWidget().lastNewItemString = null;
@@ -131,8 +131,17 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
+            String key = optionUidl.getStringAttribute("key");
+            String caption = optionUidl.getStringAttribute("caption");
+            String style = optionUidl.getStringAttribute("style");
+
+            String untranslatedIconUri = null;
+            if (optionUidl.hasAttribute("icon")) {
+                untranslatedIconUri = optionUidl.getStringAttribute("icon");
+            }
+
             final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
-                    optionUidl);
+                    key, caption, style, untranslatedIconUri);
             newSuggestions.add(suggestion);
         }
 
