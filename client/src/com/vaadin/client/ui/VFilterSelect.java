@@ -67,7 +67,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
@@ -107,17 +106,22 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Constructor
          * 
-         * @param uidl
-         *            The UIDL recieved from the server
+         * @param key
+         *            item key, empty string for a special null item not in
+         *            container
+         * @param caption
+         *            item caption
+         * @param style
+         *            item style name, can be empty string
+         * @param untranslatedIconUri
+         *            icon URI or null
          */
-        public FilterSelectSuggestion(UIDL uidl) {
-            key = uidl.getStringAttribute("key");
-            caption = uidl.getStringAttribute("caption");
-            style = uidl.getStringAttribute("style");
-
-            if (uidl.hasAttribute("icon")) {
-                untranslatedIconUri = uidl.getStringAttribute("icon");
-            }
+        public FilterSelectSuggestion(String key, String caption, String style,
+                String untranslatedIconUri) {
+            this.key = key;
+            this.caption = caption;
+            this.style = style;
+            this.untranslatedIconUri = untranslatedIconUri;
         }
 
         /**
@@ -796,13 +800,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Updates style names in suggestion popup to help theme building.
          * 
-         * @param uidl
-         *            UIDL for the whole combo box
          * @param componentState
          *            shared state of the combo box
          */
-        public void updateStyleNames(UIDL uidl,
-                AbstractComponentState componentState) {
+        public void updateStyleNames(AbstractComponentState componentState) {
             debug("VFS.SP: updateStyleNames()");
             setStyleName(VFilterSelect.this.getStylePrimaryName()
                     + "-suggestpopup");
