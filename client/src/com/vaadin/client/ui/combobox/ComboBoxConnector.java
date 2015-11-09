@@ -36,7 +36,6 @@ import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
@@ -82,6 +81,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().pageLength = getState().pageLength;
 
+        getWidget().filteringmode = getState().filteringMode;
+
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
     }
 
@@ -99,11 +100,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
-
-        if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = FilteringMode.valueOf(uidl
-                    .getStringAttribute("filteringmode"));
-        }
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 

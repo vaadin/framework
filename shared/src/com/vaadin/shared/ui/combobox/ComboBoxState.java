@@ -48,4 +48,11 @@ public class ComboBoxState extends AbstractSelectState {
      * Number of items to show per page or 0 to disable paging.
      */
     public int pageLength = 10;
+
+    /**
+     * Current filtering mode (look for match of the user typed string in the
+     * beginning of the item caption or anywhere in the item caption).
+     */
+    public FilteringMode filteringMode = FilteringMode.STARTSWITH;
+
 }
