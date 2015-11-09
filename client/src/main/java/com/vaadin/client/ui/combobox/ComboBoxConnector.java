@@ -34,10 +34,8 @@ import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
@@ -83,6 +81,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().pageLength = getState().pageLength;
 
+        getWidget().filteringmode = getState().filteringMode;
+
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
     }
 
@@ -101,21 +101,12 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
 
-        if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = FilteringMode.valueOf(uidl
-                    .getStringAttribute("filteringmode"));
-        }
-
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
         getWidget().nullSelectItem = uidl.hasAttribute("nullselectitem")
                 && uidl.getBooleanAttribute("nullselectitem");
 
         getWidget().currentPage = uidl.getIntVariable("page");
-
-        if (uidl.hasAttribute("pagelength")) {
-            getWidget().pageLength = uidl.getIntAttribute("pagelength");
-        }
 
         if (uidl.hasAttribute("suggestionPopupWidth")) {
             getWidget().suggestionPopupWidth = uidl
