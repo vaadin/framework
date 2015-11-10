@@ -1146,7 +1146,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // null is not visible on pages != 0, and not visible when
                 // filtering: handle separately
                 connector.requestFirstPage();
-                afterUpdateClientVariables();
 
                 suggestionPopup.hide();
                 return;
@@ -1195,7 +1194,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                      */
                     lastNewItemString = enteredItemValue;
                     connector.sendNewItem(enteredItemValue);
-                    afterUpdateClientVariables();
                 }
             } else if (item != null
                     && !"".equals(lastFilter)
@@ -1480,14 +1478,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public String lastFilter = "";
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public enum Select {
-        NONE, FIRST, LAST
-    }
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public Select selectPopupItemWhenResponseIsReceived = Select.NONE;
-
     /**
      * The current suggestion selected from the dropdown. This is one of the
      * values in currentSuggestions except when filtering, in this case
@@ -1736,7 +1726,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         setWaitingForFilteringResponse(true);
         connector.requestPage(filter, page);
-        afterUpdateClientVariables();
 
         lastFilter = filter;
         currentPage = page;
@@ -1857,7 +1846,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
             connector.sendSelection(selectedOptionKey);
-            afterUpdateClientVariables();
 
             // currentPage = -1; // forget the page
         }
@@ -1869,7 +1857,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             selectedOptionKey = newKey;
             explicitSelectedCaption = null;
             connector.sendSelection(selectedOptionKey);
-            afterUpdateClientVariables();
         }
 
         suggestionPopup.hide();
@@ -2117,7 +2104,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectPrevPage() {
         if (currentPage > 0) {
             filterOptions(currentPage - 1, lastFilter);
-            setSelectPopupItemWhenResponseIsReceived(Select.LAST);
+            connector.setNavigateAfterPageReceivedCallback(new Runnable() {
+                @Override
+                public void run() {
+                    suggestionPopup.selectLastItem();
+                }
+            });
         }
     }
 
@@ -2127,7 +2119,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectNextPage() {
         if (hasNextPage()) {
             filterOptions(currentPage + 1, lastFilter);
-            setSelectPopupItemWhenResponseIsReceived(Select.FIRST);
+            connector.setNavigateAfterPageReceivedCallback(new Runnable() {
+                @Override
+                public void run() {
+                    suggestionPopup.selectFirstItem();
+                }
+            });
         }
     }
 
@@ -2311,9 +2308,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         addStyleDependentName("focus");
 
-        if (connector.sendFocusEvent()) {
-            afterUpdateClientVariables();
-        }
+        connector.sendFocusEvent();
 
         connector.getConnection().getVTooltip()
                 .showAssistive(connector.getTooltipInfo(getElement()));
@@ -2378,9 +2373,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         removeStyleDependentName("focus");
 
-        if (connector.sendBlurEvent()) {
-            afterUpdateClientVariables();
-        }
+        connector.sendBlurEvent();
     }
 
     /*
@@ -2560,16 +2553,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         AriaHelper.bindCaption(tb, captionElement);
     }
 
-    /*
-     * Anything that should be set after the client updates the server.
-     */
-    private void afterUpdateClientVariables() {
-        // We need this here to be consistent with the all the calls.
-        // Then set your specific selection type only after
-        // client.updateVariable() method call.
-        setSelectPopupItemWhenResponseIsReceived(Select.NONE);
-    }
-
     @Override
     public boolean isWorkPending() {
         return isWaitingForFilteringResponse()
@@ -2647,28 +2630,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public void setUpdateSelectionWhenReponseIsReceived(
             boolean updateSelectionWhenReponseIsReceived) {
         this.updateSelectionWhenReponseIsReceived = updateSelectionWhenReponseIsReceived;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @return enum Select indicating which item (if any) to select when a new
-     *         page of data is received
-     */
-    public Select getSelectPopupItemWhenResponseIsReceived() {
-        return selectPopupItemWhenResponseIsReceived;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @param selectPopupItemWhenResponseIsReceived
-     *            enum Select indicating which item (if any) to select when a
-     *            new page of data is received
-     */
-    public void setSelectPopupItemWhenResponseIsReceived(
-            Select selectPopupItemWhenResponseIsReceived) {
-        this.selectPopupItemWhenResponseIsReceived = selectPopupItemWhenResponseIsReceived;
     }
 
     /**
