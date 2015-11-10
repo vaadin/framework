@@ -54,6 +54,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     private boolean immediate;
 
+    private Runnable pageChangeCallback;
+
     @Override
     protected void init() {
         super.init();
@@ -214,16 +216,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
             getWidget().setWaitingForFilteringResponse(false);
 
-            if (!getWidget().isPopupOpenerClicked()
-                    && getWidget().getSelectPopupItemWhenResponseIsReceived() != VFilterSelect.Select.NONE) {
-
-                // we're paging w/ arrows
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        navigateItemAfterPageChange();
-                    }
-                });
+            if (!getWidget().isPopupOpenerClicked()) {
+                navigateItemAfterPageChange();
             }
 
             if (getWidget().isUpdateSelectionWhenReponseIsReceived()) {
@@ -263,17 +257,21 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * #11333
      */
     private void navigateItemAfterPageChange() {
-        if (getWidget().getSelectPopupItemWhenResponseIsReceived() == VFilterSelect.Select.LAST) {
-            getWidget().suggestionPopup.selectLastItem();
-        } else {
-            getWidget().suggestionPopup.selectFirstItem();
-        }
+        if (pageChangeCallback != null) {
+            // pageChangeCallback is not reset here but after any server request
+            // in case you are in between two requests both changing the page
+            // back and forth
 
-        // If you're in between 2 requests both changing the page back and
-        // forth, you don't want this here, instead you need it before any
-        // other request.
-        // getWidget().selectPopupItemWhenResponseIsReceived =
-        // VFilterSelect.Select.NONE; // reset
+            // we're paging w/ arrows
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    if (pageChangeCallback != null) {
+                        pageChangeCallback.run();
+                    }
+                }
+            });
+        }
     }
 
     private void performSelection(String selectedKey) {
@@ -384,6 +382,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     public void sendNewItem(String itemValue) {
         rpc.createNewItem(itemValue);
+        afterSendRequestToServer();
     }
 
     /**
@@ -415,6 +414,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     public void requestPage(String filter, int page) {
         rpc.requestPage(filter, page);
+        afterSendRequestToServer();
     }
 
     /**
@@ -429,6 +429,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     public void sendSelection(String selection) {
         rpc.setSelectedItem(selection);
+        afterSendRequestToServer();
     }
 
     /**
@@ -441,15 +442,13 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * versions.
      * 
      * @since
-     * @return true if an event was sent (there are registered listeners), false
-     *         otherwise
      */
-    public boolean sendFocusEvent() {
+    public void sendFocusEvent() {
         boolean registeredListeners = hasEventListener(EventId.FOCUS);
         if (registeredListeners) {
             focusAndBlurRpc.focus();
+            afterSendRequestToServer();
         }
-        return registeredListeners;
     }
 
     /**
@@ -462,15 +461,36 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * versions.
      * 
      * @since
-     * @return true if an event was sent (there are registered listeners), false
-     *         otherwise
      */
-    public boolean sendBlurEvent() {
+    public void sendBlurEvent() {
         boolean registeredListeners = hasEventListener(EventId.BLUR);
         if (registeredListeners) {
             focusAndBlurRpc.blur();
+            afterSendRequestToServer();
         }
-        return registeredListeners;
+    }
+
+    /**
+     * Set a callback that is invoked when a page change occurs if there have
+     * not been intervening requests to the server. The callback is reset when
+     * any additional request is made to the server.
+     * 
+     * @since
+     * @param callback
+     */
+    public void setNavigateAfterPageReceivedCallback(Runnable callback) {
+        pageChangeCallback = callback;
+
+    }
+
+    /*
+     * Anything that should be set after the client updates the server.
+     */
+    private void afterSendRequestToServer() {
+        // We need this here to be consistent with the all the calls.
+        // Then set your specific selection type only after
+        // a server request method call.
+        pageChangeCallback = null;
     }
 
 }
