@@ -1467,10 +1467,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public String selectedOptionKey;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean waitingForFilteringResponse = false;
+    private boolean waitingForFilteringResponse = false;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean updateSelectionWhenReponseIsReceived = false;
+    private boolean updateSelectionWhenReponseIsReceived = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
@@ -1516,15 +1516,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean prompting = false;
-
-    /**
-     * Set true when popupopened has been clicked. Cleared on each UIDL-update.
-     * This handles the special case where are not filtering yet and the
-     * selected value has changed on the server-side. See #2119
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public boolean popupOpenerClicked;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int suggestionPopupMinWidth = 0;
@@ -2215,7 +2206,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 boolean immediate = focused
                         || !connector.hasEventListener(EventId.FOCUS);
                 filterOptions(-1, "", immediate);
-                setPopupOpenerClicked(true);
+                connector.popupOpenerClicked();
                 lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
@@ -2630,25 +2621,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public void setUpdateSelectionWhenReponseIsReceived(
             boolean updateSelectionWhenReponseIsReceived) {
         this.updateSelectionWhenReponseIsReceived = updateSelectionWhenReponseIsReceived;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @return true if the user has requested opening the popup
-     */
-    public boolean isPopupOpenerClicked() {
-        return popupOpenerClicked;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @param popupOpenerClicked
-     *            true if the user has requested opening the popup
-     */
-    public void setPopupOpenerClicked(boolean popupOpenerClicked) {
-        this.popupOpenerClicked = popupOpenerClicked;
     }
 
 }
