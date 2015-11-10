@@ -108,10 +108,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().currentPage = uidl.getIntVariable("page");
 
-        if (uidl.hasAttribute("pagelength")) {
-            getWidget().pageLength = uidl.getIntAttribute("pagelength");
-        }
-
         getWidget().suggestionPopup.updateStyleNames(getState());
 
         getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
