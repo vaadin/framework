@@ -56,6 +56,15 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     private Runnable pageChangeCallback;
 
+    /**
+     * Set true when popupopened has been clicked. Cleared on each UIDL-update.
+     * This handles the special case where are not filtering yet and the
+     * selected value has changed on the server-side. See #2119
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    private boolean popupOpenerClicked;
+
     @Override
     protected void init() {
         super.init();
@@ -223,7 +232,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
             getWidget().setWaitingForFilteringResponse(false);
 
-            if (!getWidget().isPopupOpenerClicked()) {
+            if (!popupOpenerClicked) {
                 navigateItemAfterPageChange();
             }
 
@@ -236,7 +245,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // Calculate minimum textarea width
         getWidget().updateSuggestionPopupMinWidth();
 
-        getWidget().setPopupOpenerClicked(false);
+        popupOpenerClicked = false;
 
         /*
          * if this is our first time we need to recalculate the root width.
@@ -289,7 +298,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 continue;
             }
             if (!getWidget().isWaitingForFilteringResponse()
-                    || getWidget().isPopupOpenerClicked()) {
+                    || popupOpenerClicked) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
                         || suggestion.getReplacementString().equals(
                                 getWidget().tb.getText())
@@ -318,8 +327,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     }
 
     private void resetSelection() {
-        if (!getWidget().isWaitingForFilteringResponse()
-                || getWidget().isPopupOpenerClicked()) {
+        if (!getWidget().isWaitingForFilteringResponse() || popupOpenerClicked) {
             // select nulled
             if (!getWidget().focused) {
                 /*
@@ -498,6 +506,20 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // Then set your specific selection type only after
         // a server request method call.
         pageChangeCallback = null;
+    }
+
+    /**
+     * Record that the popup opener has been clicked and the popup should be
+     * opened on the next request.
+     *
+     * This handles the special case where are not filtering yet and the
+     * selected value has changed on the server-side. See #2119. The flag is
+     * cleared on each UIDL reply.
+     *
+     * @since
+     */
+    public void popupOpenerClicked() {
+        popupOpenerClicked = true;
     }
 
 }
