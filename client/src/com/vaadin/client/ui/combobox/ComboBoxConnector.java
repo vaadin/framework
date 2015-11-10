@@ -152,7 +152,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
             getWidget().currentSuggestions.clear();
 
-            if (!getWidget().waitingForFilteringResponse) {
+            if (!getWidget().isWaitingForFilteringResponse()) {
                 /*
                  * Clear the current suggestions as the server response always
                  * includes the new ones. Exception is when filtering, then we
@@ -193,7 +193,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             // started.
             if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
                 performSelection(selectedKeys[0]);
-            } else if (!getWidget().waitingForFilteringResponse
+            } else if (!getWidget().isWaitingForFilteringResponse()
                     && uidl.hasAttribute("selectedCaption")) {
                 // scrolling to correct page is disabled, caption is passed as a
                 // special parameter
@@ -204,7 +204,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
         }
 
-        if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
+        if ((getWidget().isWaitingForFilteringResponse() && getWidget().lastFilter
                 .toLowerCase().equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
 
@@ -212,10 +212,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                     getWidget().currentSuggestions, getWidget().currentPage,
                     getWidget().totalMatches);
 
-            getWidget().waitingForFilteringResponse = false;
+            getWidget().setWaitingForFilteringResponse(false);
 
-            if (!getWidget().popupOpenerClicked
-                    && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
+            if (!getWidget().isPopupOpenerClicked()
+                    && getWidget().getSelectPopupItemWhenResponseIsReceived() != VFilterSelect.Select.NONE) {
 
                 // we're paging w/ arrows
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -226,7 +226,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 });
             }
 
-            if (getWidget().updateSelectionWhenReponseIsReceived) {
+            if (getWidget().isUpdateSelectionWhenReponseIsReceived()) {
                 getWidget().suggestionPopup.menu
                         .doPostFilterSelectedItemAction();
             }
@@ -235,7 +235,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // Calculate minimum textarea width
         getWidget().updateSuggestionPopupMinWidth();
 
-        getWidget().popupOpenerClicked = false;
+        getWidget().setPopupOpenerClicked(false);
 
         /*
          * if this is our first time we need to recalculate the root width.
@@ -263,7 +263,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * #11333
      */
     private void navigateItemAfterPageChange() {
-        if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
+        if (getWidget().getSelectPopupItemWhenResponseIsReceived() == VFilterSelect.Select.LAST) {
             getWidget().suggestionPopup.selectLastItem();
         } else {
             getWidget().suggestionPopup.selectFirstItem();
@@ -283,8 +283,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             if (!suggestionKey.equals(selectedKey)) {
                 continue;
             }
-            if (!getWidget().waitingForFilteringResponse
-                    || getWidget().popupOpenerClicked) {
+            if (!getWidget().isWaitingForFilteringResponse()
+                    || getWidget().isPopupOpenerClicked()) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
                         || suggestion.getReplacementString().equals(
                                 getWidget().tb.getText())
@@ -313,8 +313,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     }
 
     private void resetSelection() {
-        if (!getWidget().waitingForFilteringResponse
-                || getWidget().popupOpenerClicked) {
+        if (!getWidget().isWaitingForFilteringResponse()
+                || getWidget().isPopupOpenerClicked()) {
             // select nulled
             if (!getWidget().focused) {
                 /*

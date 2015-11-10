@@ -557,7 +557,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             public void run() {
                 debug("VFS.SP.LPS: run()");
                 if (pagesToScroll != 0) {
-                    if (!waitingForFilteringResponse) {
+                    if (!isWaitingForFilteringResponse()) {
                         /*
                          * Avoid scrolling while we are waiting for a response
                          * because otherwise the waiting flag will be reset in
@@ -947,8 +947,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
-            updateSelectionWhenReponseIsReceived = waitingForFilteringResponse;
-            if (!waitingForFilteringResponse) {
+            setUpdateSelectionWhenReponseIsReceived(isWaitingForFilteringResponse());
+            if (!isWaitingForFilteringResponse()) {
                 doPostFilterSelectedItemAction();
             }
         }
@@ -961,7 +961,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
 
-            updateSelectionWhenReponseIsReceived = false;
+            setUpdateSelectionWhenReponseIsReceived(false);
 
             // check for exact match in menu
             int p = getItems().size();
@@ -1507,7 +1507,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
-        waitingForFilteringResponse = true;
+        setWaitingForFilteringResponse(true);
         connector.requestPage(filter, page);
         afterUpdateClientVariables();
 
@@ -1607,7 +1607,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS: onSuggestionSelected(" + suggestion.caption + ": "
                     + suggestion.key + ")");
         }
-        updateSelectionWhenReponseIsReceived = false;
+        setUpdateSelectionWhenReponseIsReceived(false);
 
         currentSuggestion = suggestion;
         String newKey;
@@ -1728,7 +1728,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (enableDebug) {
                 debug("VFS: key down: " + keyCode);
             }
-            if (waitingForFilteringResponse
+            if (isWaitingForFilteringResponse()
                     && navigationKeyCodes.contains(keyCode)) {
                 /*
                  * Keyboard navigation events should not be handled while we are
@@ -1879,7 +1879,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectPrevPage() {
         if (currentPage > 0) {
             filterOptions(currentPage - 1, lastFilter);
-            selectPopupItemWhenResponseIsReceived = Select.LAST;
+            setSelectPopupItemWhenResponseIsReceived(Select.LAST);
         }
     }
 
@@ -1889,7 +1889,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectNextPage() {
         if (hasNextPage()) {
             filterOptions(currentPage + 1, lastFilter);
-            selectPopupItemWhenResponseIsReceived = Select.FIRST;
+            setSelectPopupItemWhenResponseIsReceived(Select.FIRST);
         }
     }
 
@@ -1980,7 +1980,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 boolean immediate = focused
                         || !connector.hasEventListener(EventId.FOCUS);
                 filterOptions(-1, "", immediate);
-                popupOpenerClicked = true;
+                setPopupOpenerClicked(true);
                 lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
@@ -2323,13 +2323,102 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         // We need this here to be consistent with the all the calls.
         // Then set your specific selection type only after
         // client.updateVariable() method call.
-        selectPopupItemWhenResponseIsReceived = Select.NONE;
+        setSelectPopupItemWhenResponseIsReceived(Select.NONE);
     }
 
     @Override
     public boolean isWorkPending() {
-        return waitingForFilteringResponse
+        return isWaitingForFilteringResponse()
                 || suggestionPopup.lazyPageScroller.isRunning();
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @return true if the combo box is waiting for a reply from the server with
+     *         a new page of data, false otherwise
+     */
+    public boolean isWaitingForFilteringResponse() {
+        return waitingForFilteringResponse;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @param waitingForFilteringResponse
+     *            true to indicate that the combo box is waiting for a new page
+     *            of items from the server
+     */
+    public void setWaitingForFilteringResponse(
+            boolean waitingForFilteringResponse) {
+        this.waitingForFilteringResponse = waitingForFilteringResponse;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * This flag should not be set when not waiting for a reply from the server.
+     * 
+     * @return true if the selection should be updated when a server response is
+     *         received
+     */
+    public boolean isUpdateSelectionWhenReponseIsReceived() {
+        return updateSelectionWhenReponseIsReceived;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * This flag should not be set when not waiting for a reply from the server.
+     * 
+     * @param updateSelectionWhenReponseIsReceived
+     *            true if the selection should be updated when a server response
+     *            is received
+     */
+    public void setUpdateSelectionWhenReponseIsReceived(
+            boolean updateSelectionWhenReponseIsReceived) {
+        this.updateSelectionWhenReponseIsReceived = updateSelectionWhenReponseIsReceived;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @return enum Select indicating which item (if any) to select when a new
+     *         page of data is received
+     */
+    public Select getSelectPopupItemWhenResponseIsReceived() {
+        return selectPopupItemWhenResponseIsReceived;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @param selectPopupItemWhenResponseIsReceived
+     *            enum Select indicating which item (if any) to select when a
+     *            new page of data is received
+     */
+    public void setSelectPopupItemWhenResponseIsReceived(
+            Select selectPopupItemWhenResponseIsReceived) {
+        this.selectPopupItemWhenResponseIsReceived = selectPopupItemWhenResponseIsReceived;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @return true if the user has requested opening the popup
+     */
+    public boolean isPopupOpenerClicked() {
+        return popupOpenerClicked;
+    }
+
+    /**
+     * For internal use only - this method will be removed in the future.
+     * 
+     * @param popupOpenerClicked
+     *            true if the user has requested opening the popup
+     */
+    public void setPopupOpenerClicked(boolean popupOpenerClicked) {
+        this.popupOpenerClicked = popupOpenerClicked;
     }
 
 }
