@@ -302,7 +302,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
                     // "Scroll" if change exceeds item height
                     while (Math.abs(deltaSum) >= SCROLL_UNIT_PX) {
-                        if (!filterSelect.waitingForFilteringResponse) {
+                        if (!filterSelect.dataReceivedHandler
+                                .isWaitingForFilteringResponse()) {
                             // Move selection if page flip is not in progress
                             if (deltaSum < 0) {
                                 filterSelect.suggestionPopup.selectPrevItem();
@@ -609,7 +610,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             public void run() {
                 debug("VFS.SP.LPS: run()");
                 if (pagesToScroll != 0) {
-                    if (!isWaitingForFilteringResponse()) {
+                    if (!dataReceivedHandler.isWaitingForFilteringResponse()) {
                         /*
                          * Avoid scrolling while we are waiting for a response
                          * because otherwise the waiting flag will be reset in
@@ -1151,20 +1152,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
-            doPostFilterWhenReady();
-        }
-
-        /**
-         * Perform the post-filter action either now (if not waiting for a
-         * server response) or when a response is received.
-         */
-        private void doPostFilterWhenReady() {
-            if (isWaitingForFilteringResponse()) {
-                dataReceivedHandler.setUpdateOnDataReceived(true);
-            } else {
-                dataReceivedHandler.setUpdateOnDataReceived(false);
-                doPostFilterSelectedItemAction();
-            }
+            dataReceivedHandler.doPostFilterWhenReady();
         }
 
         /**
@@ -1417,6 +1405,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         private boolean popupOpenerClicked = false;
         private boolean updateOnDataReceived = false;
+        /** For internal use only. May be removed or replaced in the future. */
+        private boolean waitingForFilteringResponse = false;
 
         /**
          * Called by the connector when new data for the last requested filter
@@ -1426,7 +1416,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
 
-            setWaitingForFilteringResponse(false);
+            waitingForFilteringResponse = false;
 
             if (!popupOpenerClicked) {
                 navigateItemAfterPageChange();
@@ -1505,8 +1495,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return popupOpenerClicked;
         }
 
-        public void setUpdateOnDataReceived(boolean update) {
-            updateOnDataReceived = update;
+        /**
+         * Cancel a pending request to perform post-filtering actions.
+         */
+        private void cancelPendingPostFiltering() {
+            updateOnDataReceived = false;
         }
 
         /**
@@ -1515,6 +1508,37 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void serverReplyHandled() {
             popupOpenerClicked = false;
+        }
+
+        /**
+         * For internal use only - this method will be removed in the future.
+         * 
+         * @return true if the combo box is waiting for a reply from the server
+         *         with a new page of data, false otherwise
+         */
+        public boolean isWaitingForFilteringResponse() {
+            return waitingForFilteringResponse;
+        }
+
+        /**
+         * Set a flag that filtering of options is pending a response from the
+         * server.
+         */
+        private void startWaitingForFilteringResponse() {
+            waitingForFilteringResponse = true;
+        }
+
+        /**
+         * Perform the post-filter action either now (if not waiting for a
+         * server response) or when a response is received.
+         */
+        private void doPostFilterWhenReady() {
+            if (isWaitingForFilteringResponse()) {
+                updateOnDataReceived = true;
+            } else {
+                updateOnDataReceived = false;
+                suggestionPopup.menu.doPostFilterSelectedItemAction();
+            }
         }
     }
 
@@ -1595,9 +1619,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public String selectedOptionKey;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    private boolean waitingForFilteringResponse = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
@@ -1844,7 +1865,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
-        setWaitingForFilteringResponse(true);
+        dataReceivedHandler.startWaitingForFilteringResponse();
         connector.requestPage(filter, page);
 
         lastFilter = filter;
@@ -1943,7 +1964,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS: onSuggestionSelected(" + suggestion.caption + ": "
                     + suggestion.key + ")");
         }
-        dataReceivedHandler.setUpdateOnDataReceived(false);
+        dataReceivedHandler.cancelPendingPostFiltering();
 
         currentSuggestion = suggestion;
         String newKey;
@@ -2063,7 +2084,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (enableDebug) {
                 debug("VFS: key down: " + keyCode);
             }
-            if (isWaitingForFilteringResponse()
+            if (dataReceivedHandler.isWaitingForFilteringResponse()
                     && navigationKeyCodes.contains(keyCode)) {
                 /*
                  * Keyboard navigation events should not be handled while we are
@@ -2659,30 +2680,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public boolean isWorkPending() {
-        return isWaitingForFilteringResponse()
+        return dataReceivedHandler.isWaitingForFilteringResponse()
                 || suggestionPopup.lazyPageScroller.isRunning();
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @return true if the combo box is waiting for a reply from the server with
-     *         a new page of data, false otherwise
-     */
-    public boolean isWaitingForFilteringResponse() {
-        return waitingForFilteringResponse;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * @param waitingForFilteringResponse
-     *            true to indicate that the combo box is waiting for a new page
-     *            of items from the server
-     */
-    public void setWaitingForFilteringResponse(
-            boolean waitingForFilteringResponse) {
-        this.waitingForFilteringResponse = waitingForFilteringResponse;
     }
 
     /**
