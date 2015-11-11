@@ -510,7 +510,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         /**
          * Each text change event in the UI causes the event to be communicated
          * to the application after a timeout. The length of the timeout can be
-         * controlled with {@link TextField#setInputEventTimeout(int)}. Only the
+         * controlled with {@link TextField#setTextChangeTimeout(int)}. Only the
          * last input event is reported to the server side if several text
          * change events happen during the timeout.
          * <p>
@@ -523,7 +523,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         /**
          * An event is triggered when there is a pause of text modifications.
          * The length of the pause can be modified with
-         * {@link TextField#setInputEventTimeout(int)}. Like with the
+         * {@link TextField#setTextChangeTimeout(int)}. Like with the
          * {@link #TIMEOUT} mode, an event is forced before
          * {@link ValueChangeEvent}s, even if the user did not keep a pause
          * while entering the text.
