@@ -1488,14 +1488,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         /**
-         * Returns true if the popup opener has been clicked. This method is for
-         * internal use only and will most likely be removed in the future.
-         */
-        public boolean isPopupOpenerClicked() {
-            return popupOpenerClicked;
-        }
-
-        /**
          * Cancel a pending request to perform post-filtering actions.
          */
         private void cancelPendingPostFiltering() {
@@ -1540,6 +1532,46 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
         }
+
+        /**
+         * Perform selection (if appropriate) based on a reply from the server.
+         * When this method is called, the suggestions have been reset if new
+         * ones (different from the previous list) were received from the
+         * server.
+         * 
+         * @param selectedKey
+         *            new selected key or null if none given by the server
+         * @param selectedCaption
+         *            new selected item caption if sent by the server or null -
+         *            this is used when the selected item is not on the current
+         *            page
+         * @param oldSuggestionTextMatchTheOldSelection
+         *            true if the old filtering text box contents matched
+         *            exactly the old selection
+         */
+        public void updateSelectionFromServer(String selectedKey,
+                String selectedCaption,
+                boolean oldSuggestionTextMatchTheOldSelection) {
+            // when filtering with empty filter, server sets the selected key
+            // to "", which we don't select here. Otherwise we won't be able to
+            // reset back to the item that was selected before filtering
+            // started.
+            if (selectedKey != null && !selectedKey.equals("")) {
+                performSelection(selectedKey,
+                        oldSuggestionTextMatchTheOldSelection,
+                        !isWaitingForFilteringResponse() || popupOpenerClicked);
+            } else if (!isWaitingForFilteringResponse()
+                    && selectedCaption != null) {
+                // scrolling to correct page is disabled, caption is passed as a
+                // special parameter
+                tb.setText(selectedCaption);
+            } else {
+                if (!isWaitingForFilteringResponse() || popupOpenerClicked) {
+                    resetSelection();
+                }
+            }
+        }
+
     }
 
     @Deprecated
@@ -2038,6 +2070,85 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (selectedItemIcon != null) {
             updateSelectedIconPosition();
         }
+    }
+
+    /**
+     * Perform selection based on a message from the server.
+     * 
+     * This method is called when the server gave a non-empty selected item key,
+     * whereas null selection is handled by {@link #resetSelection()} and the
+     * special case where the selected item is not on the current page is
+     * handled separately by the caller.
+     * 
+     * @param selectedKey
+     *            non-empty selected item key
+     * @param oldSuggestionTextMatchTheOldSelection
+     *            true if the suggestion box text matched the previous selection
+     *            before the message from the server updating the selection
+     * @param updatePromptAndSelectionIfMatchFound
+     */
+    private void performSelection(String selectedKey,
+            boolean oldSuggestionTextMatchTheOldSelection,
+            boolean updatePromptAndSelectionIfMatchFound) {
+        // some item selected
+        for (FilterSelectSuggestion suggestion : currentSuggestions) {
+            String suggestionKey = suggestion.getOptionKey();
+            if (!suggestionKey.equals(selectedKey)) {
+                continue;
+            }
+            // at this point, suggestion key matches the new selection key
+            if (updatePromptAndSelectionIfMatchFound) {
+                if (!suggestionKey.equals(selectedOptionKey)
+                        || suggestion.getReplacementString().equals(
+                                tb.getText())
+                        || oldSuggestionTextMatchTheOldSelection) {
+                    // Update text field if we've got a new
+                    // selection
+                    // Also update if we've got the same text to
+                    // retain old text selection behavior
+                    // OR if selected item caption is changed.
+                    setPromptingOff(suggestion.getReplacementString());
+                    selectedOptionKey = suggestionKey;
+                }
+            }
+            currentSuggestion = suggestion;
+            setSelectedItemIcon(suggestion.getIconUri());
+            // only a single item can be selected
+            break;
+        }
+    }
+
+    /**
+     * Reset the selection of the combo box to an empty string if focused, the
+     * input prompt if not.
+     * 
+     * This method also clears the current suggestion and the selected option
+     * key.
+     */
+    private void resetSelection() {
+        // select nulled
+        if (!focused) {
+            /*
+             * client.updateComponent overwrites all styles so we must ALWAYS
+             * set the prompting style at this point, even though we think it
+             * has been set already...
+             */
+            setPromptingOff("");
+            if (enabled && !readonly) {
+                setPromptingOn();
+            }
+        } else {
+            // we have focus in field, prompting can't be set on,
+            // instead just clear the input if the value has changed from
+            // something else to null
+            if (selectedOptionKey != null
+                    || (allowNewItem && !tb.getValue().isEmpty())) {
+                tb.setValue("");
+            }
+        }
+        currentSuggestion = null; // #13217
+        setSelectedItemIcon(null);
+        selectedOptionKey = null;
     }
 
     private void forceReflow() {
