@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.Profiler;
@@ -53,17 +51,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     private boolean oldSuggestionTextMatchTheOldSelection;
 
     private boolean immediate;
-
-    private Runnable pageChangeCallback;
-
-    /**
-     * Set true when popupopened has been clicked. Cleared on each UIDL-update.
-     * This handles the special case where are not filtering yet and the
-     * selected value has changed on the server-side. See #2119
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    private boolean popupOpenerClicked;
 
     @Override
     protected void init() {
@@ -222,30 +209,15 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
         }
 
+        // TODO even this condition should probably be moved to the handler
         if ((getWidget().isWaitingForFilteringResponse() && getWidget().lastFilter
                 .toLowerCase().equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
-
-            getWidget().suggestionPopup.showSuggestions(
-                    getWidget().currentSuggestions, getWidget().currentPage,
-                    getWidget().totalMatches);
-
-            getWidget().setWaitingForFilteringResponse(false);
-
-            if (!popupOpenerClicked) {
-                navigateItemAfterPageChange();
-            }
-
-            if (getWidget().isUpdateSelectionWhenReponseIsReceived()) {
-                getWidget().suggestionPopup.menu
-                        .doPostFilterSelectedItemAction();
-            }
+            getWidget().getDataReceivedHandler().dataReceived();
         }
 
         // Calculate minimum textarea width
         getWidget().updateSuggestionPopupMinWidth();
-
-        popupOpenerClicked = false;
 
         /*
          * if this is our first time we need to recalculate the root width.
@@ -262,32 +234,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         getWidget().initDone = true;
-    }
 
-    /*
-     * This method navigates to the proper item in the combobox page. This
-     * should be executed after setSuggestions() method which is called from
-     * vFilterSelect.showSuggestions(). ShowSuggestions() method builds the page
-     * content. As far as setSuggestions() method is called as deferred,
-     * navigateItemAfterPageChange method should be also be called as deferred.
-     * #11333
-     */
-    private void navigateItemAfterPageChange() {
-        if (pageChangeCallback != null) {
-            // pageChangeCallback is not reset here but after any server request
-            // in case you are in between two requests both changing the page
-            // back and forth
-
-            // we're paging w/ arrows
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    if (pageChangeCallback != null) {
-                        pageChangeCallback.run();
-                    }
-                }
-            });
-        }
+        // TODO this should perhaps be moved to be a part of dataReceived()
+        getWidget().getDataReceivedHandler().serverReplyHandled();
     }
 
     private void performSelection(String selectedKey) {
@@ -298,7 +247,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 continue;
             }
             if (!getWidget().isWaitingForFilteringResponse()
-                    || popupOpenerClicked) {
+                    || getWidget().getDataReceivedHandler()
+                            .isPopupOpenerClicked()) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
                         || suggestion.getReplacementString().equals(
                                 getWidget().tb.getText())
@@ -327,7 +277,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     }
 
     private void resetSelection() {
-        if (!getWidget().isWaitingForFilteringResponse() || popupOpenerClicked) {
+        if (!getWidget().isWaitingForFilteringResponse()
+                || getWidget().getDataReceivedHandler().isPopupOpenerClicked()) {
             // select nulled
             if (!getWidget().focused) {
                 /*
@@ -485,19 +436,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
     }
 
-    /**
-     * Set a callback that is invoked when a page change occurs if there have
-     * not been intervening requests to the server. The callback is reset when
-     * any additional request is made to the server.
-     * 
-     * @since
-     * @param callback
-     */
-    public void setNavigateAfterPageReceivedCallback(Runnable callback) {
-        pageChangeCallback = callback;
-
-    }
-
     /*
      * Anything that should be set after the client updates the server.
      */
@@ -505,21 +443,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // We need this here to be consistent with the all the calls.
         // Then set your specific selection type only after
         // a server request method call.
-        pageChangeCallback = null;
-    }
-
-    /**
-     * Record that the popup opener has been clicked and the popup should be
-     * opened on the next request.
-     *
-     * This handles the special case where are not filtering yet and the
-     * selected value has changed on the server-side. See #2119. The flag is
-     * cleared on each UIDL reply.
-     *
-     * @since
-     */
-    public void popupOpenerClicked() {
-        popupOpenerClicked = true;
+        getWidget().getDataReceivedHandler().anyRequestSentToServer();
     }
 
 }
