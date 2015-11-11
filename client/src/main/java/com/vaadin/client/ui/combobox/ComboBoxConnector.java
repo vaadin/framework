@@ -28,6 +28,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
+import com.vaadin.client.ui.VFilterSelect.DataReceivedHandler;
 import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -157,7 +158,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
             getWidget().currentSuggestions.clear();
 
-            if (!getWidget().isWaitingForFilteringResponse()) {
+            if (!getDataReceivedHandler().isWaitingForFilteringResponse()) {
                 /*
                  * Clear the current suggestions as the server response always
                  * includes the new ones. Exception is when filtering, then we
@@ -202,7 +203,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // it as well and clear selected caption
                 getWidget().setSelectedCaption(null);
 
-            } else if (!getWidget().isWaitingForFilteringResponse()
+            } else if (!getDataReceivedHandler()
+                    .isWaitingForFilteringResponse()
                     && uidl.hasAttribute("selectedCaption")) {
                 // scrolling to correct page is disabled, caption is passed as a
                 // special parameter
@@ -214,10 +216,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         // TODO even this condition should probably be moved to the handler
-        if ((getWidget().isWaitingForFilteringResponse() && getWidget().lastFilter
+        if ((getDataReceivedHandler().isWaitingForFilteringResponse() && getWidget().lastFilter
                 .toLowerCase().equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
-            getWidget().getDataReceivedHandler().dataReceived();
+            getDataReceivedHandler().dataReceived();
         }
 
         // Calculate minimum textarea width
@@ -240,7 +242,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().initDone = true;
 
         // TODO this should perhaps be moved to be a part of dataReceived()
-        getWidget().getDataReceivedHandler().serverReplyHandled();
+        getDataReceivedHandler().serverReplyHandled();
     }
 
     private void performSelection(String selectedKey) {
@@ -250,9 +252,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             if (!suggestionKey.equals(selectedKey)) {
                 continue;
             }
-            if (!getWidget().isWaitingForFilteringResponse()
-                    || getWidget().getDataReceivedHandler()
-                            .isPopupOpenerClicked()) {
+            if (!getDataReceivedHandler().isWaitingForFilteringResponse()
+                    || getDataReceivedHandler().isPopupOpenerClicked()) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
                         || suggestion.getReplacementString().equals(
                                 getWidget().tb.getText())
@@ -281,8 +282,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     }
 
     private void resetSelection() {
-        if (!getWidget().isWaitingForFilteringResponse()
-                || getWidget().getDataReceivedHandler().isPopupOpenerClicked()) {
+        if (!getDataReceivedHandler().isWaitingForFilteringResponse()
+                || getDataReceivedHandler().isPopupOpenerClicked()) {
             // select nulled
             if (!getWidget().focused) {
                 /*
@@ -323,6 +324,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     @Override
     public VFilterSelect getWidget() {
         return (VFilterSelect) super.getWidget();
+    }
+
+    private DataReceivedHandler getDataReceivedHandler() {
+        return getWidget().getDataReceivedHandler();
     }
 
     @Override
@@ -457,7 +462,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // We need this here to be consistent with the all the calls.
         // Then set your specific selection type only after
         // a server request method call.
-        getWidget().getDataReceivedHandler().anyRequestSentToServer();
+        getDataReceivedHandler().anyRequestSentToServer();
     }
 
 }
