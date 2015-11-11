@@ -869,7 +869,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Send the current selection to the server. Triggered when a selection
-         * is made or on a blur event.
+         * is made with the ENTER key.
          */
         public void doSelectedItemAction() {
             debug("VFS.SM: doSelectedItemAction()");
@@ -890,21 +890,29 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
-            setUpdateSelectionWhenReponseIsReceived(isWaitingForFilteringResponse());
-            if (!isWaitingForFilteringResponse()) {
+            doPostFilterWhenReady();
+        }
+
+        /**
+         * Perform the post-filter action either now (if not waiting for a
+         * server response) or when a response is received.
+         */
+        private void doPostFilterWhenReady() {
+            if (isWaitingForFilteringResponse()) {
+                dataReceivedHandler.setUpdateOnDataReceived(true);
+            } else {
+                dataReceivedHandler.setUpdateOnDataReceived(false);
                 doPostFilterSelectedItemAction();
             }
         }
 
         /**
-         * Triggered after a selection has been made
+         * Triggered after a selection has been made.
          */
         public void doPostFilterSelectedItemAction() {
             debug("VFS.SM: doPostFilterSelectedItemAction()");
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
-
-            setUpdateSelectionWhenReponseIsReceived(false);
 
             // check for exact match in menu
             int p = getItems().size();
@@ -1107,6 +1115,128 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     }
 
+    /**
+     * Handler receiving notifications from the connector and updating the
+     * widget state accordingly.
+     * 
+     * This class is still subject to change and should not be considered as
+     * public stable API.
+     * 
+     * @since
+     */
+    public class DataReceivedHandler {
+
+        private Runnable navigationCallback = null;
+        /**
+         * Set true when popupopened has been clicked. Cleared on each
+         * UIDL-update. This handles the special case where are not filtering
+         * yet and the selected value has changed on the server-side. See #2119
+         * <p>
+         * For internal use only. May be removed or replaced in the future.
+         */
+        private boolean popupOpenerClicked = false;
+        private boolean updateOnDataReceived = false;
+
+        /**
+         * Called by the connector when new data for the last requested filter
+         * is received from the server.
+         */
+        public void dataReceived() {
+            suggestionPopup.showSuggestions(currentSuggestions, currentPage,
+                    totalMatches);
+
+            setWaitingForFilteringResponse(false);
+
+            if (!popupOpenerClicked) {
+                navigateItemAfterPageChange();
+            }
+
+            if (updateOnDataReceived) {
+                updateOnDataReceived = false;
+                suggestionPopup.menu.doPostFilterSelectedItemAction();
+            }
+
+            popupOpenerClicked = false;
+        }
+
+        /*
+         * This method navigates to the proper item in the combobox page. This
+         * should be executed after setSuggestions() method which is called from
+         * vFilterSelect.showSuggestions(). ShowSuggestions() method builds the
+         * page content. As far as setSuggestions() method is called as
+         * deferred, navigateItemAfterPageChange method should be also be called
+         * as deferred. #11333
+         */
+        private void navigateItemAfterPageChange() {
+            if (navigationCallback != null) {
+                // pageChangeCallback is not reset here but after any server
+                // request in case you are in between two requests both changing
+                // the page back and forth
+
+                // we're paging w/ arrows
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (navigationCallback != null) {
+                            navigationCallback.run();
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * Called by the connector when any request has been sent to the server,
+         * before waiting for a reply.
+         */
+        public void anyRequestSentToServer() {
+            navigationCallback = null;
+        }
+
+        /**
+         * Set a callback that is invoked when a page change occurs if there
+         * have not been intervening requests to the server. The callback is
+         * reset when any additional request is made to the server.
+         * 
+         * @param callback
+         */
+        public void setNavigationCallback(Runnable callback) {
+            navigationCallback = callback;
+        }
+
+        /**
+         * Record that the popup opener has been clicked and the popup should be
+         * opened on the next request.
+         *
+         * This handles the special case where are not filtering yet and the
+         * selected value has changed on the server-side. See #2119. The flag is
+         * cleared on each UIDL reply.
+         */
+        public void popupOpenerClicked() {
+            popupOpenerClicked = true;
+        }
+
+        /**
+         * Returns true if the popup opener has been clicked. This method is for
+         * internal use only and will most likely be removed in the future.
+         */
+        public boolean isPopupOpenerClicked() {
+            return popupOpenerClicked;
+        }
+
+        public void setUpdateOnDataReceived(boolean update) {
+            updateOnDataReceived = update;
+        }
+
+        /**
+         * Called by the connector when it has finished handling any reply from
+         * the server, regardless of what was updated.
+         */
+        public void serverReplyHandled() {
+            popupOpenerClicked = false;
+        }
+    }
+
     @Deprecated
     public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
     @Deprecated
@@ -1189,9 +1319,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private boolean waitingForFilteringResponse = false;
 
     /** For internal use only. May be removed or replaced in the future. */
-    private boolean updateSelectionWhenReponseIsReceived = false;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1256,6 +1383,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * field even for filtering.
      */
     private boolean textInputEnabled = true;
+
+    private final DataReceivedHandler dataReceivedHandler = new DataReceivedHandler();
 
     /**
      * Default constructor.
@@ -1531,7 +1660,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS: onSuggestionSelected(" + suggestion.caption + ": "
                     + suggestion.key + ")");
         }
-        setUpdateSelectionWhenReponseIsReceived(false);
+        dataReceivedHandler.setUpdateOnDataReceived(false);
 
         currentSuggestion = suggestion;
         String newKey;
@@ -1794,7 +1923,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectPrevPage() {
         if (currentPage > 0) {
             filterOptions(currentPage - 1, lastFilter);
-            connector.setNavigateAfterPageReceivedCallback(new Runnable() {
+            dataReceivedHandler.setNavigationCallback(new Runnable() {
                 @Override
                 public void run() {
                     suggestionPopup.selectLastItem();
@@ -1809,7 +1938,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void selectNextPage() {
         if (hasNextPage()) {
             filterOptions(currentPage + 1, lastFilter);
-            connector.setNavigateAfterPageReceivedCallback(new Runnable() {
+            dataReceivedHandler.setNavigationCallback(new Runnable() {
                 @Override
                 public void run() {
                     suggestionPopup.selectFirstItem();
@@ -1905,7 +2034,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 boolean immediate = focused
                         || !connector.hasEventListener(EventId.FOCUS);
                 filterOptions(-1, "", immediate);
-                connector.popupOpenerClicked();
+                dataReceivedHandler.popupOpenerClicked();
                 lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
@@ -2266,29 +2395,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     /**
-     * For internal use only - this method will be removed in the future.
+     * Returns a handler receiving notifications from the connector about
+     * communications.
      * 
-     * This flag should not be set when not waiting for a reply from the server.
-     * 
-     * @return true if the selection should be updated when a server response is
-     *         received
+     * @return the dataReceivedHandler
      */
-    public boolean isUpdateSelectionWhenReponseIsReceived() {
-        return updateSelectionWhenReponseIsReceived;
-    }
-
-    /**
-     * For internal use only - this method will be removed in the future.
-     * 
-     * This flag should not be set when not waiting for a reply from the server.
-     * 
-     * @param updateSelectionWhenReponseIsReceived
-     *            true if the selection should be updated when a server response
-     *            is received
-     */
-    public void setUpdateSelectionWhenReponseIsReceived(
-            boolean updateSelectionWhenReponseIsReceived) {
-        this.updateSelectionWhenReponseIsReceived = updateSelectionWhenReponseIsReceived;
+    public DataReceivedHandler getDataReceivedHandler() {
+        return dataReceivedHandler;
     }
 
 }
