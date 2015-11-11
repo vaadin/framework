@@ -47,10 +47,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy.create(
             FocusAndBlurServerRpc.class, this);
 
-    // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
-    // update textbox text by a changed item caption.
-    private boolean oldSuggestionTextMatchTheOldSelection;
-
     private boolean immediate;
 
     @Override
@@ -145,10 +141,12 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // popup. Popup needs to be repopulated with suggestions from UIDL.
         boolean popupOpenAndCleared = false;
 
-        oldSuggestionTextMatchTheOldSelection = false;
+        // oldSuggestionTextMatchTheOldSelection is used to detect when it's
+        // safe to update textbox text by a changed item caption.
+        boolean oldSuggestionTextMatchesTheOldSelection = false;
 
         if (suggestionsChanged) {
-            oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
+            oldSuggestionTextMatchesTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
             getWidget().currentSuggestions.clear();
 
             if (!getDataReceivedHandler().isWaitingForFilteringResponse()) {
@@ -184,24 +182,21 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         //
         ) {
 
+            // single selected key (can be empty string) or empty array for null
+            // selection
             String[] selectedKeys = uidl.getStringArrayVariable("selected");
-
-            // when filtering with empty filter, server sets the selected key
-            // to "", which we don't select here. Otherwise we won't be able to
-            // reset back to the item that was selected before filtering
-            // started.
-            if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
-                performSelection(selectedKeys[0]);
-            } else if (!getDataReceivedHandler()
-                    .isWaitingForFilteringResponse()
-                    && uidl.hasAttribute("selectedCaption")) {
-                // scrolling to correct page is disabled, caption is passed as a
-                // special parameter
-                getWidget().tb.setText(uidl
-                        .getStringAttribute("selectedCaption"));
-            } else {
-                resetSelection();
+            String selectedKey = null;
+            if (selectedKeys.length == 1) {
+                selectedKey = selectedKeys[0];
             }
+            // selected item caption in case it is not on the current page
+            String selectedCaption = null;
+            if (uidl.hasAttribute("selectedCaption")) {
+                selectedCaption = uidl.getStringAttribute("selectedCaption");
+            }
+
+            getDataReceivedHandler().updateSelectionFromServer(selectedKey,
+                    selectedCaption, oldSuggestionTextMatchesTheOldSelection);
         }
 
         // TODO even this condition should probably be moved to the handler
@@ -234,70 +229,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getDataReceivedHandler().serverReplyHandled();
     }
 
-    private void performSelection(String selectedKey) {
-        // some item selected
-        for (FilterSelectSuggestion suggestion : getWidget().currentSuggestions) {
-            String suggestionKey = suggestion.getOptionKey();
-            if (!suggestionKey.equals(selectedKey)) {
-                continue;
-            }
-            if (!getDataReceivedHandler().isWaitingForFilteringResponse()
-                    || getDataReceivedHandler().isPopupOpenerClicked()) {
-                if (!suggestionKey.equals(getWidget().selectedOptionKey)
-                        || suggestion.getReplacementString().equals(
-                                getWidget().tb.getText())
-                        || oldSuggestionTextMatchTheOldSelection) {
-                    // Update text field if we've got a new
-                    // selection
-                    // Also update if we've got the same text to
-                    // retain old text selection behavior
-                    // OR if selected item caption is changed.
-                    getWidget().setPromptingOff(
-                            suggestion.getReplacementString());
-                    getWidget().selectedOptionKey = suggestionKey;
-                }
-            }
-            getWidget().currentSuggestion = suggestion;
-            getWidget().setSelectedItemIcon(suggestion.getIconUri());
-            // only a single item can be selected
-            break;
-        }
-    }
-
     private boolean isWidgetsCurrentSelectionTextInTextBox() {
         return getWidget().currentSuggestion != null
                 && getWidget().currentSuggestion.getReplacementString().equals(
                         getWidget().tb.getText());
-    }
-
-    private void resetSelection() {
-        if (!getDataReceivedHandler().isWaitingForFilteringResponse()
-                || getDataReceivedHandler().isPopupOpenerClicked()) {
-            // select nulled
-            if (!getWidget().focused) {
-                /*
-                 * client.updateComponent overwrites all styles so we must
-                 * ALWAYS set the prompting style at this point, even though we
-                 * think it has been set already...
-                 */
-                getWidget().setPromptingOff("");
-                if (getWidget().enabled && !getWidget().readonly) {
-                    getWidget().setPromptingOn();
-                }
-            } else {
-                // we have focus in field, prompting can't be set on, instead
-                // just clear the input if the value has changed from something
-                // else to null
-                if (getWidget().selectedOptionKey != null
-                        || (getWidget().allowNewItem && !getWidget().tb
-                                .getValue().isEmpty())) {
-                    getWidget().tb.setValue("");
-                }
-            }
-            getWidget().currentSuggestion = null; // #13217
-            getWidget().setSelectedItemIcon(null);
-            getWidget().selectedOptionKey = null;
-        }
     }
 
     @Override
