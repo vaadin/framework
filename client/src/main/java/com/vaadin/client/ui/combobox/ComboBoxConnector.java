@@ -47,8 +47,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy.create(
             FocusAndBlurServerRpc.class, this);
 
-    private boolean immediate;
-
     @Override
     protected void init() {
         super.init();
@@ -63,8 +61,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().readonly = isReadOnly();
         getWidget().updateReadOnly();
-
-        immediate = getState().immediate;
 
         getWidget().setTextInputEnabled(getState().textInputAllowed);
 
