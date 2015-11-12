@@ -77,7 +77,6 @@ import com.vaadin.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.util.SharedUtil;
@@ -1633,22 +1632,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The filter to apply to the components
      */
     public void filterOptions(int page, String filter) {
-        filterOptions(page, filter, true);
-    }
-
-    /**
-     * Filters the options at certain page using the given filter
-     * 
-     * @param page
-     *            The page to filter
-     * @param filter
-     *            The filter to apply to the options
-     * @param immediate
-     *            Whether to send the options request immediately
-     */
-    private void filterOptions(int page, String filter, boolean immediate) {
-        debug("VFS: filterOptions(" + page + ", " + filter + ", " + immediate
-                + ")");
+        debug("VFS: filterOptions(" + page + ", " + filter + ")");
 
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
@@ -2223,12 +2207,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {
-                // If a focus event is not going to be sent, send the options
-                // request immediately; otherwise queue in the same burst as the
-                // focus event. Fixes #8321.
-                boolean immediate = focused
-                        || !connector.hasEventListener(EventId.FOCUS);
-                filterOptions(-1, "", immediate);
+                filterOptions(-1, "");
                 dataReceivedHandler.popupOpenerClicked();
                 lastFilter = "";
             }
