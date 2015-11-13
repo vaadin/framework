@@ -36,6 +36,7 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
+import com.vaadin.shared.util.SharedUtil;
 
 public class VAccordion extends VTabsheetBase {
 
@@ -79,6 +80,8 @@ public class VAccordion extends VTabsheetBase {
         item.updateTabStyleName(tabState.styleName);
 
         item.setVisible(tabState.visible);
+
+        item.setId(tabState.id);
     }
 
     @Override
@@ -160,6 +163,7 @@ public class VAccordion extends VTabsheetBase {
     public class StackItem extends ComplexPanel implements ClickHandler {
 
         private Widget widget;
+        private String id;
 
         public void setHeight(int height) {
             if (height == -1) {
@@ -169,6 +173,18 @@ public class VAccordion extends VTabsheetBase {
                 super.setHeight((height + getCaptionHeight()) + "px");
                 content.getStyle().setHeight(height, Unit.PX);
                 content.getStyle().setTop(getCaptionHeight(), Unit.PX);
+            }
+        }
+
+        public void setId(String newId) {
+            if (!SharedUtil.equals(newId, id)) {
+                if (id != null) {
+                    getElement().removeAttribute("id");
+                }
+                id = newId;
+                if (id != null && !id.isEmpty()) {
+                    getElement().setId(id);
+                }
             }
         }
 
