@@ -62,7 +62,9 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      * longer needed.
      * 
      * @param cell
-     *            the cell to render
+     *            The cell to render. Note that the cell is a flyweight and
+     *            should not be stored and used outside of this method as its
+     *            contents will change.
      * @param data
      *            the data of the cell
      * @param widget
