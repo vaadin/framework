@@ -60,6 +60,11 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      * information in the widget that is cell specific. Do not detach the Widget
      * here, it will be done automatically by the Grid when the widget is no
      * longer needed.
+     * <p>
+     * For optimal performance, work done in this method should be kept to a
+     * minimum since it will be called continuously while the user is scrolling.
+     * The renderer can use {@link Widget#setLayoutData(Object)} to store cell
+     * data that might be needed in e.g. event listeners.
      * 
      * @param cell
      *            The cell to render. Note that the cell is a flyweight and

@@ -35,7 +35,13 @@ import com.vaadin.client.widgets.Grid;
 public interface Renderer<T> {
 
     /**
-     * Called whenever the {@link Grid} updates a cell
+     * Called whenever the {@link Grid} updates a cell.
+     * <p>
+     * For optimal performance, work done in this method should be kept to a
+     * minimum since it will be called continuously while the user is scrolling.
+     * It is recommended to set up the cell's DOM structure in
+     * {@link ComplexRenderer#init(RendererCellReference)} and only make
+     * incremental updates based on cell data in this method.
      * 
      * @param cell
      *            The cell. Note that the cell is a flyweight and should not be
