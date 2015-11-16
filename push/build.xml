@@ -87,6 +87,7 @@
 
     <target name="jar" depends="vaadinPush.js">
         <antcall target="common.jar">
+            <param name="osgi.extra.package.prefixes" value="VAADIN" />
             <param name="require-bundle"
                 value="com.vaadin.external.atmosphere.runtime;bundle-version=&quot;${atmosphere.runtime.version}&quot;;visibility:=reexport" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
