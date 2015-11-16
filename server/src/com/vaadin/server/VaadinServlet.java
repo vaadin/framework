@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,7 +66,7 @@ import elemental.json.JsonObject;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
-    private static class ScssCacheEntry implements Serializable {
+    private class ScssCacheEntry implements Serializable {
 
         private final String css;
         private final List<String> sourceUris;
@@ -119,13 +120,24 @@ public class VaadinServlet extends HttpServlet implements Constants {
             long newest = 0;
             for (String uri : sourceUris) {
                 File file = new File(uri);
+                URL resource = getService().getClassLoader().getResource(uri);
+                long lastModified = -1L;
                 if (file.exists()) {
-                    newest = Math.max(newest, file.lastModified());
-                } else if (!uri.startsWith("VAADIN/")) {
+                    lastModified = file.lastModified();
+                } else if (resource != null && resource.getProtocol().equals("file")) {
+                    try {
+                        file = new File(resource.toURI());
+                        if (file.exists()) {
+                            lastModified = file.lastModified();
+                        }
+                    } catch (URISyntaxException e) {
+                        getLogger().log(Level.WARNING, "Could not resolve timestamp for " + resource, e);
+                    }
+                }
+                if (lastModified == -1L && resource == null) {
                     /*
-                     * Ignore missing files starting with VAADIN/ since those
-                     * are fetched from the classpath, report problem and abort
-                     * for other files.
+                     * Ignore missing files found in the classpath,
+                     * report problem and abort for other files.
                      */
                     getLogger()
                             .log(Level.WARNING,
@@ -134,6 +146,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     // -1 means this cache entry will never be valid
                     return -1;
                 }
+                newest = Math.max(newest, lastModified);
             }
 
             return newest;
