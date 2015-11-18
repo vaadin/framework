@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
 import com.vaadin.data.Container.ItemSetChangeEvent;
@@ -213,7 +213,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
     }
 
-    private final Indexed container;
+    private final Container container;
 
     private DataProviderRpc rpc;
 
@@ -275,7 +275,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param container
      *            the container to make available
      */
-    public RpcDataProviderExtension(Indexed container) {
+    public RpcDataProviderExtension(Container container) {
         this.container = container;
         rpc = getRpcProxy(DataProviderRpc.class);
 
@@ -356,8 +356,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
             fullRange = newRange.combineWith(cached);
         }
 
-        List<?> itemIds = container.getItemIds(fullRange.getStart(),
-                fullRange.length());
+        List<?> itemIds;
+        if (container instanceof Container.Indexed) {
+            itemIds = ((Container.Indexed) container).getItemIds(
+                    fullRange.getStart(), fullRange.length());
+        } else {
+            // This is nowhere near optimal. You should really use Indexed
+            // containers.
+            itemIds = new ArrayList<Object>(container.getItemIds()).subList(
+                    fullRange.getStart(), fullRange.getEnd());
+        }
 
         JsonArray rows = Json.createArray();
 
