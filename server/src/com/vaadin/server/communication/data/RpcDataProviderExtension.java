@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -53,11 +52,8 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * Provides Vaadin server-side container data source to a
- * {@link com.vaadin.client.ui.grid.GridConnector}. This is currently
- * implemented as an Extension hardcoded to support a specific connector type.
- * This will be changed once framework support for something more flexible has
- * been implemented.
+ * Provides Vaadin server-side container data source to a connector implementing
+ * {@link com.vaadin.client.data.HasDataSource}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -71,7 +67,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private class ActiveItemHandler implements Serializable, DataGenerator {
 
-        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
+        private final Map<Object, DataProviderValueChangeListener> activeItemMap = new HashMap<Object, DataProviderValueChangeListener>();
         private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();
         private final Set<Object> droppedItems = new HashSet<Object>();
 
@@ -87,8 +83,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
         public void addActiveItems(Collection<?> itemIds) {
             for (Object itemId : itemIds) {
                 if (!activeItemMap.containsKey(itemId)) {
-                    activeItemMap.put(itemId, new GridValueChangeListener(
-                            itemId, container.getItem(itemId)));
+                    activeItemMap.put(itemId,
+                            new DataProviderValueChangeListener(itemId,
+                                    container.getItem(itemId)));
                 }
             }
 
@@ -125,8 +122,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * 
          * @return collection of value change listeners
          */
-        public Collection<GridValueChangeListener> getValueChangeListeners() {
-            return new HashSet<GridValueChangeListener>(activeItemMap.values());
+        public Collection<DataProviderValueChangeListener> getValueChangeListeners() {
+            return new HashSet<DataProviderValueChangeListener>(
+                    activeItemMap.values());
         }
 
         @Override
@@ -137,7 +135,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
         @Override
         public void destroyData(Object itemId) {
             keyMapper.remove(itemId);
-            GridValueChangeListener removed = activeItemMap.remove(itemId);
+            DataProviderValueChangeListener removed = activeItemMap
+                    .remove(itemId);
 
             if (removed != null) {
                 removed.removeListener();
@@ -146,10 +145,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     /**
-     * A class to listen to changes in property values in the Container added
-     * with {@link Grid#setContainerDatasource(Container.Indexed)}, and notifies
-     * the data source to update the client-side representation of the modified
-     * item.
+     * A class to listen to changes in property values in the Container, and
+     * notifies the data source to update the client-side representation of the
+     * modified item.
      * <p>
      * One instance of this class can (and should) be reused for all the
      * properties in an item, since this class will inform that the entire row
@@ -159,15 +157,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Since there's no Container-wide possibility to listen to any kind of
      * value changes, an instance of this class needs to be attached to each and
      * every Item's Property in the container.
-     * 
-     * @see Grid#addValueChangeListener(Container, Object, Object)
-     * @see Grid#valueChangeListeners
      */
-    private class GridValueChangeListener implements ValueChangeListener {
+    private class DataProviderValueChangeListener implements
+            ValueChangeListener {
         private final Object itemId;
         private final Item item;
 
-        public GridValueChangeListener(Object itemId, Item item) {
+        public DataProviderValueChangeListener(Object itemId, Item item) {
             /*
              * Using an assert instead of an exception throw, just to optimize
              * prematurely
@@ -176,7 +172,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             this.itemId = itemId;
             this.item = item;
 
-            internalAddColumns(getGrid().getColumns());
+            internalAddProperties();
         }
 
         @Override
@@ -185,18 +181,22 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         public void removeListener() {
-            removeColumns(getGrid().getColumns());
+            for (final Object propertyId : item.getItemPropertyIds()) {
+                Property<?> property = item.getItemProperty(propertyId);
+                if (property instanceof ValueChangeNotifier) {
+                    ((ValueChangeNotifier) property)
+                            .removeValueChangeListener(this);
+                }
+            }
         }
 
         public void addColumns(Collection<Column> addedColumns) {
-            internalAddColumns(addedColumns);
             updateRowData(itemId);
         }
 
-        private void internalAddColumns(Collection<Column> addedColumns) {
-            for (final Column column : addedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
+        private void internalAddProperties() {
+            for (final Object propertyId : item.getItemPropertyIds()) {
+                Property<?> property = item.getItemProperty(propertyId);
                 if (property instanceof ValueChangeNotifier) {
                     ((ValueChangeNotifier) property)
                             .addValueChangeListener(this);
@@ -205,14 +205,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         public void removeColumns(Collection<Column> removedColumns) {
-            for (final Column column : removedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
-                if (property instanceof ValueChangeNotifier) {
-                    ((ValueChangeNotifier) property)
-                            .removeValueChangeListener(this);
-                }
-            }
+
         }
     }
 
@@ -310,11 +303,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         if (initial || bareItemSetTriggeredSizeChange) {
             /*
-             * Push initial set of rows, assuming Grid will initially be
-             * rendered scrolled to the top and with a decent amount of rows
-             * visible. If this guess is right, initial data can be shown
-             * without a round-trip and if it's wrong, the data will simply be
-             * discarded.
+             * Push initial set of rows, assuming the component will initially
+             * be rendering the first items in DataSource. If this guess is
+             * right, initial data can be shown without a round-trip and if it's
+             * wrong, the data will simply be discarded.
              */
             int size = container.size();
             rpc.resetDataAndSize(size);
@@ -369,15 +361,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             Item item = container.getItem(itemId);
 
-            rows.set(i, getRowData(getGrid().getColumns(), itemId, item));
+            rows.set(i, getRowData(itemId, item));
         }
         rpc.setRowData(firstRowToPush, rows);
 
         activeItemHandler.addActiveItems(itemIds);
     }
 
-    private JsonObject getRowData(Collection<Column> columns, Object itemId,
-            Item item) {
+    private JsonObject getRowData(Object itemId, Item item) {
 
         final JsonObject rowObject = Json.createObject();
         for (DataGenerator dg : dataGenerators) {
@@ -499,14 +490,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return;
         }
 
-        List<Column> columns = getGrid().getColumns();
         JsonArray rowData = Json.createArray();
         int i = 0;
         for (Object itemId : itemIds) {
             if (activeItemHandler.getActiveItemIds().contains(itemId)) {
                 Item item = container.getItem(itemId);
                 if (item != null) {
-                    JsonObject row = getRowData(columns, itemId, item);
+                    JsonObject row = getRowData(itemId, item);
                     rowData.set(i++, row);
                 }
             }
@@ -535,10 +525,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .removeItemSetChangeListener(itemListener);
             }
 
-        } else if (!(parent instanceof Grid)) {
-            throw new IllegalStateException(
-                    "Grid is the only accepted parent type");
         }
+
         super.setParent(parent);
     }
 
@@ -556,44 +544,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
     }
 
-    /**
-     * Informs this data provider that given columns have been removed from
-     * grid.
-     * 
-     * @param removedColumns
-     *            a list of removed columns
-     */
-    public void columnsRemoved(List<Column> removedColumns) {
-        for (GridValueChangeListener l : activeItemHandler
-                .getValueChangeListeners()) {
-            l.removeColumns(removedColumns);
-        }
-
-        // No need to resend unchanged data. Client will remember the old
-        // columns until next set of rows is sent.
-    }
-
-    /**
-     * Informs this data provider that given columns have been added to grid.
-     * 
-     * @param addedColumns
-     *            a list of added columns
-     */
-    public void columnsAdded(List<Column> addedColumns) {
-        for (GridValueChangeListener l : activeItemHandler
-                .getValueChangeListeners()) {
-            l.addColumns(addedColumns);
-        }
-
-        // Resend all rows to contain new data.
-        refreshCache();
-    }
-
     public KeyMapper<Object> getKeyMapper() {
         return activeItemHandler.keyMapper;
-    }
-
-    protected Grid getGrid() {
-        return (Grid) getParent();
     }
 }

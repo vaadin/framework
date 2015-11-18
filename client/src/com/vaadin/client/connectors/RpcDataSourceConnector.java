@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
+import com.vaadin.client.data.HasDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -246,8 +247,16 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        GridConnector gridConnector = (GridConnector) target;
-        dataSource.setDetailsListener(gridConnector.getDetailsListener());
-        gridConnector.setDataSource(dataSource);
+        if (target instanceof HasDataSource) {
+            ((HasDataSource<JsonObject>) target).setDataSource(dataSource);
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent connector does not implement HasDataSource");
+        }
+
+        if (target instanceof GridConnector) {
+            dataSource.setDetailsListener(((GridConnector) target)
+                    .getDetailsListener());
+        }
     }
 }
