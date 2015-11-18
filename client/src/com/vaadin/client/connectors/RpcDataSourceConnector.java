@@ -211,13 +211,13 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         protected void setRowData(int firstRowIndex, List<JsonObject> rowData) {
             super.setRowData(firstRowIndex, rowData);
 
-            /*
-             * Intercepting details information from the data source, rerouting
-             * them back to the GridConnector (as a details listener)
-             */
-            for (int i = 0; i < rowData.size(); i++) {
-                detailsListener.reapplyDetailsVisibility(firstRowIndex + i,
-                        rowData.get(i));
+            // TODO: Move this out of the RpcDataSource. Should be handled
+            // through some more generic interface, or specifically by Grid.
+            if (detailsListener != null) {
+                for (int i = 0; i < rowData.size(); i++) {
+                    detailsListener.reapplyDetailsVisibility(firstRowIndex + i,
+                            rowData.get(i));
+                }
             }
         }
 

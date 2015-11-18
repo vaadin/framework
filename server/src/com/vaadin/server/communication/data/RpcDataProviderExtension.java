@@ -37,6 +37,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
+import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
@@ -44,8 +45,6 @@ import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -194,10 +193,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
         }
 
-        public void addColumns(Collection<Column> addedColumns) {
-            updateRowData(itemId);
-        }
-
         private void internalAddProperties() {
             for (final Object propertyId : item.getItemPropertyIds()) {
                 Property<?> property = item.getItemProperty(propertyId);
@@ -206,10 +201,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                             .addValueChangeListener(this);
                 }
             }
-        }
-
-        public void removeColumns(Collection<Column> removedColumns) {
-
         }
     }
 
@@ -397,15 +388,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return rowObject;
     }
 
-    /**
-     * Makes the data source available to the given {@link Grid} component.
-     * 
-     * @param component
-     *            the remote data grid component to extend
-     * @param columnKeys
-     *            the key mapper for columns
-     */
-    public void extend(Grid component) {
+    @Override
+    public void extend(AbstractClientConnector component) {
         super.extend(component);
     }
 
