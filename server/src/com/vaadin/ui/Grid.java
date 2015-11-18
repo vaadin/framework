@@ -4423,29 +4423,22 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     .getContainerPropertyIds());
 
             // Find columns that need to be removed.
-            List<Column> removedColumns = new LinkedList<Column>();
-            for (Object propertyId : columns.keySet()) {
-                if (!properties.contains(propertyId)) {
-                    removedColumns.add(getColumn(propertyId));
-                }
-            }
+            List<Object> removedProperties = new LinkedList<Object>(
+                    columns.keySet());
+            removedProperties.removeAll(properties);
 
             // Actually remove columns.
-            for (Column column : removedColumns) {
-                Object propertyId = column.getPropertyId();
+            for (Object propertyId : removedProperties) {
                 internalRemoveColumn(propertyId);
                 columnKeys.remove(propertyId);
             }
-            datasourceExtension.columnsRemoved(removedColumns);
 
             // Add new columns
-            List<Column> addedColumns = new LinkedList<Column>();
             for (Object propertyId : properties) {
                 if (!columns.containsKey(propertyId)) {
-                    addedColumns.add(appendColumn(propertyId));
+                    appendColumn(propertyId);
                 }
             }
-            datasourceExtension.columnsAdded(addedColumns);
 
             if (getFrozenColumnCount() > columns.size()) {
                 setFrozenColumnCount(columns.size());
@@ -4462,6 +4455,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     }
                 }
             }
+
+            // Update all rows.
+            datasourceExtension.refreshCache();
         }
     };
 
@@ -4479,13 +4475,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * after the constructor has been run.
      */
     private SelectionModel selectionModel;
-
-    /**
-     * Used to know whether selection change events originate from the server or
-     * the client so the selection change handler knows whether the changes
-     * should be sent to the client.
-     */
-    private boolean applyingSelectionFromClient;
 
     private final Header header = new Header(this);
     private final Footer footer = new Footer(this);
@@ -5046,7 +5035,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         Column column = getColumn(propertyId);
         List<Column> addedColumns = new ArrayList<Column>();
         addedColumns.add(column);
-        datasourceExtension.columnsAdded(addedColumns);
+
+        datasourceExtension.refreshCache();
 
         return column;
     }
@@ -5110,12 +5100,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Removes all columns from this Grid.
      */
     public void removeAllColumns() {
-        List<Column> removed = new ArrayList<Column>(columns.values());
         Set<Object> properties = new HashSet<Object>(columns.keySet());
         for (Object propertyId : properties) {
             removeColumn(propertyId);
         }
-        datasourceExtension.columnsRemoved(removed);
     }
 
     /**
@@ -5236,7 +5224,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         List<Column> removed = new ArrayList<Column>();
         removed.add(getColumn(propertyId));
         internalRemoveColumn(propertyId);
-        datasourceExtension.columnsRemoved(removed);
     }
 
     private void internalRemoveColumn(Object propertyId) {
