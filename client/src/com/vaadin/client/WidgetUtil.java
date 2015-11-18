@@ -1307,6 +1307,29 @@ public class WidgetUtil {
     }-*/;
 
     /**
+     * JavaScript hack to prevent text selection in various browsers.
+     * 
+     * @since
+     * @param e
+     *            element for enabling or disabling text selection
+     * @param enable
+     *            <code>true</code> if selection is enabled; </code>false</code>
+     *            if not
+     */
+    public native static void setTextSelectionEnabled(Element e, boolean enable)
+    /*-{
+        if (!enable) {
+            e.ondrag = function () { return false; };
+            e.onselectstart = function () { return false; };
+            e.style.webkitUserSelect = "none";
+        } else {
+            e.ondrag = null;
+            e.onselectstart = null;
+            e.style.webkitUserSelect = "text";
+        }
+    }-*/;
+
+    /**
      * The allowed value inaccuracy when comparing two double-typed pixel
      * values.
      * <p>
