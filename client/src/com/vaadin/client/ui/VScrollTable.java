@@ -2808,6 +2808,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         public void setSortable(boolean b) {
             sortable = b;
+            /*
+             * Should in theory call updateStyleNames here, but that would just
+             * be a waste of time since this method is only called from
+             * updateCellsFromUIDL which immediately afterwards calls setAlign
+             * which also updates the style names.
+             */
         }
 
         /**
@@ -2879,6 +2885,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
             } else {
                 setStyleName(primaryStyleName + "-header-cell");
+            }
+
+            if (sortable) {
+                addStyleName(primaryStyleName + "-header-sortable");
             }
 
             final String ALIGN_PREFIX = primaryStyleName
@@ -3648,6 +3658,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     c.setSortable(false);
                 }
 
+                // The previous call to setSortable relies on c.setAlign calling
+                // c.updateStyleNames
                 if (col.hasAttribute("align")) {
                     c.setAlign(col.getStringAttribute("align").charAt(0));
                 } else {

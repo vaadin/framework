@@ -85,7 +85,7 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                return className.equals(header.getAttribute("class"));
+                return header.getAttribute("class").contains(className);
             }
 
             @Override
