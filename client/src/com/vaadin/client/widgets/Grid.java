@@ -5612,17 +5612,25 @@ public class Grid<T> extends ResizeComposite implements
                 FlyweightCell cell) {
 
             cleanup(cell);
-
-            Column<?, ?> column = getVisibleColumn(cell.getColumn());
-            SortOrder sortingOrder = getSortOrder(column);
-            if (!headerRow.isDefault() || !column.isSortable()
-                    || sortingOrder == null) {
-                // Only apply sorting indicators to sortable header columns in
-                // the default header row
+            if (!headerRow.isDefault()) {
+                // Nothing more to do if not in the default row
                 return;
             }
 
+            Column<?, ?> column = getVisibleColumn(cell.getColumn());
+            SortOrder sortingOrder = getSortOrder(column);
+            boolean sortable = column.isSortable();
+
             Element cellElement = cell.getElement();
+
+            if (sortable) {
+                cellElement.addClassName("sortable");
+            }
+
+            if (!sortable || sortingOrder == null) {
+                // Only apply sorting indicators to sortable header columns
+                return;
+            }
 
             if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
                 cellElement.addClassName("sort-asc");
@@ -5656,6 +5664,7 @@ public class Grid<T> extends ResizeComposite implements
             cellElement.removeAttribute("sort-order");
             cellElement.removeClassName("sort-desc");
             cellElement.removeClassName("sort-asc");
+            cellElement.removeClassName("sortable");
         }
 
         @Override

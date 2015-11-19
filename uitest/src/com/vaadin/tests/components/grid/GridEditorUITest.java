@@ -90,6 +90,7 @@ public class GridEditorUITest extends MultiBrowserTest {
 
         saveEditor();
 
-        assertThat(headerCell.getAttribute("class"), not(containsString("sort")));
+        assertThat(headerCell.getAttribute("class"),
+                not(containsString("sort-")));
     }
 }
