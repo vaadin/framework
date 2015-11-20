@@ -36,7 +36,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -5581,24 +5580,25 @@ public class Grid<T> extends ResizeComposite implements
                                                     c));
                                         }
                                     }
-                                    WidgetUtil.setTextSelectionEnabled(Document
-                                            .get().getBody(), false);
+
+                                    WidgetUtil.setTextSelectionEnabled(
+                                            getElement(), false);
                                 }
 
                                 @Override
                                 public void onComplete() {
                                     fireEvent(new ColumnResizeEvent<T>(col));
 
-                                    WidgetUtil.setTextSelectionEnabled(Document
-                                            .get().getBody(), true);
+                                    WidgetUtil.setTextSelectionEnabled(
+                                            getElement(), true);
                                 }
 
                                 @Override
                                 public void onCancel() {
                                     col.setWidth(initialWidth);
 
-                                    WidgetUtil.setTextSelectionEnabled(Document
-                                            .get().getBody(), true);
+                                    WidgetUtil.setTextSelectionEnabled(
+                                            getElement(), true);
                                 }
                             });
                     dragger.addTo(td);
