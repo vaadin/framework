@@ -997,20 +997,34 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     event.preventDefault();
 
                     headerDragPending = event;
-                } else if ((type == Event.ONMOUSEMOVE || type == Event.ONTOUCHMOVE)
+                    bubble = false;
+                } else if (type == Event.ONMOUSEMOVE
                         && headerDragPending != null) {
                     // ie won't work unless this is set here
                     dragging = true;
                     onDragEvent(headerDragPending);
                     onDragEvent(event);
                     headerDragPending = null;
+                    bubble = false;
+                } else if (type != Event.ONMOUSEMOVE) {
+                    // The event can propagate to the parent in case it is a
+                    // mouse move event. This is needed for tooltips to work in
+                    // header and footer, see Ticket #19073
+                    headerDragPending = null;
+                    bubble = false;
                 } else {
                     headerDragPending = null;
                 }
-                bubble = false;
             }
             if (type == Event.ONCLICK) {
                 activateOnClick();
+            }
+        } else if (footer.isOrHasChild(target) && !dragging) {
+            onDragEvent(event);
+            if (type != Event.ONMOUSEMOVE) {
+                // This is needed for tooltips to work in header and footer, see
+                // Ticket #19073
+                bubble = false;
             }
         } else if (dragging || !contents.isOrHasChild(target)) {
             onDragEvent(event);
@@ -1031,11 +1045,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         if (!bubble) {
             event.stopPropagation();
-        } else {
-            // Super.onBrowserEvent takes care of Handlers added by the
-            // ClickEventHandler
-            super.onBrowserEvent(event);
         }
+        // Super.onBrowserEvent takes care of Handlers added by the
+        // ClickEventHandler
+        super.onBrowserEvent(event);
     }
 
     private void activateOnClick() {
