@@ -162,8 +162,33 @@ public interface ServerConnector extends Connector {
 
     public void updateEnabledState(boolean enabledState);
 
+    /**
+     * Sets the children for this connector. This method should only be called
+     * by the framework to ensure that the connector hierarchy on the client
+     * side and the server side are in sync.
+     * <p>
+     * Note that this method is separate from
+     * {@link HasComponentsConnector#setChildComponents(List)} and takes both
+     * extensions and child components. Both methods are called separately by
+     * the framework if the connector can have child components.
+     * 
+     * @param children
+     *            The new child connectors (extensions and/or components)
+     */
     public void setChildren(List<ServerConnector> children);
 
+    /**
+     * Returns the child connectors for this connector (child components and
+     * extensions).
+     * <p>
+     * Note that the method {@link HasComponentsConnector#getChildComponents()}
+     * can be used to obtain the subset of child connectors that correspond to
+     * components and not extensions.
+     * 
+     * @return A collection of child connectors (components or extensions) for
+     *         this connector. An empty collection if there are no children.
+     *         Never returns null.
+     */
     public List<ServerConnector> getChildren();
 
     /**

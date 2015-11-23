@@ -45,14 +45,17 @@ public interface HasComponentsConnector extends ServerConnector {
     void updateCaption(ComponentConnector connector);
 
     /**
-     * Returns the children for this connector.
+     * Returns the child components for this connector.
      * <p>
      * The children for this connector are defined as all {@link HasComponents}s
      * whose parent is this {@link HasComponentsConnector}.
-     * </p>
+     * <p>
+     * Note that the method {@link ServerConnector#getChildren()} can return a
+     * larger list of children including both the child components and any
+     * extensions registered for the connector.
      * 
-     * @return A collection of children for this connector. An empty collection
-     *         if there are no children. Never returns null.
+     * @return A collection of child components for this connector. An empty
+     *         collection if there are no children. Never returns null.
      */
     public List<ComponentConnector> getChildComponents();
 
@@ -65,9 +68,14 @@ public interface HasComponentsConnector extends ServerConnector {
      * {@link ConnectorHierarchyChangeHandler#onConnectorHierarchyChange(ConnectorHierarchyChangeEvent)}
      * . The event method is called only when the hierarchy has been updated for
      * all connectors.
+     * <p>
+     * Note that this method is separate from
+     * {@link ServerConnector#setChildren(List)} and contains only child
+     * components. Both methods are called separately by the framework if the
+     * connector implements {@link HasComponentsConnector}.
      * 
      * @param children
-     *            The new child connectors
+     *            The new child connectors (components only)
      */
     public void setChildComponents(List<ComponentConnector> children);
 
