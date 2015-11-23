@@ -1,0 +1,37 @@
+---
+title: Vaadin Widgets
+order: 3
+layout: page
+---
+
+[[clientsidewidgets.vaadin]]
+= Vaadin Widgets
+
+Vaadin comes with a number of Vaadin-specific widgets in addition to the GWT
+widgets, some of which you can use in pure client-side applications. The Vaadin
+widgets have somewhat different feature set from the GWT widgets and are
+foremost intended for integration with the server-side components, but some may
+prove useful for client-side applications as well.
+
+
+----
+public class MyEntryPoint implements EntryPoint {
+    @Override
+    public void onModuleLoad() {
+        // Add a Vaadin button
+        VButton button = new VButton();
+        button.setText("Click me!");
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                mywidget.setText("Clicked!");
+            }
+        });
+        
+        RootPanel.get().add(button);
+    }
+}
+----
+
+
+

@@ -1,0 +1,18 @@
+---
+title: Installing the Client-Side Development Environment
+order: 2
+layout: page
+---
+
+[[clientside.installing]]
+= Installing the Client-Side Development Environment
+
+The installation of the client-side development libraries is described in
+<<dummy/../../../framework/getting-started/getting-started-overview.asciidoc#getting-started.overview,"Getting
+Started with Vaadin">>. You especially need the [filename]#vaadin-client#
+library, which contains the client-side Java API, and
+[filename]#vaadin-client-compiler#, which contains the Vaadin Client Compiler
+for compiling Java to JavaScript.
+
+
+

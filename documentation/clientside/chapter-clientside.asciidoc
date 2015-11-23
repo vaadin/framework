@@ -1,0 +1,18 @@
+[[clientside]]
+== Client-Side Vaadin Development
+
+This chapter gives an overview of the Vaadin client-side framework, its
+architecture, and development tools.
+
+
+include::clientside-overview.asciidoc[leveloffset=+2]
+
+include::clientside-installing.asciidoc[leveloffset=+2]
+
+include::clientside-module.asciidoc[leveloffset=+2]
+
+include::clientside-compiling.asciidoc[leveloffset=+2]
+
+include::clientside-widget.asciidoc[leveloffset=+2]
+
+include::clientside-debugging.asciidoc[leveloffset=+2]

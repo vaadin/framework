@@ -1,0 +1,64 @@
+---
+title: Advanced Client-Side Topics
+order: 10
+layout: page
+---
+
+[[gwt.advanced]]
+= Advanced Client-Side Topics
+
+In the following, we mention some topics that you may encounter when integrating
+widgets.
+
+[[gwt.advanced.phases]]
+== Client-Side Processing Phases
+
+Vaadin's client-side engine reacts to changes from the server in a number of
+phases, the order of which can be relevant for a connector. The processing
+occurs in the [methodname]#handleUIDLMessage()# method in
+[classname]#ApplicationConnection#, but the logic can be quite overwhelming, so
+we describe the phases in the following summary.
+
+. Any dependencies defined by using [classname]#@JavaScript# or
+[classname]#@StyleSheet# on the server-side class are loaded. Processing does
+not continue until the browser confirms that they have been loaded.
+
+. New connectors are instantiated and [methodname]#init()# is run for each
+[interfacename]#Connector#.
+
+. State objects are updated, but no state change event is fired yet.
+
+. The connector hierarchy is updated, but no hierarchy change event is fired yet.
+[methodname]#setParent()# and [methodname]#setChildren()# are run in this phase.
+
+. Hierarchy change events are fired. This means that all state objects and the
+entire hierarchy are already up to date when this happens. The DOM hierarchy
+should in theory be up to date after all hierarchy events have been handled,
+although there are some built-in components that for various reasons do not
+always live up to this promise.
+
+. Captions are updated, causing [methodname]#updateCaption()# to be invoked on
+layouts as needed.
+
+. [classname]#@DelegateToWidget# is handled for all changed state objects using
+the annotation.
+
+. State change events are fired for all changed state objects.
+
+. [methodname]#updateFromUIDL()# is called for legacy connectors.
+
+. All RPC methods received from the server are invoked.
+
+. Connectors that are no longer included in the hierarchy are unregistered. This
+calls [methodname]#onUnregister()# on the [interfacename]#Connector#.
+
+. The layout phase starts, first checking the sizes and positions of all elements,
+and then notifying any [interfacename]#ElementResizeListener#s, as well as
+calling the appropriate layout method for the connectors that implement either
+[classname]#SimpleManagedLayout# or [classname]#DirectionalManagedLayout#
+interface.
+
+
+
+
+

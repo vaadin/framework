@@ -1,0 +1,107 @@
+---
+title: Installing Add-ons in Eclipse with Ivy
+order: 3
+layout: page
+---
+
+[[addons.eclipse]]
+= Installing Add-ons in Eclipse with Ivy
+
+The Vaadin Plugin for Eclipse uses Apache Ivy to resolve dependencies. The
+dependencies should be listed in the [filename]#ivy.xml# file in the project
+root. The Vaadin Directory allows dowloading add-ons from a Maven repository,
+which can be accessed also by Ivy.
+
+You can also use Ivy to resolve dependencies in an Ant script.
+
+. Open the add-on page in Vaadin Directory.
+
+. Select the version. The latest is shown by default, but you can choose another
+the version from the dropdown menu in the header of the add-on details page.
+
+. Click the [guilabel]#Maven/Ivy# to display the Ivy dependency declaration, as
+illustrated in Figure <<figure.addons.eclipse.ivybutton>>. If the add-on is
+available with multiple licenses, you will be prompted to select a license for
+the dependency.
+
++
+[[figure.addons.eclipse.ivybutton]]
+.Ivy Dependency Declaration
+image::img/directory-ivy-dependency.png[]
+
+. Open the [filename]#ivysettings.xml# in your Eclipse project either in the XML
+or Ivy Editor (either double-click the file or right-click it and select "Open
+With > Ivy Editor").
+
++
+Check that the settings file has the [literal]#++<ibiblio>++# entry given in the
+Directory page. It should be, if the file was created by the Vaadin project
+wizard in Eclipse. If not, copy it there.
+
+
++
+----
+<chain name="default">
+  ...
+  <ibiblio name="vaadin-addons"
+           usepoms="true"
+           m2compatible="true"
+           root="http://maven.vaadin.com/vaadin-addons"/>
+  ...
+</chain>
+----
++
+If you get Vaadin addons from another repository, such as the local repository
+if you have compiled them yourself, you need to define a resolver for the
+repository in the settings file.
+
+. Open the [filename]#ivy.xml# in your Eclipse project and copy the Ivy dependency
+to inside the [literal]#++dependencies++# element. It should be as follows:
+
+
++
+[subs="normal"]
+----
+&lt;dependencies&gt;
+    ...
+    &lt;dependency org="**com.vaadin.addon**"
+                name="**vaadin-charts**"
+                rev="**1.0.0**"/&gt;
+&lt;/dependencies&gt;
+----
++
+You can specify either a fixed version number or a dynamic revision tag, such as
+[literal]#++latest.release++#. You can find more information about the
+link:http://ant.apache.org/ivy/history/2.1.0/ivyfile/dependency.html[dependency
+declarations] in Ivy documentation.
+
++
+If the [filename]#ivy.xml# does not have a [literal]#++<configurations
+defaultconfmapping="default->default">++# defined, you also need to have
+[literal]#++conf="default->default"++# in the dependency to resolve transient
+dependencies correctly.
+
++
+IvyIDE immediately resolves the dependencies when you save the file.
+
+. Compile the add-on widget set
+////
+, as described in &lt;xref
+linkend="addons.compiling.eclipse"/&gt;.
+////
+by clicking the [guilabel]#Compile Vaadin widgets# button in the toolbar.
+
++
+[[figure.addons.eclipse.toolbar]]
+.Compiling Widget Set in Eclipse
+image::img/widgetset-compiling-toolbar-hi.png[]
+
+
+If you experience problems with Ivy, first check all the dependency parameters.
+IvyDE can sometimes cause unexpected problems. You can clear the Ivy dependency
+cache by right-clicking the project and selecting "Ivy > Clean all caches". To
+refresh Ivy configuration, select "Ivy > Refresh". To try resolving again Ivy,
+select "Ivy > Resolve".
+
+
+
