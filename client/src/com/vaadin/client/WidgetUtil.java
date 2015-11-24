@@ -995,9 +995,12 @@ public class WidgetUtil {
         final String currentValue = style.getProperty(styleProperty);
 
         style.setProperty(styleProperty, tempValue);
-        element.getOffsetWidth();
-        style.setProperty(styleProperty, currentValue);
 
+        // Read a style-based property to force the browser to recalculate the
+        // element's dimensions with the temporary style.
+        element.getOffsetWidth();
+
+        style.setProperty(styleProperty, currentValue);
     }
 
     /**
