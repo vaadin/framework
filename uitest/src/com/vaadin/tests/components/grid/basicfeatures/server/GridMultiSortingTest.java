@@ -43,10 +43,10 @@ public class GridMultiSortingTest extends GridBasicFeaturesTest {
                 "Auto");
 
         GridCellElement cell = getGridElement().getHeaderCell(0, 11);
-        new Actions(driver).moveToElement(cell, 5, 5).click().perform();
+        new Actions(driver).moveToElement(cell, 10, 10).click().perform();
         new Actions(driver).keyDown(Keys.SHIFT).perform();
         new Actions(driver)
-                .moveToElement(getGridElement().getHeaderCell(0, 0), 5, 5)
+                .moveToElement(getGridElement().getHeaderCell(0, 0), 10, 10)
                 .click().perform();
         new Actions(driver).keyUp(Keys.SHIFT).perform();
 
