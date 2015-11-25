@@ -499,11 +499,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return;
         }
 
+        Collection<Object> activeItemIds = activeItemHandler.getActiveItemIds();
         List<Column> columns = getGrid().getColumns();
         JsonArray rowData = Json.createArray();
         int i = 0;
         for (Object itemId : itemIds) {
-            if (activeItemHandler.getActiveItemIds().contains(itemId)) {
+            if (activeItemIds.contains(itemId)) {
                 Item item = container.getItem(itemId);
                 if (item != null) {
                     JsonObject row = getRowData(columns, itemId, item);

@@ -1810,12 +1810,18 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             if (!added.isEmpty()) {
                 changed = true;
                 selection.addAll(added);
+                for (Object id : added) {
+                    refreshRow(id);
+                }
             }
 
             Set<Object> removed = getDifference(selection, selectedRows);
             if (!removed.isEmpty()) {
                 changed = true;
                 selection.removeAll(removed);
+                for (Object id : removed) {
+                    refreshRow(id);
+                }
             }
 
             if (changed) {
@@ -5826,8 +5832,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Gets the
-     * {@link KeyMapper } being used by the data source.
+     * Gets the {@link KeyMapper } being used by the data source.
      * 
      * @return the key mapper being used by the data source
      */
