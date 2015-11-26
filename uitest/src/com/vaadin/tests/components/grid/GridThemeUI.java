@@ -126,7 +126,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             b.setSizeFull();
             row.join("address.streetAddress", "address.postalCode",
                     "address.city", "address.country").setComponent(b);
-            getColumn("age").setWidth(25);
+            // TODO: revert back to 25 when #16597 is fixed..
+            getColumn("age").setWidth(42);
             removeColumn("salary");
             setEditorEnabled(true);
             setSizeFull();
