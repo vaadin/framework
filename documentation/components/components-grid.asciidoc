@@ -60,9 +60,7 @@ API-level and functional differences to Table:
 * Grid has no generated columns. Instead, the container data source can be wrapped around a [classname]#GeneratedPropertyContainer#.
 * No column icons; you can implement them in a column with an [classname]#ImageRenderer#.
 * Components can not be shown in Grid cells; instead the much more efficient renderers can be used for the most common cases, and row editor for editing values.
-* No support for drag and drop currently.
-* No support for column resizing by dragging from column header boundaries.
-* Focusing with [methodname]#focus()# is currently not supported.
+* Limited support for drag and drop: the user can drag columns to reorder them.
 
 In addition, Grid has the following visual changes:
 
@@ -86,7 +84,7 @@ You can set the container in the constructor or with
 [methodname]#setContainerDataSource()#.
 
 For example, if you have a collection of beans, you could wrap them in a Vaadin
-[classname]#BeanItemContainer#, and bind to a [classname]#Grid# as follows
+[classname]#BeanContainer# or [classname]#BeanItemContainer#, and bind to a [classname]#Grid# as follows
 
 
 [source, java]
@@ -106,6 +104,9 @@ Grid grid = new Grid(container);
 grid.setColumnOrder("name", "born");
 layout.addComponent(grid);
 ----
+
+Note that you need to define [methodname]#equals()# and [methodname]#hashcode()# for
+bean ([classname]#Person#) class to make the [classname]#BeanItemContainer# work properly.
 
 [[components.grid.basic.manual]]
 === Default Data Source and Shorthands
@@ -177,8 +178,8 @@ A [classname]#Grid# can be set to be in [literal]#++SINGLE++# (default),
 grid.setSelectionMode(SelectionMode.SINGLE);
 ----
 
-Empty (null) selection is allowed in multi-selection mode, but not in single
-selection.
+Empty (null) selection is allowed by default, but can be disabled
+with [methodname]#setDeselectAllowed# in single-selection mode.
 
 The selection is handled with a different selection model object in each
 respective selection mode: [classname]#SingleSelectionModel#,
@@ -252,7 +253,8 @@ should synchronize or reset the selection with the container, such as by calling
 === Multiple Selection
 
 In the multiple selection mode, a user can select multiple items by clicking on
-the checkboxes in the leftmost column.
+the checkboxes in the leftmost column, or by using the spacebar to select/deselect the currently focused row.
+(space key is a customizable default).
 
 [[figure.components.grid.selection.multi]]
 .Multiple Selection in  [classname]#Grid#
@@ -301,9 +303,8 @@ delSelected.setEnabled(grid.getSelectedRows().size() > 0);
 
 Changes in the selection can be handled with a
 [interfacename]#SelectionListener#. The selection event object provides
-[methodname]#getAdded()# and [methodname]#getRemove()# to allow determining the
-differences in the selection change. When [classname]#Grid# is in immediate
-mode, the difference is one item, but in non-immediate mode can be more.
+[methodname]#getAdded()# and [methodname]#getRemoved()# to allow determining the
+differences in the selection change.
 
 
 [source, java]
@@ -327,7 +328,13 @@ grid.addSelectionListener(selection -> { // Java 8
 
 In addition to selecting rows, you can focus individual cells. The focus can be
 moved with arrow keys and, if editing is enabled, pressing Enter opens the
-editor. Pressing Tab or ShiftTab moves the focus to another component, as usual.
+editor. Normally pressing Tab or ShiftTab moves the focus to another component,
+as usual.
+
+In editing or unbuffered mode, Tab or ShiftTab moves the focus to
+next or previous cell. From first or last last cell of the row focus is moved
+to a previous or a next line respectively. Note you can make your own subclass of
+[classname]#DefaultEditorEventHandler# and change this behavior.
 
 With mouse, you can focus a cell by clicking on it. The clicks can be handled
 with an [interfacename]#ItemClickListener#. The [classname]#ItemClickEvent#
@@ -394,7 +401,7 @@ the [methodname]#removeColumn()#, as described later, or by hiding them in a
 === Hiding Columns
 
 Columns can be hidden by removing them with [methodname]#removeColumn()#. You
-can remove all columns with [methodname]#removeAllColumn()#. The removed columns
+can remove all columns with [methodname]#removeAllColumns()#. The removed columns
 are only removed from the grid, not from the container data source.
 
 To restore a previously removed column, you can call [methodname]#addColumn()#
@@ -441,6 +448,9 @@ space remaining from other columns, in proportion to the defined ratios.
 You can specify minimum and maximum widths for the expanding columns with
 [methodname]#setMinimumWidth()# and [methodname]#setMaximumWidth()#,
 respectively.
+
+The user can resize columns by mouse dragging. In this case all the columns widths
+are explicitly set to pixel values.
 
 
 [[components.grid.columns.frozen]]
@@ -513,7 +523,7 @@ The converter is run on the server-side, before sending the values to the
 client-side to be rendered with the renderer.
 
 The following renderers are available, as defined in the server-side
-[package]#com.vaadin.ui.renderer# package:
+[package]#com.vaadin.ui.renderers# package:
 
 [classname]#ButtonRenderer#:: Renders the data value as the caption of a button. A
 [interfacename]#RendererClickListener# can be given to handle the button clicks.
@@ -789,9 +799,24 @@ for information on implementing custom renderers.
 Optionally, you can give a [interfacename]#Converter# in the
 [methodname]#setRenderer()#, or define it for the column, to convert the data
 value to an intermediary representation that is rendered by the renderer. For
-example, when using an [classname]#ImageRenderer#, you could the image file name
+example, when using an [classname]#ImageRenderer#, you could store the image file name
 in the data column, which the converter would convert to a resource, which would
 then be rendered by the renderer.
+
+In this example, we use a converter and [classname]#HTMLRenderer# to display boolean
+values as FontAwesome icons
+[source, java]
+
+----
+// Have a column for hyperlink paths to Wikipedia
+grid.addColumn("truth", Boolean.class);
+Grid.Column truth = grid.getColumn("truth");
+truth.setRenderer(new HtmlRenderer(),
+    new StringToBooleanConverter(
+        FontAwesome.CHECK_CIRCLE_O.getHtml(),
+        FontAwesome.CIRCLE_O.getHtml()));
+...
+----
 
 In the following example, we use a converter to format URL paths to complete
 HTML hyperlinks with [classname]#HTMLRenderer#:
@@ -879,7 +904,7 @@ Similarly, you can add footer rows with [methodname]#appendFooterRow()#,
 
 You can join two or more header or footer cells with the [methodname]#join()#
 method. For header cells, the intention is usually to create column grouping,
-while for footer cells, you typically calculate sums or averates.
+while for footer cells, you typically calculate sums or averages.
 
 
 [source, java]
@@ -888,11 +913,13 @@ while for footer cells, you typically calculate sums or averates.
 HeaderRow groupingHeader = grid.prependHeaderRow();
 HeaderCell namesCell = groupingHeader.join(
     groupingHeader.getCell("firstname"),
-    groupingHeader.getCell("lastname"));
+    groupingHeader.getCell("lastname"))
+        .setText("Person");
 HeaderCell yearsCell = groupingHeader.join(
     groupingHeader.getCell("born"),
     groupingHeader.getCell("died"),
-    groupingHeader.getCell("lived"));
+    groupingHeader.getCell("lived"))
+        .setText("Dates of Life");
 ----
 
 
@@ -913,7 +940,7 @@ mainHeader.getCell("died").setText("Died In");
 mainHeader.getCell("lived").setText("Lived For");
 ----
 
-To use raw HTML in the captions, you can use [methodname]#setHTML()#.
+To use raw HTML in the captions, you can use [methodname]#setHtml()#.
 
 
 [source, java]
@@ -1041,10 +1068,8 @@ sorting.
 
 Grid supports line-based editing, where double-clicking a row opens the row
 editor. In the editor, the input fields can be edited, as well as navigated with
-Tab and ShiftTab keys. The editor has a [guibutton]#Save# button that commits
-the data item to the container data source and closes the editor. If validation
-fails, an error is displayed and the user can correct the inputs. A
-[guibutton]#Cancel# button discards the changes and exits the editor.
+Tab and ShiftTab keys. If validation fails, an error is displayed and the user
+can correct the inputs.
 
 To enable editing, you need to call [methodname]#setEditorEnabled(true)# for the
 grid.
@@ -1056,11 +1081,31 @@ Grid grid = new Grid(GridExample.exampleDataSource());
 grid.setEditorEnabled(true);
 ----
 
+Grid supports two row editor modes - buffered and unbuffered. Default mode is
+buffered. The mode could be changed by [methodname]#setBuffered(false)#
+
+[[components.grid.editing.buffered]]
+=== Buffered Mode
+
+The editor has a [guibutton]#Save# button that commits
+the data item to the container data source and closes the editor.  A
+[guibutton]#Cancel# button discards the changes and exits the editor.
+
 A row under editing is illustrated in <<figure.components.grid.editing>>.
 
 [[figure.components.grid.editing]]
 .Editing a Grid Row
 image::img/grid-editor-basic.png[]
+
+[[components.grid.editing.unbuffered]]
+=== Unbuffered Mode
+
+The editor has no buttons and all changed data is provided directly
+to the container. If another row is clicked, row editor for current row is closed and
+a row editor for the clicked row is opened.
+
+[[components.grid.editing.fields]]
+=== Editor Fields
 
 The editor fields are by default generated with a [interfacename]#FieldFactory#
 and bound to the container data source with a [classname]#FieldGroup#, which
@@ -1073,7 +1118,7 @@ To disable editing in a particular column, you can call
 [[components.grid.editing.editorfields]]
 === Customizing Editor Fields
 
-Te editor fields are normally created by the field factory of the editor's field
+The editor fields are normally created by the field factory of the editor's field
 group, which creates the fields according to the data types of their respective
 columns. To customize the editor fields of specific properties, such as to style
 them or to set up validation, you can provide them with
@@ -1106,7 +1151,7 @@ ifdef::web[]
 [[components.grid.editing.captions]]
 === Customizing Editor Buttons
 
-The editor has two buttons: [guibutton]#Save# and [guibutton]#Cancel#. You can
+In buffered mode, the editor has two buttons: [guibutton]#Save# and [guibutton]#Cancel#. You can
 set their captions with [methodname]#setEditorSaveCaption()# and
 [methodname]#setEditorCancelCaption()#, respectively.
 
@@ -1187,7 +1232,7 @@ ifdef::web[]
 [[components.grid.editing.validation]]
 === Handling Validation Errors
 
-The input fields are validated when the save button is clicked. The default
+The input fields are validated when the value is updated. The default
 error handler displays error indicators in the invalid fields, as well as the
 first error in the editor.
 
@@ -1207,8 +1252,6 @@ endif::web[]
 The fields are generated by the [classname]#FieldFactory# of the field group;
 you can also set it with [methodname]#setEditorFieldFactory()#. Alternatively,
 you can create the editor fields explicitly with [methodname]#setEditorField()#.
-
-
 
 [[components.grid.scrolling]]
 == Programmatic Scrolling
