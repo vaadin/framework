@@ -32,11 +32,11 @@ You could define it declaractively with the following equivalent design:
 
 [source, html]
 ----
-<v-vertical-layout>
-  <v-text-field caption="Name"/>
-  <v-text-field caption="Street address"/>
-  <v-text-field caption="Postal code"/>
-</v-vertical-layout>
+<vaadin-vertical-layout>
+  <vaadin-text-field caption="Name"/>
+  <vaadin-text-field caption="Street address"/>
+  <vaadin-text-field caption="Postal code"/>
+</vaadin-vertical-layout>
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
 
@@ -67,17 +67,17 @@ to variables in the Java code, as well as optional attributes.
 <!DOCTYPE html>
 <html>
   <body>
-    <v-vertical-layout size-full>
+    <vaadin-vertical-layout size-full>
       <!-- Label with HTML content -->
-      <v-label><b>Hello!</b> - How are you?</v-label>
+      <vaadin-label><b>Hello!</b> - How are you?</vaadin-label>
 
-      <v-horizontal-layout size-full :expand>
-        <v-tree _id="mytree" caption="My Tree"
+      <vaadin-horizontal-layout size-full :expand>
+        <vaadin-tree _id="mytree" caption="My Tree"
                 width-auto height-full/>
-        <v-table _id="mytable" caption="My Table"
+        <vaadin-table _id="mytable" caption="My Table"
                  size-full :expand/>
-      </v-horizontal-layout>
-    </v-vertical-layout>
+      </vaadin-horizontal-layout>
+    </vaadin-vertical-layout>
   </body>
 </html>
 ----
@@ -98,12 +98,12 @@ Hierarchical UI">>.
 HTML elements of the declarative syntax are directly mapped to Vaadin components
 according to their Java class names. The tag of a component element has a
 namespace prefix separated by a dash. Vaadin core components, which are defined
-in the [package]#com.vaadin.ui# package, have [literal]#++v-++# prefix. The rest
+in the [package]#com.vaadin.ui# package, have [literal]#++vaadin-++# prefix. The rest
 of an element tag is determined from the Java class name of the component, by
 making it lower-case, while adding a dash ( [literal]#++-++#) before every
 previously upper-case letter as a word separator. For example,
 [classname]#ComboBox# component has declarative element tag
-[literal]#++<v-combo-box>++#.
+[literal]#++<vaadin-combo-box>++#.
 
 [[application.declarative.elements.prefix]]
 === Component Prefix to Package Mapping
@@ -144,12 +144,12 @@ You would make the package prefix mapping and then use the component as follows:
   &lt;/head&gt;
 
   &lt;body&gt;
-    &lt;v-vertical-layout&gt;
-      &lt;v-label&gt;&lt;b&gt;Hello!&lt;/b&gt; - How are you?&lt;/v-label&gt;
+    &lt;vaadin-vertical-layout&gt;
+      &lt;vaadin-label&gt;&lt;b&gt;Hello!&lt;/b&gt; - How are you?&lt;/vaadin-label&gt;
 
       &lt;!-- Use it here --&gt;
       **&lt;my-example-component/&gt;**
-    &lt;/v-vertical-layout&gt;
+    &lt;/vaadin-vertical-layout&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 ----
@@ -163,7 +163,7 @@ caption. For example:
 
 [source, html]
 ----
-<v-button><b>OK</b></v-button>
+<vaadin-button><b>OK</b></vaadin-button>
 ----
 
 Some components, such as selection components, allow defining inline data within
@@ -172,11 +172,11 @@ the element. For example:
 
 [source, html]
 ----
-<v-native-select>
+<vaadin-native-select>
   <option>Mercury</option>
   <option>Venus</option>
   <option selected>Earth</option>
-</v-native-select>
+</vaadin-native-select>
 ----
 
 The declarative syntax of each component type is described in the JavaDoc API
@@ -205,7 +205,7 @@ classes.
 
 [source, html]
 ----
-<v-text-field caption="Name" input-prompt="Enter Name"/>
+<vaadin-text-field caption="Name" input-prompt="Enter Name"/>
 ----
 
 
@@ -230,7 +230,7 @@ example, the [literal]#++enabled++# attribute is boolean and has default value "
 
 [source, html]
 ----
-<v-button enabled="false">OK</v-button>
+<vaadin-button enabled="false">OK</vaadin-button>
 ----
 
 
@@ -246,19 +246,19 @@ component [parameter]#c# is equivalent to calling [methodname]#setExpandRatio(c,
 
 [subs="normal"]
 ----
-&lt;v-vertical-layout size-full&gt;
+&lt;vaadin-vertical-layout size-full&gt;
   &lt;!-- Align right in the containing layout --&gt;
-  &lt;v-label width-auto **:right**&gt;Hello!&lt;/v-label&gt;
+  &lt;vaadin-label width-auto **:right**&gt;Hello!&lt;/vaadin-label&gt;
 
   &lt;!-- Expands to take up all remaining vertical space --&gt;
-  &lt;v-horizontal-layout size-full **:expand**&gt;
+  &lt;vaadin-horizontal-layout size-full **:expand**&gt;
     &lt;!-- Automatic width - shrinks horizontally --&gt;
-    &lt;v-tree width-auto height-full/&gt;
+    &lt;vaadin-tree width-auto height-full/&gt;
 
     &lt;!-- Expands horizontally to take remaining space --&gt;
-    &lt;v-table size-full **:expand**/&gt;
-  &lt;/v-horizontal-layout&gt;
-&lt;/v-vertical-layout&gt;
+    &lt;vaadin-table size-full **:expand**/&gt;
+  &lt;/vaadin-horizontal-layout&gt;
+&lt;/vaadin-vertical-layout&gt;
 ----
 Again, compare the above declaration to the Java code given in
 <<dummy/../../../framework/application/application-architecture#application.architecture,"Building
@@ -286,7 +286,7 @@ design. This is the recommended way to identifying components.
 
 [source, html]
 ----
-<v-tree _id="mytree" caption="My Tree"/>
+<vaadin-tree _id="mytree" caption="My Tree"/>
 ----
 
 
@@ -337,7 +337,7 @@ public class MyViewDesign extends VerticalLayout {
 See the http://demo.vaadin.com/book-examples-vaadin7/book#application.declarative.designroot[on-line example, window="_blank"].
 
 The design root class must match or extend the root element class of the design.
-For example, earlier we had [literal]#++<v-vertical-layout>++# element in the
+For example, earlier we had [literal]#++<vaadin-vertical-layout>++# element in the
 HTML file, which can be bound to a class extending [classname]#VerticalLayout#.
 
 

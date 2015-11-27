@@ -42,14 +42,14 @@ Or in the declarative format:
 
 [source, html]
 ----
-<v-vertical-layout>
-  <v-label>The Ultimate Cat Finder</v-label>
+<vaadin-vertical-layout>
+  <vaadin-label>The Ultimate Cat Finder</vaadin-label>
 
-  <v-horizontal-layout>
-    <v-tree caption="Major Planets and Their Moons"/>
-    <v-panel/>
-  </v-horizontal-layout>
-</v-vertical-layout>
+  <vaadin-horizontal-layout>
+    <vaadin-tree caption="Major Planets and Their Moons"/>
+    <vaadin-panel/>
+  </vaadin-horizontal-layout>
+</vaadin-vertical-layout>
 ----
 
 You will usually need to tune the layout components a bit by setting sizes,

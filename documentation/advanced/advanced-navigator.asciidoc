@@ -170,17 +170,17 @@ following declarative design for the view:
 
 [source, html]
 ----
-<v-vertical-layout size-full>
-  <v-horizontal-layout size-full :expand>
-    <v-panel caption="List of Equals" height-full width-auto>
-      <v-vertical-layout _id="menuContent" width-auto margin/>
-    </v-panel>
+<vaadin-vertical-layout size-full>
+  <vaadin-horizontal-layout size-full :expand>
+    <vaadin-panel caption="List of Equals" height-full width-auto>
+      <vaadin-vertical-layout _id="menuContent" width-auto margin/>
+    </vaadin-panel>
 
-    <v-panel _id="equalPanel" caption="An Equal" size-full :expand/>
-  </v-horizontal-layout>
+    <vaadin-panel _id="equalPanel" caption="An Equal" size-full :expand/>
+  </vaadin-horizontal-layout>
 
-  <v-button _id="logout">Logout</v-button>
-</v-vertical-layout>
+  <vaadin-button _id="logout">Logout</vaadin-button>
+</vaadin-vertical-layout>
 ----
 
 The view's logic code would be as follows:
@@ -269,11 +269,11 @@ The animal sub-view would have the following declarative design:
 
 [source, html]
 ----
-<v-vertical-layout size-full>
-  <v-label _id="watching" size-auto :middle :center/>
-  <v-embedded _id="pic" :middle :center :expand/>
-  <v-label _id="back" size-auto :middle :center/>
-</v-vertical-layout>
+<vaadin-vertical-layout size-full>
+  <vaadin-label _id="watching" size-auto :middle :center/>
+  <vaadin-embedded _id="pic" :middle :center :expand/>
+  <vaadin-label _id="back" size-auto :middle :center/>
+</vaadin-vertical-layout>
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
 
