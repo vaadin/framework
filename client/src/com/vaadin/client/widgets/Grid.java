@@ -5586,6 +5586,11 @@ public class Grid<T> extends ResizeComposite implements
                                     initialWidth = col.getWidthActual();
 
                                     for (Column<?, T> c : getColumns()) {
+                                        if (selectionColumn == c) {
+                                            // Don't modify selection column.
+                                            continue;
+                                        }
+
                                         if (c.getWidth() < 0) {
                                             c.setWidth(c.getWidthActual());
                                             fireEvent(new ColumnResizeEvent<T>(
