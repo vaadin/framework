@@ -1284,8 +1284,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         private void updateAllSelectedState() {
-            if (allSelected != selection.size() >= selectionLimit) {
-                allSelected = selection.size() >= selectionLimit;
+            int totalRowCount = grid.datasource.size();
+            int rows = Math.min(totalRowCount, selectionLimit);
+            if (allSelected != selection.size() >= rows) {
+                allSelected = selection.size() >= rows;
                 grid.getRpcProxy(GridClientRpc.class).setSelectAll(allSelected);
             }
         }
