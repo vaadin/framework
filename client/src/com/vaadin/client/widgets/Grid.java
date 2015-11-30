@@ -119,6 +119,7 @@ import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -3530,11 +3531,17 @@ public class Grid<T> extends ResizeComposite implements
                  * height, but the spacer cell (td) has the borders, which
                  * should go on top of the previous row and next row.
                  */
-                double requiredHeightBoundingClientRectDouble = WidgetUtil
-                        .getRequiredHeightBoundingClientRectDouble(element);
+                double contentHeight;
+                if (detailsGenerator instanceof HeightAwareDetailsGenerator) {
+                    HeightAwareDetailsGenerator sadg = (HeightAwareDetailsGenerator) detailsGenerator;
+                    contentHeight = sadg.getDetailsHeight(rowIndex);
+                } else {
+                    contentHeight = WidgetUtil
+                            .getRequiredHeightBoundingClientRectDouble(element);
+                }
                 double borderTopAndBottomHeight = WidgetUtil
                         .getBorderTopAndBottomThickness(spacerElement);
-                double measuredHeight = requiredHeightBoundingClientRectDouble
+                double measuredHeight = contentHeight
                         + borderTopAndBottomHeight;
                 assert getElement().isOrHasChild(spacerElement) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
                 spacerHeight = measuredHeight;

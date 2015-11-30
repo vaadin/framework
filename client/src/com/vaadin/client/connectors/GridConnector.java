@@ -54,11 +54,11 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
-import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
@@ -489,13 +489,45 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
-    private class CustomDetailsGenerator implements DetailsGenerator {
+    private class CustomDetailsGenerator implements HeightAwareDetailsGenerator {
 
         private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
         private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
 
         @Override
         public Widget getDetails(int rowIndex) {
+            String id = getId(rowIndex);
+            if (id == null) {
+                return null;
+            }
+            ComponentConnector componentConnector = idToDetailsMap.get(id);
+            idToRowIndex.put(id, rowIndex);
+
+            return componentConnector.getWidget();
+        }
+
+        @Override
+        public double getDetailsHeight(int rowIndex) {
+            String id = getId(rowIndex);
+            ComponentConnector componentConnector = idToDetailsMap.get(id);
+
+            getLayoutManager().setNeedsMeasureRecursively(componentConnector);
+            getLayoutManager().layoutNow();
+
+            return getLayoutManager().getOuterHeightDouble(
+                    componentConnector.getWidget().getElement());
+        }
+
+        /**
+         * Fetches id from the row object that corresponds with the given
+         * rowIndex.
+         * 
+         * @since
+         * @param rowIndex
+         *            the index of the row for which to fetch the id
+         * @return id of the row if such id exists, {@code null} otherwise
+         */
+        private String getId(int rowIndex) {
             JsonObject row = getWidget().getDataSource().getRow(rowIndex);
 
             if (!row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
@@ -504,11 +536,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 return null;
             }
 
-            String id = row.getString(GridState.JSONKEY_DETAILS_VISIBLE);
-            ComponentConnector componentConnector = idToDetailsMap.get(id);
-            idToRowIndex.put(id, rowIndex);
-
-            return componentConnector.getWidget();
+            return row.getString(GridState.JSONKEY_DETAILS_VISIBLE);
         }
 
         public void updateConnectorHierarchy(List<ServerConnector> children) {
