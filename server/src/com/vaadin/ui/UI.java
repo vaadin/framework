@@ -139,7 +139,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     protected ActionManager actionManager;
 
-    /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
     private Page page = new Page(this, getState(false).pageState);
