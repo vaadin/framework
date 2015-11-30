@@ -53,6 +53,10 @@ public class LayoutManagerIE8 extends LayoutManager {
         } else {
             measuredSizes.remove(element);
         }
+        // clear any values that are saved to the element
+        if (super.getMeasuredSize(element, null) != null) {
+            super.setMeasuredSize(element, null);
+        }
     }
 
     @Override
@@ -62,6 +66,13 @@ public class LayoutManagerIE8 extends LayoutManager {
         if (measured != null) {
             return measured;
         } else {
+            // check if saved to the element instead
+            MeasuredSize measuredSize = super.getMeasuredSize(element, null);
+            if (measuredSize != null) {
+                // move the value back to the map
+                setMeasuredSize(element, measuredSize);
+                return measuredSize;
+            }
             return defaultSize;
         }
     }
@@ -72,13 +83,17 @@ public class LayoutManagerIE8 extends LayoutManager {
 
         // #12688: IE8 was leaking memory when adding&removing components.
         // Uses IE specific logic to figure if an element has been removed from
-        // DOM or not. For removed elements the measured size is discarded.
+        // DOM or not. For removed elements the measured size is stored within
+        // the element in case the element gets re-attached.
         Node rootNode = Document.get().getBody();
 
         Iterator<Element> i = measuredSizes.keySet().iterator();
         while (i.hasNext()) {
             Element e = i.next();
             if (!rootNode.isOrHasChild(e)) {
+                // Store in element in case is still needed.
+                // Not attached, so reflow isn't a problem.
+                super.setMeasuredSize(e, measuredSizes.get(e));
                 i.remove();
             }
         }
