@@ -128,7 +128,6 @@ public class MultiSelectionModelConnector extends
                             }
                         });
             } else if (renderer != null) {
-                renderer.destroy();
                 selectAll.removeHandler();
                 dataAvailable.removeHandler();
                 renderer = null;
