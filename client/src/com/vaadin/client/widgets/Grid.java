@@ -4791,7 +4791,35 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             if (renderer != bodyRenderer) {
+                // Variables used to restore removed column.
+                boolean columnRemoved = false;
+                double widthInConfiguration = 0.0d;
+                ColumnConfiguration conf = null;
+                int index = 0;
+
+                if (grid != null
+                        && (bodyRenderer instanceof WidgetRenderer || renderer instanceof WidgetRenderer)) {
+                    // Column needs to be recreated.
+                    index = grid.getColumns().indexOf(this);
+                    conf = grid.escalator.getColumnConfiguration();
+                    widthInConfiguration = conf.getColumnWidth(index);
+
+                    conf.removeColumns(index, 1);
+                    columnRemoved = true;
+                }
+
+                // Complex renderers need to be destroyed.
+                if (bodyRenderer instanceof ComplexRenderer) {
+                    ((ComplexRenderer) bodyRenderer).destroy();
+                }
+
                 bodyRenderer = renderer;
+
+                if (columnRemoved) {
+                    // Restore the column.
+                    conf.insertColumns(index, 1);
+                    conf.setColumnWidth(index, widthInConfiguration);
+                }
 
                 if (grid != null) {
                     grid.refreshBody();
@@ -5486,7 +5514,7 @@ public class Grid<T> extends ResizeComposite implements
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(cell.getElement()
-                                .getFirstChildElement(), Widget.class);
+                                .getFirstChildElement(), null);
                         if (w != null) {
 
                             // Logical detach
