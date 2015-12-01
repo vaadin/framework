@@ -81,12 +81,15 @@ To enable server push, you need to define the push mode either in the deployment
 descriptor or with the [classname]#@Push# annotation for the UI.
 
 [[advanced.push.enabling.pushmode]]
-=== Push Modes
+=== Push Modes and Transports
 
 You can use server push in two modes: [literal]#++automatic++# and
 [literal]#++manual++#. The automatic mode pushes changes to the browser
 automatically after access() finishes. With the manual mode, you can do the push
 explicitly with [methodname]#push()#, which allows more flexibility.
+
+Sever push can use several transports - WebSockets, long polling, or combined WebSockets+XHR.
+Default is [literal]#++WebSockets++#.
 
 
 [[advanced.push.enabling.pushmode]]
@@ -112,6 +115,15 @@ parameter as follows:
 public class PushyUI extends UI {
 ----
 
+To use the long polling transport, you need to set the [parameter]#Transport.LONG_POLLING#
+parameter as follows:
+
+
+[source, java]
+----
+@Push(transport=Transport.LONG_POLLING)
+public class PushyUI extends UI {
+----
 
 [[advanced.push.enabling.servlet]]
 === Servlet Configuration

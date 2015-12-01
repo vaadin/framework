@@ -31,6 +31,13 @@ The result is shown in <<figure.application.errors.error-indicator>>.
 .Error Indicator Active
 image::img/errorindicator-example2.png[]
 
+[[application.errors.reconnect]]
+== Connection Fault
+
+If the connection to the server is lost, Vaadin application shows a "lost connection" notification
+and tries to restore the connection. After several retries, an error message is shown.
+You can customize the messages, timeouts and the number of reconnect attempts using [classname]#ReconnectDialogConfiguration#
+class. Use [methodname]#getReconnectDialogConfiguration# of your [classname]#UI# object.
 
 ifdef::web[]
 [[application.errors.systemmessages]]
