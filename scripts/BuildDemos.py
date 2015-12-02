@@ -88,7 +88,14 @@ if __name__ == "__main__":
 			print("%s demo validation failed: %s" % (demo, e))
 			if demo not in ignoredDemos:
 				demosFailed = True
-		removeDir(demo)
+		except EnvironmentError as e:
+			print("%s demo validation failed: %s" % (demo, e))
+			if demo not in ignoredDemos:
+				demosFailed = True
+		try:
+			removeDir(demo)
+		except:
+			pass
 		print("")
 	if demosFailed:
 		sys.exit(1)
