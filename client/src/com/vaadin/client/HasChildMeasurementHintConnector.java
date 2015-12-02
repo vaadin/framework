@@ -22,7 +22,7 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
  * Connector with layout measuring hint. Used to improve granularity of control
  * over child component measurements.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface HasChildMeasurementHintConnector extends

@@ -19,7 +19,7 @@ package com.vaadin.ui;
  * Component with layout measuring hint. Used to improve granularity of control
  * over child component measurements.
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public interface HasChildMeasurementHint extends HasComponents {

@@ -1312,7 +1312,7 @@ public class WidgetUtil {
     /**
      * JavaScript hack to prevent text selection in various browsers.
      * 
-     * @since
+     * @since 7.6
      * @param e
      *            element for enabling or disabling text selection
      * @param enable

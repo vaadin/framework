@@ -1190,7 +1190,6 @@ public class MessageHandler {
             /**
              * Updates the hierarchy for a connector
              * 
-             * @since
              * @param connectorId
              *            the id of the connector to update
              * @param childConnectorIds

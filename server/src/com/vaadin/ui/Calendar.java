@@ -2001,7 +2001,7 @@ public class Calendar extends AbstractComponent implements
      * Allow setting first day of week depending on Locale. Set to null if you
      * want first day of week depend on locale
      * 
-     * @since
+     * @since 7.6
      * @param dayOfWeek
      */
     public void setFirstDayOfWeek(Integer dayOfWeek) {
