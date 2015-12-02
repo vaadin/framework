@@ -11,6 +11,11 @@ parser.add_argument("buildResultUrl", type=str, help="URL for the build result p
 parser.add_argument("stagingRepo", type=str, help="URL for the staging repository")
 parser.add_argument("tbapiUrl", type=str, help="URL for the TestBench API build")
 
+parser.add_argument("frameworkRevision", type=str, default="[fill in framework repository revision]", nargs="?")
+parser.add_argument("screenshotRevision", type=str, default="[fill in screenshot repository revision]", nargs="?")
+parser.add_argument("archetypeRevision", type=str, default="[fill in maven-integration repository revision]", nargs="?")
+parser.add_argument("mavenPluginRevision", type=str, default="[fill in maven-plugin repository revision]", nargs="?")
+
 args = parser.parse_args()
 
 content = """<html>
@@ -45,10 +50,10 @@ content += """</pre>
 VERSION={version}
 
 GERRIT_USER=[fill in your gerrit username]
-FRAMEWORK_REVISION=[fill in framework revision]
-SCREENSHOTS_REVISION=[fill in screenshot repository revision]
-ARCHETYPES_REVISION=[fill in maven-integration repository revision]
-PLUGIN_REVISION=[fill in maven plug-in repository revision]
+FRAMEWORK_REVISION={frameworkRevision}
+SCREENSHOTS_REVISION={screenshotRevision}
+ARCHETYPES_REVISION={archetypeRevision}
+PLUGIN_REVISION={mavenPluginRevision}
 
 git clone ssh://$GERRIT_USER@dev.vaadin.com:29418/vaadin
 cd vaadin
@@ -77,7 +82,7 @@ cd ..
 <tr><td><a href="{tbapi}">Build and publish TestBench API for version {version} if proceeding</a></td></tr>
 </table>
 </body>
-</html>""".format(url=args.buildResultUrl, repoUrl=args.stagingRepo, version=args.version, tbapi=args.tbapiUrl)
+</html>""".format(url=args.buildResultUrl, repoUrl=args.stagingRepo, version=args.version, tbapi=args.tbapiUrl, frameworkRevision=args.frameworkRevision, screenshotRevision=args.screenshotRevision, archetypeRevision=args.archetypeRevision, mavenPluginRevision=args.mavenPluginRevision)
 
 f = open("result/report.html", 'w')
 f.write(content)
