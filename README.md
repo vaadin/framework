@@ -27,7 +27,7 @@ The Vaadin repository can be cloned using
 
 or using your favorite Git tool.
 
-If using Windows, you might want to add these Git settings: core.autocrlf=false and core.fileMode=false.
+If using Windows, you might want to add these Git settings: `core.autocrlf=false` and `core.fileMode=false`.
 
 Setting up Eclipse to Develop Vaadin 7
 =========
