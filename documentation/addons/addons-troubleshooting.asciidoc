@@ -1,0 +1,57 @@
+---
+title: Troubleshooting
+order: 6
+layout: page
+---
+
+[[addons.troubleshooting]]
+= Troubleshooting
+
+If you experience problems with using add-ons, you can try the following:
+
+* Check the [filename]#.gwt.xml# descriptor file under the the project root
+package. For example, if the project root package is
+[filename]#com.example.myproject#, the widget set definition file is typically
+at [filename]#com/example/project/AppWidgetset.gwt.xml#. The location is not
+fixed and it can be elsewhere, as long as references to it match. See
+<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+Module Descriptor">> for details on the contents of the client-side module
+descriptor, which is used to define a widget set.
+
+* Check the [filename]#WEB-INF/web.xml# deployment descriptor and see that the
+servlet for your UI has a widget set parameter, such as the following:
+
+
++
+----
+<init-param>
+  <description>UI widgetset</description>
+  <param-name>widgetset</param-name>
+  <param-value>com.example.project.AppWidgetSet</param-value>
+</init-param>
+----
++
+Check that the widget set class corresponds with the [filename]#.gwt.xml# file
+in the source tree.
+
+* See the [filename]#VAADIN/widgetsets# directory and check that the widget set
+appears there. You can remove it and recompile the widget set to see that the
+compilation works properly.
+
+* Use the [guilabel]#Net# tab in Firebug to check that the widget set (and theme)
+is loaded properly.
+
+* Use the ?debug parameter for the application to open the debug window and check
+if there is any version conflict between the widget set and the Vaadin library,
+or the themes. See
+<<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
+and Window">> for details.
+
+* Refresh and recompile the project. In Eclipse, select the project and press F5,
+stop the server, clean the server temporary directories, and restart it.
+
+* Check the Error Log view in Eclipse (or in the IDE you use).
+
+
+
+

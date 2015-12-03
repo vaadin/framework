@@ -1,0 +1,94 @@
+---
+title: Background
+order: 5
+layout: page
+---
+
+[[intro.background]]
+= Background
+
+The Vaadin Framework was not written overnight. After working with web user
+interfaces since the beginning of the Web, a group of developers got together in
+2000 to form IT Mill. The team had a desire to develop a new programming
+paradigm that would support the creation of real user interfaces for real
+applications using a real programming language.
+
+The library was originally called Millstone Library. The first version was used
+in a large production application that IT Mill designed and implemented for an
+international pharmaceutical company. IT Mill made the application already in
+the year 2001 and it is still in use. Since then, the company has produced
+dozens of large business applications with the library and it has proven its
+ability to solve hard problems easily.
+
+The next generation of the library, IT Mill Toolkit Release 4, was released in
+2006. It introduced an entirely new AJAX-based presentation engine. This allowed
+the development of AJAX applications without the need to worry about
+communications between the client and the server.
+
+[[intro.background.toolkit-5]]
+== Release 5 Into the Open
+
+((("IT Mill
+Toolkit")))
+((("AJAX")))
+IT Mill Toolkit 5, released initially at the end of 2007, took a significant
+step further into AJAX. The client-side rendering of the user interface was
+completely rewritten using GWT, the Google Web Toolkit. ((("Google Web
+Toolkit")))
+
+IT Mill Toolkit 5 introduced many significant improvements both in the
+server-side API and in the functionality. Rewriting the Client-Side Engine with
+GWT allowed the use of Java both on the client and the server-side. The
+transition from JavaScript to GWT made the development and integration of custom
+components and customization of existing components much easier than before, and
+it also allows easy integration of existing GWT components. The adoption of GWT
+on the client-side did not, by itself, cause any changes in the server-side API,
+because GWT is a browser technology that is hidden well behind the API. Also
+theming was completely revised in IT Mill Toolkit 5.
+
+The Release 5 was published under the Apache License 2, an unrestrictive open
+source license, to create faster expansion of the user base and to make the
+formation of a developer community possible.
+
+
+[[intro.background.vaadin6]]
+== Birth of Vaadin Release 6
+
+IT Mill Toolkit was renamed as __Vaadin Framework__, or Vaadin in short, in
+spring 2009. Later IT Mill, the company, was also renamed as Vaadin Ltd. Vaadin
+means an adult female semi-domesticated mountain reindeer in Finnish.
+
+With Vaadin 6, the number of developers using the framework exploded. Together
+with the release, the Vaadin Plugin for Eclipse was released, helping the
+creation of Vaadin projects. The introduction of Vaadin Directory in early 2010
+gave it a further boost, as the number of available components multiplied almost
+overnight. Many of the originally experimental components have since then
+matured and are now used by thousands of developers. In 2013, we are seeing
+tremendous growth in the ecosystem around Vaadin. The size of the user
+community, at least if measured by forum activity, has already gone past the
+competing server-side frameworks and even GWT.
+
+
+[[intro.background.vaadin7]]
+== The Major Revision with Vaadin 7
+
+Vaadin 7 was a major revision that changed the Vaadin API much more than Vaadin
+6 did. It is certainly more web-oriented than Vaadin 6 was. We are doing
+everything we can to help Vaadin rise high in the web universe. Some of this
+work is easy and almost routine - fixing bugs and implementing features. But
+going higher also requires standing firmer. That was one of the aims of Vaadin 7
+- redesigning the product so that the new architecture enables Vaadin to reach
+over many long-standing challenges. Many of the changes required breaking API
+compatibility with Vaadin 6, especially in the client-side, but they are made
+with a strong desire to avoid carrying unnecessary legacy burden far into the
+future.
+
+Inclusion of the Google Web Toolkit in Vaadin 7 was a significant development,
+as it meant that Vaadin now provides support for GWT as well. When Google opened
+the GWT development in summer 2012, Vaadin (the company) joined the new GWT
+steering committee. As a member of the committee, Vaadin can work towards the
+success of GWT as a foundation of the Java web development community.
+
+
+
+

@@ -1,0 +1,54 @@
+---
+title: Loading a Client-Side Application
+order: 4
+layout: page
+---
+
+[[clientsideapp.loading]]
+= Loading a Client-Side Application
+
+You can load the JavaScript code of a client-side application in an HTML __host
+page__ by including it with a [literal]#++<script>++# tag, for example as
+follows:
+
+
+----
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8" />
+
+    <title>Embedding a Vaadin Application in HTML Page</title>
+
+    <!-- Load the Vaadin style sheet -->
+    <link rel="stylesheet"
+          type="text/css"
+          href="/myproject/VAADIN/themes/reindeer/legacy-styles.css"/>
+  </head>
+
+  <body>
+    <h1>A Pure Client-Side Application</h1>
+    
+    <script type="text/javascript" language="javascript"
+            src="clientside/com.example.myapp.MyModule/
+                 com.example.myapp.MyModule.nocache.js">
+    </script>
+  </body>
+</html>
+----
+
+The JavaScript module is loaded in a [literal]#++<script>++# element. The
+[literal]#++src++# parameter should be a relative link from the host page to the
+compiled JavaScript module.
+
+If the application uses any supplementary Vaadin widgets, and not just core GWT
+widgets, you need to include the Vaadin theme as was done in the example. The
+exact path to the style file depends on your project structure - the example is
+given for a regular Vaadin application where themes are contained in the
+[filename]#VAADIN# folder in the WAR.
+
+In addition to CSS and scripts, you can load any other resources needed by the
+client-side application in the host page.
+
+
+

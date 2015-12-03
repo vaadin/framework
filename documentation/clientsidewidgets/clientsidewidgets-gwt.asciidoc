@@ -1,0 +1,20 @@
+---
+title: GWT Widgets
+order: 2
+layout: page
+---
+
+[[clientsidewidgets.gwt]]
+= GWT Widgets
+
+GWT widgets are user interface elements that are rendered as HTML. Rendering is
+done either by manipulating the HTML Document Object Model (DOM) through the
+lower-level DOM API, or simply by injecting the HTML with
+[methodname]#setInnerHTML()#. The layout of the user interface is managed using
+special panel widgets.
+
+For information about the basic GWT widgets, please refer to the GWT Developer's
+Guide at https://developers.google.com/web-toolkit/doc/latest/DevGuideUi.
+
+
+

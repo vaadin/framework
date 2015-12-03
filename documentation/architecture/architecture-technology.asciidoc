@@ -1,0 +1,208 @@
+---
+title: Technological Background
+order: 2
+layout: page
+---
+
+[[architecture.technology]]
+= Technological Background
+
+((("Google Web
+Toolkit")))
+((("Google Web
+Toolkit")))
+This section provides an introduction to the various technologies and designs,
+which Vaadin is based on. This knowledge is not necessary for using Vaadin, but
+provides some background if you need to make low-level extensions to Vaadin.
+
+[[architecture.technology.html]]
+== HTML and JavaScript
+
+((("HTML")))
+((("JavaScript")))
+The World Wide Web, with all its websites and most of the web applications, is
+based on the use of the Hypertext Markup Language (HTML). HTML defines the
+structure and formatting of web pages, and allows inclusion of graphics and
+other resources. It is based on a hierarchy of elements marked with start and
+end tags, such as [literal]#++<div> ... </div>++#. Vaadin uses HTML version 5,
+although conservatively, to the extent supported by the major browsers, and
+their currently most widely used versions.
+
+((("DOM")))
+JavaScript, on the other hand, is a programming language for embedding programs
+in HTML pages. JavaScript programs can manipulate a HTML page through the
+Document Object Model (DOM) of the page. They can also handle user interaction
+events. The Client-Side Engine of Vaadin and its client-side widgets do exactly
+this, although it is actually programmed in Java, which is compiled to
+JavaScript with the Vaadin Client Compiler.
+
+Vaadin largely hides the use of HTML, allowing you to concentrate on the UI
+component structure and logic. In server-side development, the UI is developed
+in Java using UI components and rendered by the client-side engine as HTML, but
+it is possible to use HTML templates for defining the layout, as well as HTML
+formatting in many text elements. Also when developing client-side widgets and
+UIs, the built-in widgets in the framework hide most of HTML DOM manipulation.
+
+
+[[architecture.technology.styling]]
+== Styling with CSS and Sass
+
+((("CSS")))
+((("Sass")))
+While HTML defines the content and structure of a web page, __Cascading Style
+Sheet__ (CSS) is a language for defining the visual style, such as colors, text
+sizes, and margins. CSS is based on a set of rules that are matched with the
+HTML structure by the browser. The properties defined in the rules determine the
+visual appearance of the matching HTML elements.
+
+
+[source, css]
+----
+/* Define the color of labels in my view */
+.myview .v-label {
+  color: blue;
+}
+----
+
+((("SCSS")))
+((("CSS3")))
+__Sass__, or __Syntactically Awesome Stylesheets__, is an extension of the CSS
+language, which allows the use of variables, nesting, and many other syntactic
+features that make the use of CSS easier and clearer. Sass has two alternative
+formats, SCSS, which is a superset of the syntax of CSS3, and an older indented
+syntax, which is more concise. The Vaadin Sass compiler supports the SCSS
+syntax.
+
+((("themes")))
+Vaadin handles styling with __themes__ defined with CSS or Sass, and associated
+images, fonts, and other resources. Vaadin themes are specifically written in
+Sass. In development mode, Sass files are compiled automatically to CSS. For
+production use, you compile the Sass files to CSS with the included compiler.
+The use of themes is documented in detail in
+<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>,
+which also gives an introduction to CSS and Sass.
+
+
+[[architecture.technology.ajax]]
+== AJAX
+
+((("AJAX")))
+((("XML")))
+((("JavaScript")))
+((("HTML
+5")))
+((("CSS")))
+((("DOM")))
+((("XMLHttpRequest")))
+AJAX, short for Asynchronous JavaScript and XML, is a technique for developing
+web applications with responsive user interaction, similar to traditional
+desktop applications. Conventional web applications, be they JavaScript-enabled
+or not, can get new page content from the server only by loading an entire new
+page. AJAX-enabled pages, on the other hand, handle the user interaction in
+JavaScript, send a request to the server asynchronously (without reloading the
+page), receive updated content in the response, and modify the page accordingly.
+This way, only small parts of the page data need to be loaded. This goal is
+archieved by the use of a certain set of technologies: HTML, CSS, DOM,
+JavaScript, and the XMLHttpRequest API in JavaScript. XML is just one way to
+serialize data between the client and the server, and in Vaadin it is serialized
+with the more efficient JSON.
+
+The asynchronous requests used in AJAX are made possible by the
+[methodname]#XMLHttpRequest# class in JavaScript. The API feature is available
+in all major browsers and is under way to become a W3C standard.
+
+The communication of complex data between the browser and the server requires
+some sort of __serialization__ (or __marshalling__) of data objects. The Vaadin
+servlet and the client-side engine handle the serialization of shared state
+objects from the server-side components to the client-side widgets, as well as
+serialization of RPC calls between the widgets and the server-side components.
+
+
+[[architecture.technology.gwt]]
+== Google Web Toolkit
+
+((("Google Web
+Toolkit")))
+The client-side framework of Vaadin is based on the Google Web Toolkit (GWT).
+Its purpose is to make it possible to develop web user interfaces that run in
+the browser easily with Java instead of JavaScript. Client-side modules are
+developed with Java and compiled into JavaScript with the Vaadin Compiler, which
+is an extension of the GWT Compiler. The client-side framework also hides much
+of the HTML DOM manipulation and enables handling browser events in Java.
+
+GWT is essentially a client-side technology, normally used to develop user
+interface logic in the web browser. Pure client-side modules still need to
+communicate with a server using RPC calls and by serializing any data. The
+server-driven development mode in Vaadin effectively hides all the client-server
+communications and allows handling user interaction logic in a server-side
+application. This makes the architecture of an AJAX-based web application much
+simpler. Nevertheless, Vaadin also allows developing pure client-side
+applications, as described in
+<<dummy/../../../framework/clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
+Applications">>.
+
+See
+<<dummy/../../../framework/architecture/architecture-client-side#architecture.client-side,"Client-Side
+Engine">> for a description of how the client-side framework based on GWT is
+used in the Client-Side Engine of Vaadin.
+<<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
+Vaadin Development">> provides information about the client-side development,
+and
+<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+with the Server-Side">> about the integration of client-side widgets with the
+server-side components.
+
+
+[[architecture.technology.servlet]]
+== Java Servlets
+
+A Java Servlet is a class that is executed in a Java web server (a __Servlet
+container__) to extend the capabilities of the server. In practice, it is
+normally a part of a __web application__, which can contain HTML pages to
+provide static content, and JavaServer Pages (JSP) and Java Servlets to provide
+dynamic content. This is illustrated in
+<<figure.architecture.technology.servlet>>.
+
+[[figure.architecture.technology.servlet]]
+.Java Web Applications and Servlets
+image::img/java-servlet-hi.png[]
+
+Web applications are usually packaged and deployed to a server as __WAR__ (
+__Web application ARchive__) files, which are Java JAR packages, which in turn
+are ZIP compressed packages. The web application is defined in a
+[filename]#WEB-INF/web.xml# deployment descriptor, which defines the servlet
+classes and also the mappings from request URL paths to the servlets. This is
+described in more detail in
+<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
+a web.xml Deployment Descriptor">>. The class path for the servlets and their
+dependencies includes the [filename]#WEB-INF/classes# and
+[filename]#WEB-INF/lib# folders. The [filename]#WEB-INF# is a special hidden
+folder that can not be accessed by its URL path.
+
+The servlets are Java classes that handle HTTP requests passed to them by the
+server through the __Java Servlet API__. They can generate HTML or other content
+as a response. JSP pages, on the other hand, are HTML pages, which allow
+including Java source code embedded in the pages. They are actually translated
+to Java source files by the container and then compiled to servlets.
+
+The UIs of server-side Vaadin applications run as servlets. They are wrapped
+inside a [classname]#VaadinServlet# servlet class, which handles session
+tracking and other tasks. On the initial request, it returns an HTML loader page
+and then mostly JSON responses to synchronize the widgets and their server-side
+counterparts. It also serves various resources, such as themes. The server-side
+UIs are implemented as classes extending the [classname]#UI# class, as described
+in
+<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
+a Server-Side Web Application">>. The class is given as a parameter to the
+Vaadin Servlet in the [filename]#web.xml# deployment descriptor.
+
+The Vaadin Client-Side Engine as well as client-side Vaadin applications are
+loaded to the browser as static JavaScript files. The client-side engine, or
+widget set in technical terms, needs to be located under the
+[filename]#VAADIN/widgetsets# path in the web application. The precompiled
+default widget set is served from the [filename]#vaadin-client-compiled# JAR by
+the Vaadin Servlet.
+
+
+
+

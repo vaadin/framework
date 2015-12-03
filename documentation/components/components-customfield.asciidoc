@@ -1,0 +1,33 @@
+---
+title: Composite Fields with CustomField
+order: 32
+layout: page
+---
+
+[[components.customfield]]
+= Composite Fields with [classname]#CustomField#
+
+The [classname]#CustomField# is a way to create composite components like with
+[classname]#CustomComponent#, except that it implements the
+[interfacename]#Field# interface and inherit [classname]#AbstractField#,
+described in
+<<dummy/../../../framework/components/components-fields#components.fields,"Field
+Components">>. A field allows editing a property value in the Vaadin data model,
+and can be bound to data with field groups, as described in
+<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding,"Creating
+Forms by Binding Fields to Items">>. The field values are buffered and can be
+validated with validators.
+
+A composite field class must implement the [methodname]#getType()# and
+[methodname]#initContent()# methods. The latter should return the content
+composite of the field. It is typically a layout component, but can be any
+component.
+
+It is also possible to override [methodname]#validate()#,
+[methodname]#setInternalValue()#, [methodname]#commit()#,
+[methodname]#setPropertyDataSource#, [methodname]#isEmpty()# and other methods
+to implement different functionalities in the field. Methods overriding
+[methodname]#setInternalValue()# should call the superclass method.
+
+
+

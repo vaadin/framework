@@ -1,0 +1,49 @@
+---
+title: NativeSelect
+order: 18
+layout: page
+---
+
+[[components.nativeselect]]
+= [classname]#NativeSelect#
+
+[classname]#NativeSelect# is a drop-down selection component implemented with
+the native selection input of web browsers, using the HTML
+[literal]#++<select>++# element.
+
+
+[source, java]
+----
+// Create the selection component
+NativeSelect select = new NativeSelect("Native Selection");
+        
+// Add some items
+select.addItems("Mercury", "Venus", ...);
+----
+
+The [methodname]#setColumns()# allows setting the width of the list as
+"columns", which is a measure that depends on the browser.
+
+[[figure.components.nativeselect.basic]]
+.The [classname]#NativeSelect# Component
+image::img/nativeselect-basic.png[]
+
+Common selection component features are described in
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection
+Components">>.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-select {}
+  .v-select-select {}
+----
+
+The component has a [literal]#++v-select++# overall style. The native
+[literal]#++select++# element has [literal]#++v-select-select++# style.
+
+
+
+

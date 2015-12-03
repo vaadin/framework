@@ -1,0 +1,135 @@
+---
+title: HorizontalSplitPanel and VerticalSplitPanel
+order: 8
+layout: page
+---
+
+[[layout.splitpanel]]
+= [classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel#
+
+((("[classname]#HorizontalSplitPanel#", id="term.layout.splitpanel.horizontal", range="startofrange")))
+
+
+((("[classname]#VerticalSplitPanel#", id="term.layout.splitpanel.vertical", range="startofrange")))
+
+
+[classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel# are a
+two-component containers that divide the available space into two areas to
+accomodate the two components. [classname]#HorizontalSplitPanel# makes the split
+horizontally with a vertical splitter bar, and [classname]#VerticalSplitPanel#
+vertically with a horizontal splitter bar. The user can drag the bar to adjust
+its position.
+
+You can set the two components with the [methodname]#setFirstComponent()# and
+[methodname]#setSecondComponent()# methods, or with the regular
+[methodname]#addComponent()# method.
+
+
+[source, java]
+----
+// Have a panel to put stuff in
+Panel panel = new Panel("Split Panels Inside This Panel");
+
+// Have a horizontal split panel as its content
+HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
+panel.setContent(hsplit);
+
+// Put a component in the left panel
+Tree tree = new Tree("Menu", TreeExample.createTreeContent());
+hsplit.setFirstComponent(tree);
+
+// Put a vertical split panel in the right panel
+VerticalSplitPanel vsplit = new VerticalSplitPanel();
+hsplit.setSecondComponent(vsplit);
+
+// Put other components in the right panel
+vsplit.addComponent(new Label("Here's the upper panel"));
+vsplit.addComponent(new Label("Here's the lower panel"));
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.splitpanel.basic[on-line example, window="_blank"].
+
+The result is shown in <<figure.splitpanel.basic>>. Observe that the tree is cut
+horizontally as it can not fit in the layout. If its height exceeds the height
+of the panel, a vertical scroll bar will appear automatically. If horizontal
+scroll bar is necessary, you could put the content in a [classname]#Panel#,
+which can have scroll bars in both directions.
+
+[[figure.splitpanel.basic]]
+.[classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel#
+image::img/splitpanel-example1.png[]
+
+You can set the split position with [methodname]#setSplitPosition()#. It accepts
+any units defined in the [classname]#Sizeable# interface, with percentual size
+relative to the size of the component.
+
+
+[source, java]
+----
+// Have a horizontal split panel
+HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
+hsplit.setFirstComponent(new Label("75% wide panel"));
+hsplit.setSecondComponent(new Label("25% wide panel"));
+
+// Set the position of the splitter as percentage
+hsplit.setSplitPosition(75, Sizeable.UNITS_PERCENTAGE);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.splitpanel.splitposition[on-line example, window="_blank"].
+
+Another version of the [methodname]#setSplitPosition()# method allows leaving
+out the unit, using the same unit as previously. The method also has versions
+take take a boolean parameter, [parameter]#reverse#, which allows defining the
+size of the right or bottom panel instead of the left or top panel.
+
+The split bar allows the user to adjust the split position by dragging the bar
+with mouse. To lock the split bar, use [methodname]#setLocked(true)#. When
+locked, the move handle in the middle of the bar is disabled.
+
+
+[source, java]
+----
+// Lock the splitter
+hsplit.setLocked(true);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.splitpanel.splitposition[on-line example, window="_blank"].
+
+Setting the split position programmatically and locking the split bar is
+illustrated in <<figure.component.splitpanel.splitposition>>.
+
+[[figure.component.splitpanel.splitposition]]
+.A Layout With Nested SplitPanels
+image::img/splitpanel-splitposition.png[]
+
+Notice that the size of a split panel must not be undefined in the split
+direction.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+/* For a horizontal SplitPanel. */
+.v-splitpanel-horizontal {}
+.v-splitpanel-hsplitter {}
+.v-splitpanel-hsplitter-locked {}
+
+/* For a vertical SplitPanel. */
+.v-splitpanel-vertical {}
+.v-splitpanel-vsplitter {}
+.v-splitpanel-vsplitter-locked {}
+
+/* The two container panels. */
+.v-splitpanel-first-container {}  /* Top or left panel. */
+.v-splitpanel-second-container {} /* Bottom or right panel. */
+----
+
+The entire split panel has the style [literal]#++v-splitpanel-horizontal++# or
+[literal]#++v-splitpanel-vertical++#, depending on the panel direction. The
+split bar or __splitter__ between the two content panels has either the
+[literal]#++...-splitter++# or [literal]#++...-splitter-locked++# style,
+depending on whether its position is locked or not.
+
+
+(((range="endofrange", startref="term.layout.splitpanel.horizontal")))
+(((range="endofrange", startref="term.layout.splitpanel.vertical")))
+
+

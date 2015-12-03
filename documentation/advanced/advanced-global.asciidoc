@@ -1,0 +1,234 @@
+---
+title: Accessing Session-Global Data
+order: 15
+layout: page
+---
+
+[[advanced.global]]
+= Accessing Session-Global Data
+
+__This section is mostly up-to-date with Vaadin 7, but has some information
+which still needs to be updated.__
+
+Applications typically need to access some objects from practically all user
+interface code, such as a user object, a business data model, or a database
+connection. This data is typically initialized and managed in the UI class of
+the application, or in the session or servlet.
+
+For example, you could hold it in the UI class as follows:
+
+
+[source, java]
+----
+class MyUI extends UI {
+    UserData userData;
+
+    public void init() {
+        userData = new UserData();
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+}
+----
+
+Vaadin offers two ways to access the UI object: with [methodname]#getUI()#
+method from any component and the global [methodname]#UI.getCurrent()# method.
+
+The [methodname]#getUI()# works as follows:
+
+
+[source, java]
+----
+data = ((MyUI)component.getUI()).getUserData();
+----
+
+This does not, however work in many cases, because it requires that the
+components are attached to the UI. That is not the case most of the time when
+the UI is still being built, such as in constructors.
+
+
+[source, java]
+----
+class MyComponent extends CustomComponent {
+    public MyComponent() {
+        // This fails with NullPointerException
+        Label label = new Label("Country: " +
+            getUI().getLocale().getCountry());
+
+        setCompositionRoot(label);
+    }
+}
+----
+
+The global access methods for the currently served servlet, session, and UI
+allow an easy way to access the data:
+
+
+[source, java]
+----
+data = ((MyUI) UI.getCurrent()).getUserData();
+----
+
+[[advanced.global.passing.problem]]
+== The Problem
+
+The basic problem in accessing session-global data is that the
+[methodname]#getUI()# method works only after the component has been attached to
+the application. Before that, it returns [parameter]#null#. This is the case in
+constructors of components, such as a [classname]#CustomComponent#:
+
+Using a static variable or a singleton implemented with such to give a global
+access to user session data is not possible, because static variables are global
+in the entire web application, not just the user session. This can be handy for
+communicating data between the concurrent sessions, but creates a problem within
+a session.
+
+The data would be shared by all users and be reinitialized every time a new user
+opens the application.
+
+
+[[advanced.global.passing.solutions-overview]]
+== Overview of Solutions
+
+To get the application object or any other global data, you have the following
+solutions:
+
+* Pass a reference to the global data as a parameter
+
+* Initialize components in [methodname]#attach()# method
+
+* Initialize components in the [methodname]#enter()# method of the navigation view
+(if using navigation)
+
+* Store a reference to global data using the __ThreadLocal Pattern__
+
+
+Each solution is described in the following sections.
+
+
+[[advanced.global.passing]]
+== Passing References Around
+
+You can pass references to objects as parameters. This is the normal way in
+object-oriented programming.
+
+
+[source, java]
+----
+class MyApplication extends Application {
+    UserData userData;
+
+    public void init() {
+        Window mainWindow = new Window("My Window");
+        setMainWindow(mainWindow);
+
+        userData = new UserData();
+        
+        mainWindow.addComponent(new MyComponent(this));
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+}
+
+class MyComponent extends CustomComponent {
+    public MyComponent(MyApplication app) {
+        Label label = new Label("Name: " +
+            app.getUserData().getName());
+
+        setCompositionRoot(label);
+    }
+}
+----
+
+If you need the reference in other methods, you either have to pass it again as
+a parameter or store it in a member variable.
+
+The problem with this solution is that practically all constructors in the
+application need to get a reference to the application object, and passing it
+further around in the classes is another hard task.
+
+
+[[advanced.global.attach]]
+== Overriding [methodname]#attach()#
+
+The [methodname]#attach()# method is called when the component is attached to
+the UI through containment hierarchy. The [methodname]#getUI()# method always
+works.
+
+
+[source, java]
+----
+class MyComponent extends CustomComponent {
+    public MyComponent() {
+        // Must set a dummy root in constructor
+        setCompositionRoot(new Label(""));
+    }
+
+    @Override
+    public void attach() {    
+        Label label = new Label("Name: " +
+            ((MyUI)component.getUI())
+                .getUserData().getName());
+
+        setCompositionRoot(label);
+    }
+}
+----
+
+While this solution works, it is slightly messy. You may need to do some
+initialization in the constructor, but any construction requiring the global
+data must be done in the [methodname]#attach()# method. Especially,
+[classname]#CustomComponent# requires that the
+[methodname]#setCompositionRoot()# method is called in the constructor. If you
+can't create the actual composition root component in the constructor, you need
+to use a temporary dummy root, as is done in the example above.
+
+Using [methodname]#getUI()# also needs casting if you want to use methods
+defined in your UI class.
+
+
+[[advanced.global.threadlocal]]
+== ThreadLocal Pattern
+
+((("ThreadLocal pattern", id="term.advanced.global.threadlocal", range="startofrange")))
+
+
+Vaadin uses the ThreadLocal pattern for allowing global access to the
+[classname]#UI#, and [classname]#Page# objects of the currently processed server
+request with a static [methodname]#getCurrent()# method in all the respective
+classes. This section explains why the pattern is used in Vaadin and how it
+works. You may also need to reimplement the pattern for some purpose.
+
+The ThreadLocal pattern gives a solution to the global access problem by solving
+two sub-problems of static variables.
+
+As the first problem, assume that the servlet container processes requests for
+many users (sessions) sequentially. If a static variable is set in a request
+belonging one user, it could be read or re-set by the next incoming request
+belonging to another user. This can be solved by setting the global reference at
+the beginning of each HTTP request to point to data of the current user, as
+illustrated in Figure <<figure.advanced.global.threadlocal.sequentiality>>.
+
+[[figure.advanced.global.threadlocal.sequentiality]]
+.Switching a static (or ThreadLocal) reference during sequential processing of requests
+image::img/threadlocal-sequentiality-hi.png[]
+
+The second problem is that servlet containers typically do thread pooling with
+multiple worker threads that process requests. Therefore, setting a static
+reference would change it in all threads running concurrently, possibly just
+when another thread is processing a request for another user. The solution is to
+store the reference in a thread-local variable instead of a static. You can do
+so by using the [classname]#ThreadLocal# class in Java for the switch reference.
+
+[[figure.advanced.global.threadlocal.concurrency]]
+.Switching [classname]#ThreadLocal# references during concurrent processing of requests
+image::img/threadlocal-concurrency-hi.png[]
+
+(((range="endofrange", startref="term.advanced.global.threadlocal")))
+
+
+

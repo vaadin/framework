@@ -1,0 +1,87 @@
+---
+title: PopupView
+order: 29
+layout: page
+---
+
+[[components.popupview]]
+= [classname]#PopupView#
+
+The [classname]#PopupView# component allows opening a pop-up view either by
+clicking on a link or programmatically. The component has two representations: a
+minimized textual representation and the popped-up content. The view can contain
+any components. The view closes automatically when the mouse pointer moves
+outside the view.
+
+In the following, we have a popup view with a text field and a button that opens
+automatically when the user clicks on a "Open the popup" link:
+
+
+[source, java]
+----
+// Content for the PopupView
+VerticalLayout popupContent = new VerticalLayout();
+popupContent.addComponent(new TextField("Textfield"));
+popupContent.addComponent(new Button("Button"));
+
+// The component itself
+PopupView popup = new PopupView("Pop it up", popupContent);
+layout.addComponent(popup);
+----
+
+If the textual minimized representation is not given (a null is given), the
+component is invisible in the minimized state. The pop-up can be opened
+programmatically by calling [methodname]#setPopupVisible(true)#. For example:
+
+
+[source, java]
+----
+// A pop-up view without minimalized representation
+PopupView popup = new PopupView(null,
+    new Table(null, TableExample.generateContent()));
+
+// A component to open the view
+Button button = new Button("Show table", click -> // Java 8
+     popup.setPopupVisible(true));
+
+layout.addComponents(button, popup);
+----
+
+When the pop-up is opened or closed, a [classname]#PopupVisibilityEvent# is
+fired, which can be handled with a [interfacename]#PopupVisibilityListener#
+added with [methodname]#setPopupVisibilityListener()#.
+
+
+[source, java]
+----
+// Fill the pop-up content when it's popped up
+popup.addPopupVisibilityListener(event -> { 
+    if (event.isPopupVisible()) {
+        popupContent.removeAllComponents();
+        popupContent.addComponent(new Table(null,
+            TableExample.generateContent()));
+    }});
+----
+
+[[components.popupview.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-popupview {}
+.v-overlay-container {
+  .v-popupview-popup {
+    .popupContent { }
+  }
+}
+----
+
+In minimalized state, the component has [literal]#++v-popupview++# style. When
+popped up, the pop-up content is shown in a [literal]#++v-popupview-popup++#
+overlay element under the [literal]#++v-overlay-container++#, which is contains
+all floating overlays outside the component hierarchy.
+
+
+
+

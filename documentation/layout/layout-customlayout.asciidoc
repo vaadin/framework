@@ -1,0 +1,100 @@
+---
+title: Custom Layouts
+order: 14
+layout: page
+---
+
+[[layout.customlayout]]
+= Custom Layouts
+
+While it is possible to create almost any typical layout with the standard
+layout components, it is sometimes best to separate the layout completely from
+code. With the [classname]#CustomLayout# component, you can write your layout as
+a template in HTML that provides locations of any contained components. The
+layout template is included in a theme. This separation allows the layout to be
+designed separately from code, for example using WYSIWYG web designer tools such
+as Adobe Dreamweaver.
+
+A template is a HTML file located under [filename]#layouts# folder under a theme
+folder under the [filename]#WebContent/VAADIN/themes/# folder, for example,
+[filename]#WebContent/VAADIN/themes/__themename/layouts/mylayout.html__#.
+(Notice that the root path [filename]#WebContent/VAADIN/themes/# for themes is
+fixed.) A template can also be provided dynamically from an
+[classname]#InputStream#, as explained below. A template includes
+[literal]#++<div>++# elements with a [parameter]#location# attribute that
+defines the location identifier. All custom layout HTML-files must be saved
+using UTF-8 character encoding.
+
+[subs="normal"]
+----
+&lt;table width="100%" height="100%"&gt;
+  &lt;tr height="100%"&gt;
+    &lt;td&gt;
+      &lt;table align="center"&gt;
+        &lt;tr&gt;
+          &lt;td align="right"&gt;User&amp;nbsp;name:&lt;/td&gt;
+          &lt;td&gt;**&lt;div location="username"&gt;&lt;/div&gt;**&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td align="right"&gt;Password:&lt;/td&gt;
+          &lt;td&gt;**&lt;div location="password"&gt;&lt;/div&gt;**&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td align="right" colspan="2"&gt;
+      **&lt;div location="okbutton"&gt;**&lt;/div&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+----
+The client-side engine of Vaadin will replace contents of the location elements
+with the components. The components are bound to the location elements by the
+location identifier given to [methodname]#addComponent()#, as shown in the
+example below.
+
+
+[source, java]
+----
+Panel loginPanel = new Panel("Login");
+CustomLayout content = new CustomLayout("layoutname");
+content.setSizeUndefined();
+loginPanel.setContent(content);
+loginPanel.setSizeUndefined();
+        
+// No captions for fields is they are provided in the template
+content.addComponent(new TextField(), "username");
+content.addComponent(new TextField(), "password");
+content.addComponent(new Button("Login"), "okbutton");
+----
+
+The resulting layout is shown below in <<figure.layout.customlayout>>.
+
+[[figure.layout.customlayout]]
+.Example of a Custom Layout Component
+image::img/customlayout-example1.png[]
+
+You can use [methodname]#addComponent()# also to replace an existing component
+in the location given in the second parameter.
+
+In addition to a static template file, you can provide a template dynamically
+with the [classname]#CustomLayout# constructor that accepts an
+[classname]#InputStream# as the template source. For example:
+
+
+[source, java]
+----
+new CustomLayout(new ByteArrayInputStream("<b>Template</b>".getBytes()));
+----
+
+or
+
+
+[source, java]
+----
+new CustomLayout(new FileInputStream(file));
+----
+
+
+
