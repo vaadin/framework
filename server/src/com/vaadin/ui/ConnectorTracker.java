@@ -368,7 +368,34 @@ public class ConnectorTracker implements Serializable {
             }
 
             if (!hierachyInfo.hasKey(firstVisibleParent.getConnectorId())) {
-                return false;
+                /*
+                 * No hierarchy change about to be sent, but this might be
+                 * because of an optimization that omits explicit hierarchy
+                 * changes for empty connectors that have state changes.
+                 */
+                if (hasVisibleChild(firstVisibleParent)) {
+                    // Not the optimization case if the parent has visible
+                    // children
+                    return false;
+                }
+
+                attributeName = ConnectorHierarchyWriter.class.getName()
+                        + ".stateUpdateConnectors";
+                Object stateUpdateConnectorsObj = request
+                        .getAttribute(attributeName);
+                if (stateUpdateConnectorsObj instanceof Set<?>) {
+                    Set<?> stateUpdateConnectors = (Set<?>) stateUpdateConnectorsObj;
+                    if (!stateUpdateConnectors.contains(firstVisibleParent
+                            .getConnectorId())) {
+                        // Not the optimization case if the parent is not marked
+                        // as dirty
+                        return false;
+                    }
+                } else {
+                    getLogger().warning(
+                            "Request attribute " + attributeName
+                                    + " is not a Set");
+                }
             }
         } else {
             getLogger().warning(
@@ -377,6 +404,18 @@ public class ConnectorTracker implements Serializable {
         }
 
         return true;
+    }
+
+    private static boolean hasVisibleChild(ClientConnector parent) {
+        Iterator<? extends ClientConnector> iterator = AbstractClientConnector
+                .getAllChildrenIterable(parent).iterator();
+        while (iterator.hasNext()) {
+            ClientConnector child = iterator.next();
+            if (LegacyCommunicationManager.isConnectorVisibleToClient(child)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ClientConnector findFirstVisibleParent(ClientConnector connector) {

@@ -91,16 +91,19 @@ public class ConnectorHierarchyWriter implements Serializable {
         }
         // Dummy assert just for conditionally storing away data that will be
         // used by the real assert later on
-        assert storeSentHierarchy(hierarchyInfo);
+        assert storeSentHierarchy(hierarchyInfo, stateUpdateConnectors);
 
         writer.write(JsonUtil.stringify(hierarchyInfo));
     }
 
-    private boolean storeSentHierarchy(JsonObject hierarchyInfo) {
+    private boolean storeSentHierarchy(JsonObject hierarchyInfo,
+            Set<String> stateUpdateConnectors) {
         VaadinRequest request = VaadinService.getCurrentRequest();
         if (request != null) {
             request.setAttribute(ConnectorHierarchyWriter.class.getName()
                     + ".hierarchyInfo", hierarchyInfo);
+            request.setAttribute(ConnectorHierarchyWriter.class.getName()
+                    + ".stateUpdateConnectors", stateUpdateConnectors);
         }
 
         // Always true, we're just setting up for another assert

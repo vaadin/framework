@@ -27,7 +27,10 @@ import com.vaadin.ui.SelectiveRenderer;
 public class MissingHierarchyDetection extends AbstractTestUI {
 
     private boolean isChildRendered = true;
-    private BrokenCssLayout layout = new BrokenCssLayout();
+    private BrokenCssLayout brokenLayout = new BrokenCssLayout();
+
+    private CssLayout normalLayout = new CssLayout(new Label(
+            "Normal layout child"));
 
     public class BrokenCssLayout extends CssLayout implements SelectiveRenderer {
         public BrokenCssLayout() {
@@ -45,7 +48,8 @@ public class MissingHierarchyDetection extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(layout);
+        addComponent(brokenLayout);
+        addComponent(normalLayout);
         addComponent(new Button("Toggle properly", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -64,7 +68,12 @@ public class MissingHierarchyDetection extends AbstractTestUI {
     private void toggle(boolean properly) {
         isChildRendered = !isChildRendered;
         if (properly) {
-            layout.markAsDirtyRecursive();
+            brokenLayout.markAsDirtyRecursive();
         }
+
+        normalLayout.getComponent(0).setVisible(isChildRendered);
+        // Must also have a state change of the layout to trigger special case
+        // related to optimizations
+        normalLayout.setCaption("With child: " + isChildRendered);
     }
 }
