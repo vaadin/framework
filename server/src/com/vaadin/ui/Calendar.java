@@ -1998,11 +1998,13 @@ public class Calendar extends AbstractComponent implements
     }
 
     /**
-     * Allow setting first day of week depending on Locale. Set to null if you
-     * want first day of week depend on locale
+     * Allow setting first day of week independent of Locale. Set to null if you
+     * want first day of week being defined by the locale
      * 
      * @since 7.6
      * @param dayOfWeek
+     *            any of java.util.Calendar.SUNDAY..java.util.Calendar.SATURDAY
+     *            or null to revert to default first day of week by locale
      */
     public void setFirstDayOfWeek(Integer dayOfWeek) {
         int minimalSupported = java.util.Calendar.SUNDAY;
