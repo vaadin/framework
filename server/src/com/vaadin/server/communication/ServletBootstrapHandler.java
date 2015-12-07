@@ -20,9 +20,18 @@ import com.vaadin.server.BootstrapHandler;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletService;
 
+import elemental.json.JsonObject;
+
 public class ServletBootstrapHandler extends BootstrapHandler {
     @Override
     protected String getServiceUrl(BootstrapContext context) {
+        String url = System.getProperty("com.vaadin.server.serviceUrl");
+        if (url == null) {
+            url = System.getProperty("com.vaadin.server.serviceurl");
+        }
+        if (url != null) {
+            return url;
+        }
         String pathInfo = context.getRequest().getPathInfo();
         if (pathInfo == null) {
             return null;
@@ -44,5 +53,18 @@ public class ServletBootstrapHandler extends BootstrapHandler {
             themeName = super.getThemeName(context);
         }
         return themeName;
+    }
+
+    @Override
+    protected JsonObject getApplicationParameters(BootstrapContext context) {
+        JsonObject parameters = super.getApplicationParameters(context);
+        String url = System.getProperty("com.vaadin.server.browserDetailsUrl");
+        if (url == null) {
+            url = System.getProperty("com.vaadin.server.browserdetailsurl");
+        }
+        if (url != null) {
+            parameters.put("browserDetailsUrl", url);
+        }
+        return parameters;
     }
 }
