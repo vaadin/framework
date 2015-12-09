@@ -532,6 +532,16 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 return super.getPropertyType(propertyId);
             }
         }
+
+        @Override
+        protected <T extends Field> T build(String caption, Class<?> dataType,
+                Class<T> fieldType) throws BindException {
+            T field = super.build(caption, dataType, fieldType);
+            if (field instanceof CheckBox) {
+                field.setCaption(null);
+            }
+            return field;
+        }
     }
 
     /**

@@ -13,7 +13,7 @@ $v-grid-row-selected-background-color: $v-selection-color !default;
 $v-grid-header-font-size: $v-table-header-font-size !default;
 $v-grid-header-background-color: $v-background-color !default;
 
-$v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
+$v-grid-cell-padding-horizontal: 1.5 * $v-table-cell-padding-horizontal !default;
 
 $v-grid-animations-enabled: $v-animations-enabled !default;
 
@@ -160,6 +160,10 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
       }
     }
     
+    input[type="text"].v-datefield-textfield {
+    	padding-left: $v-unit-size * 1.2;
+    }
+    
     .v-datefield-button {
       .v-ie8 & {
         margin-left: 0px;
@@ -184,9 +188,13 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
     }
 
     .v-checkbox {
-      margin: 0 round($v-grid-cell-padding-horizontal / 2);
+      margin: 0 round($v-grid-cell-padding-horizontal / 2) 0 $v-grid-cell-padding-horizontal;
 
-      label {
+	  > input[type="checkbox"] {
+      	margin-left: 0;
+      }
+      
+      > label {
         white-space: nowrap;
       }
     }

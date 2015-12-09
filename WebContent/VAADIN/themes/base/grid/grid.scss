@@ -21,7 +21,7 @@ $v-grid-footer-row-height: $v-grid-header-row-height !default;
 $v-grid-footer-font-size: $v-grid-header-font-size !default;
 $v-grid-footer-background-color: $v-grid-header-background-color !default;
 
-$v-grid-cell-padding-horizontal: 5px !default;
+$v-grid-cell-padding-horizontal: 10px !default;
 
 $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
@@ -266,10 +266,9 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
 
   .#{$primaryStyleName}-column-resize-handle {
     position: absolute;
-    width: 12px;
+    width: 2 * $v-grid-cell-padding-horizontal;
     top: 0px;
     bottom: 0px;
-    right: -6px;
     cursor: col-resize;
     z-index: 10;
 
@@ -279,6 +278,13 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+  
+  .sort-asc,
+  .sort-desc {
+  	> .#{$primaryStyleName}-column-resize-handle {
+      right: -$v-grid-cell-padding-horizontal;
+  	}
   }
 
   // Footer
@@ -420,7 +426,25 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         vertical-align: middle;
         display: inline-block;
       }
-
+      
+      .v-filterselect {
+      	padding-left: 0;
+      }
+      
+      input[type="text"],
+      input[type="password"] {
+      	padding-left: $v-grid-cell-padding-horizontal;
+      }
+      
+      input[type="text"]:not(.v-filterselect-input),
+      input[type="password"] {
+      	padding-right: $v-grid-cell-padding-horizontal / 2;
+      }
+      
+      input[type="checkbox"] {
+      	margin-left: $v-grid-cell-padding-horizontal;
+      }
+      
       .v-textfield,
       .v-datefield,
       .v-filterselect {

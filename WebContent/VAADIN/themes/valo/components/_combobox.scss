@@ -249,7 +249,7 @@
                                 $states: $states);
   width: 100% !important; // Need to override calculated inline style which is sometimes added
   height: 100%;
-  padding-right: round($unit-size * 1.2);
+  padding-right: round($unit-size * 1) + 1;
   border-radius: inherit;
 }
 

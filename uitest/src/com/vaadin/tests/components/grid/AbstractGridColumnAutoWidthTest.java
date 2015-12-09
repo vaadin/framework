@@ -32,7 +32,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
-    public static final int TOTAL_MARGIN_PX = 13;
+    public static final int TOTAL_MARGIN_PX = 21;
 
     @Before
     public void before() {

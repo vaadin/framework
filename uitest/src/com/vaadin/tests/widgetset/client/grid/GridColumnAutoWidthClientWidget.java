@@ -46,7 +46,7 @@ public class GridColumnAutoWidthClientWidget extends
         super(new Grid<List<String>>());
         grid = getTestedWidget();
         grid.setSelectionMode(SelectionMode.NONE);
-        grid.setWidth("700px");
+        grid.setWidth("750px");
 
         List<List<String>> list = new ArrayList<List<String>>();
         list.add(Arrays.asList("equal length", "a very long cell content",

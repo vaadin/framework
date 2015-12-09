@@ -41,7 +41,7 @@ public class GridColumnAutoWidth extends AbstractTestUI {
         }
 
         grid.setSelectionMode(SelectionMode.NONE);
-        grid.setWidth("700px");
+        grid.setWidth("750px");
         addComponent(grid);
     }
 
