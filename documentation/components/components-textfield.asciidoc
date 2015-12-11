@@ -9,13 +9,11 @@ layout: page
 
 ((("[classname]#TextField#", id="term.components.textfield", range="startofrange")))
 
-
 [classname]#TextField# is one of the most commonly used user interface
 components. It is a [classname]#Field# component that allows entering textual
 values using keyboard.
 
 The following example creates a simple text field:
-
 
 [source, java]
 ----
@@ -37,7 +35,6 @@ Value changes are handled with a [classname]#Property.ValueChangeListener#, as
 in most other fields. The value can be acquired with [methodname]#getValue()#
 directly from the text field, as is done in the example below, or from the
 property reference of the event.
-
 
 [source, java]
 ----
@@ -67,7 +64,7 @@ single-line text fields.
 
 [[figure.components.textfield.api]]
 .Text Field Class Relationships
-image::img/textfield-diagram-hi.png[]
+image::img/textfield-diagram-hi.png[width=50%]
 
 [[components.textfield.databinding]]
 == Data Binding
@@ -76,7 +73,6 @@ image::img/textfield-diagram-hi.png[]
 any property type that has a proper converter, as described in
 <<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
 Between Property Type and Representation">>.
-
 
 [source, java]
 ----
@@ -116,7 +112,6 @@ the Values in a Table">>, and
 <<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding,"Creating
 Forms by Binding Fields to Items">> regarding forms.
 
-Bean Binding
 [[components.textfield.length]]
 == String Length
 
@@ -130,19 +125,12 @@ Notice that the maximum length setting does not affect the width of the field.
 You can set the width with [methodname]#setWidth()#, as with other components.
 Using __em__ widths is recommended to better approximate the proper width in
 relation to the size of the used font. There is no standard way in HTML for
-setting the width exactly to a number of letters (in a monospaced font). You can
-trick your way around this restriction by putting the text field in an
-undefined-width [classname]#VerticalLayout# together with an undefined-width
-[classname]#Label# that contains a sample text, and setting the width of the
-text field as 100%. The layout will get its width from the label, and the text
-field will use that.
+setting the width exactly to a number of letters (in a monospaced font).
 
-Fitting TextField width to fixed input length
 [[components.textfield.nullvalues]]
 == Handling Null Values
 
 ((("Null representation", id="term.components.textfield.nullvalues", range="startofrange")))
-
 
 ((("[methodname]#setNullRepresentation()#")))
 As with any field, the value of a [classname]#TextField# can be set as
@@ -163,7 +151,6 @@ input a null value by using the null value representation. If the setting is
 representation string sets the value as the literal value of the string, not
 null. This default assumption is a safeguard for data sources that may not allow
 null values.
-
 
 [source, java]
 ----
@@ -196,7 +183,6 @@ image::img/textfield-nullrepresentation.png[]
 
 ((("[classname]#Text change events#", id="term.components.textfield.textchangeevents", range="startofrange")))
 
-
 Often you want to receive a change event immediately when the text field value
 changes. The __immediate__ mode is not literally immediate, as the changes are
 transmitted only after the field loses focus. In the other extreme, using
@@ -209,7 +195,6 @@ typing while an event is being processed.
 Text change events are received with a [classname]#TextChangeListener#, as is
 done in the following example that demonstrates how to create a text length
 counter:
-
 
 [source, java]
 ----
@@ -278,13 +263,10 @@ sequentially one after another. Change events are nevertheless communicated
 asynchronously to the server, so further input can be typed while event requests
 are being processed.
 
-
-
 (((range="endofrange", startref="term.components.textfield.textchangeevents")))
 
 [[components.textfield.css]]
 == CSS Style Rules
-
 
 [source, css]
 ----
@@ -295,7 +277,6 @@ The HTML structure of [classname]#TextField# is extremely simple, consisting
 only of an element with the [literal]#++v-textfield++# style.
 
 For example, the following custom style uses dashed border:
-
 
 [source, css]
 ----
@@ -317,7 +298,4 @@ that contain a text input field, even if the text input is not an actual
 [classname]#TextField#. This ensures that the style of different text input
 boxes is similar.
 
-
 (((range="endofrange", startref="term.components.textfield")))
-
-
