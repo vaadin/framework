@@ -92,21 +92,29 @@ public class SingleSelectionModelConnector extends
         @Override
         public boolean select(JsonObject row) {
             boolean changed = false;
-            if ((row == null && isDeselectAllowed())
-                    || (row != null && !getRowHandle(row).equals(selectedRow))) {
+
+            if (row == null && !isDeselectAllowed()) {
+                // Attempting to deselect, even though it's not allowed.
+            } else {
                 if (selectedRow != null) {
-                    selectedRow.getRow().remove(GridState.JSONKEY_SELECTED);
-                    selectedRow.updateRow();
-                    selectedRow.unpin();
-                    selectedRow = null;
+                    // Check if currently re-selected row was deselected from
+                    // the server.
+                    if (row != null && getRowHandle(row).equals(selectedRow)) {
+                        if (selectedRow.getRow().hasKey(
+                                GridState.JSONKEY_SELECTED)) {
+                            // Everything is OK, no need to do anything.
+                            return false;
+                        }
+                    }
+
+                    // Remove old selected row
+                    clearSelectedRow();
                     changed = true;
                 }
 
                 if (row != null) {
-                    selectedRow = getRowHandle(row);
-                    selectedRow.pin();
-                    selectedRow.getRow().put(GridState.JSONKEY_SELECTED, true);
-                    selectedRow.updateRow();
+                    // Select the new row.
+                    setSelectedRow(row);
                     changed = true;
                 }
             }
@@ -117,6 +125,20 @@ public class SingleSelectionModelConnector extends
             }
 
             return changed;
+        }
+
+        private void setSelectedRow(JsonObject row) {
+            selectedRow = getRowHandle(row);
+            selectedRow.pin();
+            selectedRow.getRow().put(GridState.JSONKEY_SELECTED, true);
+            selectedRow.updateRow();
+        }
+
+        private void clearSelectedRow() {
+            selectedRow.getRow().remove(GridState.JSONKEY_SELECTED);
+            selectedRow.updateRow();
+            selectedRow.unpin();
+            selectedRow = null;
         }
 
         @Override
