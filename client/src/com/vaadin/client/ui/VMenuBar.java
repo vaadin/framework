@@ -569,7 +569,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     protected void showChildMenuAt(CustomMenuItem item, int top, int left) {
         final int shadowSpace = 10;
 
-        popup = new VOverlay(true, false, true);
+        popup = createOverlay();
         popup.setOwner(this);
 
         /*
@@ -631,6 +631,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         popup.setPopupPosition(left, top);
 
+    }
+
+    /**
+     * Create an overlay for the menu bar.
+     * 
+     * This method can be overridden to use a custom overlay.
+     * 
+     * @since 7.6
+     * @return overlay to use
+     */
+    protected VOverlay createOverlay() {
+        return new VOverlay(true, false, true);
     }
 
     private int adjustPopupHeight(int top, final int shadowSpace) {
