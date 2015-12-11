@@ -124,8 +124,9 @@ length property is defined at [classname]#AbstractTextField# level.
 Notice that the maximum length setting does not affect the width of the field.
 You can set the width with [methodname]#setWidth()#, as with other components.
 Using __em__ widths is recommended to better approximate the proper width in
-relation to the size of the used font. There is no standard way in HTML for
-setting the width exactly to a number of letters (in a monospaced font).
+relation to the size of the used font, but the __em__ width is not exactly the
+width of a letter and varies by browser and operating system. There is no standard
+way in HTML for setting the width exactly to a number of letters (in a monospaced font).
 
 [[components.textfield.nullvalues]]
 == Handling Null Values
