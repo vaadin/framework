@@ -45,6 +45,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
@@ -132,7 +133,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
             // remove the touch handlers as well
             unregisterTouchHandlers();
-
         }
     }
 
@@ -324,6 +324,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // The default context click implementation only provides the mouse
         // coordinates relative to root element of widget.
         getRpcProxy(ContextClickRpc.class).contextClick(details);
+
+        WidgetUtil.clearTextSelection();
     }
 
     /**

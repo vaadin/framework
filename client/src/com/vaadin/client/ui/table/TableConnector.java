@@ -28,11 +28,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.HasChildMeasurementHintConnector;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
+import com.vaadin.client.HasChildMeasurementHintConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
@@ -56,7 +56,8 @@ import com.vaadin.shared.ui.table.TableState;
 @Connect(com.vaadin.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector implements
         HasComponentsConnector, ConnectorHierarchyChangeHandler, Paintable,
-        DirectionalManagedLayout, PostLayoutListener, HasChildMeasurementHintConnector {
+        DirectionalManagedLayout, PostLayoutListener,
+        HasChildMeasurementHintConnector {
 
     private List<ComponentConnector> childComponents;
 
@@ -120,6 +121,8 @@ public class TableConnector extends AbstractFieldConnector implements
 
         getRpcProxy(TableServerRpc.class).contextClick(rowKey, colKey, section,
                 details);
+
+        WidgetUtil.clearTextSelection();
     }
 
     protected VScrollTableRow getScrollTableRow(Element e) {

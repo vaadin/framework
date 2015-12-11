@@ -43,6 +43,7 @@ import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
@@ -1197,6 +1198,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getRpcProxy(GridServerRpc.class).contextClick(eventCell.getRowIndex(),
                 rowKey, columnId, section, details);
+
+        WidgetUtil.clearTextSelection();
     }
 
     /**

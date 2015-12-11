@@ -394,5 +394,7 @@ public class TreeConnector extends AbstractComponentConnector implements
         }
 
         getRpcProxy(TreeServerRpc.class).contextClick(key, details);
+
+        WidgetUtil.clearTextSelection();
     }
 }

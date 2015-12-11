@@ -1333,6 +1333,18 @@ public class WidgetUtil {
     }-*/;
 
     /**
+     * JavaScript hack to clear text selection in various browsers.
+     * 
+     * @since 7.6
+     */
+    public native static void clearTextSelection()
+    /*-{
+        if ($wnd.getSelection) {
+            $wnd.getSelection().removeAllRanges();
+        }
+    }-*/;
+
+    /**
      * The allowed value inaccuracy when comparing two double-typed pixel
      * values.
      * <p>
