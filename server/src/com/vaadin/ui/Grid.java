@@ -4859,6 +4859,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             removeExtension(datasourceExtension);
         }
 
+        // Remove old DetailComponentManager
+        if (detailComponentManager != null) {
+            detailComponentManager.remove();
+        }
+
         resetEditor();
 
         datasource = container;
@@ -4893,6 +4898,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this);
         datasourceExtension.addDataGenerator(new RowDataGenerator());
+        for (Extension e : getExtensions()) {
+            if (e instanceof DataGenerator) {
+                datasourceExtension.addDataGenerator((DataGenerator) e);
+            }
+        }
 
         detailComponentManager = new DetailComponentManager(this);
 
