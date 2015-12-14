@@ -2851,10 +2851,13 @@ public class Grid<T> extends ResizeComposite implements
                     @Override
                     public void onClick(GridClickEvent event) {
                         CellReference<?> targetCell = event.getTargetCell();
-                        int defaultRowIndex = getHeader().getRows().indexOf(getDefaultHeaderRow());
+                        int defaultRowIndex = getHeader().getRows().indexOf(
+                                getDefaultHeaderRow());
 
-                        if(targetCell.getColumnIndex() == 0 && targetCell.getRowIndex() == defaultRowIndex) {
-                            selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
+                        if (targetCell.getColumnIndex() == 0
+                                && targetCell.getRowIndex() == defaultRowIndex) {
+                            selectAllCheckBox.setValue(
+                                    !selectAllCheckBox.getValue(), true);
                         }
                     }
                 });
@@ -8198,10 +8201,10 @@ public class Grid<T> extends ResizeComposite implements
                 .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
 
         if (!SharedUtil.equals(oldStyleName, styleName)) {
-            if (oldStyleName != null) {
+            if (oldStyleName != null && !oldStyleName.isEmpty()) {
                 element.removeClassName(oldStyleName);
             }
-            if (styleName != null) {
+            if (styleName != null && !styleName.isEmpty()) {
                 element.addClassName(styleName);
             }
             element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME, styleName);
