@@ -137,6 +137,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
         @Override
         public void destroyData(Object itemId) {
             keyMapper.remove(itemId);
+            removeListener(itemId);
+        }
+
+        private void removeListener(Object itemId) {
             GridValueChangeListener removed = activeItemMap.remove(itemId);
 
             if (removed != null) {
@@ -239,6 +243,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             else {
+                // Remove obsolete value change listeners.
+                Set<Object> keySet = new HashSet<Object>(
+                        activeItemHandler.activeItemMap.keySet());
+                for (Object itemId : keySet) {
+                    activeItemHandler.removeListener(itemId);
+                }
+
                 /* Mark as dirty to push changes in beforeClientResponse */
                 bareItemSetTriggeredSizeChange = true;
                 markAsDirty();
