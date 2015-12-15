@@ -72,8 +72,9 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
     }
 
     private void assertEmbeddedTheme(String theme) {
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // IE8 won't initialize the dummy flash properly
+        if (BrowserUtil.isIE8(getDesiredCapabilities())
+                || BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // IE8 and Chrome 47 won't initialize the dummy flash properly
             return;
         }
         EmbeddedElement e = $(EmbeddedElement.class).first();
