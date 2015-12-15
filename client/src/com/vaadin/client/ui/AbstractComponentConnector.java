@@ -190,6 +190,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
                         event.getNativeEvent(), getWidget().getElement());
 
+                // Prevent selection for the element while pending long tap.
+                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
+                        false);
+
                 final EventTarget eventTarget = event.getNativeEvent()
                         .getEventTarget();
 
@@ -285,6 +289,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     private void cancelTouchTimer() {
         if (longTouchTimer != null) {
+            // Re-enable text selection
+            WidgetUtil.setTextSelectionEnabled(getWidget().getElement(), true);
             longTouchTimer.cancel();
         }
     }
