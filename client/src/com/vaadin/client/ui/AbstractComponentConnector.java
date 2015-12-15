@@ -181,6 +181,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     return;
                 }
 
+                // Prevent selection for the element while pending long tap.
+                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
+                        false);
+
+                if (BrowserInfo.get().isAndroid()) {
+                    // Android fires ContextMenu events automatically.
+                    return;
+                }
+
                 /*
                  * we need to build mouseEventDetails eagerly - the event won't
                  * be guaranteed to be around when the timer executes. At least
@@ -189,10 +198,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
                 final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
                         event.getNativeEvent(), getWidget().getElement());
-
-                // Prevent selection for the element while pending long tap.
-                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
-                        false);
 
                 final EventTarget eventTarget = event.getNativeEvent()
                         .getEventTarget();
@@ -278,8 +283,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     protected boolean shouldHandleLongTap() {
-        final BrowserInfo browserInfo = BrowserInfo.get();
-        return browserInfo.isTouchDevice() && !browserInfo.isAndroid();
+        return BrowserInfo.get().isTouchDevice();
     }
 
     /**
@@ -288,9 +292,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     private void cancelTouchTimer() {
+        WidgetUtil.setTextSelectionEnabled(getWidget().getElement(), true);
         if (longTouchTimer != null) {
             // Re-enable text selection
-            WidgetUtil.setTextSelectionEnabled(getWidget().getElement(), true);
             longTouchTimer.cancel();
         }
     }
