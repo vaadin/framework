@@ -1960,54 +1960,67 @@ public class Escalator extends Widget implements RequiresResize,
             return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
 
-        double getMaxCellWidth(int colIndex) throws IllegalArgumentException {
-            double maxCellWidth = -1;
+        double measureCellWidth(TableCellElement cell, boolean withContent) {
+            /*
+             * To get the actual width of the contents, we need to get the cell
+             * content without any hardcoded height or width.
+             * 
+             * But we don't want to modify the existing column, because that
+             * might trigger some unnecessary listeners and whatnot. So,
+             * instead, we make a deep clone of that cell, but without any
+             * explicit dimensions, and measure that instead.
+             */
 
-            assert isAttached() : "Can't measure max width of cell, since Escalator is not attached to the DOM.";
+            TableCellElement cellClone = TableCellElement.as((Element) cell
+                    .cloneNode(withContent));
+            cellClone.getStyle().clearHeight();
+            cellClone.getStyle().clearWidth();
 
-            NodeList<TableRowElement> rows = root.getRows();
-            for (int row = 0; row < rows.getLength(); row++) {
-                TableRowElement rowElement = rows.getItem(row);
-                TableCellElement cellOriginal = rowElement.getCells().getItem(
-                        colIndex);
-
-                if (cellOriginal == null || cellIsPartOfSpan(cellOriginal)) {
-                    continue;
-                }
-
+            cell.getParentElement().insertBefore(cellClone, cell);
+            double requiredWidth = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(cellClone);
+            if (BrowserInfo.get().isIE()) {
                 /*
-                 * To get the actual width of the contents, we need to get the
-                 * cell content without any hardcoded height or width.
-                 * 
-                 * But we don't want to modify the existing column, because that
-                 * might trigger some unnecessary listeners and whatnot. So,
-                 * instead, we make a deep clone of that cell, but without any
-                 * explicit dimensions, and measure that instead.
+                 * IE browsers have some issues with subpixels. Occasionally
+                 * content is overflown even if not necessary. Increase the
+                 * counted required size by 0.01 just to be on the safe side.
                  */
-
-                TableCellElement cellClone = TableCellElement
-                        .as((Element) cellOriginal.cloneNode(true));
-                cellClone.getStyle().clearHeight();
-                cellClone.getStyle().clearWidth();
-
-                rowElement.insertBefore(cellClone, cellOriginal);
-                double requiredWidth = WidgetUtil
-                        .getRequiredWidthBoundingClientRectDouble(cellClone);
-                if (BrowserInfo.get().isIE()) {
-                    /*
-                     * IE browsers have some issues with subpixels. Occasionally
-                     * content is overflown even if not necessary. Increase the
-                     * counted required size by 0.01 just to be on the safe
-                     * side.
-                     */
-                    requiredWidth += 0.01;
-                }
-
-                maxCellWidth = Math.max(requiredWidth, maxCellWidth);
-                cellClone.removeFromParent();
+                requiredWidth += 0.01;
             }
 
-            return maxCellWidth;
+            cellClone.removeFromParent();
+
+            return requiredWidth;
+        }
+
+        /**
+         * Gets the minimum width needed to display the cell properly.
+         * 
+         * @param colIndex
+         *            index of column to measure
+         * @param withContent
+         *            <code>true</code> if content is taken into account,
+         *            <code>false</code> if not
+         * @return cell width needed for displaying correctly
+         */
+        double measureMinCellWidth(int colIndex, boolean withContent) {
+            assert isAttached() : "Can't measure max width of cell, since Escalator is not attached to the DOM.";
+
+            double minCellWidth = -1;
+            NodeList<TableRowElement> rows = root.getRows();
+
+            for (int row = 0; row < rows.getLength(); row++) {
+
+                TableCellElement cell = rows.getItem(row).getCells()
+                        .getItem(colIndex);
+
+                if (cell != null && !cellIsPartOfSpan(cell)) {
+                    double cellWidth = measureCellWidth(cell, withContent);
+                    minCellWidth = Math.max(minCellWidth, cellWidth);
+                }
+            }
+
+            return minCellWidth;
         }
 
         private boolean cellIsPartOfSpan(TableCellElement cell) {
@@ -4293,14 +4306,26 @@ public class Escalator extends Widget implements RequiresResize,
 
         private double getMaxCellWidth(int colIndex)
                 throws IllegalArgumentException {
-            double headerWidth = header.getMaxCellWidth(colIndex);
-            double bodyWidth = body.getMaxCellWidth(colIndex);
-            double footerWidth = footer.getMaxCellWidth(colIndex);
+            double headerWidth = header.measureMinCellWidth(colIndex, true);
+            double bodyWidth = body.measureMinCellWidth(colIndex, true);
+            double footerWidth = footer.measureMinCellWidth(colIndex, true);
 
             double maxWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
             assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
             return maxWidth;
+        }
+
+        private double getMinCellWidth(int colIndex)
+                throws IllegalArgumentException {
+            double headerWidth = header.measureMinCellWidth(colIndex, false);
+            double bodyWidth = body.measureMinCellWidth(colIndex, false);
+            double footerWidth = footer.measureMinCellWidth(colIndex, false);
+
+            double minWidth = Math.max(headerWidth,
+                    Math.max(bodyWidth, footerWidth));
+            assert minWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
+            return minWidth;
         }
 
         /**
@@ -6658,5 +6683,15 @@ public class Escalator extends Widget implements RequiresResize,
 
     private void logWarning(String message) {
         getLogger().warning(message);
+    }
+
+    /**
+     * This is an internal method for calculating minimum width for Column
+     * resize.
+     * 
+     * @return minimum width for column
+     */
+    double getMinCellWidth(int colIndex) {
+        return columnConfiguration.getMinCellWidth(colIndex);
     }
 }

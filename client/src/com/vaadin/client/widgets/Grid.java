@@ -5603,17 +5603,22 @@ public class Grid<T> extends ResizeComposite implements
 
                                 private Column<?, T> col = getVisibleColumn(column);
                                 private double initialWidth = 0;
+                                private double minCellWidth;
 
                                 @Override
                                 public void onUpdate(double deltaX,
                                         double deltaY) {
-                                    col.setWidth(initialWidth + deltaX);
+                                    col.setWidth(Math.max(minCellWidth,
+                                            initialWidth + deltaX));
                                 }
 
                                 @Override
                                 public void onStart() {
                                     initialWidth = col.getWidthActual();
 
+                                    minCellWidth = escalator
+                                            .getMinCellWidth(getColumns()
+                                                    .indexOf(col));
                                     for (Column<?, T> c : getColumns()) {
                                         if (selectionColumn == c) {
                                             // Don't modify selection column.
@@ -5657,17 +5662,20 @@ public class Grid<T> extends ResizeComposite implements
         private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,
                 FlyweightCell cell) {
 
+            Element cellElement = cell.getElement();
+
+            boolean sortedBefore = cellElement.hasClassName("sort-asc")
+                    || cellElement.hasClassName("sort-desc");
+
             cleanup(cell);
             if (!headerRow.isDefault()) {
                 // Nothing more to do if not in the default row
                 return;
             }
 
-            Column<?, ?> column = getVisibleColumn(cell.getColumn());
+            final Column<?, T> column = getVisibleColumn(cell.getColumn());
             SortOrder sortingOrder = getSortOrder(column);
             boolean sortable = column.isSortable();
-
-            Element cellElement = cell.getElement();
 
             if (sortable) {
                 cellElement.addClassName("sortable");
@@ -5680,8 +5688,14 @@ public class Grid<T> extends ResizeComposite implements
 
             if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
                 cellElement.addClassName("sort-asc");
+                if (!sortedBefore) {
+                    verifyColumnWidth(column);
+                }
             } else {
                 cellElement.addClassName("sort-desc");
+                if (!sortedBefore) {
+                    verifyColumnWidth(column);
+                }
             }
 
             int sortIndex = Grid.this.getSortOrder().indexOf(sortingOrder);
@@ -5690,6 +5704,25 @@ public class Grid<T> extends ResizeComposite implements
                 // sorted and other sorted columns also exists.
                 cellElement.setAttribute("sort-order",
                         String.valueOf(sortIndex + 1));
+            }
+        }
+
+        /**
+         * Sort indicator requires a bit more space from the cell than normally.
+         * This method check that the now sorted column has enough width.
+         * 
+         * @param column
+         *            sorted column
+         */
+        private void verifyColumnWidth(Column<?, T> column) {
+            int colIndex = getColumns().indexOf(column);
+            double minWidth = escalator.getMinCellWidth(colIndex);
+            if (column.getWidthActual() < minWidth) {
+                // Fix column size
+                escalator.getColumnConfiguration().setColumnWidth(colIndex,
+                        minWidth);
+
+                fireEvent(new ColumnResizeEvent<T>(column));
             }
         }
 

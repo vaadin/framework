@@ -121,4 +121,14 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
                 cell.isElementPresent(By
                         .cssSelector("div.v-grid-column-resize-handle")));
     }
+
+    @Test
+    public void testShrinkColumnToZero() {
+        openTestURL();
+        GridCellElement cell = getGridElement().getCell(0, 1);
+        dragResizeColumn(1, 0, cell.getSize().getWidth());
+
+        assertGreaterOrEqual("Cell got too small.", cell.getSize().getWidth(),
+                10);
+    }
 }
