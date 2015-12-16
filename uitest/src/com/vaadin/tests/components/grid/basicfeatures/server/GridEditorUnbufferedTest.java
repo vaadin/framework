@@ -83,12 +83,17 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
     }
 
     @Test
-    public void testEditorMoveWithKeyboard() {
+    public void testEditorMoveWithKeyboard() throws InterruptedException {
         selectMenuPath(EDIT_ITEM_100);
 
         assertEditorOpen();
 
-        getGridElement().sendKeys(Keys.ENTER);
+        getEditorWidgets().get(0).click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            sleep(300);
+        }
 
         String firstFieldValue = getEditorWidgets().get(0)
                 .getAttribute("value");
@@ -96,11 +101,18 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
                 firstFieldValue);
 
         for (int i = 0; i < 10; i++) {
-            getGridElement().sendKeys(Keys.SHIFT, Keys.ENTER);
-        }
+            new Actions(getDriver()).keyDown(Keys.SHIFT).sendKeys(Keys.ENTER)
+                    .keyUp(Keys.SHIFT).perform();
 
-        firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
-        assertEquals("Editor should move to row 91", "(91, 0)", firstFieldValue);
+            if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+                sleep(300);
+            }
+
+            firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
+            int row = 100 - i;
+            assertEquals("Editor should move to row " + row,
+                    "(" + row + ", 0)", firstFieldValue);
+        }
     }
 
     @Test
@@ -133,7 +145,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
 
         getGridElement().getCell(10, 0).click();
 
-        assertEquals("Editor should not to row 10", "(10, 0)",
+        assertEquals("Editor should move to row 10", "(10, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));
 
     }
