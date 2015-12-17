@@ -5688,14 +5688,8 @@ public class Grid<T> extends ResizeComposite implements
 
             if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
                 cellElement.addClassName("sort-asc");
-                if (!sortedBefore) {
-                    verifyColumnWidth(column);
-                }
             } else {
                 cellElement.addClassName("sort-desc");
-                if (!sortedBefore) {
-                    verifyColumnWidth(column);
-                }
             }
 
             int sortIndex = Grid.this.getSortOrder().indexOf(sortingOrder);
@@ -5704,6 +5698,10 @@ public class Grid<T> extends ResizeComposite implements
                 // sorted and other sorted columns also exists.
                 cellElement.setAttribute("sort-order",
                         String.valueOf(sortIndex + 1));
+            }
+
+            if (!sortedBefore) {
+                verifyColumnWidth(column);
             }
         }
 
