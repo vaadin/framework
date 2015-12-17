@@ -175,8 +175,13 @@ public class AtmospherePushConnection implements PushConnection {
             config.setStringValue("logLevel", "debug");
         }
         for (String param : pushConfiguration.parameters.keySet()) {
-            config.setStringValue(param,
-                    pushConfiguration.parameters.get(param));
+            String value = pushConfiguration.parameters.get(param);
+            if (value.equalsIgnoreCase("true")
+                    || value.equalsIgnoreCase("false")) {
+                config.setBooleanValue(param, value.equalsIgnoreCase("true"));
+            } else {
+                config.setStringValue(param, value);
+            }
         }
         if (pushConfiguration.pushUrl != null) {
             url = pushConfiguration.pushUrl;
@@ -436,6 +441,16 @@ public class AtmospherePushConnection implements PushConnection {
          }-*/;
 
         protected final native void setIntValue(String key, int value)
+        /*-{
+            this[key] = value;
+        }-*/;
+
+        protected final native boolean getBooleanValue(String key)
+        /*-{
+           return this[key];
+         }-*/;
+
+        protected final native void setBooleanValue(String key, boolean value)
         /*-{
             this[key] = value;
         }-*/;
