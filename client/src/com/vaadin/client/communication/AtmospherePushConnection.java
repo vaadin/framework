@@ -520,6 +520,7 @@ public class AtmospherePushConnection implements PushConnection {
             maxReconnectOnClose: 10000000,
             trackMessageLength: true,
             enableProtocol: true,
+            handleOnlineOffline: false,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;
