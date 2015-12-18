@@ -22,7 +22,7 @@ package com.vaadin.shared.ui.table;
  * 
  * @see com.vaadin.ui.Table#setCollapseMenuContent(CollapseMenuContent)
  * 
- * @since
+ * @since 7.6
  * @author Vaadin Ltd
  */
 public enum CollapseMenuContent {

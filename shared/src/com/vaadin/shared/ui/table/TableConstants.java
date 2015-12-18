@@ -48,7 +48,7 @@ public class TableConstants implements Serializable {
     /**
      * Default value for {@link TableState#collapseMenuContent}.
      * 
-     * @since
+     * @since 7.6
      */
     public static final CollapseMenuContent DEFAULT_COLLAPSE_MENU_CONTENT = CollapseMenuContent.ALL_COLUMNS;
 

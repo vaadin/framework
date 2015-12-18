@@ -6505,7 +6505,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link CollapseMenuContent#ALL_COLUMNS}.
      * 
      * 
-     * @since
+     * @since 7.6
      * @param content
      *            the desired collapsible menu content setting
      */
@@ -6518,7 +6518,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * column collapse menu. The default is
      * {@link CollapseMenuContent#ALL_COLUMNS} .
      * 
-     * @since
+     * @since 7.6
      * @return the current collapsible menu content setting
      */
     public CollapseMenuContent getCollapseMenuContent() {
