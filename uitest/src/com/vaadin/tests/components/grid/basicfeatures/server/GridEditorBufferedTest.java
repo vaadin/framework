@@ -48,6 +48,9 @@ public class GridEditorBufferedTest extends GridEditorTest {
         WebElement textField = getEditorWidgets().get(0);
 
         textField.click();
+        // without this, the click in the middle of the field might not be after
+        // the old text on some browsers
+        new Actions(getDriver()).sendKeys(Keys.END).perform();
 
         textField.sendKeys(" changed");
 
@@ -67,6 +70,9 @@ public class GridEditorBufferedTest extends GridEditorTest {
         WebElement textField = getEditorWidgets().get(0);
 
         textField.click();
+        // without this, the click in the middle of the field might not be after
+        // the old text on some browsers
+        new Actions(getDriver()).sendKeys(Keys.END).perform();
 
         textField.sendKeys(" changed");
 
