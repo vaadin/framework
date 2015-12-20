@@ -25,7 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 /**
  * Test for PUSH version string in debug window.
@@ -33,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 @TestCategory("push")
-public class PushVersionInfoTest extends MultiBrowserTest {
+public class PushVersionInfoTest extends SingleBrowserTest {
 
     @Test
     public void testDisabledPush() {
@@ -63,8 +63,8 @@ public class PushVersionInfoTest extends MultiBrowserTest {
                 "Push client version doesn't contain 'vaadin' string",
                 jsString.contains("vaadin"));
         Assert.assertTrue(
-                "Push client version doesn't contain 'jquery' string",
-                jsString.contains("jquery"));
+                "Push client version doesn't contain 'javascript' string",
+                jsString.contains("javascript"));
     }
 
     private void selectInfoTab() {
