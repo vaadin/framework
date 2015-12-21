@@ -334,14 +334,14 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         GridCellElement draggedHeaderCell = getGridElement()
                 .getHeaderCell(0, 1);
         final int xOffset = 500;
-        new Actions(getDriver()).moveToElement(draggedHeaderCell, 10, 10)
+        new Actions(getDriver()).moveToElement(draggedHeaderCell, 20, 10)
                 .clickAndHold().moveByOffset(xOffset, 0).build().perform();
 
         WebElement floatingDragElement = findElement(By
                 .className("dragged-column-header"));
 
         int expectedLeft = draggedHeaderCell.getLocation().getX() + xOffset
-                + 10 - (floatingDragElement.getSize().getWidth() / 2);
+                + 20 - (floatingDragElement.getSize().getWidth() / 2);
         int realLeft = floatingDragElement.getLocation().getX();
 
         assertTrue("Dragged element location wrong, expected " + expectedLeft
