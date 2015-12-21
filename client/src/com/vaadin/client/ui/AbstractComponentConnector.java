@@ -283,7 +283,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     protected boolean shouldHandleLongTap() {
-        return BrowserInfo.get().isTouchDevice();
+        return BrowserInfo.get().isTouchDevice() && !BrowserInfo.get().isIOS();
     }
 
     /**
