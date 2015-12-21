@@ -1186,6 +1186,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     protected void sendContextClickEvent(MouseEventDetails details,
             EventTarget eventTarget) {
+        // if element is the resize indicator, ignore the event
+        if (isResizeHandle(eventTarget)) {
+            WidgetUtil.clearTextSelection();
+            return;
+        }
+
         EventCellReference<JsonObject> eventCell = getWidget().getEventCell();
 
         Section section = eventCell.getSection();
@@ -1200,6 +1206,16 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 rowKey, columnId, section, details);
 
         WidgetUtil.clearTextSelection();
+    }
+
+    private boolean isResizeHandle(EventTarget eventTarget) {
+        if (Element.is(eventTarget)) {
+            Element e = Element.as(eventTarget);
+            if (e.getClassName().contains("-column-resize-handle")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

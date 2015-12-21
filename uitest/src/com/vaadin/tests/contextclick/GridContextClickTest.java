@@ -18,6 +18,7 @@ package com.vaadin.tests.contextclick;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
@@ -87,6 +88,22 @@ public class GridContextClickTest extends AbstractContextClickTest {
                 "1. ContextClickEvent value: , propertyId: null, section: BODY",
                 getLogRow(0));
 
+    }
+
+    /**
+     * Performs a context click on given element at coordinates 20, 10 followed
+     * by a regular click. This prevents browser context menu from blocking
+     * future operations.
+     * 
+     * A smaller X offset might hit the resize handle of the previous cell that
+     * overlaps with the next header cell.
+     * 
+     * @param e
+     *            web element
+     */
+    @Override
+    protected void contextClick(WebElement e) {
+        contextClick(e, 20, 10);
     }
 
 }
