@@ -196,7 +196,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
     }
 
     private void clickHeader(GridCellElement headerCell) {
-        new Actions(getDriver()).moveToElement(headerCell, 10, 10).click()
+        new Actions(getDriver()).moveToElement(headerCell, 20, 10).click()
                 .perform();
     }
 
