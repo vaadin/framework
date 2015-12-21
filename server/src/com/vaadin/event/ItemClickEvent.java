@@ -68,7 +68,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
 
     /**
      * Returns property on which click event occurred. Returns null if source
-     * cannot be resolved at property leve. For example if clicked a cell in
+     * cannot be resolved at property level. For example if clicked a cell in
      * table, the "column id" is returned.
      * 
      * @return a property id of clicked property or null if click didn't occur
