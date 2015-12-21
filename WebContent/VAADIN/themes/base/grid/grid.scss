@@ -432,6 +432,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       }
       
       input[type="text"],
+      input[type="text"].v-filterselect-input,
       input[type="password"] {
       	padding-left: $v-grid-cell-padding-horizontal;
       }
