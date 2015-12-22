@@ -304,7 +304,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @since 7.6
      */
-    private final static class DetailComponentManager extends
+    public final static class DetailComponentManager extends
             AbstractGridExtension implements DataGenerator {
 
         /**
