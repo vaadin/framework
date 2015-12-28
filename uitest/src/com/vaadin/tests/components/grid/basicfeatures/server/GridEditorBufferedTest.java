@@ -29,6 +29,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -39,6 +40,52 @@ public class GridEditorBufferedTest extends GridEditorTest {
     @Before
     public void setUp() {
         super.setUp();
+    }
+
+    @Test
+    public void testKeyboardSave() {
+        selectMenuPath(EDIT_ITEM_100);
+
+        WebElement textField = getEditorWidgets().get(0);
+
+        textField.click();
+        // without this, the click in the middle of the field might not be after
+        // the old text on some browsers
+        new Actions(getDriver()).sendKeys(Keys.END).perform();
+
+        textField.sendKeys(" changed");
+
+        // Save from keyboard
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        assertEditorClosed();
+        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
+                .getText());
+    }
+
+    @Test
+    public void testKeyboardSaveWithInvalidEdition() {
+        makeInvalidEdition();
+
+        GridEditorElement editor = getGridElement().getEditor();
+        TestBenchElement field = editor.getField(7);
+
+        field.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        assertEditorOpen();
+        assertEquals("Column 7: Could not convert value to Integer",
+                editor.getErrorMessage());
+        assertTrue("Field 7 should have been marked with an error after error",
+                editor.isFieldErrorMarked(7));
+
+        editor.cancel();
+
+        selectMenuPath(EDIT_ITEM_100);
+        assertFalse("Exception should not exist",
+                isElementPresent(NotificationElement.class));
+        assertEquals("There should be no editor error message", null,
+                getGridElement().getEditor().getErrorMessage());
     }
 
     @Test
@@ -84,18 +131,9 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
     @Test
     public void testInvalidEdition() {
-        selectMenuPath(EDIT_ITEM_5);
-        assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
+        makeInvalidEdition();
 
         GridEditorElement editor = getGridElement().getEditor();
-
-        assertFalse(
-                "Field 7 should not have been marked with an error before error",
-                editor.isFieldErrorMarked(7));
-
-        WebElement intField = editor.getField(7);
-        intField.clear();
-        intField.sendKeys("banana phone");
         editor.save();
 
         assertEquals("Column 7: Could not convert value to Integer",
@@ -109,6 +147,21 @@ public class GridEditorBufferedTest extends GridEditorTest {
                 isElementPresent(NotificationElement.class));
         assertEquals("There should be no editor error message", null,
                 getGridElement().getEditor().getErrorMessage());
+    }
+
+    private void makeInvalidEdition() {
+        selectMenuPath(EDIT_ITEM_5);
+        assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
+
+        GridEditorElement editor = getGridElement().getEditor();
+
+        assertFalse(
+                "Field 7 should not have been marked with an error before error",
+                editor.isFieldErrorMarked(7));
+
+        WebElement intField = editor.getField(7);
+        intField.clear();
+        intField.sendKeys("banana phone");
     }
 
     @Test
@@ -226,17 +279,6 @@ public class GridEditorBufferedTest extends GridEditorTest {
         selectMenuPath(EDIT_ITEM_5);
 
         getGridElement().getCell(4, 0).doubleClick();
-
-        assertEquals("Editor should still edit row 5", "(5, 0)",
-                getEditorWidgets().get(0).getAttribute("value"));
-    }
-
-    @Test
-    public void testKeyboardOpeningDisabledWhenOpen() {
-        selectMenuPath(EDIT_ITEM_5);
-
-        new Actions(getDriver()).click(getGridElement().getCell(4, 0))
-                .sendKeys(Keys.ENTER).perform();
 
         assertEquals("Editor should still edit row 5", "(5, 0)",
                 getEditorWidgets().get(0).getAttribute("value"));

@@ -38,7 +38,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     public static final int KEYCODE_OPEN = KeyCodes.KEY_ENTER;
     public static final int KEYCODE_MOVE_VERTICAL = KeyCodes.KEY_ENTER;
     public static final int KEYCODE_CLOSE = KeyCodes.KEY_ESCAPE;
-    private static final int KEYCODE_MOVE_HORIZONTAL = KeyCodes.KEY_TAB;
+    public static final int KEYCODE_MOVE_HORIZONTAL = KeyCodes.KEY_TAB;
+    public static final int KEYCODE_BUFFERED_SAVE = KeyCodes.KEY_ENTER;
 
     private double lastTouchEventTime = 0;
     private int lastTouchEventX = -1;
@@ -221,6 +222,13 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()
                     + (e.getShiftKey() ? -1 : +1));
 
+            return true;
+        } else if (e.getType().equals(BrowserEvents.KEYDOWN)
+                && e.getKeyCode() == KEYCODE_BUFFERED_SAVE) {
+            triggerValueChangeEvent(event);
+
+            // Save and close.
+            event.getGrid().getEditor().save();
             return true;
         }
 
