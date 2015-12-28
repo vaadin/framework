@@ -1,5 +1,7 @@
 Vaadin
 ======
+
+[![Join the chat at https://gitter.im/vaadin/vaadin](https://badges.gitter.im/vaadin/vaadin.svg)](https://gitter.im/vaadin/vaadin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 *[Vaadin](https://vaadin.com) is a Java framework for building modern web applications that look great, perform well and make you and your users happy.*
 
 For instructions about _using_ Vaadin to develop applications, please refer to
