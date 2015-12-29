@@ -31,7 +31,7 @@ using Scala IDE, you can copy it from somewhere under your Eclipse installation
 to the class path of the web application, that is, either to the
 [filename]#WebContent/WEB-INF/lib# folder in the project or to the library path
 of the application server. If copying outside Eclipse to a project, refresh the
-project by selecting it and pressing F5.
+project by selecting it and pressing kbd:[F5].
 
 +
 You could also get it with an Ivy or Maven dependency, just make sure that the
@@ -63,7 +63,7 @@ class MyScalaUI extends UI {
 ----
 
 Eclipse and Scala IDE should be able to import the Vaadin classes automatically
-when you press CtrlShiftO.
+when you press kbd:[Ctrl+Shift+O].
 
 You need to define the Scala UI class either in a servlet class (in Servlet 3.0
 project) or in a [filename]#web.xml# deployment descriptor, just like described
@@ -108,6 +108,3 @@ content addComponent new Button("Click Me!",
 ----
 
 endif::web[]
-
-
-

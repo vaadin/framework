@@ -236,7 +236,7 @@ a web.xml Deployment Descriptor">>.
 == Coding Tips for Eclipse
 
 One of the most useful features in Eclipse is __code completion__. Pressing
-CtrlSpace in the editor will display a popup list of possible class name and
+kbd:[Ctrl+Space] in the editor will display a pop-up list of possible class name and
 method name completions, as shown in
 <<figure.getting-started.first-project.coding.codecompletion>>, depending on the
 context of the cursor position.
@@ -246,7 +246,7 @@ context of the cursor position.
 image::img/codingtips-codecompletion.png[]
 
 To add an [literal]#++import++# statement for a class, such as
-[classname]#Button#, simply press CtrlShiftO or click the red error indicator on
+[classname]#Button#, simply press kbd:[Ctrl+Shift+O] or click the red error indicator on
 the left side of the editor window. If the class is available in multiple
 packages, a list of the alternatives is displayed, as shown in
 <<figure.getting-started.first-project.coding.import>>. For server-side
@@ -321,7 +321,3 @@ Above, we described how to debug a server-side application. Debugging
 client-side applications and widgets is described in
 <<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
 Client-Side Code">>.
-
-
-
-

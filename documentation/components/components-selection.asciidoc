@@ -228,13 +228,13 @@ a property of the bean as the caption.
 public class Planet implements Serializable {
     int    id;
     String name;
-    
+
     public Planet(int id, String name) {
         this.id   = id;
         this.name = name;
     }
 
-    ... setters and getters ...    
+    ... setters and getters ...
 }
 
 public void captionproperty(VerticalLayout layout) {
@@ -299,7 +299,7 @@ event, accessible with the [methodname]#getProperty()# method.
 // Create a selection component with some items
 ComboBox select = new ComboBox("My Select");
 select.addItems("Io", "Europa", "Ganymedes", "Callisto");
-        
+
 // Handle selection change
 select.addValueChangeListener(event -> // Java 8
     layout.addComponent(new Label("Selected " +
@@ -319,7 +319,7 @@ image::img/select-selected1.png[]
 
 Some selection components can allow the user to add new items. Currently, only
 [classname]#ComboBox# allows it, when the user types in a value and presses
-Enter. You need to enable the mode with [methodname]#setNewItemsAllowed(true)#.
+kbd:[Enter]. You need to enable the mode with [methodname]#setNewItemsAllowed(true)#.
 Setting the component also in immediate mode may be necessary, as otherwise the
 item would not be added immediately when the user interacts with the component,
 but after some other component causes a server
@@ -337,7 +337,7 @@ myselect.setImmediate(true);
 
 The user interface for adding new items depends on the selection component. The
 regular [classname]#ComboBox# component allows you to simply type the new item
-in the combo box and hit Enter to add it.
+in the combo box and hit kbd:[Enter] to add it.
 
 Adding new items is not possible if the selection component is read-only or is
 bound to a [classname]#Container# that does not allow adding new items. An
@@ -373,10 +373,10 @@ container.addItem(new Planet(4, "Mars"));
 final ComboBox select =
     new ComboBox("Select or Add a Planet", container);
 select.setNullSelectionAllowed(false);
-        
+
 // Use the name property for item captions
 select.setItemCaptionPropertyId("name");
-        
+
 // Allow adding new items
 select.setNewItemsAllowed(true);
 select.setImmediate(true);
@@ -388,10 +388,10 @@ select.setNewItemHandler(new NewItemHandler() {
         // Create a new bean - can't set all properties
         Planet newPlanet = new Planet(0, newItemCaption);
         container.addBean(newPlanet);
-        
+
         // Remember to set the selection to the new item
         select.select(newPlanet);
-        
+
         Notification.show("Added new planet called " +
                           newItemCaption);
     }
@@ -462,7 +462,3 @@ however, that icons are not supported in [classname]#NativeSelect#,
 [classname]#TwinColSelect#, and some other selection components and modes. This
 is because HTML does not support images inside the native [literal]#++select++#
 elements. Icons are also not really visually applicable.
-
-
-
-

@@ -19,7 +19,7 @@ pressed within a specific scope in the UI. The scope can be the entire
 == Shortcut Keys for Default Buttons
 
 You can add a __click shortcut__ to a button to set it as "default" button;
-pressing the defined key, typically Enter, in any component in the scope
+pressing the defined key, typically kbd:[Enter], in any component in the scope
 (sub-window or UI) causes a click event for the button to be fired.
 
 You can define a click shortcut with the [methodname]#setClickShortcut()#
@@ -94,7 +94,7 @@ Shortcut keys can be defined as __actions__ using the
 [classname]#ShortcutAction# class. It extends the generic [classname]#Action#
 class that is used for example in [classname]#Tree# and [classname]#Table# for
 context menus. Currently, the only classes that accept
-[classname]#ShortcutAction#s are [classname]#Window# and [classname]#Panel#.
+[classname]##ShortcutAction##s are [classname]#Window# and [classname]#Panel#.
 
 To handle key presses, you need to define an action handler by implementing the
 [classname]#Handler# interface. The interface has two methods that you need to
@@ -138,7 +138,7 @@ and as shortcut actions. The second parameter is the key code and the third a
 list of modifier keys, which are listed in <<advanced.shortcuts.keycodes>>.
 
 The following example demonstrates the definition of a default button for a user
-interface, as well as a normal shortcut key, AltC for clicking the
+interface, as well as a normal shortcut key, kbd:[Alt+C] for clicking the
 [guibutton]#Cancel# button.
 
 
@@ -226,9 +226,9 @@ public class DefaultButtonExample extends CustomComponent
 ----
 
 Notice that the keyboard actions can currently be attached only to
-[classname]#Panel#s and [classname]#Window#s. This can cause problems if you
+[classname]##Panel##s and [classname]##Window##s. This can cause problems if you
 have components that require a certain key. For example, multi-line
-[classname]#TextField# requires the Enter key. There is currently no way to
+[classname]#TextField# requires the kbd:[Enter] key. There is currently no way to
 filter the shortcut actions out while the focus is inside some specific
 component, so you need to avoid such conflicts.
 
@@ -237,34 +237,34 @@ component, so you need to avoid such conflicts.
 == Supported Key Codes and Modifier Keys
 
 The shortcut key definitions require a key code to identify the pressed key and
-modifier keys, such as Shift, Alt, or Ctrl, to specify a key combination.
+modifier keys, such as kbd:[Shift], kbd:[Alt], or kbd:[Ctrl], to specify a key combination.
 
 The key codes are defined in the [classname]#ShortcutAction.KeyCode# interface
 and are:
 
-Keys [parameter]#A#to[parameter]#Z#:: Normal letter keys
-[parameter]#F1#to[parameter]#F12#:: Function keys
+Keys [parameter]#A# to [parameter]#Z#:: Normal letter keys
+[parameter]#F1# to [parameter]#F12#:: Function keys
 
-[parameter]#BACKSPACE#,[parameter]#DELETE#,[parameter]#ENTER#,[parameter]#ESCAPE#,[parameter]#INSERT#,[parameter]#TAB#:: Control keys
+[parameter]#BACKSPACE#, [parameter]#DELETE#, [parameter]#ENTER#, [parameter]#ESCAPE#, [parameter]#INSERT#, [parameter]#TAB#:: Control keys
 
-[parameter]#NUM0#to[parameter]#NUM9#:: Number pad keys
+[parameter]#NUM0# to [parameter]#NUM9#:: Number pad keys
 
-[parameter]#ARROW_DOWN#,[parameter]#ARROW_UP#,[parameter]#ARROW_LEFT#,[parameter]#ARROW_RIGHT#:: Arrow keys
+[parameter]#ARROW_DOWN#, [parameter]#ARROW_UP#, [parameter]#ARROW_LEFT#, [parameter]#ARROW_RIGHT#:: Arrow keys
 
-[parameter]#HOME#,[parameter]#END#,[parameter]#PAGE_UP#,[parameter]#PAGE_DOWN#:: Other movement keys
+[parameter]#HOME#, [parameter]#END#, [parameter]#PAGE_UP#, [parameter]#PAGE_DOWN#:: Other movement keys
 
 
 
 Modifier keys are defined in [classname]#ShortcutAction.ModifierKey# and are:
 
-[parameter]#ModifierKey.ALT#:: Alt key
-[parameter]#ModifierKey.CTRL#:: Ctrl key
-[parameter]#ModifierKey.SHIFT#:: Shift key
+[parameter]#ModifierKey.ALT#:: kbd:[Alt] key
+[parameter]#ModifierKey.CTRL#:: kbd:[Ctrl] key
+[parameter]#ModifierKey.SHIFT#:: kbd:[Shift] key
 
 
 All constructors and methods accepting modifier keys take them as a variable
 argument list following the key code, separated with commas. For example, the
-following defines a CtrlShiftN key combination for a shortcut.
+following defines a kbd:[Ctrl+Shift+N] key combination for a shortcut.
 
 
 [source, java]
@@ -281,12 +281,7 @@ name.addShortcutListener(
 The actual possible key combinations vary greatly between browsers, as most
 browsers have a number of built-in shortcut keys, which can not be used in web
 applications. For example, Mozilla Firefox allows binding almost any key
-combination, while Opera does not even allow binding Alt shortcuts. Other
+combination, while Opera does not even allow binding kbd:[Alt] shortcuts. Other
 browsers are generally in between these two. Also, the operating system can
 reserve some key combinations and some computer manufacturers define their own
 system key combinations.
-
-
-
-
-

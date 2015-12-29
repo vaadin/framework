@@ -140,13 +140,12 @@ selection.
 === Multiple Selection Mode
 
 A table can also be in __multiselect__ mode, where a user can select multiple
-items by clicking them with left mouse button while holding the Ctrl key (or
-Meta key) pressed. If Ctrl is not held, clicking an item will select it and
+items by clicking them with left mouse button while holding the kbd:[Ctrl] key (or kbd:[Meta] key) pressed. If kbd:[Ctrl] is not held, clicking an item will select it and
 other selected items are deselected. The user can select a range by selecting an
-item, holding the Shift key pressed, and clicking another item, in which case
+item, holding the kbd:[Shift] key pressed, and clicking another item, in which case
 all the items between the two are also selected. Multiple ranges can be selected
-by first selecting a range, then selecting an item while holding Ctrl, and then
-selecting another item with both Ctrl and Shift pressed.
+by first selecting a range, then selecting an item while holding kbd:[Ctrl], and then
+selecting another item with both kbd:[Ctrl] and kbd:[Shift] pressed.
 
 The multiselect mode is enabled with the [methodname]#setMultiSelect()# method
 of the [classname]#AbstractSelect# superclass of [classname]#Table#. Setting
@@ -155,8 +154,8 @@ must be set separately.
 
 The [methodname]#setMultiSelectMode()# property affects the control of multiple
 selection: [parameter]#MultiSelectMode.DEFAULT# is the default behaviour, which
-requires holding the Ctrl (or Meta) key pressed while selecting items, while in
-[parameter]#MultiSelectMode.SIMPLE# holding the Ctrl key is not needed. In the
+requires holding the kbd:[Ctrl] (or kbd:[Meta]) key pressed while selecting items, while in
+[parameter]#MultiSelectMode.SIMPLE# holding the kbd:[Ctrl] key is not needed. In the
 simple mode, items can only be deselected by clicking them.
 
 
@@ -199,7 +198,7 @@ table.addColumnResizeListener(new Table.ColumnResizeListener(){
     public void columnResize(ColumnResizeEvent event) {
         // Get the new width of the resized column
         int width = event.getCurrentWidth();
-        
+
         // Get the property ID of the resized column
         String column = (String) event.getPropertyId();
 
@@ -207,7 +206,7 @@ table.addColumnResizeListener(new Table.ColumnResizeListener(){
         table.setColumnFooter(column, String.valueOf(width) + "px");
     }
 });
-        
+
 // Must be immediate to send the resize events immediately
 table.setImmediate(true);
 ----
@@ -253,7 +252,7 @@ try {
     // Can't occur - collapsing was allowed above
     System.err.println("Something horrible occurred");
 }
-        
+
 // Give enough width for the table to accommodate the
 // initially collapsed column later
 table.setWidth("250px");
@@ -316,15 +315,15 @@ for (int i=0; i<100; i++) {
                    new Object[] {new Double(Math.random()*1000)}),
                                ContentMode.HTML);
     CheckBox transferredField = new CheckBox("is transferred");
-    
-    // Multiline text field. This required modifying the 
+
+    // Multiline text field. This required modifying the
     // height of the table row.
     TextField commentsField = new TextField();
     commentsField.setRows(3);
-    
+
     // The Table item identifier for the row.
     Integer itemId = new Integer(i);
-    
+
     // Create a button and handle its click. A Button does not
     // know the item it is contained in, so we have to store the
     // item ID as user-defined data.
@@ -336,10 +335,10 @@ for (int i=0; i<100; i++) {
             Integer iid = (Integer)event.getButton().getData();
             Notification.show("Link " +
                               iid.intValue() + " clicked.");
-        } 
+        }
     });
     detailsField.addStyleName("link");
-    
+
     // Create the table row.
     table.addItem(new Object[] {sumField, transferredField,
                                 commentsField, detailsField},
@@ -478,8 +477,8 @@ ifdef::web[]
 
 In the editable mode, the editor fields can have focus. Pressing Tab moves the
 focus to next column or, at the last column, to the first column of the next
-item. Respectively, pressing ShiftTab moves the focus backward. If the focus is
-in the last column of the last visible item, the pressing Tab moves the focus
+item. Respectively, pressing kbd:[Shift+Tab] moves the focus backward. If the focus is
+in the last column of the last visible item, the pressing kbd:[Tab] moves the focus
 outside the table. Moving backward from the first column of the first item moves
 the focus to the table itself. Some updates to the table, such as changing the
 headers or footers or regenerating a column, can move the focus from an editor
@@ -488,7 +487,7 @@ component to the table itself.
 The default behaviour may be undesirable in many cases. For example, the focus
 also goes through any read-only editor fields and can move out of the table
 inappropriately. You can provide better navigation is to use event handler for
-shortcut keys such as Tab, Arrow Up, Arrow Down, and Enter.
+shortcut keys such as kbd:[Tab], kbd:[Arrow Up], kbd:[Arrow Down], and kbd:[Enter].
 
 
 [source, java]
@@ -523,7 +522,7 @@ class KbdHandler implements Handler {
             // On enter, just stay where you were. If we did
             // not catch the enter action, the focus would be
             // moved to wrong place.
-            
+
             if (itemid >= 0 && itemid < table.size()) {
                 TextField newTF = valueFields.get(itemid);
                 if (newTF != null)
@@ -568,17 +567,17 @@ table.setTableFieldFactory(new TableFieldFactory () {
     public Field createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         TextField field = new TextField((String) propertyId);
-        
+
         // User can only edit the numeric column
         if ("Source of Fear".equals(propertyId))
             field.setReadOnly(true);
         else { // The numeric column
             // The field needs to know the item it is in
             field.setData(itemId);
-            
+
             // Remember the field
             valueFields.put((Integer) itemId, field);
-            
+
             // Focus the first editable value
             if (((Integer)itemId) == 0)
                 field.focus();
@@ -650,7 +649,7 @@ The following example shows how to calculate average of the values in a column:
 Table table = new Table("Custom Table Footer");
 table.addContainerProperty("Name", String.class, null);
 table.addContainerProperty("Died At Age", Integer.class, null);
-        
+
 // Insert some data
 Object people[][] = { {"Galileo",  77},
                       {"Monnier",  83},
@@ -658,7 +657,7 @@ Object people[][] = { {"Galileo",  77},
                       {"Oterma",   86}};
 for (int i=0; i<people.length; i++)
     table.addItem(people[i], new Integer(i));
-        
+
 // Calculate the average of the numeric column
 double avgAge = 0;
 for (int i=0; i<people.length; i++)
@@ -706,7 +705,7 @@ table.addHeaderClickListener(new Table.HeaderClickListener() {
                 "with " + event.getButtonName());
     }
 });
-        
+
 // Disable the default sorting behavior
 table.setSortDisabled(true);
 ----
@@ -723,7 +722,7 @@ the mouse button with which the click was made: [parameter]#BUTTON_LEFT#,
 [methodname]#getButtonName()# a human-readable button name in English: "
 [parameter]#left#", " [parameter]#right#", or " [parameter]#middle#". The
 [methodname]#isShiftKey()#, [methodname]#isCtrlKey()#, etc., methods indicate if
-the Shift, Ctrl, Alt or other modifier keys were pressed during the click.
+the kbd:[Shift], kbd:[Ctrl], kbd:[Alt] or other modifier keys were pressed during the click.
 
 Clicks in the footer cause a [classname]#FooterClickEvent#, which you can handle
 with a [classname]#Table.FooterClickListener#. Footers do not have any default
@@ -787,7 +786,7 @@ class ValueColumnGenerator implements Table.ColumnGenerator {
         if (prop.getType().equals(Double.class)) {
             Label label = new Label(String.format(format,
                     new Object[] { (Double) prop.getValue() }));
-            
+
             // Set styles for the column: one indicating that it's
             // a value and a more specific one with the column
             // name in it. This assumes that the column name
@@ -878,7 +877,7 @@ editable.setImmediate(true);
 editable.addClickListener(new ClickListener() {
     public void buttonClick(ClickEvent event) {
         table.setEditable(editable.booleanValue());
-        
+
         // The columns may not be generated when we want to
         // have them editable.
         if (editable.booleanValue()) {
@@ -917,10 +916,10 @@ public class ImmediateFieldFactory extends DefaultFieldFactory {
         // Let the DefaultFieldFactory create the fields...
         Field field = super.createField(container, itemId,
                                         propertyId, uiContext);
-        
+
         // ...and just set them as immediate.
         ((AbstractField)field).setImmediate(true);
-        
+
         return field;
     }
 }
@@ -980,10 +979,10 @@ final Table table = new Table("Formatted Table") {
         return super.formatPropertyValue(rowId, colId, property);
     }
 };
-        
+
 // The table has some columns
 table.addContainerProperty("Time", Date.class, null);
-        
+
 ... Fill the table with data ...
 ----
 
@@ -1081,7 +1080,7 @@ table.addItem(new Object[]{
 table.addItem(new Object[]{
     "2", "P", "P", "P", "P", "P", "P", "P", "P"}, new Integer(1));
 for (int i=2; i<6; i++)
-    table.addItem(new Object[]{String.valueOf(i+1), 
+    table.addItem(new Object[]{String.valueOf(i+1),
                  "", "", "", "", "", "", "", ""}, new Integer(i));
 table.addItem(new Object[]{
     "7", "P", "P", "P", "P", "P", "P", "P", "P"}, new Integer(6));
@@ -1098,11 +1097,11 @@ table.setCellStyleGenerator(new Table.CellStyleGenerator() {
 
         int row = ((Integer)itemId).intValue();
         int col = Integer.parseInt((String)propertyId);
-        
+
         // The first column.
         if (col == 0)
             return "rowheader";
-        
+
         // Other cells.
         if ((row+col)%2 == 0)
             return "black";
@@ -1160,5 +1159,3 @@ endif::web[]
 
 
 (((range="endofrange", startref="term.components.table")))
-
-
