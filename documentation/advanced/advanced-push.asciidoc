@@ -88,8 +88,8 @@ You can use server push in two modes: [literal]#++automatic++# and
 automatically after access() finishes. With the manual mode, you can do the push
 explicitly with [methodname]#push()#, which allows more flexibility.
 
-Sever push can use several transports - WebSockets, long polling, or combined WebSockets+XHR.
-Default is [literal]#++WebSockets++#.
+Sever push can use several transports: WebSockets, long polling, or combined WebSockets+XHR.
+[literal]#++WebSockets++# is the default transport.
 
 
 [[advanced.push.enabling.pushmode]]
@@ -115,9 +115,7 @@ parameter as follows:
 public class PushyUI extends UI {
 ----
 
-To use the long polling transport, you need to set the [parameter]#Transport.LONG_POLLING#
-parameter as follows:
-
+To use the long polling transport, you need to set the transport parameter as [parameter]#Transport.LONG_POLLING# as follows:
 
 [source, java]
 ----

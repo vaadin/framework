@@ -71,7 +71,7 @@ corner of the window. The button is controlled by the __closable__ property, so
 you can disable it with [methodname]#setClosable(false)#. You can also use keyboard
 shortcuts for closing a sub-window.  You can manage the shortcuts with the [methodname]#addCloseShortcut()#,
 [methodname]#removeCloseShortcut()#, [methodname]#removeAllCloseShortcuts()#,
-[methodname]#hasCloseShortcut()# and [methodname]#getCloseShortcuts()# methods.
+[methodname]#hasCloseShortcut()#, and [methodname]#getCloseShortcuts()# methods.
 
 You close a sub-window also programmatically by calling the
 [methodname]#close()# for the sub-window, typically in a click listener for an

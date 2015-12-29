@@ -36,8 +36,8 @@ image::img/errorindicator-example2.png[scaledwidth=40%]
 
 If the connection to the server is lost, Vaadin application shows a "lost connection" notification
 and tries to restore the connection. After several retries, an error message is shown.
-You can customize the messages, timeouts and the number of reconnect attempts using [classname]#ReconnectDialogConfiguration#
-class. Use [methodname]#getReconnectDialogConfiguration# of your [classname]#UI# object.
+You can customize the messages, timeouts, and the number of reconnect attempts in the [classname]#ReconnectDialogConfiguration#
+object, which you can access from your [classname]#UI# with [methodname]#getReconnectDialogConfiguration()#.
 
 ifdef::web[]
 [[application.errors.systemmessages]]
