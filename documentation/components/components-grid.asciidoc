@@ -105,8 +105,8 @@ grid.setColumnOrder("name", "born");
 layout.addComponent(grid);
 ----
 
-Note that you need to define [methodname]#equals()# and [methodname]#hashcode()# for
-bean ([classname]#Person#) class to make the [classname]#BeanItemContainer# work properly.
+Note that you need to override [methodname]#equals()# and [methodname]#hashcode()# for
+the bean ([classname]#Person#) class to make the [classname]#BeanItemContainer# work properly.
 
 [[components.grid.basic.manual]]
 === Default Data Source and Shorthands
@@ -179,7 +179,7 @@ grid.setSelectionMode(SelectionMode.SINGLE);
 ----
 
 Empty (null) selection is allowed by default, but can be disabled
-with [methodname]#setDeselectAllowed# in single-selection mode.
+with [methodname]#setDeselectAllowed()# in single-selection mode.
 
 The selection is handled with a different selection model object in each
 respective selection mode: [classname]#SingleSelectionModel#,
@@ -253,8 +253,8 @@ should synchronize or reset the selection with the container, such as by calling
 === Multiple Selection
 
 In the multiple selection mode, a user can select multiple items by clicking on
-the checkboxes in the leftmost column, or by using the spacebar to select/deselect the currently focused row.
-(space key is a customizable default).
+the checkboxes in the leftmost column, or by using the kbd:[Space] to select/deselect the currently focused row.
+Space bar is the default key for toggling the selection, but it can be customized.
 
 [[figure.components.grid.selection.multi]]
 .Multiple Selection in  [classname]#Grid#
@@ -327,16 +327,17 @@ grid.addSelectionListener(selection -> { // Java 8
 === Focus and Clicks
 
 In addition to selecting rows, you can focus individual cells. The focus can be
-moved with arrow keys and, if editing is enabled, pressing Enter opens the
-editor. Normally pressing Tab or ShiftTab moves the focus to another component,
+moved with arrow keys and, if editing is enabled, pressing kbd:[Enter] opens the
+editor. Normally, pressing kbd:[Tab] or kbd:[Shift+Tab] moves the focus to another component,
 as usual.
 
-In editing or unbuffered mode, Tab or ShiftTab moves the focus to
-next or previous cell. From first or last last cell of the row focus is moved
-to a previous or a next line respectively. Note you can make your own subclass of
-[classname]#DefaultEditorEventHandler# and change this behavior.
+When editing or in unbuffered mode, kbd:[Tab] or kbd:[Shift+Tab] moves the focus to the next or
+previous cell. The focus moves from the last cell of a row forward to the
+beginning of the next row, and likewise, from the first cell backward to the
+end of the previous row. Note that you can extend [classname]#DefaultEditorEventHandler#
+to change this behavior.
 
-With mouse, you can focus a cell by clicking on it. The clicks can be handled
+With the mouse, you can focus a cell by clicking on it. The clicks can be handled
 with an [interfacename]#ItemClickListener#. The [classname]#ItemClickEvent#
 object contains various information, most importantly the ID of the clicked row
 and column.
@@ -449,9 +450,9 @@ You can specify minimum and maximum widths for the expanding columns with
 [methodname]#setMinimumWidth()# and [methodname]#setMaximumWidth()#,
 respectively.
 
-The user can resize columns by mouse dragging. In this case all the columns widths
-are explicitly set to pixel values.
-
+The user can resize columns by dragging their separators with the mouse. When resized manually,
+all the columns widths are set to explicit pixel values, even if they had
+relative values before.
 
 [[components.grid.columns.frozen]]
 === Frozen Columns
@@ -803,10 +804,9 @@ example, when using an [classname]#ImageRenderer#, you could store the image fil
 in the data column, which the converter would convert to a resource, which would
 then be rendered by the renderer.
 
-In this example, we use a converter and [classname]#HTMLRenderer# to display boolean
-values as FontAwesome icons
+In the following example, we use a converter and [classname]#HTMLRenderer# to display boolean
+values as [classname]#FontAwesome# icons
 [source, java]
-
 ----
 // Have a column for hyperlink paths to Wikipedia
 grid.addColumn("truth", Boolean.class);
@@ -818,7 +818,7 @@ truth.setRenderer(new HtmlRenderer(),
 ...
 ----
 
-In the following example, we use a converter to format URL paths to complete
+In this example, we use a converter to format URL paths to complete
 HTML hyperlinks with [classname]#HTMLRenderer#:
 
 
@@ -913,13 +913,11 @@ while for footer cells, you typically calculate sums or averages.
 HeaderRow groupingHeader = grid.prependHeaderRow();
 HeaderCell namesCell = groupingHeader.join(
     groupingHeader.getCell("firstname"),
-    groupingHeader.getCell("lastname"))
-        .setText("Person");
+    groupingHeader.getCell("lastname")).setText("Person");
 HeaderCell yearsCell = groupingHeader.join(
     groupingHeader.getCell("born"),
     groupingHeader.getCell("died"),
-    groupingHeader.getCell("lived"))
-        .setText("Dates of Life");
+    groupingHeader.getCell("lived")).setText("Dates of Life");
 ----
 
 
@@ -1068,7 +1066,7 @@ sorting.
 
 Grid supports line-based editing, where double-clicking a row opens the row
 editor. In the editor, the input fields can be edited, as well as navigated with
-Tab and ShiftTab keys. If validation fails, an error is displayed and the user
+kbd:[Tab] and kbd:[Shift+Tab] keys. If validation fails, an error is displayed and the user
 can correct the inputs.
 
 To enable editing, you need to call [methodname]#setEditorEnabled(true)# for the
@@ -1081,14 +1079,14 @@ Grid grid = new Grid(GridExample.exampleDataSource());
 grid.setEditorEnabled(true);
 ----
 
-Grid supports two row editor modes - buffered and unbuffered. Default mode is
-buffered. The mode could be changed by [methodname]#setBuffered(false)#
+Grid supports two row editor modes - buffered and unbuffered. The default mode is
+buffered. The mode can be changed with [methodname]#setBuffered(false)#
 
 [[components.grid.editing.buffered]]
 === Buffered Mode
 
 The editor has a [guibutton]#Save# button that commits
-the data item to the container data source and closes the editor.  A
+the data item to the container data source and closes the editor. The
 [guibutton]#Cancel# button discards the changes and exits the editor.
 
 A row under editing is illustrated in <<figure.components.grid.editing>>.
@@ -1100,8 +1098,8 @@ image::img/grid-editor-basic.png[]
 [[components.grid.editing.unbuffered]]
 === Unbuffered Mode
 
-The editor has no buttons and all changed data is provided directly
-to the container. If another row is clicked, row editor for current row is closed and
+The editor has no buttons and all changed data is committed directly
+to the container. If another row is clicked, the editor for the current row is closed and
 a row editor for the clicked row is opened.
 
 [[components.grid.editing.fields]]
@@ -1151,7 +1149,7 @@ ifdef::web[]
 [[components.grid.editing.captions]]
 === Customizing Editor Buttons
 
-In buffered mode, the editor has two buttons: [guibutton]#Save# and [guibutton]#Cancel#. You can
+In the buffered mode, the editor has two buttons: [guibutton]#Save# and [guibutton]#Cancel#. You can
 set their captions with [methodname]#setEditorSaveCaption()# and
 [methodname]#setEditorCancelCaption()#, respectively.
 
