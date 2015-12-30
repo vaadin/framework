@@ -1,6 +1,7 @@
 package com.vaadin.data.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -164,6 +165,14 @@ public abstract class AbstractContainerTestBase extends TestCase {
                 sampleData.length);
 
         validateRemovingItems(container);
+        validateAddItem(container);
+        if (container instanceof Container.Indexed) {
+            validateAddItemAt((Container.Indexed) container);
+        }
+        if (container instanceof Container.Ordered) {
+            validateAddItemAfter((Container.Ordered) container);
+        }
+
     }
 
     protected void validateRemovingItems(Container container) {
@@ -184,6 +193,95 @@ public abstract class AbstractContainerTestBase extends TestCase {
         container.removeAllItems();
 
         assertEquals(0, container.size());
+    }
+
+    protected void validateAddItem(Container container) {
+        try {
+            container.removeAllItems();
+
+            Object id = container.addItem();
+            Assert.assertTrue(container.containsId(id));
+            Assert.assertNotNull(container.getItem(id));
+
+            Item item = container.addItem("foo");
+            Assert.assertNotNull(item);
+            Assert.assertTrue(container.containsId("foo"));
+            Assert.assertEquals(item, container.getItem("foo"));
+
+            // Add again
+            Item item2 = container.addItem("foo");
+            Assert.assertNull(item2);
+        } catch (UnsupportedOperationException e) {
+            // Ignore contains which do not support addItem*
+        }
+    }
+
+    protected void validateAddItemAt(Container.Indexed container) {
+        try {
+            container.removeAllItems();
+
+            Object id = container.addItemAt(0);
+            Assert.assertTrue(container.containsId(id));
+            Assert.assertEquals(id, container.getIdByIndex(0));
+            Assert.assertNotNull(container.getItem(id));
+
+            Item item = container.addItemAt(0, "foo");
+            Assert.assertNotNull(item);
+            Assert.assertTrue(container.containsId("foo"));
+            Assert.assertEquals(item, container.getItem("foo"));
+            Assert.assertEquals("foo", container.getIdByIndex(0));
+
+            Item itemAtEnd = container.addItemAt(2, "atend");
+            Assert.assertNotNull(itemAtEnd);
+            Assert.assertTrue(container.containsId("atend"));
+            Assert.assertEquals(itemAtEnd, container.getItem("atend"));
+            Assert.assertEquals("atend", container.getIdByIndex(2));
+
+            // Add again
+            Item item2 = container.addItemAt(0, "foo");
+            Assert.assertNull(item2);
+        } catch (UnsupportedOperationException e) {
+            // Ignore contains which do not support addItem*
+        }
+    }
+
+    protected void validateAddItemAfter(Container.Ordered container) {
+        if (container instanceof AbstractBeanContainer) {
+            // Doesn't work as bean container requires beans
+            return;
+        }
+        if (container instanceof ContainerOrderedWrapper) {
+            // Doesn't work because of #19427
+            return;
+        }
+
+        try {
+            container.removeAllItems();
+
+            Assert.assertNotNull(container.addItem(0));
+
+            Item item = container.addItemAfter(null, "foo");
+            Assert.assertNotNull(item);
+            Assert.assertTrue(container.containsId("foo"));
+            Assert.assertEquals(item, container.getItem("foo"));
+            Assert.assertEquals("foo", container.getItemIds().iterator().next());
+
+            Item itemAtEnd = container.addItemAfter(0, "atend");
+            Assert.assertNotNull(itemAtEnd);
+            Assert.assertTrue(container.containsId("atend"));
+            Assert.assertEquals(itemAtEnd, container.getItem("atend"));
+            Iterator<?> i = container.getItemIds().iterator();
+            i.next();
+            i.next();
+            Assert.assertEquals("atend", i.next());
+
+            // Add again
+            Assert.assertNull(container.addItemAfter(null, "foo"));
+            Assert.assertNull(container.addItemAfter("atend", "foo"));
+            Assert.assertNull(container.addItemAfter("nonexistant", "123123"));
+        } catch (UnsupportedOperationException e) {
+            // Ignore contains which do not support addItem*
+        }
     }
 
     protected void testContainerOrdered(Container.Ordered container) {

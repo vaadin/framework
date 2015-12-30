@@ -564,12 +564,18 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = wrappedContainer.addItemAfter(previousItemId, newItemId);
+        if (item == null) {
+            return null;
+        }
         return createGeneratedPropertyItem(newItemId, item);
     }
 
     @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         Item item = wrappedContainer.addItem(itemId);
+        if (item == null) {
+            return null;
+        }
         return createGeneratedPropertyItem(itemId, item);
     }
 
@@ -577,6 +583,9 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     public Item addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         Item item = wrappedContainer.addItemAt(index, newItemId);
+        if (item == null) {
+            return null;
+        }
         return createGeneratedPropertyItem(newItemId, item);
     }
 
