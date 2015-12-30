@@ -38,8 +38,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     public void testContainerOrdered() {
-        // Fails because of #19246
-        // testContainerOrdered(createContainer());
+        testContainerOrdered(createContainer());
     }
 
     public void testContainerIndexed() {
