@@ -550,6 +550,10 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     @Override
     public Item getItem(Object itemId) {
         Item item = wrappedContainer.getItem(itemId);
+        if (item == null) {
+            return null;
+        }
+
         return createGeneratedPropertyItem(itemId, item);
     }
 
