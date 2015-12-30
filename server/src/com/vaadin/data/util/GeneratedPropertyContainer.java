@@ -165,6 +165,39 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
             throw new UnsupportedOperationException(
                     "GeneratedPropertyItem does not support removing properties");
         }
+
+        /**
+         * Tests if the given object is the same as the this object. Two Items
+         * from the same container with the same ID are equal.
+         * 
+         * @param obj
+         *            an object to compare with this object
+         * @return <code>true</code> if the given object is the same as this
+         *         object, <code>false</code> if not
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null
+                    || !obj.getClass().equals(GeneratedPropertyItem.class)) {
+                return false;
+            }
+            final GeneratedPropertyItem li = (GeneratedPropertyItem) obj;
+            return getContainer() == li.getContainer()
+                    && itemId.equals(li.itemId);
+        }
+
+        @Override
+        public int hashCode() {
+            return itemId.hashCode();
+        }
+
+        private GeneratedPropertyContainer getContainer() {
+            return GeneratedPropertyContainer.this;
+        }
     };
 
     /**
