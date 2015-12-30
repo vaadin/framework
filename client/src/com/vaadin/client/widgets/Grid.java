@@ -5592,6 +5592,7 @@ public class Grid<T> extends ResizeComposite implements
 
                 Element td = cell.getElement();
                 td.removeAllChildren();
+                setCustomStyleName(td, metadata.getStyleName());
 
                 Element content;
                 // Wrap text or html content in default header to isolate
@@ -5622,7 +5623,6 @@ public class Grid<T> extends ResizeComposite implements
                 } else {
                     content = td;
                 }
-                setCustomStyleName(content, metadata.getStyleName());
 
                 switch (metadata.getType()) {
                 case TEXT:

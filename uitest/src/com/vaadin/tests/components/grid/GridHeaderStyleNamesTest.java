@@ -85,23 +85,23 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
         if (set) {
             assertHasStyleName(
                     "Footer cell should have the assigned 'age-footer' class name",
-                    getAgeFooterCellContent(), "age-footer");
+                    getAgeFooterCell(), "age-footer");
             assertHasStyleName(
                     "Header cell should have the assigned 'age' class name",
-                    getAgeHeaderCellContent(), "age");
+                    getAgeHeaderCell(), "age");
             assertHasStyleName(
                     "The merged header cell should have the assigned 'city-country' class name",
-                    getMergedHeaderCellContent(), "city-country");
+                    getMergedHeaderCell(), "city-country");
         } else {
             assertHasNotStyleName(
                     "Footer cell should not have the removed 'age-footer' class name",
-                    getAgeFooterCellContent(), "age-footer");
+                    getAgeFooterCell(), "age-footer");
             assertHasNotStyleName(
                     "Header cell should not have the removed 'age' class name",
-                    getAgeHeaderCellContent(), "age");
+                    getAgeHeaderCell(), "age");
             assertHasNotStyleName(
                     "Ther merged header cell should not have the removed 'city-country' class name",
-                    getMergedHeaderCellContent(), "city-country");
+                    getMergedHeaderCell(), "city-country");
         }
         assertHasStyleName(
                 "The default v-grid-cell style name should not be removed from the header cell",
