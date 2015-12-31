@@ -16,10 +16,12 @@
 
 package com.vaadin.data.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -464,7 +466,21 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     @Override
     public Collection<?> getItemIds() {
-        return container.getItemIds();
+        if (ordered) {
+            return ((Container.Ordered) container).getItemIds();
+        } else if (first == null) {
+            return new ArrayList<Object>();
+        } else {
+            List<Object> itemIds = new ArrayList<Object>();
+            itemIds.add(first);
+            Object current = first;
+            while (next.containsKey(current)) {
+                current = next.get(current);
+                itemIds.add(current);
+            }
+            return itemIds;
+        }
+
     }
 
     /*

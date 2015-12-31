@@ -261,10 +261,6 @@ public abstract class AbstractContainerTestBase {
             // Doesn't work as bean container requires beans
             return;
         }
-        if (container instanceof ContainerOrderedWrapper) {
-            // Doesn't work because of #19427
-            return;
-        }
 
         try {
             container.removeAllItems();
