@@ -1861,8 +1861,16 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         case KeyCodes.KEY_ENTER:
 
             if (!allowNewItem) {
-                onSuggestionSelected(currentSuggestions
-                        .get(suggestionPopup.menu.getSelectedIndex()));
+                int selected = suggestionPopup.menu.getSelectedIndex();
+                if (selected != -1) {
+                    onSuggestionSelected(currentSuggestions.get(selected));
+                } else {
+                    // The way VFilterSelect is done, it handles enter and tab
+                    // in exactly the same way so we close the popup in both
+                    // cases even though we could leave it open when pressing
+                    // enter
+                    suggestionPopup.hide();
+                }
             } else {
                 // Handle addition of new items.
                 suggestionPopup.menu.doSelectedItemAction();
