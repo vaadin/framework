@@ -32,6 +32,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -495,8 +497,23 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getHead().appendChild(style);
         }
 
-        DOM.sinkEvents(getWidget().getElement(), Event.ONKEYDOWN
-                | Event.ONSCROLL);
+        Widget shortcutContextWidget = getWidget();
+        if (applicationConnection.getConfiguration().isStandalone()) {
+            // Listen to body for standalone apps (#19392)
+            shortcutContextWidget = RootPanel.get(); // document body
+        }
+
+        shortcutContextWidget.addDomHandler(new KeyDownHandler() {
+            @Override
+            public void onKeyDown(KeyDownEvent event) {
+                if (getWidget().actionHandler != null) {
+                    getWidget().actionHandler.handleKeyboardEvent((Event) event
+                            .getNativeEvent().cast());
+                }
+            }
+        }, KeyDownEvent.getType());
+
+        DOM.sinkEvents(getWidget().getElement(), Event.ONSCROLL);
 
         RootPanel root = RootPanel.get(rootPanelId);
 

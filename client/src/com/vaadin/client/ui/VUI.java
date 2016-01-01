@@ -30,8 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -347,16 +345,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
     protected boolean isMonitoringParentSize() {
         // could also perform a more specific check (Liferay portlet)
         return isEmbedded();
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-        int type = DOM.eventGetType(event);
-        if (type == Event.ONKEYDOWN && actionHandler != null) {
-            actionHandler.handleKeyboardEvent(event);
-            return;
-        }
     }
 
     /*
