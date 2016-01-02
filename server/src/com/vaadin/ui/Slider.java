@@ -392,6 +392,7 @@ public class Slider extends AbstractField<Double> {
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
         result.add("orientation");
+        result.add("vertical");
         return result;
     }
 }
