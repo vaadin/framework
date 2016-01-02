@@ -108,6 +108,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
     protected Collection<String> getCustomAttributes() {
         Collection<String> c = super.getCustomAttributes();
         c.add("alternate-text");
+        c.add("alt");
         return c;
     }
 }

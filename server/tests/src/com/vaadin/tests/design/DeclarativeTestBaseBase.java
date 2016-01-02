@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -32,6 +35,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.Assert;
 
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
@@ -149,14 +153,55 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     }
 
+    public static class TestLogHandler {
+        final List<String> messages = new ArrayList<String>();
+        Handler handler = new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                messages.add(record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+            }
+
+            @Override
+            public void close() throws SecurityException {
+
+            }
+        };
+
+        public TestLogHandler() {
+            Logger.getLogger(AbstractComponent.class.getName()).getParent()
+                    .addHandler(handler);
+        }
+
+        public String getMessages() {
+            if (messages.isEmpty()) {
+                return "";
+            }
+
+            String r = "";
+            for (String message : messages) {
+                r += message + "\n";
+            }
+            return r;
+        }
+
+    }
+
     public T testRead(String design, T expected) {
+        TestLogHandler l = new TestLogHandler();
         T read = read(design);
         assertEquals(expected, read);
+        Assert.assertEquals("", l.getMessages());
         return read;
     }
 
     public void testWrite(String design, T expected) {
+        TestLogHandler l = new TestLogHandler();
         testWrite(design, expected, false);
+        Assert.assertEquals("", l.getMessages());
     }
 
     public void testWrite(String design, T expected, boolean writeData) {
