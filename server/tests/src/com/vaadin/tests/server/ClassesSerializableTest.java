@@ -80,6 +80,7 @@ public class ClassesSerializableTest extends TestCase {
             "com\\.vaadin\\.util\\.WeakValueMap.*", //
             "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
+            "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
     };
 
     /**
