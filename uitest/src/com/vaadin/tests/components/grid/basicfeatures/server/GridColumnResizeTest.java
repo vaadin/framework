@@ -101,6 +101,21 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         }
     }
 
+    @Test
+    public void testResizeWithWidgetHeader() {
+        selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
+                "250px");
+        selectMenuPath("Component", "Columns", "Column 0", "Header Type",
+                "Widget Header");
+
+        // IE9 and IE10 sometimes have a 1px gap between resize handle parts, so
+        // using posX 1px
+        dragResizeColumn(0, 1, 10);
+
+        assertTrue("Log should contain a resize event",
+                logContainsText("ColumnResizeEvent: isUserOriginated? true"));
+    }
+
     private void dragResizeColumn(int columnIndex, int posX, int offset) {
         GridCellElement headerCell = getGridElement().getHeaderCell(0,
                 columnIndex);
