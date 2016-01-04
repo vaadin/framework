@@ -18,6 +18,7 @@ package com.vaadin.tests.server.component.label;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -110,6 +111,38 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
         root = new Element(Tag.valueOf("vaadin-label"), "");
         label.writeDesign(root, new DesignContext());
         Assert.assertEquals("&amp; Test", root.html());
+    }
+
+    @Test
+    public void testNullValue() {
+        Label label = new Label();
+        label.setValue(null);
+
+        label.setContentMode(ContentMode.TEXT);
+        Element root = new Element(Tag.valueOf("vaadin-label"), "");
+        label.writeDesign(root, new DesignContext());
+        Assert.assertEquals("", root.html());
+
+        label.setContentMode(ContentMode.HTML);
+        root = new Element(Tag.valueOf("vaadin-label"), "");
+        label.writeDesign(root, new DesignContext());
+        Assert.assertEquals("", root.html());
+    }
+
+    /**
+     * FIXME Using another content mode than TEXT OR HTML is currently not
+     * supported and will cause the content mode to fallback without the users
+     * knowledge to HTML. This test can be enabled when
+     * https://dev.vaadin.com/ticket/19435 is fixed.
+     */
+    @Test
+    @Ignore("Test ignored due to https://dev.vaadin.com/ticket/19435")
+    public void testContentModes() {
+        String design = "<vaadin-label caption='This\n is a label' />";
+        Label l = createLabel(null, "This\n is a label", true);
+        l.setContentMode(ContentMode.PREFORMATTED);
+        testRead(design, l);
+        testWrite(design, l);
     }
 
     private Label createLabel(String content, String caption, boolean html) {
