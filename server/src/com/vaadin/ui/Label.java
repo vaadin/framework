@@ -625,12 +625,31 @@ public class Label extends AbstractComponent implements Property<String>,
         super.writeDesign(design, designContext);
         String content = getValue();
         if (content != null) {
-            design.html(getValue());
-        }
-        // plain-text (default is html)
-        if (getContentMode() == ContentMode.TEXT) {
-            design.attr(DESIGN_ATTR_PLAIN_TEXT, true);
-            design.html(DesignFormatter.encodeForTextNode(getValue()));
+            switch (getContentMode()) {
+            case TEXT:
+            case PREFORMATTED:
+            case XML:
+            case RAW: {
+                // FIXME This attribute is not enough to be able to restore the
+                // content mode in readDesign. The content mode should instead
+                // be written directly in the attribute and restored in
+                // readDesign. See ticket #19435
+                design.attr(DESIGN_ATTR_PLAIN_TEXT, true);
+                String encodeForTextNode = DesignFormatter
+                        .encodeForTextNode(content);
+                if (encodeForTextNode != null) {
+                    design.html(encodeForTextNode);
+                }
+            }
+                break;
+            case HTML:
+                design.html(content);
+                break;
+            default:
+                throw new IllegalStateException(
+                        "ContentMode " + getContentMode()
+                                + " is not supported by writeDesign");
+            }
         }
     }
 }
