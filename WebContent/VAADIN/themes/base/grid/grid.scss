@@ -267,6 +267,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   .#{$primaryStyleName}-column-resize-handle {
     position: absolute;
     width: 2 * $v-grid-cell-padding-horizontal;
+    right: -$v-grid-cell-padding-horizontal;
     top: 0px;
     bottom: 0px;
     cursor: col-resize;
@@ -278,13 +279,6 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-  }
-  
-  .sort-asc,
-  .sort-desc {
-  	> .#{$primaryStyleName}-column-resize-handle {
-      right: -$v-grid-cell-padding-horizontal;
-  	}
   }
 
   // Footer
