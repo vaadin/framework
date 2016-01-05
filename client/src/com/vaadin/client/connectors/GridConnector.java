@@ -48,7 +48,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
-import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -160,7 +160,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private AbstractRendererConnector<Object> rendererConnector;
 
-        private AbstractFieldConnector editorConnector;
+        private AbstractComponentConnector editorConnector;
 
         private HandlerRegistration errorStateHandler;
 
@@ -196,12 +196,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             return null;
         }
 
-        private AbstractFieldConnector getEditorConnector() {
+        private AbstractComponentConnector getEditorConnector() {
             return editorConnector;
         }
 
         private void setEditorConnector(
-                final AbstractFieldConnector editorConnector) {
+                final AbstractComponentConnector editorConnector) {
             this.editorConnector = editorConnector;
 
             if (errorStateHandler != null) {
@@ -328,7 +328,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             assert column != null;
 
             if (column instanceof CustomGridColumn) {
-                AbstractFieldConnector c = ((CustomGridColumn) column)
+                AbstractComponentConnector c = ((CustomGridColumn) column)
                         .getEditorConnector();
 
                 if (c == null) {
@@ -1033,7 +1033,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setHidingToggleCaption(state.hidingToggleCaption);
 
         column.setEditable(state.editable);
-        column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
+        column.setEditorConnector((AbstractComponentConnector) state.editorConnector);
     }
 
     /**
