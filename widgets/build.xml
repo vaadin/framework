@@ -45,6 +45,7 @@
             <fileset dir="${result.deps}">
                 <include name="com/vaadin/*.gwt.xml" />
                 <include name="com/vaadin/client/BrowserInfo.java" />
+                <include name="com/vaadin/client/AnimationUtil.java" />
                 <include name="com/vaadin/client/ComputedStyle.java" />
                 <include name="com/vaadin/client/DeferredWorker.java" />
                 <include name="com/vaadin/client/Profiler.java" />
