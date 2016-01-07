@@ -98,6 +98,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             getColumn("age").getEditorField().addValidator(
                     new IntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
+            getColumn("birthDate").setRenderer(
+                    new DateRenderer(DateFormat.getDateInstance()));
         }
     }
 
