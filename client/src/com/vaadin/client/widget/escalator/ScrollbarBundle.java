@@ -402,11 +402,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Sets the length of the scrollbar.
-     * <p>
-     * <em>Note:</em> Even though {@code double} values are used, they are
-     * currently only used as integers as large {@code int} (or small but fast
-     * {@code long}). This means, all values are truncated to zero decimal
-     * places.
      * 
      * @param px
      *            the length of the scrollbar in pixels
@@ -437,7 +432,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     }
 
     private void setOffsetSizeNow(double px) {
-        internalSetOffsetSize(Math.max(0, truncate(px)));
+        internalSetOffsetSize(Math.max(0, px));
         recalculateMaxScrollPos();
         forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
@@ -595,11 +590,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Sets the amount of pixels the scrollbar needs to be able to scroll
      * through.
-     * <p>
-     * <em>Note:</em> Even though {@code double} values are used, they are
-     * currently only used as integers as large {@code int} (or small but fast
-     * {@code long}). This means, all values are truncated to zero decimal
-     * places.
      * 
      * @param px
      *            the number of pixels the scrollbar should be able to scroll
@@ -727,7 +717,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * @return <code>true</code> iff the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
-        return getOffsetSize() < getScrollSize();
+        return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
     }
 
     public void recalculateMaxScrollPos() {
