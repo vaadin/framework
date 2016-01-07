@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.renderers.DateRenderer;
 
 @Theme("valo")
 public class GridThemeUI extends AbstractTestUIWithLog {
@@ -134,6 +136,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             getColumn("age").getEditorField().addValidator(
                     new IntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
+            getColumn("birthDate").setRenderer(
+                    new DateRenderer(DateFormat.getDateInstance()));
 
             addFooterRowAt(0);
         }
