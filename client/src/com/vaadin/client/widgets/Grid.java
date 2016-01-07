@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -3620,7 +3619,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private final Grid<?> grid;
 
-        private PopupPanel overlay;
+        private Overlay overlay;
 
         private Sidebar(Grid<?> grid) {
             this.grid = grid;
@@ -3712,33 +3711,8 @@ public class Grid<T> extends ResizeComposite implements
          * Creates and initializes the overlay.
          */
         private void createOverlay() {
-            overlay = new PopupPanel() {
-
-                @Override
-                protected void onAttach() {
-                    // PopupPanel by default attaches itself directly to the
-                    // body. Try to find a Vaadin overlay container and move the
-                    // overlay there if found.
-
-                    // FIXME: This is a hack; Grid should not have
-                    // Vaadin-specific behavior special-cased. Instead, there
-                    // should be a customization point for setting the overlay
-                    // container.
-
-                    BodyElement body = Document.get().getBody();
-                    Element target = body.getFirstChildElement();
-                    while (!target.hasClassName("v-overlay-container")
-                            && target != null) {
-                        target = target.getNextSiblingElement();
-                    }
-
-                    if (target != null) {
-                        target.appendChild(getElement());
-                    }
-
-                    super.onAttach();
-                }
-            };
+            overlay = GWT.create(Overlay.class);
+            overlay.setOwner(grid);
             overlay.setAutoHideEnabled(true);
             overlay.addStyleDependentName("popup");
             overlay.add(content);
