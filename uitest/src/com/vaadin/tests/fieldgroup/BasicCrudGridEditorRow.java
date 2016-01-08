@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.fieldgroup;
 
+import java.text.DateFormat;
+import java.util.Locale;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -22,6 +25,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.renderers.DateRenderer;
 
 public class BasicCrudGridEditorRow extends AbstractBasicCrud {
 
@@ -52,6 +56,9 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
                 .addValidator(
                         new IntegerRangeValidator("Must be between 0 and 100",
                                 0, 100));
+        grid.getColumn("birthDate").setRenderer(
+                new DateRenderer(DateFormat.getDateInstance(DateFormat.MEDIUM,
+                        Locale.US)));
         addComponent(grid);
         getLayout().setExpandRatio(grid, 1);
     }

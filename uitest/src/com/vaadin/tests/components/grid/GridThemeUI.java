@@ -99,7 +99,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
                     new IntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
             getColumn("birthDate").setRenderer(
-                    new DateRenderer(DateFormat.getDateInstance()));
+                    new DateRenderer(DateFormat.getDateInstance(
+                            DateFormat.MEDIUM, Locale.US)));
         }
     }
 
@@ -139,7 +140,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
                     new IntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
             getColumn("birthDate").setRenderer(
-                    new DateRenderer(DateFormat.getDateInstance()));
+                    new DateRenderer(DateFormat.getDateInstance(
+                            DateFormat.MEDIUM, Locale.US)));
 
             addFooterRowAt(0);
         }
