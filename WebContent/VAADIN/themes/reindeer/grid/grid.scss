@@ -87,6 +87,12 @@
       background: transparent;
     }
 
+    .v-datefield-button {
+      .v-ie8 & {
+        margin-top: -2px;
+      }
+    }
+      
     .v-filterselect {
       overflow: hidden;
     }
