@@ -56,9 +56,9 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EventCellReference;
+import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
-import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.ColumnReorderEvent;
@@ -508,6 +508,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         @Override
         public double getDetailsHeight(int rowIndex) {
+            // Case of null is handled in the getDetails method and this method
+            // will not called if it returns null.
             String id = getId(rowIndex);
             ComponentConnector componentConnector = idToDetailsMap.get(id);
 
