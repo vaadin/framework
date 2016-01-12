@@ -302,7 +302,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * the client. Details components are detached and forgotten when client
      * informs that it has dropped the corresponding item.
      * 
-     * @since 7.6
+     * @since 7.6.1
      */
     public final static class DetailComponentManager extends
             AbstractGridExtension implements DataGenerator {

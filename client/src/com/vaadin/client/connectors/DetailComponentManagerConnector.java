@@ -23,7 +23,7 @@ import com.vaadin.ui.Grid.DetailComponentManager;
 /**
  * Client-side connector for the DetailComponentManager of Grid.
  * 
- * @since 7.6
+ * @since 7.6.1
  */
 @Connect(DetailComponentManager.class)
 public class DetailComponentManagerConnector extends AbstractExtensionConnector {

@@ -71,6 +71,8 @@ import com.vaadin.client.WidgetUtil;
  * href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
  * >Microsoft Developer Network</a>
  * </p>
+ * 
+ * @since 7.6.1
  */
 public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
