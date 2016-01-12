@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.integration;
 
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.testbench.parallel.TestNameSuffix;
 import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
@@ -37,4 +39,17 @@ public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
         return deploymentUrl;
     }
 
+    @Override
+    protected void openTestURL() {
+        super.openTestURL();
+
+        waitForApplication();
+    }
+
+    protected void waitForApplication() {
+        if (!isElementPresent(UIElement.class)) {
+            // Wait for UI element.
+            waitForElementPresent(By.vaadin("//com.vaadin.ui.UI"));
+        }
+    }
 }
