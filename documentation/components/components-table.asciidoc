@@ -7,6 +7,11 @@ layout: page
 [[components.table]]
 = [classname]#Table#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/table]
+endif::web[]
+
 ((("[classname]#Table#", id="term.components.table", range="startofrange")))
 
 

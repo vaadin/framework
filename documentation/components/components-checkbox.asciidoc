@@ -7,6 +7,11 @@ layout: page
 [[components.checkbox]]
 = [classname]#CheckBox#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/check-box]
+endif::web[]
+
 [classname]#CheckBox# is a two-state selection component that can be either
 checked or unchecked. The caption of the check box will be placed right of the
 actual check box. Vaadin provides two ways to create check boxes: individual

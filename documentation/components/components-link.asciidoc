@@ -7,6 +7,11 @@ layout: page
 [[components.link]]
 = [classname]#Link#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/link]
+endif::web[]
+
 The [classname]#Link# component allows making hyperlinks. References to
 locations are represented as resource objects, explained in
 <<dummy/../../../framework/application/application-resources#application.resources,"Images

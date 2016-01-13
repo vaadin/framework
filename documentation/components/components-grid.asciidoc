@@ -7,6 +7,11 @@ layout: page
 [[components.grid]]
 = [classname]#Grid#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/grid]
+endif::web[]
+
 ((("[classname]#Grid#")))
 [classname]#Grid# is many things, and perhaps the most versatile and powerful
 component in Vaadin. Like [classname]#Table#, it allows presenting and editing

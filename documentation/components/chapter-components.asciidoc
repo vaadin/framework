@@ -4,7 +4,6 @@
 This chapter provides an overview and a detailed description of all non-layout
 components in Vaadin.
 
-
 include::components-overview.asciidoc[leveloffset=+2]
 
 include::components-interfaces.asciidoc[leveloffset=+2]

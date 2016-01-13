@@ -7,6 +7,11 @@ layout: page
 [[components.upload]]
 = [classname]#Upload#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/upload]
+endif::web[]
+
 The [classname]#Upload# component allows a user to upload files to the server.
 It displays a file name entry box, a file selection button, and an upload submit
 button. The user can either write the filename in the text area or click the

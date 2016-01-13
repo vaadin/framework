@@ -7,6 +7,12 @@ layout: page
 [[components.button]]
 = [classname]#Button#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/button"]
+endif::web[]
+
+
 The [classname]#Button# component is normally used for initiating some action,
 such as finalizing input in forms. When the user clicks a button, a
 [classname]#Button.ClickEvent# is fired, which can be handled with a

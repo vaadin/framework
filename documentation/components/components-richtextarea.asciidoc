@@ -7,6 +7,11 @@ layout: page
 [[components.richtextarea]]
 = [classname]#RichTextArea#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/rich-text-area]
+endif::web[]
+
 The [classname]#RichTextArea# field allows entering or editing formatted text.
 The toolbar provides all basic editing functionalities. The text content of
 [classname]#RichTextArea# is represented in HTML format.

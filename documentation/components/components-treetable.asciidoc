@@ -7,6 +7,11 @@ layout: page
 [[components.treetable]]
 = [classname]#TreeTable#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree-table]
+endif::web[]
+
 [classname]#TreeTable# is an extension of the [classname]#Table# component with
 support for a tree-like hierarchy in the first column. As with
 [classname]#Tree#, the hierarchy is determined by the parent-children

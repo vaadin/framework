@@ -7,6 +7,11 @@ layout: page
 [[components.twincolselect]]
 = [classname]#TwinColSelect#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/list-builder]
+endif::web[]
+
 The [classname]#TwinColSelect# field provides a multiple selection component
 that shows two lists side by side, with the left column containing unselected
 items and the right column the selected items. The user can select items from

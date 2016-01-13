@@ -7,6 +7,11 @@ layout: page
 [[components.listselect]]
 = [classname]#ListSelect#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/list-select]
+endif::web[]
+
 The [classname]#ListSelect# component is list box that shows the selectable
 items in a vertical list. If the number of items exceeds the height of the
 component, a scrollbar is shown. The component allows both single and multiple

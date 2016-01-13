@@ -7,6 +7,11 @@ layout: page
 [[components.datefield]]
 = Date and Time Input with [classname]#DateField#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/dates/popup-date-field]
+endif::web[]
+
 The [classname]#DateField# component provides the means to display and input
 date and time. The field comes in two variations: [classname]#PopupDateField#,
 with a numeric input box and a popup calendar view, and

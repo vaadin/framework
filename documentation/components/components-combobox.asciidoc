@@ -7,6 +7,11 @@ layout: page
 [[components.combobox]]
 = [classname]#ComboBox#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/combo-box]
+endif::web[]
+
 [classname]#ComboBox# is a selection component allows selecting an item from a
 drop-down list. The component also has a text field area, which allows entering
 search text by which the items shown in the drop-down list are filtered. Common

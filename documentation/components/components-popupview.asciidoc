@@ -7,6 +7,11 @@ layout: page
 [[components.popupview]]
 = [classname]#PopupView#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/structure/popup-view]
+endif::web[]
+
 The [classname]#PopupView# component allows opening a pop-up view either by
 clicking on a link or programmatically. The component has two representations: a
 minimized textual representation and the popped-up content. The view can contain

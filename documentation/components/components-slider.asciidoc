@@ -7,6 +7,11 @@ layout: page
 [[components.slider]]
 = [classname]#Slider#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/slider]
+endif::web[]
+
 The [classname]#Slider# is a vertical or horizontal bar that allows setting a
 numeric value within a defined range by dragging a bar handle with the mouse.
 The value is shown when dragging the handle.
