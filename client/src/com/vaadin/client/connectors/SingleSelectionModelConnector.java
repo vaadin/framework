@@ -90,6 +90,16 @@ public class SingleSelectionModelConnector extends
         }
 
         @Override
+        public void reset() {
+            super.reset();
+
+            // Clean up selected row
+            if (selectedRow != null) {
+                clearSelectedRow();
+            }
+        }
+
+        @Override
         public boolean select(JsonObject row) {
             boolean changed = false;
 
