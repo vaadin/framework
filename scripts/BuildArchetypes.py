@@ -73,6 +73,8 @@ if __name__ == "__main__":
 	if hasattr(args, "artifactPath") and args.artifactPath is not None:
 		raise Exception("Archetype validation build does not support artifactPath")
 
+	wars = {}
+
 	for archetype in archetypes:
 		artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
 		try:
@@ -82,15 +84,23 @@ if __name__ == "__main__":
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:
-				try:
-					deployWar(war, "%s.war" % (getDeploymentContext(archetype, args.version)))
-				except Exception as e:
-					print("War %s failed to deploy: %s" % (war, e))
-					archetypesFailed = True
+				wars[war] = "%s.war" % (getDeploymentContext(archetype, args.version))
+			print("%s validation succeeded!" % (archetype))
 		except Exception as e:
 			print("Archetype %s build failed:" % (archetype), e)
 			archetypesFailed = True
-#		removeDir(artifactId)
+		try:
+			removeDir(artifactId)
+		except:
+			pass
 		print("")
+
+	for i in wars:
+		try:
+			deployWar(i, wars[i])
+		except Exception as e:
+			print("War %s failed to deploy: %s" % (war, e))
+			archetypesFailed = True
+
 	if archetypesFailed:
 		sys.exit(1)

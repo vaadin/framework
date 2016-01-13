@@ -65,6 +65,8 @@ if __name__ == "__main__":
 	demosFailed = False
 	ignoredDemos = args.ignore.split(",")
 	
+	wars = []
+
 	for demo in demos:
 		print("Validating demo %s" % (demo))
 		try:
@@ -76,13 +78,7 @@ if __name__ == "__main__":
 			if hasattr(args, "repo") and args.repo is not None:
 				updateRepositories(join(resultPath, demo), args.repo)
 			mavenValidate(demo, logFile=getLogFile(demo))
-			resultWars = copyWarFiles(demo)
-			for war in resultWars:
-				try:
-					deployWar(war)
-				except Exception as e:
-					print("War %s failed to deploy: %s" % (war, e))
-					demosFailed = True
+			wars.extend(copyWarFiles(demo))
 			print("%s demo validation succeeded!" % (demo))
 		except Exception as e:
 			print("%s demo validation failed: %s" % (demo, e))
@@ -97,5 +93,13 @@ if __name__ == "__main__":
 		except:
 			pass
 		print("")
+
+	for war in wars:
+		try:
+			deployWar(war)
+		except Exception as e:
+			print("War %s failed to deploy: %s" % (war, e))
+			demosFailed = True
+
 	if demosFailed:
 		sys.exit(1)
