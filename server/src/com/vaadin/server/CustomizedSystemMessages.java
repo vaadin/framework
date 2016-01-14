@@ -46,12 +46,6 @@ import java.io.Serializable;
  * server returned and invalid response.</li>
  * <li>Internal error: unhandled critical server error (e.g out of memory,
  * database crash)
- * <li>Out of sync: the client is not in sync with the server. E.g the user
- * opens two windows showing the same application, but the application does not
- * support this and uses the same Window instance. When the user makes changes
- * in one of the windows - the other window is no longer in sync, and (for
- * instance) pressing a button that is no longer present in the UI will cause a
- * out-of-sync -situation.
  * </p>
  */
 
