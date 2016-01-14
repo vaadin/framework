@@ -4,6 +4,6 @@
 <module>
     <entry-point class='com.vaadin.themes.valoutil.BodyStyleName' />
     <source path='valoutil' />
-    <public path="valo" />
-    <stylesheet src="styles.css" />
+    <public path="public" />
+    <stylesheet src="valo/styles.css" />
 </module>
