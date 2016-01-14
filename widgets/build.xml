@@ -76,11 +76,11 @@
             </fileset>
         </copy>
 
-        <mkdir dir="${result.src}/com/vaadin/themes" />
-        <copy todir="${result.src}/com/vaadin/themes/valo">
+        <mkdir dir="${result.src}/com/vaadin/themes/public" />
+        <copy todir="${result.src}/com/vaadin/themes/public/valo">
             <fileset dir="${result.deps}/VAADIN/themes/valo" />
         </copy>
-        <copy todir="${result.src}/com/vaadin/themes/base">
+        <copy todir="${result.src}/com/vaadin/themes/public/base">
             <fileset dir="${result.deps}/VAADIN/themes/base" />
         </copy>
     </target>
