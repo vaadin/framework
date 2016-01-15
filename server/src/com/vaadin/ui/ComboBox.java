@@ -105,16 +105,27 @@ public class ComboBox extends AbstractSelect implements
         }
 
         @Override
+        @Deprecated
         public void requestPage(String filter, int page) {
+            setFilter(filter);
+            requestPage(page);
+        }
+
+        @Override
+        public void setFilter(String filter) {
             filterstring = filter;
             if (filterstring != null) {
                 filterstring = filterstring.toLowerCase(getLocale());
             }
+        }
+
+        @Override
+        public void requestPage(int page) {
             currentPage = page;
 
             // TODO this should trigger a data-only update instead of a full
             // repaint
-            requestRepaint();
+            markAsDirty();
         }
     };
 

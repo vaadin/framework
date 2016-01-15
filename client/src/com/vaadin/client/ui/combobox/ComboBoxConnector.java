@@ -308,7 +308,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      *            the page number to get
      */
     public void requestPage(String filter, int page) {
-        rpc.requestPage(filter, page);
+        rpc.setFilter(filter);
+        // TODO: Replace with a DataSource ensureAvailability call.
+        rpc.requestPage(page);
         afterSendRequestToServer();
     }
 

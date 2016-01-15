@@ -48,6 +48,30 @@ public interface ComboBoxServerRpc extends ServerRpc {
      *            mode
      * @param page
      *            zero based page number
+     * @deprecated method split to two separate parts, see
+     *             {@link ComboBoxServerRpc#setFilter(String)} and
+     *             {@link ComboBoxServerRpc#requestPage(int)}
      */
+    @Deprecated
     public void requestPage(String filter, int page);
+
+    /**
+     * Sets a filter to the server-side data source.
+     * 
+     * @param filter
+     *            filter string interpreted according to the current filtering
+     *            mode
+     * @since
+     */
+    public void setFilter(String filter);
+
+    /**
+     * Request the server to send a page of the item list. This request will get
+     * results filtered by filter string given with
+     * {@link ComboBoxServerRpc#setFilter(String)}
+     *
+     * @param page
+     *            zero based page number
+     */
+    public void requestPage(int page);
 }
