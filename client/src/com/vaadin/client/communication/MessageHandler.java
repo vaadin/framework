@@ -1784,7 +1784,11 @@ public class MessageHandler {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-       return JSON.parse(jsonText);
+      try {
+        return JSON.parse(jsonText);
+      } catch (ignored) {
+        return eval('(' + jsonText + ')');
+      }
     }-*/;
 
     /**
