@@ -207,7 +207,11 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         super.onClick(event);
         if (event.getSource() instanceof CheckBox) {
             CheckBox source = (CheckBox) event.getSource();
-
+            if (!source.isEnabled()) {
+                // Click events on the text are received even though the
+                // checkbox is disabled
+                return;
+            }
             if (BrowserInfo.get().isWebkit()) {
                 // Webkit does not focus non-text input elements on click
                 // (#11854)
