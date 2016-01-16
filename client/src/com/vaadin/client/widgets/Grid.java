@@ -116,10 +116,10 @@ import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EventCellReference;
+import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
-import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -371,6 +371,14 @@ public class Grid<T> extends ResizeComposite implements
              *            null).
              */
             public void setWidget(Widget widget) {
+                if (this.content == widget) {
+                    return;
+                }
+
+                if (this.content instanceof Widget) {
+                    // Old widget in the cell, detach it first
+                    section.getGrid().detachWidget((Widget) this.content);
+                }
                 this.content = widget;
                 this.type = GridStaticCellType.WIDGET;
                 section.requestSectionRefresh();
@@ -407,6 +415,17 @@ public class Grid<T> extends ResizeComposite implements
 
             }
 
+            /**
+             * Called when the cell is detached from the row
+             * 
+             * @since
+             */
+            void detach() {
+                if (this.content instanceof Widget) {
+                    // Widget in the cell, detach it
+                    section.getGrid().detachWidget((Widget) this.content);
+                }
+            }
         }
 
         /**
@@ -626,6 +645,22 @@ public class Grid<T> extends ResizeComposite implements
                 this.styleName = styleName;
                 section.requestSectionRefresh();
             }
+
+            /**
+             * Called when the row is detached from the grid
+             * 
+             * @since
+             */
+            void detach() {
+                // Avoid calling detach twice for a merged cell
+                HashSet<CELLTYPE> cells = new HashSet<CELLTYPE>();
+                for (Column<?, ?> column : getSection().grid.getColumns()) {
+                    cells.add(getCell(column));
+                }
+                for (CELLTYPE cell : cells) {
+                    cell.detach();
+                }
+            }
         }
 
         private Grid<?> grid;
@@ -738,7 +773,8 @@ public class Grid<T> extends ResizeComposite implements
          * @see #removeRow(StaticRow)
          */
         public void removeRow(int index) {
-            rows.remove(index);
+            ROWTYPE row = rows.remove(index);
+            row.detach();
             requestSectionRefresh();
         }
 
@@ -1820,7 +1856,7 @@ public class Grid<T> extends ResizeComposite implements
 
                     if (editor != null) {
                         columnToWidget.put(column, editor);
-                        attachWidget(editor, cell);
+                        grid.attachWidget(editor, cell);
                     }
 
                     if (i == focusedColumnIndex) {
@@ -1866,7 +1902,7 @@ public class Grid<T> extends ResizeComposite implements
                                 }
                             }
                         });
-                        attachWidget(checkBox, cell);
+                        grid.attachWidget(checkBox, cell);
                         columnToWidget.put(column, checkBox);
 
                         // Only enable CheckBox in non-buffered mode
@@ -1891,8 +1927,8 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             if (isBuffered()) {
-                attachWidget(saveButton, buttonsWrapper);
-                attachWidget(cancelButton, buttonsWrapper);
+                grid.attachWidget(saveButton, buttonsWrapper);
+                grid.attachWidget(cancelButton, buttonsWrapper);
             }
 
             setMessageAndButtonsWrapperVisible(isBuffered());
@@ -1981,8 +2017,8 @@ public class Grid<T> extends ResizeComposite implements
             }
             columnToWidget.clear();
 
-            detachWidget(saveButton);
-            detachWidget(cancelButton);
+            grid.detachWidget(saveButton);
+            grid.detachWidget(cancelButton);
 
             editorOverlay.removeAllChildren();
             cellWrapper.removeAllChildren();
@@ -2050,16 +2086,6 @@ public class Grid<T> extends ResizeComposite implements
             setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(), width,
                     height);
             return cell;
-        }
-
-        private void attachWidget(Widget w, Element parent) {
-            parent.appendChild(w.getElement());
-            setParent(w, grid);
-        }
-
-        private void detachWidget(Widget w) {
-            setParent(w, null);
-            w.getElement().removeFromParent();
         }
 
         private static void setBounds(Element e, double left, double top,
@@ -5787,20 +5813,14 @@ public class Grid<T> extends ResizeComposite implements
                 StaticSection.StaticCell metadata = gridRow.getCell(columns
                         .get(cell.getColumn()));
                 /*
-                 * If the cell contains widgets that are not currently attach
+                 * If the cell contains widgets that are not currently attached
                  * then attach them now.
                  */
                 if (GridStaticCellType.WIDGET.equals(metadata.getType())) {
                     final Widget widget = metadata.getWidget();
-                    final Element cellElement = cell.getElement();
-
-                    if (!widget.isAttached()) {
-
-                        // Physical attach
-                        cellElement.appendChild(widget.getElement());
-
-                        // Logical attach
-                        setParent(widget, Grid.this);
+                    if (widget != null && !widget.isAttached()) {
+                        getGrid().attachWidget(metadata.getWidget(),
+                                cell.getElement());
                     }
                 }
             }
@@ -5817,18 +5837,17 @@ public class Grid<T> extends ResizeComposite implements
                             .get(cell.getColumn()));
 
                     if (GridStaticCellType.WIDGET.equals(metadata.getType())
+                            && metadata.getWidget() != null
                             && metadata.getWidget().isAttached()) {
 
-                        Widget widget = metadata.getWidget();
-
-                        // Logical detach
-                        setParent(widget, null);
-
-                        // Physical detach
-                        widget.getElement().removeFromParent();
+                        getGrid().detachWidget(metadata.getWidget());
                     }
                 }
             }
+        }
+
+        protected Grid getGrid() {
+            return section.grid;
         }
 
         @Override
@@ -8583,6 +8602,20 @@ public class Grid<T> extends ResizeComposite implements
         if (sidebar.getParent() == this) {
             onDetach(sidebar);
         }
+    }
+
+    private void attachWidget(Widget w, Element parent) {
+        assert w.getParent() == null;
+
+        parent.appendChild(w.getElement());
+        setParent(w, this);
+    }
+
+    private void detachWidget(Widget w) {
+        assert w.getParent() == this;
+
+        setParent(w, null);
+        w.getElement().removeFromParent();
     }
 
     /**
