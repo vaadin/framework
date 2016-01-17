@@ -22,6 +22,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
@@ -149,6 +150,20 @@ public class StringToCollectionConverterTest {
         Assert.assertEquals("Incorrect fist token", "a", iterator.next());
         Assert.assertFalse("More than one item detected after conversation",
                 iterator.hasNext());
+    }
+
+    @Test
+    public void convertToModel_null() {
+        StringToCollectionConverter converter = new StringToCollectionConverter();
+        Assert.assertNull(converter.convertToModel(null, ArrayList.class,
+                Locale.ENGLISH));
+    }
+
+    @Test
+    public void convertToPresentation_null() {
+        StringToCollectionConverter converter = new StringToCollectionConverter();
+        Assert.assertNull(converter.convertToPresentation(null, String.class,
+                Locale.ENGLISH));
     }
 
     public enum TestEnum {
