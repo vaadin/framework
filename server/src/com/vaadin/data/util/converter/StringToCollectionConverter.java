@@ -145,6 +145,10 @@ public class StringToCollectionConverter implements
     public Collection convertToModel(String value,
             Class<? extends Collection> targetType, Locale locale)
             throws Converter.ConversionException {
+        if (value == null) {
+            return null;
+        }
+
         int index = value.indexOf(delimiter);
         int previous = 0;
         Collection result = factory.createCollection(targetType);
@@ -163,6 +167,9 @@ public class StringToCollectionConverter implements
     public String convertToPresentation(Collection value,
             Class<? extends String> targetType, Locale locale)
             throws Converter.ConversionException {
+        if (value == null) {
+            return null;
+        }
         StringBuilder builder = new StringBuilder();
         Converter converter = tokenConverter;
         for (Iterator<?> iterator = value.iterator(); iterator.hasNext();) {
