@@ -23,11 +23,13 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VCheckBox;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
@@ -135,6 +137,19 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
             if (getState().immediate) {
                 getConnection().sendPendingVariableChanges();
             }
+        }
+    }
+
+    private boolean contextEventSunk = false;
+
+    @OnStateChange("registeredEventListeners")
+    void sinkContextClickEvent() {
+        if (!contextEventSunk && hasEventListener(EventId.CONTEXT_CLICK)) {
+            // CheckBox.sinkEvents works differently than all other widgets:
+            // "Unlike other widgets the CheckBox sinks on its inputElement, not
+            // its wrapper"
+            DOM.sinkEvents(getWidget().getElement(), Event.ONCONTEXTMENU);
+            contextEventSunk = true;
         }
     }
 }
