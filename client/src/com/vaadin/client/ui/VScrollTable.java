@@ -5307,9 +5307,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 for (Widget row : renderedRows) {
                     if (!(row instanceof VScrollTableGeneratedRow)) {
                         TableRowElement tr = row.getElement().cast();
-                        Element wrapperdiv = tr.getCells().getItem(columnIndex)
-                                .getFirstChildElement().cast();
-                        return wrapperdiv.getOffsetWidth();
+                        // Spanned rows might cause an NPE.
+                        if (columnIndex < tr.getChildCount()) {
+                            Element wrapperdiv = tr.getCells()
+                                    .getItem(columnIndex)
+                                    .getFirstChildElement().cast();
+                            return wrapperdiv.getOffsetWidth();
+                        }
                     }
                 }
                 return 0;
