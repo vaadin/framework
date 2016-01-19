@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.fieldgroup;
 
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,4 +91,23 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         Assert.assertNotEquals("Checkbox value did not change", value,
                 cb.getValue());
     }
+
+    @Test
+    public void testNoTopStyleSetOnEditorOpenWithFooterOnTop() {
+        GridCellElement cell = grid.getCell(2, 3);
+        // Open editor row
+        new Actions(getDriver()).doubleClick(cell).perform();
+
+        // Close editor
+        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
+
+        cell = grid.getCell(14, 3);
+
+        // Open editor row
+        new Actions(getDriver()).doubleClick(cell).perform();
+
+        String attribute = grid.getEditor().getAttribute("style").toLowerCase();
+        assertFalse("Style should not contain top.", attribute.contains("top:"));
+    }
+
 }

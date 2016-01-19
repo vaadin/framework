@@ -1817,9 +1817,7 @@ public class Grid<T> extends ResizeComposite implements
                 @Override
                 public void onScroll(ScrollEvent event) {
                     updateHorizontalScrollPosition();
-                    if (!isBuffered()) {
-                        updateVerticalScrollPosition();
-                    }
+                    updateVerticalScrollPosition();
                 }
             });
 
@@ -2109,6 +2107,10 @@ public class Grid<T> extends ResizeComposite implements
          * row container if the edited row is scrolled out of the visible area.
          */
         private void updateVerticalScrollPosition() {
+            if (isBuffered()) {
+                return;
+            }
+
             double newScrollTop = grid.getScrollTop();
 
             int gridTop = grid.getElement().getAbsoluteTop();
