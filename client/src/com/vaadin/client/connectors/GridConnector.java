@@ -274,8 +274,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void bind(final int rowIndex) {
-                    // call this finally to avoid issues with editing on init
-                    Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    // call this deferred to avoid issues with editing on init
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
                             GridConnector.this.getWidget().editRow(rowIndex);
