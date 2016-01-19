@@ -746,7 +746,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
-        URL resourceUrl = findResourceURL(filename, sc);
+        URL resourceUrl = findResourceURL(filename);
 
         if (resourceUrl == null) {
             // File not found, if this was a css request we still look for a
@@ -975,11 +975,21 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
-    private URL findResourceURL(String filename, ServletContext sc)
-            throws MalformedURLException {
-        URL resourceUrl = sc.getResource(filename);
+    /**
+     * Finds the given resource from the web content folder or using the class
+     * loader.
+     * 
+     * @since
+     * @param filename
+     *            The file to find, starting with a "/"
+     * @return The URL to the given file, or null if the file was not found
+     * @throws IOException
+     *             if there was a problem while locating the file
+     */
+    protected URL findResourceURL(String filename) throws IOException {
+        URL resourceUrl = getServletContext().getResource(filename);
         if (resourceUrl == null) {
-            // try if requested file is found from classloader
+            // try if requested file is found from class loader
 
             // strip leading "/" otherwise stream from JAR wont work
             if (filename.startsWith("/")) {
@@ -1000,7 +1010,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         String scssFilename = filename.substring(0, filename.length() - 4)
                 + ".scss";
-        URL scssUrl = findResourceURL(scssFilename, sc);
+        URL scssUrl = findResourceURL(scssFilename);
         if (scssUrl == null) {
             // Is a css request but no scss file was found
             return false;

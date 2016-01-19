@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,8 +25,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
@@ -201,14 +202,25 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public InputStream getThemeResourceAsStream(UI uI, String themeName,
-            String resource) {
-        VaadinServletService service = (VaadinServletService) uI.getSession()
-                .getService();
-        ServletContext servletContext = service.getServlet()
-                .getServletContext();
-        return servletContext.getResourceAsStream("/"
-                + VaadinServlet.THEME_DIR_PATH + '/' + themeName + "/"
-                + resource);
+            String resource) throws IOException {
+        String filename = "/" + VaadinServlet.THEME_DIR_PATH + '/' + themeName
+                + "/" + resource;
+        URL resourceUrl = servlet.findResourceURL(filename);
+
+        if (resourceUrl != null) {
+            // security check: do not permit navigation out of the VAADIN
+            // directory
+            if (!servlet.isAllowedVAADINResourceUrl(null, resourceUrl)) {
+                throw new IOException(
+                        String.format(
+                                "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                                filename));
+            }
+
+            return resourceUrl.openStream();
+        } else {
+            return null;
+        }
     }
 
     @Override

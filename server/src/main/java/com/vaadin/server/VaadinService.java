@@ -1085,17 +1085,22 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * TODO PUSH Document
      *
-     * TODO Pass UI or VaadinSession?
-     *
-     * @param uI
+     * Finds the given theme resource from the web content folder or using the
+     * class loader and returns a stream for it
+     * 
+     * @param ui
+     *            The ui for which to find the resource
      * @param themeName
+     *            The name of the theme
      * @param resource
-     * @return
+     *            The name of the resource, e.g. "layouts/mycustomlayout.html"
+     * @return A stream for the resource or null if the resource was not found
+     * @throws IOException
+     *             if a problem occurred while finding or opening the resource
      */
-    public abstract InputStream getThemeResourceAsStream(UI uI,
-            String themeName, String resource);
+    public abstract InputStream getThemeResourceAsStream(UI ui,
+            String themeName, String resource) throws IOException;
 
     /**
      * Creates and returns a unique ID for the DIV where the UI is to be
