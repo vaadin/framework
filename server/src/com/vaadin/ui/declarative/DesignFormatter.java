@@ -292,8 +292,9 @@ public class DesignFormatter implements Serializable {
         if (object == null) {
             return null;
         } else {
-            return findConverterFor(object.getClass()).convertToPresentation(
-                    object, String.class, null);
+            Converter<String, Object> converter = findConverterFor(object
+                    .getClass());
+            return converter.convertToPresentation(object, String.class, null);
         }
     }
 

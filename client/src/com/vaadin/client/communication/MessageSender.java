@@ -33,6 +33,7 @@ import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * MessageSender is responsible for sending messages to the server.
@@ -161,7 +162,8 @@ public class MessageSender {
 
         if (extraJson != null) {
             for (String key : extraJson.keys()) {
-                payload.put(key, extraJson.get(key));
+                JsonValue value = extraJson.get(key);
+                payload.put(key, value);
             }
         }
 
