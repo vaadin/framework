@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/option-group]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/option-group"]
 endif::web[]
 
 [classname]#OptionGroup# is a selection component that allows selection from a

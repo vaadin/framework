@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/progress-bar]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/progress-bar"]
 endif::web[]
 
 The [classname]#ProgressBar# component allows displaying the progress of a task

@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/menu-bar]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/menu-bar"]
 endif::web[]
 
 The [classname]#MenuBar# component allows creating horizontal dropdown menus,

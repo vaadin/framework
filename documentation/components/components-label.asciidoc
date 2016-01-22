@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-presentation/label]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-presentation/label"]
 endif::web[]
 
 [classname]#Label# component displays non-editable text. This text can be used

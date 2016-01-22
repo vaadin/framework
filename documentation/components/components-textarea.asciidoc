@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/text-area]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/text-area"]
 endif::web[]
 
 [classname]#TextArea# is a multi-line version of the [classname]#TextField#

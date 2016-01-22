@@ -9,7 +9,7 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/text-field]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/text-field"]
 endif::web[]
 
 ((("[classname]#TextField#", id="term.components.textfield", range="startofrange")))
