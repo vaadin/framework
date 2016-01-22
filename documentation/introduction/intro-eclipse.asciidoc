@@ -1,0 +1,40 @@
+---
+title: Support for the Eclipse IDE
+order: 3
+layout: page
+---
+
+[[intro.eclipse]]
+= Support for the Eclipse IDE
+
+While Vaadin is not bound to any specific IDE, and you can in fact easily use it
+without any IDE altogether, we provide special support for the Eclipse IDE,
+which has become the most used environment for Java development. The support is
+provided in the Vaadin Plugin for Eclipse, which helps you in:
+
+* Creating new Vaadin projects
+
+* Creating custom themes
+
+* Creating custom client-side widgets
+
+* Easily upgrading to a newer version of the Vaadin library
+
+
+Using the Vaadin Plugin for Eclipse is the recommended way of installing Vaadin
+for development. Downloading the installation package that contains the JARs or
+defining Vaadin as a Maven dependency is also possible.
+
+Installing and updating the Eclipse plugin is covered in
+<<dummy/../../../framework/getting-started/getting-started-eclipse#getting-started.eclipse,"Vaadin
+Plugin for Eclipse">> and the creation of a new Vaadin project using the plugin
+in
+<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.creation,"Creating
+the Project">>. See
+<<dummy/../../../framework/themes/themes-eclipse#themes.eclipse,"Creating a
+Theme in Eclipse">> and
+<<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse,"Starting It Simple With
+Eclipse">> for instructions on using the different features of the plugin.
+
+
+

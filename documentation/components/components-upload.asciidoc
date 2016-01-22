@@ -1,0 +1,172 @@
+---
+title: Upload
+order: 26
+layout: page
+---
+
+[[components.upload]]
+= [classname]#Upload#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/upload]
+endif::web[]
+
+The [classname]#Upload# component allows a user to upload files to the server.
+It displays a file name entry box, a file selection button, and an upload submit
+button. The user can either write the filename in the text area or click the
+[guibutton]#Browse# button to select a file. After the file is selected, the
+user sends the file by clicking the upload submit button.
+
+Uploading requires a receiver that implements [interfacename]#Upload.Receiver#
+to provide an output stream to which the upload is written by the server.
+
+
+[source, java]
+----
+Upload upload = new Upload("Upload it here", receiver);
+----
+
+[[figure.ui.upload]]
+.Upload Component
+image::img/upload.png[]
+
+You can set the text of the upload button with [methodname]#setButtonCaption()#.
+Note that it is difficult to change the caption or look of the
+[guibutton]#Browse# button. This is a security feature of web browsers. The
+language of the [guibutton]#Browse# button is determined by the browser, so if
+you wish to have the language of the [classname]#Upload# component consistent,
+you will have to use the same language in your application.
+
+
+[source, java]
+----
+upload.setButtonCaption("Upload Now");
+----
+
+You can also hide the upload button with [literal]#++.v-upload .v-button
+{display: none}++# in theme, have custom logic for starting the upload, and call
+[methodname]#startUpload()# to start it. If the upload component has
+[methodname]#setImmediate(true)# enabled, uploading starts immediately after
+choosing the file.
+
+[[components.upload.receiving]]
+== Receiving Upload Data
+
+The uploaded files are typically stored as files in a file system, in a
+database, or as temporary objects in memory. The upload component writes the
+received data to an [classname]#java.io.OutputStream# so you have plenty of
+freedom in how you can process the upload content.
+
+To use the [classname]#Upload# component, you need to implement the
+[classname]#Upload.Receiver# interface. The [methodname]#receiveUpload()# method
+of the receiver is called when the user clicks the submit button. The method
+must return an [classname]#OutputStream#. To do this, it typically creates a
+file or a memory buffer to which the stream is written. The method gets the file
+name and MIME type of the file, as reported by the browser.
+
+While uploading, the upload progress can be monitored with an
+[interfacename]#Upload.ProgressListener#. The [methodname]#updateProgress()#
+method gets the number of read bytes and the content length as parameters. The
+content length is reported by the browser, but the reported value is not
+reliable, and can also be unknown, in which case the value is -1. It is
+therefore recommended to follow the upload progress and check the allowed size
+in a progress listener. Upload can be terminated by calling
+[methodname]#interruptUpload()# on the upload component. You may want to use a
+[classname]#ProgressBar# to visualize the progress, and in indeterminate mode if
+the content length is not known.
+
+When an upload is finished, successfully or unsuccessfully, the
+[classname]#Upload# component will emit the [classname]#Upload.FinishedEvent#
+event, which you can handle with an [classname]#Upload.FinishedListener# added
+to the upload component. The event object will include the file name, MIME type,
+and final length of the file. More specific [classname]#Upload.FailedEvent# and
+[classname]#Upload.SucceededEvent# events will be called in the cases where the
+upload failed or succeeded, respectively.
+
+The following example uploads images to [filename]#/tmp/uploads# directory in
+(UNIX) filesystem (the directory must exist or the upload fails). The component
+displays the uploaded image in an [classname]#Image# component.
+
+
+[source, java]
+----
+// Show uploaded file in this placeholder
+final Embedded image = new Embedded("Uploaded Image");
+image.setVisible(false);
+
+// Implement both receiver that saves upload in a file and
+// listener for successful upload
+class ImageUploader implements Receiver, SucceededListener {
+    public File file;
+    
+    public OutputStream receiveUpload(String filename,
+                                      String mimeType) {
+        // Create upload stream
+        FileOutputStream fos = null; // Stream to write to
+        try {
+            // Open the file for writing.
+            file = new File("/tmp/uploads/" + filename);
+            fos = new FileOutputStream(file);
+        } catch (final java.io.FileNotFoundException e) {
+            new Notification("Could not open file<br/>",
+                             e.getMessage(),
+                             Notification.Type.ERROR_MESSAGE)
+                .show(Page.getCurrent());
+            return null;
+        }
+        return fos; // Return the output stream to write to
+    }
+
+    public void uploadSucceeded(SucceededEvent event) {
+        // Show the uploaded file in the image viewer
+        image.setVisible(true);
+        image.setSource(new FileResource(file));
+    }
+};
+ImageUploader receiver = new ImageUploader(); 
+
+// Create the upload with a caption and set receiver later
+Upload upload = new Upload("Upload Image Here", receiver);
+upload.setButtonCaption("Start Upload");
+upload.addSucceededListener(receiver);
+        
+// Put the components in a panel
+Panel panel = new Panel("Cool Image Storage");
+Layout panelContent = new VerticalLayout();
+panelContent.addComponents(upload, image);
+panel.setContent(panelContent);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.upload.basic[on-line example, window="_blank"].
+
+Note that the example does not check the type of the uploaded files in any way,
+which will cause an error if the content is anything else but an image. The
+program also assumes that the MIME type of the file is resolved correctly based
+on the file name extension. After uploading an image, the component will look as
+shown in <<figure.ui.upload.example>>.
+
+[[figure.ui.upload.example]]
+.Image Upload Example
+image::img/upload-example.png[]
+
+
+[[components.upload.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-upload { }
+  .gwt-FileUpload { }
+  .v-button { }
+    .v-button-wrap { }
+      .v-button-caption { }
+----
+
+The [classname]#Upload# component has an overall [literal]#++v-upload++# style.
+The upload button has the same structure and style as a regular
+[classname]#Button# component.
+
+
+
+

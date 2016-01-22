@@ -1,0 +1,27 @@
+[[getting-started]]
+== Getting Started with Vaadin
+
+This chapter gives practical instructions for installing the recommended
+toolchain, the Vaadin libraries and its dependencies, and creating a new Vaadin
+project.
+
+
+include::getting-started-overview.asciidoc[leveloffset=+2]
+
+include::getting-started-environment.asciidoc[leveloffset=+2]
+
+include::getting-started-libraries.asciidoc[leveloffset=+2]
+
+include::getting-started-eclipse.asciidoc[leveloffset=+2]
+
+include::getting-started-first-project.asciidoc[leveloffset=+2]
+
+include::getting-started-maven.asciidoc[leveloffset=+2]
+
+include::getting-started-netbeans.asciidoc[leveloffset=+2]
+
+include::getting-started-idea.asciidoc[leveloffset=+2]
+
+include::getting-started-package.asciidoc[leveloffset=+2]
+
+include::getting-started-scala.asciidoc[leveloffset=+2]

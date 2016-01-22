@@ -1,0 +1,71 @@
+---
+title: Button
+order: 14
+layout: page
+---
+
+[[components.button]]
+= [classname]#Button#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/button"]
+endif::web[]
+
+
+The [classname]#Button# component is normally used for initiating some action,
+such as finalizing input in forms. When the user clicks a button, a
+[classname]#Button.ClickEvent# is fired, which can be handled with a
+[interfacename]#Button.ClickListener# in the [methodname]#buttonClick()# method.
+
+You can handle button clicks with an anonymous class as follows:
+
+
+[source, java]
+----
+Button button = new Button("Do not press this button");
+
+button.addClickListener(new Button.ClickListener() {
+    public void buttonClick(ClickEvent event) {
+        Notification.show("Do not press this button again");
+    }
+});
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.button.basic[on-line example, window="_blank"].
+
+The result is shown in <<figure.component.button.basic>>. The listener can also
+be given in the constructor, which is often perhaps simpler.
+
+[[figure.component.button.basic]]
+.Button in Different Styles of Valo Theme
+image::img/button-example1.png[]
+
+If you handle several buttons in the same listener, you can differentiate
+between them either by comparing the [classname]#Button# object reference
+returned by the [methodname]#getButton()# method of
+[classname]#Button.ClickEvent# to a kept reference. For a detailed description
+of these patterns together with some examples, please see
+<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
+and Listeners">>.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-button { }
+  .v-button-wrap { }
+    .v-button-caption { }
+----
+
+A button has an overall [literal]#++v-button++# style. The caption has
+[literal]#++v-button-caption++# style. There is also an intermediate wrap
+element, which may help in styling in some cases.
+
+Some built-in themes contain a small style, which you can enable by adding
+[parameter]#Reindeer.BUTTON_SMALL#, etc. The [classname]#BaseTheme# also has a
+[parameter]#BUTTON_LINK# style, which makes the button look like a hyperlink.
+
+
+
+

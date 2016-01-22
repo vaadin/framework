@@ -1,0 +1,19 @@
+[[portal]]
+== Portal Integration
+
+((("portal integration", id="term.portal", range="startofrange")))
+
+
+
+include::portal-overview.asciidoc[leveloffset=+2]
+
+include::portal-eclipse.asciidoc[leveloffset=+2]
+
+include::portal-liferay.asciidoc[leveloffset=+2]
+
+include::portal-ui.asciidoc[leveloffset=+2]
+
+include::portal-deployment.asciidoc[leveloffset=+2]
+
+include::portal-liferay-ipc.asciidoc[leveloffset=+2]
+(((range="endofrange", startref="term.portal")))

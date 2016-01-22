@@ -1,0 +1,274 @@
+---
+title: Developing Vaadin Portlets for Liferay
+order: 3
+layout: page
+---
+
+[[portal.liferay]]
+= Developing Vaadin Portlets for Liferay
+
+A Vaadin portlet requires resources such as the server-side Vaadin libraries, a
+theme, and a widget set. You have two basic ways to deploy these: either
+globally in Liferay, so that the resources are shared between all Vaadin
+portlets, or as self-contained WARs, where each portlet carries their own
+resources.
+
+The self-contained way is easier and more flexible to start with, as the
+different portlets may have different versions of the resources. Currently, the
+latest Maven archetypes support the self-contained portlets, while with portlets
+created with the Vaadin Plugin for Eclipse only support globally deployed
+resources.
+
+Using shared resources is more efficient when you have multiple Vaadin portlets
+on the same page, as they can share the common resources. However, they must use
+exactly same Vaadin version. This is recommended for production environments,
+where you can even serve the theme and widget set from a front-end server. You
+can install the shared resources as described in <<portal.liferay.install>>.
+
+At the time of writing, the latest Liferay release 6.2 is bundled with a version
+of Vaadin release 6. If you want to use Vaadin 7 portlets with shared resources,
+you first need to remove the old ones as described in <<portal.liferay.remove>>.
+
+[[portal.liferay.profile]]
+== Defining Liferay Profile for Maven
+
+When creating a Liferay portlet project with a Maven archetype or the Liferay
+IDE, you need to define a Liferay profile. With the Liferay IDE, you can create
+it when you create the project, as described in <<portal.liferay.ide>>, but for
+creating a project from the Maven archetype, you need to define in manually.
+
+[[portal.liferay.profile.settings]]
+=== Defining Profile in [filename]#settings.xml#
+
+Liferay profile can be defined either in the user or in the global
+[filename]#settings.xml# file for Maven. The global settings file is located in
+[filename]#${MAVEN_HOME}/conf/settings.xml# and the user settings file in
+[filename]#${USER_HOME}/.m2/settings.xml#. To create a user settings file, copy
+at least the relevant headers and root element from the global settings file.
+
+[subs="normal"]
+----
+...
+&lt;profile&gt;
+  &lt;id&gt;**liferay**&lt;/id&gt;
+  &lt;properties&gt;
+    &lt;liferayinstall&gt;**/opt/liferay-portal-6.2-ce-ga2**
+    &lt;/liferayinstall&gt;
+    &lt;plugin.type&gt;portlet&lt;/plugin.type&gt;
+    &lt;liferay.version&gt;**6.2.1**&lt;/liferay.version&gt;
+    &lt;liferay.maven.plugin.version&gt;**6.2.1**
+    &lt;/liferay.maven.plugin.version&gt;
+    &lt;liferay.auto.deploy.dir&gt;${liferayinstall}/**deploy**
+    &lt;/liferay.auto.deploy.dir&gt;
+
+    &lt;!-- Application server version - here for Tomcat --&gt;
+    &lt;liferay.tomcat.version&gt;**7.0.42**&lt;/liferay.tomcat.version&gt;
+    &lt;liferay.tomcat.dir&gt;
+        ${liferayinstall}/tomcat-${liferay.tomcat.version}
+    &lt;/liferay.tomcat.dir&gt;
+
+    &lt;liferay.app.server.deploy.dir&gt;**${liferay.tomcat.dir}/webapps**
+    &lt;/liferay.app.server.deploy.dir&gt;
+    &lt;liferay.app.server.lib.global.dir&gt;**${liferay.tomcat.dir}/lib/ext**
+    &lt;/liferay.app.server.lib.global.dir&gt;
+    &lt;liferay.app.server.portal.dir&gt;**${liferay.tomcat.dir}/webapps/ROOT**
+    &lt;/liferay.app.server.portal.dir&gt;
+  &lt;/properties&gt;     
+&lt;/profile&gt;
+----
+The parameters are as follows:
+
+liferayinstall:: Full (absolute) path to the Liferay installation directory.
+liferay.version:: Liferay version by the Maven version numbering scheme. The first two (major and minor) numbers are same as in the installation package. The third (maintenance) number starts from 0 with first GA (general availability) release.
+liferay.maven.plugin.version:: This is usually the same as the Liferay version.
+liferay.auto.deploy.dir:: The Liferay auto-deployment directory. It is by default [filename]#deploy# under the Liferay installation path.
+liferay.tomcat.version(optional):: If using Tomcat, its version number.
+liferay.tomcat.dir:: Full (absolute) path to Tomcat installation directory. For Tomcat bundled with Liferay, this is under the Liferay installation directory.
+liferay.app.server.deploy.dir:: Directory where portlets are deployed in the application server used for Liferay. This depends on the server - for Tomcat it is the [filename]#webapps# directory under the Tomcat installation directory.
+liferay.app.server.lib.global.dir:: Library path where libraries globally accessible in the application server should be installed.
+liferay.app.server.portal.dir:: Deployment directory for static resources served by the application server, under the root path of the server.
+
+
+If you modify the settings after the project is created, you need to touch the
+POM file in the project to have the settings reloaded.
+
+
+[[portal.liferay.profile.properties]]
+=== Activating the Maven Profile
+
+The Maven 2 Plugin for Eclipse (m2e) must know which Maven profiles you use in a
+project. This is configured in the [menuchoice]#Maven# section of the project
+properties. In the [guilabel]#Active Maven Profiles# field, enter the profile ID
+defined in the [filename]#settings.xml# file, as illustrated in
+<<figure.portal.liferay.profile.properties>>.
+
+[[figure.portal.liferay.profile.properties]]
+.Activating Maven Liferay Profile
+image::img/liferay-maven-profile.png[]
+
+
+
+[[portal.liferay.project]]
+== Creating a Portlet Project with Maven
+
+Creation of Vaadin a Maven project is described in
+<<dummy/../../../framework/getting-started/getting-started-maven#getting-started.maven,"Using
+Vaadin with Maven">>. For a Liferay project, you should use the
+[literal]#++vaadin-archetype-liferay-portlet++#.
+
+[[portal.liferay.project.archetype-parameters]]
+=== Archetype Parameters
+
+The archetype has a number of parameters. If you use Maven Plugin for Eclipse
+(m2e) to create the project, you get to enter the parameters after selecting the
+archetype, as shown in <<figure.portal.liferay.project.archetype-parameters>>.
+
+Minimally, you just need to enter the artifact ID. To activate the Maven profile
+created as described earlier in <<portal.liferay.profile>>, you need to specify
+the profile in the [guilabel]#Profiles# field under the [guilabel]#Advanced#
+section.
+
+[[figure.portal.liferay.project.archetype-parameters]]
+.Liferay Project Archetype Parameters
+image::img/liferay-maven-project.png[]
+
+The other parameters are the following:
+
+vaadinVersion:: Vaadin release version for the Maven dependency.
+uiClassName:: Class name of the UI class stub to be created.
+theme:: Theme to use. You can use either a project theme, which must be compiled before deployment, or use the [literal]#++liferay++# theme.
+portletTitle:: Title shown in the portlet title bar.
+portletShortTitle:: Title shown in contexts where a shorter title is preferred.
+portletKeywords:: Keywords for finding the portlet in Liferay.
+portletDescription:: A description of the portlet.
+portletName:: Identifier for the portlet, used for identifying it in the configuration files.
+portletDisplayName:: Name of the portlet for contexts where it is displayed.
+
+
+
+
+[[portal.liferay.ide]]
+== Creating a Portlet Project in Liferay IDE
+
+Liferay IDE, which you install in Eclipse as plugins just like the Vaadin
+plugin, enables a development environment for Liferay portlets. Liferay IDE
+allows integrated deployment of portlets to Liferay, just like you would deploy
+servlets to a server in Eclipse. The project creation wizard supports creation
+of Vaadin portlets.
+
+
+Loading widget sets, themes, and the Vaadin JAR from a portlet is possible as
+long as you have a single portlet, but causes a problem if you have multiple
+portlets. To solve this, Vaadin portlets need to use a globally installed widget
+set, theme, and Vaadin libraries.
+
+__Liferay 6.2, which is the latest Liferay version at the time of publication of
+this book, comes bundled with an older Vaadin 6 version. If you want to use
+Vaadin 7, you need to remove the bundled version and install the newer one
+manually as described in this chapter.__
+
+In these instructions, we assume that you use Liferay bundled with Apache
+Tomcat, although you can use almost any other application server with Liferay
+just as well. The Tomcat installation is included in the Liferay installation
+package, under the [filename]#tomcat-x.x.x# directory.
+
+[[portal.liferay.remove]]
+== Removing the Bundled Installation
+
+Before installing a new Vaadin version, you need to remove the version bundled
+with Liferay. You need to remove the Vaadin library JAR from the library
+directory of the portal and the [filename]#VAADIN# directory from under the root
+context. For example, with Liferay bundled with Tomcat, they are usually located
+as follows:
+
+* [filename]#tomcat-x.x.x/webapps/ROOT/html/VAADIN#
+* [filename]#tomcat-x.x.x/webapps/ROOT/WEB-INF/lib/vaadin.jar#
+
+
+[[portal.liferay.install]]
+== Installing Vaadin Resources
+
+To use common resources needed by multiple Vaadin portlets, you can install them
+globally as shared resources as described in the following.
+
+If you are installing Vaadin in a Liferay version that comes bundled with an
+older version of Vaadin, you first need to remove the resources as described in
+<<portal.liferay.remove>>.
+
+In the following, we assume that you use only the built-in "liferay" theme in
+Vaadin and the default widget set.
+
+. Get the Vaadin installation package from the Vaadin download page
+. Extract the following Vaadin JARs from the installation package: [filename]#vaadin-server.jar# and [filename]#vaadin-shared.jar#, as well as the [filename]#vaadin-shared-deps.jar# and [filename]#jsoup.jar# dependencies from the [filename]#lib# folder
+. Rename the JAR files as they were listed above, without the version number
+. Put the libraries in [filename]#tomcat-x.x.x/webapps/ROOT/WEB-INF/lib/#
+. Extract the [filename]#VAADIN# folders from [filename]#vaadin-server.jar#,
+[filename]#vaadin-themes.jar#, and [filename]#vaadin-client-compiled.jar# and
+copy their contents to [filename]#tomcat-x.x.x/webapps/ROOT/html/VAADIN#.
+
+
++
+[subs="normal"]
+----
+[prompt]#$# [command]#cd# tomcat-x.x.x/webapps/ROOT/html
+----
+
++
+[subs="normal"]
+----
+[prompt]#$# [command]#unzip# path-to/vaadin-server-7.1.0.jar 'VAADIN/*'
+----
+
++
+[subs="normal"]
+----
+[prompt]#$# [command]#unzip# path-to/vaadin-themes-7.1.0.jar 'VAADIN/*'
+----
+
++
+[subs="normal"]
+----
+[prompt]#$# [command]#unzip# path-to/vaadin-client-compiled-7.1.0.jar 'VAADIN/*'
+----
+
+
+You need to define the widget set, the theme, and the JAR in the
+[filename]#portal-ext.properties# configuration file for Liferay, as described
+earlier. The file should normally be placed in the Liferay installation
+directory. See Liferay documentation for details on the configuration file.
+
+Below is an example of a [filename]#portal-ext.properties# file:
+
+
+----
+# Path under which the VAADIN directory is located.
+# (/html is the default so it is not needed.)
+# vaadin.resources.path=/html
+
+# Portal-wide widget set
+vaadin.widgetset=com.vaadin.server.DefaultWidgetSet
+
+# Theme to use
+vaadin.theme=liferay
+----
+
+The allowed parameters are:
+
+[parameter]#vaadin.resources.path#:: Specifies the resource root path under the portal context. This is
+[filename]#/html# by default. Its actual location depends on the portal and the
+application server; in Liferay with Tomcat it would be located at
+[filename]#webapps/ROOT/html# under the Tomcat installation directory.
+
+[parameter]#vaadin.widgetset#:: The widget set class to use. Give the full path to the class name in the dot
+notation. If the parameter is not given, the default widget set is used.
+
+[parameter]#vaadin.theme#:: Name of the theme to use. If the parameter is not given, the default theme is
+used, which is [literal]#++reindeer++# in Vaadin 6.
+
+
+
+You will need to restart Liferay after creating or modifying the
+[filename]#portal-ext.properties# file.
+
+
+

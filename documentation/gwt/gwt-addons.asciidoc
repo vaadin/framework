@@ -1,0 +1,318 @@
+---
+title: Creating Add-ons
+order: 11
+layout: page
+---
+
+[[gwt.addons]]
+= Creating Add-ons
+
+((("add-ons", "creating", id="term.gwt.addons", range="startofrange")))
+
+
+Add-ons are the most convenient way to reuse Vaadin code, either commercially or
+free. Vaadin Directory serves as the store for the add-ons. You can distribute
+add-ons both as JAR libraries and Zip packages.
+
+Creating a typical add-on package involves the following tasks:
+
+* Compile server-side classes
+* Compile JavaDoc (optional)
+* Build the JAR
+
+** Include Vaadin add-on manifest
+** Include the compiled server-side classes
+** Include the compiled JavaDoc (optional)
+** Include sources of client-side classes for widget set compilation (optional)
+** Include any JavaScript dependency libraries (optional)
+** Exclude any test or demo code in the project
+
+
+The exact contents depend on the add-on type. Component add-ons often include a
+widget set, but not always, such as JavaScript components or pure server-side
+components. You can also have data container and theme add-ons, as well as
+various tools.
+
+It is common to distribute the JavaDoc in a separate JAR, but you can also
+include it in the same JAR.
+
+[[gwt.addons.export]]
+== Exporting Add-on in Eclipse
+
+If you use the Vaadin Plugin for Eclipse for your add-on project, you can simply
+export the add-on from Eclipse.
+
+. Select the project and then "File > Export" from the menu
+
+. In the export wizard that opens, select "Vaadin > Vaadin Add-on Package", and
+click [guibutton]#Next#
+
+. In the [guilabel]#Select the resources to export# panel, select the content that
+should be included in the add-on package. In general, you should include sources
+in [filename]#src# folder (at least for the client-side package), compiled
+server-side classes, themes in [filename]#WebContent/VAADIN/themes#. These are
+all included automatically. You probably want to leave out any demo or example
+code.
+
++
+[[figure.gwt.addons.export]]
+.Exporting a Vaadin Add-on
+image::img/addon-export.png[]
+
++
+If you are submitting the add-on to Vaadin Directory, the
+[guilabel]#Implementation title# should be exactly the name of the add-on in
+Directory. The name may contain spaces and most other letters. Notice that __it
+is not possible to change the name later__.
+
++
+The [guilabel]#Implementation version# is the version of your add-on. Typically
+experimental or beta releases start from 0.1.0, and stable releases from 1.0.0.
+
++
+The [guilabel]#Widgetsets# field should list the widget sets included in the
+add-on, separated by commas. The widget sets should be listed by their class
+name, that is, without the [filename]#.gwt.xml# extension.
+
++
+The [guilabel]#JAR file# is the file name of the exported JAR file. It should
+normally include the version number of the add-on. You should follow the Maven
+format for the name, such as [filename]#myaddon-1.0.0.jar#.
+
++
+Finally, click [guibutton]#Finish#.
+
+
+
+ifdef::web[]
+[[gwt.addons.ant]]
+== Building Add-on with Ant
+
+Building an add-on with Ant is similar to building Vaadin applications. Vaadin
+libraries and other dependencies are retrieved and included in the classpath
+using Apache Ivy.
+
+In the following, we assume the same structure as in the Eclipse project
+example. Let us put the build script in the [filename]#build# folder under the
+project. We begin the Ant script as follows:
+
+[subs="normal"]
+----
+&lt;?xml version="1.0"?&gt;
+
+&lt;project xmlns:ivy="antlib:org.apache.ivy.ant"
+         name="**My Own add-on**"
+         basedir=".."
+         default="package-jar"&gt;
+
+----
+The namespace declaration is all you need to do to enable Ivy in Ant 1.6 and
+later. For earlier Ant versions, please see the Ivy documentation.
+
+[[gwt.addons.ant.configuration]]
+=== Configuration and Initialization
+
+In the example script, we organize most settings in a [literal]#++configure++#
+target and then initialize the build in [literal]#++init++# target.
+
+[subs="normal"]
+----
+//Update these settings for your project structure
+
+&lt;target name="configure"&gt;
+    &lt;!-- Where project source files are located --&gt;
+    &lt;property name="src-location" value="**src**" /&gt;
+        
+    &lt;!-- Name of the widget set. --&gt;
+    &lt;property name="widgetset" value="**com.example.myaddon.widgetset.MyAddonWidgetset**"/&gt;
+
+    &lt;!-- Addon version --&gt;
+    &lt;property name="version" value="**0.1.0**"/&gt;
+    
+    &lt;!-- Compilation result directory --&gt;
+    &lt;property name="result-dir" value="build/result"/&gt;
+    
+    &lt;!-- The target name of the built add-on JAR --&gt;
+    &lt;property name="target-jar"
+        value="${result-dir}/**myaddon**-${version}.jar"/&gt;
+&lt;/target&gt;
+
+//Initialize build
+
+&lt;target name="init" depends="configure"&gt;
+    &lt;!-- Construct and check classpath --&gt;
+    &lt;path id="compile.classpath"&gt;
+        &lt;pathelement path="build/classes" /&gt;
+        &lt;pathelement path="${src-location}" /&gt;
+        &lt;fileset dir="${result-dir}/lib"&gt;
+            &lt;include name="*.jar"/&gt;
+        &lt;/fileset&gt;
+    &lt;/path&gt;
+
+    &lt;mkdir dir="${result-dir}"/&gt;
+&lt;/target&gt;
+
+----
+You will need to make some configuration also in the [literal]#++package-jar++#
+target in addition to the [literal]#++configure++# target.
+
+
+[[gwt.addons.ant.compiling]]
+=== Compiling the Server-Side
+
+Compiling the add-on requires the Vaadin libraries and any dependencies. We use
+Apache Ivy for resolving the dependencies and retrieving the library JARs.
+
+
+----
+<!-- Retrieve dependencies with Ivy -->
+<target name="resolve" depends="init">
+    <ivy:retrieve
+        pattern="${result-dir}/lib/[artifact].[ext]"/>
+</target>
+----
+
+The [literal]#++pattern++# attribute for the [literal]#++<retrieve>++# task
+specifies where the dependencies are stored, in the above case in the
+[filename]#build/result/lib# directory.
+
+Compiling the server-side classes is then straight-forward:
+
+
+----
+<!-- Compile server-side -->
+<target name="compile-server-side"
+        depends="init, resolve">
+    <delete dir="${result-dir}/classes"/>
+    <mkdir dir="${result-dir}/classes"/>
+
+    <javac srcdir="${src-location}"
+           destdir="${result-dir}/classes">
+        <classpath>
+            <path refid="compile.classpath"/>
+        </classpath>
+    </javac>
+</target>
+----
+
+
+[[gwt.addons.ant.javadoc]]
+=== Compiling the JavaDoc
+
+You may want to include API documentation for the add-on in the same or in a
+different JAR file. You can do it as follows, using the configuration we defined
+earlier. You may want to exclude the client-side classes and any test and demo
+classes from the JavaDoc, as is done in this example, if they are in the same
+source tree.
+
+[subs="normal"]
+----
+&lt;!-- Compile JavaDoc --&gt;
+&lt;target name="compile-javadoc" depends="init"&gt;
+    &lt;delete dir="${result-dir}/javadoc"/&gt;
+    &lt;mkdir dir="${result-dir}/javadoc"/&gt;
+
+    &lt;javadoc destdir="${result-dir}/javadoc"&gt;
+        &lt;sourcefiles&gt;
+            &lt;fileset dir="${src-location}" id="src"&gt;
+                &lt;include name="**/*.java"/&gt;
+                
+                &lt;!-- Excluded stuff from the package --&gt;
+                &lt;exclude name="**++*++++*++/client/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/demo/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/MyDemoUI.java**"/&gt;
+            &lt;/fileset&gt;
+        &lt;/sourcefiles&gt;
+        &lt;classpath&gt;
+            &lt;path refid="compile.classpath"/&gt;
+        &lt;/classpath&gt;
+    &lt;/javadoc&gt;
+&lt;/target&gt;
+----
+
+[[gwt.addons.ant.package]]
+=== Packaging the JAR
+
+An add-on JAR typically includes the following:
+
+* Vaadin add-on manifest
+* The compiled server-side classes
+* The compiled JavaDoc (optional)
+* Sources of client-side classes (optional)
+* Any JavaScript dependency libraries (optional)
+
+Let us begin crafting the target. The JAR requires the compiled server-side
+classes and the optional API documentation.
+
+
+----
+<!-- Build the JAR -->
+<target name="package-jar"
+        depends="compile-server-side, compile-javadoc">
+    <jar jarfile="${target-jar}" compress="true">
+----
+
+First, you need to include a manifest that defines basic information about the
+add-on. The implementation title must be the exact title of the add-on, as shown
+in the Vaadin Directory title. The vendor is you. The manifest also includes the
+license title and file reference for the add-on.
+
+[subs="normal"]
+----
+&lt;!-- Manifest required by Vaadin Directory --&gt;
+&lt;manifest&gt;
+    &lt;attribute name="Vaadin-Package-Version"
+               value="1" /&gt;
+    &lt;attribute name="Vaadin-Widgetsets"
+               value="${widgetset}" /&gt;
+    &lt;attribute name="Implementation-Title"
+               value="**My Own Addon**" /&gt;
+    &lt;attribute name="Implementation-Version"
+               value="${version}" /&gt;
+    &lt;attribute name="Implementation-Vendor"
+               value="**Me Myself**" /&gt;
+    &lt;attribute name="Vaadin-License-Title"
+               value="**Apache2**" /&gt;
+    &lt;attribute name="Vaadin-License-File"
+        value="**http://www.apache.org/licenses/LICENSE-2.0**" /&gt;
+&lt;/manifest&gt;
+----
+The rest of the [literal]#++package-jar++# target goes as follows. As was done
+in the JavaDoc compilation, you also need to exclude any test or demo code in
+the project here. You need to modify at least the emphasized parts for your
+project.
+
+[subs="normal"]
+----
+        &lt;!-- Include built server-side classes --&gt;
+        &lt;fileset dir="build/result/classes"&gt;
+            &lt;patternset&gt;
+                &lt;include name="**com/example/myaddon/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/client/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/demo/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/test/++*++++*++/++*++**"/&gt;
+                &lt;exclude name="**++*++++*++/MyDemoUI++*++**"/&gt;
+            &lt;/patternset&gt;
+        &lt;/fileset&gt;
+    
+        &lt;!-- Include widget set sources --&gt;
+        &lt;fileset dir="src"&gt;
+            &lt;patternset&gt;
+                &lt;include name="**com/exaple/myaddon/++*++++*++/++*++**"/&gt;
+            &lt;/patternset&gt;
+        &lt;/fileset&gt;
+    
+        &lt;!-- Include JavaDoc in the JAR --&gt;
+        &lt;fileset dir="${result-dir}/javadoc"
+                 includes="**/*"/&gt;
+    &lt;/jar&gt;
+&lt;/target&gt;
+----
+
+You should now be ready to run the build script with Ant.
+
+endif::web[]
+
+(((range="endofrange", startref="term.gwt.addons")))
+
+

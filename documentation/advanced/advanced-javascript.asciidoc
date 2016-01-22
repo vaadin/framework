@@ -1,0 +1,109 @@
+---
+title: JavaScript Interaction
+order: 14
+layout: page
+---
+
+[[advanced.javascript]]
+= JavaScript Interaction
+
+Vaadin supports two-direction JavaScript calls from and to the server-side. This
+allows interfacing with JavaScript code without writing client-side integration
+code.
+
+[[advanced.javascript.calling]]
+== Calling JavaScript
+
+You can make JavaScript calls from the server-side with the
+[methodname]#execute()# method in the [classname]#JavaScript# class. You can get
+a [classname]#JavaScript# instance from the current [classname]#Page# object
+with [methodname]#getJavaScript()#.//TODO Check that the API is
+so.
+
+
+[source, java]
+----
+// Execute JavaScript in the currently processed page
+Page.getCurrent().getJavaScript().execute("alert('Hello')");
+----
+
+The [classname]#JavaScript# class itself has a static shorthand method
+[methodname]#getCurrent()# to get the instance for the currently processed page.
+
+
+[source, java]
+----
+// Shorthand
+JavaScript.getCurrent().execute("alert('Hello')");
+----
+
+The JavaScript is executed after the server request that is currently processed
+returns. If multiple JavaScript calls are made during the processing of the
+request, they are all executed sequentially after the request is done. Hence,
+the JavaScript execution does not pause the execution of the server-side
+application and you can not return values from the JavaScript.
+
+
+[[advanced.javascript.callback]]
+== Handling JavaScript Function Callbacks
+
+You can make calls with JavaScript from the client-side to the server-side. This
+requires that you register JavaScript call-back methods from the server-side.
+You need to implement and register a [classname]#JavaScriptFunction# with
+[methodname]#addFunction()# in the current [classname]#JavaScript# object. A
+function requires a name, with an optional package path, which are given to the
+[methodname]#addFunction()#. You only need to implement the [methodname]#call()#
+method to handle calls from the client-side JavaScript.
+
+
+[source, java]
+----
+
+JavaScript.getCurrent().addFunction("com.example.foo.myfunc",
+                                    new JavaScriptFunction() {
+    @Override
+    public void call(JsonArray arguments) {
+        Notification.show("Received call");
+    }
+});
+
+Link link = new Link("Send Message", new ExternalResource(
+        "javascript:com.example.foo.myfunc()"));
+----
+
+Parameters passed to the JavaScript method on the client-side are provided in a
+[classname]#JSONArray# passed to the [methodname]#call()# method. The parameter
+values can be acquired with the [methodname]#get()# method by the index of the
+parameter, or any of the type-casting getters. The getter must match the type of
+the passed parameter, or an exception is thrown.
+
+
+[source, java]
+----
+JavaScript.getCurrent().addFunction("com.example.foo.myfunc",
+                                    new JavaScriptFunction() {
+    @Override
+    public void call(JsonArray arguments) {
+        try {
+            String message = arguments.getString(0);
+            int    value   = arguments.getInt(1);
+            Notification.show("Message: " + message +
+                              ", value: " + value);
+        } catch (Exception e) {
+            Notification.show("Error: " + e.getMessage());
+        }
+    }
+});
+        
+Link link = new Link("Send Message", new ExternalResource(
+  "javascript:com.example.foo.myfunc(prompt('Message'), 42)"));
+----
+
+The function callback mechanism is the same as the RPC mechanism used with
+JavaScript component integration, as described in
+<<dummy/../../../framework/gwt/gwt-javascript#gwt.javascript.rpc,"RPC from
+JavaScript to Server-Side">>.
+
+
+
+

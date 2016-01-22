@@ -1,0 +1,98 @@
+---
+title: Client-Side Module Descriptor
+order: 3
+layout: page
+---
+
+[[clientside.module]]
+= Client-Side Module Descriptor
+
+Client-side Vaadin modules, such as the Vaadin Client-Side Engine (widget set)
+or pure client-side applications, that are to be compiled to JavaScript, are
+defined in a __module descriptor__ ( [filename]#.gwt.xml#) file.
+
+When defining a widget set to build the Vaadin client-side engine, the only
+necessary task is to inherit a base widget set. If you are developing a regular
+widget set, you should normally inherit the [classname]#DefaultWidgetSet#.
+
+
+----
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+  "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
+
+<module>
+    <!-- Inherit the default widget set -->
+    <inherits name="com.vaadin.DefaultWidgetSet" />
+</module>
+----
+
+If you are developing a pure client-side application, you should instead inherit
+[classname]#com.vaadin.Vaadin#, as described in
+<<dummy/../../../framework/clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
+Applications">>. In that case, the module descriptor also needs an entry-point.
+
+If you are using the Eclipse IDE, the New Vaadin Widget wizard will
+automatically create the GWT module descriptor. See
+<<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse.widget,"Creating a
+Widget">> for detailed instructions.
+
+[[clientside.module.stylesheet]]
+== Specifying a Stylesheet
+
+A client-side module can include CSS stylesheets. When the module is compiled,
+these stylesheets are copied to the output target. In the module descriptor,
+define a [literal]#++stylesheet++# element.
+
+For example, if you are developing a custom widget and want to have a default
+stylesheet for it, you could define it as follows:
+
+
+----
+<stylesheet src="mywidget/styles.css"/>
+----
+
+The specified path is relative to the __public__ folder under the folder of the
+module descriptor.
+
+
+[[gwt.module.compilation-limiting]]
+== Limiting Compilation Targets
+
+Compiling widget sets takes considerable time. You can reduce the compilation
+time significantly by compiling the widget sets only for your browser, which is
+useful during development. You can do this by setting the
+[parameter]#user.agent# property in the module descriptor.
+
+
+----
+<set-property name="user.agent" value="gecko1_8"/>
+----
+
+The [parameter]#value# attribute should match your browser. The browsers
+supported by GWT depend on the GWT version, below is a list of browser
+identifiers supported by GWT.
+
+.GWT User Agents
+[options="header"]
+|===============
+|Identifier|Name
+|ie6|Internet Explorer 6
+|ie8|Internet Explorer 8
+|gecko1_8|Mozilla Firefox 1.5 and later
+|safari|Apple Safari and other Webkit-based browsers including Google Chrome
+|opera|Opera
+|ie9|Internet Explorer 9
+
+|===============
+
+
+
+
+For more information about the GWT Module XML Format, please see Google Web
+Toolkit Developer Guide.
+
+
+

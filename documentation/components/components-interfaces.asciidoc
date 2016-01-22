@@ -1,0 +1,117 @@
+---
+title: Interfaces and Abstractions
+order: 2
+layout: page
+---
+
+[[components.interfaces]]
+= Interfaces and Abstractions
+
+((("interfaces")))
+Vaadin user interface components are built on a skeleton of interfaces and
+abstract classes that define and implement the features common to all components
+and the basic logic how the component states are serialized between the server
+and the client.
+
+This section gives details on the basic component interfaces and abstractions.
+The layout and other component container abstractions are described in
+<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
+Layout">>. The interfaces that define the Vaadin data model are described in
+<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
+Components to Data">>.
+
+[[figure.components.interfaces]]
+.Component Interfaces and Abstractions
+image::img/component-abstractions-hi.png[]
+
+((("[classname]#Paintable#")))
+((("[classname]#VariableOwner#")))
+All components also implement the [classname]#Paintable# interface, which is
+used for serializing ("painting") the components to the client, and the reverse
+[classname]#VariableOwner# interface, which is needed for deserializing
+component state or user interaction from the client.
+
+((("[classname]#Serializable#")))
+In addition to the interfaces defined within the Vaadin framework, all
+components implement the [classname]#java.io.Serializable# interface to allow
+serialization. Serialization is needed in many clustering and cloud computing
+solutions.
+
+[[components.interfaces.component]]
+== [classname]#Component# Interface
+
+((("[interfacename]#Component# interface")))
+The [interfacename]#Component# interface is paired with the
+[classname]#AbstractComponent# class, which implements all the methods defined
+in the interface.
+
+=== Component Tree Management
+
+Components are laid out in the user interface hierarchically. The layout is
+managed by layout components, or more generally components that implement the
+[classname]#ComponentContainer# interface. Such a container is the parent of the
+contained components.
+
+The [methodname]#getParent()# method allows retrieving the parent component of a
+component. While there is a [methodname]#setParent()#, you rarely need it as you
+usually add components with the [methodname]#addComponent()# method of the
+[classname]#ComponentContainer# interface, which automatically sets the parent.
+
+A component does not know its parent when the component is still being created,
+so you can not refer to the parent in the constructor with
+[methodname]#getParent()#.
+
+Attaching a component to an UI triggers a call to its [methodname]#attach()#
+method. Correspondingly, removing a component from a container triggers calling
+the [methodname]#detach()# method. If the parent of an added component is
+already connected to the UI, the [methodname]#attach()# is called immediately
+from [methodname]#setParent()#.
+
+
+[source, java]
+----
+public class AttachExample extends CustomComponent {
+    public AttachExample() {
+    }
+    
+    @Override
+    public void attach() {
+        super.attach(); // Must call.
+        
+        // Now we know who ultimately owns us.
+        ClassResource r = new ClassResource("smiley.jpg");
+        Image image = new Image("Image:", r); 
+        setCompositionRoot(image);
+    }
+}
+----
+
+The attachment logic is implemented in [classname]#AbstractComponent#, as
+described in <<components.interfaces.abstractcomponent>>.
+
+
+((("[classname]#Component# interface")))
+
+[[components.interfaces.abstractcomponent]]
+== [classname]#AbstractComponent#
+
+((("[classname]#AbstractComponent#", id="term.components.interfaces.abstractcomponent", range="startofrange")))
+
+
+[classname]#AbstractComponent# is the base class for all user interface
+components. It is the (only) implementation of the [classname]#Component#
+interface, implementing all the methods defined in the interface.
+
+[classname]#AbstractComponent# has a single abstract method,
+[methodname]#getTag()#, which returns the serialization identifier of a
+particular component class. It needs to be implemented when (and only when)
+creating entirely new components. [classname]#AbstractComponent# manages much of
+the serialization of component states between the client and the server.
+Creation of new components and serialization is described in
+<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+with the Server-Side">>.
+
+(((range="endofrange", startref="term.components.interfaces.abstractcomponent")))
+
+
+

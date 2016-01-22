@@ -1,0 +1,391 @@
+---
+title: Date and Time Input with DateField
+order: 13
+layout: page
+---
+
+[[components.datefield]]
+= Date and Time Input with [classname]#DateField#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/dates/popup-date-field]
+endif::web[]
+
+The [classname]#DateField# component provides the means to display and input
+date and time. The field comes in two variations: [classname]#PopupDateField#,
+with a numeric input box and a popup calendar view, and
+[classname]#InlineDateField#, with the calendar view always visible. The
+[classname]#DateField# base class defaults to the popup variation.
+
+The example below illustrates the use of the [classname]#DateField# baseclass,
+which is equivalent to the [classname]#PopupDateField#. We set the initial time
+of the date field to current time by using the default constructor of the
+[classname]#java.util.Date# class.
+
+
+[source, java]
+----
+// Create a DateField with the default style
+DateField date = new DateField();
+	
+// Set the date and time to present
+date.setValue(new Date());
+----
+
+The result is shown in <<figure.components.datefield.basic>>.
+
+[[figure.components.datefield.basic]]
+.[classname]#DateField# ([classname]#PopupDateField#) for Selecting Date and Time
+image::img/datefield-example1.png[]
+
+[[components.datefield.popupdatefield]]
+== [classname]#PopupDateField#
+
+The [classname]#PopupDateField# provides date input using a text box for the
+date and time. As the [classname]#DateField# defaults to this component, the use
+is exactly the same as described earlier. Clicking the handle right of the date
+opens a popup view for selecting the year, month, and day, as well as time. Also
+the Down key opens the popup. Once opened, the user can navigate the calendar
+using the cursor keys.
+
+The date and time selected from the popup are displayed in the text box
+according to the default date and time format of the current locale, or as
+specified with [methodname]#setDateFormat()#. The same format definitions are
+used for parsing user input.
+
+[[components.datefield.popupdatefield.format]]
+=== Date and Time Format
+
+The date and time are normally displayed according to the default format for the
+current locale (see
+<<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>).
+You can specify a custom format with [methodname]#setDateFormat()#. It takes a
+format string that follows the format of the [classname]#SimpleDateFormat# in
+Java.
+
+
+[source, java]
+----
+// Display only year, month, and day in ISO format
+date.setDateFormat("yyyy-MM-dd");
+----
+
+The result is shown in <<figure.components.datefield.popupdatefield.format>>.
+
+[[figure.components.datefield.popupdatefield.format]]
+.Custom Date Format for [classname]#PopupDateField#
+image::img/datefield-formatting.png[]
+
+The same format specification is also used for parsing user-input date and time,
+as described later.
+
+
+ifdef::web[]
+[[components.datefield.popupdatefield.malformed]]
+=== Handling Malformed User Input
+
+A user can easily input a malformed or otherwise invalid date or time.
+[classname]#DateField# has two validation layers: first on the client-side and
+then on the server-side.
+
+The validity of the entered date is first validated on the client-side,
+immediately when the input box loses focus. If the date format is invalid, the
+[literal]#++v-datefield-parseerror++# style is set. Whether this causes a
+visible indication of a problem depends on the theme. The built-in
+[literal]#++reindeer++# theme does not shown any indication by default, making
+server-side handling of the problem more convenient.
+
+
+[source, css]
+----
+.mydate.v-datefield-parseerror .v-textfield {
+    background: pink;
+}
+----
+
+The [methodname]#setLenient(true)# setting enables relaxed interpretation of
+dates, so that invalid dates, such as February 30th or March 0th, are wrapped to
+the next or previous month, for example.
+
+The server-side validation phase occurs when the date value is sent to the
+server. If the date field is set in immediate state, it occurs immediately after
+the field loses focus. Once this is done and if the status is still invalid, an
+error indicator is displayed beside the component. Hovering the mouse pointer
+over the indicator shows the error message.
+
+You can handle the errors by overriding the
+[methodname]#handleUnparsableDateString()# method. The method gets the user
+input as a string parameter and can provide a custom parsing mechanism, as shown
+in the following example.
+
+
+[source, java]
+----
+// Create a date field with a custom parsing and a
+// custom error message for invalid format
+PopupDateField date = new PopupDateField("My Date") {
+    @Override
+    protected Date handleUnparsableDateString(String dateString)
+    throws Property.ConversionException {
+        // Try custom parsing
+        String fields[] = dateString.split("/");
+        if (fields.length >= 3) {
+            try {
+                int year  = Integer.parseInt(fields[0]);
+                int month = Integer.parseInt(fields[1])-1;
+                int day   = Integer.parseInt(fields[2]);
+                GregorianCalendar c =
+                    new GregorianCalendar(year, month, day);
+                return c.getTime();
+            } catch (NumberFormatException e) {
+                throw new Property.
+                    ConversionException("Not a number");
+            }
+        }
+        
+        // Bad date
+        throw new Property.
+            ConversionException("Your date needs two slashes");
+    }
+};
+        
+// Display only year, month, and day in slash-delimited format
+date.setDateFormat("yyyy/MM/dd");
+
+// Don't be too tight about the validity of dates
+// on the client-side
+date.setLenient(true);
+----
+
+The handler method must either return a parsed [classname]#Date# object or throw
+a [classname]#ConversionException#. Returning [parameter]#null# will set the
+field value to [parameter]#null# and clear the input box.
+
+endif::web[]
+
+ifdef::web[]
+[[components.datefield.popupdatefield.error-customization]]
+=== Customizing the Error Message
+
+In addition to customized parsing, overriding the handler method for unparseable
+input is useful for internationalization and other customization of the error
+message. You can also use it for another way for reporting the errors, as is
+done in the example below:
+
+
+[source, java]
+----
+// Create a date field with a custom error message for invalid format
+PopupDateField date = new PopupDateField("My Date") {
+    @Override
+    protected Date handleUnparsableDateString(String dateString)
+    throws Property.ConversionException {
+        // Have a notification for the error
+        Notification.show(
+                "Your date needs two slashes",
+                Notification.TYPE_WARNING_MESSAGE);
+        
+        // A failure must always also throw an exception
+        throw new Property.ConversionException("Bad date");
+    }
+};
+----
+
+If the input is invalid, you should always throw the exception; returning a
+[parameter]#null# value would make the input field empty, which is probably
+undesired.
+
+endif::web[]
+
+[[components.datefield.popupdatefield.prompt]]
+=== Input Prompt
+
+Like other fields that have a text box, [classname]#PopupDateField# allows an
+input prompt that is visible until the user has input a value. You can set the
+prompt with [methodname]#setInputPrompt#.
+
+
+[source, java]
+----
+PopupDateField date = new PopupDateField();
+
+// Set the prompt
+date.setInputPrompt("Select a date");
+        
+// Set width explicitly to accommodate the prompt
+date.setWidth("10em");
+----
+
+The date field doesn't automatically scale to accommodate the prompt, so you
+need to set it explicitly with [methodname]#setWidth()#.
+
+The input prompt is not available in the [classname]#DateField# superclass.
+
+
+[[components.datefield.popupdatefield.css]]
+=== CSS Style Rules
+
+
+[source, css]
+----
+.v-datefield, v-datefield-popupcalendar {}
+  .v-textfield, v-datefield-textfield {}
+  .v-datefield-button {}
+----
+
+The top-level element of [classname]#DateField# and all its variants have
+[literal]#++v-datefield++# style. The base class and the
+[classname]#PopupDateField# also have the
+[literal]#++v-datefield-popupcalendar++# style.
+
+In addition, the top-level element has a style that indicates the resolution,
+with [literal]#++v-datefield-++# basename and an extension, which is one of
+[literal]#++full++#, [literal]#++day++#, [literal]#++month++#, or
+[literal]#++year++#. The [literal]#++-full++# style is enabled when the
+resolution is smaller than a day. These styles are used mainly for controlling
+the appearance of the popup calendar.
+
+The text box has [literal]#++v-textfield++# and
+[literal]#++v-datefield-textfield++# styles, and the calendar button
+[literal]#++v-datefield-button++#.
+
+Once opened, the calendar popup has the following styles at the top level:
+
+
+[source, css]
+----
+.v-datefield-popup {}
+  .v-popupcontent {}
+    .v-datefield-calendarpanel {}
+----
+
+The top-level element of the floating popup calendar has
+[literal]#++.v-datefield-popup++# style. Observe that the popup frame is outside
+the HTML structure of the component, hence it is not enclosed in the
+[literal]#++v-datefield++# element and does not include any custom styles.
+//NOTE: May be changed in
+#5752.
+The content in the [literal]#++v-datefield-calendarpanel++# is the same as in
+[classname]#InlineDateField#, as described in <<components.datefield.calendar>>.
+
+
+
+[[components.datefield.calendar]]
+== [classname]#InlineDateField#
+
+The [classname]#InlineDateField# provides a date picker component with a month
+view. The user can navigate months and years by clicking the appropriate arrows.
+Unlike with the popup variant, the month view is always visible in the inline
+field.
+
+
+[source, java]
+----
+// Create a DateField with the default style
+InlineDateField date = new InlineDateField();
+    
+// Set the date and time to present
+date.setValue(new java.util.Date());
+----
+
+The result is shown in <<figure.components.datefield.inlinedatefield>>.
+
+[[figure.components.datefield.inlinedatefield]]
+.Example of the [classname]#InlineDateField#
+image::img/datefield-inlinedatefield.png[]
+
+The user can also navigate the calendar using the cursor keys.
+
+=== CSS Style Rules
+
+
+[source, css]
+----
+.v-datefield {}
+  .v-datefield-calendarpanel {}
+    .v-datefield-calendarpanel-header {}
+      .v-datefield-calendarpanel-prevyear {}
+      .v-datefield-calendarpanel-prevmonth {}
+      .v-datefield-calendarpanel-month {}
+      .v-datefield-calendarpanel-nextmonth {}
+      .v-datefield-calendarpanel-nextyear {}
+    .v-datefield-calendarpanel-body {}
+      .v-datefield-calendarpanel-weekdays,
+      .v-datefield-calendarpanel-weeknumbers {}
+        .v-first {}
+        .v-last {}
+      .v-datefield-calendarpanel-weeknumber {}
+      .v-datefield-calendarpanel-day {}
+    .v-datefield-calendarpanel-time {}
+      .v-datefield-time {}
+        .v-select {}
+        .v-label {}
+----
+
+The top-level element has the [literal]#++v-datefield++# style. In addition, the
+top-level element has a style name that indicates the resolution of the
+calendar, with [literal]#++v-datefield-++# basename and an extension, which is
+one of [literal]#++full++#, [literal]#++day++#, [literal]#++month++#, or
+[literal]#++year++#. The [literal]#++-full++# style is enabled when the
+resolution is smaller than a day.
+
+The [literal]#++v-datefield-calendarpanel-weeknumbers++# and
+[literal]#++v-datefield-calendarpanel-weeknumber++# styles are enabled when the
+week numbers are enabled. The former controls the appearance of the weekday
+header and the latter the actual week numbers.
+
+The other style names should be self-explanatory. For weekdays, the
+[literal]#++v-first++# and [literal]#++v-last++# styles allow making rounded
+endings for the weekday bar.
+
+
+
+[[components.datefield.resolution]]
+== Date and Time Resolution
+
+In addition to display a calendar with dates, [classname]#DateField# can also
+display the time in hours and minutes, or just the month or year. The visibility
+of the input components is controlled by __time resolution__, which you can set
+with [methodname]#setResolution()#. The method takes as its parameters the
+lowest visible component, [parameter]#DateField.Resolution.DAY# for just dates
+and [parameter]#DateField.Resolution.MIN# for dates with time in hours and
+minutes. Please see the API Reference for the complete list of resolution
+parameters.
+
+
+[[components.datefield.locale]]
+== DateField Locale
+
+The date and time are displayed according to the locale of the user, as reported
+by the browser. You can set a custom locale with the [methodname]#setLocale()#
+method of [classname]#AbstractComponent#, as described in
+<<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>.
+Only Gregorian calendar is supported.
+
+
+ifdef::web[]
+[[components.datefield.weeknumbers]]
+== Week Numbers
+
+You can enable week numbers in a date field with
+[methodname]#setShowISOWeekNumbers()#. The numbers are shown in a column on the
+left side of the field.
+
+
+[source, java]
+----
+df.setShowISOWeekNumbers(true);
+----
+
+The supported numbering is defined in the ISO 8601 standard. Note that the ISO
+standard applies only to calendar locales where the week starts on Monday. This
+is not the case in many countries, such as Americas (North and South), many
+East-Asian countries, and some African countries, where the week starts on
+Sunday, nor in some North African and Middle-Eastern countries, where the week
+begins on Saturday. In such locales, the week numbers are not displayed.
+
+endif::web[]
+
+
+

@@ -1,0 +1,144 @@
+---
+title: AbsoluteLayout
+order: 11
+layout: page
+---
+
+[[layout.absolutelayout]]
+= [classname]#AbsoluteLayout#
+
+[classname]#AbsoluteLayout# allows placing components in arbitrary positions in
+the layout area. The positions are specified in the [methodname]#addComponent()#
+method with horizontal and vertical coordinates relative to an edge of the
+layout area. The positions can include a third depth dimension, the __z-index__,
+which specifies which components are displayed in front and which behind other
+components.
+
+The positions are specified by a CSS absolute position string, using the
+[literal]#++left++#, [literal]#++right++#, [literal]#++top++#,
+[literal]#++bottom++#, and [literal]#++z-index++# properties known from CSS. In
+the following example, we have a 300 by 150 pixels large layout and position a
+text field 50 pixels from both the left and the top edge:
+
+
+[source, java]
+----
+// A 400x250 pixels size layout
+AbsoluteLayout layout = new AbsoluteLayout();
+layout.setWidth("400px");
+layout.setHeight("250px");
+        
+// A component with coordinates for its top-left corner
+TextField text = new TextField("Somewhere someplace");
+layout.addComponent(text, "left: 50px; top: 50px;");
+----
+
+The [literal]#++left++# and [literal]#++top++# specify the distance from the
+left and top edge, respectively. The [literal]#++right++# and
+[literal]#++bottom++# specify the distances from the right and top edge.
+
+
+[source, java]
+----
+// At the top-left corner
+Button button = new Button( "left: 0px; top: 0px;");
+layout.addComponent(button, "left: 0px; top: 0px;");
+
+// At the bottom-right corner
+Button buttCorner = new Button( "right: 0px; bottom: 0px;");
+layout.addComponent(buttCorner, "right: 0px; bottom: 0px;");
+
+// Relative to the bottom-right corner
+Button buttBrRelative = new Button( "right: 50px; bottom: 50px;");
+layout.addComponent(buttBrRelative, "right: 50px; bottom: 50px;");
+
+// On the bottom, relative to the left side
+Button buttBottom = new Button( "left: 50px; bottom: 0px;");
+layout.addComponent(buttBottom, "left: 50px; bottom: 0px;");
+
+// On the right side, up from the bottom
+Button buttRight = new Button( "right: 0px; bottom: 100px;");
+layout.addComponent(buttRight, "right: 0px; bottom: 100px;");
+----
+
+The result of the above code examples is shown in
+<<figure.layout.absolutelayout.bottomright>>.
+
+[[figure.layout.absolutelayout.bottomright]]
+.Components Positioned Relative to Various Edges
+image::img/absolutelayout-bottomright.png[]
+
+Drag and drop is very useful for moving the components contained in an
+[classname]#AbsoluteLayout#. Check out the example in
+<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.drop-on-component,"Dropping
+on a Component">>.
+
+[[layout.absolutelayout.area]]
+== Placing a Component in an Area
+
+Earlier, we had components of undefined size and specified the positions of
+components by a single pair of coordinates. The other possibility is to specify
+an area and let the component fill the area by specifying a proportinal size for
+the component, such as " [literal]#++100%++#". Normally, you use
+[methodname]#setSizeFull()# to take the entire area given by the layout.
+
+
+[source, java]
+----
+// Specify an area that a component should fill
+Panel panel = new Panel("A Panel filling an area");
+panel.setSizeFull(); // Fill the entire given area
+layout.addComponent(panel, "left: 25px; right: 50px; "+
+                           "top: 100px; bottom: 50px;");
+----
+
+The result is shown in <<figure.layout.absolutelayout.area>>
+
+[[figure.layout.absolutelayout.area]]
+.Component Filling an Area Specified by Coordinates
+image::img/absolutelayout-area.png[]
+
+
+[[layout.absolutelayout.proportional]]
+== Proportional Coordinates
+
+You can also use proportional coordinates to specify the placement of
+components:
+
+
+[source, java]
+----
+// A panel that takes 30% to 90% horizontally and
+// 20% to 80% vertically
+Panel panel = new Panel("A Panel");
+panel.setSizeFull(); // Fill the specified area
+layout.addComponent(panel, "left: 30%; right: 10%;" +
+                           "top: 20%; bottom: 20%;");
+----
+
+The result is shown in <<figure.layout.absolutelayout.proportional>>
+
+[[figure.layout.absolutelayout.proportional]]
+.Specifying an Area by Proportional Coordinates
+image::img/absolutelayout-proportional.png[]
+
+
+[[layout.absolutelayout.css]]
+== Styling with CSS
+
+
+[source, css]
+----
+.v-absolutelayout {}
+.v-absolutelayout-wrapper {}
+----
+
+The [classname]#AbsoluteLayout# component has [literal]#++v-absolutelayout++#
+root style. Each component in the layout is contained within an element that has
+the [literal]#++v-absolutelayout-wrapper++#. The component captions are outside
+the wrapper elements, in a separate element with the usual
+[literal]#++v-caption++# style.
+
+
+
+

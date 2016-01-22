@@ -1,0 +1,100 @@
+---
+title: TwinColSelect
+order: 20
+layout: page
+---
+
+[[components.twincolselect]]
+= [classname]#TwinColSelect#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/list-builder]
+endif::web[]
+
+The [classname]#TwinColSelect# field provides a multiple selection component
+that shows two lists side by side, with the left column containing unselected
+items and the right column the selected items. The user can select items from
+the list on the left and click on the "&gt;&gt;" button to move them to the list on
+the right. Items can be deselected by selecting them in the right list and
+clicking on the "&lt;&lt;" button.
+
+[[figure.components.twincolselect.basic]]
+.Twin Column Selection
+image::img/twincolselect-basic.png[]
+
+[classname]#TwinColSelect# is always in multi-select mode, so its property value
+is always a collection of the item IDs of the selected items, that is, the items
+in the right column.
+
+The selection columns can have their own captions, separate from the overall
+component caption, which is managed by the containing layout. You can set the
+column captions with [methodname]#setLeftColumnCaption()# and
+[methodname]#setRightColumnCaption()#.
+
+
+[source, java]
+----
+TwinColSelect select = new TwinColSelect("Select Targets");
+
+// Put some items in the select
+select.addItems("Mercury", "Venus", "Earth", "Mars",
+        "Jupiter", "Saturn", "Uranus", "Neptune");
+
+// Few items, so we can set rows to match item count
+select.setRows(select.size());
+
+// Preselect a few items by creating a set
+select.setValue(new HashSet<String>(
+    Arrays.asList("Venus", "Earth", "Mars")));
+
+// Handle value changes
+select.addValueChangeListener(event -> // Java 8
+    layout.addComponent(new Label("Selected: " +
+            event.getProperty().getValue())));
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.twincolselect.captions[on-line example, window="_blank"].
+
+The resulting component is shown in <<figure.components.twincolselect.basic>>.
+
+The [methodname]#setRows()# method sets the height of the component by the
+number of visible items in the selection boxes. Setting the height with
+[methodname]#setHeight()# to a defined value overrides the rows setting.
+
+Common selection component features are described in
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection
+Components">>.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-select-twincol {}
+  .v-select-twincol-options-caption {}
+  .v-select-twincol-selections-caption {}
+  .v-select-twincol-options {}
+  .v-select-twincol-buttons {}
+    .v-button {}
+      .v-button-wrap {}
+        .v-button-caption {}
+    .v-select-twincol-deco {}
+  .v-select-twincol-selections {}
+----
+
+The [classname]#TwinColSelect# component has an overall
+[literal]#++v-select-twincol++# style. If set, the left and right column
+captions have [literal]#++v-select-twincol-options-caption++# and
+[literal]#++v-select-twincol-options-caption++# style names, respectively. The
+left box, which displays the unselected items, has
+[literal]#++v-select-twincol-options-caption++# style and the right box, which
+displays the selected items, has
+[literal]#++v-select-twincol-options-selections++# style. Between them is the
+button area, which has overall [literal]#++v-select-twincol-buttons++# style;
+the actual buttons reuse the styles for the [classname]#Button# component.
+Between the buttons is a divider element with
+[literal]#++v-select-twincol-deco++# style.
+
+
+
+

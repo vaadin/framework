@@ -1,0 +1,77 @@
+---
+title: Grid
+order: 4
+layout: page
+---
+
+[[clientsidewidgets.grid]]
+= Grid
+
+The [classname]#Grid# widget is the client-side counterpart for the server-side
+[classname]#Grid# component described in
+<<dummy/../../../framework/components/components-grid#components.grid,"Grid">>.
+
+The client-side API is almost identical to the server-side API, so its
+documentation is currently omitted here and we refer you to the API
+documentation. In the following, we go through some customization features of
+[classname]#Grid#.
+
+[[clientsidewidgets.grid.renderers]]
+== Renderers
+
+As described in
+<<dummy/../../../framework/components/components-grid#components.grid.renderer,"Column
+Renderers">>, renderers draw the visual representation of data values on the
+client-side. They implement [interfacename]#Renderer# interface and its
+[methodname]#render()# method. The method gets a reference to the element of the
+grid cell, as well as the data value to be rendered. An implementation needs to
+modify the element as needed.
+
+For example, [classname]#TextRenderer# is implemented simply as follows:
+
+
+----
+public class TextRenderer implements Renderer<String> {
+    @Override
+    public void render(RendererCellReference cell,
+                       String text) {
+        cell.getElement().setInnerText(text);
+    }
+}
+----
+
+The server-side renderer API should extend [classname]#AbstractRenderer# or
+[classname]#ClickableRenderer# with the data type accepted by the renderer. The
+data type also must be given for the superclass constructor.
+
+
+----
+public class TextRenderer extends AbstractRenderer<String> {
+    public TextRenderer() {
+        super(String.class);
+    }
+}
+----
+
+The client-side and server-side renderer need to be connected with a connector
+extending from [classname]#AbstractRendererConnector#.
+
+
+----
+@Connect(com.vaadin.ui.renderer.TextRenderer.class)
+public class TextRendererConnector
+       extends AbstractRendererConnector<String> {
+    @Override
+    public TextRenderer getRenderer() {
+        return (TextRenderer) super.getRenderer();
+    }
+}
+----
+
+Renderers can have parameters, for which normal client-side communication of
+extension parameters can be used. Please see the implementations of different
+renderers for examples.
+
+
+
+
