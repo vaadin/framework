@@ -2467,6 +2467,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             abstract protected String getCellTagName();
+
+            void detach() {
+                for (CELLTYPE cell : cells.values()) {
+                    cell.detach();
+                }
+            }
         }
 
         /**
@@ -2674,6 +2680,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                             .html()));
                 }
             }
+
+            void detach() {
+                removeComponentIfPresent();
+            }
         }
 
         protected Grid grid;
@@ -2720,6 +2730,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         + rowIndex);
             }
             ROWTYPE row = rows.remove(rowIndex);
+            row.detach();
             getSectionState().rows.remove(rowIndex);
 
             markAsDirty();
