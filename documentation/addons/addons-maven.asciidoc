@@ -1,0 +1,170 @@
+---
+title: Using Add-ons in a Maven Project
+order: 4
+layout: page
+---
+
+[[addons.maven]]
+= Using Add-ons in a Maven Project
+
+((("Maven", "using add-ons", id="term.addons.maven", range="startofrange")))
+
+
+To use add-ons in a Maven project, you simply have to add them as dependencies
+in the project POM. Most add-ons include a widget set, which are compiled to the
+project widget set.
+
+Creating, compiling, and packaging a Vaadin project with Maven was described in
+<<dummy/../../../framework/getting-started/getting-started-maven#getting-started.maven,"Using
+Vaadin with Maven">>.
+
+[[addons.maven.dependency]]
+== Adding a Dependency
+
+Vaadin Directory provides a Maven repository for all the add-ons in the
+Directory.
+
+. Open the add-on page in Vaadin Directory.
+
+. Select the version. The latest is shown by default, but you can choose another
+the version from the dropdown menu in the header of the add-on details page.
+
+. Click the [guilabel]#Maven/Ivy# to display the Maven dependency declaration, as
+illustrated in Figure <<figure.addons.maven.pombutton>>. If the add-on is
+available with multiple licenses, you will be prompted to select a license for
+the dependency.
+
++
+[[figure.addons.maven.pombutton]]
+.Maven POM Definitions
+image::img/directory-maven-pom.png[]
+
+. Copy the [literal]#++dependency++# declaration to the [filename]#pom.xml# file
+in your project, under the [literal]#++dependencies++# element.
+
+
++
+[subs="normal"]
+----
+  ...
+  &lt;dependencies&gt;
+    ...
+    &lt;dependency&gt;
+      &lt;groupId&gt;**com.vaadin.addon**&lt;/groupId&gt;
+      &lt;artifactId&gt;**vaadin-charts**&lt;/artifactId&gt;
+      &lt;version&gt;**1.0.0**&lt;/version&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+----
++
+You can use an exact version number, as is done in the example above, or
+[literal]#++LATEST++# to always use the latest version of the add-on.
+
++
+The POM excerpt given in Directory includes also a repository definition, but if
+you have used the [literal]#++vaadin-archetype-application++# to create your
+project, it already includes the definition.
+
+. Compile the widget set as described in the following section.
+
+
+
+[[addons.maven.compiling]]
+== Compiling the Project Widget Set
+
+If you have used the [literal]#++vaadin-archetype-application++# to create the
+project, the [filename]#pom.xml# includes all necessary declarations to compile
+the widget set. The widget set compilation occurs in standard Maven build phase,
+such as with [parameter]#package# or [parameter]#install# goal.
+
+[subs="normal"]
+----
+[prompt]#$# [command]#mvn# [parameter]#package#
+----
+Then, just deploy the WAR to your application server.
+
+[[addons.maven.compiling.recompiling]]
+=== Recompiling the Widget Set
+
+The Vaadin plugin for Maven tries to avoid recompiling the widget set unless
+necessary, which sometimes means that it is not compiled even when it should.
+Running the [literal]#++clean++# goal usually helps, but causes a full
+recompilation. You can compile the widget set manually by running the
+[parameter]#vaadin:compile# goal.
+
+[subs="normal"]
+----
+[prompt]#$# [command]#mvn# [parameter]#vaadin:compile#
+----
+Note that this does not update the project widget set by searching new widget
+sets from the class path. It must be updated if you add or remove add-ons, for
+example. You can do that by running the [literal]#++vaadin:update-widgetset++#
+goal in the project directory.
+
+[subs="normal"]
+----
+[prompt]#$# [command]#mvn# [parameter]#vaadin:update-widgetset#
+...
+[INFO] auto discovered modules [your.company.gwt.ProjectNameWidgetSet]
+[INFO] Updating widgetset your.company.gwt.ProjectNameWidgetSet
+[ERROR] 27.10.2011 19:22:34 com.vaadin.terminal.gwt.widgetsetutils.ClassPathExplorer getAvailableWidgetSets
+[ERROR] INFO: Widgetsets found from classpath:
+...
+
+----
+Do not mind the "ERROR" labels, they are just an issue with the Vaadin Plugin
+for Maven.
+
+After running the update, you need to run the [literal]#++vaadin:compile++# goal
+to actually compile the widget set.
+
+
+
+[[addons.maven.widgetset]]
+== Enabling Widget Set Compilation
+
+If you are not using a POM created with the proper Vaadin archetype, you may
+need to enable widget set compilation manually. The simplest way to do that is
+to copy the definitions from a POM created with the archetype. Specifically, you
+need to copy the [literal]#++plugin++# definitions. You also need the Vaadin
+dependencies.
+
+You need to create an empty widget set definition file, which the widget set
+compilation will populate with widget sets found from the class path. Create a
+[filename]#src/main/java/com/example/AppWidgetSet.gwt.xml# file (in the project
+package) with an empty [literal]#++<module>++# element as follows:
+
+
+----
+<module>
+</module>
+----
+
+[[addons.maven.widgetset.web]]
+=== Enabling the Widget Set in the UI
+
+If you have previously used the default widget set in the project, you need to
+enable the project widget set in the [filename]#web.xml# deployment descriptor.
+Edit the [filename]#src/main/webapp/WEB-INF/web.xml# file and add or modify the
+[literal]#++widgetset++# parameter for the servlet as follows.
+
+[subs="normal"]
+----
+&lt;servlet&gt;
+  ...
+  &lt;init-param&gt;
+    &lt;description&gt;Widget Set to Use&lt;/description&gt;
+    &lt;param-name&gt;widgetset&lt;/param-name&gt;
+    &lt;param-value&gt;**com.example.AppWidgetSet**&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+----
+The parameter is the class name of the widget set, that is, without the
+[filename]#.gwt.xml# extension and with the Java dot notation for class names
+that include the package name.
+
+
+
+(((range="endofrange", startref="term.addons.maven")))
+
+

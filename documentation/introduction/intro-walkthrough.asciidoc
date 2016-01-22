@@ -1,0 +1,111 @@
+---
+title: Example Application Walkthrough
+order: 2
+layout: page
+---
+
+[[intro.walkthrough]]
+= Example Application Walkthrough
+
+Let us follow the long tradition of first saying "Hello World!" when learning a
+new programming framework. First, using the primary server-side API.
+
+
+[source, java]
+----
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+
+@Title("My UI")
+@Theme("valo")
+public class HelloWorld extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        // Create the content root layout for the UI
+        VerticalLayout content = new VerticalLayout();
+        setContent(content);
+
+        // Display the greeting
+        content.addComponent(new Label("Hello World!"));
+
+        // Have a clickable button        
+        content.addComponent(new Button("Push Me!",
+            new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent e) {
+                    Notification.show("Pushed!");
+                }
+            }));
+    }
+}
+----
+
+A Vaadin application has one or more __UI__s that extend the
+[classname]#com.vaadin.ui.UI# class. A UI is a part of the web page in which the
+Vaadin application runs. An application can have multiple UIs in the same page,
+especially in portals, or in different windows or tabs. A UI is associated with
+a user session, and a session is created for each user who uses the application.
+In the context of our Hello World UI, it is sufficient to know that the
+underlying session is created when the user first accesses the application by
+opening the page, and the [methodname]#init()# method is invoked at that time.
+
+The page title, which is shown in the caption of the browser window or tab, is
+defined with an annotation. The example uses a layout component as the root
+content of the UI, as that is the case with most Vaadin applications, which
+normally have more than one component. It then creates a new [classname]#Label#
+user interface component, which displays simple text, and sets the text to
+"Hello World!". The label is added to the layout.
+
+The example also shows how to create a button and handle button click events.
+Event handling is described in
+<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
+and Listeners">> and on the practical side in
+<<dummy/../../../framework/application/application-events#application.events,"Handling
+Events with Listeners">>. In addition to listeners, in Java 8 you can handle
+events with lambda expressions, which simplifies the handler code significantly.
+
+
+[source, java]
+----
+content.addComponent(new Button("Push Me!",
+    event -> Notification.show("Pushed!")));
+----
+
+The result of the Hello World application, when opened in a browser, is shown in
+<<figure.intro.walkthrough>>.
+
+[[figure.intro.walkthrough]]
+.Hello World Application
+image::img/HelloWorld.png[]
+
+To run a program, you need to package it as a web application WAR package and
+deploy it to a server, as explained in
+<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+an Application">>. During development, you typically deploy to an application
+server integrated with the IDE.
+
+Developing a pure client-side application, you could write a Hello World just as
+easily, and also in Java:
+
+
+[source, java]
+----
+public class HelloWorld implements EntryPoint {
+    @Override
+    public void onModuleLoad() {
+        RootPanel.get().add(new Label("Hello, world!"));
+    }
+}
+----
+
+We do not set the title here, because it is usually defined in the HTML page in
+which the code is executed. The application would be compiled into JavaScript
+with the Vaadin Client Compiler (or GWT Compiler). It is more typical, however,
+to write client-side widgets, which you can then use from a server-side Vaadin
+application. For more information regarding client-side development, see
+<<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
+Vaadin Development">>.
+
+
+

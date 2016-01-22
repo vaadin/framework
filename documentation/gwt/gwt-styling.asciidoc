@@ -1,0 +1,88 @@
+---
+title: Styling a Widget
+order: 8
+layout: page
+---
+
+[[gwt.styling]]
+= Styling a Widget
+
+To make your widget look stylish, you need to style it. There are two basic ways
+to define CSS styles for a component: in the widget sources and in a theme. A
+default style should be defined in the widget sources, and different themes can
+then modify the style.
+
+[[gwt.styling.class]]
+== Determining the CSS Class
+
+The CSS class of a widget element is normally defined in the widget class and
+set with [methodname]#setStyleName()#. A widget should set the styles for its
+sub-elements as it desires.
+
+For example, you could style a composite widget with an overall style and with
+separate styles for the sub-widgets as follows:
+
+
+----
+public class MyPickerWidget extends ComplexPanel {
+    public static final String CLASSNAME = "mypicker";
+
+    private final TextBox textBox = new TextBox();
+    private final PushButton button = new PushButton("...");
+
+    public MyPickerWidget() {
+        setElement(Document.get().createDivElement());
+        setStylePrimaryName(CLASSNAME);
+
+        textBox.setStylePrimaryName(CLASSNAME + "-field");
+        button.setStylePrimaryName(CLASSNAME + "-button");
+
+        add(textBox, getElement());
+        add(button, getElement());
+
+        button.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+              Window.alert("Calendar picker not yet supported!");
+            }
+        });
+    }
+}
+----
+
+In addition, all Vaadin components get the [literal]#++v-widget++# class. If it
+extends an existing Vaadin or GWT widget, it will inherit CSS classes from that
+as well.
+
+
+[[gwt.styling.default]]
+== Default Stylesheet
+
+A client-side module, which is normally a widget set, can include stylesheets.
+They must be placed under the [filename]#public# folder under the folder of the
+widget set, a described in
+<<dummy/../../../framework/clientside/clientside-module#clientside.module.stylesheet,"Specifying
+a Stylesheet">>.
+
+For example, you could style the widget described above as follows:
+
+
+----
+.mypicker {
+	white-space: nowrap;
+}
+
+.mypicker-button {
+	display: inline-block;
+	border: 1px solid black;
+	padding: 3px;
+	width: 15px;
+	text-align: center;
+}
+----
+
+Notice that some size settings may require more complex handling and calculating
+the sizes dynamically.
+
+
+
+

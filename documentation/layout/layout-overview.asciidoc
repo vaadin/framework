@@ -1,0 +1,74 @@
+---
+title: Overview
+order: 1
+layout: page
+---
+
+[[layout.overview]]
+= Overview
+
+The user interface components in Vaadin can roughly be divided in two groups:
+components that the user can interact with and layout components for placing the
+other components to specific places in the user interface. The layout components
+are identical in their purpose to layout managers in regular desktop frameworks
+for Java and you can use plain Java to accomplish sophisticated component
+layouting.
+
+You start by creating a content layout for the UI and then add other layout
+components hierarchically, and finally the interaction components as the leaves
+of the component tree.
+
+
+[source, java]
+----
+// Set the root layout for the UI
+VerticalLayout content = new VerticalLayout();
+setContent(content);
+
+// Add the topmost component.
+content.addComponent(new Label("The Ultimate Cat Finder"));
+
+// Add a horizontal layout for the bottom part.
+HorizontalLayout bottom = new HorizontalLayout();
+content.addComponent(bottom);
+
+bottom.addComponent(new Tree("Major Planets and Their Moons"));
+bottom.addComponent(new Panel());
+...
+----
+
+Or in the declarative format:
+
+
+[source, html]
+----
+<vaadin-vertical-layout>
+  <vaadin-label>The Ultimate Cat Finder</vaadin-label>
+
+  <vaadin-horizontal-layout>
+    <vaadin-tree caption="Major Planets and Their Moons"/>
+    <vaadin-panel/>
+  </vaadin-horizontal-layout>
+</vaadin-vertical-layout>
+----
+
+You will usually need to tune the layout components a bit by setting sizes,
+expansion ratios, alignments, spacings, and so on. The general settings are
+described in
+<<dummy/../../../framework/layout/layout-settings#layout.settings,"Layout
+Formatting">>.
+
+Layouts are coupled with themes that specify various layout features, such as
+backgrounds, borders, text alignment, and so on. Definition and use of themes is
+described in
+<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>.
+
+You can see a finished version of the above example in
+<<figure.layout.intro.simple>>.
+
+[[figure.layout.intro.simple]]
+.Layout Example
+image::img/layout-intro-example-1.png[]
+
+
+

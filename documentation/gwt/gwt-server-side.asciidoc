@@ -1,0 +1,38 @@
+---
+title: Creating a Server-Side Component
+order: 3
+layout: page
+---
+
+[[gwt.server-side]]
+= Creating a Server-Side Component
+
+Typical server-side Vaadin applications use server-side components that are
+rendered on the client-side using their counterpart widgets. A server-side
+component must manage state synchronization between the widget on the
+client-side, in addition to any server-side logic.
+
+[[gwt.server-side.basic]]
+== Basic Server-Side Component
+
+The component state is usually managed by a __shared state__, described later in
+<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+State">>.
+
+
+----
+public class MyComponent extends AbstractComponent {
+    public MyComponent() {
+        getState().setText("This is MyComponent");
+    }
+
+    @Override
+    protected MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+}
+----
+
+
+
+

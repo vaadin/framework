@@ -1,0 +1,180 @@
+---
+title: Handling Browser Windows
+order: 1
+layout: page
+---
+
+[[advanced.windows]]
+= Handling Browser Windows
+
+The UI of a Vaadin application runs in a web page displayed in a browser window
+or tab. An application can be used from multiple UIs in different windows or
+tabs, either opened by the user using an URL or by the Vaadin application.
+
+In addition to native browser windows, Vaadin has a [classname]#Window#
+component, which is a floating panel or __sub-window__ inside a page, as
+described in
+<<dummy/../../../framework/layout/layout-sub-window#layout.sub-window,"Sub-Windows">>.
+
+* __Native popup windows__. An application can open popup windows for sub-tasks.
+* __Page-based browsing__. The application can allow the user to open certain content to different windows. For example, in a messaging application, it can be useful to open different messages to different windows so that the user can browse through them while writing a new message.
+* __Bookmarking__. Bookmarks in the web browser can provide an entry-point to some content provided by an application.
+* __Embedding UIs__. UIs can be embedded in web pages, thus making it possible to provide different views to an application from different pages or even from the same page, while keeping the same session. See <<dummy/../../../framework/advanced/advanced-embedding#advanced.embedding,"Embedding UIs in Web Pages">>.
+
+Use of multiple windows in an application may require defining and providing
+different UIs for the different windows. The UIs of an application share the
+same user session, that is, the [classname]#VaadinSession# object, as described
+in
+<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.session,"User
+Session">>. Each UI is identified by a URL that is used to access it, which
+makes it possible to bookmark application UIs. UI instances can even be created
+dynamically based on the URLs or other request parameters, such as browser
+information, as described in
+<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.ui,"Loading
+a UI">>.
+
+Because of the special nature of AJAX applications, use of multiple windows uses
+require some
+caveats.////
+TODO Re-enable We will go through them later in &lt;xref
+linkend="advanced.windows.caveats"/&gt;.
+////
+
+[[advanced.windows.popup]]
+== Opening Popup Windows
+
+((("popup windows")))
+((("windows", "popup")))
+Popup windows are native browser windows or tabs opened by user interaction with
+an existing window. Due to browser security reasons, it is made incovenient for
+a web page to open popup windows using JavaScript commands. At the least, the
+browser will ask for a permission to open the popup, if it is possible at all.
+This limitation can be circumvented by letting the browser open the new window
+or tab directly by its URL when the user clicks some target. This is realized in
+Vaadin with the [classname]#BrowserWindowOpener# component extension, which
+causes the browser to open a window or tab when the component is clicked.
+
+[[advanced.windows.popup.ui]]
+=== The Popup Window UI
+
+A popup Window displays an [classname]#UI#. The UI of a popup window is defined
+just like a main UI in a Vaadin application, and it can have a theme, title, and
+so forth.
+
+For example:
+
+
+[source, java]
+----
+@Theme("book-examples")
+public static class MyPopupUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        getPage().setTitle("Popup Window");
+        
+        // Have some content for it
+        VerticalLayout content = new VerticalLayout();
+        Label label =
+            new Label("I just popped up to say hi!");
+        label.setSizeUndefined();
+        content.addComponent(label);
+        content.setComponentAlignment(label,
+            Alignment.MIDDLE_CENTER);
+        content.setSizeFull();
+        setContent(content);
+    }
+}
+----
+
+
+[[advanced.windows.popup.popping]]
+=== Popping It Up
+
+A popup window is opened using the [classname]#BrowserWindowOpener# extension,
+which you can attach to any component. The constructor of the extension takes
+the class object of the UI class to be opened as a parameter.
+
+You can configure the features of the popup window with
+[methodname]#setFeatures()#. It takes as its parameter a comma-separated list of
+window features, as defined in the HTML specification.
+
+status=[parameter]#0|1#:: Whether the status bar at the bottom of the window should be enabled.
+[parameter]##:: 
+scrollbars:: Enables scrollbars in the window if the document area is bigger than the view area of the window.
+resizable:: Allows the user to resize the browser window (no effect for tabs).
+menubar:: Enables the browser menu bar.
+location:: Enables the location bar.
+toolbar:: Enables the browser toolbar.
+height=[parameter]#value#:: Specifies the height of the window in pixels.
+width=[parameter]#value#:: Specifies the width of the window in pixels.
+
+
+For example:
+
+
+[source, java]
+----
+// Create an opener extension
+BrowserWindowOpener opener =
+    new BrowserWindowOpener(MyPopupUI.class);
+opener.setFeatures("height=200,width=300,resizable");
+
+// Attach it to a button
+Button button = new Button("Pop It Up");
+opener.extend(button);
+----
+
+The resulting popup window, which appears when the button is clicked, is shown
+in <<figure.advanced.windows.popup.popping>>.
+
+[[figure.advanced.windows.popup.popping]]
+.A Popup Window
+image::img/windows-popup.png[]
+
+
+[[advanced.windows.popup.target]]
+=== Popup Window Name (Target)
+
+The target name is one of the default HTML target names ( [parameter]#_new#,
+[parameter]#_blank#, [parameter]#_top#, etc.) or a custom target name. How the
+window is exactly opened depends on the browser. Browsers that support tabbed
+browsing can open the window in another tab, depending on the browser settings.
+
+
+[[advanced.windows.popup.url]]
+=== URL and Session
+
+The URL path for a popup window UI is by default determined from the UI class
+name, by prefixig it with " [literal]#++popup/++#". For example, for the example
+UI giver earlier, the URL would be
+[literal]#++/book-examples/book/popup/MyPopupUI++#.
+
+
+
+[[advanced.windows.popup-closing]]
+== Closing Popup Windows
+
+Besides closing popup windows from a native window close button, you can close
+them programmatically by calling the JavaScript [methodname]#close()# method as
+follows.
+
+
+[source, java]
+----
+public class MyPopup extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        setContent(new Button("Close Window", event -> {// Java 8
+            // Close the popup
+            JavaScript.eval("close()");
+
+            // Detach the UI from the session
+            getUI().close();
+        }));
+    }
+}
+----
+
+
+
+

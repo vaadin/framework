@@ -1,0 +1,72 @@
+---
+title: CheckBox
+order: 15
+layout: page
+---
+
+[[components.checkbox]]
+= [classname]#CheckBox#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/check-box]
+endif::web[]
+
+[classname]#CheckBox# is a two-state selection component that can be either
+checked or unchecked. The caption of the check box will be placed right of the
+actual check box. Vaadin provides two ways to create check boxes: individual
+check boxes with the [classname]#CheckBox# component described in this section
+and check box groups with the [classname]#OptionGroup# component in multiple
+selection mode, as described in
+<<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>.
+
+Clicking on a check box will change its state. The state is a
+[classname]#Boolean# property that you can set with the [methodname]#setValue()#
+method and obtain with the [methodname]#getValue()# method of the
+[classname]#Property# interface. Changing the value of a check box will cause a
+[classname]#ValueChangeEvent#, which can be handled by a
+[classname]#ValueChangeListener#.
+
+
+[source, java]
+----
+CheckBox checkbox1 = new CheckBox("Box with no Check");
+CheckBox checkbox2 = new CheckBox("Box with a Check");
+
+checkbox2.setValue(true);
+
+checkbox1.addValueChangeListener(event -> // Java 8
+    checkbox2.setValue(! checkbox1.getValue()));
+
+checkbox2.addValueChangeListener(event -> // Java 8
+    checkbox1.setValue(! checkbox2.getValue()));
+----
+
+The result is shown in <<figure.components.checkbox.basic>>.
+
+[[figure.components.checkbox.basic]]
+.An Example of a Check Box
+image::img/checkbox-example1.png[]
+
+For an example on the use of check boxes in a table, see
+<<dummy/../../../framework/components/components-table#components.table,"Table">>.
+
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-checkbox { }
+  .v-checkbox > input { }
+  .v-checkbox > label { }
+----
+
+The top-level element of a [classname]#CheckBox# has the
+[literal]#++v-checkbox++# style. It contains two sub-elements: the actual check
+box [literal]#++input++# element and the [literal]#++label++# element. If you
+want to have the label on the left, you can change the positions with "
+[literal]#++direction: rtl++#" for the top element.
+
+
+
+

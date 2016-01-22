@@ -1,0 +1,96 @@
+---
+title: TextArea
+order: 10
+layout: page
+---
+
+[[components.textarea]]
+= [classname]#TextArea#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/text-input/text-area]
+endif::web[]
+
+[classname]#TextArea# is a multi-line version of the [classname]#TextField#
+component described in
+<<dummy/../../../framework/components/components-textfield#components.textfield,"TextField">>.
+
+The following example creates a simple text area:
+
+
+[source, java]
+----
+// Create the area
+TextArea area = new TextArea("Big Area");
+        
+// Put some content in it
+area.setValue("A row\n"+
+              "Another row\n"+
+              "Yet another row");
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textarea.basic[on-line example, window="_blank"].
+
+The result is shown in <<figure.components.textarea>>.
+
+[[figure.components.textarea]]
+.[classname]#TextArea# Example
+image::img/textarea-basic.png[]
+
+You can set the number of visible rows with [methodname]#setRows()# or use the
+regular [methodname]#setHeight()# to define the height in other units. If the
+actual number of rows exceeds the number, a vertical scrollbar will appear.
+Setting the height with [methodname]#setRows()# leaves space for a horizontal
+scrollbar, so the actual number of visible rows may be one higher if the
+scrollbar is not visible.
+
+You can set the width with the regular [methodname]#setWidth()# method. Setting
+the size with the __em__ unit, which is relative to the used font size, is
+recommended.
+
+[[components.textarea.wordwrap]]
+== Word Wrap
+
+The [methodname]#setWordwrap()# sets whether long lines are wrapped (
+[literal]#++true++# - default) when the line length reaches the width of the
+writing area. If the word wrap is disabled ( [literal]#++false++#), a vertical
+scrollbar will appear instead. The word wrap is only a visual feature and
+wrapping a long line does not insert line break characters in the field value;
+shortening a wrapped line will undo the wrapping.
+
+
+[source, java]
+----
+TextArea area1 = new TextArea("Wrapping");
+area1.setWordwrap(true); // The default
+area1.setValue("A quick brown fox jumps over the lazy dog");
+
+TextArea area2 = new TextArea("Nonwrapping");
+area2.setWordwrap(false);
+area2.setValue("Victor jagt zw&ouml;lf Boxk&auml;mpfer quer "+
+               "&uuml;ber den Sylter Deich");
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textarea.wordwrap[on-line example, window="_blank"].
+
+The result is shown in <<figure.components.textarea.wordwrap>>.
+
+[[figure.components.textarea.wordwrap]]
+.Word Wrap in [classname]#TextArea#
+image::img/textarea-wordwrap.png[]
+
+
+[[components.textarea.css]]
+== CSS Style Rules
+
+
+[source, css]
+----
+.v-textarea { }
+----
+
+The HTML structure of [classname]#TextArea# is extremely simple, consisting only
+of an element with [literal]#++v-textarea++# style.
+
+CSS Styling
+
+

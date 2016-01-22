@@ -1,0 +1,223 @@
+---
+title: Compiling Sass Themes
+order: 4
+layout: page
+---
+
+[[themes.compiling]]
+= Compiling Sass Themes
+
+Sass themes must be compiled to CSS understood by browsers. Compilation can be
+done with the Vaadin Sass Compiler, which you can run in Eclipse, Maven, or it
+can be run on-the-fly when the application is loaded in the browser. You can
+also use any other Sass compiler.
+
+[[themes.compiling.on-the-fly]]
+== Compiling On the Fly
+
+The easiest way to use Sass themes during theme development is to let the Vaadin
+servlet compile them on the run. In this case, the SCSS source files are placed
+in the theme folder. Compilation is done each time the [filename]#styles.css# is
+requested from the server.
+
+The on-the-fly compilation takes a bit time, so it is only available when the
+Vaadin servlet is in the development mode, as described in
+<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+Servlet Configuration Parameters">>. Also, it requires the theme compiler and
+all its dependencies to be in the class path of the servlet. At least for
+production, you must compile the theme to CSS, as described next.
+
+
+[[themes.compiling.eclipse]]
+== Compiling in Eclipse
+
+If using Eclipse and the Vaadin Plugin for Eclipse, its project wizard creates a
+Sass theme. It includes [menuchoice]#Compile Theme# command in the toolbar to
+compile the project theme to CSS. Another command compiles also the widget set.
+
+[[figure.themes.compiling.eclipse]]
+.Compiling Sass Theme
+image::img/eclipse-theme-compiler.png[]
+
+The [filename]#WebContent/VAADIN/mytheme/styles.scss# and any Sass sources
+included by it are compiled to [filename]#styles.css#.
+
+
+[[themes.compiling.maven]]
+== Compiling with Maven
+
+To compile the themes with Maven, you need to include the built-in themes as a
+dependency:
+
+
+[source, xml]
+----
+  ...
+  <dependencies>
+    ...
+    <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-themes</artifactId>
+        <version>${vaadin.version}</version>
+    </dependency>
+  </dependencies>
+  ...
+----
+
+This is automatically included at least in the
+[literal]#++vaadin-archetype-application++# archetype for Vaadin applications.
+The actual theme compilation is most conveniently done by the Vaadin Maven
+Plugin with [literal]#++update-theme++# and [literal]#++compile-theme++# goals.
+
+
+[source, xml]
+----
+  ...
+  <plugin>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-maven-plugin</artifactId>
+    ...
+    <executions>
+      <execution>
+        ...
+        <goals>
+          <goal>clean</goal>
+          <goal>resources</goal>
+          <goal>update-theme</goal>
+          <goal>update-widgetset</goal>
+          <goal>compile-theme</goal>
+          <goal>compile</goal>
+        </goals>
+      </execution>
+    </executions>
+----
+
+Once these are in place, the theme is compiled as part of relevant lifecycle
+phases, such as [literal]#++package++#.
+
+[subs="normal"]
+----
+[command]#mvn# [parameter]#package#
+----
+You can also compile just the theme with the [package]#compile-theme# goal:
+
+[subs="normal"]
+----
+[command]#mvn# [parameter]#vaadin:compile-theme#
+----
+
+ifdef::web[]
+[[themes.compiling.command-line]]
+== Compiling in Command-line
+
+You can compile Sass style sheets to CSS either with the Vaadin Sass compiler or
+the standard one. The [filename]#styles.css# of a custom theme should be the
+compilation target. When compiled before deployment, the source files do not
+need to be in the theme folder.
+
+You can run the Vaadin Sass compiler in a theme folder as follows:
+
+[subs="normal"]
+----
+[command]#java# [parameter]#-cp# [replaceable]#'../../../WEB-INF/lib/*'# com.vaadin.sass.SassCompiler styles.scss styles.css
+----
+The [parameter]#-cp# parameter should point to the class path where the Vaadin
+Sass Compiler and theme JARs are located. In the above example, they are assumed
+to be located in the [filename]#WEB-INF/lib# folder of the web application. If
+you have loaded the Vaadin libraries using Ivy, as is the case with projects
+created with the Vaadin Plugin for Eclipse, the Vaadin libraries are stored in
+Ivy's local repository. Its folder hierarchy is somewhat scattered, so we
+recommend that you retrieve the libraries to a single folder. We recommend using
+an Ant script as is described next.
+
+endif::web[]
+
+[[themes.compiling.ant]]
+== Compiling with Ant
+
+With Apache Ant, you can easily resolve the dependencies with Ivy and compile
+the theme with the Theme Compiler included in Vaadin as follows. This build step
+can be conveniently included in a WAR build script.
+
+Start with the following configuration:
+
+
+[source, xml]
+----
+<project xmlns:ivy="antlib:org.apache.ivy.ant"
+         name="My Project" basedir="../"
+         default="package-war">
+
+  <target name="configure">
+    <!-- Where project source files are located -->
+    <property name="src-location" value="src" />
+
+    ... other project build definitions ...
+            
+    <!-- Name of the theme -->
+    <property name="theme" value="book-examples"/>
+        
+    <!-- Compilation result directory -->
+    <property name="result" value="build/result"/>
+  </target>
+
+  <!-- Initialize build -->
+  <target name="init" depends="configure">
+    <!-- Construct and check classpath -->
+    <path id="compile.classpath">
+        <!-- Source code to be compiled -->
+        <pathelement path="${src-location}" />
+            
+        <!-- Vaadin libraries and dependencies -->
+        <fileset dir="${result}/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <mkdir dir="${result}"/>
+  </target>
+----
+
+You should first resolve all Vaadin libraries to a single directory, which you
+can use for deployment, but also for theme compilation.
+
+
+----
+  <target name="resolve" depends="init">
+    <ivy:retrieve
+        pattern="${result}/lib/[module]-[type]-[artifact]-[revision].[ext]"/>
+  </target>
+----
+
+Then, you can compile the theme as follows:
+
+
+----
+  <!-- Compile theme -->
+  <target name="compile-theme"
+          depends="init, resolve">
+    <delete dir="${result}/VAADIN/themes/${theme}"/>
+    <mkdir dir="${result}/VAADIN/themes/${theme}"/>
+    	
+    <java classname="com.vaadin.sass.SassCompiler"
+          fork="true">
+      <classpath>
+        <path refid="compile.classpath"/>
+      </classpath>
+      <arg value="WebContent/VAADIN/themes/${theme}/styles.scss"/>
+      <arg value="${result}/VAADIN/themes/${theme}/styles.css"/>
+    </java>
+
+    	<!-- Copy theme resources -->
+    <copy todir="${result}/VAADIN/themes/${theme}">
+      <fileset dir="WebContent/VAADIN/themes/${theme}">
+        <exclude name="**/*.scss"/>
+      </fileset>
+    </copy>
+  </target>
+</project>
+----
+
+
+
+

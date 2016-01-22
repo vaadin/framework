@@ -1,0 +1,398 @@
+---
+title: Designing UIs Declaratively
+order: 3
+layout: page
+---
+
+[[application.declarative]]
+= Designing UIs Declaratively
+
+Declarative definition of composites and even entire UIs makes it easy for
+developers and especially graphical designers to work on visual designs without
+any coding. Designs can be modified even while the application is running, as
+can be the associated themes. A design is a representation of a component
+hierarcy, which can be accessed from Java code to implement dynamic UI logic, as
+well as data binding.
+
+For example, considering the following layout in Java:
+
+
+[source, java]
+----
+VerticalLayout vertical = new VerticalLayout ();
+vertical.addComponent(new TextField("Name"));
+vertical.addComponent(new TextField("Street address"));
+vertical.addComponent(new TextField("Postal code"));
+layout.addComponent(vertical);
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
+
+You could define it declaractively with the following equivalent design:
+
+
+[source, html]
+----
+<vaadin-vertical-layout>
+  <vaadin-text-field caption="Name"/>
+  <vaadin-text-field caption="Street address"/>
+  <vaadin-text-field caption="Postal code"/>
+</vaadin-vertical-layout>
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
+
+Declarative designs can be crafted by hand, but are most conveniently created
+with the Vaadin Designer.
+
+In the following, we first go through the syntax of the declarative design
+files, and then see how to use them in applications by binding them to data and
+handling user interaction events.
+
+[[application.declarative.syntax]]
+== Declarative Syntax
+
+A design is an HTML document with custom elements for representing components
+and their configuration. A design has a single root component inside the HTML
+body element. Enclosing [literal]#++<html>++#, [literal]#++<head>++#,
+[literal]#++<body>++# are optional, but necessary if you need to make namespace
+definitions for custom components. Other regular HTML elements may not be used
+in the file, except inside components that specifically accept HTML content.
+
+In a design, each nested element corresponds to a Vaadin component in a
+component tree. Components can have explicitly given IDs to enable binding them
+to variables in the Java code, as well as optional attributes.
+
+
+[source, html]
+----
+<!DOCTYPE html>
+<html>
+  <body>
+    <vaadin-vertical-layout size-full>
+      <!-- Label with HTML content -->
+      <vaadin-label><b>Hello!</b> - How are you?</vaadin-label>
+
+      <vaadin-horizontal-layout size-full :expand>
+        <vaadin-tree _id="mytree" caption="My Tree"
+                width-auto height-full/>
+        <vaadin-table _id="mytable" caption="My Table"
+                 size-full :expand/>
+      </vaadin-horizontal-layout>
+    </vaadin-vertical-layout>
+  </body>
+</html>
+----
+
+The DOCTYPE is not required, neither is the [literal]#++<html>++#, or
+[literal]#++<body>++# elements. Nevertheless, there may only be one design root
+element.
+
+The above design defines the same UI layout as done earlier with Java code, and
+illustrated in
+<<dummy/../../../framework/application/application-architecture#figure.application.architecture.example,"Simple
+Hierarchical UI">>.
+
+
+[[application.declarative.elements]]
+== Component Elements
+
+HTML elements of the declarative syntax are directly mapped to Vaadin components
+according to their Java class names. The tag of a component element has a
+namespace prefix separated by a dash. Vaadin core components, which are defined
+in the [package]#com.vaadin.ui# package, have [literal]#++vaadin-++# prefix. The rest
+of an element tag is determined from the Java class name of the component, by
+making it lower-case, while adding a dash ( [literal]#++-++#) before every
+previously upper-case letter as a word separator. For example,
+[classname]#ComboBox# component has declarative element tag
+[literal]#++<vaadin-combo-box>++#.
+
+[[application.declarative.elements.prefix]]
+=== Component Prefix to Package Mapping
+
+You can use any components in a design: components extending Vaadin components,
+composite components, and add-on components. To do so, you need to define a
+mapping from an element prefix to the Java package of the component. The prefix
+is used as a sort of a namespace.
+
+The mappings are defined in [literal]#++<meta name="package-mapping" ...>++#
+elements in the HTML head. A [parameter]#content# attribute defines a mapping,
+in notation with a prefix separated from the corresponding Java package name
+with a colon, such as " [literal]#++my:com.example.myapp++#".
+
+For example, consider that you have the following composite class
+[classname]#com.example.myapp.ExampleComponent#:
+
+
+[source, java]
+----
+package com.example.myapp;
+
+public class ExampleComponent extends CustomComponent {
+    public ExampleComponent() {
+        setCompositionRoot(new Label("I am an example."));
+    }
+}
+----
+
+You would make the package prefix mapping and then use the component as follows:
+
+[subs="normal"]
+----
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    **&lt;meta name="package-mapping" content="my:com.example.myapp" /&gt;**
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;vaadin-vertical-layout&gt;
+      &lt;vaadin-label&gt;&lt;b&gt;Hello!&lt;/b&gt; - How are you?&lt;/vaadin-label&gt;
+
+      &lt;!-- Use it here --&gt;
+      **&lt;my-example-component/&gt;**
+    &lt;/vaadin-vertical-layout&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+----
+
+[[application.declarative.elements.inline]]
+=== Inline Content and Data
+
+The element content can be used for certain default attributes, such as a button
+caption. For example:
+
+
+[source, html]
+----
+<vaadin-button><b>OK</b></vaadin-button>
+----
+
+Some components, such as selection components, allow defining inline data within
+the element. For example:
+
+
+[source, html]
+----
+<vaadin-native-select>
+  <option>Mercury</option>
+  <option>Venus</option>
+  <option selected>Earth</option>
+</vaadin-native-select>
+----
+
+The declarative syntax of each component type is described in the JavaDoc API
+documentation of Vaadin.
+
+
+
+[[application.declarative.attributes]]
+== Component Attributes
+
+[[application.declarative.attributes.mapping]]
+=== Attribute-to-Property Mapping
+
+Component properties are directly mapped to the attributes of the HTML elements
+according to the names of the properties. Attributes are written in lower-case
+letters and dash is used for word separation instead of upper-case letters in
+the Java methods, so that [literal]#++input-prompt++# attribute is equivalent to
+[methodname]#setInputPrompt()#.
+
+For example, the __caption__ property, which you can set with
+[methodname]#setCaption()#, is represented as [literal]#++caption++# attribute.
+You can find the component properties by the setter methods in the
+link:https://vaadin.com/api/[JavaDoc API documentation] of the component
+classes.
+
+
+[source, html]
+----
+<vaadin-text-field caption="Name" input-prompt="Enter Name"/>
+----
+
+
+[[application.declarative.attributes.parameters]]
+=== Attribute Values
+
+Attribute parameters must be enclosed in quotes and the value given as a string
+must be convertible to the type of the property (string, integer, boolean, or
+enumeration). Object types are not supported.
+
+Some attribute names are given by a shorthand. For example,
+[parameter]#alternateText# property of the [classname]#Image# component, which
+you would set with [methodname]#setAlternateText()#, is given as the
+[literal]#++alt++# attribute.
+
+Boolean values must be either " [literal]#++true++#" or " [literal]#++false++#".
+The value can be omitted, in which case [literal]#++true++# is assumed. For
+example, the [literal]#++enabled++# attribute is boolean and has default value "
+[literal]#++true++#", so [literal]#++enabled="true"++# and
+[literal]#++enabled++# and equivalent.
+
+
+[source, html]
+----
+<vaadin-button enabled="false">OK</vaadin-button>
+----
+
+
+[[application.declarative.attributes.parent]]
+=== Parent Component Settings
+
+Certain settings, such as a component's alignment in a layout, are not done in
+the component itself, but in the layout. Attributes prefixed with colon (
+[literal]#++:++#) are passed to the containing component, with the component as
+a target parameter. For example, [literal]#++:expand="1"++# given for a
+component [parameter]#c# is equivalent to calling [methodname]#setExpandRatio(c,
+1)# for the containing layout.
+
+[subs="normal"]
+----
+&lt;vaadin-vertical-layout size-full&gt;
+  &lt;!-- Align right in the containing layout --&gt;
+  &lt;vaadin-label width-auto **:right**&gt;Hello!&lt;/vaadin-label&gt;
+
+  &lt;!-- Expands to take up all remaining vertical space --&gt;
+  &lt;vaadin-horizontal-layout size-full **:expand**&gt;
+    &lt;!-- Automatic width - shrinks horizontally --&gt;
+    &lt;vaadin-tree width-auto height-full/&gt;
+
+    &lt;!-- Expands horizontally to take remaining space --&gt;
+    &lt;vaadin-table size-full **:expand**/&gt;
+  &lt;/vaadin-horizontal-layout&gt;
+&lt;/vaadin-vertical-layout&gt;
+----
+Again, compare the above declaration to the Java code given in
+<<dummy/../../../framework/application/application-architecture#application.architecture,"Building
+the UI">>.
+
+
+
+[[application.declarative.identifiers]]
+== Component Identifiers
+
+Components can be identified by either an identifier or a caption. There are two
+types of identifiers: page-global and local. This allows accessing them from
+Java code and binding them to components, as described later in
+<<application.declarative.composite>>.
+
+The [literal]#++id++# attribute can be used to define a page-global identifier,
+which must be unique within the page. Another design or UI shown simultaneously
+in the same page may not have components sharing the same ID. Using global
+identifiers is therefore not recommended, except in special cases where
+uniqueness is ensured.
+
+The [literal]#++_id++# attribute defines a local identifier used only within the
+design. This is the recommended way to identifying components.
+
+
+[source, html]
+----
+<vaadin-tree _id="mytree" caption="My Tree"/>
+----
+
+
+[[application.declarative.composite]]
+== Using Designs in Code
+
+The main use of declarative designs is in building application views, sub-views,
+dialogs, and forms through composition. The two main tasks are filling the
+designs with application data and handling user interaction events.
+
+[[application.declarative.composite.designroot]]
+=== Binding to a Design Root
+
+You can bind any component container as the root component of a design with the
+[classname]#@DesignRoot# annotation. The class must match or extend the class of
+the root element in the design.
+
+The member variables are automatically initialized from the design according to
+the component identifiers (see <<application.declarative.identifiers>>), which
+must match the variable names.
+
+For example, the following class could be used to bind the design given earlier.
+
+
+[source, java]
+----
+@DesignRoot
+public class MyViewDesign extends VerticalLayout {
+    Tree mytree;
+    Table mytable;
+    
+    public MyViewDesign() {
+        Design.read("MyDeclarativeUI.html", this);
+
+        // Show some (example) data
+        mytree.setContainerDataSource(
+            TreeExample.createTreeContent());
+        mytable.setContainerDataSource(
+            TableExample.generateContent());
+            
+        // Some interaction
+        mytree.addItemClickListener(event -> // Java 8
+            Notification.show("Selected " +
+                event.getItemId()));
+    }
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#application.declarative.designroot[on-line example, window="_blank"].
+
+The design root class must match or extend the root element class of the design.
+For example, earlier we had [literal]#++<vaadin-vertical-layout>++# element in the
+HTML file, which can be bound to a class extending [classname]#VerticalLayout#.
+
+
+[[application.declarative.composite.using]]
+=== Using a Design
+
+The fact that a component is defined declaratively is not visible in its API, so
+you can create and use such it just like any other component.
+
+For example, to use the previously defined design root component as the content
+of the entire UI:
+
+
+[source, java]
+----
+public class DeclarativeViewUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        setContent(new MyViewDesign());
+    }
+}
+----
+
+
+[[application.declarative.composite.viewnavigation]]
+=== Designs in View Navigation
+
+To use a design in view navigation, as described in
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+in an Application">>, you just need to implement the [interfacename]#View#
+interface.
+
+
+[source, java]
+----
+@DesignRoot
+public class MainView extends VerticalLayout
+                      implements View {
+    public MainView() {
+        Design.read(this);
+        ...
+    }
+    ...
+}
+
+...
+// Use the view by precreating it
+navigator.addView(MAINVIEW, new MainView());
+----
+
+See
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.urifragment,"Handling
+URI Fragment Path">> for a complete example.
+
+
+
+
+

@@ -1,0 +1,156 @@
+---
+title: Syntactically Awesome Stylesheets (Sass)
+order: 3
+layout: page
+---
+
+[[themes.sass]]
+= Syntactically Awesome Stylesheets (Sass)
+
+Vaadin uses Sass for stylesheets. Sass is an extension of CSS3 that adds nested
+rules, variables, mixins, selector inheritance, and other features to CSS. Sass
+supports two formats for stylesheet: Vaadin themes are written in SCSS (
+[filename]#.scss#), which is a superset of CSS3, but Sass also allows a more
+concise indented format ( [filename]#.sass#).
+
+Sass can be used in two basic ways in Vaadin applications, either by compiling
+SCSS files to CSS or by doing the compilation on the fly. The latter way is
+possible if the development mode is enabled for the Vaadin servlet, as described
+in
+<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+Servlet Configuration Parameters">>.
+
+[[themes.sass.overview]]
+== Sass Overview
+
+[[themes.sass.overview.variables]]
+=== Variables
+
+Sass allows defining variables that can be used in the rules.
+
+
+[source, css]
+----
+$textcolor: blue;
+
+.v-button-caption {
+  color: $textcolor;
+}
+----
+
+The above rule would be compiled to CSS as:
+
+
+[source, css]
+----
+.v-button-caption {
+  color: blue;
+}
+----
+
+Also mixins can have variables as parameters, as explained later.
+
+
+[[themes.sass.overview.nesting]]
+=== Nesting
+
+Sass supports nested rules, which are compiled into inside-selectors. For
+example:
+
+
+[source, css]
+----
+.v-app {
+  background: yellow;
+  
+  .mybutton {
+    font-style: italic;
+    
+    .v-button-caption {
+      color: blue;
+    }
+  }
+}
+----
+
+is compiled as:
+
+
+[source, css]
+----
+.v-app {
+  background: yellow;
+}
+
+.v-app .mybutton {
+    font-style: italic;
+}
+
+.v-app .mybutton .v-button-caption {
+  color: blue;
+}
+----
+
+
+[[themes.sass.overview.mixins]]
+=== Mixins
+
+Mixins are rules that can be included in other rules. You define a mixin rule by
+prefixing it with the [literal]#++@mixin++# keyword and the name of the mixin.
+You can then use [literal]#++@include++# to apply it to another rule. You can
+also pass parameters to it, which are handled as local variables in the mixin.
+
+For example:
+
+
+[source, css]
+----
+@mixin mymixin {
+  background: yellow;
+}
+
+@mixin othermixin($param) {
+  margin: $param;
+}
+
+.v-button-caption {
+  @include mymixin;
+  @include othermixin(10px);
+}
+----
+
+The above SCSS would translated to the following CSS:
+
+
+[source, css]
+----
+.v-button-caption {
+  background: yellow;
+  margin: 10px;
+}
+----
+
+You can also have nested rules in a mixin, which makes them especially powerful.
+Mixing in rules is used when extending Vaadin themes, as described in
+<<dummy/../../../framework/themes/themes-creating#themes.creating.sass,"Sass
+Themes">>.
+
+Vaadin themes are defined as mixins to allow for certain uses, such as different
+themes for different portlets in a portal.
+
+
+
+[[themes.sass.basic]]
+== Sass Basics with Vaadin
+
+We are not going to give in-depth documentation of Sass and refer you to its
+excellent documentation at http://sass-lang.com/. In the following, we give just
+basic introduction to using it with Vaadin.
+
+You can create a new Sass-based theme with the Eclipse plugin, as described in
+<<dummy/../../../framework/themes/themes-eclipse#themes.eclipse,"Creating a
+Theme in Eclipse">>.
+
+
+
+

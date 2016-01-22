@@ -1,0 +1,98 @@
+---
+title: Tree
+order: 22
+layout: page
+---
+
+[[components.tree]]
+= [classname]#Tree#
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree]
+endif::web[]
+
+The [classname]#Tree# component allows a natural way to represent data that has
+hierarchical relationships, such as filesystems or message threads. The
+[classname]#Tree# component in Vaadin works much like the tree components of
+most modern desktop user interface toolkits, for example in directory browsing.
+
+The typical use of the [classname]#Tree# component is for displaying a
+hierachical menu, like a menu on the left side of the screen, as in
+<<figure.components.tree>>, or for displaying filesystems or other hierarchical
+datasets. The [parameter]#menu# style makes the appearance of the tree more
+suitable for this purpose.
+
+
+[source, java]
+----
+final Object[][] planets = new Object[][]{
+        new Object[]{"Mercury"}, 
+        new Object[]{"Venus"},
+        new Object[]{"Earth", "The Moon"},    
+        new Object[]{"Mars", "Phobos", "Deimos"},
+        new Object[]{"Jupiter", "Io", "Europa", "Ganymedes",
+                                "Callisto"},
+        new Object[]{"Saturn",  "Titan", "Tethys", "Dione",
+                                "Rhea", "Iapetus"},
+        new Object[]{"Uranus",  "Miranda", "Ariel", "Umbriel",
+                                "Titania", "Oberon"},
+        new Object[]{"Neptune", "Triton", "Proteus", "Nereid",
+                                "Larissa"}};
+        
+Tree tree = new Tree("The Planets and Major Moons");
+
+/* Add planets as root items in the tree. */
+for (int i=0; i<planets.length; i++) {
+    String planet = (String) (planets[i][0]);
+    tree.addItem(planet);
+    
+    if (planets[i].length == 1) {
+        // The planet has no moons so make it a leaf.
+        tree.setChildrenAllowed(planet, false);
+    } else {
+        // Add children (moons) under the planets.
+        for (int j=1; j<planets[i].length; j++) {
+            String moon = (String) planets[i][j];
+            
+            // Add the item as a regular item.
+            tree.addItem(moon);
+            
+            // Set it to be a child.
+            tree.setParent(moon, planet);
+            
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(moon, false);
+        }
+
+        // Expand the subtree.
+        tree.expandItemsRecursively(planet);
+    }
+}
+
+main.addComponent(tree);
+----
+
+<<figure.components.tree>> below shows the tree from the code example in a
+practical situation.
+
+[[figure.components.tree]]
+.A [classname]#Tree# Component as a Menu
+image::img/tree-example1.png[]
+
+You can read or set the currently selected item by the value property of the
+[classname]#Tree# component, that is, with [methodname]#getValue()# and
+[methodname]#setValue()#. When the user clicks an item on a tree, the tree will
+receive an [classname]#ValueChangeEvent#, which you can catch with a
+[classname]#ValueChangeListener#. To receive the event immediately after the
+click, you need to set the tree as [classname]#setImmediate(true)#.
+
+The [classname]#Tree# component uses [classname]#Container# data sources much
+like the [classname]#Table# component, with the addition that it also utilizes
+hierarchy information maintained by a [classname]#HierarchicalContainer#. The
+contained items can be of any item type supported by the container. The default
+container and its [methodname]#addItem()# assume that the items are strings and
+the string value is used as the item ID.
+
+
+
