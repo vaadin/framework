@@ -15,11 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertFalse;
+
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -28,9 +32,15 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
+    @Before
+    public void setUp() {
+        setDebug(true);
+
+        openTestURL();
+    }
+
     @Test
     public void hideAndShowComponentsInHeader() {
-        openTestURL();
         GridElement grid = $(GridElement.class).first();
 
         int filterRow = 2;
@@ -48,6 +58,8 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
         textfield.setValue("foo");
         Assert.assertEquals("1. value change for field in string to foo",
                 getLogRow(0));
+
+        assertNoErrorNotifications();
     }
 
     private TextFieldElement getHeaderElement(GridElement grid, int row, int col) {
@@ -66,7 +78,6 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
     @Test
     public void hideAndShowComponentsInFooter() {
-        openTestURL();
         GridElement grid = $(GridElement.class).first();
 
         int filterRow = 0;
@@ -84,6 +95,8 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
         textfield.setValue("foo");
         Assert.assertEquals("1. value change for field in string to foo",
                 getLogRow(0));
+
+        assertNoErrorNotifications();
     }
 
     private TextFieldElement getFooterElement(GridElement grid, int row, int col) {
@@ -100,4 +113,28 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
         }
     }
 
+    @Test
+    public void testRemoveAllHeadersAndFooters() {
+        openTestURL();
+
+        for (int i = 2; i >= 0; --i) {
+            // Remove Header
+            $(GridElement.class).first().getHeaderCell(i, 0)
+                    .$(ButtonElement.class).first().click();
+            assertFalse(
+                    "Header " + i + " should not be present.",
+                    $(GridElement.class).first().isElementPresent(
+                            By.vaadin("#header[" + i + "]")));
+
+            // Remove Footer
+            $(GridElement.class).first().getFooterCell(i, 0)
+                    .$(ButtonElement.class).first().click();
+            assertFalse(
+                    "Footer " + i + " should not be present.",
+                    $(GridElement.class).first().isElementPresent(
+                            By.vaadin("#footer[" + i + "]")));
+        }
+
+        assertNoErrorNotifications();
+    }
 }
