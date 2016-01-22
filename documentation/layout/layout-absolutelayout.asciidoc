@@ -7,6 +7,11 @@ layout: page
 [[layout.absolutelayout]]
 = [classname]#AbsoluteLayout#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/absolute-layout"]
+endif::web[]
+
 [classname]#AbsoluteLayout# allows placing components in arbitrary positions in
 the layout area. The positions are specified in the [methodname]#addComponent()#
 method with horizontal and vertical coordinates relative to an edge of the

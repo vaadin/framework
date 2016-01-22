@@ -7,6 +7,11 @@ layout: page
 [[layout.csslayout]]
 = [classname]#CssLayout#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/css-layout"]
+endif::web[]
+
 [classname]#CssLayout# allows strong control over styling of the components
 contained inside the layout. The components are contained in a simple DOM
 structure consisting of [literal]#++<div>++# elements. By default, the contained

@@ -7,6 +7,11 @@ layout: page
 [[layout.sub-window]]
 = Sub-Windows
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/structure/window"]
+endif::web[]
+
 __Sub-windows__ are floating panels within a native browser window. Unlike
 native browser windows, sub-windows are managed by the client-side runtime of
 Vaadin using HTML features. Vaadin allows opening, closing, resizing, maximizing

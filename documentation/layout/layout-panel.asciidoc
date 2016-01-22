@@ -7,6 +7,11 @@ layout: page
 [[layout.panel]]
 = [classname]#Panel#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/structure/panel"]
+endif::web[]
+
 [classname]#Panel# is a single-component container with a frame around the
 content. It has an optional caption and an icon which are handled by the panel
 itself, not its containing layout. The panel itself does not manage the caption
