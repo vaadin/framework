@@ -7,6 +7,11 @@ layout: page
 [[layout.accordion]]
 = [classname]#Accordion#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/structure/accordion"]
+endif::web[]
+
 [classname]#Accordion# is a multicomponent container similar to
 [classname]#TabSheet#, except that the "tabs" are arranged vertically. Clicking
 on a tab opens its contained component in the space between the tab and the next

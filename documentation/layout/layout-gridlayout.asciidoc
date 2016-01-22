@@ -7,6 +7,11 @@ layout: page
 [[layout.gridlayout]]
 = [classname]#GridLayout#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/grid-layout"]
+endif::web[]
+
 [classname]#GridLayout# container lays components out on a grid, defined by the
 number of columns and rows. The columns and rows of the grid serve as
 coordinates that are used for laying out components on the grid. Each component

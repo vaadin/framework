@@ -7,6 +7,11 @@ layout: page
 [[layout.formlayout]]
 = [classname]#FormLayout#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/form-layout"]
+endif::web[]
+
 [classname]#FormLayout# lays the components and their captions out in two
 columns, with optional indicators for required fields and errors that can be
 shown for each field. The field captions can have an icon in addition to the

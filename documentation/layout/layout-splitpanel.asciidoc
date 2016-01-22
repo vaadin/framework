@@ -7,11 +7,14 @@ layout: page
 [[layout.splitpanel]]
 = [classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel#
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/structure/"]
+endif::web[]
+
 ((("[classname]#HorizontalSplitPanel#", id="term.layout.splitpanel.horizontal", range="startofrange")))
 
-
 ((("[classname]#VerticalSplitPanel#", id="term.layout.splitpanel.vertical", range="startofrange")))
-
 
 [classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel# are a
 two-component containers that divide the available space into two areas to

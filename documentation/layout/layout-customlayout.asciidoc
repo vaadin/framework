@@ -7,6 +7,11 @@ layout: page
 [[layout.customlayout]]
 = Custom Layouts
 
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/custom-layout"]
+endif::web[]
+
 While it is possible to create almost any typical layout with the standard
 layout components, it is sometimes best to separate the layout completely from
 code. With the [classname]#CustomLayout# component, you can write your layout as
