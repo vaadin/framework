@@ -16,9 +16,10 @@ also use any other Sass compiler.
 == Compiling On the Fly
 
 The easiest way to use Sass themes during theme development is to let the Vaadin
-servlet compile them on the run. In this case, the SCSS source files are placed
-in the theme folder. Compilation is done each time the [filename]#styles.css# is
-requested from the server.
+servlet compile them at runtime. In runtime aka on-the-fly compilation only the
+SCSS source files are placed in the theme folder and each time the
+[filename]#styles.css# is requested from the server, the SCSS based theme is
+compiled.
 
 The on-the-fly compilation takes a bit time, so it is only available when the
 Vaadin servlet is in the development mode, as described in
@@ -27,6 +28,10 @@ Servlet Configuration Parameters">>. Also, it requires the theme compiler and
 all its dependencies to be in the class path of the servlet. At least for
 production, you must compile the theme to CSS, as described next.
 
+TIP: If the on-the-fly compilation don't seem to work, ensure your build script
+has not generated a pre-compiled CSS file. If styles.css file is found the
+servlet, the compilation is skipped. Delete existing styles.css file and disable
+theme compilation temporarily.
 
 [[themes.compiling.eclipse]]
 == Compiling in Eclipse
