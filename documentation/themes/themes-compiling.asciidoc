@@ -15,10 +15,11 @@ also use any other Sass compiler.
 [[themes.compiling.on-the-fly]]
 == Compiling On the Fly
 
-The easiest way to use Sass themes during theme development is to let the Vaadin
-servlet compile them on the run. In this case, the SCSS source files are placed
-in the theme folder. Compilation is done each time the [filename]#styles.css# is
-requested from the server.
+The easiest way to develop Sass themes is to compile them at runtime, when the page is loaded.
+The Vaadin servlet does this automatically if a compiled theme CSS file is not found from the theme folder.
+You need to have the SCSS source files placed in the theme folder.
+The theme is compiled when the [filename]#styles.css# is first requested from the server.
+If you edit the Sass theme, it is recompiled the next time you reload the page.
 
 The on-the-fly compilation takes a bit time, so it is only available when the
 Vaadin servlet is in the development mode, as described in
@@ -27,6 +28,9 @@ Servlet Configuration Parameters">>. Also, it requires the theme compiler and
 all its dependencies to be in the class path of the servlet. At least for
 production, you must compile the theme to CSS, as described next.
 
+NOTE: If the on-the-fly compilation does not seem to work, ensure that your build script has not generated a pre-compiled CSS file.
+If [filename]#styles.css# file is found the servlet, the compilation is skipped.
+Delete such an existing [filename]#styles.css# file and disable theme compilation temporarily.
 
 [[themes.compiling.eclipse]]
 == Compiling in Eclipse
@@ -153,10 +157,10 @@ Start with the following configuration:
     <property name="src-location" value="src" />
 
     ... other project build definitions ...
-            
+
     <!-- Name of the theme -->
     <property name="theme" value="book-examples"/>
-        
+
     <!-- Compilation result directory -->
     <property name="result" value="build/result"/>
   </target>
@@ -167,7 +171,7 @@ Start with the following configuration:
     <path id="compile.classpath">
         <!-- Source code to be compiled -->
         <pathelement path="${src-location}" />
-            
+
         <!-- Vaadin libraries and dependencies -->
         <fileset dir="${result}/lib">
             <include name="*.jar"/>
@@ -198,7 +202,7 @@ Then, you can compile the theme as follows:
           depends="init, resolve">
     <delete dir="${result}/VAADIN/themes/${theme}"/>
     <mkdir dir="${result}/VAADIN/themes/${theme}"/>
-    	
+
     <java classname="com.vaadin.sass.SassCompiler"
           fork="true">
       <classpath>
@@ -217,7 +221,3 @@ Then, you can compile the theme as follows:
   </target>
 </project>
 ----
-
-
-
-
