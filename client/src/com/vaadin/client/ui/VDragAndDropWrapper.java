@@ -45,6 +45,7 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
@@ -106,23 +107,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 final int deltaX = Math.abs(event.getClientX() - startX);
                 final int deltaY = Math.abs(event.getClientY() - startY);
                 if ((deltaX + deltaY) < MIN_PX_DELTA) {
-                    setFocusOnLastElement(event);
+                    Element clickedElement = WidgetUtil.getElementFromPoint(
+                            event.getClientX(), event.getClientY());
+                    clickedElement.focus();
                 }
-            }
-
-            private void setFocusOnLastElement(final MouseUpEvent event) {
-                Element el = event.getRelativeElement();
-                getLastChildElement(el).focus();
-            }
-
-            private Element getLastChildElement(Element el) {
-                do {
-                    if (el == null) {
-                        break;
-                    }
-                    el = el.getFirstChildElement();
-                } while (el.getFirstChildElement() != null);
-                return el;
             }
 
         }, MouseUpEvent.getType());
