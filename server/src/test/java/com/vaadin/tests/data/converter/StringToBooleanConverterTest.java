@@ -17,14 +17,18 @@ public class StringToBooleanConverterTest {
     StringToBooleanConverter localeConverter = new StringToBooleanConverter() {
         @Override
         public String getFalseString(Locale locale) {
+            Date d = new Date(3000000000000L);
             return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG,
-                    locale).format(new Date(3000000000000L));
+                    locale).format(
+                    d.getTime() + (d.getTimezoneOffset() + 120) * 60 * 1000L);
         }
 
         @Override
         public String getTrueString(Locale locale) {
+            Date d = new Date(2000000000000L);
             return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG,
-                    locale).format(new Date(2000000000000L));
+                    locale).format(
+                    d.getTime() + (d.getTimezoneOffset() + 120) * 60 * 1000L);
         }
     };
 
