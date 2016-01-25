@@ -722,14 +722,11 @@ filtering, a simple [literal]#++==++# check is performed. For other containers,
 the comparison implementation is container dependent, but should correspond to
 the in-memory null check.
 
-[classname]#Equal#,[classname]#Greater#,
- [classname]#Less#,
- [classname]#GreaterOrEqual#, and[classname]#LessOrEqual#:: ((("[classname]#Equal# (filter)")))
+[classname]#Equal#, [classname]#Greater#, [classname]#Less#, [classname]#GreaterOrEqual#, and [classname]#LessOrEqual#:: ((("[classname]#Equal# (filter)")))
 ((("[classname]#Greater# (filter)")))
 ((("[classname]#Less# (filter)")))
 ((("[classname]#GreaterOrEqual# (filter)")))
 ((("[classname]#LessOrEqual# (filter)")))
-+
 The comparison filter implementations compare the specified property value to
 the given constant and pass items for which the comparison result is true. The
 comparison operators are included in the abstract [classname]#Compare# class.
@@ -746,7 +743,7 @@ For the other filters, the property value type must implement the
 containers. Again for the other types of containers, the comparison is container
 dependent.
 
-[classname]#And#and[classname]#Or#:: ((("[classname]#And# (filter)")))
+[classname]#And# and [classname]#Or#:: ((("[classname]#And# (filter)")))
 ((("[classname]#Or# (filter)")))
 +
 These logical operator filters are composite filters that combine multiple other
@@ -756,9 +753,6 @@ filters.
 +
 The logical unary operator filter negates which items are passed by the filter
 given as the parameter.
-
-
-
 
 [[datamodel.container.filtered.custom]]
 === Implementing Custom Filters
