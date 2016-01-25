@@ -20,7 +20,7 @@ In the following, we set and read the property value from a
 [classname]#TextField# component, which implements the [interfacename]#Property#
 interface to allow accessing the field value.
 
-
+[source, java]
 ----
 final TextField tf = new TextField("Name");
         
@@ -83,7 +83,7 @@ user interface component (views) to allow editing or viewing the data model.
 A property can be bound to a component implementing the [classname]#Viewer#
 interface with [methodname]#setPropertyDataSource()#.
 
-
+[source, java]
 ----
 // Have a data model
 ObjectProperty property =
@@ -99,7 +99,7 @@ viewer.setPropertyDataSource(property);
 You can use the same method in the [classname]#Editor# interface to bind a
 component that allows editing a particular property type to a property.
 
-
+[source, java]
 ----
 // Have a data model
 ObjectProperty property =
@@ -110,7 +110,6 @@ TextField editor = new TextField("Edit Greeting");
         
 // Bind it to the data
 editor.setPropertyDataSource(property);
-
 ----
 
 As all field components implement the [classname]#Property# interface, you can
@@ -119,7 +118,7 @@ assuming that the viewer is able the view the object type of the field.
 Continuing from the above example, we can bind a [classname]#Label# to the
 [classname]#TextField# value:
 
-
+[source, java]
 ----
 Label viewer = new Label();
 viewer.setPropertyDataSource(editor);
@@ -143,7 +142,7 @@ property data source, or by calling the [methodname]#validate()# or
 The [classname]#ObjectProperty# class is a simple implementation of the
 [classname]#Property# interface that allows storing an arbitrary Java object.
 
-
+[source, java]
 ----
 // Have a component that implements Viewer interface
 final TextField tf = new TextField("Name");
@@ -158,7 +157,6 @@ ObjectProperty property =
 // Bind the property to the component
 tf.setPropertyDataSource(property);
 ----
-
 
 [[datamodel.properties.converter]]
 == Converting Between Property Type and Representation
@@ -179,7 +177,7 @@ application.
 The [methodname]#setConverter([interfacename]#Converter#)# method sets the
 converter for a field. The method is defined in [classname]#AbstractField#.
 
-
+[source, java]
 ----
 // Have an integer property
 final ObjectProperty<Integer> property =
@@ -233,7 +231,7 @@ the [package]#com.vaadin.data.util.converter# package.
 For example, let us assume that we have a simple [classname]#Complex# type for
 storing complex values.
 
-
+[source, java]
 ----
 public class ComplexConverter
        implements Converter<String, Complex> {
@@ -281,7 +279,7 @@ you need to implement one yourself. While you could implement the
 [interfacename]#ConverterFactory# interface, it is usually easier to just extend
 [classname]#DefaultConverterFactory#.
 
-
+[source, java]
 ----
 class MyConverterFactory extends DefaultConverterFactory {
     @Override
@@ -318,7 +316,7 @@ for the property type, as the type is often fixed in property implementations.
 The following example shows a simple implementation of the [classname]#Property#
 interface:
 
-
+[source, java]
 ----
 class MyProperty implements Property {
     Integer data     = 0;
@@ -394,6 +392,3 @@ or in the read-only mode. You should normally also implement at least the
 [classname]#ObjectProperty# class for an example of the implementation.
 
 endif::web[]
-
-
-
