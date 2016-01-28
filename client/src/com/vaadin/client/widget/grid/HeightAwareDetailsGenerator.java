@@ -22,7 +22,7 @@ package com.vaadin.client.widget.grid;
  * temporary workaround and might be removed or renamed at any time.
  * </p>
  * 
- * @since
+ * @since  7.6.1
  * @author Vaadin Ltd
  */
 @Deprecated
@@ -36,7 +36,7 @@ public interface HeightAwareDetailsGenerator extends DetailsGenerator {
      * temporary workaround and might be removed or renamed at any time.
      * </p>
      * 
-     * @since
+     * @since 7.6.1
      * @param rowIndex
      *            the index of the row for which to calculate details row height
      * @return height of the details row

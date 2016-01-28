@@ -524,7 +524,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
          * Fetches id from the row object that corresponds with the given
          * rowIndex.
          * 
-         * @since
+         * @since 7.6.1
          * @param rowIndex
          *            the index of the row for which to fetch the id
          * @return id of the row if such id exists, {@code null} otherwise
