@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.dataprovider;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Random;
 
 import com.vaadin.annotations.Widgetset;
@@ -27,6 +28,10 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 
 import elemental.json.JsonObject;
 
@@ -36,8 +41,10 @@ public class DummyDataProviderUI extends AbstractTestUI {
     public static class DummyDataComponent extends AbstractComponent {
 
         private DataProvider<ComplexPerson> dataProvider;
+        private Collection<ComplexPerson> data;
 
         public DummyDataComponent(Collection<ComplexPerson> data) {
+            this.data = data;
             dataProvider = DataProvider.create(data, this);
             dataProvider
                     .addDataGenerator(new TypedDataGenerator<ComplexPerson>() {
@@ -52,16 +59,47 @@ public class DummyDataProviderUI extends AbstractTestUI {
                     });
         }
 
+        void addItem(ComplexPerson person) {
+            if (data.add(person)) {
+                dataProvider.add(person);
+            }
+        }
+
+        void removeItem(ComplexPerson person) {
+            if (data.remove(person)) {
+                dataProvider.remove(person);
+            }
+        }
     }
+
+    private Random r = new Random(1337);
+    private List<ComplexPerson> persons = getPersons(20);
+    private DummyDataComponent dummy;
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new DummyDataComponent(getPersons(20)));
+        dummy = new DummyDataComponent(persons);
+
+        Button remove = new Button("Remove third", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                dummy.removeItem(persons.get(2));
+            }
+        });
+        Button add = new Button("Add new", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                dummy.addItem(ComplexPerson.create(r));
+            }
+        });
+        addComponent(new HorizontalLayout(add, remove));
+        addComponent(dummy);
     }
 
-    private Collection<ComplexPerson> getPersons(int count) {
-        Random r = new Random(1337);
-        Collection<ComplexPerson> c = new LinkedHashSet<ComplexPerson>();
+    private List<ComplexPerson> getPersons(int count) {
+        List<ComplexPerson> c = new ArrayList<ComplexPerson>();
         for (int i = 0; i < count; ++i) {
             c.add(ComplexPerson.create(r));
         }

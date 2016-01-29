@@ -61,6 +61,22 @@ public class DataSourceConnector extends AbstractExtensionConnector {
                     }
                 }
             }
+
+            @Override
+            public void add(JsonObject dataObject) {
+                ds.asList().add(dataObject);
+            }
+
+            @Override
+            public void drop(JsonObject dataObject) {
+                List<JsonObject> l = ds.asList();
+                for (int i = 0; i < l.size(); ++i) {
+                    if (l.get(i).toJson().equals(dataObject.toJson())) {
+                        l.remove(i);
+                        return;
+                    }
+                }
+            }
         });
 
         ServerConnector parent = getParent();

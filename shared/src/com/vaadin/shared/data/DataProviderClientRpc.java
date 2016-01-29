@@ -18,6 +18,7 @@ package com.vaadin.shared.data;
 import com.vaadin.shared.communication.ClientRpc;
 
 import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
 /**
  * RPC interface used by DataProvider to send data to the client-side.
@@ -47,5 +48,22 @@ public interface DataProviderClientRpc extends ClientRpc {
      *            array of new data
      */
     void setData(long firstIndex, JsonArray data);
+
+    /**
+     * Adds a new data object to the client-side DataSource. The new data object
+     * is added at the end of the data source.
+     * 
+     * @param dataObject
+     *            single added data object
+     */
+    void add(JsonObject dataObject);
+
+    /**
+     * Removes data from the client-side DataSource.
+     * 
+     * @param dataObject
+     *            single removed data object
+     */
+    void drop(JsonObject dataObject);
 
 }

@@ -79,6 +79,7 @@ public class DataProvider<T> extends AbstractExtension {
 
     private Collection<T> data;
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
+    private DataProviderClientRpc rpc;
 
     /**
      * Creates a new DataProvider with the given Collection.
@@ -88,6 +89,8 @@ public class DataProvider<T> extends AbstractExtension {
      */
     protected DataProvider(Collection<T> data) {
         this.data = data;
+
+        rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
     }
 
@@ -142,7 +145,7 @@ public class DataProvider<T> extends AbstractExtension {
             data.set(i++, getDataObject(item));
         }
 
-        getRpcProxy(DataProviderClientRpc.class).setData(firstIndex, data);
+        rpc.setData(firstIndex, data);
     }
 
     /**
@@ -171,6 +174,27 @@ public class DataProvider<T> extends AbstractExtension {
      */
     protected DataRequestRpc createRpc() {
         return new DataRequestRpcImpl();
+    }
+
+    /**
+     * Informs the DataProvider that an item has been added. It is assumed to be
+     * the last item in the collection.
+     * 
+     * @param item
+     *            item added to collection
+     */
+    public void add(T item) {
+        rpc.add(getDataObject(item));
+    }
+
+    /**
+     * Informs the DataProvider that an item has been removed.
+     * 
+     * @param item
+     *            item removed from collection
+     */
+    public void remove(T item) {
+        rpc.drop(getDataObject(item));
     }
 
 }

@@ -48,6 +48,13 @@ public class DummyDataConnector extends AbstractComponentConnector implements
         dataSource.setDataChangeHandler(new AbstractDataChangeHandler() {
 
             @Override
+            public void dataRemoved(int firstRowIndex, int numberOfRows) {
+                for (int i = 0; i < numberOfRows; ++i) {
+                    getWidget().remove(firstRowIndex);
+                }
+            }
+
+            @Override
             public void dataAdded(int firstRowIndex, int numberOfRows) {
                 for (int i = 0; i < numberOfRows; ++i) {
                     getWidget().add(
@@ -57,5 +64,4 @@ public class DummyDataConnector extends AbstractComponentConnector implements
             }
         });
     }
-
 }
