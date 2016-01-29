@@ -19,6 +19,11 @@ import com.vaadin.shared.communication.ClientRpc;
 
 import elemental.json.JsonArray;
 
+/**
+ * RPC interface used by DataProvider to send data to the client-side.
+ * 
+ * @since
+ */
 public interface DataProviderClientRpc extends ClientRpc {
 
     /**

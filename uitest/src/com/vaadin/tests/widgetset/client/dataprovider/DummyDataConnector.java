@@ -16,7 +16,7 @@
 package com.vaadin.tests.widgetset.client.dataprovider;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.vaadin.client.data.DataChangeHandler;
+import com.vaadin.client.data.AbstractDataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.HasDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -45,23 +45,7 @@ public class DummyDataConnector extends AbstractComponentConnector implements
     @Override
     public void setDataSource(DataSource<JsonObject> ds) {
         dataSource = ds;
-        dataSource.setDataChangeHandler(new DataChangeHandler() {
-
-            @Override
-            public void resetDataAndSize(int estimatedNewDataSize) {
-            }
-
-            @Override
-            public void dataUpdated(int firstRowIndex, int numberOfRows) {
-            }
-
-            @Override
-            public void dataRemoved(int firstRowIndex, int numberOfRows) {
-            }
-
-            @Override
-            public void dataAvailable(int firstRowIndex, int numberOfRows) {
-            }
+        dataSource.setDataChangeHandler(new AbstractDataChangeHandler() {
 
             @Override
             public void dataAdded(int firstRowIndex, int numberOfRows) {

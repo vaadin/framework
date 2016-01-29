@@ -16,6 +16,7 @@
 package com.vaadin.server.communication.data.typed;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.data.DataProviderClientRpc;
@@ -32,6 +33,28 @@ import elemental.json.JsonObject;
  * @since
  */
 public class DataProvider<T> extends AbstractExtension {
+
+    /**
+     * Creates the appropriate type of DataProvider based on the type of
+     * Collection provided to the method.
+     * <p>
+     * <strong>Note:</strong> this method will also extend the given component
+     * with the newly created DataProvider. The user should <strong>not</strong>
+     * call the {@link #extend(com.vaadin.server.AbstractClientConnector)}
+     * method explicitly.
+     * 
+     * @param data
+     *            collection of data objects
+     * @param component
+     *            component to extend with the data provider
+     * @return created data provider
+     */
+    public static <V> DataProvider<V> create(Collection<V> data,
+            AbstractComponent component) {
+        DataProvider<V> dataProvider = new DataProvider<V>(data);
+        dataProvider.extend(component);
+        return dataProvider;
+    }
 
     /**
      * Simple implementation of collection data provider communication. All data
@@ -55,20 +78,16 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     private Collection<T> data;
+    private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
 
     /**
-     * Creates a new DataProvider, connecting it to given Collection and
-     * Component
+     * Creates a new DataProvider with the given Collection.
      * 
      * @param data
      *            collection of data to use
-     * @param component
-     *            component to extend
      */
-    public DataProvider(Collection<T> data, AbstractComponent component) {
+    protected DataProvider(Collection<T> data) {
         this.data = data;
-        extend(component);
-
         registerRpc(createRpc());
     }
 
@@ -85,6 +104,26 @@ public class DataProvider<T> extends AbstractExtension {
             getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
             pushRows(0, data);
         }
+    }
+
+    /**
+     * Adds a TypedDataGenerator to this DataProvider.
+     * 
+     * @param generator
+     *            typed data generator
+     */
+    public void addDataGenerator(TypedDataGenerator<T> generator) {
+        generators.add(generator);
+    }
+
+    /**
+     * Removes a TypedDataGenerator from this DataProvider.
+     * 
+     * @param generator
+     *            typed data generator
+     */
+    public void removeDataGenerator(TypedDataGenerator<T> generator) {
+        generators.add(generator);
     }
 
     /**
@@ -117,9 +156,9 @@ public class DataProvider<T> extends AbstractExtension {
     protected JsonObject getDataObject(T item) {
         JsonObject dataObject = Json.createObject();
 
-        dataObject.put("k", item.toString());
-
-        // TODO: Add data generator stuff..
+        for (TypedDataGenerator<T> generator : generators) {
+            generator.generateData(item, dataObject);
+        }
 
         return dataObject;
     }
