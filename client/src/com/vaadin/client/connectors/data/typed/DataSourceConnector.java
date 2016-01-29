@@ -15,14 +15,17 @@
  */
 package com.vaadin.client.connectors.data.typed;
 
+import java.util.List;
+
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.HasDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.server.communication.data.typed.DataProvider;
+import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.ui.Connect;
 
+import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
@@ -33,10 +36,33 @@ import elemental.json.JsonObject;
 @Connect(DataProvider.class)
 public class DataSourceConnector extends AbstractExtensionConnector {
 
-    DataSource<JsonObject> ds = new ListDataSource<JsonObject>();
+    ListDataSource<JsonObject> ds = new ListDataSource<JsonObject>();
 
     @Override
     protected void extend(ServerConnector target) {
+        registerRpc(DataProviderClientRpc.class, new DataProviderClientRpc() {
+
+            @Override
+            public void resetSize(long size) {
+                // Server will provide the data we need.
+                ds.asList().clear();
+            }
+
+            @Override
+            public void setData(long firstIndex, JsonArray data) {
+                List<JsonObject> l = ds.asList();
+                assert firstIndex <= l.size() : "Gap in data. First Index: "
+                        + firstIndex + ", Size: " + l.size();
+                for (long i = 0; i < data.length(); ++i) {
+                    if (i + firstIndex == l.size()) {
+                        l.add(data.getObject((int) i));
+                    } else if (i + firstIndex < l.size()) {
+                        l.set((int) (i + firstIndex), data.getObject((int) i));
+                    }
+                }
+            }
+        });
+
         ServerConnector parent = getParent();
         if (parent instanceof HasDataSource) {
             ((HasDataSource) parent).setDataSource(ds);
@@ -44,5 +70,4 @@ public class DataSourceConnector extends AbstractExtensionConnector {
             assert false : "Parent not implementing HasDataSource";
         }
     }
-
 }
