@@ -248,7 +248,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         if (target instanceof HasDataSource) {
-            ((HasDataSource<JsonObject>) target).setDataSource(dataSource);
+            ((HasDataSource) target).setDataSource(dataSource);
         } else {
             throw new IllegalArgumentException(
                     "Parent connector does not implement HasDataSource");

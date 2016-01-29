@@ -48,9 +48,9 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.HasDataSource;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -112,7 +112,7 @@ import elemental.json.JsonValue;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout, DeferredWorker, HasDataSource<JsonObject> {
+        SimpleManagedLayout, DeferredWorker, HasDataSource {
 
     private static final class CustomStyleGenerator implements
             CellStyleGenerator<JsonObject>, RowStyleGenerator<JsonObject> {

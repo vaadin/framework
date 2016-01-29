@@ -15,12 +15,14 @@
  */
 package com.vaadin.client.data;
 
+import elemental.json.JsonObject;
+
 /**
  * Interface describing a class that supports setting a {@link DataSource}.
  * 
  * @since
  */
-public interface HasDataSource<T> {
+public interface HasDataSource {
 
-    public void setDataSource(DataSource<T> ds);
+    public void setDataSource(DataSource<JsonObject> ds);
 }
