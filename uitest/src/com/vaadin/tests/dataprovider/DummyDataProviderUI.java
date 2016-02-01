@@ -56,6 +56,10 @@ public class DummyDataProviderUI extends AbstractTestUI {
                                     + data.getFirstName();
                             dataObject.put("name", name);
                         }
+
+                        @Override
+                        public void destroyData(ComplexPerson data) {
+                        }
                     });
         }
 
@@ -72,8 +76,10 @@ public class DummyDataProviderUI extends AbstractTestUI {
         }
     }
 
-    private Random r = new Random(1337);
-    private List<ComplexPerson> persons = getPersons(20);
+    public static final int RANDOM_SEED = 1337;
+    public static final int PERSON_COUNT = 20;
+    private Random r = new Random(RANDOM_SEED);
+    private List<ComplexPerson> persons = createPersons(PERSON_COUNT, r);
     private DummyDataComponent dummy;
 
     @Override
@@ -98,7 +104,7 @@ public class DummyDataProviderUI extends AbstractTestUI {
         addComponent(dummy);
     }
 
-    private List<ComplexPerson> getPersons(int count) {
+    public static List<ComplexPerson> createPersons(int count, Random r) {
         List<ComplexPerson> c = new ArrayList<ComplexPerson>();
         for (int i = 0; i < count; ++i) {
             c.add(ComplexPerson.create(r));

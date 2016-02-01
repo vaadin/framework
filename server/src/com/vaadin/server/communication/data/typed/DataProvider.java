@@ -15,11 +15,15 @@
  */
 package com.vaadin.server.communication.data.typed;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.data.DataProviderClientRpc;
+import com.vaadin.shared.data.DataProviderConstants;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.ui.AbstractComponent;
 
@@ -28,7 +32,13 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * DataProvider for Collection "container".
+ * DataProvider for Collections. This class takes care of sending data objects
+ * stored in a Collection from the server-side to the client-side. It uses
+ * {@link TypedDataGenerator}s to write a {@link JsonObject} representing each
+ * data object.
+ * <p>
+ * This is an implementation that does not provide any kind of lazy loading. All
+ * data is sent to the client-side on the initial client response.
  * 
  * @since
  */
@@ -57,6 +67,112 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
+     * A class for handling currently active data and dropping data that is no
+     * longer needed. Data tracking is based on key string provided by
+     * {@link DataKeyMapper}.
+     * <p>
+     * When the {@link DataProvider} is pushing new data to the client-side via
+     * {@link DataProvider#pushData(long, Collection)},
+     * {@link #addActiveData(Collection)} and {@link #cleanUp(Collection)} are
+     * called with the same parameter. In the clean up method any dropped data
+     * objects that are not in the given collection will be cleaned up and
+     * {@link TypedDataGenerator#destroyData(Object)} will be called for them.
+     */
+    protected class ActiveDataHandler implements Serializable,
+            TypedDataGenerator<T> {
+
+        /**
+         * Set of key strings for currently active data objects
+         */
+        private final Set<String> activeData = new HashSet<String>();
+
+        /**
+         * Set of key strings for data objects dropped on the client. This set
+         * is used to clean up old data when it's no longer needed.
+         */
+        private final Set<String> droppedData = new HashSet<String>();
+
+        /**
+         * Adds given objects as currently active objects.
+         * 
+         * @param dataObjects
+         *            collection of new active data objects
+         */
+        public void addActiveData(Collection<T> dataObjects) {
+            for (T data : dataObjects) {
+                if (!activeData.contains(getKeyMapper().key(data))) {
+                    activeData.add(getKeyMapper().key(data));
+                }
+            }
+        }
+
+        /**
+         * Executes the data destruction for dropped data that is not sent to
+         * the client. This method takes most recently sent data objects in a
+         * collection. Doing the clean up like this prevents the
+         * {@link ActiveDataHandler} from creating new keys for rows that were
+         * dropped but got re-requested by the client-side. In the case of
+         * having all data at the client, the collection should be all the data
+         * in the back end.
+         * 
+         * @see DataProvider#pushData(long, Collection)
+         * @param dataObjects
+         *            collection of most recently sent data to the client
+         */
+        public void cleanUp(Collection<T> dataObjects) {
+            Collection<String> keys = new HashSet<String>();
+            for (T data : dataObjects) {
+                keys.add(getKeyMapper().key(data));
+            }
+
+            // Remove still active rows that were dropped by the client
+            droppedData.removeAll(keys);
+            // Do data clean up for object no longer needed.
+            dropData(droppedData);
+            droppedData.clear();
+        }
+
+        /**
+         * Marks a data object identified by given key string to be dropped.
+         * 
+         * @param key
+         *            key string
+         */
+        public void dropActiveData(String key) {
+            if (activeData.contains(key)) {
+                droppedData.add(key);
+            }
+        }
+
+        /**
+         * Returns the collection of all currently active data.
+         * 
+         * @return collection of active data objects
+         */
+        public Collection<T> getActiveData() {
+            HashSet<T> hashSet = new HashSet<T>();
+            for (String key : activeData) {
+                hashSet.add(getKeyMapper().get(key));
+            }
+            return hashSet;
+        }
+
+        @Override
+        public void generateData(T data, JsonObject jsonObject) {
+            // Write the key string for given data object
+            jsonObject.put(DataProviderConstants.KEY, getKeyMapper().key(data));
+        }
+
+        @Override
+        public void destroyData(T data) {
+            // Remove from active data set
+            activeData.remove(getKeyMapper().key(data));
+            // Drop the registered key
+            getKeyMapper().remove(data);
+        }
+    }
+
+    /**
      * Simple implementation of collection data provider communication. All data
      * is sent by server automatically and no data is requested by client.
      */
@@ -74,12 +190,14 @@ public class DataProvider<T> extends AbstractExtension {
         public void dropRows(JsonArray rowKeys) {
             // FIXME: What should I do with these?
         }
-
     }
 
     private Collection<T> data;
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
     private DataProviderClientRpc rpc;
+    // TODO: Allow customizing the used key mapper
+    private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
+    private ActiveDataHandler handler;
 
     /**
      * Creates a new DataProvider with the given Collection.
@@ -92,6 +210,8 @@ public class DataProvider<T> extends AbstractExtension {
 
         rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
+        handler = new ActiveDataHandler();
+        addDataGenerator(handler);
     }
 
     /**
@@ -105,7 +225,7 @@ public class DataProvider<T> extends AbstractExtension {
 
         if (initial) {
             getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
-            pushRows(0, data);
+            pushData(0, data);
         }
     }
 
@@ -130,22 +250,24 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Sends given row range to the client.
+     * Sends given data collection to the client-side.
      * 
      * @param firstIndex
-     *            first index
-     * @param items
-     *            items to send as an iterable
+     *            first index of pushed data
+     * @param data
+     *            data objects to send as an iterable
      */
-    protected void pushRows(long firstIndex, Iterable<T> items) {
-        JsonArray data = Json.createArray();
+    protected void pushData(long firstIndex, Collection<T> data) {
+        JsonArray dataArray = Json.createArray();
 
         int i = 0;
-        for (T item : items) {
-            data.set(i++, getDataObject(item));
+        for (T item : data) {
+            dataArray.set(i++, getDataObject(item));
         }
 
-        rpc.setData(firstIndex, data);
+        rpc.setData(firstIndex, dataArray);
+        handler.addActiveData(data);
+        handler.cleanUp(data);
     }
 
     /**
@@ -164,6 +286,35 @@ public class DataProvider<T> extends AbstractExtension {
         }
 
         return dataObject;
+    }
+
+    /**
+     * Drops data objects identified by given keys from memory. This will invoke
+     * {@link TypedDataGenerator#destroyData} for each of those objects.
+     * 
+     * @param droppedKeys
+     *            collection of dropped keys
+     */
+    private void dropData(Collection<String> droppedKeys) {
+        for (String key : droppedKeys) {
+            assert key != null : "Bookkeepping failure. Dropping a null key";
+
+            T data = getKeyMapper().get(key);
+            assert data != null : "Bookkeepping failure. No data object to match key";
+
+            for (TypedDataGenerator<T> g : generators) {
+                g.destroyData(data);
+            }
+        }
+    }
+
+    /**
+     * Gets the {@link DataKeyMapper} instance used by this {@link DataProvider}
+     * 
+     * @return key mapper
+     */
+    public DataKeyMapper<T> getKeyMapper() {
+        return keyMapper;
     }
 
     /**

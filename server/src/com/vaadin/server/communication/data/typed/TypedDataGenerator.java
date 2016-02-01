@@ -27,8 +27,8 @@ import elemental.json.JsonObject;
 public interface TypedDataGenerator<T> extends Serializable {
 
     /**
-     * Adds data for given object to JsonObject. This JsonObject will be sent to
-     * client-side DataSource.
+     * Adds data for given object to {@link JsonObject}. This JsonObject will be
+     * sent to client-side DataSource.
      * 
      * @param data
      *            data object
@@ -36,4 +36,14 @@ public interface TypedDataGenerator<T> extends Serializable {
      *            json object being sent to the client
      */
     void generateData(T data, JsonObject jsonObject);
+
+    /**
+     * Informs the {@link TypedDataGenerator} that given data has been dropped
+     * and is no longer needed. This method should clean up any unneeded
+     * information stored for this data.
+     * 
+     * @param data
+     *            dropped data
+     */
+    public void destroyData(T data);
 }

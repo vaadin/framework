@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.data.DataProviderConstants;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.TabIndexState;
 
@@ -86,7 +87,7 @@ public class GridState extends TabIndexState {
      * 
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
-    public static final String JSONKEY_ROWKEY = "k";
+    public static final String JSONKEY_ROWKEY = DataProviderConstants.KEY;
 
     /**
      * The key in which a row's generated style can be found
