@@ -15,28 +15,41 @@
  */
 package com.vaadin.client.connectors.data.typed;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.HasDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.server.communication.data.typed.DataProvider;
 import com.vaadin.shared.data.DataProviderClientRpc;
+import com.vaadin.shared.data.DataProviderConstants;
+import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
 
+import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * A simple connector for DataProvider class.
+ * A simple connector for DataProvider class. Based on {@link ListDataSource}
+ * and does not support lazy loading or paging.
  * 
  * @since
  */
 @Connect(DataProvider.class)
 public class DataSourceConnector extends AbstractExtensionConnector {
 
-    ListDataSource<JsonObject> ds = new ListDataSource<JsonObject>();
+    private Map<String, JsonObject> keyToJson = new HashMap<String, JsonObject>();
+    private Set<String> droppedKeys = new HashSet<String>();
+    private ListDataSource<JsonObject> ds = new ListDataSource<JsonObject>();
+    private boolean pendingDrop = false;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -44,8 +57,12 @@ public class DataSourceConnector extends AbstractExtensionConnector {
 
             @Override
             public void resetSize(long size) {
-                // Server will provide the data we need.
                 ds.asList().clear();
+                // Inform the server-side that all keys are now dropped.
+                for (String key : keyToJson.keySet()) {
+                    dropKey(key);
+                }
+                sendDroppedKeys();
             }
 
             @Override
@@ -54,12 +71,17 @@ public class DataSourceConnector extends AbstractExtensionConnector {
                 assert firstIndex <= l.size() : "Gap in data. First Index: "
                         + firstIndex + ", Size: " + l.size();
                 for (long i = 0; i < data.length(); ++i) {
+                    JsonObject object = data.getObject((int) i);
                     if (i + firstIndex == l.size()) {
-                        l.add(data.getObject((int) i));
+                        l.add(object);
                     } else if (i + firstIndex < l.size()) {
-                        l.set((int) (i + firstIndex), data.getObject((int) i));
+                        int index = (int) (i + firstIndex);
+                        dropKey(getKey(l.get(index)));
+                        l.set(index, object);
                     }
+                    keyToJson.put(getKey(object), object);
                 }
+                sendDroppedKeys();
             }
 
             @Override
@@ -68,13 +90,11 @@ public class DataSourceConnector extends AbstractExtensionConnector {
             }
 
             @Override
-            public void drop(JsonObject dataObject) {
-                List<JsonObject> l = ds.asList();
-                for (int i = 0; i < l.size(); ++i) {
-                    if (l.get(i).toJson().equals(dataObject.toJson())) {
-                        l.remove(i);
-                        return;
-                    }
+            public void drop(String key) {
+                if (keyToJson.containsKey(key)) {
+                    ds.asList().remove(keyToJson.get(key));
+                    dropKey(key);
+                    sendDroppedKeys();
                 }
             }
         });
@@ -85,5 +105,69 @@ public class DataSourceConnector extends AbstractExtensionConnector {
         } else {
             assert false : "Parent not implementing HasDataSource";
         }
+    }
+
+    /**
+     * Marks a key as dropped. Call to
+     * {@link DataSourceConnector#sendDroppedKeys()} should be called to make
+     * sure the information is sent to the server-side.
+     * 
+     * @param key
+     *            dropped key
+     */
+    private void dropKey(String key) {
+        if (keyToJson.containsKey(key)) {
+            droppedKeys.add(key);
+            keyToJson.remove(key);
+        }
+    }
+
+    /**
+     * Sends dropped keys to the server-side with a deferred scheduled command.
+     * Multiple calls to this method will only result to one command being
+     * executed.
+     */
+    private void sendDroppedKeys() {
+        if (pendingDrop) {
+            return;
+        }
+
+        pendingDrop = true;
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                pendingDrop = false;
+                if (droppedKeys.isEmpty()) {
+                    return;
+                }
+
+                JsonArray keyArray = Json.createArray();
+                int i = 0;
+                for (String key : droppedKeys) {
+                    keyArray.set(i++, key);
+                }
+
+                getRpcProxy(DataRequestRpc.class).dropRows(keyArray);
+
+                // Force RPC since it's delayed.
+                getConnection().getServerRpcQueue().flush();
+
+                droppedKeys.clear();
+            }
+        });
+    }
+
+    /**
+     * Gets the mapping key from given {@link JsonObject}.
+     * 
+     * @param jsonObject
+     *            json object to get the key from
+     */
+    protected String getKey(JsonObject jsonObject) {
+        if (jsonObject.hasKey(DataProviderConstants.KEY)) {
+            return jsonObject.getString(DataProviderConstants.KEY);
+        }
+        return null;
     }
 }

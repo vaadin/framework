@@ -59,11 +59,11 @@ public interface DataProviderClientRpc extends ClientRpc {
     void add(JsonObject dataObject);
 
     /**
-     * Removes data from the client-side DataSource.
+     * Removes data identified by given key from the client-side DataSource.
      * 
-     * @param dataObject
-     *            single removed data object
+     * @param key
+     *            key identifying the object to be removed
      */
-    void drop(JsonObject dataObject);
+    void drop(String key);
 
 }

@@ -187,8 +187,13 @@ public class DataProvider<T> extends AbstractExtension {
         }
 
         @Override
-        public void dropRows(JsonArray rowKeys) {
-            // FIXME: What should I do with these?
+        public void dropRows(JsonArray keys) {
+            for (int i = 0; i < keys.length(); ++i) {
+                handler.dropActiveData(keys.getString(i));
+            }
+
+            // Use the whole data as the ones sent to the client.
+            handler.cleanUp(data);
         }
     }
 
@@ -328,24 +333,26 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Informs the DataProvider that an item has been added. It is assumed to be
-     * the last item in the collection.
+     * Informs the DataProvider that a data object has been added. It is assumed
+     * to be the last object in the collection.
      * 
-     * @param item
-     *            item added to collection
+     * @param data
+     *            data object added to collection
      */
-    public void add(T item) {
-        rpc.add(getDataObject(item));
+    public void add(T data) {
+        rpc.add(getDataObject(data));
     }
 
     /**
-     * Informs the DataProvider that an item has been removed.
+     * Informs the DataProvider that a data object has been removed.
      * 
-     * @param item
-     *            item removed from collection
+     * @param data
+     *            data object removed from collection
      */
-    public void remove(T item) {
-        rpc.drop(getDataObject(item));
+    public void remove(T data) {
+        if (handler.getActiveData().contains(data)) {
+            rpc.drop(getKeyMapper().key(data));
+        }
     }
 
 }
