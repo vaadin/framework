@@ -26,7 +26,7 @@ navigation views.
 
 To learn more about Vaadin CDI, the link:[Vaadin CDI Tutorial] gives a hands-on
 introduction. The source code of the CDI Tutorial demo is available for browsing
-or cloning at https://github.com/vaadin-samples/cdi-tutorial.
+or cloning at https://github.com/vaadin/cdi-tutorial.
 
 [[advanced.cdi.cdi]]
 == CDI Overview
