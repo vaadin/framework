@@ -66,4 +66,12 @@ public interface DataProviderClientRpc extends ClientRpc {
      */
     void drop(String key);
 
+    /**
+     * Updates an array of objects based on their identifying key.
+     * 
+     * @param data
+     *            array of updated data
+     */
+    void updateData(JsonArray data);
+
 }

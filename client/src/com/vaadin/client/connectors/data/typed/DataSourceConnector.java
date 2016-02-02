@@ -98,6 +98,23 @@ public class DataSourceConnector extends AbstractExtensionConnector {
                     sendDroppedKeys();
                 }
             }
+
+            @Override
+            public void updateData(JsonArray data) {
+                List<JsonObject> list = ds.asList();
+                for (int i = 0; i < data.length(); ++i) {
+                    JsonObject json = data.getObject(i);
+                    String key = getKey(json);
+
+                    if (keyToJson.containsKey(key)) {
+                        int index = list.indexOf(keyToJson.get(key));
+                        list.set(index, json);
+                    } else {
+                        dropKey(key);
+                    }
+                }
+                sendDroppedKeys();
+            }
         });
 
         ServerConnector parent = getParent();
@@ -117,8 +134,8 @@ public class DataSourceConnector extends AbstractExtensionConnector {
      *            dropped key
      */
     private void dropKey(String key) {
+        droppedKeys.add(key);
         if (keyToJson.containsKey(key)) {
-            droppedKeys.add(key);
             keyToJson.remove(key);
         }
     }

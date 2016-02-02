@@ -62,6 +62,15 @@ public class DummyDataConnector extends AbstractComponentConnector implements
                                     .toJson()));
                 }
             }
+
+            @Override
+            public void dataUpdated(int firstRowIndex, int numberOfRows) {
+                for (int i = 0; i < numberOfRows; ++i) {
+                    VLabel label = (VLabel) getWidget().getWidget(
+                            i + firstRowIndex);
+                    label.setText(dataSource.getRow(i + firstRowIndex).toJson());
+                }
+            }
         });
     }
 }

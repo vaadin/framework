@@ -199,6 +199,7 @@ public class DataProvider<T> extends AbstractExtension {
 
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
     private boolean reset = false;
+    private final Set<T> updatedData = new HashSet<T>();
 
     private Collection<T> data;
     private DataProviderClientRpc rpc;
@@ -233,7 +234,19 @@ public class DataProvider<T> extends AbstractExtension {
             getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
             pushData(0, data);
             reset = false;
+            updatedData.clear();
         }
+
+        if (updatedData.isEmpty()) {
+            return;
+        }
+
+        JsonArray dataArray = Json.createArray();
+        int i = 0;
+        for (T data : updatedData) {
+            dataArray.set(i++, getDataObject(data));
+        }
+        rpc.updateData(dataArray);
     }
 
     /**
@@ -369,4 +382,17 @@ public class DataProvider<T> extends AbstractExtension {
         markAsDirty();
     }
 
+    /**
+     * Informs the DataProvider that a data object has been updated.
+     * 
+     * @param data
+     *            updated data object
+     */
+    public void refresh(T data) {
+        if (updatedData.isEmpty()) {
+            markAsDirty();
+        }
+
+        updatedData.add(data);
+    }
 }

@@ -16,8 +16,10 @@
 package com.vaadin.tests.dataprovider;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +95,8 @@ public class DummyDataProviderTest extends SingleBrowserTest {
     }
 
     private void createPersonObjects() {
+        personObjects.clear();
+
         for (ComplexPerson p : persons) {
             JsonObject j = Json.createObject();
             j.put(DataProviderConstants.KEY, personToKeyMap.get(p));
@@ -152,5 +156,30 @@ public class DummyDataProviderTest extends SingleBrowserTest {
         assertEquals("Data not removed", json, text);
 
         assertNoErrorNotifications();
+    }
+
+    @Test
+    public void testEditFirstItem() {
+        persons.retainAll(Arrays.asList(persons.get(0)));
+        createPersonObjects();
+
+        openTestURL();
+
+        String json = personObjects.get(0).toJson();
+        String text = findElements(By.className("v-label")).get(1).getText();
+        assertEquals("Initial data did not match", json, text);
+
+        $(ButtonElement.class).id("edit").click();
+
+        persons.get(0).setFirstName("Foo");
+        createPersonObjects();
+
+        json = personObjects.get(0).toJson();
+
+        assertFalse("JsonObject of edited person was not updated",
+                json.equals(text));
+
+        text = findElements(By.className("v-label")).get(1).getText();
+        assertEquals("Modified data did not match", json, text);
     }
 }

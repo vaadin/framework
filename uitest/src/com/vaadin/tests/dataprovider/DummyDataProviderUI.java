@@ -85,6 +85,10 @@ public class DummyDataProviderUI extends AbstractTestUI {
             Collections.sort(data, comparator);
             dataProvider.reset();
         }
+
+        public void update(ComplexPerson p) {
+            dataProvider.refresh(p);
+        }
     }
 
     public static final int RANDOM_SEED = 1337;
@@ -128,13 +132,23 @@ public class DummyDataProviderUI extends AbstractTestUI {
                 dummy.sort(nameComparator);
             }
         });
+        Button edit = new Button("Edit first", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                ComplexPerson p = persons.get(0);
+                p.setFirstName("Foo");
+                dummy.update(p);
+            }
+        });
 
         // Button Ids
         remove.setId("remove");
         add.setId("add");
         sort.setId("sort");
+        edit.setId("edit");
 
-        addComponent(new HorizontalLayout(add, remove, sort));
+        addComponent(new HorizontalLayout(add, remove, sort, edit));
         addComponent(dummy);
     }
 
