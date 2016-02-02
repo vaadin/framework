@@ -17,6 +17,8 @@ package com.vaadin.tests.dataprovider;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -41,10 +43,14 @@ public class DummyDataProviderUI extends AbstractTestUI {
     public static class DummyDataComponent extends AbstractComponent {
 
         private DataProvider<ComplexPerson> dataProvider;
-        private Collection<ComplexPerson> data;
+        private List<ComplexPerson> data;
 
         public DummyDataComponent(Collection<ComplexPerson> data) {
-            this.data = data;
+            if (data instanceof List) {
+                this.data = (List<ComplexPerson>) data;
+            } else {
+                this.data = new ArrayList<ComplexPerson>(data);
+            }
             dataProvider = DataProvider.create(data, this);
             dataProvider
                     .addDataGenerator(new TypedDataGenerator<ComplexPerson>() {
@@ -74,10 +80,25 @@ public class DummyDataProviderUI extends AbstractTestUI {
                 dataProvider.remove(person);
             }
         }
+
+        public void sort(Comparator<ComplexPerson> comparator) {
+            Collections.sort(data, comparator);
+            dataProvider.reset();
+        }
     }
 
     public static final int RANDOM_SEED = 1337;
     public static final int PERSON_COUNT = 20;
+    public static final Comparator<ComplexPerson> nameComparator = new Comparator<ComplexPerson>() {
+
+        @Override
+        public int compare(ComplexPerson p1, ComplexPerson p2) {
+            int fn = p1.getFirstName().compareTo(p2.getFirstName());
+            int ln = p1.getLastName().compareTo(p2.getLastName());
+            return fn != 0 ? fn : ln;
+        }
+    };
+
     private Random r = new Random(RANDOM_SEED);
     private List<ComplexPerson> persons = createPersons(PERSON_COUNT, r);
     private DummyDataComponent dummy;
@@ -100,7 +121,20 @@ public class DummyDataProviderUI extends AbstractTestUI {
                 dummy.addItem(ComplexPerson.create(r));
             }
         });
-        addComponent(new HorizontalLayout(add, remove));
+        Button sort = new Button("Sort content", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                dummy.sort(nameComparator);
+            }
+        });
+
+        // Button Ids
+        remove.setId("remove");
+        add.setId("add");
+        sort.setId("sort");
+
+        addComponent(new HorizontalLayout(add, remove, sort));
         addComponent(dummy);
     }
 

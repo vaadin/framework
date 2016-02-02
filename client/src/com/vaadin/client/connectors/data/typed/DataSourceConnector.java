@@ -59,7 +59,8 @@ public class DataSourceConnector extends AbstractExtensionConnector {
             public void resetSize(long size) {
                 ds.asList().clear();
                 // Inform the server-side that all keys are now dropped.
-                for (String key : keyToJson.keySet()) {
+                Set<String> keySet = new HashSet<String>(keyToJson.keySet());
+                for (String key : keySet) {
                     dropKey(key);
                 }
                 sendDroppedKeys();

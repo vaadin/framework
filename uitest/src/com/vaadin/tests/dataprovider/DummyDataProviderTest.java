@@ -17,7 +17,11 @@ package com.vaadin.tests.dataprovider;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.junit.Test;
@@ -25,6 +29,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.shared.data.DataProviderConstants;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -33,6 +38,32 @@ import elemental.json.JsonObject;
 
 public class DummyDataProviderTest extends SingleBrowserTest {
 
+    // Each test uses a set of person objects (generated json) that is supposed
+    // to match the data sent to the client-side.
+    private List<JsonObject> personObjects = new ArrayList<JsonObject>();
+    // Persons are created exactly the same way as in the test, so we should
+    // have identical data.
+    private List<ComplexPerson> persons = DummyDataProviderUI.createPersons(
+            DummyDataProviderUI.PERSON_COUNT, new Random(
+                    DummyDataProviderUI.RANDOM_SEED));
+    // For each person we generate a string key, that should match the one
+    // DataProvider gives to it.
+    private Map<ComplexPerson, String> personToKeyMap = new HashMap<ComplexPerson, String>();
+
+    {
+        int key = 0;
+        for (ComplexPerson p : persons) {
+            personToKeyMap.put(p, "" + (++key));
+        }
+    }
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        setDebug(true);
+    }
+
     @Override
     protected Class<?> getUIClass() {
         return DummyDataProviderUI.class;
@@ -40,9 +71,7 @@ public class DummyDataProviderTest extends SingleBrowserTest {
 
     @Test
     public void testVerifyJsonContent() {
-        Random r = new Random(DummyDataProviderUI.RANDOM_SEED);
-        List<ComplexPerson> persons = DummyDataProviderUI.createPersons(
-                DummyDataProviderUI.PERSON_COUNT, r);
+        createPersonObjects();
 
         openTestURL();
 
@@ -54,13 +83,74 @@ public class DummyDataProviderTest extends SingleBrowserTest {
 
         List<WebElement> personData = labels.subList(1, size);
 
-        int key = 0;
-        for (WebElement e : personData) {
-            JsonObject j = Json.createObject();
-            ComplexPerson p = persons.get(key);
-            j.put(DataProviderConstants.KEY, "" + (++key));
-            j.put("name", p.getLastName() + ", " + p.getFirstName());
+        for (int i = 0; i < personData.size(); ++i) {
+            WebElement e = personData.get(i);
+            JsonObject j = personObjects.get(i);
             assertEquals("Json did not match.", j.toJson(), e.getText());
         }
+
+        assertNoErrorNotifications();
+    }
+
+    private void createPersonObjects() {
+        for (ComplexPerson p : persons) {
+            JsonObject j = Json.createObject();
+            j.put(DataProviderConstants.KEY, personToKeyMap.get(p));
+            j.put("name", p.getLastName() + ", " + p.getFirstName());
+            personObjects.add(j);
+        }
+    }
+
+    @Test
+    public void testSortDoesNotChangeContent() {
+        // Sort our internal data to match the order after sort.
+        Collections.sort(persons, DummyDataProviderUI.nameComparator);
+        createPersonObjects();
+
+        openTestURL();
+
+        $(ButtonElement.class).id("sort").click();
+
+        // Second sort would show if any keys got destroyed/recreated.
+        $(ButtonElement.class).id("sort").click();
+
+        int size = DummyDataProviderUI.PERSON_COUNT + 1;
+        List<WebElement> labels = findElements(By.className("v-label"));
+
+        assertEquals("Label count did not match person count", size,
+                labels.size());
+
+        List<WebElement> personData = labels.subList(1, size);
+
+        for (int i = 0; i < personData.size(); ++i) {
+            WebElement e = personData.get(i);
+            JsonObject j = personObjects.get(i);
+            assertEquals("Json did not match.", j.toJson(), e.getText());
+        }
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void testRemoveWorksAfterSort() {
+        // Sort our internal data to match the order after sort.
+        Collections.sort(persons, DummyDataProviderUI.nameComparator);
+        createPersonObjects();
+
+        openTestURL();
+
+        $(ButtonElement.class).id("sort").click();
+
+        String text = findElements(By.className("v-label")).get(3).getText();
+        String json = personObjects.get(2).toJson();
+        assertEquals("Data not sorted", json, text);
+
+        $(ButtonElement.class).id("remove").click();
+
+        text = findElements(By.className("v-label")).get(3).getText();
+        json = personObjects.get(3).toJson();
+        assertEquals("Data not removed", json, text);
+
+        assertNoErrorNotifications();
     }
 }

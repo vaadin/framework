@@ -197,8 +197,10 @@ public class DataProvider<T> extends AbstractExtension {
         }
     }
 
-    private Collection<T> data;
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
+    private boolean reset = false;
+
+    private Collection<T> data;
     private DataProviderClientRpc rpc;
     // TODO: Allow customizing the used key mapper
     private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
@@ -220,17 +222,17 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Initially we need to push all the data to the client.
-     * 
-     * TODO: The same is true for unknown size changes.
+     * Initially and in the case of a reset all data should be pushed to the
+     * client.
      */
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
-        if (initial) {
+        if (initial || reset) {
             getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
             pushData(0, data);
+            reset = false;
         }
     }
 
@@ -353,6 +355,18 @@ public class DataProvider<T> extends AbstractExtension {
         if (handler.getActiveData().contains(data)) {
             rpc.drop(getKeyMapper().key(data));
         }
+    }
+
+    /**
+     * Informs the DataProvider that the collection has changed.
+     */
+    public void reset() {
+        if (reset) {
+            return;
+        }
+
+        reset = true;
+        markAsDirty();
     }
 
 }
