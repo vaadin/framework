@@ -25,6 +25,7 @@ import java.util.Random;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.communication.data.typed.DataProvider;
+import com.vaadin.server.communication.data.typed.SimpleDataProvider;
 import com.vaadin.server.communication.data.typed.TypedDataGenerator;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -42,7 +43,7 @@ public class DummyDataProviderUI extends AbstractTestUI {
 
     public static class DummyDataComponent extends AbstractComponent {
 
-        private DataProvider<ComplexPerson> dataProvider;
+        private SimpleDataProvider<ComplexPerson> dataProvider;
         private List<ComplexPerson> data;
 
         public DummyDataComponent(Collection<ComplexPerson> data) {
@@ -70,18 +71,21 @@ public class DummyDataProviderUI extends AbstractTestUI {
         }
 
         void addItem(ComplexPerson person) {
+            // TODO: This should be in the back end implementation
             if (data.add(person)) {
                 dataProvider.add(person);
             }
         }
 
         void removeItem(ComplexPerson person) {
+            // TODO: This should be in the back end implementation
             if (data.remove(person)) {
                 dataProvider.remove(person);
             }
         }
 
         public void sort(Comparator<ComplexPerson> comparator) {
+            // TODO: This should be in the back end implementation
             Collections.sort(data, comparator);
             dataProvider.reset();
         }

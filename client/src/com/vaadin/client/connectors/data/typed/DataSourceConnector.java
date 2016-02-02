@@ -27,7 +27,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.HasDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.server.communication.data.typed.DataProvider;
+import com.vaadin.server.communication.data.typed.SimpleDataProvider;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataProviderConstants;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -43,7 +43,7 @@ import elemental.json.JsonObject;
  * 
  * @since
  */
-@Connect(DataProvider.class)
+@Connect(SimpleDataProvider.class)
 public class DataSourceConnector extends AbstractExtensionConnector {
 
     private Map<String, JsonObject> keyToJson = new HashMap<String, JsonObject>();

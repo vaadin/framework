@@ -32,17 +32,14 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * DataProvider for Collections. This class takes care of sending data objects
- * stored in a Collection from the server-side to the client-side. It uses
- * {@link TypedDataGenerator}s to write a {@link JsonObject} representing each
- * data object.
- * <p>
- * This is an implementation that does not provide any kind of lazy loading. All
- * data is sent to the client-side on the initial client response.
+ * DataProvider base class. This class is the base for all DataProvider
+ * communication implementations. It uses {@link TypedDataGenerator}s to write
+ * {@link JsonObject}s representing each data object to be sent to the
+ * client-side.
  * 
  * @since
  */
-public class DataProvider<T> extends AbstractExtension {
+public abstract class DataProvider<T> extends AbstractExtension {
 
     /**
      * Creates the appropriate type of DataProvider based on the type of
@@ -52,6 +49,9 @@ public class DataProvider<T> extends AbstractExtension {
      * with the newly created DataProvider. The user should <strong>not</strong>
      * call the {@link #extend(com.vaadin.server.AbstractClientConnector)}
      * method explicitly.
+     * <p>
+     * TODO: Actually use different DataProviders and provide an API for the
+     * back end to inform changes back.
      * 
      * @param data
      *            collection of data objects
@@ -59,9 +59,9 @@ public class DataProvider<T> extends AbstractExtension {
      *            component to extend with the data provider
      * @return created data provider
      */
-    public static <V> DataProvider<V> create(Collection<V> data,
+    public static <V> SimpleDataProvider<V> create(Collection<V> data,
             AbstractComponent component) {
-        DataProvider<V> dataProvider = new DataProvider<V>(data);
+        SimpleDataProvider<V> dataProvider = new SimpleDataProvider<V>(data);
         dataProvider.extend(component);
         return dataProvider;
     }
@@ -172,85 +172,21 @@ public class DataProvider<T> extends AbstractExtension {
         }
     }
 
-    /**
-     * Simple implementation of collection data provider communication. All data
-     * is sent by server automatically and no data is requested by client.
-     */
-    protected class DataRequestRpcImpl implements DataRequestRpc {
-
-        @Override
-        public void requestRows(int firstRowIndex, int numberOfRows,
-                int firstCachedRowIndex, int cacheSize) {
-            throw new UnsupportedOperationException(
-                    "Collection data provider sends all data from server."
-                            + " It does not expect client to request anything.");
-        }
-
-        @Override
-        public void dropRows(JsonArray keys) {
-            for (int i = 0; i < keys.length(); ++i) {
-                handler.dropActiveData(keys.getString(i));
-            }
-
-            // Use the whole data as the ones sent to the client.
-            handler.cleanUp(data);
-        }
-    }
-
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
-    private boolean reset = false;
-    private final Set<T> updatedData = new HashSet<T>();
+    protected ActiveDataHandler handler = new ActiveDataHandler();
+    protected DataProviderClientRpc rpc;
 
-    private Collection<T> data;
-    private DataProviderClientRpc rpc;
-    // TODO: Allow customizing the used key mapper
-    private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
-    private ActiveDataHandler handler;
+    // TODO: Add a "BackEnd" API
+    // protected BackEnd data;
 
-    /**
-     * Creates a new DataProvider with the given Collection.
-     * 
-     * @param data
-     *            collection of data to use
-     */
-    protected DataProvider(Collection<T> data) {
-        this.data = data;
-
+    protected DataProvider() {
+        addDataGenerator(handler);
         rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
-        handler = new ActiveDataHandler();
-        addDataGenerator(handler);
     }
 
     /**
-     * Initially and in the case of a reset all data should be pushed to the
-     * client.
-     */
-    @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-
-        if (initial || reset) {
-            getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
-            pushData(0, data);
-            reset = false;
-            updatedData.clear();
-        }
-
-        if (updatedData.isEmpty()) {
-            return;
-        }
-
-        JsonArray dataArray = Json.createArray();
-        int i = 0;
-        for (T data : updatedData) {
-            dataArray.set(i++, getDataObject(data));
-        }
-        rpc.updateData(dataArray);
-    }
-
-    /**
-     * Adds a TypedDataGenerator to this DataProvider.
+     * Adds a {@link TypedDataGenerator} to this {@link DataProvider}.
      * 
      * @param generator
      *            typed data generator
@@ -260,7 +196,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Removes a TypedDataGenerator from this DataProvider.
+     * Removes a {@link TypedDataGenerator} from this {@link DataProvider}.
      * 
      * @param generator
      *            typed data generator
@@ -270,7 +206,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Sends given data collection to the client-side.
+     * Sends given collection of data objects to the client-side.
      * 
      * @param firstIndex
      *            first index of pushed data
@@ -291,18 +227,18 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Creates the JsonObject for given item. This method calls all data
-     * generators for this item.
+     * Creates the JsonObject for given data object. This method calls all data
+     * generators for it.
      * 
-     * @param item
-     *            item to be made into a json object
-     * @return json object representing the item
+     * @param data
+     *            data object to be made into a json object
+     * @return json object representing the data object
      */
-    protected JsonObject getDataObject(T item) {
+    protected JsonObject getDataObject(T data) {
         JsonObject dataObject = Json.createObject();
 
         for (TypedDataGenerator<T> generator : generators) {
-            generator.generateData(item, dataObject);
+            generator.generateData(data, dataObject);
         }
 
         return dataObject;
@@ -329,70 +265,16 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Gets the {@link DataKeyMapper} instance used by this {@link DataProvider}
+     * Gets the {@link DataKeyMapper} used by this {@link DataProvider}.
      * 
      * @return key mapper
      */
-    public DataKeyMapper<T> getKeyMapper() {
-        return keyMapper;
-    }
+    protected abstract DataKeyMapper<T> getKeyMapper();
 
     /**
-     * Creates an instance of DataRequestRpc. By default it is
-     * {@link DataRequestRpcImpl}.
+     * Creates a {@link DataRequestRpc} instance.
      * 
      * @return data request rpc implementation
      */
-    protected DataRequestRpc createRpc() {
-        return new DataRequestRpcImpl();
-    }
-
-    /**
-     * Informs the DataProvider that a data object has been added. It is assumed
-     * to be the last object in the collection.
-     * 
-     * @param data
-     *            data object added to collection
-     */
-    public void add(T data) {
-        rpc.add(getDataObject(data));
-    }
-
-    /**
-     * Informs the DataProvider that a data object has been removed.
-     * 
-     * @param data
-     *            data object removed from collection
-     */
-    public void remove(T data) {
-        if (handler.getActiveData().contains(data)) {
-            rpc.drop(getKeyMapper().key(data));
-        }
-    }
-
-    /**
-     * Informs the DataProvider that the collection has changed.
-     */
-    public void reset() {
-        if (reset) {
-            return;
-        }
-
-        reset = true;
-        markAsDirty();
-    }
-
-    /**
-     * Informs the DataProvider that a data object has been updated.
-     * 
-     * @param data
-     *            updated data object
-     */
-    public void refresh(T data) {
-        if (updatedData.isEmpty()) {
-            markAsDirty();
-        }
-
-        updatedData.add(data);
-    }
+    protected abstract DataRequestRpc createRpc();
 }
