@@ -165,6 +165,14 @@ public class BrowserInfo {
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_WEBKIT;
+            } else if (browserDetails.isPhantomJS()) {
+                // Safari needed for theme
+                browserIdentifier = BROWSER_SAFARI;
+                majorVersionClass = browserIdentifier
+                        + getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_WEBKIT;
             } else if (browserDetails.isIE()) {
                 browserIdentifier = BROWSER_IE;
                 majorVersionClass = browserIdentifier
