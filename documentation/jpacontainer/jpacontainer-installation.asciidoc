@@ -61,12 +61,12 @@ The link:http://vaadin.com/directory[download page in Vaadin Directory] gives
 the dependency declaration needed for retrieving the Vaadin JPAContainer library
 with Maven.
 
-
+[subs="normal"]
 ----
 <dependency>
    <groupId>com.vaadin.addon</groupId>
-   <artifactId>jpacontainer-addon</artifactId>
-   <version>3.1.0</version>
+   <artifactId>jpacontainer</artifactId>
+   <version>[replaceable]##3.2.0##</version>
 </dependency>
 ----
 
@@ -254,7 +254,7 @@ EclipseLink JPA, you can get log that includes all SQL statements with the
 
 
 ----
-<property name="eclipselink.logging.level" 
+<property name="eclipselink.logging.level"
           value="FINE" />
 ----
 
@@ -269,7 +269,7 @@ tables before trying to create them. In production environments, you should use
 
 
 ----
-<property name="eclipselink.ddl-generation" 
+<property name="eclipselink.ddl-generation"
           value="drop-and-create-tables" />
 ----
 
@@ -303,9 +303,3 @@ is in [filename]#WEB-INF/classes/META-INF# folder in the deployment.
 [filename]#persistence.xml# does not have [parameter]#exclude-unlisted-classes#
 defined as [literal]#++false++#, the persistent entity classes should be listed
 with [literal]#++<class>++# elements.
-
-
-
-
-
-
