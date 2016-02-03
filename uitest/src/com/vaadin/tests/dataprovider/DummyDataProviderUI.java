@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.dataprovider;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -37,11 +39,26 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.proto.ListBox;
+import com.vaadin.ui.proto.ListBox.NameProvider;
 
 import elemental.json.JsonObject;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class DummyDataProviderUI extends AbstractTestUI {
+
+    abstract static class MyRunnable implements Runnable, Serializable {
+
+        private final String name;
+
+        public MyRunnable(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     public static class DummyDataComponent extends AbstractComponent {
 
@@ -99,50 +116,65 @@ public class DummyDataProviderUI extends AbstractTestUI {
     private Random r = new Random(RANDOM_SEED);
     private MyDataSource dataSource;
     private DummyDataComponent dummy;
+    private ListBox<MyRunnable> listBox;
+    private List<ComplexPerson> persons;
 
     @Override
     protected void setup(VaadinRequest request) {
-        dataSource = new MyDataSource(createPersons(PERSON_COUNT, r));
+
+        persons = createPersons(PERSON_COUNT, r);
+        dataSource = new MyDataSource(persons);
         dummy = new DummyDataComponent(dataSource);
 
-        Button remove = new Button("Remove third", new ClickListener() {
+        Collection<MyRunnable> actions = new LinkedHashSet<MyRunnable>();
+        actions.add(new MyRunnable("remove") {
 
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void run() {
                 dataSource.remove(dataSource.getData().get(2));
             }
         });
-        Button add = new Button("Add new", new ClickListener() {
+        actions.add(new MyRunnable("add") {
 
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void run() {
                 dataSource.save(ComplexPerson.create(r));
             }
         });
-        Button sort = new Button("Sort content", new ClickListener() {
+        actions.add(new MyRunnable("sort") {
 
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void run() {
                 dataSource.sort(nameComparator);
             }
         });
-        Button edit = new Button("Edit first", new ClickListener() {
+        actions.add(new MyRunnable("edit") {
 
             @Override
-            public void buttonClick(ClickEvent event) {
-                ComplexPerson p = dataSource.iterator().next();
+            public void run() {
+                ComplexPerson p = persons.get(0);
                 p.setFirstName("Foo");
                 dataSource.save(p);
             }
         });
 
-        // Button Ids
-        remove.setId("remove");
-        add.setId("add");
-        sort.setId("sort");
-        edit.setId("edit");
+        listBox = new ListBox<MyRunnable>(actions,
+                new NameProvider<MyRunnable>() {
 
-        addComponent(new HorizontalLayout(add, remove, sort, edit));
+                    @Override
+                    public String getName(MyRunnable value) {
+                        return value.getName();
+                    }
+                });
+
+        Button execute = new Button("Execute", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                listBox.getSelected().run();
+            }
+        });
+        addComponent(new HorizontalLayout(listBox, execute));
         addComponent(dummy);
     }
 

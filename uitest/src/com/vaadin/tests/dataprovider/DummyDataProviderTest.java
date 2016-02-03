@@ -29,9 +29,12 @@ import java.util.Random;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.shared.data.DataProviderConstants;
+import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -39,6 +42,14 @@ import elemental.json.Json;
 import elemental.json.JsonObject;
 
 public class DummyDataProviderTest extends SingleBrowserTest {
+
+    @ServerClass("com.vaadin.ui.proto.ListBox")
+    public static class ListBoxElement extends AbstractComponentElement {
+
+        public void selectByText(String text) {
+            new Select(this).selectByVisibleText(text);
+        }
+    }
 
     // Each test uses a set of person objects (generated json) that is supposed
     // to match the data sent to the client-side.
@@ -113,10 +124,12 @@ public class DummyDataProviderTest extends SingleBrowserTest {
 
         openTestURL();
 
-        $(ButtonElement.class).id("sort").click();
+        $(ListBoxElement.class).first().selectByText("sort");
+        ButtonElement button = $(ButtonElement.class).first();
+        button.click();
 
         // Second sort would show if any keys got destroyed/recreated.
-        $(ButtonElement.class).id("sort").click();
+        button.click();
 
         int size = DummyDataProviderUI.PERSON_COUNT + 1;
         List<WebElement> labels = findElements(By.className("v-label"));
@@ -143,13 +156,16 @@ public class DummyDataProviderTest extends SingleBrowserTest {
 
         openTestURL();
 
-        $(ButtonElement.class).id("sort").click();
+        $(ListBoxElement.class).first().selectByText("sort");
+        ButtonElement button = $(ButtonElement.class).first();
+        button.click();
 
         String text = findElements(By.className("v-label")).get(3).getText();
         String json = personObjects.get(2).toJson();
         assertEquals("Data not sorted", json, text);
 
-        $(ButtonElement.class).id("remove").click();
+        $(ListBoxElement.class).first().selectByText("remove");
+        button.click();
 
         text = findElements(By.className("v-label")).get(3).getText();
         json = personObjects.get(3).toJson();
@@ -169,7 +185,9 @@ public class DummyDataProviderTest extends SingleBrowserTest {
         String text = findElements(By.className("v-label")).get(1).getText();
         assertEquals("Initial data did not match", json, text);
 
-        $(ButtonElement.class).id("edit").click();
+        $(ListBoxElement.class).first().selectByText("edit");
+        ButtonElement button = $(ButtonElement.class).first();
+        button.click();
 
         persons.get(0).setFirstName("Foo");
         createPersonObjects();
@@ -182,7 +200,8 @@ public class DummyDataProviderTest extends SingleBrowserTest {
         text = findElements(By.className("v-label")).get(1).getText();
         assertEquals("Modified data did not match", json, text);
 
-        $(ButtonElement.class).id("edit").click();
+        $(ListBoxElement.class).first().selectByText("edit");
+        button.click();
 
         text = findElements(By.className("v-label")).get(1).getText();
         assertEquals("Running edit again shouldn't change anything", json, text);
