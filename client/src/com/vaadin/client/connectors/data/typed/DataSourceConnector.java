@@ -109,6 +109,7 @@ public class DataSourceConnector extends AbstractExtensionConnector {
                     if (keyToJson.containsKey(key)) {
                         int index = list.indexOf(keyToJson.get(key));
                         list.set(index, json);
+                        keyToJson.put(key, json);
                     } else {
                         dropKey(key);
                     }

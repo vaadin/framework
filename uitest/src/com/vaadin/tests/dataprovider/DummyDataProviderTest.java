@@ -181,5 +181,13 @@ public class DummyDataProviderTest extends SingleBrowserTest {
 
         text = findElements(By.className("v-label")).get(1).getText();
         assertEquals("Modified data did not match", json, text);
+
+        $(ButtonElement.class).id("edit").click();
+
+        text = findElements(By.className("v-label")).get(1).getText();
+        assertEquals("Running edit again shouldn't change anything", json, text);
+
+        assertNoErrorNotifications();
+
     }
 }

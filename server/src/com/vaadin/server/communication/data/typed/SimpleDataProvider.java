@@ -89,20 +89,17 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
         if (initial || reset) {
             getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
             pushData(0, data);
-            reset = false;
-            updatedData.clear();
+        } else if (!updatedData.isEmpty()) {
+            JsonArray dataArray = Json.createArray();
+            int i = 0;
+            for (T data : updatedData) {
+                dataArray.set(i++, getDataObject(data));
+            }
+            rpc.updateData(dataArray);
         }
 
-        if (updatedData.isEmpty()) {
-            return;
-        }
-
-        JsonArray dataArray = Json.createArray();
-        int i = 0;
-        for (T data : updatedData) {
-            dataArray.set(i++, getDataObject(data));
-        }
-        rpc.updateData(dataArray);
+        reset = false;
+        updatedData.clear();
     }
 
     @Override
