@@ -45,7 +45,7 @@ public class CollectionDataSource<T> extends AbstractDataSource<T> {
             fireDataUpdate(data);
         } else {
             backend.add(data);
-            fireDataAdd(data);
+            fireDataAppend(data);
         }
     }
 

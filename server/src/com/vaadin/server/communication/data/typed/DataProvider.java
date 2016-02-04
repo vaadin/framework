@@ -23,7 +23,6 @@ import java.util.Set;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.communication.data.typed.DataSource.DataChangeHandler;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataProviderConstants;
 import com.vaadin.shared.data.DataRequestRpc;

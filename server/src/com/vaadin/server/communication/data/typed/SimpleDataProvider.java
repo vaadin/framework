@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.server.communication.data.typed.DataSource.DataChangeHandler;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 
@@ -172,7 +171,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
             }
 
             @Override
-            public void onDataAdd(T data) {
+            public void onDataAppend(T data) {
                 add(data);
             }
 
