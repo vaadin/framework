@@ -15,6 +15,7 @@
  */
 package com.vaadin.server.communication.data.typed;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -138,6 +139,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      */
     protected void add(T data) {
         rpc.add(getDataObject(data));
+        handler.addActiveData(Collections.singleton(data));
     }
 
     /**

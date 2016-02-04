@@ -88,6 +88,7 @@ public class DataSourceConnector extends AbstractExtensionConnector {
             @Override
             public void add(JsonObject dataObject) {
                 ds.asList().add(dataObject);
+                keyToJson.put(getKey(dataObject), dataObject);
             }
 
             @Override
