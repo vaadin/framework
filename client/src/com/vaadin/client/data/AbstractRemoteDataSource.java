@@ -324,8 +324,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             // Called after dropping from cache. Dropped row is passed as a
             // parameter, but is no longer present in the DataSource
             T removed = indexToRowMap.remove(Integer.valueOf(i));
-            onDropFromCache(i, removed);
-            keyToIndexMap.remove(getRowKey(removed));
+            if (removed != null) {
+                onDropFromCache(i, removed);
+                keyToIndexMap.remove(getRowKey(removed));
+            }
         }
     }
 
@@ -534,13 +536,15 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         size -= count;
 
+        Range removedRange = Range.withLength(firstRowIndex, count);
+        dropFromCache(removedRange);
+
         // shift indices to fill the cache correctly
         int firstMoved = Math.max(firstRowIndex + count, cached.getStart());
         for (int i = firstMoved; i < cached.getEnd(); i++) {
             moveRowFromIndexToIndex(i, i - count);
         }
 
-        Range removedRange = Range.withLength(firstRowIndex, count);
         if (cached.isSubsetOf(removedRange)) {
             // Whole cache is part of the removal. Empty cache
             cached = Range.withLength(0, 0);
