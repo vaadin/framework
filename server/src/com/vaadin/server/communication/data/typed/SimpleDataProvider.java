@@ -15,10 +15,10 @@
  */
 package com.vaadin.server.communication.data.typed;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.vaadin.server.communication.data.typed.DataSource.DataChangeHandler;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 
@@ -64,7 +64,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
 
-    private Collection<T> data;
+    private DataSource<T> data;
     // TODO: Allow customizing the used key mapper
     private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
 
@@ -74,8 +74,30 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      * @param data
      *            collection of data to use
      */
-    protected SimpleDataProvider(Collection<T> data) {
+    protected SimpleDataProvider(DataSource<T> data) {
         this.data = data;
+        this.data.addDataChangeHandler(new DataChangeHandler<T>() {
+
+            @Override
+            public void onDataChange() {
+                reset();
+            }
+
+            @Override
+            public void onDataAdd(T data) {
+                add(data);
+            }
+
+            @Override
+            public void onDataRemove(T data) {
+                remove(data);
+            }
+
+            @Override
+            public void onDataUpdate(T data) {
+                refresh(data);
+            }
+        });
     }
 
     /**
@@ -114,7 +136,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      * @param data
      *            data object added to collection
      */
-    public void add(T data) {
+    protected void add(T data) {
         rpc.add(getDataObject(data));
     }
 
@@ -124,7 +146,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      * @param data
      *            data object removed from collection
      */
-    public void remove(T data) {
+    protected void remove(T data) {
         if (handler.getActiveData().contains(data)) {
             rpc.drop(getKeyMapper().key(data));
         }
@@ -133,7 +155,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
     /**
      * Informs the DataProvider that the collection has changed.
      */
-    public void reset() {
+    protected void reset() {
         if (reset) {
             return;
         }
@@ -148,7 +170,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      * @param data
      *            updated data object
      */
-    public void refresh(T data) {
+    protected void refresh(T data) {
         if (updatedData.isEmpty()) {
             markAsDirty();
         }

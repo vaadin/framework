@@ -59,7 +59,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
      *            component to extend with the data provider
      * @return created data provider
      */
-    public static <V> SimpleDataProvider<V> create(Collection<V> data,
+    public static <V> SimpleDataProvider<V> create(DataSource<V> data,
             AbstractComponent component) {
         SimpleDataProvider<V> dataProvider = new SimpleDataProvider<V>(data);
         dataProvider.extend(component);
@@ -98,7 +98,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
          * @param dataObjects
          *            collection of new active data objects
          */
-        public void addActiveData(Collection<T> dataObjects) {
+        public void addActiveData(Iterable<T> dataObjects) {
             for (T data : dataObjects) {
                 if (!activeData.contains(getKeyMapper().key(data))) {
                     activeData.add(getKeyMapper().key(data));
@@ -119,7 +119,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
          * @param dataObjects
          *            collection of most recently sent data to the client
          */
-        public void cleanUp(Collection<T> dataObjects) {
+        public void cleanUp(Iterable<T> dataObjects) {
             Collection<String> keys = new HashSet<String>();
             for (T data : dataObjects) {
                 keys.add(getKeyMapper().key(data));
@@ -213,7 +213,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * @param data
      *            data objects to send as an iterable
      */
-    protected void pushData(long firstIndex, Collection<T> data) {
+    protected void pushData(long firstIndex, Iterable<T> data) {
         JsonArray dataArray = Json.createArray();
 
         int i = 0;

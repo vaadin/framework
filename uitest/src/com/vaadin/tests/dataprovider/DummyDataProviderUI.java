@@ -24,7 +24,9 @@ import java.util.Random;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.communication.data.typed.CollectionDataSource;
 import com.vaadin.server.communication.data.typed.DataProvider;
+import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.server.communication.data.typed.SimpleDataProvider;
 import com.vaadin.server.communication.data.typed.TypedDataGenerator;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -44,14 +46,8 @@ public class DummyDataProviderUI extends AbstractTestUI {
     public static class DummyDataComponent extends AbstractComponent {
 
         private SimpleDataProvider<ComplexPerson> dataProvider;
-        private List<ComplexPerson> data;
 
-        public DummyDataComponent(Collection<ComplexPerson> data) {
-            if (data instanceof List) {
-                this.data = (List<ComplexPerson>) data;
-            } else {
-                this.data = new ArrayList<ComplexPerson>(data);
-            }
+        public DummyDataComponent(DataSource<ComplexPerson> data) {
             dataProvider = DataProvider.create(data, this);
             dataProvider
                     .addDataGenerator(new TypedDataGenerator<ComplexPerson>() {
@@ -69,29 +65,22 @@ public class DummyDataProviderUI extends AbstractTestUI {
                         }
                     });
         }
+    }
 
-        void addItem(ComplexPerson person) {
-            // TODO: This should be in the back end implementation
-            if (data.add(person)) {
-                dataProvider.add(person);
-            }
+    private static class MyDataSource extends
+            CollectionDataSource<ComplexPerson> {
+
+        public MyDataSource(Collection<ComplexPerson> data) {
+            super(data);
         }
 
-        void removeItem(ComplexPerson person) {
-            // TODO: This should be in the back end implementation
-            if (data.remove(person)) {
-                dataProvider.remove(person);
-            }
+        public void sort(Comparator<ComplexPerson> c) {
+            Collections.sort(backend, c);
+            fireDataChange();
         }
 
-        public void sort(Comparator<ComplexPerson> comparator) {
-            // TODO: This should be in the back end implementation
-            Collections.sort(data, comparator);
-            dataProvider.reset();
-        }
-
-        public void update(ComplexPerson p) {
-            dataProvider.refresh(p);
+        public List<ComplexPerson> getData() {
+            return Collections.unmodifiableList(backend);
         }
     }
 
@@ -108,41 +97,42 @@ public class DummyDataProviderUI extends AbstractTestUI {
     };
 
     private Random r = new Random(RANDOM_SEED);
-    private List<ComplexPerson> persons = createPersons(PERSON_COUNT, r);
+    private MyDataSource dataSource;
     private DummyDataComponent dummy;
 
     @Override
     protected void setup(VaadinRequest request) {
-        dummy = new DummyDataComponent(persons);
+        dataSource = new MyDataSource(createPersons(PERSON_COUNT, r));
+        dummy = new DummyDataComponent(dataSource);
 
         Button remove = new Button("Remove third", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                dummy.removeItem(persons.get(2));
+                dataSource.remove(dataSource.getData().get(2));
             }
         });
         Button add = new Button("Add new", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                dummy.addItem(ComplexPerson.create(r));
+                dataSource.save(ComplexPerson.create(r));
             }
         });
         Button sort = new Button("Sort content", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                dummy.sort(nameComparator);
+                dataSource.sort(nameComparator);
             }
         });
         Button edit = new Button("Edit first", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                ComplexPerson p = persons.get(0);
+                ComplexPerson p = dataSource.iterator().next();
                 p.setFirstName("Foo");
-                dummy.update(p);
+                dataSource.save(p);
             }
         });
 
