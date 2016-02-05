@@ -202,7 +202,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
      *            typed data generator
      */
     public void removeDataGenerator(TypedDataGenerator<T> generator) {
-        generators.add(generator);
+        generators.remove(generator);
     }
 
     /**
