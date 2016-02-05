@@ -58,14 +58,13 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
             }
 
             // Use the whole data as the ones sent to the client.
-            handler.cleanUp(data);
+            handler.cleanUp(dataSource);
         }
     }
 
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
 
-    private DataSource<T> data;
     // TODO: Allow customizing the used key mapper
     private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
 
@@ -76,29 +75,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      *            collection of data to use
      */
     protected SimpleDataProvider(DataSource<T> data) {
-        this.data = data;
-        this.data.addDataChangeHandler(new DataChangeHandler<T>() {
-
-            @Override
-            public void onDataChange() {
-                reset();
-            }
-
-            @Override
-            public void onDataAdd(T data) {
-                add(data);
-            }
-
-            @Override
-            public void onDataRemove(T data) {
-                remove(data);
-            }
-
-            @Override
-            public void onDataUpdate(T data) {
-                refresh(data);
-            }
-        });
+        super(data);
     }
 
     /**
@@ -110,8 +87,9 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
         super.beforeClientResponse(initial);
 
         if (initial || reset) {
-            getRpcProxy(DataProviderClientRpc.class).resetSize(data.size());
-            pushData(0, data);
+            getRpcProxy(DataProviderClientRpc.class).resetSize(
+                    dataSource.size());
+            pushData(0, dataSource);
         } else if (!updatedData.isEmpty()) {
             JsonArray dataArray = Json.createArray();
             int i = 0;
@@ -185,4 +163,29 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
         return new SimpleDataRequestRpc();
     }
 
+    @Override
+    protected DataChangeHandler<T> createDataChangeHandler() {
+        return new DataChangeHandler<T>() {
+
+            @Override
+            public void onDataChange() {
+                reset();
+            }
+
+            @Override
+            public void onDataAdd(T data) {
+                add(data);
+            }
+
+            @Override
+            public void onDataRemove(T data) {
+                remove(data);
+            }
+
+            @Override
+            public void onDataUpdate(T data) {
+                refresh(data);
+            }
+        };
+    }
 }

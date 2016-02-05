@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.communication.data.typed.DataSource.DataChangeHandler;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataProviderConstants;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -176,13 +177,14 @@ public abstract class DataProvider<T> extends AbstractExtension {
     protected ActiveDataHandler handler = new ActiveDataHandler();
     protected DataProviderClientRpc rpc;
 
-    // TODO: Add a "BackEnd" API
-    // protected BackEnd data;
+    protected DataSource<T> dataSource;
 
-    protected DataProvider() {
+    protected DataProvider(DataSource<T> dataSource) {
         addDataGenerator(handler);
+        this.dataSource = dataSource;
         rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
+        this.dataSource.addDataChangeHandler(createDataChangeHandler());
     }
 
     /**
@@ -277,4 +279,11 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * @return data request rpc implementation
      */
     protected abstract DataRequestRpc createRpc();
+
+    /**
+     * Creates a {@link DataChangeHandler} to use with the {@link DataSource}.
+     * 
+     * @return data change handler
+     */
+    protected abstract DataChangeHandler<T> createDataChangeHandler();
 }
