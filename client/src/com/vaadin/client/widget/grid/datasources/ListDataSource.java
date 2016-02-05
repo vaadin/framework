@@ -236,7 +236,7 @@ public class ListDataSource<T> implements DataSource<T> {
         public void clear() {
             int size = ds.size();
             ds.clear();
-            if (changeHandler != null) {
+            if (changeHandler != null && size > 0) {
                 changeHandler.dataRemoved(0, size);
             }
         }
