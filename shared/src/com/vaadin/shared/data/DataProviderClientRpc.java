@@ -28,12 +28,9 @@ import elemental.json.JsonObject;
 public interface DataProviderClientRpc extends ClientRpc {
 
     /**
-     * Sets the size of the client-side DataSource.
-     * 
-     * @param size
-     *            the new data set size
+     * Informs the client-side DataSource that all data has been invalidated.
      */
-    void resetSize(long size);
+    void reset();
 
     /**
      * Sets the data of the client-side DataSource to match the given data

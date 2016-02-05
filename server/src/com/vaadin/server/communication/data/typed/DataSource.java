@@ -28,13 +28,6 @@ import java.io.Serializable;
 public interface DataSource<T> extends Iterable<T>, Serializable {
 
     /**
-     * Gets the data object count from the back end.
-     * 
-     * @return back end size
-     */
-    long size();
-
-    /**
      * Saves a data object to the back end. If it's a new object, it should be
      * created in the back end. Existing objects with changes should be stored.
      * 

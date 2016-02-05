@@ -86,9 +86,11 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        if (reset) {
+            getRpcProxy(DataProviderClientRpc.class).reset();
+        }
+
         if (initial || reset) {
-            getRpcProxy(DataProviderClientRpc.class).resetSize(
-                    dataSource.size());
             pushData(0, dataSource);
         } else if (!updatedData.isEmpty()) {
             JsonArray dataArray = Json.createArray();

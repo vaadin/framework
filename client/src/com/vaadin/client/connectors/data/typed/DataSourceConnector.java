@@ -56,7 +56,7 @@ public class DataSourceConnector extends AbstractExtensionConnector {
         registerRpc(DataProviderClientRpc.class, new DataProviderClientRpc() {
 
             @Override
-            public void resetSize(long size) {
+            public void reset() {
                 ds.asList().clear();
                 // Inform the server-side that all keys are now dropped.
                 Set<String> keySet = new HashSet<String>(keyToJson.keySet());

@@ -61,9 +61,4 @@ public class CollectionDataSource<T> extends AbstractDataSource<T> {
     public Iterator<T> iterator() {
         return backend.iterator();
     }
-
-    @Override
-    public long size() {
-        return backend.size();
-    }
 }
