@@ -254,6 +254,14 @@ public class XhrConnection {
     private static native boolean resendRequest(Request request)
     /*-{
         var xhr = request.@com.google.gwt.http.client.Request::xmlHttpRequest
+        if (xhr == null) {
+            // This might be called even though the request has completed,
+            // if the webkitMaybeIgnoringRequests has been set to true on beforeunload
+            // but unload was cancelled after that. It will then stay on until the following
+            // request and if that request completes before we get here (<250mS), we will
+            // hit this case.
+            return false;
+        }
         if (xhr.readyState != 1) {
             // Progressed to some other readyState -> no longer blocked
             return false;
