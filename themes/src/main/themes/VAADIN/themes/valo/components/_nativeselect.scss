@@ -23,9 +23,12 @@
       }
     }
   }
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-select {
+      @include valo-textfield-error-style;
+    }
+  }
 }
-
-
 
 /**
  *

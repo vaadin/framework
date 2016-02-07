@@ -78,6 +78,13 @@
     }
   }
 
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-style;
+    }
+  }
+
 }
 
 
