@@ -230,6 +230,12 @@
             <param name="target-server" value="wildfly9" />
         </antcall>
     </target>
+    <target name="integration-test-wildfly10">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly10" />
+        </antcall>
+    </target>
     <target name="integration-test-wildfly9-nginx">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -402,6 +408,7 @@
             <antcall target="integration-test-jboss-eap6" />
             <antcall target="integration-test-wildfly8" />
             <antcall target="integration-test-wildfly9" />
+            <antcall target="integration-test-wildfly10" />
             <antcall target="integration-test-jetty7" />
             <antcall target="integration-test-jetty8" />
             <antcall target="integration-test-jetty9" />
