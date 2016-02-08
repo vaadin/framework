@@ -30,7 +30,9 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
 
     @Override
     public void addDataChangeHandler(DataChangeHandler<T> handler) {
-        handlers.add(handler);
+        if (handler != null) {
+            handlers.add(handler);
+        }
     }
 
     @Override

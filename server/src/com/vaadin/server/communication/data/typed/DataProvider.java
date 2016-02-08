@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.communication.data.typed.DataSource.DataChangeHandler;
 import com.vaadin.shared.data.DataProviderClientRpc;
 import com.vaadin.shared.data.DataProviderConstants;
@@ -178,13 +179,42 @@ public abstract class DataProvider<T> extends AbstractExtension {
     protected DataProviderClientRpc rpc;
 
     protected DataSource<T> dataSource;
+    private DataChangeHandler<T> dataChangeHandler;
+    private DetachListener detachListener;
 
     protected DataProvider(DataSource<T> dataSource) {
         addDataGenerator(handler);
         this.dataSource = dataSource;
         rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
-        this.dataSource.addDataChangeHandler(createDataChangeHandler());
+        dataChangeHandler = createDataChangeHandler();
+        this.dataSource.addDataChangeHandler(dataChangeHandler);
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        if (detachListener == null) {
+            detachListener = new DetachListener() {
+
+                @Override
+                public void detach(DetachEvent event) {
+                    cleanUp();
+                }
+            };
+            getUI().addDetachListener(detachListener);
+        }
+    }
+
+    @Override
+    public void setParent(ClientConnector parent) {
+        if (getParent() != null && parent == null) {
+            // Removing from parent, clean up.
+            cleanUp();
+        }
+
+        super.setParent(parent);
     }
 
     /**
@@ -263,6 +293,22 @@ public abstract class DataProvider<T> extends AbstractExtension {
             for (TypedDataGenerator<T> g : generators) {
                 g.destroyData(data);
             }
+        }
+    }
+
+    /**
+     * Clean up method for removing all listeners attached by the
+     * {@link DataProvider}. This method is called from {@link #remove()} or
+     * when the UI gets detached.
+     */
+    protected void cleanUp() {
+        if (dataSource != null) {
+            dataSource.removeDataChangeHandler(dataChangeHandler);
+            dataChangeHandler = null;
+        }
+        if (detachListener != null) {
+            getUI().removeDetachListener(detachListener);
+            detachListener = null;
         }
     }
 
