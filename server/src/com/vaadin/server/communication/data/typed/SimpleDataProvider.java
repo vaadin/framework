@@ -65,9 +65,6 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
 
-    // TODO: Allow customizing the used key mapper
-    private DataKeyMapper<T> keyMapper = new KeyMapper<T>();
-
     /**
      * Creates a new DataProvider with the given Collection.
      * 
@@ -103,11 +100,6 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
 
         reset = false;
         updatedData.clear();
-    }
-
-    @Override
-    protected DataKeyMapper<T> getKeyMapper() {
-        return keyMapper;
     }
 
     /**
@@ -158,6 +150,11 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
         }
 
         updatedData.add(data);
+    }
+
+    @Override
+    protected DataKeyMapper<T> createKeyMapper() {
+        return new KeyMapper<T>();
     }
 
     @Override

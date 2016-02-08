@@ -181,6 +181,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
     protected DataSource<T> dataSource;
     private DataChangeHandler<T> dataChangeHandler;
     private DetachListener detachListener;
+    private DataKeyMapper<T> keyMapper;
 
     protected DataProvider(DataSource<T> dataSource) {
         addDataGenerator(handler);
@@ -189,6 +190,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
         registerRpc(createRpc());
         dataChangeHandler = createDataChangeHandler();
         this.dataSource.addDataChangeHandler(dataChangeHandler);
+        keyMapper = createKeyMapper();
     }
 
     @Override
@@ -235,6 +237,17 @@ public abstract class DataProvider<T> extends AbstractExtension {
      */
     public void removeDataGenerator(TypedDataGenerator<T> generator) {
         generators.remove(generator);
+    }
+
+    /**
+     * Gets the {@link DataKeyMapper} used by this {@link DataProvider}. Key
+     * mapper can be used to map keys sent to the client-side back to their
+     * respective data objects.
+     * 
+     * @return key mapper
+     */
+    public DataKeyMapper<T> getKeyMapper() {
+        return keyMapper;
     }
 
     /**
@@ -313,14 +326,18 @@ public abstract class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Gets the {@link DataKeyMapper} used by this {@link DataProvider}.
+     * Creates a {@link DataKeyMapper} to use with this {@link DataProvider}.
+     * <p>
+     * This method is called from the constructor.
      * 
      * @return key mapper
      */
-    protected abstract DataKeyMapper<T> getKeyMapper();
+    protected abstract DataKeyMapper<T> createKeyMapper();
 
     /**
-     * Creates a {@link DataRequestRpc} instance.
+     * Creates a {@link DataRequestRpc} used with this {@link DataProvider}.
+     * <p>
+     * This method is called from the constructor.
      * 
      * @return data request rpc implementation
      */
@@ -328,6 +345,8 @@ public abstract class DataProvider<T> extends AbstractExtension {
 
     /**
      * Creates a {@link DataChangeHandler} to use with the {@link DataSource}.
+     * <p>
+     * This method is called from the constructor.
      * 
      * @return data change handler
      */
