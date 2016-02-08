@@ -589,6 +589,11 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     @Override
     public void removeExtension(Extension extension) {
+        if (extension.getParent() != this) {
+            throw new IllegalArgumentException(
+                    "This connector is not the parent for given extension");
+        }
+
         extension.setParent(null);
         extensions.remove(extension);
         markAsDirty();
