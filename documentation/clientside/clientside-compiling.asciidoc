@@ -16,9 +16,9 @@ compiler.
 As most Vaadin add-ons include widgets, widget set compilation is usually needed
 when using add-ons. In that case, the widget sets from different add-ons are
 compiled into a __project widget set__, as described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
-Vaadin
-Add-ons">>.////
+<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">>.
+
+////
 TODO Provide a link to a proper add-on compilation section when one is
 available.
 ////
@@ -76,6 +76,3 @@ follows:
 ----
 [prompt]#$# [command]#mvn# [parameter]#vaadin:compile#
 ----
-
-
-

@@ -323,10 +323,8 @@ kbd:[Enter]. You need to enable the mode with [methodname]#setNewItemsAllowed(tr
 Setting the component also in immediate mode may be necessary, as otherwise the
 item would not be added immediately when the user interacts with the component,
 but after some other component causes a server
-request.////
-TODO This could be a
-bug
-////
+request.
+// TODO This could be a bug
 
 
 [source, java]

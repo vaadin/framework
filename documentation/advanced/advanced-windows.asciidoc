@@ -35,7 +35,9 @@ a UI">>.
 
 Because of the special nature of AJAX applications, use of multiple windows uses
 require some
-caveats.////
+caveats.
+
+////
 TODO Re-enable We will go through them later in &lt;xref
 linkend="advanced.windows.caveats"/&gt;.
 ////
@@ -71,7 +73,7 @@ public static class MyPopupUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         getPage().setTitle("Popup Window");
-        
+
         // Have some content for it
         VerticalLayout content = new VerticalLayout();
         Label label =
@@ -99,7 +101,7 @@ You can configure the features of the popup window with
 window features, as defined in the HTML specification.
 
 status=[parameter]#0|1#:: Whether the status bar at the bottom of the window should be enabled.
-[parameter]##:: 
+[parameter]##::
 scrollbars:: Enables scrollbars in the window if the document area is bigger than the view area of the window.
 resizable:: Allows the user to resize the browser window (no effect for tabs).
 menubar:: Enables the browser menu bar.
@@ -174,7 +176,3 @@ public class MyPopup extends UI {
     }
 }
 ----
-
-
-
-

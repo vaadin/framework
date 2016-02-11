@@ -20,11 +20,10 @@ attack] by injecting offensive JavaScript code in such components. See other
 sources for more information about cross-site scripting.
 
 Offensive code can easily be injected with [literal]#++<script>++# markup or in
-tag attributes as events, such as
-[parameter]#onLoad#.////
-TODO Consider an example, Alice, Bob,
-etc.
-////
+tag attributes as events, such as [parameter]#onLoad#.
+
+// TODO Consider an example, Alice, Bob, etc.
+
 Cross-site scripting vulnerabilities are browser dependent, depending on the
 situations in which different browsers execute scripting markup.
 
@@ -50,7 +49,3 @@ and is not sanitized. As the entire purpose of the [classname]#RichTextArea#
 component is to allow input of formatted text, you can not just remove all HTML
 tags. Also many attributes, such as [parameter]#style#, should pass through the
 sanitization.
-
-
-
-

@@ -29,7 +29,7 @@ component:
 [source, java]
 ----
 CssLayout layout = new CssLayout();
-        
+
 // Component with a layout-managed caption and icon
 TextField tf = new TextField("A TextField");
 tf.setIcon(new ThemeResource("icons/user.png"));
@@ -39,7 +39,7 @@ layout.addComponent(tf);
 Label label = new Label("A Label");
 label.setWidth(Sizeable.SIZE_UNDEFINED, 0);
 layout.addComponent(label);
-        
+
 layout.addComponent(new Button("A Button"));
 ----
 
@@ -120,18 +120,13 @@ logic behind the other layout components is there to give nice default behaviour
 and to handle the differences in different browsers. Some browsers, no need to
 say which, are notoriously incompatible with the CSS standards, so they require
 a lot of custom CSS. You may need to make use of the browser-specific style
-classes in the root element of the
-application.////
-TODO: described in &lt;xref
-linkend="advanced.browserinfo"/&gt;
-////
+classes in the root element of the application.
+// TODO: ... described in <<advanced.browserinfo>>
 Some features in the other layouts are not even solvable in pure CSS, at least
 in all browsers.
 
-
 [[layout.csslayout.css]]
 == Styling with CSS
-
 
 [source, css]
 ----
@@ -147,7 +142,6 @@ enabled. The components are contained in an element with
 
 For example, we could style the basic [classname]#CssLayout# example shown
 earlier as follows:
-
 
 [source, css]
 ----
@@ -178,7 +172,3 @@ at the same level as the actual component elements. This may cause problems with
 wrapping in [literal]#++inline-block++# mode, as wrapping can occur between the
 caption and its corresponding component element just as well as between
 components. Such use case is therefore not feasible.
-
-
-
-

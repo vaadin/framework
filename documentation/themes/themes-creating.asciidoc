@@ -10,8 +10,7 @@ layout: page
 Custom themes are placed in the [filename]#VAADIN/themes# folder of the web
 application, in an Eclipse project under the [filename]#WebContent# folder or
 [filename]#src/main/webapp# in Maven projects, as was illustrated in
-<<dummy/../../../framework/themes/themes-overview#figure.themes.theme-contents,"Contents
-of a Theme">>. This location is fixed. You need to have a theme folder for each
+<<themes-overview#figure.themes.theme-contents,"Contents of a Theme">>. This location is fixed. You need to have a theme folder for each
 theme you use in your application, although applications rarely need more than a
 single theme.
 
@@ -21,8 +20,7 @@ single theme.
 You can use Sass themes in Vaadin in two ways, either by compiling them to CSS
 by yourself or by letting the Vaadin servlet compile them for you on-the-fly
 when the theme CSS is requested by the browser, as described in
-<<dummy/../../../framework/themes/themes-compiling#themes.compiling,"Compiling
-Sass Themes">>.
+<<themes-compiling#themes.compiling,"Compiling Sass Themes">>.
 
 To define a Sass theme with the name mytheme, you must place a file with name
 [filename]#styles.scss# in the theme folder [filename]#VAADIN/themes/mytheme#.
@@ -152,13 +150,11 @@ returns only the custom stylenames, not the built-in stylenames for the
 component.
 
 Please see the section on each component for a description of its styles. Most
-of the stylenames are determined in the client-side widget of each component.
+of the style names are determined in the client-side widget of each component.
 The easiest way to find out the styles of the elements is to use a HTML
-inspector such as
-FireBug.////
-TODO reference to a Firebug section when
-available
-////
+inspector such as FireBug.
+
+//TODO add reference to a Firebug section when available
 
 Some client-side components or component styles can be shared by different
 server-side components. For example, [literal]#++v-textfield++# style is used
@@ -194,10 +190,10 @@ style names for specific components.
 public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        ...      
+        ...
         Panel panel = new Panel("Regular Panel in the Runo Theme");
         panel.addComponent(new Button("Regular Runo Button"));
-        
+
         // A button with the "small" style
         Button smallButton = new Button("Small Runo Button");
         smallButton.addStyleName(Runo.BUTTON_SMALL);
@@ -277,7 +273,3 @@ add-ons contain a theme for the components they provide.
 The add-on themes need to be included in the project theme. Vaadin Plugin for
 Eclipse and Maven automatically include them in the [filename]#addons.scss# file
 in the project theme folder. It should be included by the project theme.
-
-
-
-

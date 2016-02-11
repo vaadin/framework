@@ -120,37 +120,37 @@ Servlet 2.4 application. You simply specify the UI class with the
 [parameter]#UI# parameter for the [classname]#com.vaadin.server.VaadinServlet#.
 The servlet is then mapped to a URL path in a standard way for Java Servlets.
 
-[subs="normal"]
+[subs="verbatim,replacements,quotes"]
 ----
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;web-app
   id="WebApp_ID" version="2.4"
-  xmlns="http://java.sun.com/xml/ns/j2ee" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
      http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
 
   &lt;servlet&gt;
-    &lt;servlet-name&gt;**myservlet**&lt;/servlet-name&gt;
+    &lt;servlet-name&gt;[replaceable]##myservlet##&lt;/servlet-name&gt;
     &lt;servlet-class&gt;
-        com.vaadin.server.VaadinServlet
+        [replaceable]##com.vaadin.server.VaadinServlet##
     &lt;/servlet-class&gt;
 
     &lt;init-param&gt;
       &lt;param-name&gt;UI&lt;/param-name&gt;
-      &lt;param-value&gt;**com.ex.myprj.MyUI**&lt;/param-value&gt;
+      &lt;param-value&gt;[replaceable]##com.ex.myprj.MyUI##&lt;/param-value&gt;
     &lt;/init-param&gt;
 
     &lt;!-- If not using the default widget set--&gt;
     &lt;init-param&gt;
       &lt;param-name&gt;widgetset&lt;/param-name&gt;
-      &lt;param-value&gt;**com.ex.myprj.MyWidgetSet**&lt;/param-value&gt;
+      &lt;param-value&gt;[replaceable]##com.ex.myprj.MyWidgetSet##&lt;/param-value&gt;
     &lt;/init-param&gt;
   &lt;/servlet&gt;
 
   &lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;**myservlet**&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;servlet-name&gt;[replaceable]##myservlet##&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;[replaceable]##/*##&lt;/url-pattern&gt;
   &lt;/servlet-mapping&gt;
 &lt;/web-app&gt;
 ----
@@ -170,8 +170,8 @@ such as Servlet 3.0, you should use:
 ----
 &lt;web-app
   id="WebApp_ID" version="**3.0**"
-  xmlns="http://java.sun.com/xml/ns/j2ee" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="**http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd**"&gt;
 ----
 Servlet 3.0 support is useful for at least server push.
@@ -496,7 +496,3 @@ You can also access other [classname]#HttpSession# and
 [classname]#PortletSession# session properties through the interface, such as
 set and read session attributes that are shared by all servlets belonging to a
 particular servlet or portlet session.
-
-
-
-

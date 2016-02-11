@@ -20,7 +20,6 @@ changes to the UI itself, but only the following:
 [options="compact"]
 * Application packaged as a WAR
 
-[options="compact"]
 ** [filename]#WEB-INF/portlet.xml# descriptor
 
 ** [filename]#WEB-INF/liferay-portlet.xml# descriptor for Liferay
@@ -29,23 +28,17 @@ changes to the UI itself, but only the following:
 
 ** [filename]#WEB-INF/liferay-plugin-package.properties# for Liferay
 
-
 * Widget set installed to portal (optional)
 * Themes installed to portal (optional)
 * Vaadin libraries installed to portal (optional)
 * Portal configuration settings (optional)
 
 The Vaadin Plugin for Eclipse creates these files for you, when you create a
-portlet project as described in
-<<dummy/../../../framework/portal/portal-eclipse#portal.eclipse,"Creating a
-Generic Portlet in Eclipse">>.
+portlet project as described in <<portal-eclipse#portal.eclipse,"Creating a Generic Portlet in Eclipse">>.
 
-Installing the widget set and themes to the portal is required for running two
-or more Vaadin portlets simultaneously in a single portal page. As this
-situation occurs quite easily, we recommend installing them in any case.
-Instructions for Liferay are given in
-<<dummy/../../../framework/portal/portal-liferay#portal.liferay,"Developing
-Vaadin Portlets for Liferay">> and the procedure is similar for other portals.
+Installing the widget set and themes to the portal is required for running two or more Vaadin portlets simultaneously in a single portal page.
+As this situation occurs quite easily, we recommend installing them in any case.
+Instructions for Liferay are given in <<portal-liferay#portal.liferay,"Developing Vaadin Portlets for Liferay">> and the procedure is similar for other portals.
 
 In addition to the Vaadin libraries, you will need to have the
 [filename]#portlet.jar# in your project classpath. However, notice that you must
@@ -59,13 +52,11 @@ javax.portlet.Portlet++#".
 [[portal.deployment.descriptor]]
 == Portlet Deployment Descriptor
 
-The portlet WAR must include a portlet descriptor located at
-[filename]#WEB-INF/portlet.xml#. A portlet definition includes the portlet name,
-mapping to a servlet, modes supported by the portlet, and other configuration.
-Below is an example of a simple portlet definition in [filename]#portlet.xml#
-descriptor.
+The portlet WAR must include a portlet descriptor located at [filename]#WEB-INF/portlet.xml#.
+A portlet definition includes the portlet name, mapping to a servlet, modes supported by the portlet, and other configuration.
+Below is an example of a simple portlet definition in [filename]#portlet.xml# descriptor.
 
-[subs="normal"]
+[subs="verbatim,replacements,quotes"]
 ----
 &lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
 &lt;portlet-app
@@ -77,8 +68,8 @@ descriptor.
      http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"&gt;
 
   &lt;portlet&gt;
-    &lt;portlet-name&gt;**Portlet Example portlet**&lt;/portlet-name&gt;
-    &lt;display-name&gt;**Vaadin Portlet Example**&lt;/display-name&gt;
+    &lt;portlet-name&gt;[replaceable]##Portlet Example portlet##&lt;/portlet-name&gt;
+    &lt;display-name&gt;[replaceable]##Vaadin Portlet Example##&lt;/display-name&gt;
 
     &lt;!-- Map portlet to a servlet. --&gt;
     &lt;portlet-class&gt;
@@ -88,7 +79,7 @@ descriptor.
       &lt;name&gt;UI&lt;/name&gt;
 
       &lt;!-- The application class with package name. --&gt;
-      &lt;value&gt;**com.example.myportlet.MyportletUI**&lt;/value&gt;
+      &lt;value&gt;[replaceable]##com.example.myportlet.MyportletUI##&lt;/value&gt;
     &lt;/init-param&gt;
 
     &lt;!-- Supported portlet modes and content types. --&gt;
@@ -101,22 +92,20 @@ descriptor.
 
     &lt;!-- Not always required but Liferay requires these. --&gt;
     &lt;portlet-info&gt;
-      &lt;title&gt;**Vaadin Portlet Example**&lt;/title&gt;
-      &lt;short-title&gt;**Portlet Example**&lt;/short-title&gt;
+      &lt;title&gt;[replaceable]##Vaadin Portlet Example##&lt;/title&gt;
+      &lt;short-title&gt;[replaceable]##Portlet Example##&lt;/short-title&gt;
     &lt;/portlet-info&gt;
   &lt;/portlet&gt;
 &lt;/portlet-app&gt;
 ----
-Listing supported portlet modes in [filename]#portlet.xml# enables the
-corresponding portlet controls in the portal user interface that allow changing
-the mode, as described later.
 
+The mode definitions enable the corresponding portlet controls in the portal.
+The portlet controls allow changing the mode of the portlet, as described later.
 
 [[portal.deployment.liferay]]
 == Liferay Portlet Descriptor
 
 ((("Liferay", "portlet descriptor", id="term.portal.liferay.descriptor.liferay-portlet.liferay", range="startofrange")))
-
 
 Liferay requires a special [filename]#liferay-portlet.xml# descriptor file that
 defines Liferay-specific parameters. Especially, Vaadin portlets must be defined
@@ -135,7 +124,7 @@ Below is an example descriptor for the earlier portlet example:
     &lt;portlet&gt;
         &lt;!-- Matches definition in portlet.xml.          --&gt;
         &lt;!-- Note: Must not be the same as servlet name. --&gt;
-        &lt;portlet-name&gt;**Portlet Example portlet**&lt;/portlet-name&gt;
+        &lt;portlet-name&gt;[replaceable]##Portlet Example portlet##&lt;/portlet-name&gt;
 
         &lt;instanceable&gt;true&lt;/instanceable&gt;
         &lt;ajaxable&gt;false&lt;/ajaxable&gt;
@@ -181,7 +170,7 @@ Vaadin portlets under the "Vaadin" category, as shown in
 
 [[figure.portal.liferay.descriptor.display]]
 .Portlet Categories in Add Application Window
-image::img/liferay-display-hi.png[]
+image::img/liferay-display-hi.png[width=60%]
 
 See Liferay documentation for further details on how to configure the categories
 in the [filename]#liferay-display.xml# deployment descriptor.
@@ -203,16 +192,16 @@ settings for the portlet, most importantly the Vaadin JAR to be used.
 
 [subs="normal"]
 ----
-name=**Portlet Example portlet**
-short-description=**myportlet**
-module-group-id=**Vaadin**
+name=[replaceable]##Portlet Example portlet##
+short-description=[replaceable]##myportlet##
+module-group-id=[replaceable]##Vaadin##
 module-incremental-version=1
 #change-log=
 #page-uri=
 #author=
 license=Proprietary
 portal-dependency-jars=\
-    **vaadin.jar**
+    [replaceable]##vaadin.jar##
 ----
 [parameter]#name#:: The plugin name must match the portlet name.
 
@@ -299,7 +288,3 @@ installation directory. The deployment depends on the application server under
 which Liferay runs; for example, if you use Liferay bundled with Tomcat, you
 will find the extracted package in the [filename]#webapps# directory under the
 Tomcat installation directory included in Liferay.
-
-
-
-
