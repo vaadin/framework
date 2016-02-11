@@ -210,7 +210,7 @@ Calendar calendar = new Calendar("Bound Calendar");
 
 // Use a container of built-in BasicEvents
 final BeanItemContainer<BasicEvent> container =
-    new BeanItemContainer<BasicEvent>(BasicEvent.class);        
+    new BeanItemContainer<BasicEvent>(BasicEvent.class);
 
 // Create a meeting in the container
 container.addBean(new BasicEvent("The Event", "Single Event",
@@ -308,7 +308,7 @@ ContainerEventProvider cep =
 
 // Set the container as the data source
 calendar.setEventProvider(cep);
-        
+
 // Now we can add events to the database through the calendar
 BasicEvent event = new BasicEvent("The Event", "Single Event",
     new GregorianCalendar(2012,1,15,12,00).getTime(),
@@ -414,7 +414,7 @@ public class BasicEvent
             EventChangeListener listener) {
         ...
     }
-    
+
     public void removeListener(EventChangeListener listener) {
         ...
     }
@@ -660,10 +660,10 @@ private Calendar createDDCalendar() {
   Calendar calendar = new Calendar();
   calendar.setDropHandler(new DropHandler() {
     public void drop(DragAndDropEvent event) {
-      CalendarTargetDetails details = 
+      CalendarTargetDetails details =
               (CalendarTargetDetails) event.getTargetDetails();
-      
-      TableTransferable transferable = 
+
+      TableTransferable transferable =
               (TableTransferable) event.getTransferable();
 
       createEvent(details, transferable);
@@ -877,14 +877,11 @@ endif::web[]
 
 Vaadin Calendar has only limited built-in navigation support. The weekly view
 has navigation buttons in the top left and top right
-corners.////
-TODO See the figure
-4.
-////
+corners.
+// TODO See the figure 4.
 
 You can handle backward and forward navigation with a
 [interfacename]#BackwardListener# and [interfacename]#ForwardListener#.
-
 
 [source, java]
 ----
@@ -894,7 +891,7 @@ cal.setHandler(new BasicBackwardHandler() {
 
       java.util.Calendar calendar = event.getComponent()
                                     .getInternalCalendar();
-      if (isThisYear(calendar, end) 
+      if (isThisYear(calendar, end)
            && isThisYear(calendar, start)) {
         super.setDates(event, start, end);
       }
@@ -923,7 +920,7 @@ the week view clicking on a day switches to the day view.
 calendar.setHandler(new BasicDateClickHandler() {
     public void dateClick(DateClickEvent event) {
       Calendar cal = event.getComponent();
-      
+
       // Check if the current range is already one day long
       long currentCalDateRange = cal.getEndDate().getTime() -
                                  cal.getStartDate().getTime();
@@ -977,7 +974,7 @@ cal.setHandler(new BasicWeekClickHandler() {
                           Date start, Date end) {
         java.util.Calendar calendar = event.getComponent()
                                   .getInternalCalendar();
-        if (isThisMonth(calendar, start) 
+        if (isThisMonth(calendar, start)
             && isThisMonth(calendar,  end)) {
             super.setDates(event, start, end);
         }
@@ -1039,7 +1036,7 @@ cal.setHandler(new BasicEventMoveHandler() {
     javaCalendar = event.getComponent().getInternalCalendar();
     super.eventMove(event);
   }
-  
+
   protected void setDates(CalendarEventEditor event,
                           Date start, Date end) {
     if (isThisMonth(javaCalendar, start)
@@ -1082,7 +1079,7 @@ public static class MyEventProvider
     events.add(BasicEvent);
   }
 
-  public List<CalendarEvent> getEvents(Date startDate, 
+  public List<CalendarEvent> getEvents(Date startDate,
                                        Date endDate) {
     return events;
   }
@@ -1129,9 +1126,9 @@ cal.setHandler(new RangeSelectHandler() {
     final Window w = new Window(null, layout);
     ...
 
-    // Wrap the calendar event to a BeanItem 
+    // Wrap the calendar event to a BeanItem
     // and pass it to the form
-    final BeanItem<CalendarEvent> item = 
+    final BeanItem<CalendarEvent> item =
                          new BeanItem<CalendarEvent>(myEvent);
 
     final Form form = new Form();
@@ -1181,7 +1178,7 @@ resize will just be corrected by the server.
 cal.setHandler(new BasicEventResizeHandler() {
   private static final long twelveHoursInMs = 12*60*60*1000;
 
-  protected void setDates(CalendarEventEditor event, 
+  protected void setDates(CalendarEventEditor event,
                           Date start, Date end) {
     long eventLength = end.getTime() - start.getTime();
     if (eventLength <= twelveHoursInMs) {
@@ -1192,6 +1189,3 @@ cal.setHandler(new BasicEventResizeHandler() {
 ----
 
 endif::web[]
-
-
-

@@ -29,7 +29,7 @@ The result is shown in <<figure.application.errors.error-indicator>>.
 
 [[figure.application.errors.error-indicator]]
 .Error Indicator Active
-image::img/errorindicator-example2.png[]
+image::img/errorindicator-example2.png[scaledwidth=40%]
 
 [[application.errors.reconnect]]
 == Connection Fault
@@ -101,7 +101,7 @@ as follows:
 ----
 getService().setSystemMessagesProvider(
     new SystemMessagesProvider() {
-    @Override 
+    @Override
     public SystemMessages getSystemMessages(
         SystemMessagesInfo systemMessagesInfo) {
         CustomizedSystemMessages messages =
@@ -124,7 +124,7 @@ endif::web[]
 
 ifdef::web[]
 [[application.errors.unchecked-exceptions]]
-== Handling Uncaught Exceptions 
+== Handling Uncaught Exceptions
 
 Handling events can result in exceptions either in the application logic or in
 the framework itself, but some of them may not be caught properly by the
@@ -150,7 +150,7 @@ behavior of the default handler.
 
 [source, java]
 ----
-// Here's some code that produces an uncaught exception 
+// Here's some code that produces an uncaught exception
 final VerticalLayout layout = new VerticalLayout();
 final Button button = new Button("Click Me!",
     new Button.ClickListener() {
@@ -170,13 +170,13 @@ UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
              t = t.getCause())
             if (t.getCause() == null) // We're at final cause
                 cause += t.getClass().getName() + "<br/>";
-        
+
         // Display the error message in a custom fashion
         layout.addComponent(new Label(cause, ContentMode.HTML));
-           
+
         // Do the default error handling (optional)
         doDefault(event);
-    } 
+    }
 });
 ----
 
@@ -191,6 +191,3 @@ thrown. See the source code of the implementation for more details. You can call
 error. If the error is not associated with a component, it returns null.
 
 endif::web[]
-
-
-

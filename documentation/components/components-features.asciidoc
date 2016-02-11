@@ -168,7 +168,7 @@ Components are always enabled by default. You can disable a component with
 Button enabled = new Button("Enabled");
 enabled.setEnabled(true); // The default
 layout.addComponent(enabled);
-        
+
 Button disabled = new Button("Disabled");
 disabled.setEnabled(false);
 layout.addComponent(disabled);
@@ -242,7 +242,7 @@ image is provided as a resource, perhaps most typically a
 TextField name = new TextField("Name");
 name.setIcon(new ThemeResource("icons/user.png"));
 layout.addComponent(name);
-        
+
 // Component with an icon from another theme ('runo')
 Button ok = new Button("OK");
 ok.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
@@ -297,11 +297,11 @@ You can set the locale of a component (or the application) with
 ----
 // Component for which the locale is meaningful
 InlineDateField date = new InlineDateField("Datum");
-        
+
 // German language specified with ISO 639-1 language
-// code and ISO 3166-1 alpha-2 country code. 
+// code and ISO 3166-1 alpha-2 country code.
 date.setLocale(new Locale("de", "DE"));
-        
+
 date.setResolution(Resolution.DAY);
 layout.addComponent(date);
 ----
@@ -357,7 +357,7 @@ get the localized resource right when the component is created.
 ResourceBundle bundle =
     ResourceBundle.getBundle(MyAppCaptions.class.getName(),
         UI.getCurrent().getLocale());
-        
+
 // Get a localized resource from the bundle
 Button cancel =
     new Button(bundle.getString(MyAppCaptions.CancelKey));
@@ -381,10 +381,10 @@ in Java.
 // The locale in which we want to have the language
 // selection list
 Locale displayLocale = Locale.ENGLISH;
-        
+
 // All known locales
 final Locale[] locales = Locale.getAvailableLocales();
-        
+
 // Allow selecting a language. We are in a constructor of a
 // CustomComponent, so preselecting the current
 // language of the application can not be done before
@@ -401,7 +401,7 @@ for (int i=0; i<locales.length; i++) {
     select.addItem(locales[i]);
     select.setItemCaption(locales[i],
                           locales[i].getDisplayName(displayLocale));
-    
+
     // Automatically select the current locale
     if (locales[i].equals(getLocale()))
         select.setValue(locales[i]);
@@ -417,7 +417,7 @@ final InlineDateField date =
     new InlineDateField("Calendar in the selected language");
 date.setResolution(Resolution.DAY);
 layout.addComponent(date);
-        
+
 // Handle language selection
 select.addValueChangeListener(new Property.ValueChangeListener() {
     public void valueChange(ValueChangeEvent event) {
@@ -457,7 +457,7 @@ TextField readwrite = new TextField("Read-Write");
 readwrite.setValue("You can change this");
 readwrite.setReadOnly(false); // The default
 layout.addComponent(readwrite);
-        
+
 TextField readonly = new TextField("Read-Only");
 readonly.setValue("You can't touch this!");
 readonly.setReadOnly(true);
@@ -497,10 +497,11 @@ read-only component can accept some other variable changes from the client-side
 and some of such changes could be acceptable, such as change in the scroll bar
 position of a [classname]#Table#. Custom widgets should check the read-only
 state for variables bound to business
-data.////
-TODO: Note this also in the Advanced: Security section and possibly also in the
-GWT
-chapter.
+data.
+
+////
+TODO: Note this also in the Advanced: Security section.
+Possibly also in the GWT chapter.
 ////
 
 === CSS Style Rules
@@ -750,8 +751,3 @@ For example, the following would make a text field blue when it has focus.
     background: lightblue;
 }
 ----
-
-
-
-
-

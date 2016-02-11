@@ -26,20 +26,13 @@ The generated defaults are as follows:
 
 |===============
 
-
-
-The field factory is recusive, so that you can edit a complex object tree with
-one form.
+The field factory is recursive, so that you can edit a complex object tree with one form.
 
 [[jpacontainer.fieldfactory.configuring]]
 == Configuring the Field Factory
 
-The [classname]#FieldFactory# is highly configurable with various configuration
-settings and by
-extending.////
-You need to make the configuration
-before
-////
+The [classname]#FieldFactory# is highly configurable with various configuration settings and by extending.
+// You need to make the configuration before ...
 
 The [methodname]#setMultiSelectType()# and [methodname]#setSingleSelectType()#
 allow you to specify a selection component that is used instead of the default
@@ -93,7 +86,7 @@ countrySelect.addValueChangeListener(new ValueChangeListener(){
         // Get the item to edit in the form
         Item countryItem =
             countries.getItem(event.getProperty().getValue());
-        
+
         // Use a JPAContainer field factory
         //  - no configuration is needed here
         final FieldFactory fieldFactory = new FieldFactory();
@@ -102,7 +95,7 @@ countrySelect.addValueChangeListener(new ValueChangeListener(){
         // Edit the item in the form
         countryForm.setItemDataSource(countryItem);
         countryForm.setEnabled(true);
-        
+
         // Handle saves on the form
         final Button save = new Button("Save");
         countryForm.getFooter().removeAllComponents();
@@ -156,7 +149,3 @@ automatically. As shown in the example in
 <<figure.jpacontainer.fieldfactory.using>>, the factory creates a
 [classname]#MasterDetailEditor# for all properties with a
 [literal]#++@OneToMany++# or an [literal]#++@ElementCollection++# annotation.
-
-
-
-

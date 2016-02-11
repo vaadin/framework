@@ -3,9 +3,7 @@
 
 ((("JPAContainer", id="term.jpacontainer", range="startofrange")))
 
-
 This chapter describes the use of the Vaadin JPAContainer add-on.
-
 
 include::jpacontainer-overview.asciidoc[leveloffset=+2]
 

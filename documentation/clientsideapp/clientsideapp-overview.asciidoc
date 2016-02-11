@@ -64,13 +64,10 @@ can be loaded to any web page, as described in
 <<dummy/../../../framework/clientsideapp/clientsideapp-loading#clientsideapp.loading,"Loading
 a Client-Side Application">>.
 
+// TODO What is this? What's an "UI Binder"?
 The client-side user interface can be built declaratively using the included
-__UI
-Binder__////
-, as described in &lt;xref
-linkend="clientsideapp.uibinder"/&gt;
-////
-.
+__UI Binder__.
+// , as described in <<clientsideapp.uibinder>>.
 
 The servlet for processing RPC calls from the client-side can be generated
 automatically using the included compiler.
@@ -79,12 +76,9 @@ Even with regular server-side Vaadin applications, it may be useful to provide
 an off-line mode if the connection is closed. An off-line mode can persist data
 in a local store in the browser, thereby avoiding the need for server-side
 storage, and transmit the data to the server when the connection is again
-available. Such a pattern is commonly used with Vaadin
-TouchKit.////
-Use of a client-side application to provide an off-line mode is described in
-&lt;xref
-linkend="clientsideapp.offline"/&gt;.
+available. Such a pattern is commonly used with Vaadin TouchKit.
+
 ////
-
-
-
+TODO It may be necessary to have such a section at some point.
+Use of a client-side application to provide an off-line mode is described in <<clientsideapp.offline>>.
+////

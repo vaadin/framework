@@ -1,6 +1,11 @@
 [[layout]]
 == Managing Layout
 
+////
+TODO The intro text below is now completely hidden, as this text is
+not visible in web edition and all the text is web-conditional.
+////
+
 ifdef::web[]
 Ever since the ancient xeroxians invented graphical user interfaces, programmers
 have wanted to make GUI programming ever easier for themselves. Solutions
@@ -43,16 +48,17 @@ presentations, such as books and most web pages. Real applications, however,
 need to have more control. They need to be able to change the state of user
 interface components and even their layout on the run. This creates a need to
 separate the presentation from content on exactly the right
-level.////
-Vaadin provides a solution for this, using themes and CSS, but let us first look
-at what Java did for UI
-programming.
+level.
+
 ////
+Vaadin provides a solution for this, using themes and CSS, but let us first look
+at what Java did for UI programming.
+////
+
 ////
 Changing the layout steps right on the feet of the graphics designers, so we
 have a conflict. We will discuss this conflict later, but let us first look at
-what Java did for UI
-programming.
+what Java did for UI programming.
 ////
 endif::web[]
 

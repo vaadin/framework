@@ -209,7 +209,7 @@ The Ivy dependency is as follows:
 [subs="normal"]
 ----
     &lt;dependency org="com.vaadin" name="vaadin-spring"
-                rev="[replaceable]#latest.release#"/&gt;
+                rev="[replaceable]##latest.release##"/&gt;
 ----
 The Maven dependency is as follows:
 
@@ -218,17 +218,17 @@ The Maven dependency is as follows:
     &lt;dependency&gt;
         &lt;groupId&gt;com.vaadin&lt;/groupId&gt;
         &lt;artifactId&gt;vaadin-spring&lt;/artifactId&gt;
-        &lt;version&gt;[replaceable]#LATEST#&lt;/version&gt;
+        &lt;version&gt;[replaceable]##LATEST##&lt;/version&gt;
     &lt;/dependency&gt;
 ----
 
-[[advanced.spring.peparing]]
+[[advanced.spring.preparing]]
 == Preparing Application for Spring
 
 A Vaadin application that uses Spring must have a file named
 [filename]#applicationContext.xml# in the [filename]#WEB-INF# directory.
 
-[subs="normal"]
+[subs="verbatim,replacements,quotes"]
 ----
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
@@ -240,12 +240,10 @@ A Vaadin application that uses Spring must have a file named
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-4.1.xsd"&gt;
 
-  //Configuration object
-
+  &lt;!-- Configuration object --&gt;
   &lt;bean class="[replaceable]#com.example.myapp.MySpringUI.MyConfiguration#" /&gt;
 
-  //Location for automatically scanned beans
-
+  &lt;!-- Location for automatically scanned beans --&gt;
   &lt;context:component-scan
       base-package="[replaceable]#com.example.myapp.domain#" /&gt;
 &lt;/beans&gt;
@@ -395,7 +393,7 @@ navigator.
 public class MySpringUI extends UI {
     @Autowired
     SpringViewProvider viewProvider;
-    
+
     @Override
     protected void init(VaadinRequest request) {
         Navigator navigator = new Navigator(this, this);
@@ -498,11 +496,9 @@ If the list contains [parameter]#UI.class#, the view is available to all UIs.
 @SpringView(name="myview", uis={UI.class})
 ----
 
-
 In the following, we have a login view that accesses a session-scoped user
 object. Here, we use a constant to define the view name, so that we can use the
 constant when navigating to it.
-
 
 [source, java]
 ----
@@ -510,13 +506,13 @@ constant when navigating to it.
 public class LoginView extends CustomComponent
                        implements View {
     public final static String NAME = "";
-    
+
     // Here we inject to the constructor and actually do
     // not store the injected object to use it later
     @Autowired
     public LoginView(User user) {
         VerticalLayout layout = new VerticalLayout();
-        
+
         // An input field for editing injected data
         BeanItem<User> item = new BeanItem<User>(user);
         TextField username = new TextField("User name",
@@ -528,10 +524,10 @@ public class LoginView extends CustomComponent
         layout.addComponent(new Button("Login", e ->
             getUI().getNavigator().
                 navigateTo(MainView.VIEWNAME)));
-        
+
         setCompositionRoot(layout);
     }
-    
+
     @Override
     public void enter(ViewChangeEvent event) {}
 }
@@ -539,12 +535,10 @@ public class LoginView extends CustomComponent
 
 You could now navigate to the view from any other view in the UI with:
 
-
 [source, java]
 ----
 getUI().getNavigator().navigateTo(LoginView.VIEWNAME);
 ----
-
 
 endif::web[]
 
@@ -664,7 +658,6 @@ default servlet as follows, and map the other servlets to other URL paths:
 ----
 &lt;web-app&gt;
   ...
-
   &lt;servlet&gt;
     &lt;servlet-name&gt;Default&lt;/servlet-name&gt;
     &lt;servlet-class&gt;
@@ -674,23 +667,18 @@ default servlet as follows, and map the other servlets to other URL paths:
 
   &lt;servlet-mapping&gt;
     &lt;servlet-name&gt;Default&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;[replaceable]#/myspringuis/*#&lt;/url-pattern&gt;
+    &lt;url-pattern&gt;[replaceable]##/myspringuis/*##&lt;/url-pattern&gt;
   &lt;/servlet-mapping&gt;
 
   &lt;servlet-mapping&gt;
     &lt;servlet-name&gt;Default&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/VAADIN/*&lt;/url-pattern&gt;
+    &lt;url-pattern&gt;/VAADIN/+++*+++&lt;/url-pattern&gt;
   &lt;/servlet-mapping&gt;
 &lt;/web-app&gt;
 ----
-With such a setting, paths to Spring UIs would have base path
-[filename]#/myapp/myspringuis#, to which the (optional) UI path would be
-appended. The [filename]#/VAADIN/*# only needs to be mapped to the servlet if
-there are no other Vaadin servlets.
 
-
+With such a setting, paths to Spring UIs would have base path [filename]#/myapp/myspringuis#, to which the (optional) UI path would be appended.
+The [filename]#/VAADIN/*# only needs to be mapped to the servlet if there are no other Vaadin servlets.
 
 (((range="endofrange", startref="term.advanced.spring.springlong")))
 (((range="endofrange", startref="term.advanced.spring.spring")))
-
-
