@@ -296,7 +296,7 @@ components, including [classname]#Tree# and [classname]#Table#.
 [classname]#AcceptItem#:: Accepts only specific items from a specific selection component. The selection component, which must inherit [classname]#AbstractSelect#, is given as the first parameter for the constructor. It is followed by a list of allowed item identifiers in the drag source.
 [classname]#AcceptItem.ALL#:: Accepts all transferables as long as they are items.
 [classname]#TargetItemIs#:: Accepts all drops on the specified target items. The constructor requires the target component ( [classname]#AbstractSelect#) followed by a list of allowed item identifiers.
-[classname]#VerticalLocationIs.MIDDLE#,[classname]#TOP#, and[classname]#BOTTOM#:: The three static criteria accepts drops on, above, or below an item. For example, you could accept drops only in between items with the following: 
+[classname]#VerticalLocationIs.MIDDLE#, [classname]#TOP#, and [classname]#BOTTOM#:: The three static criteria accepts drops on, above, or below an item. For example, you could accept drops only in between items with the following: 
 [source, java]
 ----
 public AcceptCriterion getAcceptCriterion() {
