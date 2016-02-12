@@ -19,9 +19,31 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.DetailsGenerator;
+import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.Label;
 
 public class GridContainerTest {
+
+    @Test
+    public void testDetailsGeneratorDoesNotResetOnContainerChange() {
+        Grid grid = new Grid();
+        DetailsGenerator detGen = new DetailsGenerator() {
+
+            @Override
+            public Component getDetails(RowReference rowReference) {
+                return new Label("Empty details");
+            }
+        };
+        grid.setDetailsGenerator(detGen);
+
+        grid.setContainerDataSource(createContainer());
+
+        Assert.assertEquals("DetailsGenerator changed", detGen,
+                grid.getDetailsGenerator());
+    }
 
     @Test
     public void testSetContainerTwice() throws Exception {
