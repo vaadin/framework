@@ -70,7 +70,7 @@ public class GridLayoutDeclarativeTest extends
 
     @Test
     public void testOneBigComponentGridLayout() {
-        Button b1 = new Button("Button 0,0 -> 1,1");
+        Button b1 = new Button("Button 0,0 -&gt; 1,1");
         b1.setCaptionAsHtml(true);
         String design = "<vaadin-grid-layout><row>" //
                 + "<column colspan=2 rowspan=2>" + writeChild(b1) + "</column>" //
@@ -86,19 +86,19 @@ public class GridLayoutDeclarativeTest extends
     @Test
     public void testMultipleSpannedComponentsGridLayout() {
         GridLayout gl = new GridLayout(5, 5);
-        Button b1 = new Button("Button 0,0 -> 0,2");
+        Button b1 = new Button("Button 0,0 -&gt; 0,2");
         b1.setCaptionAsHtml(true);
         gl.addComponent(b1, 0, 0, 2, 0);
 
-        Button b2 = new Button("Button 0,3 -> 3,3");
+        Button b2 = new Button("Button 0,3 -&gt; 3,3");
         b2.setCaptionAsHtml(true);
         gl.addComponent(b2, 3, 0, 3, 3);
 
-        Button b3 = new Button("Button 0,4 -> 1,4");
+        Button b3 = new Button("Button 0,4 -&gt; 1,4");
         b3.setCaptionAsHtml(true);
         gl.addComponent(b3, 4, 0, 4, 1);
 
-        Button b4 = new Button("Button 1,0 -> 3,1");
+        Button b4 = new Button("Button 1,0 -&gt; 3,1");
         b4.setCaptionAsHtml(true);
         gl.addComponent(b4, 0, 1, 1, 3);
 
@@ -106,11 +106,11 @@ public class GridLayoutDeclarativeTest extends
         b5.setCaptionAsHtml(true);
         gl.addComponent(b5, 2, 2);
 
-        Button b6 = new Button("Button 3,4 -> 4,4");
+        Button b6 = new Button("Button 3,4 -&gt; 4,4");
         b6.setCaptionAsHtml(true);
         gl.addComponent(b6, 4, 3, 4, 4);
 
-        Button b7 = new Button("Button 4,1 -> 4,2");
+        Button b7 = new Button("Button 4,1 -&gt; 4,2");
         b7.setCaptionAsHtml(true);
         gl.addComponent(b7, 2, 4, 3, 4);
 
@@ -146,7 +146,7 @@ public class GridLayoutDeclarativeTest extends
     @Test
     public void testManyExtraGridLayoutSlots() {
         GridLayout gl = new GridLayout(5, 5);
-        Button b1 = new Button("Button 0,4 -> 4,4");
+        Button b1 = new Button("Button 0,4 -&gt; 4,4");
         b1.setCaptionAsHtml(true);
         gl.addComponent(b1, 4, 0, 4, 4);
         gl.setColumnExpandRatio(2, 2.0f);
@@ -166,7 +166,7 @@ public class GridLayoutDeclarativeTest extends
     @Test
     public void testManyEmptyColumnsWithOneExpand() {
         GridLayout gl = new GridLayout(5, 5);
-        Button b1 = new Button("Button 0,4 -> 4,4");
+        Button b1 = new Button("Button 0,4 -&gt; 4,4");
         b1.setCaptionAsHtml(true);
         gl.addComponent(b1, 0, 0, 0, 4);
         gl.setColumnExpandRatio(4, 2.0f);
@@ -202,13 +202,29 @@ public class GridLayoutDeclarativeTest extends
 
         GridLayout result = super.testRead(design, expected);
         for (int row = 0; row < expected.getRows(); ++row) {
-            Assert.assertTrue(Math.abs(expected.getRowExpandRatio(row)
-                    - result.getRowExpandRatio(row)) < 0.00001);
+            Assert.assertEquals(expected.getRowExpandRatio(row),
+                    result.getRowExpandRatio(row), 0.00001);
         }
         for (int col = 0; col < expected.getColumns(); ++col) {
-            Assert.assertTrue(Math.abs(expected.getColumnExpandRatio(col)
-                    - result.getColumnExpandRatio(col)) < 0.00001);
+            Assert.assertEquals(expected.getColumnExpandRatio(col),
+                    result.getColumnExpandRatio(col), 0.00001);
         }
+        for (int row = 0; row < expected.getRows(); ++row) {
+            for (int col = 0; col < expected.getColumns(); ++col) {
+                Component eC = expected.getComponent(col, row);
+                Component rC = result.getComponent(col, row);
+
+                assertEquals(eC, rC);
+                if (eC == null) {
+                    continue;
+                }
+
+                Assert.assertEquals(expected.getComponentAlignment(eC),
+                        result.getComponentAlignment(rC));
+
+            }
+        }
+
         return result;
     }
 
