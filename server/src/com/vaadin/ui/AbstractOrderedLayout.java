@@ -31,7 +31,6 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
@@ -486,22 +485,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             Component newChild = designContext.readDesign(childComponent);
             addComponent(newChild);
             // handle alignment
-            int bitMask = 0;
-            if (attr.hasKey(":middle")) {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
-            } else if (attr.hasKey(":bottom")) {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
-            } else {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
-            }
-            if (attr.hasKey(":center")) {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
-            } else if (attr.hasKey(":right")) {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
-            } else {
-                bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
-            }
-            setComponentAlignment(newChild, new Alignment(bitMask));
+            setComponentAlignment(newChild,
+                    DesignAttributeHandler.readAlignment(attr));
             // handle expand ratio
             if (attr.hasKey(":expand")) {
                 String value = attr.get(":expand");
