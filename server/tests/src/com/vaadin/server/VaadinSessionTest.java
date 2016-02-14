@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -42,17 +43,17 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
-public class VaadinSessionTest {
+public class VaadinSessionTest implements Serializable {
 
-    private VaadinSession session;
-    private VaadinServlet mockServlet;
-    private VaadinServletService mockService;
-    private ServletConfig mockServletConfig;
-    private HttpSession mockHttpSession;
-    private WrappedSession mockWrappedSession;
-    private VaadinServletRequest vaadinRequest;
-    private UI ui;
-    private Lock httpSessionLock;
+    private transient VaadinSession session;
+    private transient VaadinServlet mockServlet;
+    private transient VaadinServletService mockService;
+    private transient ServletConfig mockServletConfig;
+    private transient HttpSession mockHttpSession;
+    private transient WrappedSession mockWrappedSession;
+    private transient VaadinServletRequest vaadinRequest;
+    private transient UI ui;
+    private transient Lock httpSessionLock;
 
     @Before
     public void setup() throws Exception {
@@ -315,5 +316,28 @@ public class VaadinSessionTest {
                 "Current session should be available in SerializationTestLabel.readObject",
                 deserializedSession, deserializedLabel.session);
         deserializedSession.unlock();
+    }
+
+    @Test
+    public void lockedDuringSerialization() throws IOException {
+        final AtomicBoolean lockChecked = new AtomicBoolean(false);
+
+        ui.setContent(new Label() {
+            private void writeObject(ObjectOutputStream out) throws IOException {
+                Assert.assertTrue(session.hasLock());
+                lockChecked.set(true);
+                out.defaultWriteObject();
+            }
+        });
+
+        session.unlock();
+        Assert.assertFalse(session.hasLock());
+
+        ObjectOutputStream out = new ObjectOutputStream(
+                new ByteArrayOutputStream());
+        out.writeObject(session);
+
+        Assert.assertFalse(session.hasLock());
+        Assert.assertTrue(lockChecked.get());
     }
 }

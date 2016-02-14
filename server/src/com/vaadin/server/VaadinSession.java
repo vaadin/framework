@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -1416,6 +1417,26 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
         } finally {
             CurrentInstance.restoreInstances(old);
+        }
+    }
+
+    /**
+     * Override default serialization logic to avoid
+     * ConcurrentModificationException if the contents are modified while
+     * serialization is reading them.
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        Lock lock = this.lock;
+
+        if (lock != null) {
+            lock.lock();
+        }
+        try {
+            out.defaultWriteObject();
+        } finally {
+            if (lock != null) {
+                lock.unlock();
+            }
         }
     }
 
