@@ -34,7 +34,6 @@ different widget sets and different themes.
 Embedding an UI requires the following basic tasks:
 
 * Set up the page header
-* Include a GWT history frame in the page
 * Call the [filename]#vaadinBootstrap.js# file
 * Define the [literal]#++<div>++# element for the UI
 * Configure and initialize the UI
@@ -94,18 +93,6 @@ relative to the path of the embedding page.
 ----
 The bootstrap script is served by the Vaadin servlet from inside the
 [filename]#vaadin-server# JAR.
-
-Vaadin, or more precisely GWT, requires an invisible history frame, which is
-used for tracking the page or fragment history in the browser.
-
-
-[source, html]
-----
-  <iframe tabindex="-1" id="__gwt_historyFrame"
-          style="position: absolute; width: 0; height: 0;
-                 border: 0; overflow: hidden"
-          src="javascript:false"></iframe>
-----
 
 endif::web[]
 
@@ -254,13 +241,6 @@ element.
   <!-- Loads the Vaadin widget set, etc. -->
   <script type="text/javascript"
           src="VAADIN/vaadinBootstrap.js"></script>
-
-  <!-- GWT requires an invisible history frame. It is   -->
-  <!-- needed for page/fragment history in the browser. -->
-  <iframe tabindex="-1" id="__gwt_historyFrame"
-          style="position: absolute; width: 0; height: 0;
-                 border: 0; overflow: hidden"
-          src="javascript:false"></iframe>  
 
   <h1>Embedding a Vaadin UI</h1>
     
