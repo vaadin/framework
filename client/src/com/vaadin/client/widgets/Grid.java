@@ -2015,8 +2015,10 @@ public class Grid<T> extends ResizeComposite implements
             }
             columnToWidget.clear();
 
-            grid.detachWidget(saveButton);
-            grid.detachWidget(cancelButton);
+            if (isBuffered()) {
+                grid.detachWidget(saveButton);
+                grid.detachWidget(cancelButton);
+            }
 
             editorOverlay.removeAllChildren();
             cellWrapper.removeAllChildren();
