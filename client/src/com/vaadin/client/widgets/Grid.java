@@ -418,7 +418,7 @@ public class Grid<T> extends ResizeComposite implements
             /**
              * Called when the cell is detached from the row
              * 
-             * @since
+             * @since 7.6.3
              */
             void detach() {
                 if (this.content instanceof Widget) {
@@ -649,7 +649,7 @@ public class Grid<T> extends ResizeComposite implements
             /**
              * Called when the row is detached from the grid
              * 
-             * @since
+             * @since 7.6.3
              */
             void detach() {
                 // Avoid calling detach twice for a merged cell
