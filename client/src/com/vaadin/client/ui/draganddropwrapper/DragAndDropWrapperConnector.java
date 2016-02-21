@@ -30,11 +30,18 @@ import com.vaadin.client.ui.VDragAndDropWrapper;
 import com.vaadin.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.DragAndDropWrapper;
 
 @Connect(DragAndDropWrapper.class)
 public class DragAndDropWrapperConnector extends CustomComponentConnector
-        implements Paintable {
+        implements Paintable, VDragAndDropWrapper.UploadHandler {
+
+    @Override
+    protected void init() {
+        super.init();
+        getWidget().uploadHandler = this;
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -121,4 +128,11 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
     private static Logger getLogger() {
         return Logger.getLogger(DragAndDropWrapperConnector.class.getName());
     }
+
+    @Override
+    public void uploadDone() {
+        // #19616 RPC to poll the server for changes
+        getRpcProxy(DragAndDropWrapperServerRpc.class).poll();
+    }
+
 }

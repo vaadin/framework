@@ -40,6 +40,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
@@ -110,6 +111,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
     }
+
+    private final DragAndDropWrapperServerRpc rpc = new DragAndDropWrapperServerRpc() {
+
+        @Override
+        public void poll() {
+            // #19616 RPC to poll the server for changes
+        }
+    };
 
     private Map<String, ProxyReceiver> receivers = new HashMap<String, ProxyReceiver>();
 
@@ -197,6 +206,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     @Deprecated
     public DragAndDropWrapper() {
         super();
+        registerRpc(rpc);
     }
 
     /**

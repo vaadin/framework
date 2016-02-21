@@ -196,6 +196,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /** For internal use only. May be removed or replaced in the future. */
     public VAbstractDropHandler dropHandler;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public UploadHandler uploadHandler;
+
     private VDragEvent vaadinDragEvent;
 
     int filecounter = 0;
@@ -239,9 +242,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-                // visit server for possible
-                // variable changes
-                client.sendPendingVariableChanges();
+                // #19616 Notify the upload handler that the request is complete
+                // and let it poll the server for changes.
+                uploadHandler.uploadDone();
                 uploading = false;
                 startNextUpload();
                 xhr.clearOnReadyStateChange();
@@ -725,6 +728,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      */
     public Widget getDragImageWidget() {
         return dragImageWidget;
+    }
+
+    public interface UploadHandler {
+
+        public void uploadDone();
+
     }
 
 }
