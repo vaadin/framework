@@ -65,7 +65,7 @@ with Maven.
 ----
 <dependency>
    <groupId>com.vaadin.addon</groupId>
-   <artifactId>jpacontainer-addon</artifactId>
+   <artifactId>jpacontainer</artifactId>
    <version>3.1.0</version>
 </dependency>
 ----
