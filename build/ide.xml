@@ -180,9 +180,19 @@
         </java>
     </target>
     <target name="vaadinPush.js" depends="resolve">
-        <ant antfile="${basedir}/push/build.xml" target="vaadinPush.js" dir="${basedir}/push" />
+        <property name="project.root" location="."/>
+        <ivy:resolve log="download-only" file="${project.root}/ivy-taskdefs.xml" conf="taskdefs" />
+        <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
+        <!-- ant contrib for Maven integration -->
+        <taskdef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="taskdefs.classpath" />
+
+        <!-- Must fork to avoid ExitException -->
+        <artifact:mvn pom="${project.root}/push/pom.xml" fork="true" mavenVersion="3.0.4">
+            <arg value="package"/>
+        </artifact:mvn>
+
         <property name="js.output.dir" location="WebContent" />
-        <property name="push.js.dir" location="${basedir}/push/result/js" />
+        <property name="push.js.dir" location="${basedir}/push/target/classes/" />
         <copy todir="${js.output.dir}">
             <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*" excludes="**/*.gz">
             </fileset>

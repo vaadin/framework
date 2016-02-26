@@ -16,6 +16,8 @@
         <filesystem name="local-maven" m2compatible="true">
             <artifact
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+            <ivy
+                pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom" />
         </filesystem>
         <filesystem name="build-temp">
             <ivy
@@ -48,7 +50,7 @@
         <module organisation="com.vaadin" name="vaadin-themes"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-push"
-            resolver="build-temp" />
+            resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-bom"

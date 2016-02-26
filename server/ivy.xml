@@ -55,7 +55,7 @@
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
-            conf="build-provided,test->build">
+            conf="build-provided,test->compile">
             <exclude type="pom" conf="test" />
         </dependency>
 

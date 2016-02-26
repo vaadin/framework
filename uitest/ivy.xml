@@ -53,7 +53,7 @@
             <exclude type="pom" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
-            conf="build->build">
+            conf="build->default">
             <exclude org="javax.servlet"></exclude>
             <exclude type="pom" />
         </dependency>
