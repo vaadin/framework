@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.vaadincontext;
 
+import com.vaadin.annotations.BootstrapMod;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
@@ -29,6 +31,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
+@BootstrapMod({
+        BootstrapModifyUI.BootstrapMod1.class,
+        BootstrapModifyUI.BootstrapMod2.class})
 public class BootstrapModifyUI extends AbstractTestUI {
     private static final String INSTALLED_ATRIBUTE_NAME = BootstrapModifyUI.class
             .getName() + ".installed";
@@ -88,4 +93,29 @@ public class BootstrapModifyUI extends AbstractTestUI {
         return Integer.valueOf(9274);
     }
 
+    public static class BootstrapMod1 implements BootstrapListener {
+        @Override
+        public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+
+        }
+
+        @Override
+        public void modifyBootstrapPage(BootstrapPageResponse response) {
+            Document document = response.getDocument();
+            document.head().appendElement("bootstrap-1");
+        }
+    }
+
+    public static class BootstrapMod2 implements BootstrapListener {
+        @Override
+        public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+
+        }
+
+        @Override
+        public void modifyBootstrapPage(BootstrapPageResponse response) {
+            Document document = response.getDocument();
+            document.head().appendElement("bootstrap-2");
+        }
+    }
 }

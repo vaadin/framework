@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.annotations.BootstrapMod;
 import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
@@ -55,19 +57,16 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
- * 
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
 public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
-     * Parameter that is added to the UI init request if the session has already
-     * been restarted when generating the bootstrap HTML and ?restartApplication
-     * should thus be ignored when handling the UI init request.
+     * Parameter that is added to the UI init request if the session has already been restarted when generating the
+     * bootstrap HTML and ?restartApplication should thus be ignored when handling the UI init request.
      */
     public static final String IGNORE_RESTART_PARAM = "ignoreRestart";
 
@@ -264,8 +263,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             BootstrapFragmentResponse fragmentResponse = context
                     .getBootstrapResponse();
             session.modifyBootstrapResponse(fragmentResponse);
-
-            String html = getBootstrapHtml(context);
+            String html = getBootstrapHtml(context, uiClass);
 
             writeBootstrapPage(response, html);
         } catch (JsonException e) {
@@ -275,7 +273,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         return true;
     }
 
-    private String getBootstrapHtml(BootstrapContext context) {
+    private String getBootstrapHtml(BootstrapContext context, Class<? extends UI> uiClass) {
         VaadinRequest request = context.getRequest();
         VaadinResponse response = context.getResponse();
         VaadinService vaadinService = request.getService();
@@ -297,6 +295,16 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
             setupStandaloneDocument(context, pageResponse);
             context.getSession().modifyBootstrapResponse(pageResponse);
+            Class<BootstrapListener>[] uiBootstrapListeners = findBootstrapListeners(uiClass);
+            try {
+                for (Class<BootstrapListener> uiBootstrapListener : uiBootstrapListeners) {
+                    uiBootstrapListener.newInstance().modifyBootstrapPage(pageResponse);
+                }
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
             sendBootstrapHeaders(response, headers);
 
@@ -471,15 +479,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Method to write the div element into which that actual Vaadin application
-     * is rendered.
-     * <p>
-     * Override this method if you want to add some custom html around around
-     * the div element into which the actual Vaadin application will be
-     * rendered.
-     * 
+     * Method to write the div element into which that actual Vaadin application is rendered.
+     * <p/>
+     * Override this method if you want to add some custom html around around the div element into which the actual
+     * Vaadin application will be rendered.
+     *
      * @param context
-     * 
      * @throws IOException
      */
     private void setupMainDiv(BootstrapContext context) throws IOException {
@@ -545,7 +550,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         builder.append("//<![CDATA[\n");
         builder.append("if (!window.vaadin) alert("
                 + JsonUtil.quote("Failed to load the bootstrap javascript: "
-                        + bootstrapLocation) + ");\n");
+                + bootstrapLocation) + ");\n");
 
         appendMainScriptTagContents(context, builder);
 
@@ -694,13 +699,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Get the URI for the application theme.
-     * 
-     * A portal-wide default theme is fetched from the portal shared resource
-     * directory (if any), other themes from the portlet.
-     * 
+     * <p/>
+     * A portal-wide default theme is fetched from the portal shared resource directory (if any), other themes from the
+     * portlet.
+     *
      * @param context
      * @param themeName
-     * 
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
@@ -713,7 +717,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Override if required
-     * 
+     *
      * @param context
      * @return
      */
@@ -725,7 +729,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Do not override.
-     * 
+     *
      * @param context
      * @return
      */
@@ -757,5 +761,32 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         } else {
             object.put(key, value);
         }
+    }
+
+    /**
+     * Finds the {@link BootstrapListener}s classes to use for a specific UI. If no listeners are defined, empty array
+     * is returned.
+     * <p/>
+     *
+     * @param uiClass
+     * @return the transport type to use, or empty array
+     */
+    public static Class<BootstrapListener>[] findBootstrapListeners(Class<? extends UI> uiClass) {
+        List<Class<?>> result = new ArrayList<Class<?>>();
+        for (Class<?> tClass = uiClass; tClass != Object.class; tClass = tClass.getSuperclass()) {
+            BootstrapMod annotation = tClass.getAnnotation(BootstrapMod.class);
+            if (annotation != null) {
+                Collections.addAll(result, annotation.value());
+            }
+        }
+
+        for (Class<?> aClass : uiClass.getInterfaces()) {
+            BootstrapMod annotation = aClass.getAnnotation(BootstrapMod.class);
+            if (annotation != null) {
+                Collections.addAll(result, annotation.value());
+            }
+        }
+        //noinspection unchecked
+        return result.toArray(new Class[result.size()]);
     }
 }
