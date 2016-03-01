@@ -352,9 +352,12 @@ public class UidlWriter implements Serializable {
      * @throws IOException
      */
     private void writePerformanceData(UI ui, Writer writer) throws IOException {
-        writer.write(String.format(", \"timings\":[%d, %d]", ui.getSession()
-                .getCumulativeRequestDuration(), ui.getSession()
-                .getLastRequestDuration()));
+        if (!ui.getSession().getService().getDeploymentConfiguration()
+                .isProductionMode()) {
+            writer.write(String.format(", \"timings\":[%d, %d]", ui
+                    .getSession().getCumulativeRequestDuration(), ui
+                    .getSession().getLastRequestDuration()));
+        }
     }
 
     private static final Logger getLogger() {

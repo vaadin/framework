@@ -142,6 +142,8 @@
                 This default can be changed in deployment configuration.</li>
             <li>The annotations @PreserveOnRefresh, @Push, @Theme, @Title, @VaadinServletConfiguration and @Widgetset now use
                 @Inherited. The annotation is also looked up in extended interfaces for backwards compatibility.</li>
+            <li>Server-side timings of request processing are only sent to the client when not in production mode. Using the
+                timings in TestBench tests requires the server not to be in production mode.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
