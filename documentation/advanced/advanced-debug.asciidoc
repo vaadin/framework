@@ -14,14 +14,20 @@ debug features for Vaadin developers:
 * Debug Window
 * Display debug information in the Debug Window and server console
 * On-the-fly compilation of Sass themes
+* Timings of server calls for Vaadin TestBench
+
+It is recommended to always deploy production applications in production mode
+for security reasons.
 
 [[advanced.debug.mode]]
 == Enabling the Debug Mode
 
 The debug mode is enabled and production mode disabled by default in the UI
-templates created with the Eclipse plugin or the Maven archetypes. The debug
-mode can be enabled by giving a [parameter]#productionMode=false# parameter to
-the Vaadin servlet configuration:
+templates created with the Eclipse plugin or the Maven archetypes. Some
+archetypes have a separate module and profile for producing a production mode
+application. The debug mode can be enabled by giving a
+[parameter]#productionMode=false# parameter to the Vaadin servlet
+configuration:
 
 [subs="normal"]
 ----

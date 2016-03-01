@@ -491,7 +491,11 @@ public class ApplicationConnection implements HasHandlers {
                 smh.@com.vaadin.client.communication.MessageHandler::lastProcessingTime,
                     smh.@com.vaadin.client.communication.MessageHandler::totalProcessingTime
                 ];
-            pd = pd.concat(smh.@com.vaadin.client.communication.MessageHandler::serverTimingInfo);
+            if (null != smh.@com.vaadin.client.communication.MessageHandler::serverTimingInfo) {
+                pd = pd.concat(smh.@com.vaadin.client.communication.MessageHandler::serverTimingInfo);
+            } else {
+                pd = pd.concat(-1, -1);
+            }
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
