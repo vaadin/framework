@@ -180,6 +180,14 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
      */
     public static class VaadinLiferayRequest extends
             VaadinHttpAndPortletRequest {
+        /**
+         * The PortalUtil class to use. Set to either
+         * {@link #LIFERAY_6_PORTAL_UTIL} or {@link #LIFERAY_7_PORTAL_UTIL} the
+         * first time it is needed.
+         */
+        private static String portalUtilClass = null;
+        private static final String LIFERAY_6_PORTAL_UTIL = "com.liferay.portal.util.PortalUtil";
+        private static final String LIFERAY_7_PORTAL_UTIL = "com.liferay.portal.kernel.util.PortalUtil";
 
         public VaadinLiferayRequest(PortletRequest request,
                 VaadinPortletService vaadinService) {
@@ -247,19 +255,28 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
         @Override
         protected HttpServletRequest getServletRequest(PortletRequest request) {
+            if (portalUtilClass == null) {
+                try {
+                    invokeStaticLiferayMethod(LIFERAY_7_PORTAL_UTIL,
+                            "getHttpServletRequest", request,
+                            "javax.portlet.PortletRequest");
+                    portalUtilClass = LIFERAY_7_PORTAL_UTIL;
+                } catch (Exception e) {
+                    // Liferay 6 or older
+                    portalUtilClass = LIFERAY_6_PORTAL_UTIL;
+                }
+            }
             try {
                 // httpRequest = PortalUtil.getHttpServletRequest(request);
                 HttpServletRequest httpRequest = (HttpServletRequest) invokeStaticLiferayMethod(
-                        "com.liferay.portal.util.PortalUtil",
-                        "getHttpServletRequest", request,
+                        portalUtilClass, "getHttpServletRequest", request,
                         "javax.portlet.PortletRequest");
 
                 // httpRequest =
                 // PortalUtil.getOriginalServletRequest(httpRequest);
                 httpRequest = (HttpServletRequest) invokeStaticLiferayMethod(
-                        "com.liferay.portal.util.PortalUtil",
-                        "getOriginalServletRequest", httpRequest,
-                        "javax.servlet.http.HttpServletRequest");
+                        portalUtilClass, "getOriginalServletRequest",
+                        httpRequest, "javax.servlet.http.HttpServletRequest");
                 return httpRequest;
             } catch (Exception e) {
                 throw new IllegalStateException("Liferay request not detected",
