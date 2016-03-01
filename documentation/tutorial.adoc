@@ -1,90 +1,108 @@
+---
+title: Vaadin Tutorial
+order: 1
+layout: page
+---
+
 :experimental:
-:sectnums:
+// :sectnums:
 :imagesdir: img
 
-= Vaadin tutorial
+= Vaadin Tutorial
+:toc: macro
 
-This tutorial gives you an overview of how you can use
-https://vaadin.com/framework[Vaadin Framework] to build single-page web UI's for your Java
-application. All you need to start with it is JDK 8 and an https://en.wikipedia.org/wiki/Integrated_development_environment[IDE] like Eclipse.
-No extensive knowledge of Java is even needed to get started, only the basic programming skills are required. Although the tutorial is built for
-Eclipse users, you can use your IDE of choice.
+This tutorial gives you an overview of how you can use https://vaadin.com/framework[Vaadin Framework] to build single-page web UIs for your Java application.
+All you need to start with it is JDK 8 and an https://en.wikipedia.org/wiki/Integrated_development_environment[IDE], such as Eclipse.
+While this tutorial is written for Eclipse users, you can use your IDE of choice.
+No extensive knowledge of Java is needed, only basic programming skills are required.
 
-We'll build a simple customer management system. It is not a real app, but we'll
-use an in-memory "backend" so that you can understand how to hook it to an
-existing Java based backend. We'll cover the basic Vaadin development and you
-can use the result as a basis for more experiments with Vaadin, like using
-add-ons, your own custom look and feel (aka. theme), adding new views or optimizing the result for
-mobile support.
+toc::[]
 
-You'll need about 20 - 60 minutes to complete the tutorial, depending on your
-existing experience, but naturally you can just do the beginning of
-the exercise or pick any of the steps you want. To start from a specific step,
-we have prepared the example code after each step to be 
-downloaded as a zip file. If don't want to do the exercise at all, you can also
-just https://github.com/vaadin/tutorial/[downlood the final application] and
-play around with it.
+== Overview
 
-The tutorial uses Java 8, so ensure you have an up-to-date JDK 8 installed. Most
-linux distributions can use package managers to install JDK8, Windows and Mac users should
-download it from
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle's Java
+In this tutorial, we build a simple customer management system.
+It is not a real application; we use an in-memory "back-end", so that you can understand how to hook it to an existing Java based back-end.
+We cover the basic Vaadin development and you can use the result as a basis for more experiments with Vaadin, such as using add-ons, your own custom look-and- feel (aka. theme), adding new views, or optimizing the result for mobile support.
+
+.UI to be built in the tutorial
+image::finalUI.jpg[]
+
+You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
+Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
+To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
+If do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
+
+=== Installing the Development Tools
+
+The tutorial uses Java 8, so please ensure that you have an up-to-date JDK 8 installed.
+Most Linux distributions can use package managers to install JDK8.
+Windows and Mac users should download it from http://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle's Java
 SE site].
 
-Also make sure you have the latest version of your IDE. Eclipse is available in
-various packages, be sure to download the *Eclipse IDE for Java EE Developers*
-from http://www.eclipse.org/downloads/[eclipse.org].
+Also make sure you have the latest version of your IDE.
+Eclipse is available in various packages; be sure to download the *Eclipse IDE for Java EE Developers* from http://www.eclipse.org/downloads/[eclipse.org].
 
-== Creating a project using an archetype
+Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools.
 
-As a starting point for the application, we'll use a Maven archetype called
-vaadin-archetype-application. Maven archetypes are project stubs with basic
-build script and some example code.
+== Creating a Project from an Archetype
 
-Start by choosing menu:File[New > Maven Project] from the menu.
+As the starting point for the application, we use a Maven archetype called `vaadin-archetype-application`.
+Archetypes are project stubs that have some example code and a basic Maven build script.
 
-image::createMavenProject.jpg[Create a new Maven built Vaadin project.]
+. Start by choosing "File > New > Maven Project" from the menu.
++
+.Create a new Maven project
+image::createMavenProject.jpg[]
++
+TIP: If the [guilabel]#Maven Project# is not visible in the menu, you should switch to the _Java EE_ perspective.
+You can use the shortcut button in the tool bar or "Window > Perspective" to switch to the perspective.
++
+The first step in the wizard is good as is for our purpose.
 
-TIP: If the "Maven Project" is not visible in the menu, you should switch to the
-_Java EE_ perspective. Use the shortcut button in the toolbar or
-menu:Window[Perspective] to do this.
+. In the second step, you need to choose the `vaadin-archetype-application` archetype.
++
+You can first try to find it using the filtering function.
++
+If Eclipse has not yet indexed the archetype catalog, you need to manually add the archetype details. Click the [guibutton]#Add Archetype# button and enter the following values:
++
+[guilabel]#Group ID#::
+ Give `com.vaadin`
+[guilabel]#Artifact ID#::
+ Give `vaadin-archetype-application`
+[guilabel]#Version#::
+ You can find the latest Vaadin version number from http://vaadin.com/download/[vaadin.com/download].
+[guilabel]#Repository URL#::
+ This can be left blank.
 
-The first page in the wizard is ok with its defaults, but on the second page
-you'll need to choose _vaadin-archetype-application_ archetype. You can first
-try to find it using the filtering function, but in some cases Eclipse hasn't
-yet indexed the archetype catalog, so you might need to manually add the
-archetype details with the _Add Archetype_ button. The Group Id is _com.vaadin_,
-the Artifact Id is _vaadin-archetype-application_ and as a version you can use
-the latest Vaadin version, at the time of writing _7.6.2_. The _Repository URL_
-can be left blank.
++
+WARNING: Eclipse has a bug in its project wizard.
+The `vaadin-archetype-application` may not appear in the listing, even though you added it using the [guibutton]#Add Archetype# button.
+If this occurs, close the whole new project wizard and re-open it by selecting "File > New > Maven Project" again.
+The archetype then typically appears in the listing and can be found by the filtering functionality.
 
-CAUTION: Eclipse has a bug in its project wizard. If
-_vaadin-archetype-application_ doesn't appear in the listing, even though you
-added it using the _Add Archetype_ button, close the whole new project wizard
-and re-open it by selecting menu:File[New > Maven Project] again. The archetype
-then typically appears in the listing and can be found by the filtering
-functionality.
+. In the next wizard step, type in the following fields:
+[guilabel]#Group Id#:: `my.vaadin`
+[guilabel]#Artifact Id#:: `app`
 
-On the next wizard page, type in _my.vaadin_ as the Group Id, _app_ as the
-Artifact Id and click _Finish_. If this is your first Vaadin app, creating
-a project might take a while, depending on the speed of your network, as Vaadin
-libraries and other dependencies are being downloaded. Maven caches these on
-your local file system and creating your next Maven based Vaadin project will be much
-faster.
++
+and click [guibutton]#Finish#.
 
-Right click on the newly created project and choose menu:Run as[Maven Install].
-This will initiate a full build of your application and will finally create a
-https://en.wikipedia.org/wiki/WAR_(file_format)[war] file to the "target" directory that you can deploy to your application
-server. As Maven might again need to download some new modules and the project
-has a setup for add-on usage and contains a project specific theme, the first
-build will take a while.
+If this is your first Vaadin app, creating a project might take a while, depending on the speed of your network, as Vaadin libraries and other dependencies are being downloaded.
+Maven caches them on your local file system.
+Creating your next Maven-based Vaadin project will be much faster.
+
+Right click on the newly created project and choose "Run as > Maven Install".
+This initiates a full build of your application and finally creates a https://en.wikipedia.org/wiki/WAR_(file_format)[WAR] file into the [filename]#target# directory.
+You can deploy the WAR file to your application server.
+The first build will take a while, as Maven might again need to download some new modules.
+Also, the project uses add-ons and contains a project specific theme.
+Compiling them takes a while.
 
 TIP: For the Maven compilation to work you need a JDK to be configured in your
-Eclipse in menu:Window[Preferences > Java > Installed JREs > Add...]. This step
-is necessary at least on Windows, if you are using a fresh installation of
-Eclipse or for some other reason haven't configured a JDK to your Eclipse. The
-JDK by default installs to _\Program Files\Java_ on Windows. You
-can make JDK the default JRE for your Eclipse.
+Eclipse in "Window > Preferences > Java > Installed JREs > Add...".
+This step is necessary at least on Windows, if you are using a fresh installation of Eclipse or for some other reason haven't configured a JDK to your Eclipse.
+The JDK by default installs to _\Program Files\Java_ on Windows.
+You can make JDK the default JRE for your Eclipse.
 
 While the build is running, let's have a look at what the archetype created for
 you. You can browse your project resources from the tree structure in the
@@ -880,5 +898,3 @@ start in your Vaadin developer career.
  * http://spring.io/guides/gs/crud-with-vaadin/[Creating CRUD UI with Vaadin] - the tutorial for your first Vaadin application using a Spring based backend.
  * https://github.com/mstahv/jpa-invoicer[Jave EE example app] - a Vaadin app example for creating invoices that uses Java EE backend, Apache DeltaSpike Data for simple JPA layer, OAuth2 based login, PDF generation etc.
  * http://vaadin.com/directory[Directory] - a vast source of awesome Vaadin add-ons
-
-
