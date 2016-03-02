@@ -2,36 +2,65 @@
 title: Vaadin Tutorial
 order: 1
 layout: page
+subnav_auto_list_numbers: true
+subnav:
+  - title: Overview
+    href: '#framework.tutorial.overview'
+    subnav:
+      - title: Installing the Development Tools
+        href: '#framework.tutorial.overview.tools'
+  - title: Creating a project using an archetype
+    href: '#framework.tutorial.archetype'
+  - title: Adding a demo "backend"
+    href: '#framework.tutorial.backend'
+  - title: Listing entities in a Grid
+    href: '#framework.tutorial.grid'
+  - title: Creating live filtering for entities
+    href: '#framework.tutorial.filtering'
+  - title: Creating a form to edit Customer objects
+    href: '#framework.tutorial.form'
+    subnav:
+      - title: Creating a form using Vaadin Designer
+        href: '#framework.tutorial.form.designer'
+        subnav:
+          - title: Installing Vaadin Designer
+            href: '#framework.tutorial.form.designer.install'
+          - title: Creating the form design
+            href: '#framework.tutorial.form.designer.create'
+      - title: Creating a form using plain Java
+        href: '#framework.tutorial.form.java'
+  - title: Connecting the form to the application
+    href: '#framework.tutorial.form-connection'
+  - title: It works! What next?
+    href: '#framework.tutorial.next'
 ---
+:sectnums:
 
-:experimental:
-// :sectnums:
-:imagesdir: img
-
-== Vaadin Tutorial
-:toc: macro
+[[framework.tutorial]]
+= Vaadin Tutorial
 
 This tutorial gives you an overview of how you can use https://vaadin.com/framework[Vaadin Framework] to build single-page web UIs for your Java application.
 All you need to start with it is JDK 8 and an https://en.wikipedia.org/wiki/Integrated_development_environment[IDE], such as Eclipse.
 While this tutorial is written for Eclipse users, you can use your IDE of choice.
 No extensive knowledge of Java is needed, only basic programming skills are required.
 
-toc::[]
-
-=== Overview
+[[framework.tutorial.overview]]
+== Overview
 
 In this tutorial, we build a simple customer management system.
 It is not a real application; we use an in-memory "back-end", so that you can understand how to hook it to an existing Java based back-end.
 We cover the basic Vaadin development and you can use the result as a basis for more experiments with Vaadin, such as using add-ons, your own custom look-and- feel (aka. theme), adding new views, or optimizing the result for mobile support.
 
+[[figure.framework.tutorial.final-ui]]
 .UI to be built in the tutorial
-image::finalUI.jpg[]
+image::img/finalUI.jpg[]
 
 You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
 Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
 To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
 If do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
 
+[[framework.tutorial.overview.tools]]
 === Installing the Development Tools
 
 The tutorial uses Java 8, so please ensure that you have an up-to-date JDK 8 installed.
@@ -44,6 +73,7 @@ Eclipse is available in various packages; be sure to download the *Eclipse IDE f
 
 Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools.
 
+[[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
 
 As the starting point for the application, we use a Maven archetype called `vaadin-archetype-application`.
@@ -51,8 +81,13 @@ Archetypes are project stubs that have some example code and a basic Maven build
 
 . Start by choosing "File > New > Maven Project" from the menu.
 +
+[[figure.framework.tutorial.create-maven-project]]
 .Create a new Maven project
+<<<<<<< HEAD
 image::createMavenProject.jpg[width=70%]
+=======
+image::img/createMavenProject.jpg[]
+>>>>>>> Tutorial navigation and formatting
 +
 TIP: If the [guilabel]#Maven Project# is not visible in the menu, you should switch to the _Java EE_ perspective.
 You can use the shortcut button in the tool bar or "Window > Perspective" to switch to the perspective.
@@ -141,23 +176,41 @@ are used to position and display other Vaadin components in your UI classes.
 The example code creates one [classname]#TextField# to allow the user to input her name and a [classname]#Button# whose click listener dynamically adds a new [classname]#Label# component to the main layout.
 In the end of the [methodname]#init()# method, we just configure the main layout and place components into it and set it to be the content of [classname]#MyUI#.
 
+<<<<<<< HEAD
 To test your first Vaadin application, right-click on the project and choose "Debug as > Maven build...".
 The debug mode is slightly slower than the basic run mode, but it often helps you to figure out what is happening in your application.
+=======
+[[figure.framework.tutorial.debug-as-maven-build]]
+.Starting the server using a Maven target
+image::img/debugAsMavenBuild.jpg[]
+>>>>>>> Tutorial navigation and formatting
 
 .Starting the server using a Maven target
 image::debugAsMavenBuild.jpg[]
 
+<<<<<<< HEAD
 In the dialog, type `Run in jetty` to the [guilabel]#Name# input and `jetty:run` to the [guilabel]#Goals# input.
 
 .Generating a Maven launch for `jetty:run` target
 image::debugAsMavenBuild2.jpg[]
+=======
+[[figure.framework.tutorial.jetty-run]]
+.Generating a Maven launch for jetty:run target
+image::img/debugAsMavenBuild2.jpg[]
+>>>>>>> Tutorial navigation and formatting
 
 Before clicking debug, to make sure debugging works properly, add your Java
 project to the source lookup path from the [guilabel]#Source# tab, as it is being done in <<figure.tutorial.creating.add-sources>>.
 
+<<<<<<< HEAD
 [[figure.tutorial.creating.add-sources]]
 .Adding sources for debugging
 image::debugAsMavenBuildAddSources.jpg[]
+=======
+[[figure.framework.tutorial.add-sources]]
+.Adding sources for debugging
+image::img/debugAsMavenBuildAddSources.jpg[]
+>>>>>>> Tutorial navigation and formatting
 
 Now click [guibutton]#Debug# to continue.
 This will download a small Java web server (if not cached to your local Maven repository), and use it to host your application.
@@ -188,8 +241,14 @@ That way you can step through the execution and inspect the variables.
 Clicking on the _play_ icon in the toolbar will continue the execution.
 Double-click the same line again to remove the breakpoint.
 
+<<<<<<< HEAD
 .Execution in a break point in the button click listener
 image::debugInBreakPointVariable.jpg[]
+=======
+[[figure.framework.tutorial.breakpoint]]
+.Execution in a break point in the button click listener
+image::img/debugInBreakPointVariable.jpg[]
+>>>>>>> Tutorial navigation and formatting
 
 Clicking the red square in the [guilabel]#Console# view will terminate the server process.
 You can restart it easily form the run/debug history.
@@ -199,6 +258,7 @@ history/Debug history > Run in Jetty".
 
 To get back to the _Java EE Perspective_, an Eclipse mode designed for editing Java web app code, click the [guibutton]#Java EE# button in the toolbar.
 
+[[framework.tutorial.backend]]
 == Adding a demo "backend"
 
 Before getting more into real Vaadin development, let us introduce some domain objects and a "fake backend".
@@ -221,6 +281,7 @@ Eclipse is smart enough to automatically create a properly named Java file for t
 In the next steps, we will be using these classes and build a UI around them.
 The actual implementation of these classes is not relevant for this tutorial, but feel free to have a look around.
 
+[[framework.tutorial.grid]]
 == Listing entities in a Grid
 
 TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step2.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
@@ -337,6 +398,7 @@ public void updateList() {
 You can now save your changes to the file and verify the changes from your browser.
 You can do this at any point during the rest of the tutorial as well.
 
+[[framework.tutorial.filtering]]
 == Creating live filtering for entities
 
 TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step3.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
@@ -436,12 +498,14 @@ application.
 
 Now it is a good place to save your changes and try them in your browser.
 
+[[framework.tutorial.form]]
 == Creating a form to edit Customer objects
 
 To edit and add Customer objects we need to create a form, that edits the
 values in our domain objects. This tutorial has two alternative methods to do
 that. Pick either of them.
 
+[[framework.tutorial.form.designer]]
 === Creating a form using Vaadin Designer
 
 TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
@@ -456,6 +520,7 @@ TIP: If you are using another IDE or just prefer to compose your user interface
 with code, take the alternative step, <<Creating a form using plain Java>>,
 where the CustomerForm is composed using plain Java code.
 
+[[framework.tutorial.form.designer.install]]
 ==== Installing Vaadin Designer
 
 Vaadin Designer comes as an integrated part of Vaadin Plugin for Eclipse. It can
@@ -465,7 +530,9 @@ In the dialog, just search for Vaadin and click _install_ to mark it for
 installation. Clicking _Install Now_ will take you to choose the modules you want
 and accept the license agreement.
 
-image::pluginEclipseMarketPlace2.jpg[Selecting Vaadin Plugin for Eclipse for installation in Eclipse Marketplace]
+[[figure.framework.tutorial.plugin-install]]
+.Selecting Vaadin Plugin for Eclipse for installation in Eclipse Marketplace
+image::img/pluginEclipseMarketPlace2.jpg[]
 
 If you get a security warning about the software containing unsigned content,
 just accept the warning by clicking OK. After installation, Eclipse asks if you
@@ -476,6 +543,7 @@ step, it will ask for a license key. Get a key from
 https://vaadin.com/designer. If you are not willing to buy a license now, just
 acquire a trial license.
 
+[[framework.tutorial.form.designer.create]]
 ==== Creating the form design
 
 The following screencast will show you how to produce the
@@ -639,6 +707,7 @@ system like https://vaadin.com/wiki/-/wiki/main/Events+and+contexts[CDI events]
 to completely decouple the components. We'll leave that out of this tutorial for
 simplicity.
 
+[[framework.tutorial.form.java]]
 === Creating a form using plain Java
 
 This is an alternative step to the <<Creating a form using Vaadin Designer>>,
@@ -810,6 +879,7 @@ system like https://vaadin.com/wiki/-/wiki/main/Events+and+contexts[CDI events]
 to completely decouple the components. We'll leave that out of this tutorial for
 simplicity.
 
+[[framework.tutorial.form-connection]]
 == Connecting the form to the application
 
 TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
@@ -888,6 +958,7 @@ All planned features are now done. You can save the changes and play around with
 the application. If something went wrong, you can also download an example of
 https://github.com/vaadin/tutorial[the final application] and see what went wrong.
 
+[[framework.tutorial.next]]
 == It works! What next?
 
 Congratulations! Users can now create, read, update and delete customer records
