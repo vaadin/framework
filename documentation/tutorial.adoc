@@ -71,7 +71,7 @@ SE site].
 Also make sure you have the latest version of your IDE.
 Eclipse is available in various packages; be sure to download the *Eclipse IDE for Java EE Developers* from http://www.eclipse.org/downloads/[eclipse.org].
 
-Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools.
+Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for information regarding installing the tools.
 
 [[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
@@ -83,11 +83,7 @@ Archetypes are project stubs that have some example code and a basic Maven build
 +
 [[figure.framework.tutorial.create-maven-project]]
 .Create a new Maven project
-<<<<<<< HEAD
-image::createMavenProject.jpg[width=70%]
-=======
-image::img/createMavenProject.jpg[]
->>>>>>> Tutorial navigation and formatting
+image::img/createMavenProject.jpg[width=70%]
 +
 TIP: If the [guilabel]#Maven Project# is not visible in the menu, you should switch to the _Java EE_ perspective.
 You can use the shortcut button in the tool bar or "Window > Perspective" to switch to the perspective.
@@ -98,19 +94,19 @@ Just click [guibutton]#Next#.
 . In the second step, you need to choose the `vaadin-archetype-application` archetype.
 +
 .Selecting the archetype
-image::projectWizard2-top.jpg[width=70%]
+image::img/projectWizard2-top.jpg[width=70%]
 +
 You can first try to find it using the filtering function.
 +
 If Eclipse has not yet indexed the archetype catalog, you need to manually add the archetype details.
 // +
 // .Adding a new archetype
-// image::projectWizard2-add.jpg[width=70%]
+// image::img/projectWizard2-add.jpg[width=70%]
 +
 Click the [guibutton]#Add Archetype# button.
 +
 .Settings for a new archetype
-image::projectWizardAddArchetype-crop.jpg[width=70%]
+image::img/projectWizardAddArchetype-crop.jpg[width=70%]
 +
 Enter the following values:
 +
@@ -176,41 +172,25 @@ are used to position and display other Vaadin components in your UI classes.
 The example code creates one [classname]#TextField# to allow the user to input her name and a [classname]#Button# whose click listener dynamically adds a new [classname]#Label# component to the main layout.
 In the end of the [methodname]#init()# method, we just configure the main layout and place components into it and set it to be the content of [classname]#MyUI#.
 
-<<<<<<< HEAD
 To test your first Vaadin application, right-click on the project and choose "Debug as > Maven build...".
 The debug mode is slightly slower than the basic run mode, but it often helps you to figure out what is happening in your application.
-=======
+
 [[figure.framework.tutorial.debug-as-maven-build]]
 .Starting the server using a Maven target
 image::img/debugAsMavenBuild.jpg[]
->>>>>>> Tutorial navigation and formatting
 
-.Starting the server using a Maven target
-image::debugAsMavenBuild.jpg[]
-
-<<<<<<< HEAD
 In the dialog, type `Run in jetty` to the [guilabel]#Name# input and `jetty:run` to the [guilabel]#Goals# input.
 
-.Generating a Maven launch for `jetty:run` target
-image::debugAsMavenBuild2.jpg[]
-=======
 [[figure.framework.tutorial.jetty-run]]
-.Generating a Maven launch for jetty:run target
+.Generating a Maven launch for `jetty:run` target
 image::img/debugAsMavenBuild2.jpg[]
->>>>>>> Tutorial navigation and formatting
 
 Before clicking debug, to make sure debugging works properly, add your Java
 project to the source lookup path from the [guilabel]#Source# tab, as it is being done in <<figure.tutorial.creating.add-sources>>.
 
-<<<<<<< HEAD
 [[figure.tutorial.creating.add-sources]]
 .Adding sources for debugging
-image::debugAsMavenBuildAddSources.jpg[]
-=======
-[[figure.framework.tutorial.add-sources]]
-.Adding sources for debugging
 image::img/debugAsMavenBuildAddSources.jpg[]
->>>>>>> Tutorial navigation and formatting
 
 Now click [guibutton]#Debug# to continue.
 This will download a small Java web server (if not cached to your local Maven repository), and use it to host your application.
@@ -241,14 +221,9 @@ That way you can step through the execution and inspect the variables.
 Clicking on the _play_ icon in the toolbar will continue the execution.
 Double-click the same line again to remove the breakpoint.
 
-<<<<<<< HEAD
-.Execution in a break point in the button click listener
-image::debugInBreakPointVariable.jpg[]
-=======
 [[figure.framework.tutorial.breakpoint]]
 .Execution in a break point in the button click listener
 image::img/debugInBreakPointVariable.jpg[]
->>>>>>> Tutorial navigation and formatting
 
 Clicking the red square in the [guilabel]#Console# view will terminate the server process.
 You can restart it easily form the run/debug history.
