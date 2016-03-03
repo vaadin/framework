@@ -8,7 +8,7 @@ layout: page
 // :sectnums:
 :imagesdir: img
 
-= Vaadin Tutorial
+== Vaadin Tutorial
 :toc: macro
 
 This tutorial gives you an overview of how you can use https://vaadin.com/framework[Vaadin Framework] to build single-page web UIs for your Java application.
@@ -18,7 +18,7 @@ No extensive knowledge of Java is needed, only basic programming skills are requ
 
 toc::[]
 
-== Overview
+=== Overview
 
 In this tutorial, we build a simple customer management system.
 It is not a real application; we use an in-memory "back-end", so that you can understand how to hook it to an existing Java based back-end.
@@ -52,18 +52,32 @@ Archetypes are project stubs that have some example code and a basic Maven build
 . Start by choosing "File > New > Maven Project" from the menu.
 +
 .Create a new Maven project
-image::createMavenProject.jpg[]
+image::createMavenProject.jpg[width=70%]
 +
 TIP: If the [guilabel]#Maven Project# is not visible in the menu, you should switch to the _Java EE_ perspective.
 You can use the shortcut button in the tool bar or "Window > Perspective" to switch to the perspective.
-+
-The first step in the wizard is good as is for our purpose.
+
+. The first step in the wizard is good as is for our purpose.
+Just click [guibutton]#Next#.
 
 . In the second step, you need to choose the `vaadin-archetype-application` archetype.
 +
+.Selecting the archetype
+image::projectWizard2-top.jpg[width=70%]
++
 You can first try to find it using the filtering function.
 +
-If Eclipse has not yet indexed the archetype catalog, you need to manually add the archetype details. Click the [guibutton]#Add Archetype# button and enter the following values:
+If Eclipse has not yet indexed the archetype catalog, you need to manually add the archetype details.
+// +
+// .Adding a new archetype
+// image::projectWizard2-add.jpg[width=70%]
++
+Click the [guibutton]#Add Archetype# button.
++
+.Settings for a new archetype
+image::projectWizardAddArchetype-crop.jpg[width=70%]
++
+Enter the following values:
 +
 [guilabel]#Group ID#::
  Give `com.vaadin`
@@ -73,6 +87,10 @@ If Eclipse has not yet indexed the archetype catalog, you need to manually add t
  You can find the latest Vaadin version number from http://vaadin.com/download/[vaadin.com/download].
 [guilabel]#Repository URL#::
  This can be left blank.
+
++
+And click [guibutton]#OK#.
+Now you can select the new archetype from the list.
 
 +
 WARNING: Eclipse has a bug in its project wizard.
@@ -101,146 +119,137 @@ Compiling them takes a while.
 TIP: For the Maven compilation to work you need a JDK to be configured in your
 Eclipse in "Window > Preferences > Java > Installed JREs > Add...".
 This step is necessary at least on Windows, if you are using a fresh installation of Eclipse or for some other reason haven't configured a JDK to your Eclipse.
-The JDK by default installs to _\Program Files\Java_ on Windows.
+The JDK by default installs to [filename]#\Program Files\Java# on Windows.
 You can make JDK the default JRE for your Eclipse.
 
-While the build is running, let's have a look at what the archetype created for
-you. You can browse your project resources from the tree structure in the
-_Project Explorer_. Maven's _pom.xml_ on top level contains settings for your
-projects build and declares the used dependencies. Open _Java Resources_ and
-below it _src/main/java_, the main source directory, and _my.vaadin.app_, the
-main Java package that will contain your Vaadin UI code.
+While the build is running, let us have a look at what the archetype created for
+you.
+You can browse your project resources from the tree structure in the [guilabel]#Project Explorer#.
+Maven's [filename]#pom.xml# on top level contains settings for building your project and declares the used dependencies.
+Open [guilabel]#Java Resources# and below it [filename]#src/main/java#, the main source directory, and [packagename]#my.vaadin.app#, the main Java package that will contain your Vaadin UI code.
 
-TIP: Eclipse shows all project files in the Project Explorer. In this case you
-can also find your _.java_ files via top level _src_ node, but the suggested
-method is to access them via the _Java Resources_ node, which is optimized for
-editing Java source code.
+TIP: Eclipse shows all project files in the Project Explorer.
+In this case, you can also find your [filename]#.java# files from under the top-level [filename]#src# node.
+However, the suggested method is to access them from under the [guilabel]#Java Resources# node, which is optimized for editing Java source code.
 
 The UI code (and the Servlet declaration) used by the application stub can be
-found in the _MyUI.java_ file. Let's read it through to see how it works. The
-_init_ method of a UI class is triggered when a user enters your web
-application. The VerticalLayout is one of the most used layout objects, which
-are used to position and display other Vaadin components in your UI classes. The
-example code creates one TextField to allow the user to input her name and a
-Button whose click listener dynamically adds a new Label component to the main
-layout. In the end of the init method we just configure the main layout and
-place components into it and set it to be the content of MyUI.
+found in the [filename]#MyUI.java# file.
+Let us read it through to see how it works.
+The [methodname]#init()# method of a UI class is triggered when a user enters your web application.
+The [classname]#VerticalLayout# is one of the most used layout components, which
+are used to position and display other Vaadin components in your UI classes.
+The example code creates one [classname]#TextField# to allow the user to input her name and a [classname]#Button# whose click listener dynamically adds a new [classname]#Label# component to the main layout.
+In the end of the [methodname]#init()# method, we just configure the main layout and place components into it and set it to be the content of [classname]#MyUI#.
 
-To test your first Vaadin application, right click on the project and choose
-menu:Debug as[Maven build...]. The debug mode is slightly slower than the basic run
-mode, but it often helps you to figure out what is happening in your
-application.
+To test your first Vaadin application, right-click on the project and choose "Debug as > Maven build...".
+The debug mode is slightly slower than the basic run mode, but it often helps you to figure out what is happening in your application.
 
-image::debugAsMavenBuild.jpg[Starting the server using a Maven target]
+.Starting the server using a Maven target
+image::debugAsMavenBuild.jpg[]
 
-In the dialog, type _Run in jetty_ to the _Name_ input and _jetty:run_ to the
-_Goals_ input.
+In the dialog, type `Run in jetty` to the [guilabel]#Name# input and `jetty:run` to the [guilabel]#Goals# input.
 
-image::debugAsMavenBuild2.jpg[Generating a Maven launch for jetty:run target]
+.Generating a Maven launch for `jetty:run` target
+image::debugAsMavenBuild2.jpg[]
 
 Before clicking debug, to make sure debugging works properly, add your Java
-project to the source lookup path from the _Source_ tab, like it is being done
-in the image below.
+project to the source lookup path from the [guilabel]#Source# tab, as it is being done in <<figure.tutorial.creating.add-sources>>.
 
-image::debugAsMavenBuildAddSources.jpg[Adding sources for debugging]
+[[figure.tutorial.creating.add-sources]]
+.Adding sources for debugging
+image::debugAsMavenBuildAddSources.jpg[]
 
-Now click _Debug_ to continue. This will download a small Java web server
-(if not cached to your local Maven repository), and use it to host
-your application. Once the server has started, point your browser to the URL
-http://localhost:8080/[http://localhost:8080/] to see the running application.
+Now click [guibutton]#Debug# to continue.
+This will download a small Java web server (if not cached to your local Maven repository), and use it to host your application.
+Once the server has started, point your browser to the URL http://localhost:8080/[http://localhost:8080/] to see the running application.
 
-If you make changes to the code, the jetty server will notice the changes and in
-a couple of seconds most changes are automatically deployed. Reloading the page
-in your browser will show the changes.
+If you make changes to the code, the Jetty server will notice the changes and in
+a couple of seconds most changes are automatically deployed.
+Reloading the page in your browser will show the changes.
 
-TIP: In some cases your JVM might not allow injecting changes on the fly. In
-these cases, Eclipse will complain about "Hot code replacement error". Just
-choose to restart the server to get the latest changes. Many Java developers use
-a commercial tool called http://zeroturnaround.com/software/jrebel/[JRebel] to make code
-replacement work better.
+TIP: In some cases your JVM might not allow injecting changes on the fly.
+In these cases, Eclipse will complain about "Hot code replacement error".
+Just choose to restart the server to get the latest changes.
+Many Java developers use a commercial tool called http://zeroturnaround.com/software/jrebel/[JRebel] to make code replacement work better.
 
-Mastering the usage of the java debugger is also handy to better understand how your
-application actually works and fixing bugs that all developers write at some
-point. As Vaadin is "only" Java code, you can use all of Java's debugging tools, which cannot be done with other UI frameworks where the UI is written (partly) in HTML and/or JavaScript. Double click on the line number in the Java editor, for example of the
-following line in the click listener:
+Mastering the usage of the Java debugger is also handy to better understand how your application actually works and fixing bugs that all developers write at some point.
+As Vaadin is "only" Java code, you can use all of Java's debugging tools, which cannot be done with other UI frameworks where the UI is written (partly) in HTML and/or JavaScript.
+Double-click on the line number in the Java editor, for example of the following line in the click listener:
 
 [source,java]
 ----
-    layout.addComponent(new Label("Thanks " + name.getValue()
+layout.addComponent(new Label("Thanks " + name.getValue()));
 ----
 
-This will add a breakpoint to the selected line. If you then click the button in
-your browser, the execution of the application will stop on that line. Eclipse
-will ask you to enter to _Debugging perspective_ and you can inspect its
-variables and step through the execution. Clicking on the _play_ icon in the
-toolbar will continue the execution. Double click the same line again to remove
-the breakpoint.
+Doing so adds a breakpoint to the selected line.
+If you then click the button in your browser, the execution of the application will stop on that line.
+Eclipse will ask you to enter to _Debugging perspective_.
+That way you can step through the execution and inspect the variables.
+Clicking on the _play_ icon in the toolbar will continue the execution.
+Double-click the same line again to remove the breakpoint.
 
-image::debugInBreakPointVariable.jpg[Execution in a break point in the button click listener]
+.Execution in a break point in the button click listener
+image::debugInBreakPointVariable.jpg[]
 
-Clicking the red square in the Console view will terminate the server process.
-You can restart it easily form the run/debug history. You can find that from the
-small down arrow next to the green play button or bug button (for the debug
-mode) in the toolbar. Alternatively you can use the main menu menu:Run[Run
-history/Debug history > Run in Jetty].
+Clicking the red square in the [guilabel]#Console# view will terminate the server process.
+You can restart it easily form the run/debug history.
+You can find that from the small down arrow next to the green play button or bug button (for the debug mode) in the tool bar.
+Alternatively, you can use the main menu "Run > Run
+history/Debug history > Run in Jetty".
 
-To get back to the _Java EE Perspective_, an Eclipse mode designed for editing
-Java web app code, click the _Java EE_ button in the toolbar.
+To get back to the _Java EE Perspective_, an Eclipse mode designed for editing Java web app code, click the [guibutton]#Java EE# button in the toolbar.
 
 == Adding a demo "backend"
 
-Before getting more into real Vaadin development, let's introduce some domain
-objects and a "fake backend". In a real world application, you'll most likely
-have something similar, implemented with, for example, JPA and EJB or a Spring based
-service.
+Before getting more into real Vaadin development, let us introduce some domain objects and a "fake backend".
+In a real-world application, you will most likely have something similar, implemented with, for example, JPA and EJB or a Spring-based service.
 
-Copy the following three classes from github to your project. Class names
-point to the classes hosted in Github. Copying classes can be done in many ways.
+Copy the following three classes from github to your project.
+Class names point to the classes hosted in Github.
+Copying classes can be done in many ways.
 
 TIP: The fastest way to copy classes using Eclipse is to use your good old
 clipboard. Select the text content of the whole class from your browser, choose
-menu:Edit[Copy], focus the node representing the _my.vaadin.app_ Java package in
-Eclipse's Java Resources view and choose menu:Edit[Paste]. Eclipse is smart
-enough to automatically create a properly named Java file for the class.
+"Edit > Copy", focus the node representing the [packagename]#my.vaadin.app# Java package in Eclipse's Java Resources view and choose "Edit > Paste".
+Eclipse is smart enough to automatically create a properly named Java file for the class.
 
  * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerStatus.java[CustomerStatus] - this is a simple enum class
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we'll be
-   using in our example
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify Customer instances. You can think of this as your entry point to your fake database.
+ * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we will be using in our example
+ * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify [classname]#Customer# instances.
+ You can think of this as your entry point to your fake database.
 
-In the next steps, we'll be using these classes and build a UI around them. The
-actual implementation of these classes is not relevant for this tutorial, but
-feel free to have a look around.
+In the next steps, we will be using these classes and build a UI around them.
+The actual implementation of these classes is not relevant for this tutorial, but feel free to have a look around.
 
 == Listing entities in a Grid
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step2.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step2.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
 
-Often when you start building a UI for a data centric application, the first
-thing you want to do is to list your data from your backend. There are several
-components and methods in Vaadin to do this. In this example, we'll use the Grid
-component for tabular presentation of our customers.
+Often when you start building a UI for a data-centric application, the first
+thing you want to do is to list your data from your back-end.
+There are several components and ways in Vaadin to do this.
+In this example, we will use the Grid component for tabular presentation of our customers.
 
-We'll start by introducing a Grid field to the MyUI class. We could of course
-just introduce the Grid as a variable in the init method, but we'll most likely
-want to refer to it later. Also, let's get a reference to the CustomerService.
+We start by introducing a [classname]#Grid# to the [classname]#MyUI# class.
+We could of course just introduce the Grid as a variable in the [methodname]#init()# method, but we most likely want to refer to it later.
+Also, let us get a reference to the [classname]#CustomerService#.
 
 [source,java]
 ----
 public class MyUI extends UI {
-
-    // Add next two lines:
+    // Add the next two lines:
     private CustomerService service = CustomerService.getInstance();
     private Grid grid = new Grid();
 
-    // the rest is already there...
+    // The rest is already there...
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        ...
 ----
 
-TIP: If you are new to Java development, you probably don't feel comfortable
-with the red compilation error for the line where the Grid got introduced, due
-to a missing import. This is easily fixed in Eclipse by using the
+TIP: If you are new to Java development, you probably do not feel comfortable
+with the red compilation error for the line where the [classname]#Grid# got introduced, because of a missing import.
+This is easily fixed in Eclipse by using the
 menu:Source[Organize Imports] command. Learn its shortcut (kbd:[Ctrl-Shift-O] or
 kbd:[CMD-Shift-O] on Macs), you'll be using it a lot in Java development. In
 possible class name collisions, always choose the appropriate class from the
