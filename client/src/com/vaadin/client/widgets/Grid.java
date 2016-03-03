@@ -2527,7 +2527,6 @@ public class Grid<T> extends ResizeComposite implements
             if (rowIndex == rowWithFocus
                     && cellFocusRange.contains(columnIndexDOM)
                     && container == this.containerWithFocus) {
-                refreshRow(rowWithFocus);
                 return;
             }
 
