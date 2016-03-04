@@ -34,126 +34,44 @@ previous section. First, launch Eclipse and follow the following steps:
 
 . Start creating a new project by selecting from the menu "File > New > Project...".
 . In the [guilabel]#New Project# window that opens, select "Vaadin > Vaadin 7
-Project" and click [guibutton]#Next#.
+Project (Maven)" and click [guibutton]#Next#.
 
 +
 image::img/myproject-new-vaadin.png[]
 
-. In the [guilabel]#Vaadin Project# step, you need to set the basic web project
-settings. You need to give at least the __project name__ and the runtime; the
-default values should be good for the other settings.
+. In the [guilabel]#Select a Maven archetype# step, you need to select the project type.
+To create a simple test project, select the [guilabel]#Single-module Application Project#.
+
++
+image::img/myproject-archetype-selection.png[]
+
+. In the [guilabel]#Specify archetype parameters# step, you need to give at least the
+[guilabel]#Group Id# and the [guilabel]#Artifact Id#; the default values should be good
+for the other settings.
 
 +
 image::img/myproject-settings.png[]
 
-[guilabel]#Project name#:: Give the project a name. The name should be a valid identifier usable
-cross-platform as a filename and inside a URL, so using only lower-case
-alphanumerics, underscore, and minus sign is recommended.
+[guilabel]#Group Id#:: Give the project a namespace that is typically used as a prefix
+for your package names, for example, [packagename]#com.example#. The group ID should be a
+valid java package name.
 
-[guilabel]#Use default location#:: Define the directory under which the project is created. The default is under
-your workspace folder, and you should normally leave it as it is. You may need
-to set the directory, for example, if you are creating an Eclipse project on top
-of a version-controlled source tree.
+[guilabel]#Artifact Id#:: Give the project a name, for example, `myproject`. The artifact ID should
+be a valid java identifier.
 
-[guilabel]#Target runtime#:: Define the application server to use for deploying the application. The server
-that you have installed, for example Apache Tomcat, should be selected
-automatically. If not, click [guibutton]#New# to configure a new server under
-Eclipse.
+[guilabel]#Version#:: Give the project a Maven compatible version number, for example, `1.0-SNAPSHOT`.
+The version number should typically start with two or more integers separated with dots, and
+should not contain spaces.
 
-[guilabel]#Configuration#:: Select the configuration to use; you should normally use the default
-configuration for the application server. If you need to modify the project
-facets, click [guibutton]#Modify#. The recommended Servlet 3.0 configuration
-uses the @WebServlet deployment, while Servlet 2.4 uses the old
-[filename]#web.xml# deployment.
+[guilabel]#Package#:: Give the base package name for the project, for example,
+[packagename]#com.example.myproject#. By default, this is generated from the group ID and
+the artifact ID.
 
-[guilabel]#Deployment configuration#:: This setting defines the environment to which the application will be deployed,
-to generate the appropriate project directory layout and configuration files.
-The choises are:
-
-*** [guilabel]#Servlet# (default)
-*** [guilabel]#Google App Engine Servlet#
-*** [guilabel]#Generic Portlet (Portlet 2.0)#
+[guilabel]#Properties#:: Enter values for the archetype specific properties that control naming
+of various elements in the created project, such as the UI class name.
 
 +
-The further steps in the New Project Wizard depend on the selected deployment
-configuration; the steps listed in this section are for the default servlet
-configuration.
-ifdef::web[]
-See <<dummy/../../../framework/advanced/advanced-gae#advanced.gae,"Google App
-Engine Integration">> and
-<<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal
-Integration">> for instructions regarding the use of Vaadin in the alternative
-environments.
-endif::web[]
-
-[guilabel]#Vaadin version#:: Select the Vaadin version to use. The drop-down list shows, by default, the
-latest available version of Vaadin. The selection includes nightly
-[literal]#++SNAPSHOT++# builds, if you want to keep up with the absolutely
-latest unstable versions.
-
-+
-You can change the version later in the [filename]#ivy.xml#.
-
-[guilabel]#Create TestBench test#:: When enabled, the application stub will include a test case for testing the UI
-with Vaadin TestBench, as described in
-<<dummy/../../../testbench/testbench-overview.asciidoc#testbench.overview,"Vaadin
-TestBench">>. Vaadin TestBench API library will be included in
-[filename]#ivy.xml# as a dependency. Vaadin version 7.3 or later is required to
-create the stub.
-
-
-
-+
-You can click [guibutton]#Finish# here to use the defaults for the rest of the
-settings, or click [guibutton]#Next#.
-
-. The settings in the [guilabel]#Web Module# step define the basic web application
-(WAR) deployment settings and the structure of the web application project. All
-the settings are pre-filled, and you should normally accept them as they are.
-
-+
-image::img/myproject-web.png[]
-
-[guilabel]#Context Root#:: The context root (of the application) identifies the application in the URL used
-for accessing it. For example, if the project has a [literal]#++myproject++#
-context and a single UI at the context root, the URL would be
-http://example.com/myproject. The wizard will suggest the project name given in
-the first step as the context name. You can change the context root later in the
-Eclipse project properties.
-
-[guilabel]#Content Directory#:: The directory containing all the content to be included in the web application
-(WAR) that is deployed to the web server. The directory is relative to the root
-directory of the project.
-
-
-
-+
-You can just accept the defaults and click [guibutton]#Next#.
-
-. The [guilabel]#Vaadin project# step page has various Vaadin-specific application
-settings. If you are trying out Vaadin for the first time, you should not need
-to change anything. You can set most of the settings afterwards, except the
-creation of the portlet configuration.
-
-+
-image::img/myproject-vaadin.png[]
-
-[guilabel]#Create project template#:: Make the wizard create an UI class stub.
-
-[guilabel]#Application Name#:: A name for the application UI, shown in the title bar of the browser window.
-
-[guilabel]#Base package name#:: The name of the Java package under which the UI class of the application is to
-be placed.
-
-[guilabel]#Application/UI class name#:: The name of the UI class for the application, in which the user interface is
-developed.
-
-[guilabel]#Portlet version#:: When a portlet version is selected (only Portlet 2.0 is supported), the wizard
-will create the files needed for running the application in a portal. See
-<<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal
-Integration">> for more information on portlets.
-
-
+You can change the version later in the [filename]#pom.xml#.
 
 +
 Finally, click [guibutton]#Finish# to create the project.
@@ -164,8 +82,7 @@ Finally, click [guibutton]#Finish# to create the project.
 == Exploring the Project
 
 After the [guilabel]#New Project# wizard exits, it has done all the work for
-you: an UI class skeleton has been written to [filename]#src# directory and the
-[filename]#WebContent/WEB-INF/web.xml# contains a deployment descriptor. The
+you: a UI class skeleton has been written to the [filename]#src# directory. The
 project hierarchy shown in the Project Explorer is shown in
 <<figure.getting-started.first-project.exploring>>.
 
@@ -173,9 +90,9 @@ project hierarchy shown in the Project Explorer is shown in
 .A New Vaadin Project
 image::img/myproject-created.png[]
 
-The Vaadin libraries and other dependencies are managed by Ivy. Notice that the
+The Vaadin libraries and other dependencies are managed by Maven. Notice that the
 libraries are not stored under the project folder, even though they are listed
-in the "Java Resources > Libraries > ivy.xml" virtual folder.
+in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
 
 [[getting-started.first-project.exploring.ui]]
 === The UI Class
@@ -190,46 +107,47 @@ package com.example.myproject;
 import com.vaadin.ui.UI;
 ...
 
-@SuppressWarnings("serial")
-@Theme("myproject")
-public class MyprojectUI extends UI {
-
-    @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(
-            productionMode = false,
-            ui = MyprojectUI.class)
-    public static class Servlet extends VaadinServlet {
-    }
+@Theme("mytheme")
+@Widgetset("com.example.myproject.MyAppWidgetset")
+public class MyUI extends UI {
 
     @Override
-    protected void init(VaadinRequest request) {
+    protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        setContent(layout);
+        
+        final TextField name = new TextField();
+        name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                layout.addComponent(
-                    new Label("Thank you for clicking"));
-            }
+        button.addClickListener( e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue() 
+                    + ", it works!"));
         });
-        layout.addComponent(button);
+        
+        layout.addComponents(name, button);
+        layout.setMargin(true);
+        layout.setSpacing(true);
+        
+        setContent(layout);
+    }
+
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    public static class MyUIServlet extends VaadinServlet {
     }
 }
 ----
 
-In a Servlet 3.0 project, the deployment is configured with servlet class and a
-[literal]#++@WebServlet++# annotation. The stub includes the servlet class as a
-static inner class. You may want to refactor it to a separate normal class.
 
-In a Servlet 2.3 project, you would have a [filename]#web.xml# deployment
-descriptor.
+[[getting-started.first-project.widgetset]]
+== Compiling the Widget Set and Theme
 
-For a more detailed treatment of the deployment, see
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
-a web.xml Deployment Descriptor">>.
+Before running the project for the first time, select [guilabel]#Compile Widgetset and Theme#
+from the menu shown in <<figure.getting-started.first-project.compilewidgetset>>.
 
+[[figure.getting-started.first-project.compilewidgetset]]
+.Compile Widgetset and Theme Menu
+image::img/myproject-compilewidgetset.png[]
 
 
 [[getting-started.first-project.coding]]
@@ -278,7 +196,7 @@ Follow the following steps.
 image::img/tomcat-startserver-1.png[]
 
 
-. Select "Apache > Tomcat v7.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#. +
+. Select "Apache > Tomcat v8.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#. +
 image::img/tomcat-startserver-2.png[]
 
 
