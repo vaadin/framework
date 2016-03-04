@@ -558,7 +558,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      */
     public final double getScrollPos() {
         assert internalGetScrollPos() == toInt32(scrollPos) : "calculated scroll position ("
-                + toInt32(scrollPos)
+                + scrollPos
                 + ") did not match the DOM element scroll position ("
                 + internalGetScrollPos() + ")";
         return scrollPos;
@@ -793,7 +793,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      */
     private static native int toInt32(double val)
     /*-{
-        return val | 0;
+        return Math.round(val) | 0;
     }-*/;
 
     /**
