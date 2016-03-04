@@ -73,8 +73,36 @@ Vaadin libraries, which are project specific. See below for instructions for
 updating the libraries.
 
 
+[[getting-started.eclipse.mavenlibraryupdate]]
+== Updating the Vaadin Libraries in Maven Projects
+
+Updating the Vaadin plugin does not update Vaadin libraries. The libraries are
+project specific, as a different version might be required for different
+projects, so you have to update them separately for each project.
+
+. Open the [filename]#pom.xml# in an editor in Eclipse.
+
+. Edit the [propertyname]#vaadin.version# property to set the Vaadin version.
+
++
+Updating the libraries can take several minutes. You can see the progress in the
+Eclipse status bar. You can get more details about the progress by clicking the
+indicator.
+
+. If you have compiled the widget set for your project, recompile it by clicking
+the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+
+. Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
+right-clicking the server and selecting [guilabel]#Clean# as well as
+[guilabel]#Clean Tomcat Work Directory#, and restart it.
+
+
+If you experience problems after updating the libraries, you can try using
+"Maven > Update Project".
+
+
 [[getting-started.eclipse.libraryupdate]]
-== Updating the Vaadin Libraries
+== Updating the Vaadin Libraries in Ivy Projects
 
 Updating the Vaadin plugin does not update Vaadin libraries. The libraries are
 project specific, as a different version might be required for different
