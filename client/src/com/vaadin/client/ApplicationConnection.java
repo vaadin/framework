@@ -42,7 +42,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.ConnectionStateHandler;
@@ -486,7 +485,7 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         client.getProfilingData = $entry(function() {
-            var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler();
+            var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
                 smh.@com.vaadin.client.communication.MessageHandler::lastProcessingTime,
                     smh.@com.vaadin.client.communication.MessageHandler::totalProcessingTime
