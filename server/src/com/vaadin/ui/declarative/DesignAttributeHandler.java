@@ -458,7 +458,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Read the alignment from the given child component attributes.
      * 
-     * @since
+     * @since 7.6.4
      * @param attr
      *            the child component attributes
      * @return the component alignment
@@ -486,7 +486,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Writes the alignment to the given child element attributes.
      * 
-     * @since
+     * @since 7.6.4
      * @param childElement
      *            the child element
      * @param alignment
