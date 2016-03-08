@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC interface for calls from client to server.
  * 
- * @since
+ * @since 7.6.4
  * @author Vaadin Ltd
  */
 public interface DragAndDropWrapperServerRpc extends ServerRpc {
@@ -28,8 +28,6 @@ public interface DragAndDropWrapperServerRpc extends ServerRpc {
     /**
      * Called to poll the server to see if any changes have been made e.g. when
      * the upload is complete.
-     * 
-     * @since
      */
     public void poll();
 

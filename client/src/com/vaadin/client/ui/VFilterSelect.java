@@ -1134,7 +1134,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Creates a new filter select text box.
          * 
-         * @since
+         * @since 7.6.4
          */
         public FilterSelectTextBox() {
             /*-

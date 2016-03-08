@@ -730,6 +730,13 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         return dragImageWidget;
     }
 
+    /**
+     * Internal client side interface used by the connector and the widget for
+     * the drag and drop wrapper to signal the completion of an HTML5 file
+     * upload.
+     * 
+     * @since 7.6.4
+     */
     public interface UploadHandler {
 
         public void uploadDone();
