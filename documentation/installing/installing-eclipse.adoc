@@ -114,6 +114,98 @@ Then, click [guibutton]#Next#.
 More installation instructions for the Eclipse plugin can be found at
 http://vaadin.com/eclipse.
 
+
+
+[[getting-started.eclipse.notification.overview]]
+== Notification Center
+
+
+The notification center is a feature of the Vaadin Eclipse plug-in. It displays
+notifications about new Vaadin releases as well as news about upcoming events,
+such as webinars. The notification center can be connected to your Vaadin
+account.
+
+The plug-in adds an indicator in the bottom right corner. The indicator shows
+whether or not there are any pending notifications. The indicator turns red when there are new notifications.
+
+Clicking the tray icon opens up the pop-up, as shown
+in <<figure.getting-started.eclipse.notification-center.overview>>.
+
+[[figure.getting-started.eclipse.notification-center.overview]]
+.Overview of the notification center
+image::img/notification-center-overview.png[]
+
+By clicking a notification in the list, you can open it up.
+
+.Detailed view of a notification
+image::img/webinar-trainings-sneakpeek.png[]
+
+Clicking on the [guilabel]#Clear All# icon in the main pop-up clears all notifications and marks them all as read.
+
+[[getting-started.eclipse.notification.signin]]
+=== Signing in
+
+The notification center uses your Vaadin account to determine
+which notifications you have acknowledged as read. If you want to keep
+the notification center in sync with your Vaadin account, you can sign in. If
+you have read a notification on the site, it will be marked as read in the
+notification center and vice versa.
+
+When you are not signed in, the top-most notification will be a
+notification that asks you to sign in.
+
+.The sign-in notification
+image::img/signin-icon.png[]
+
+When you click the sign-in item, a dialog opens for signing in.
+
+.The sign-in dialog.
+image::img/sign-in-form.png[]
+
+You can then sign in with your Vaadin
+account. If you do not have one, you can sign in using a Google,
+Facebook, or Twitter account instead. First, click on the sign-in link. It opens a second dialog, as shown
+in <<figure.getting-started.eclipse.notification-center.complex-signin>>.
+
+[[figure.getting-started.eclipse.notification-center.complex-signin]]
+.Sign-in authentication dialog
+image::img/signin-via-website.png[]
+
+By following the [url]#vaadin.com# link and logging in to the Vaadin website using your preferred
+account, you can then copy the authentication token from the resulting page.
+After that, you can paste the authorization token into the dialog and
+click [guibutton]#Submit# to log in.
+
+[[getting-started.eclipse.notification.settings]]
+=== Notification Settings
+
+You can open the settings by selecting "Eclipse... > Preferences".
+
+.The settings pane
+image::img/preferences.png[]
+
+
+
+The options are as follows:
+
+[guilabel]#Enable Vaadin Notifications# :: Disabling this disables all notifications.
+
+[guilabel]#Inform me about new notifications using a popup# :: Disabling this stops
+pop-ups from appearing. The notifications can still be viewed by opening
+the notification center window.
+
+In the [guilabel]#Update Schedule# panel, you can set the polling frequency.
+
+[guilabel]#Refresh notifications from scratch each time when list is shown# ::
+Forces the notifications center to poll all notifications every time.
+
+[guilabel]#Get notifications on IDE start# :: Immediately request notifications when the
+IDE starts without waiting for the polling interval.
+
+[guilabel]#Look for new notifications / Vaadin versions# :: Interval for polling new notifications.
+
+
+
 [[installing.eclipse.update]]
 == Updating the Plugins
 
