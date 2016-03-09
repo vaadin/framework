@@ -34,7 +34,7 @@
             <path refid="gwt.deps" />
             <path refid="uitest.deps" />
             <path location="server/src" />
-            <path location="shared/src" />
+            <path location="shared/src/main/java" />
             <path location="uitest/src" />
             <path location="client/src" />
         </path>

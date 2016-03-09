@@ -51,7 +51,7 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build,test->default">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
