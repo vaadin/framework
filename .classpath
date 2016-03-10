@@ -2,14 +2,15 @@
 <classpath>
 	<classpathentry kind="src" path="server/tests/src"/>
 	<classpathentry kind="src" path="client/tests/src"/>
-	<classpathentry kind="src" path="shared/tests/src"/>
+	<classpathentry kind="src" path="shared/src/test/java"/>
 	<classpathentry kind="src" path="client/src"/>
 	<classpathentry kind="src" path="server/src"/>
 	<classpathentry kind="src" path="client-compiler/src"/>
 	<classpathentry kind="src" path="client-compiler/tests/src"/>
 	<classpathentry kind="src" path="uitest/src"/>
+	<classpathentry kind="src" path="shared/src/main/java"/>
+	<classpathentry kind="src" path="shared/src/main/java-templates"/>
 	<classpathentry kind="src" path="buildhelpers/src"/>
-	<classpathentry kind="src" path="shared/src"/>
 	<classpathentry kind="src" path="widgets/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
