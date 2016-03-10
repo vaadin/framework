@@ -24,7 +24,7 @@
         <dependency org="com.vaadin" name="vaadin-push"
             rev="${vaadin.version}" conf="deps -> default" transitive="false" />
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="deps -> build" transitive="false" />
+            rev="${vaadin.version}" conf="deps -> default" transitive="false" />
     </dependencies>
 
 </ivy-module>

@@ -23,7 +23,7 @@
         <dependency org="com.vaadin" name="vaadin-shared"
             rev="${vaadin.version}" conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build" />
+            rev="${vaadin.version}" conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build,test" />
         <dependency org="com.vaadin" name="vaadin-sass-compiler"

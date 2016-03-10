@@ -40,7 +40,7 @@
         <module organisation="com.vaadin" name="vaadin-shared"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
-            resolver="build-temp" />
+            resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-client"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-client-compiler"

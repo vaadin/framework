@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="server/tests/src"/>
+	<classpathentry kind="src" path="server/src/test/java"/>
 	<classpathentry kind="src" path="client/tests/src"/>
 	<classpathentry kind="src" path="shared/src/test/java"/>
 	<classpathentry kind="src" path="client/src"/>
-	<classpathentry kind="src" path="server/src"/>
+	<classpathentry kind="src" path="server/src/main/java"/>
 	<classpathentry kind="src" path="client-compiler/src"/>
 	<classpathentry kind="src" path="client-compiler/tests/src"/>
 	<classpathentry kind="src" path="uitest/src"/>

@@ -29,7 +29,7 @@
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build,test->default">
             <exclude type="pom" conf="test" />
         </dependency>
 

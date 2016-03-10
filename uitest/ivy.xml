@@ -36,7 +36,7 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build->build">
+            rev="${vaadin.version}" conf="build->default">
             <exclude org="javax.servlet"></exclude>
             <exclude type="pom" />
         </dependency>

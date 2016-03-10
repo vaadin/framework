@@ -22,7 +22,7 @@
     </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="compile-module-> build" />
+            rev="${vaadin.version}" conf="compile-module-> default" />
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="compile-module-> build" />
         <dependency org="com.vaadin" name="vaadin-client-compiler"

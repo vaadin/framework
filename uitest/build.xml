@@ -36,7 +36,7 @@
         <property name="result.dir" location="result" />
         <property name="src" location="${result.dir}/../src" />
         <property name="classes" location="${result.dir}/classes" />
-        <property name="server.test.sources" location="${result.dir}/../../server/tests/src" />
+        <property name="server.test.sources" location="${result.dir}/../../server/src/test/java" />
         <mkdir dir="${classes}" />
 
         <!-- TODO: Get rid of this -->

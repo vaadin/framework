@@ -86,6 +86,7 @@ scripts/*.pyc
 result
 push/target/
 shared/target/
+server/target/
 
 .sass-cache
 phantomjsdriver.log
