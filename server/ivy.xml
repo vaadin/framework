@@ -40,7 +40,12 @@
 
         <!-- Bean Validation API -->
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build-provided,ide,test -> default" />
+                    rev="1.0.0.GA" conf="build-provided,ide,test -> default" />
+
+        <dependency org="com.googlecode" name="openbeans"
+                    rev="1.0" conf="build-provided,ide,test -> default" >
+ 		<artifact name="openbeans-1.0" type="jar" url="https://bintray.com/artifact/download/melix/thirdparty-apache/com/googlecode/openbeans/1.0/openbeans-1.0.jar"/>
+	</dependency>
 
         <!-- Sass compiler -->
         <dependency org="com.vaadin" name="vaadin-sass-compiler"

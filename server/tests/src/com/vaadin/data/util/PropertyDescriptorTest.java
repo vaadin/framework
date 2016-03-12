@@ -1,7 +1,7 @@
 package com.vaadin.data.util;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import com.googlecode.openbeans.Introspector;
+import com.googlecode.openbeans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;

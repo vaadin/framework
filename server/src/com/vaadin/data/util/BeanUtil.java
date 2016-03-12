@@ -15,10 +15,10 @@
  */
 package com.vaadin.data.util;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import com.googlecode.openbeans.BeanInfo;
+import com.googlecode.openbeans.IntrospectionException;
+import com.googlecode.openbeans.Introspector;
+import com.googlecode.openbeans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public final class BeanUtil implements Serializable {
      * to work correctly.
      * 
      * NOTE : This utility method relies on introspection (and returns
-     * PropertyDescriptor) which is a part of java.beans package. The latter
+     * PropertyDescriptor) which is a part of com.googlecode.openbeans package. The latter
      * package could require bigger JDK in the future (with Java 9+). So it may
      * be changed in the future.
      * 

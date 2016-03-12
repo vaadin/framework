@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui.declarative;
 
-import java.beans.IntrospectionException;
+import com.googlecode.openbeans.IntrospectionException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
