@@ -538,10 +538,9 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
-
         // Null ids are not accepted
         if (itemId == null) {
-            throw new NullPointerException("Container item id can not be null");
+            return null;
         }
 
         final Item item = container.addItem(itemId);

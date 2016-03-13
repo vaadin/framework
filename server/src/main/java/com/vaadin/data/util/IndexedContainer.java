@@ -269,7 +269,9 @@ public class IndexedContainer extends
     public Item addItem(Object itemId) {
         Item item = internalAddItemAtEnd(itemId, new IndexedContainerItem(
                 itemId), false);
-        if (!isFiltered()) {
+        if (item == null) {
+            return null;
+        } else if (!isFiltered()) {
             // always the last item
             fireItemAdded(size() - 1, itemId, item);
         } else if (passesFilters(itemId) && !containsId(itemId)) {
@@ -726,11 +728,6 @@ public class IndexedContainer extends
          *            the Item ID of the new Item.
          */
         private IndexedContainerItem(Object itemId) {
-
-            // Gets the item contents from the host
-            if (itemId == null) {
-                throw new NullPointerException();
-            }
             this.itemId = itemId;
         }
 
