@@ -741,6 +741,10 @@ public class IndexedContainer extends
          */
         @Override
         public Property getItemProperty(Object id) {
+            if (!propertyIds.contains(id)) {
+                return null;
+            }
+
             return new IndexedContainerProperty(itemId, id);
         }
 
