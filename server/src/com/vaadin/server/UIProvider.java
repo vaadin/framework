@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
@@ -30,6 +31,10 @@ import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
 
 public abstract class UIProvider implements Serializable {
+
+    /* Default widgetset name to look for */
+    private static final String APP_WIDGETSET_NAME = "AppWidgetset";
+
     public abstract Class<? extends UI> getUIClass(UIClassSelectionEvent event);
 
     public UI createInstance(UICreateEvent event) {
@@ -136,8 +141,13 @@ public abstract class UIProvider implements Serializable {
         if (uiWidgetset != null) {
             return uiWidgetset.value();
         } else {
-            return null;
+            InputStream resource = event.getUIClass().getResourceAsStream(
+                    "/" + APP_WIDGETSET_NAME + ".gwt.xml");
+            if (resource != null) {
+                return APP_WIDGETSET_NAME;
+            }
         }
+        return null;
     }
 
     /**
