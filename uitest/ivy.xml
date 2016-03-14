@@ -29,7 +29,12 @@
             rev="1.0.0.GA" conf="build,ide -> default,sources" />
         <dependency org="org.hibernate" name="hibernate-validator"
             rev="4.2.0.Final" conf="build,ide -> default" />
-        <!-- Google App Engine -->
+         <dependency org="com.googlecode" name="openbeans"
+                    rev="1.0" conf="build,ide -> default" >
+ 		<artifact name="openbeans-1.0" type="jar" url="https://bintray.com/artifact/download/melix/thirdparty-apache/com/googlecode/openbeans/1.0/openbeans-1.0.jar"/>
+	</dependency>
+
+       <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
             rev="1.7.7" conf="build-provided,ide -> default" />
 
