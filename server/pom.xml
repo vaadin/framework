@@ -4,31 +4,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-parent</artifactId>
-		<version>1.0.0</version>
+		<artifactId>vaadin-root</artifactId>
+		<version>7.7.0-SNAPSHOT</version>
 	</parent>
 	<groupId>com.vaadin</groupId>
 	<artifactId>vaadin-server</artifactId>
 	<name>vaadin-server</name>
 	<packaging>jar</packaging>
-	<version>7.7.0-SNAPSHOT</version>
-
-	<properties>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<!-- Used version numbers for dependencies -->
-		<vaadin.sass.version>0.9.13</vaadin.sass.version>
-		<commons-io.version>2.4</commons-io.version>
-		<guava.version>16.0.1.vaadin1</guava.version>
-		<!-- TODO: Move to Parent -->
-		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
-	</properties>
 
 	<organization>
 		<name>Vaadin Ltd</name>
 	</organization>
 	<url>https://vaadin.com/</url>
-	<description>Vaadin shared</description>
+	<description>Vaadin server</description>
 
 	<dependencies>
 		<!-- API DEPENDENCIES -->

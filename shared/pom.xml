@@ -4,24 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-parent</artifactId>
-		<version>1.0.0</version>
+		<artifactId>vaadin-root</artifactId>
+		<version>7.7.0-SNAPSHOT</version>
 	</parent>
-	<groupId>com.vaadin</groupId>
 	<artifactId>vaadin-shared</artifactId>
 	<name>vaadin-shared</name>
 	<packaging>jar</packaging>
-	<version>7.7.0-SNAPSHOT</version>
 
 	<properties>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<!-- Used version numbers for dependencies -->
 		<flute.version>1.3.0.gg2</flute.version>
 		<streamhtmlparser.version>0.0.10.vaadin1</streamhtmlparser.version>
-		<guava.version>16.0.1.vaadin1</guava.version>
-		<!-- TODO: Move to Parent -->
-		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
 	</properties>
 
 	<organization>
@@ -168,7 +160,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -183,7 +175,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

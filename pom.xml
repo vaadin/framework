@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<groupId>com.vaadin</groupId>
+	<artifactId>vaadin-root</artifactId>
+	<name>vaadin-root</name>
+	<packaging>pom</packaging>
+	<version>7.7.0-SNAPSHOT</version>
+
+	<properties>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+
+		<!-- Used version numbers for dependencies -->
+		<vaadin.sass.version>0.9.13</vaadin.sass.version>
+		<commons-io.version>2.4</commons-io.version>
+		<guava.version>16.0.1.vaadin1</guava.version>
+		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
+
+		<!-- Atmosphere versions -->
+		<atmosphere.runtime.version>2.2.7.vaadin1</atmosphere.runtime.version>
+		<atmosphere.js.version>2.2.6.vaadin4</atmosphere.js.version>
+	</properties>
+
+	<organization>
+		<name>Vaadin Ltd</name>
+	</organization>
+	<url>https://vaadin.com/</url>
+	<description>Vaadin Framework Root Pom</description>
+
+	<modules>
+		<module>shared</module>
+		<module>push</module>
+		<module>server</module>
+	</modules>
+
+</project>

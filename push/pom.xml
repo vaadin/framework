@@ -4,17 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>vaadin-root</artifactId>
+        <version>7.7.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-push</artifactId>
     <name>Vaadin Push</name>
     <packaging>jar</packaging>
-    <version>7.7.0-SNAPSHOT</version>
     <properties>
-        <atmosphere.runtime.version>2.2.7.vaadin1</atmosphere.runtime.version>
-        <atmosphere.js.version>2.2.6.vaadin4</atmosphere.js.version>
+
     </properties>
     
     <organization>

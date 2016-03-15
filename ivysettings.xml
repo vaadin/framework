@@ -37,6 +37,8 @@
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
             resolver="build-temp" />
+        <module organisation="com.vaadin" name="vaadin-root"
+            resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-shared"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
