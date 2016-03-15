@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>com.liferay.portal</groupId>
 			<artifactId>portal-service</artifactId>
-			<version>6.0.2</version>
+			<version>${liferay.portal.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>${javax.servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
-			<version>2.0</version>
+			<version>${javax.portlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>1.7.7</version>
+			<version>${google.appengine.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
+			<version>${javax.validation.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -86,7 +86,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.8.3</version>
+			<version>${jsoup.version}</version>
 		</dependency>
 
 		<!-- TESTING DEPENDENCIES -->
@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -257,17 +257,17 @@
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>com.vaadin.*;version="${project.version}",com.google.*;version="${project.version}"</Export-Package>
-						<Import-Package>javax.servlet;version="2.4.0",
-							javax.servlet.http;version="2.4.0",
-							javax.validation;version="1.0.0.GA";resolution:=optional,
-							org.jsoup;version="1.8.3",
-							org.jsoup.parser;version="1.8.3",
-							org.jsoup.nodes;version="1.8.3",
-							org.jsoup.helper;version="1.8.3",
-							org.jsoup.safety;version="1.8.3",
-							org.jsoup.select;version="1.8.3",
-							javax.portlet;version="[2.0,3)";resolution:=optional,
-							javax.portlet.filter;version="[2.0,3)";resolution:=optional,
+						<Import-Package>javax.servlet;version="${javax.servlet.version}",
+							javax.servlet.http;version="${javax.servlet.version}",
+							javax.validation;version="${javax.validation.version}";resolution:=optional,
+							org.jsoup;version="${jsoup.version}",
+							org.jsoup.parser;version="${jsoup.version}",
+							org.jsoup.nodes;version="${jsoup.version}",
+							org.jsoup.helper;version="${jsoup.version}",
+							org.jsoup.safety;version="${jsoup.version}",
+							org.jsoup.select;version="${jsoup.version}",
+							javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
+							javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
 							com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
 						<Require-Bundle>com.google.gwt.thirdparty.guava;bundle-version="${guava.version}",
 							com.vaadin.shared;bundle-version="${project.version}",

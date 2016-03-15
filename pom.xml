@@ -18,10 +18,21 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 
 		<!-- Used version numbers for dependencies -->
-		<vaadin.sass.version>0.9.13</vaadin.sass.version>
 		<commons-io.version>2.4</commons-io.version>
+		<google.appengine.version>1.7.7</google.appengine.version>
 		<guava.version>16.0.1.vaadin1</guava.version>
+		<jsoup.version>1.8.3</jsoup.version>
+		<liferay.portal.version>6.0.2</liferay.portal.version>
+
+		<vaadin.sass.version>0.9.13</vaadin.sass.version>
 		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
+
+		<javax.portlet.version>2.0</javax.portlet.version>
+		<javax.servlet.version>3.0.1</javax.servlet.version>
+		<javax.validation.version>1.0.0.GA</javax.validation.version>
+
+		<!-- Test dependencies -->
+		<junit.version>4.11</junit.version>
 
 		<!-- Atmosphere versions -->
 		<atmosphere.runtime.version>2.2.7.vaadin1</atmosphere.runtime.version>
