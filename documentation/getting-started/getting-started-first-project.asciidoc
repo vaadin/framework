@@ -164,7 +164,7 @@ project hierarchy shown in the Project Explorer is shown in
 
 [[figure.getting-started.first-project.exploring]]
 .A New Vaadin Project
-image::img/myproject-ivy-created.png[]
+image::img/myproject-ivy-created.png[scaledwidth=60%]
 
 The Vaadin libraries and other dependencies are managed by Ivy. Notice that the
 libraries are not stored under the project folder, even though they are listed
@@ -361,7 +361,7 @@ server-side development.
 
 [[figure.getting-started.first-project.coding.import]]
 .Importing Classes Automatically
-image::img/codingtips-automaticimports.png[]
+image::img/codingtips-automaticimports.png[scaledwidth=80%]
 
 [[getting-started.first-project.server]]
 == Setting Up and Starting the Web Server
@@ -377,22 +377,28 @@ directory.
 
 Follow the following steps:
 
-. Switch to the Servers tab in the lower panel in Eclipse. List of servers should be empty after Eclipse is installed. Right-click on the empty area in the panel and select "New > Server". +
+. Switch to the Servers tab in the lower panel in Eclipse. List of servers should be empty after Eclipse is installed. Right-click on the empty area in the panel and select "New > Server".
++
 image::img/tomcat-startserver-1.png[]
 
 
-. Select "Apache > Tomcat v8.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#. +
+. Select "Apache > Tomcat v7.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#.
++
 image::img/tomcat-startserver-2.png[]
 
 
-. Add your project to the server by selecting it on the left and clicking [guibutton]#Add# to add it to the configured projects on the right. Click [guibutton]#Finish#. +
+. Add your project to the server by selecting it on the left and clicking [guibutton]#Add# to add it to the configured projects on the right. Click [guibutton]#Finish#.
++
 image::img/tomcat-startserver-3.png[]
 
-
-. The server and the project are now installed in Eclipse and are shown in the [guilabel]#Servers# tab. To start the server, right-click on the server and select Debug. To start the server in non-debug mode, select Start. +
+. The server and the project are now installed in Eclipse and are shown in the [guilabel]#Servers# tab.
+To start the server, right-click on the server and select [guilabel]#Debug#.
+To start the server in non-debug mode, select [guilabel]#Start#.
++
 image::img/tomcat-startserver-4.png[]
 
-. The server starts and the WebContent directory of the project is published to the server on http://localhost:8080/myproject/. +
+. The server starts and the WebContent directory of the project is published to the server on http://localhost:8080/myproject/.
++
 image::img/tomcat-startserver-5.png[]
 
 [[getting-started.first-project.run]]
@@ -410,13 +416,12 @@ margin bar of the source code window. For example, if you insert a breakpoint in
 the [methodname]#buttonClick()# method and click the [guibutton]#What is the
 time?# button, Eclipse will ask to switch to the Debug perspective. Debug
 perspective will show where the execution stopped at the breakpoint. You can
-examine and change the state of the application. To continue execution, select
-Resume from Run menu.
+examine and change the state of the application.
+To continue execution, select [guilabel]#Resume# from [guilabel]#Run# menu.
 
 .Debugging a Vaadin Application
 image::img/debuggingMyProject.png[]
 
-Above, we described how to debug a server-side application. Debugging
-client-side applications and widgets is described in
-<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
-Client-Side Code">>.
+Above, we described how to debug a server-side application.
+Debugging client-side applications and widgets is described in
+<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.

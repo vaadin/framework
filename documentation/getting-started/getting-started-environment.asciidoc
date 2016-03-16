@@ -63,8 +63,6 @@ link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[http://w
 
 . Install the Java SDK by running the installer. The default options are fine.
 
-
-
 [[getting-started.environment.linux]]
 === Linux / UNIX
 
@@ -83,12 +81,11 @@ link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[http://w
 . Decompress it under a suitable base directory, such as [filename]#/opt#. For
 example, for Java SDK, enter (either as root or with [command]#sudo# in Linux):
 
-
 +
 [subs="normal"]
 ----
 [prompt]#+++#+++# [command]#cd# [replaceable]#/opt#
-[prompt]#+++#+++# [command]#sh# [replaceable]#(path-to-installation-package)/jdk-8u20-linux-x64.bin#
+[prompt]#+++#+++# [command]#sh# [replaceable]##<path>##/jdk-[replaceable]##<version>##.bin
 ----
 +
 and follow the instructions in the installer.
@@ -99,10 +96,9 @@ installation directory. Also, include the [literal]#++$JAVA_HOME/bin++# in the
 Linux and using the Bash shell, you would add lines such as the following to the
 [filename]#.bashrc# or [filename]#.profile# script in your home directory:
 
-
 +
 ----
-export JAVA_HOME=/opt/jdk1.8.0_20
+export JAVA_HOME=/opt/jdk1.8.0_31
 export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
 ----
 +
@@ -115,8 +111,6 @@ path.
 Settings done in a [filename]#bashrc# file require that you open a new shell
 window. Settings done in a [filename]#profile# file require that you log in into
 the system. You can, of course, also give the commands in the current shell.
-
-
 
 
 [[getting-started.environment.eclipse]]
@@ -133,15 +127,15 @@ decompress the ZIP file by just double-clicking it and selecting "Extract all
 files" task from Windows compressed folder task. In our installation example, we
 use [filename]#C:\dev# as the target directory.
 
-
-Eclipse is now installed in [filename]#C:\dev\eclipse# and can be started from
-there (by double clicking eclipse.exe).
-
+Eclipse is now installed in [filename]#C:\dev\eclipse#.
+You can start it from there by double clicking [filename]#eclipse.exe#.
 
 === Linux / OS X / UNIX
 
-We recommend that you install Eclipse manually in Linux and other UNIX variants
-as follows.
+We recommend that you install Eclipse manually in Linux and other UNIX variants.
+They may have it available from a package repository, but using such an installation may cause problems with installing plug-ins.
+
+You can install Eclipse as follows:
 
 . Download Eclipse IDE for Java EE Developers from
 link:http://www.eclipse.org/downloads/[http://www.eclipse.org/downloads/]
@@ -150,15 +144,14 @@ link:http://www.eclipse.org/downloads/[http://www.eclipse.org/downloads/]
 to make sure that there is no old Eclipse installation in the target directory.
 Installing a new version on top of an old one probably renders Eclipse unusable.
 
-. Eclipse should normally be installed as a regular user, as this makes
-installation of plugins easier. Eclipse also stores some user settings in the
-installation directory. To install the package, enter:
-
-
+. Eclipse should normally be installed as a regular user, which makes installation of plug-ins easier.
+Eclipse also stores some user settings in the installation directory.
++
+To install the package, enter:
 +
 [subs="normal"]
 ----
-[prompt]#$# [command]#tar# zxf [replaceable]#(path-to-installation-package)/eclipse-jee-ganymede-SR2-linux-gtk.tar.gz#
+[prompt]#$# [command]#tar# zxf [replaceable]##<path>##/eclipse-jee-[replaceable]##<version>##.tar.gz
 ----
 +
 This will extract the package to a subdirectory with the name
@@ -231,8 +224,3 @@ on an element and select [guilabel]#Inspect Element with Firebug# to inspect it.
 In addition to HTML tree, it also shows the CSS rules matching the element,
 which you can use for building themes. You can even edit the CSS styles live, to
 experiment with styling.
-
-
-
-
-

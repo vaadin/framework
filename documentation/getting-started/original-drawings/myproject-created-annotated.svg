@@ -72,8 +72,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="236.02753"
-     inkscape:cy="570.52264"
+     inkscape:cx="191.07987"
+     inkscape:cy="356.49384"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:window-width="1920"
@@ -101,7 +101,7 @@
        spacingy="5px" />
     <sodipodi:guide
        orientation="1,0"
-       position="395,555"
+       position="385,100"
        id="guide11876" />
   </sodipodi:namedview>
   <metadata
@@ -122,10 +122,10 @@
      id="layer1"
      transform="translate(0,-308.2677)">
     <rect
-       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.50000000000000000;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect29725"
-       width="500"
-       height="460"
+       width="480"
+       height="455"
        x="95"
        y="164.09448"
        transform="translate(0,308.2677)"
@@ -171,13 +171,13 @@
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Helvetica LT Std;-inkscape-font-specification:Helvetica LT Std Light"
-       x="394.74399"
+       x="385"
        y="584.474"
        id="text13161"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan13163"
-         x="394.74399"
+         x="385"
          y="584.474">The UI class skeleton</tspan></text>
     <g
        transform="translate(204.99999,-66.969547)"
@@ -216,32 +216,32 @@
       <path
          sodipodi:nodetypes="cccc"
          style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         d="m 30,762.36218 10,-5 0,-20 10,-10"
+         d="m 25,762.36218 10,-5 0,-20 10,-10"
          id="path3804-2-3-46-9"
          inkscape:connector-curvature="0" />
       <path
          sodipodi:nodetypes="cccc"
          style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         d="m 30,692.36218 10,5 0,20 10,10"
+         d="m 25,692.36218 10,5 0,20 10,10"
          id="path3804-2-3-46"
          inkscape:connector-curvature="0" />
       <path
          sodipodi:nodetypes="cc"
          style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         d="m 50,419.09448 55,1e-5"
+         d="m 45,419.09448 60,1e-5"
          id="path3804-2-3"
          inkscape:connector-curvature="0"
          transform="translate(0,308.2677)" />
       <path
          sodipodi:type="arc"
-         style="color:#000000;fill:#ffedd1;fill-opacity:1;stroke:#000000;stroke-width:2.74977946000000006;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         style="color:#000000;fill:#ffedd1;fill-opacity:1;stroke:#000000;stroke-width:2.74977946;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
          id="path3005-2-10-8"
          sodipodi:cx="25"
          sodipodi:cy="419.09448"
          sodipodi:rx="9.1659365"
          sodipodi:ry="9.1659365"
-         d="m 34.165936,419.09448 c 0,5.06221 -4.103729,9.16594 -9.165936,9.16594 -5.062207,0 -9.165936,-4.10373 -9.165936,-9.16594 0,-5.0622 4.103729,-9.16593 9.165936,-9.16593 5.062207,0 9.165936,4.10373 9.165936,9.16593 z"
-         transform="matrix(0.54549827,0,0,0.54549827,36.362543,498.74687)" />
+         d="m 34.165936,419.09448 a 9.1659365,9.1659365 0 1 1 -18.331872,0 9.1659365,9.1659365 0 1 1 18.331872,0 z"
+         transform="matrix(0.54549827,0,0,0.54549827,31.362543,498.74687)" />
       <path
          sodipodi:type="arc"
          style="color:#000000;fill:#ecf3ff;fill-opacity:1;stroke:#000000;stroke-width:2.74977946000000006;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -318,46 +318,46 @@
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Helvetica LT Std;-inkscape-font-specification:Helvetica LT Std Light"
-       x="394.74399"
+       x="385"
        y="664.25208"
        id="text13161-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan13163-0"
-         x="394.74399"
+         x="385"
          y="664.25208">The widget set</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Helvetica LT Std;-inkscape-font-specification:Helvetica LT Std Light"
-       x="394.74399"
+       x="385"
        y="808.74548"
        id="text13161-0-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan13163-0-8"
-         x="394.74399"
+         x="385"
          y="808.74548">The theme</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Helvetica LT Std;-inkscape-font-specification:Helvetica LT Std Light"
-       x="393.75201"
+       x="385"
        y="901.34863"
        id="text13161-0-4-1"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan13163-0-8-3"
-         x="393.75201"
+         x="385"
          y="901.34863">Maven project configuration</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Helvetica LT Std;-inkscape-font-specification:Helvetica LT Std Light"
-       x="393.75201"
+       x="385"
        y="918.85156"
        id="text13161-0-4-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan13163-0-8-2"
-         x="393.75201"
+         x="385"
          y="918.85156">Project README skeleton</tspan></text>
   </g>
 </svg>
