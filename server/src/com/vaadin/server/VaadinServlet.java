@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gwt.thirdparty.guava.common.base.Charsets;
 import com.google.gwt.thirdparty.guava.common.io.Files;
+import com.vaadin.annotations.SystemMessagesMod;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
@@ -315,6 +316,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
         VaadinServletService service = new VaadinServletService(this,
                 deploymentConfiguration);
         service.init();
+        SystemMessagesMod systemMessagesMod = this.getClass().getAnnotation(SystemMessagesMod.class);
+        if(systemMessagesMod != null) {
+            try {
+                service.setSystemMessagesProvider(systemMessagesMod.value().newInstance());
+            } catch (Exception e) {
+                throw new ServiceException(e);
+            }
+        }
+
         return service;
     }
 

@@ -86,3 +86,7 @@ result
 
 .sass-cache
 phantomjsdriver.log
+
+#IDEA
+*.iml
+.idea
