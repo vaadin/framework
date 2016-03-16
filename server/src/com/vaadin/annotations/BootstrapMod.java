@@ -26,9 +26,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Provides various helper methods for connectors. Meant for internal use.
+ * This annotation adds custom BootstrapListeners to Vaadin UI.
  *
- * @author Vaadin Ltd
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
