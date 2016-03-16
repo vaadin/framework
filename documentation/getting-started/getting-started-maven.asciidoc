@@ -21,6 +21,10 @@ link:https://github.com/johndevs/gradle-vaadin-plugin[Gradle Vaadin Plugin].
 Vaadin Plugin for Eclipse uses Ivy for resolving dependencies in Vaadin
 projects, and it should provide you with the basic Ivy configuration.
 
+For an interactive guide, see the instructions at link:https://vaadin.com/maven[vaadin.com/maven].
+It automatically generates you the command to create a new project based on archetype selection.
+It can also generate dependency declarations for Vaadin dependencies.
+
 [[getting-started.maven.command-line]]
 == Working from Command-Line
 
@@ -31,7 +35,7 @@ line):
 ----
 [prompt]#$# [command]#mvn# archetype:generate \
    -DarchetypeGroupId=com.vaadin \
-   -DarchetypeArtifactId=[parameter]#vaadin-archetype-application# \
+   -DarchetypeArtifactId=[replaceable]#vaadin-archetype-application# \
    -DarchetypeVersion=[replaceable]#7.x.x# \
    -DgroupId=[replaceable]#your.company# \
    -DartifactId=[replaceable]#project-name# \
@@ -43,17 +47,32 @@ The parameters are as follows:
 [parameter]#archetypeGroupId#:: The group ID of the archetype is [literal]#++com.vaadin++# for Vaadin
 archetypes.
 
-[parameter]#archetypeArtifactId#:: The archetype ID. Vaadin 7 currently supports
-[literal]#++vaadin-archetype-application++# archetype for server-side
-applications and [literal]#++vaadin-archetype-widget++# for client-side widget
-development projects.
+[parameter]#archetypeArtifactId#:: The archetype ID.
+Vaadin 7 currently supports the following archetypes:
 
-+
-//TODO Vaadin 7: Not all these archetypes are supported
-+
-////
-&lt;itemizedlist&gt; &lt;listitem&gt; &lt;literal&gt;vaadin-archetype-clean&lt;/literal&gt; is a new project with a barebone skeleton for a regular Vaadin application. The &lt;filename&gt;pom.xml&lt;/filename&gt; includes out-commented definitions for additional widgets. &lt;/listitem&gt; &lt;/itemizedlist&gt; &lt;itemizedlist&gt; &lt;listitem&gt; &lt;literal&gt;vaadin-archetype-widget&lt;/literal&gt; is a skeleton for a project with custom widgets. &lt;/listitem&gt; &lt;/itemizedlist&gt; &lt;itemizedlist&gt; &lt;listitem&gt; &lt;literal&gt;vaadin-archetype-sample&lt;/literal&gt; is also for a project with custom widgets, but the skeleton includes the Color Picker example used in &lt;xref linkend="gwt"/&gt;. &lt;/listitem&gt; &lt;/itemizedlist&gt; &lt;itemizedlist&gt; &lt;listitem&gt; &lt;literal&gt;vaadin-archetype-addon&lt;/literal&gt; is for Vaadin add-on projects. It packages the add-on so that it can be published in Vaadin Directory. The archetype is for server-side add-ons and does not include definitions needed for building a widget set. If your add-on includes or requires other than the widgets in the Vaadin core library, you need to copy the required definitions from a POM of a &lt;literal&gt;vaadin-archetype-clean&lt;/literal&gt; project. &lt;/listitem&gt; &lt;/itemizedlist&gt; &lt;itemizedlist&gt; &lt;listitem&gt; &lt;literal&gt;vaadin-archetype-touchkit&lt;/literal&gt; is for projects using Vaadin TouchKit, described in &lt;xref linkend="mobile"/&gt;. Notice that this archetype uses the AGPL-licensed version of TouchKit, which requires that your project must also be licensed under the AGPL license. &lt;/listitem&gt; &lt;/itemizedlist&gt;
-////
+`vaadin-archetype-application`;;
+A single-module project for simple applications.
+Good for quick demos and trying out Vaadin.
+
+`vaadin-archetype-application-multimodule`;;
+A complete Vaadin application development setup.
+It features separate production and development profiles.
+
+`vaadin-archetype-application-example`;;
+An example CRUD web application using multi-module project setup.
+
+`vaadin-archetype-widget`;;
+A multi-module project for a new Vaadin add-on.
+It has two modules: one for the add-on and another for a demo application.
+
+`vaadin-archetype-touchkit`;;
+A mobile development starter project using Vaadin TouchKit.
+See <<dummy/../../../touchkit/touchkit-overview#touchkit.overview,"Vaadin TouchKit">>.
+Notice that this archetype uses the AGPL-licensed version of TouchKit, which requires that your project must also be licensed under the AGPL license.
+
+`vaadin-archetype-liferay-portlet`;;
+A portlet development setup for the open-source Liferay portal.
+
 [parameter]#archetypeVersion#:: Version of the archetype to use. This should be [literal]#++LATEST++# for normal
 Vaadin releases. For prerelease versions it should be the exact version number,
 such as [literal]#++7.5.3++#.
@@ -82,7 +101,7 @@ created project structure is shown in
 
 [[figure.getting-started.maven.archetype.created]]
 .A New Vaadin Project with Maven
-image::img/maven-project-created.png[]
+image::img/maven-project-created.png[scaledwidth=60%]
 
 
 [[getting-started.maven.compiling]]
@@ -129,5 +148,3 @@ Maven Project">>.
 
 (((range="endofrange", startref="term.maven.addons")))
 (((range="endofrange", startref="term.maven.creating")))
-
-

@@ -29,7 +29,6 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.b
 
 You could define it declaractively with the following equivalent design:
 
-
 [source, html]
 ----
 <vaadin-vertical-layout>
@@ -38,7 +37,9 @@ You could define it declaractively with the following equivalent design:
   <vaadin-text-field caption="Postal code"/>
 </vaadin-vertical-layout>
 ----
+ifdef::web[]
 See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
+endif::web[]
 
 Declarative designs can be crafted by hand, but are most conveniently created
 with the Vaadin Designer.
@@ -52,7 +53,7 @@ handling user interaction events.
 
 A design is an HTML document with custom elements for representing components
 and their configuration. A design has a single root component inside the HTML
-body element. Enclosing [literal]#++<html>++#, [literal]#++<head>++#,
+body element. Enclosing [literal]#++<html>++#, [literal]#++<head>++#, and
 [literal]#++<body>++# are optional, but necessary if you need to make namespace
 definitions for custom components. Other regular HTML elements may not be used
 in the file, except inside components that specifically accept HTML content.
@@ -61,7 +62,6 @@ In a design, each nested element corresponds to a Vaadin component in a
 component tree. Components can have explicitly given IDs to enable binding them
 to variables in the Java code, as well as optional attributes.
 
-
 [source, html]
 ----
 <!DOCTYPE html>
@@ -69,13 +69,14 @@ to variables in the Java code, as well as optional attributes.
   <body>
     <vaadin-vertical-layout size-full>
       <!-- Label with HTML content -->
-      <vaadin-label><b>Hello!</b> - How are you?</vaadin-label>
+      <vaadin-label><b>Hello!</b> -
+                    How are you?</vaadin-label>
 
       <vaadin-horizontal-layout size-full :expand>
-        <vaadin-tree _id="mytree" caption="My Tree"
-                width-auto height-full/>
-        <vaadin-table _id="mytable" caption="My Table"
-                 size-full :expand/>
+       <vaadin-tree _id="mytree" caption="My Tree"
+                    width-auto height-full/>
+       <vaadin-table _id="mytable" caption="My Table"
+                     size-full :expand/>
       </vaadin-horizontal-layout>
     </vaadin-vertical-layout>
   </body>
@@ -95,15 +96,11 @@ Hierarchical UI">>.
 [[application.declarative.elements]]
 == Component Elements
 
-HTML elements of the declarative syntax are directly mapped to Vaadin components
-according to their Java class names. The tag of a component element has a
-namespace prefix separated by a dash. Vaadin core components, which are defined
-in the [package]#com.vaadin.ui# package, have [literal]#++vaadin-++# prefix. The rest
-of an element tag is determined from the Java class name of the component, by
-making it lower-case, while adding a dash ( [literal]#++-++#) before every
-previously upper-case letter as a word separator. For example,
-[classname]#ComboBox# component has declarative element tag
-[literal]#++<vaadin-combo-box>++#.
+HTML elements of the declarative syntax are directly mapped to Vaadin components according to their Java class names.
+The tag of a component element has a namespace prefix separated by a dash.
+Vaadin core components, which are defined in the [package]#com.vaadin.ui# package, have [literal]#++vaadin-++# prefix.
+The rest of an element tag is determined from the Java class name of the component, by making it lower-case, while adding a dash (`-`) before every previously upper-case letter as a word separator.
+For example, [classname]#ComboBox# component has declarative element tag [vaadinelement]#vaadin-combo-box#.
 
 [[application.declarative.elements.prefix]]
 === Component Prefix to Package Mapping
@@ -113,14 +110,13 @@ composite components, and add-on components. To do so, you need to define a
 mapping from an element prefix to the Java package of the component. The prefix
 is used as a sort of a namespace.
 
-The mappings are defined in [literal]#++<meta name="package-mapping" ...>++#
+The mappings are defined in `<meta name="package-mapping" ...>`
 elements in the HTML head. A [parameter]#content# attribute defines a mapping,
 in notation with a prefix separated from the corresponding Java package name
-with a colon, such as " [literal]#++my:com.example.myapp++#".
+with a colon, such as `my:com.example.myapp`.
 
 For example, consider that you have the following composite class
 [classname]#com.example.myapp.ExampleComponent#:
-
 
 [source, java]
 ----
@@ -140,12 +136,14 @@ You would make the package prefix mapping and then use the component as follows:
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
-    **&lt;meta name="package-mapping" content="my:com.example.myapp" /&gt;**
+    **&lt;meta name="package-mapping"
+          content="my:com.example.myapp" /&gt;**
   &lt;/head&gt;
 
   &lt;body&gt;
     &lt;vaadin-vertical-layout&gt;
-      &lt;vaadin-label&gt;&lt;b&gt;Hello!&lt;/b&gt; - How are you?&lt;/vaadin-label&gt;
+      &lt;vaadin-label&gt;&lt;b&gt;Hello!&lt;/b&gt; -
+                How are you?&lt;/vaadin-label&gt;
 
       &lt;!-- Use it here --&gt;
       **&lt;my-example-component/&gt;**
@@ -221,12 +219,9 @@ Some attribute names are given by a shorthand. For example,
 you would set with [methodname]#setAlternateText()#, is given as the
 [literal]#++alt++# attribute.
 
-Boolean values must be either " [literal]#++true++#" or " [literal]#++false++#".
-The value can be omitted, in which case [literal]#++true++# is assumed. For
-example, the [literal]#++enabled++# attribute is boolean and has default value "
-[literal]#++true++#", so [literal]#++enabled="true"++# and
-[literal]#++enabled++# and equivalent.
-
+Boolean values must be either `true` or `false`.
+The value can be omitted, in which case `true` is assumed.
+For example, the [literal]#++enabled++# attribute is boolean and has default value "`true`", so `enabled="true"` and `enabled` and equivalent.
 
 [source, html]
 ----
@@ -317,7 +312,7 @@ For example, the following class could be used to bind the design given earlier.
 public class MyViewDesign extends VerticalLayout {
     Tree mytree;
     Table mytable;
-    
+
     public MyViewDesign() {
         Design.read("MyDeclarativeUI.html", this);
 
@@ -326,7 +321,7 @@ public class MyViewDesign extends VerticalLayout {
             TreeExample.createTreeContent());
         mytable.setContainerDataSource(
             TableExample.generateContent());
-            
+
         // Some interaction
         mytree.addItemClickListener(event -> // Java 8
             Notification.show("Selected " +
@@ -391,8 +386,3 @@ navigator.addView(MAINVIEW, new MainView());
 See
 <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.urifragment,"Handling
 URI Fragment Path">> for a complete example.
-
-
-
-
-

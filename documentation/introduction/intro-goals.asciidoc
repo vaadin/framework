@@ -31,14 +31,13 @@ frameworks and ensuring that our implementation represents an ideal solution for
 its purpose without clutter or bloat.
 
 
-== XML is not designed for programming
+== Choice between declarative and dynamic UIs
 
-The Web is inherently document-centered and very much bound to the declarative
-presentation of user interfaces. While Vaadin allows for declarative designs of
-views, layouts, and even entire UIs, the programmatic approach by building the
-UIs from Java components frees the programmer from these limitations. To create
-highly dynamic views, it is more natural to create them by programming.
-
+The Web is inherently document-centered and very much bound to the declarative presentation of user interfaces.
+Vaadin allows for declarative designs of views, layouts, and even entire UIs.
+Vaadin Designer enables creating such designs visually.
+Nevertheless, the programmatic approach by building the UIs from Java components frees the programmer from its limitations.
+To create highly dynamic views, it is more natural to create them by programming.
 
 == Tools should not limit your work
 
@@ -47,7 +46,3 @@ some reason the user interface components do not support what you need to
 achieve, it must be easy to add new ones to your application. When you need to
 create new components, the role of the framework is critical: it makes it easy
 to create re-usable components that are easy to maintain.
-
-
-
-
