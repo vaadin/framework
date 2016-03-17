@@ -3,23 +3,26 @@ package com.vaadin.tests.data.converter;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.DateToSqlDateConverter;
 
-public class DateToSqlDateConverterTest extends TestCase {
+public class DateToSqlDateConverterTest {
 
     DateToSqlDateConverter converter = new DateToSqlDateConverter();
 
+    @Test
     public void testNullConversion() {
-        assertEquals(null,
+        Assert.assertEquals(null,
                 converter.convertToModel(null, java.sql.Date.class, null));
     }
 
+    @Test
     public void testValueConversion() {
         Date testDate = new Date(100, 0, 1);
         long time = testDate.getTime();
-        assertEquals(testDate, converter.convertToModel(
+        Assert.assertEquals(testDate, converter.convertToModel(
                 new java.sql.Date(time), java.sql.Date.class, Locale.ENGLISH));
     }
 }

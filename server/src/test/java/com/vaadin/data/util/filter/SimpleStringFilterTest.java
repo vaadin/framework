@@ -1,6 +1,7 @@
 package com.vaadin.data.util.filter;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 public class SimpleStringFilterTest extends
         AbstractFilterTestBase<SimpleStringFilter> {
@@ -25,6 +26,7 @@ public class SimpleStringFilterTest extends
                 .passesFilter(null, getTestItem());
     }
 
+    @Test
     public void testStartsWithCaseSensitive() {
         Assert.assertTrue(passes(PROPERTY1, "ab", false, true));
         Assert.assertTrue(passes(PROPERTY1, "", false, true));
@@ -33,12 +35,14 @@ public class SimpleStringFilterTest extends
         Assert.assertFalse(passes(PROPERTY1, "AB", false, true));
     }
 
+    @Test
     public void testStartsWithCaseInsensitive() {
         Assert.assertTrue(passes(PROPERTY1, "AB", true, true));
         Assert.assertTrue(passes(PROPERTY2, "te", true, true));
         Assert.assertFalse(passes(PROPERTY2, "AB", true, true));
     }
 
+    @Test
     public void testContainsCaseSensitive() {
         Assert.assertTrue(passes(PROPERTY1, "ab", false, false));
         Assert.assertTrue(passes(PROPERTY1, "abcde", false, false));
@@ -50,6 +54,7 @@ public class SimpleStringFilterTest extends
         Assert.assertFalse(passes(PROPERTY1, "es", false, false));
     }
 
+    @Test
     public void testContainsCaseInsensitive() {
         Assert.assertTrue(passes(PROPERTY1, "AB", true, false));
         Assert.assertTrue(passes(PROPERTY1, "aBcDe", true, false));
@@ -61,6 +66,7 @@ public class SimpleStringFilterTest extends
         Assert.assertFalse(passes(PROPERTY2, "ab", true, false));
     }
 
+    @Test
     public void testAppliesToProperty() {
         SimpleStringFilter filter = f(PROPERTY1, "ab", false, true);
         Assert.assertTrue(filter.appliesToProperty(PROPERTY1));
@@ -68,6 +74,7 @@ public class SimpleStringFilterTest extends
         Assert.assertFalse(filter.appliesToProperty("other"));
     }
 
+    @Test
     public void testEqualsHashCode() {
         SimpleStringFilter filter = f(PROPERTY1, "ab", false, true);
 
@@ -115,10 +122,12 @@ public class SimpleStringFilterTest extends
         Assert.assertEquals(f4.hashCode(), f4b.hashCode());
     }
 
+    @Test
     public void testNonExistentProperty() {
         Assert.assertFalse(passes("other1", "ab", false, true));
     }
 
+    @Test
     public void testNullValueForProperty() {
         TestItem<String, String> item = createTestItem();
         item.addItemProperty("other1", new NullProperty());

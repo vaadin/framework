@@ -17,7 +17,8 @@ package com.vaadin.tests.data.converter;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
@@ -25,7 +26,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
-public class ConverterFactoryTest extends TestCase {
+public class ConverterFactoryTest {
 
     public static class ConvertTo42 implements Converter<String, Integer> {
 
@@ -67,6 +68,7 @@ public class ConverterFactoryTest extends TestCase {
         }
     }
 
+    @Test
     public void testApplicationConverterFactoryInBackgroundThread() {
         VaadinSession.setCurrent(null);
         final VaadinSession appWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
@@ -83,9 +85,10 @@ public class ConverterFactoryTest extends TestCase {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        assertEquals(42, tf.getConvertedValue());
+        Assert.assertEquals(42, tf.getConvertedValue());
     }
 
+    @Test
     public void testApplicationConverterFactoryForDetachedComponent() {
         final VaadinSession appWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
                 null);
@@ -97,9 +100,10 @@ public class ConverterFactoryTest extends TestCase {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        assertEquals(42, tf.getConvertedValue());
+        Assert.assertEquals(42, tf.getConvertedValue());
     }
 
+    @Test
     public void testApplicationConverterFactoryForDifferentThanCurrentApplication() {
         final VaadinSession fieldAppWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
                 null);
@@ -117,6 +121,6 @@ public class ConverterFactoryTest extends TestCase {
 
         // The application converter always returns 42. Application.getCurrent()
         // should not be used
-        assertEquals(42, tf.getConvertedValue());
+        Assert.assertEquals(42, tf.getConvertedValue());
     }
 }

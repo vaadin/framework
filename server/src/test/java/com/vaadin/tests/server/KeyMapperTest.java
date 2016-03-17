@@ -1,14 +1,19 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.server.KeyMapper;
 
-public class KeyMapperTest extends TestCase {
+public class KeyMapperTest {
 
+    @Test
     public void testAdd() {
         KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();
@@ -40,6 +45,7 @@ public class KeyMapperTest extends TestCase {
 
     }
 
+    @Test
     public void testRemoveAll() {
         KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();
@@ -57,6 +63,7 @@ public class KeyMapperTest extends TestCase {
 
     }
 
+    @Test
     public void testRemove() {
         KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();

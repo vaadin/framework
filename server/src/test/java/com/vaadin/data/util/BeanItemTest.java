@@ -9,9 +9,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Property;
 
@@ -22,7 +21,7 @@ import com.vaadin.data.Property;
  * 
  * See also {@link PropertySetItemTest}, which tests the base class.
  */
-public class BeanItemTest extends TestCase {
+public class BeanItemTest {
 
     @SuppressWarnings("unused")
     protected static class MySuperClass {
@@ -161,6 +160,7 @@ public class BeanItemTest extends TestCase {
         public void setOverride(int i);
     }
 
+    @Test
     public void testGetProperties() {
         BeanItem<MySuperClass> item = new BeanItem<MySuperClass>(
                 new MySuperClass());
@@ -172,6 +172,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(itemPropertyIds.contains("superPublic"));
     }
 
+    @Test
     public void testGetSuperClassProperties() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
@@ -185,6 +186,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(itemPropertyIds.contains("name2"));
     }
 
+    @Test
     public void testOverridingProperties() {
         BeanItem<MyClass2> item = new BeanItem<MyClass2>(new MyClass2("bean2"));
 
@@ -197,6 +199,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(item.getItemProperty("name2").isReadOnly());
     }
 
+    @Test
     public void testGetInterfaceProperties() throws SecurityException,
             NoSuchMethodException, IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
@@ -215,6 +218,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(property.isReadOnly());
     }
 
+    @Test
     public void testGetSuperInterfaceProperties() throws SecurityException,
             NoSuchMethodException, IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
@@ -235,6 +239,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(property.isReadOnly());
     }
 
+    @Test
     public void testPropertyExplicitOrder() {
         Collection<String> ids = new ArrayList<String>();
         ids.add("name");
@@ -253,6 +258,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(it.hasNext());
     }
 
+    @Test
     public void testPropertyExplicitOrder2() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"),
                 new String[] { "name", "superPublic", "name2", "noField" });
@@ -265,6 +271,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(it.hasNext());
     }
 
+    @Test
     public void testPropertyBadPropertyName() {
         Collection<String> ids = new ArrayList<String>();
         ids.add("name3");
@@ -279,6 +286,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(it.hasNext());
     }
 
+    @Test
     public void testRemoveProperty() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
@@ -290,6 +298,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(itemPropertyIds.contains("name2"));
     }
 
+    @Test
     public void testRemoveSuperProperty() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
@@ -301,6 +310,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertFalse(itemPropertyIds.contains("superPrivate"));
     }
 
+    @Test
     public void testPropertyTypes() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
@@ -314,6 +324,7 @@ public class BeanItemTest extends TestCase {
                 .getType()));
     }
 
+    @Test
     public void testPropertyReadOnly() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
@@ -321,6 +332,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(item.getItemProperty("name2").isReadOnly());
     }
 
+    @Test
     public void testCustomProperties() throws Exception {
         LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>> propertyDescriptors = new LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>>();
         propertyDescriptors.put(
@@ -340,6 +352,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertEquals("bean1", item.getItemProperty("myname").getValue());
     }
 
+    @Test
     public void testAddRemoveProperty() throws Exception {
         MethodPropertyDescriptor<BeanItemTest.MyClass> pd = new MethodPropertyDescriptor<BeanItemTest.MyClass>(
                 "myname", MyClass.class,
@@ -359,6 +372,7 @@ public class BeanItemTest extends TestCase {
         Assert.assertEquals(null, item.getItemProperty("myname"));
     }
 
+    @Test
     public void testOverridenGenericMethods() {
         BeanItem<SubClass> item = new BeanItem<SubClass>(new SubClass());
 

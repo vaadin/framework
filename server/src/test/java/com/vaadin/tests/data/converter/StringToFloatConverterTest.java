@@ -1,23 +1,29 @@
 package com.vaadin.tests.data.converter;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToFloatConverter;
 
-public class StringToFloatConverterTest extends TestCase {
+public class StringToFloatConverterTest {
 
     StringToFloatConverter converter = new StringToFloatConverter();
 
+    @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Float.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel(null, Float.class, null));
     }
 
+    @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Float.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel("", Float.class, null));
     }
 
+    @Test
     public void testValueConversion() {
-        assertEquals(Float.valueOf(10),
+        Assert.assertEquals(Float.valueOf(10),
                 converter.convertToModel("10", Float.class, null));
     }
 }

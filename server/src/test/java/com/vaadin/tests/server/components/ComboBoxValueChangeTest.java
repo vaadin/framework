@@ -3,6 +3,8 @@ package com.vaadin.tests.server.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
+
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.ComboBox;
 
@@ -14,8 +16,9 @@ import com.vaadin.ui.ComboBox;
  */
 public class ComboBoxValueChangeTest extends
         AbstractFieldValueChangeTestBase<Object> {
-    @Override
-    protected void setUp() throws Exception {
+
+    @Before
+    public void setUp() {
         ComboBox combo = new ComboBox();
         combo.addItem("myvalue");
         super.setUp(combo);

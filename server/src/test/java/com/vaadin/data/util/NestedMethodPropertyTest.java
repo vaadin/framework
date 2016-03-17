@@ -1,5 +1,8 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,11 +10,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class NestedMethodPropertyTest extends TestCase {
+public class NestedMethodPropertyTest {
 
     public static class Address implements Serializable {
         private String street;
@@ -125,20 +128,14 @@ public class NestedMethodPropertyTest extends TestCase {
     private Person joonas;
     private Team vaadin;
 
-    @Override
+    @Before
     public void setUp() {
         oldMill = new Address("Ruukinkatu 2-4", 20540);
         joonas = new Person("Joonas", oldMill);
         vaadin = new Team("Vaadin", joonas);
     }
 
-    @Override
-    public void tearDown() {
-        vaadin = null;
-        joonas = null;
-        oldMill = null;
-    }
-
+    @Test
     public void testSingleLevelNestedSimpleProperty() {
         NestedMethodProperty<String> nameProperty = new NestedMethodProperty<String>(
                 vaadin, "name");
@@ -147,6 +144,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals("Vaadin", nameProperty.getValue());
     }
 
+    @Test
     public void testSingleLevelNestedObjectProperty() {
         NestedMethodProperty<Person> managerProperty = new NestedMethodProperty<Person>(
                 vaadin, "manager");
@@ -155,6 +153,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals(joonas, managerProperty.getValue());
     }
 
+    @Test
     public void testMultiLevelNestedProperty() {
         NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
@@ -191,6 +190,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals(Boolean.TRUE, booleanProperty.getValue());
     }
 
+    @Test
     public void testEmptyPropertyName() {
         try {
             new NestedMethodProperty<Object>(vaadin, "");
@@ -207,6 +207,7 @@ public class NestedMethodPropertyTest extends TestCase {
         }
     }
 
+    @Test
     public void testInvalidPropertyName() {
         try {
             new NestedMethodProperty<Object>(vaadin, ".");
@@ -234,6 +235,7 @@ public class NestedMethodPropertyTest extends TestCase {
         }
     }
 
+    @Test
     public void testInvalidNestedPropertyName() {
         try {
             new NestedMethodProperty<Object>(vaadin, "member");
@@ -257,6 +259,7 @@ public class NestedMethodPropertyTest extends TestCase {
         }
     }
 
+    @Test
     public void testNullNestedProperty() {
         NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
@@ -276,6 +279,7 @@ public class NestedMethodPropertyTest extends TestCase {
 
     }
 
+    @Test
     public void testMultiLevelNestedPropertySetValue() {
         NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
@@ -305,6 +309,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals("Other street", streetProperty.getValue());
     }
 
+    @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
         NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.address.street");
@@ -317,6 +322,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals("Ruukinkatu 2-4", property2.getValue());
     }
 
+    @Test
     public void testSerializationWithIntermediateNull() throws IOException,
             ClassNotFoundException {
         vaadin.setManager(null);
@@ -331,6 +337,7 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertNull(property2.getValue());
     }
 
+    @Test
     public void testIsReadOnly() {
         NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.address.street");

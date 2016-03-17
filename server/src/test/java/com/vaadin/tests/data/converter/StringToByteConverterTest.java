@@ -1,55 +1,61 @@
 package com.vaadin.tests.data.converter;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.ReverseConverter;
 import com.vaadin.data.util.converter.StringToByteConverter;
 
-public class StringToByteConverterTest extends TestCase {
+public class StringToByteConverterTest {
 
     StringToByteConverter converter = new StringToByteConverter();
     Converter<Byte, String> reverseConverter = new ReverseConverter<Byte, String>(
             converter);
 
+    @Test
     public void testNullConversion() {
-        assertEquals("Null value was converted incorrectly", null,
+        Assert.assertEquals("Null value was converted incorrectly", null,
                 converter.convertToModel(null, Byte.class, null));
     }
 
+    @Test
     public void testReverseNullConversion() {
-        assertEquals("Null value reversely was converted incorrectly", null,
-                reverseConverter.convertToModel(null, String.class, null));
+        Assert.assertEquals("Null value reversely was converted incorrectly",
+                null, reverseConverter.convertToModel(null, String.class, null));
     }
 
+    @Test
     public void testEmptyStringConversion() {
-        assertEquals("Empty value was converted incorrectly", null,
+        Assert.assertEquals("Empty value was converted incorrectly", null,
                 converter.convertToModel("", Byte.class, null));
     }
 
+    @Test
     public void testValueConversion() {
-        assertEquals("Byte value was converted incorrectly",
+        Assert.assertEquals("Byte value was converted incorrectly",
                 Byte.valueOf((byte) 10),
                 converter.convertToModel("10", Byte.class, null));
     }
 
+    @Test
     public void testReverseValueConversion() {
-        assertEquals("Byte value reversely was converted incorrectly",
+        Assert.assertEquals("Byte value reversely was converted incorrectly",
                 reverseConverter.convertToModel((byte) 10, String.class, null),
                 "10");
     }
 
+    @Test
     public void testExtremeByteValueConversion() {
         byte b = converter.convertToModel("127", Byte.class, null);
         Assert.assertEquals(Byte.MAX_VALUE, b);
         b = converter.convertToModel("-128", Byte.class, null);
-        assertEquals("Min byte value was converted incorrectly",
+        Assert.assertEquals("Min byte value was converted incorrectly",
                 Byte.MIN_VALUE, b);
     }
 
+    @Test
     public void testValueOutOfRange() {
         Double[] values = new Double[] { Byte.MAX_VALUE * 2.0,
                 Byte.MIN_VALUE * 2.0, Long.MAX_VALUE * 2.0,
@@ -64,6 +70,6 @@ public class StringToByteConverterTest extends TestCase {
             } catch (ConversionException expected) {
             }
         }
-        assertFalse("Accepted value outside range of int", accepted);
+        Assert.assertFalse("Accepted value outside range of int", accepted);
     }
 }

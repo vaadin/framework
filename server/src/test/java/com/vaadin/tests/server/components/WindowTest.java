@@ -3,9 +3,9 @@ package com.vaadin.tests.server.components;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
@@ -14,16 +14,17 @@ import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
 
-public class WindowTest extends TestCase {
+public class WindowTest {
 
     private Window window;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         window = new Window();
         new LegacyWindow().addWindow(window);
     }
 
+    @Test
     public void testCloseListener() {
         CloseListener cl = EasyMock.createMock(Window.CloseListener.class);
 
@@ -50,6 +51,7 @@ public class WindowTest extends TestCase {
 
     }
 
+    @Test
     public void testResizeListener() {
         ResizeListener rl = EasyMock.createMock(Window.ResizeListener.class);
 

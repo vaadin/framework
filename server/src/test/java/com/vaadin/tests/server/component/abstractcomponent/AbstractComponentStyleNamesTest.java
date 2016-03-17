@@ -1,17 +1,21 @@
 package com.vaadin.tests.server.component.abstractcomponent;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import com.vaadin.ui.AbstractComponent;
 
-public class AbstractComponentStyleNamesTest extends TestCase {
+public class AbstractComponentStyleNamesTest {
 
+    @Test
     public void testSetMultiple() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1 style2");
         assertEquals(component.getStyleName(), "style1 style2");
     }
 
+    @Test
     public void testSetAdd() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1");
@@ -19,6 +23,7 @@ public class AbstractComponentStyleNamesTest extends TestCase {
         assertEquals(component.getStyleName(), "style1 style2");
     }
 
+    @Test
     public void testAddSame() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1 style2");
@@ -26,6 +31,7 @@ public class AbstractComponentStyleNamesTest extends TestCase {
         assertEquals(component.getStyleName(), "style1 style2");
     }
 
+    @Test
     public void testSetRemove() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1 style2");
@@ -33,6 +39,7 @@ public class AbstractComponentStyleNamesTest extends TestCase {
         assertEquals(component.getStyleName(), "style2");
     }
 
+    @Test
     public void testAddRemove() {
         AbstractComponent component = getComponent();
         component.addStyleName("style1");
@@ -41,6 +48,7 @@ public class AbstractComponentStyleNamesTest extends TestCase {
         assertEquals(component.getStyleName(), "style2");
     }
 
+    @Test
     public void testRemoveMultipleWithExtraSpaces() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1 style2 style3");
@@ -48,6 +56,7 @@ public class AbstractComponentStyleNamesTest extends TestCase {
         assertEquals(component.getStyleName(), "style2");
     }
 
+    @Test
     public void testSetWithExtraSpaces() {
         AbstractComponent component = getComponent();
         component.setStyleName(" style1  style2 ");

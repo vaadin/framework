@@ -1,15 +1,16 @@
 package com.vaadin.tests.server;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.TextField;
 
-public class EventRouterTest extends TestCase {
+public class EventRouterTest {
 
     int innerListenerCalls = 0;
 
+    @Test
     public void testAddInEventListener() {
         final TextField tf = new TextField();
 

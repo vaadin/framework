@@ -1,8 +1,7 @@
 package com.vaadin.tests.server.components;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.Test;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -22,12 +21,12 @@ import com.vaadin.ui.AbstractField;
  * override {@link #setValue(AbstractField)} to set the field value via
  * <code>changeVariables()</code>.
  */
-public abstract class AbstractFieldValueChangeTestBase<T> extends TestCase {
+public abstract class AbstractFieldValueChangeTestBase<T> {
 
     private AbstractField<T> field;
     private ValueChangeListener listener;
 
-    protected void setUp(AbstractField<T> field) throws Exception {
+    protected void setUp(AbstractField<T> field) {
         this.field = field;
         listener = EasyMock.createStrictMock(ValueChangeListener.class);
 
@@ -40,6 +39,7 @@ public abstract class AbstractFieldValueChangeTestBase<T> extends TestCase {
     /**
      * Test that listeners are not called when they have been unregistered.
      */
+    @Test
     public void testRemoveListener() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setBuffered(false);
@@ -75,6 +75,7 @@ public abstract class AbstractFieldValueChangeTestBase<T> extends TestCase {
      * Field value change notifications closely mirror value changes of the data
      * source behind the field.
      */
+    @Test
     public void testNonBuffered() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setBuffered(false);

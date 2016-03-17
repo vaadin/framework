@@ -3,24 +3,30 @@ package com.vaadin.tests.data.converter;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToDateConverter;
 
-public class StringToDateConverterTest extends TestCase {
+public class StringToDateConverterTest {
 
     StringToDateConverter converter = new StringToDateConverter();
 
+    @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Date.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel(null, Date.class, null));
     }
 
+    @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Date.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel("", Date.class, null));
     }
 
+    @Test
     public void testValueConversion() {
-        assertEquals(new Date(100, 0, 1), converter.convertToModel(
+        Assert.assertEquals(new Date(100, 0, 1), converter.convertToModel(
                 "Jan 1, 2000 12:00:00 AM", Date.class, Locale.ENGLISH));
     }
 }

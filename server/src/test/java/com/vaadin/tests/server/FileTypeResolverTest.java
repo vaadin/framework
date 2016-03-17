@@ -1,17 +1,20 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.util.FileTypeResolver;
 
-public class FileTypeResolverTest extends TestCase {
+public class FileTypeResolverTest {
 
     private static final String FLASH_MIME_TYPE = "application/x-shockwave-flash";
     private static final String TEXT_MIME_TYPE = "text/plain";
     private static final String HTML_MIME_TYPE = "text/html";
 
+    @Test
     public void testMimeTypes() {
         File plainFlash = new File("MyFlash.swf");
         File plainText = new File("/a/b/MyFlash.txt");
@@ -56,6 +59,7 @@ public class FileTypeResolverTest extends TestCase {
 
     }
 
+    @Test
     public void testExtensionCase() {
         assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.jpg"));
         assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.jPg"));
@@ -65,6 +69,7 @@ public class FileTypeResolverTest extends TestCase {
         assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.JPE"));
     }
 
+    @Test
     public void testCustomMimeType() {
         assertEquals(FileTypeResolver.DEFAULT_MIME_TYPE,
                 FileTypeResolver.getMIMEType("vaadin.foo"));

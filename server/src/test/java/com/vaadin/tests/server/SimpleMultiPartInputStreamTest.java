@@ -5,11 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.server.communication.FileUploadHandler.SimpleMultiPartInputStream;
 
-public class SimpleMultiPartInputStreamTest extends TestCase {
+public class SimpleMultiPartInputStreamTest {
 
     /**
      * Check that the output for a given stream until boundary is as expected.
@@ -46,28 +46,34 @@ public class SimpleMultiPartInputStreamTest extends TestCase {
         checkBoundaryDetection(input.getBytes(), boundary, expected.getBytes());
     }
 
+    @Test
     public void testSingleByteBoundaryAtEnd() throws Exception {
         checkBoundaryDetection("xyz123" + getFullBoundary("a"), "a", "xyz123");
     }
 
+    @Test
     public void testSingleByteBoundaryInMiddle() throws Exception {
         checkBoundaryDetection("xyz" + getFullBoundary("a") + "123", "a", "xyz");
     }
 
+    @Test
     public void testCorrectBoundaryAtEnd() throws Exception {
         checkBoundaryDetection("xyz123" + getFullBoundary("abc"), "abc",
                 "xyz123");
     }
 
+    @Test
     public void testCorrectBoundaryNearEnd() throws Exception {
         checkBoundaryDetection("xyz123" + getFullBoundary("abc") + "de", "abc",
                 "xyz123");
     }
 
+    @Test
     public void testCorrectBoundaryAtBeginning() throws Exception {
         checkBoundaryDetection(getFullBoundary("abc") + "xyz123", "abc", "");
     }
 
+    @Test
     public void testRepeatingCharacterBoundary() throws Exception {
         checkBoundaryDetection(getFullBoundary("aa") + "xyz123", "aa", "");
         checkBoundaryDetection("axyz" + getFullBoundary("aa") + "123", "aa",
@@ -85,6 +91,7 @@ public class SimpleMultiPartInputStreamTest extends TestCase {
     // + "1234567890", "\n\n", "");
     // }
 
+    @Test
     public void testRepeatingStringBoundary() throws Exception {
         checkBoundaryDetection(getFullBoundary("abab") + "xyz123", "abab", "");
         checkBoundaryDetection("abaxyz" + getFullBoundary("abab") + "123",
@@ -93,6 +100,7 @@ public class SimpleMultiPartInputStreamTest extends TestCase {
                 "xyz123");
     }
 
+    @Test
     public void testOverlappingBoundary() throws Exception {
         checkBoundaryDetection("abc" + getFullBoundary("abcabd") + "xyz123",
                 "abcabd", "abc");

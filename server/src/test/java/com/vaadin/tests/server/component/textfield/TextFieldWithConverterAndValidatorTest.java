@@ -1,25 +1,25 @@
 package com.vaadin.tests.server.component.textfield;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.tests.data.converter.ConverterFactoryTest.ConvertTo42;
 import com.vaadin.ui.TextField;
 
-public class TextFieldWithConverterAndValidatorTest extends TestCase {
+public class TextFieldWithConverterAndValidatorTest {
 
     private TextField field;
     private ObjectProperty<Integer> property;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() {
         field = new TextField();
         field.setInvalidAllowed(false);
     }
 
+    @Test
     public void testConvert42AndValidator() {
         property = new ObjectProperty<Integer>(123);
         field.setConverter(new ConvertTo42());

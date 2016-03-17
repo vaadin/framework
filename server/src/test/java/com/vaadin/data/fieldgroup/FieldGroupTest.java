@@ -16,7 +16,7 @@ import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
-public class FieldGroupTests {
+public class FieldGroupTest {
 
     private FieldGroup sut;
     private Field field;

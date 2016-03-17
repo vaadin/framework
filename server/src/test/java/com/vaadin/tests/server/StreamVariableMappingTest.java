@@ -1,8 +1,13 @@
 package com.vaadin.tests.server;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.MockServletConfig;
@@ -17,7 +22,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 
-public class StreamVariableMappingTest extends TestCase {
+public class StreamVariableMappingTest {
     private static final String variableName = "myName";
 
     private Upload owner;
@@ -25,8 +30,8 @@ public class StreamVariableMappingTest extends TestCase {
 
     private LegacyCommunicationManager cm;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         final VaadinSession application = new AlwaysLockedVaadinSession(null);
         final UI uI = new UI() {
             @Override
@@ -46,10 +51,9 @@ public class StreamVariableMappingTest extends TestCase {
         };
         streamVariable = EasyMock.createMock(StreamVariable.class);
         cm = createCommunicationManager();
-
-        super.setUp();
     }
 
+    @Test
     public void testAddStreamVariable() {
         owner.getUI().getConnectorTracker().registerConnector(owner);
         String targetUrl = cm.getStreamVariableTargetUrl(owner, variableName,
@@ -63,6 +67,7 @@ public class StreamVariableMappingTest extends TestCase {
         assertSame(streamVariable, streamVariable2);
     }
 
+    @Test
     public void testRemoveVariable() {
         ConnectorTracker tracker = owner.getUI().getConnectorTracker();
         tracker.registerConnector(owner);

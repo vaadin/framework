@@ -9,7 +9,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class DateFieldTests {
+public class DateFieldTestCase {
 
     private DateField dateField;
     private Date date;

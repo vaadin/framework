@@ -1,8 +1,8 @@
 package com.vaadin.tests.server;
 
-import java.util.Date;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
 
 @SuppressWarnings("unchecked")
-public class PropertyFormatterTest extends TestCase {
+public class PropertyFormatterTest {
 
     class TestFormatter extends PropertyFormatter {
 

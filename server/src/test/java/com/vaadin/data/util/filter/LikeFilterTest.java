@@ -17,6 +17,7 @@
 package com.vaadin.data.util.filter;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
@@ -28,6 +29,7 @@ public class LikeFilterTest extends AbstractFilterTestBase<Like> {
     protected Item item2 = new PropertysetItem();
     protected Item item3 = new PropertysetItem();
 
+    @Test
     public void testLikeWithNulls() {
 
         Like filter = new Like("value", "a");

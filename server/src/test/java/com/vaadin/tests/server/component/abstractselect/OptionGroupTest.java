@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.vaadin.ui.OptionGroup;
 
-public class OptionGroupTests {
+public class OptionGroupTest {
 
     private OptionGroup optionGroup;
 

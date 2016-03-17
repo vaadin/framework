@@ -1,5 +1,11 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,6 +17,8 @@ import java.util.Map;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
@@ -35,7 +43,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         return new BeanItemContainer<ClassName>(ClassName.class);
     }
 
-    @Override
+    @Before
     public void setUp() {
         nameToBean.clear();
 
@@ -78,6 +86,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         return false;
     }
 
+    @Test
     public void testGetType_existingProperty_typeReturned() {
         BeanItemContainer<ClassName> container = getContainer();
         Assert.assertEquals(
@@ -85,30 +94,36 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
                 String.class, container.getType("simpleName"));
     }
 
+    @Test
     public void testGetType_notExistingProperty_nullReturned() {
         BeanItemContainer<ClassName> container = getContainer();
         Assert.assertNull("Not null type is returned for property ''",
                 container.getType(""));
     }
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(getContainer());
     }
 
+    @Test
     public void testFiltering() {
         testContainerFiltering(getContainer());
     }
 
+    @Test
     public void testSorting() {
         testContainerSorting(getContainer());
     }
 
+    @Test
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(getContainer());
     }
 
     // duplicated from parent class and modified - adding items to
     // BeanItemContainer differs from other containers
+    @Test
     public void testContainerOrdered() {
         BeanItemContainer<String> container = new BeanItemContainer<String>(
                 String.class);
@@ -181,12 +196,14 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     }
 
+    @Test
     public void testContainerIndexed() {
         testContainerIndexed(getContainer(), nameToBean.get(sampleData[2]), 2,
                 false, new ClassName("org.vaadin.test.Test", 8888), true);
     }
 
     @SuppressWarnings("deprecation")
+    @Test
     public void testCollectionConstructors() {
         List<ClassName> classNames = new ArrayList<ClassName>();
         classNames.add(new ClassName("a.b.c.Def", 1));
@@ -215,6 +232,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     // this only applies to the collection constructor with no type parameter
     @SuppressWarnings("deprecation")
+    @Test
     public void testEmptyCollectionConstructor() {
         try {
             new BeanItemContainer<ClassName>((Collection<ClassName>) null);
@@ -230,6 +248,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         }
     }
 
+    @Test
     public void testItemSetChangeListeners() {
         BeanItemContainer<ClassName> container = getContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -328,6 +347,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     }
 
+    @Test
     public void testItemSetChangeListenersFiltering() {
         BeanItemContainer<ClassName> container = getContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -496,6 +516,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.assertNone();
     }
 
+    @Test
     public void testAddRemoveWhileFiltering() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -573,6 +594,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(michael, container.lastItemId());
     }
 
+    @Test
     public void testRefilterOnPropertyModification() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -608,6 +630,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(3, container.size());
     }
 
+    @Test
     public void testAddAll() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -637,6 +660,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(michael, container.nextItemId(jack));
     }
 
+    @Test
     public void testUnsupportedMethods() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -673,6 +697,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, container.size());
     }
 
+    @Test
     public void testRemoveContainerProperty() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -689,6 +714,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         Assert.assertNull(container.getItem(john).getItemProperty("name"));
     }
 
+    @Test
     public void testAddNullBean() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -703,6 +729,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, container.size());
     }
 
+    @Test
     public void testBeanIdResolver() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -711,14 +738,12 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertSame(john, container.getBeanIdResolver().getIdForBean(john));
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testNullBeanClass() {
-        try {
-            new BeanItemContainer<Object>((Class<Object>) null);
-        } catch (IllegalArgumentException e) {
-            // should get exception
-        }
+        new BeanItemContainer<Object>((Class<Object>) null);
     }
 
+    @Test
     public void testAddNestedContainerProperty() {
         BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);
@@ -734,6 +759,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
                         .getValue());
     }
 
+    @Test
     public void testNestedContainerPropertyWithNullBean() {
         BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);
@@ -748,6 +774,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
                 .getValue());
     }
 
+    @Test
     public void testItemAddedEvent() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -761,6 +788,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         EasyMock.verify(addListener);
     }
 
+    @Test
     public void testItemAddedEvent_AddedItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -774,6 +802,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(bean, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemAddedEvent_addItemAt_IndexOfAddedItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -788,6 +817,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemAddedEvent_addItemAfter_IndexOfAddedItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -802,6 +832,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemAddedEvent_amountOfAddedItems() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -816,6 +847,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(2, capturedEvent.getValue().getAddedItemsCount());
     }
 
+    @Test
     public void testItemAddedEvent_someItemsAreFiltered_amountOfAddedItemsIsReducedByAmountOfFilteredItems() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -831,6 +863,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getAddedItemsCount());
     }
 
+    @Test
     public void testItemAddedEvent_someItemsAreFiltered_addedItemIsTheFirstVisibleItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -846,6 +879,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(bean, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemRemovedEvent() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -861,6 +895,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         EasyMock.verify(removeListener);
     }
 
+    @Test
     public void testItemRemovedEvent_RemovedItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -875,6 +910,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(bean, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemRemovedEvent_indexOfRemovedItem() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -890,6 +926,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemRemovedEvent_amountOfRemovedItems() {
         BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class);
@@ -926,6 +963,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         return listener;
     }
 
+    @Test
     public void testAddNestedContainerBeanBeforeData() {
         BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);
@@ -947,6 +985,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     }
 
+    @Test
     public void testAddNestedContainerBeanAfterData() {
         BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);

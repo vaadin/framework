@@ -28,9 +28,6 @@ import org.junit.Test;
 import com.vaadin.server.communication.AtmospherePushConnection.State;
 import com.vaadin.ui.UI;
 
-/**
- * @author Vaadin Ltd
- */
 public class AtmospherePushConnectionTest {
     @Test
     public void testSerialization() throws Exception {

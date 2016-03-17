@@ -2,6 +2,8 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 
+import org.junit.Test;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -89,11 +91,13 @@ public class ContainerOrderedWrapperTest extends AbstractContainerTestBase {
 
     }
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(new ContainerOrderedWrapper(
                 new NotOrderedContainer()));
     }
 
+    @Test
     public void testOrdered() {
         testContainerOrdered(new ContainerOrderedWrapper(
                 new NotOrderedContainer()));

@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -22,7 +25,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ClientMethodInvocation;
@@ -36,7 +39,7 @@ import elemental.json.JsonArray;
 import elemental.json.JsonValue;
 import elemental.json.impl.JsonUtil;
 
-public class ClientMethodSerializationTest extends TestCase {
+public class ClientMethodSerializationTest {
 
     private static final Method JAVASCRIPT_CALLBACK_METHOD = ReflectTools
             .findMethod(JavaScriptCallbackRpc.class, "call", String.class,
@@ -62,6 +65,7 @@ public class ClientMethodSerializationTest extends TestCase {
      * {@link JavaScriptCallbackHelper#invokeCallback(String, Object...)}.
      * #12532
      */
+    @Test
     public void testClientMethodSerialization_WithJSONArray_ContentStaysSame()
             throws Exception {
         JsonArray originalArray = Json.createArray();
@@ -78,6 +82,7 @@ public class ClientMethodSerializationTest extends TestCase {
                 JsonUtil.stringify(copyArray));
     }
 
+    @Test
     public void testClientMethodSerialization_WithBasicParams_NoChanges()
             throws Exception {
         String stringParam = "a string 123";
@@ -92,6 +97,7 @@ public class ClientMethodSerializationTest extends TestCase {
         assertEquals(copyInteger, integerParam);
     }
 
+    @Test
     public void testClientMethodSerialization_NoParams_NoExceptions() {
         ClientMethodInvocation original = new ClientMethodInvocation(null,
                 "interfaceName", NO_PARAMS_CALL_METHOD, null);
@@ -115,6 +121,7 @@ public class ClientMethodSerializationTest extends TestCase {
         return output;
     }
 
+    @Test
     public void testSerializeTwice() {
         String name = "javascriptFunctionName";
         String[] arguments = { "1", "2", "3" };

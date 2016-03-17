@@ -1,8 +1,16 @@
 package com.vaadin.tests.server.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
@@ -20,7 +28,7 @@ import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
-public class ComponentAttachDetachListenerTest extends TestCase {
+public class ComponentAttachDetachListenerTest {
 
     private AbstractOrderedLayout olayout;
     private GridLayout gridlayout;
@@ -126,9 +134,8 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         componentPosition = null;
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
 
         olayout = new HorizontalLayout();
         olayout.addComponentAttachListener(new MyAttachListener());
@@ -151,6 +158,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         customlayout.addComponentDetachListener(new MyDetachListener());
     }
 
+    @Test
     public void testOrderedLayoutAttachListener() {
         // Reset state variables
         resetVariables();
@@ -175,6 +183,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertFalse(indexOfComponent == -1);
     }
 
+    @Test
     public void testOrderedLayoutDetachListener() {
         // Add a component to detach
         Component comp = new Label();
@@ -202,6 +211,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertEquals(-1, indexOfComponent);
     }
 
+    @Test
     public void testGridLayoutAttachListener() {
         // Reset state variables
         resetVariables();
@@ -226,6 +236,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertNotNull(componentArea);
     }
 
+    @Test
     public void testGridLayoutDetachListener() {
         // Add a component to detach
         Component comp = new Label();
@@ -253,6 +264,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertNull(componentArea);
     }
 
+    @Test
     public void testAbsoluteLayoutAttachListener() {
         // Reset state variables
         resetVariables();
@@ -277,6 +289,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertNotNull(componentPosition);
     }
 
+    @Test
     public void testAbsoluteLayoutDetachListener() {
         // Add a component to detach
         Component comp = new Label();
@@ -304,6 +317,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertNull(componentPosition);
     }
 
+    @Test
     public void testCSSLayoutAttachListener() {
         // Reset state variables
         resetVariables();
@@ -325,6 +339,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertTrue(foundInContainer);
     }
 
+    @Test
     public void testCSSLayoutDetachListener() {
         // Add a component to detach
         Component comp = new Label();
@@ -349,6 +364,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         assertFalse(foundInContainer);
     }
 
+    @Test
     public void testCustomLayoutAttachListener() {
         // Reset state variables
         resetVariables();
@@ -369,6 +385,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
                 foundInContainer);
     }
 
+    @Test
     public void testCustomLayoutDetachListener() {
         // Add a component to detach
         Component comp = new Label();

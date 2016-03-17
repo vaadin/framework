@@ -18,36 +18,42 @@ package com.vaadin.tests.data.converter;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 
-public class StringToBigDecimalConverterTest extends TestCase {
+public class StringToBigDecimalConverterTest {
 
     StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
 
+    @Test
     public void testNullConversion() {
-        assertEquals(null,
+        Assert.assertEquals(null,
                 converter.convertToModel(null, BigDecimal.class, null));
     }
 
+    @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", BigDecimal.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel("", BigDecimal.class, null));
     }
 
+    @Test
     public void testValueParsing() {
         BigDecimal converted = converter.convertToModel("10", BigDecimal.class,
                 null);
         BigDecimal expected = new BigDecimal(10);
-        assertEquals(expected, converted);
+        Assert.assertEquals(expected, converted);
     }
 
+    @Test
     public void testValueFormatting() {
         BigDecimal bd = new BigDecimal(12.5);
         String expected = "12,5";
 
         String converted = converter.convertToPresentation(bd, String.class,
                 Locale.GERMAN);
-        assertEquals(expected, converted);
+        Assert.assertEquals(expected, converted);
     }
 }

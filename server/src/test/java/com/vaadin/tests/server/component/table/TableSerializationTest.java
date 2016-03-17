@@ -1,13 +1,13 @@
 package com.vaadin.tests.server.component.table;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.lang.SerializationUtils;
+import org.junit.Test;
 
 import com.vaadin.ui.Table;
 
-public class TableSerializationTest extends TestCase {
+public class TableSerializationTest {
 
+    @Test
     public void testSerialization() {
         Table t = new Table();
         byte[] ser = SerializationUtils.serialize(t);
@@ -15,6 +15,7 @@ public class TableSerializationTest extends TestCase {
 
     }
 
+    @Test
     public void testSerializationWithRowHeaders() {
         Table t = new Table();
         t.setRowHeaderMode(Table.ROW_HEADER_MODE_EXPLICIT);

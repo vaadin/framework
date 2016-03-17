@@ -16,9 +16,13 @@
 
 package com.vaadin.tests.server;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
-public class AssertionsEnabledTest extends TestCase {
+import org.junit.Test;
+
+public class AssertionsEnabledTest {
+
+    @Test
     public void testAssertionsEnabled() {
         boolean assertFailed = false;
         try {

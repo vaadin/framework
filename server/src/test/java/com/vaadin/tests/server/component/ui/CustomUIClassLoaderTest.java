@@ -1,12 +1,13 @@
 package com.vaadin.tests.server.component.ui;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.Test;
 
 import com.vaadin.server.DefaultDeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
@@ -18,7 +19,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.UI;
 
-public class CustomUIClassLoaderTest extends TestCase {
+public class CustomUIClassLoaderTest {
 
     /**
      * Stub root
@@ -53,6 +54,7 @@ public class CustomUIClassLoaderTest extends TestCase {
      * @throws Exception
      *             if thrown
      */
+    @Test
     public void testWithDefaultClassLoader() throws Exception {
         VaadinSession application = createStubApplication();
         application.setConfiguration(createConfigurationMock());
@@ -98,6 +100,7 @@ public class CustomUIClassLoaderTest extends TestCase {
      * @throws Exception
      *             if thrown
      */
+    @Test
     public void testWithClassLoader() throws Exception {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 

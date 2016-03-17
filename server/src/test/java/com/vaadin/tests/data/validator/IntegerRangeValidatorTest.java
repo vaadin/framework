@@ -1,10 +1,13 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.validator.IntegerRangeValidator;
 
-public class IntegerRangeValidatorTest extends TestCase {
+public class IntegerRangeValidatorTest {
 
     private IntegerRangeValidator cleanValidator = new IntegerRangeValidator(
             "no values", null, null);
@@ -15,6 +18,7 @@ public class IntegerRangeValidatorTest extends TestCase {
     private IntegerRangeValidator minMaxValidator = new IntegerRangeValidator(
             "no values", 10, 100);
 
+    @Test
     public void testNullValue() {
         assertTrue("Didn't accept null", cleanValidator.isValid(null));
         assertTrue("Didn't accept null", minValidator.isValid(null));
@@ -22,6 +26,7 @@ public class IntegerRangeValidatorTest extends TestCase {
         assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
+    @Test
     public void testMinValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(-15));
@@ -29,6 +34,7 @@ public class IntegerRangeValidatorTest extends TestCase {
         assertFalse("Accepted too small value", minValidator.isValid(9));
     }
 
+    @Test
     public void testMaxValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(1120));
@@ -36,6 +42,7 @@ public class IntegerRangeValidatorTest extends TestCase {
         assertFalse("Accepted too large value", maxValidator.isValid(120));
     }
 
+    @Test
     public void testMinMaxValue() {
         assertTrue("Didn't accept valid value", minMaxValidator.isValid(15));
         assertTrue("Didn't accept valid value", minMaxValidator.isValid(99));

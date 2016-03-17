@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
@@ -20,8 +22,8 @@ import com.vaadin.ui.TextField;
 public class TextFieldValueChangeTest extends
         AbstractFieldValueChangeTestBase<String> {
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         super.setUp(new TextField());
     }
 
@@ -29,6 +31,7 @@ public class TextFieldValueChangeTest extends
      * Case where the text field only uses its internal buffer, no external
      * property data source.
      */
+    @Test
     public void testNoDataSource() {
         getField().setPropertyDataSource(null);
 
@@ -49,6 +52,7 @@ public class TextFieldValueChangeTest extends
      * 
      * TODO make test field type agnostic (eg. combobox)
      */
+    @Test
     public void testValueChangeEventPropagationWithReadThrough() {
         ObjectProperty<String> property = new ObjectProperty<String>("");
         getField().setPropertyDataSource(property);
@@ -82,6 +86,7 @@ public class TextFieldValueChangeTest extends
      * 
      * TODO make test field type agnostic (eg. combobox)
      */
+    @Test
     public void testValueChangePropagationWithReadThroughOff() {
         final String initialValue = "initial";
         ObjectProperty<String> property = new ObjectProperty<String>(

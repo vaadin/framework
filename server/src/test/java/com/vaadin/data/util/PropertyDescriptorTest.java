@@ -7,14 +7,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.NestedMethodPropertyTest.Person;
 
-public class PropertyDescriptorTest extends TestCase {
+public class PropertyDescriptorTest {
+
+    @Test
     public void testMethodPropertyDescriptorSerialization() throws Exception {
         PropertyDescriptor[] pds = Introspector.getBeanInfo(Person.class)
                 .getPropertyDescriptors();
@@ -40,6 +41,7 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertEquals("John", property.getValue());
     }
 
+    @Test
     public void testSimpleNestedPropertyDescriptorSerialization()
             throws Exception {
         NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
@@ -55,6 +57,7 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertEquals("John", property.getValue());
     }
 
+    @Test
     public void testNestedPropertyDescriptorSerialization() throws Exception {
         NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
                 "address.street", Person.class);
@@ -69,6 +72,7 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertNull(property.getValue());
     }
 
+    @Test
     public void testMethodPropertyDescriptorWithPrimitivePropertyType()
             throws Exception {
         MethodPropertyDescriptor<Person> pd = new MethodPropertyDescriptor<Person>(

@@ -15,6 +15,10 @@
  */
 package com.vaadin.tests.server.component.table;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,8 +27,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
@@ -34,12 +37,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Table;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
-public class TablePropertyValueConverterTest extends TestCase {
+public class TablePropertyValueConverterTest {
     protected TestableTable table;
     protected Collection<?> initialProperties;
 
@@ -227,7 +225,7 @@ public class TablePropertyValueConverterTest extends TestCase {
                 DerivedClass.class.isAssignableFrom(BaseClass.class));
     }
 
-    @Override
+    @Before
     public void setUp() {
         table = new TestableTable("Test table", createContainer(new String[] {
                 "col1", "col2", "col3" }));

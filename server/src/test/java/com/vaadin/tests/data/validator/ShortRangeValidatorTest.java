@@ -1,10 +1,13 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.validator.ShortRangeValidator;
 
-public class ShortRangeValidatorTest extends TestCase {
+public class ShortRangeValidatorTest {
 
     private ShortRangeValidator cleanValidator = new ShortRangeValidator(
             "no values", null, null);
@@ -15,6 +18,7 @@ public class ShortRangeValidatorTest extends TestCase {
     private ShortRangeValidator minMaxValidator = new ShortRangeValidator(
             "no values", (short) 10, (short) 100);
 
+    @Test
     public void testNullValue() {
         assertTrue("Didn't accept null", cleanValidator.isValid(null));
         assertTrue("Didn't accept null", minValidator.isValid(null));
@@ -22,6 +26,7 @@ public class ShortRangeValidatorTest extends TestCase {
         assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
+    @Test
     public void testMinValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid((short) -15));
@@ -30,6 +35,7 @@ public class ShortRangeValidatorTest extends TestCase {
         assertFalse("Accepted too small value", minValidator.isValid((short) 9));
     }
 
+    @Test
     public void testMaxValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid((short) 1120));
@@ -39,6 +45,7 @@ public class ShortRangeValidatorTest extends TestCase {
                 maxValidator.isValid((short) 120));
     }
 
+    @Test
     public void testMinMaxValue() {
         assertTrue("Didn't accept valid value",
                 minMaxValidator.isValid((short) 15));

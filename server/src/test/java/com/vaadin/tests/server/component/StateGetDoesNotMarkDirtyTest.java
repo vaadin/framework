@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.tests.VaadinClasses;
@@ -17,16 +17,17 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
-public class StateGetDoesNotMarkDirtyTest extends TestCase {
+public class StateGetDoesNotMarkDirtyTest {
 
     private Set<String> excludedMethods = new HashSet<String>();
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         excludedMethods.add(Label.class.getName() + "getDataSourceValue");
         excludedMethods.add("getConnectorId");
     }
 
+    @Test
     public void testGetDoesntMarkStateDirty() throws Exception {
         for (Class<? extends Component> c : VaadinClasses.getComponents()) {
             Component newInstance = construct(c);

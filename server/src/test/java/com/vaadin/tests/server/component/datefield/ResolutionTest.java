@@ -2,13 +2,14 @@ package com.vaadin.tests.server.component.datefield;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.util.TestUtil;
 
-public class ResolutionTest extends TestCase {
+public class ResolutionTest {
 
+    @Test
     public void testResolutionHigherOrEqualToYear() {
         Iterable<Resolution> higherOrEqual = Resolution
                 .getResolutionsHigherOrEqualTo(Resolution.YEAR);
@@ -17,6 +18,7 @@ public class ResolutionTest extends TestCase {
         TestUtil.assertIterableEquals(expected, higherOrEqual);
     }
 
+    @Test
     public void testResolutionHigherOrEqualToDay() {
         Iterable<Resolution> higherOrEqual = Resolution
                 .getResolutionsHigherOrEqualTo(Resolution.DAY);
@@ -28,6 +30,7 @@ public class ResolutionTest extends TestCase {
 
     }
 
+    @Test
     public void testResolutionLowerThanDay() {
         Iterable<Resolution> higherOrEqual = Resolution
                 .getResolutionsLowerThan(Resolution.DAY);
@@ -39,6 +42,7 @@ public class ResolutionTest extends TestCase {
 
     }
 
+    @Test
     public void testResolutionLowerThanSecond() {
         Iterable<Resolution> higherOrEqual = Resolution
                 .getResolutionsLowerThan(Resolution.SECOND);
@@ -46,6 +50,7 @@ public class ResolutionTest extends TestCase {
         TestUtil.assertIterableEquals(expected, higherOrEqual);
     }
 
+    @Test
     public void testResolutionLowerThanYear() {
         Iterable<Resolution> higherOrEqual = Resolution
                 .getResolutionsLowerThan(Resolution.YEAR);

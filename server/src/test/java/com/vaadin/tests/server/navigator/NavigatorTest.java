@@ -16,14 +16,19 @@
 
 package com.vaadin.tests.server.navigator;
 
-import java.util.LinkedList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import java.util.LinkedList;
 
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
 import org.easymock.IMocksControl;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
@@ -42,7 +47,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public class NavigatorTest extends TestCase {
+public class NavigatorTest {
 
     // TODO test internal parameters (and absence of them)
     // TODO test listeners blocking navigation, multiple listeners
@@ -273,6 +278,7 @@ public class NavigatorTest extends TestCase {
         return new Navigator(createMockUI(), manager, display);
     }
 
+    @Test(expected = NullPointerException.class)
     public void testDestroy_unsetNavigatorInUIAndUriFragmentManager() {
         TestPage page = new TestPage();
         UI ui = new TestUI(page);
@@ -292,16 +298,14 @@ public class NavigatorTest extends TestCase {
                 ui.getNavigator());
         UriFragmentManager manager = (UriFragmentManager) navigator
                 .getStateManager();
-        try {
-            manager.uriFragmentChanged(EasyMock
-                    .createMock(UriFragmentChangedEvent.class));
-            Assert.assertTrue(
-                    "Expected null pointer exception after call uriFragmentChanged "
-                            + "for destroyed navigator", false);
-        } catch (NullPointerException e) {
-        }
+
+        manager.uriFragmentChanged(EasyMock
+                .createMock(UriFragmentChangedEvent.class));
+        Assert.fail("Expected null pointer exception after call uriFragmentChanged "
+                + "for destroyed navigator");
     }
 
+    @Test
     public void testBasicNavigation() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -355,6 +359,7 @@ public class NavigatorTest extends TestCase {
         assertEquals("test1/params", navigator.getState());
     }
 
+    @Test
     public void testMainView() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -400,6 +405,7 @@ public class NavigatorTest extends TestCase {
         navigator.navigateTo("test1/params");
     }
 
+    @Test
     public void testListeners() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -450,6 +456,7 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testComponentContainerViewDisplay() {
         abstract class TestView implements Component, View {
         }
@@ -478,6 +485,7 @@ public class NavigatorTest extends TestCase {
         assertEquals(1, container.getComponentCount());
     }
 
+    @Test
     public void testBlockNavigation() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -557,6 +565,7 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testAddViewInstance() throws Exception {
         View view = new TestView();
 
@@ -568,6 +577,7 @@ public class NavigatorTest extends TestCase {
                 view, navigator.getView("test"));
     }
 
+    @Test
     public void testAddViewInstanceSameName() throws Exception {
         View view1 = new TestView();
         View view2 = new TestView2();
@@ -582,6 +592,7 @@ public class NavigatorTest extends TestCase {
                 view2, navigator.getView("test"));
     }
 
+    @Test
     public void testAddViewClass() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -593,6 +604,7 @@ public class NavigatorTest extends TestCase {
                 view.getClass());
     }
 
+    @Test
     public void testAddViewClassSameName() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -604,6 +616,7 @@ public class NavigatorTest extends TestCase {
                 TestView2.class, navigator.getView("test").getClass());
     }
 
+    @Test
     public void testAddViewInstanceAndClassSameName() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -622,6 +635,7 @@ public class NavigatorTest extends TestCase {
                 TestView.class, navigator.getView("test").getClass());
     }
 
+    @Test
     public void testAddViewWithNullName() throws Exception {
         Navigator navigator = new TestNavigator();
 
@@ -637,26 +651,23 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testAddViewWithNullInstance() throws Exception {
         Navigator navigator = new TestNavigator();
 
-        try {
-            navigator.addView("test", (View) null);
-            fail("addView() accepted null view instance");
-        } catch (IllegalArgumentException e) {
-        }
+        navigator.addView("test", (View) null);
+        fail("addView() accepted null view instance");
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testAddViewWithNullClass() throws Exception {
         Navigator navigator = new TestNavigator();
 
-        try {
-            navigator.addView("test", (Class<View>) null);
-            fail("addView() accepted null view class");
-        } catch (IllegalArgumentException e) {
-        }
+        navigator.addView("test", (Class<View>) null);
+        fail("addView() accepted null view class");
     }
 
+    @Test
     public void testRemoveViewInstance() throws Exception {
         View view = new TestView();
 
@@ -668,6 +679,7 @@ public class NavigatorTest extends TestCase {
         assertNull("View not removed", navigator.getView("test"));
     }
 
+    @Test
     public void testRemoveViewInstanceNothingElse() throws Exception {
         View view = new TestView();
         View view2 = new TestView2();
@@ -681,6 +693,7 @@ public class NavigatorTest extends TestCase {
         assertEquals("Removed extra views", view2, navigator.getView("test2"));
     }
 
+    @Test
     public void testRemoveViewClass() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -690,6 +703,7 @@ public class NavigatorTest extends TestCase {
         assertNull("View not removed", navigator.getView("test"));
     }
 
+    @Test
     public void testRemoveViewClassNothingElse() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -701,6 +715,7 @@ public class NavigatorTest extends TestCase {
                 navigator.getView("test2").getClass());
     }
 
+    @Test
     public void testGetViewNestedNames() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -727,6 +742,7 @@ public class NavigatorTest extends TestCase {
                         .getClass());
     }
 
+    @Test
     public void testGetViewLongestPrefixOrder() throws Exception {
         TestNavigator navigator = new TestNavigator();
 
@@ -747,6 +763,7 @@ public class NavigatorTest extends TestCase {
                 .getView("test").getClass());
     }
 
+    @Test
     public void testNavigateToUnknownView() {
         TestNavigator navigator = new TestNavigator();
 
@@ -785,6 +802,7 @@ public class NavigatorTest extends TestCase {
         navigator.navigateTo("doesnotexist2");
     }
 
+    @Test
     public void testShowViewEnterOrder() {
         IMocksControl control = EasyMock.createStrictControl();
 
@@ -805,6 +823,7 @@ public class NavigatorTest extends TestCase {
         navigator.navigateTo("view");
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testNullViewProvider() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -814,11 +833,8 @@ public class NavigatorTest extends TestCase {
         // create navigator to test
         Navigator navigator = createNavigator(manager, display);
 
-        try {
-            navigator.addProvider(null);
-            fail("Should not be allowed to add a null view provider");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        }
+        navigator.addProvider(null);
+        fail("Should not be allowed to add a null view provider");
+
     }
 }

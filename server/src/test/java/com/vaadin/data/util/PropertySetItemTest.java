@@ -2,15 +2,16 @@ package com.vaadin.data.util;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Item.PropertySetChangeEvent;
 import com.vaadin.data.Item.PropertySetChangeListener;
 
-public class PropertySetItemTest extends TestCase {
+public class PropertySetItemTest {
 
     private static final String ID1 = "id1";
     private static final String ID2 = "id2";
@@ -27,8 +28,8 @@ public class PropertySetItemTest extends TestCase {
     private PropertySetChangeListener propertySetListenerMock;
     private PropertySetChangeListener propertySetListenerMock2;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         prop1 = new ObjectProperty<String>(VALUE1, String.class);
         prop2 = new ObjectProperty<String>(VALUE2, String.class);
         prop3 = new ObjectProperty<String>(VALUE3, String.class);
@@ -39,8 +40,8 @@ public class PropertySetItemTest extends TestCase {
                 .createMock(PropertySetChangeListener.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         prop1 = null;
         prop2 = null;
         prop3 = null;
@@ -53,12 +54,14 @@ public class PropertySetItemTest extends TestCase {
         return new PropertysetItem();
     }
 
+    @Test
     public void testEmptyItem() {
         PropertysetItem item = createPropertySetItem();
         Assert.assertNotNull(item.getItemPropertyIds());
         Assert.assertEquals(0, item.getItemPropertyIds().size());
     }
 
+    @Test
     public void testGetProperty() {
         PropertysetItem item = createPropertySetItem();
 
@@ -70,6 +73,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertNull(item.getItemProperty(ID2));
     }
 
+    @Test
     public void testAddSingleProperty() {
         PropertysetItem item = createPropertySetItem();
 
@@ -80,6 +84,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(prop1, item.getItemProperty(ID1));
     }
 
+    @Test
     public void testAddMultipleProperties() {
         PropertysetItem item = createPropertySetItem();
 
@@ -96,6 +101,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(3, item.getItemPropertyIds().size());
     }
 
+    @Test
     public void testAddedPropertyOrder() {
         PropertysetItem item = createPropertySetItem();
         item.addItemProperty(ID1, prop1);
@@ -108,6 +114,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(ID3, it.next());
     }
 
+    @Test
     public void testAddPropertyTwice() {
         PropertysetItem item = createPropertySetItem();
         Assert.assertTrue(item.addItemProperty(ID1, prop1));
@@ -117,6 +124,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(prop1, item.getItemProperty(ID1));
     }
 
+    @Test
     public void testCannotChangeProperty() {
         PropertysetItem item = createPropertySetItem();
         Assert.assertTrue(item.addItemProperty(ID1, prop1));
@@ -129,6 +137,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(prop1, item.getItemProperty(ID1));
     }
 
+    @Test
     public void testRemoveProperty() {
         PropertysetItem item = createPropertySetItem();
         item.addItemProperty(ID1, prop1);
@@ -138,6 +147,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertNull(item.getItemProperty(ID1));
     }
 
+    @Test
     public void testRemovePropertyOrder() {
         PropertysetItem item = createPropertySetItem();
         item.addItemProperty(ID1, prop1);
@@ -151,11 +161,13 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(ID3, it.next());
     }
 
+    @Test
     public void testRemoveNonExistentListener() {
         PropertysetItem item = createPropertySetItem();
         item.removeListener(propertySetListenerMock);
     }
 
+    @Test
     public void testRemoveListenerTwice() {
         PropertysetItem item = createPropertySetItem();
         item.addListener(propertySetListenerMock);
@@ -163,6 +175,7 @@ public class PropertySetItemTest extends TestCase {
         item.removeListener(propertySetListenerMock);
     }
 
+    @Test
     public void testAddPropertyNotification() {
         // exactly one notification each time
         PropertysetItem item = createPropertySetItem();
@@ -188,6 +201,7 @@ public class PropertySetItemTest extends TestCase {
         EasyMock.verify(propertySetListenerMock);
     }
 
+    @Test
     public void testRemovePropertyNotification() {
         // exactly one notification each time
         PropertysetItem item = createPropertySetItem();
@@ -214,12 +228,14 @@ public class PropertySetItemTest extends TestCase {
         EasyMock.verify(propertySetListenerMock);
     }
 
+    @Test
     public void testItemEqualsNull() {
         PropertysetItem item = createPropertySetItem();
 
         Assert.assertFalse(item.equals(null));
     }
 
+    @Test
     public void testEmptyItemEquals() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -227,6 +243,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertTrue(item1.equals(item2));
     }
 
+    @Test
     public void testItemEqualsSingleProperty() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -255,6 +272,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertFalse(item2.equals(item1));
     }
 
+    @Test
     public void testItemEqualsMultipleProperties() {
         PropertysetItem item1 = createPropertySetItem();
         item1.addItemProperty(ID1, prop1);
@@ -272,6 +290,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertTrue(item2.equals(item3));
     }
 
+    @Test
     public void testItemEqualsPropertyOrder() {
         PropertysetItem item1 = createPropertySetItem();
         item1.addItemProperty(ID1, prop1);
@@ -284,6 +303,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertFalse(item1.equals(item2));
     }
 
+    @Test
     public void testEqualsSingleListener() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -299,6 +319,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertTrue(item2.equals(item1));
     }
 
+    @Test
     public void testEqualsMultipleListeners() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -317,6 +338,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertTrue(item2.equals(item1));
     }
 
+    @Test
     public void testEqualsAddRemoveListener() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -328,6 +350,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertTrue(item2.equals(item1));
     }
 
+    @Test
     public void testItemHashCodeEmpty() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -335,6 +358,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(item1.hashCode(), item2.hashCode());
     }
 
+    @Test
     public void testItemHashCodeAddProperties() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -351,6 +375,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(item1.hashCode(), item2.hashCode());
     }
 
+    @Test
     public void testItemHashCodeAddListeners() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -365,6 +390,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(item1.hashCode(), item2.hashCode());
     }
 
+    @Test
     public void testItemHashCodeAddRemoveProperty() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -375,6 +401,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(item1.hashCode(), item2.hashCode());
     }
 
+    @Test
     public void testItemHashCodeAddRemoveListener() {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
@@ -385,6 +412,7 @@ public class PropertySetItemTest extends TestCase {
         Assert.assertEquals(item1.hashCode(), item2.hashCode());
     }
 
+    @Test
     public void testToString() {
         // toString() behavior is specified in the class javadoc
         PropertysetItem item = createPropertySetItem();

@@ -1,9 +1,12 @@
 package com.vaadin.tests.server.component.tree;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.CollapseEvent;
@@ -11,18 +14,18 @@ import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
 
-public class ListenersTest extends TestCase implements ExpandListener,
-        CollapseListener {
+public class ListenersTest implements ExpandListener, CollapseListener {
     private int expandCalled;
     private int collapseCalled;
     private Object lastExpanded;
     private Object lastCollapsed;
 
-    @Override
-    protected void setUp() {
+    @Before
+    public void setUp() {
         expandCalled = 0;
     }
 
+    @Test
     public void testExpandListener() {
         Tree tree = createTree(10, 20, false);
         tree.addListener((ExpandListener) this);
@@ -93,6 +96,7 @@ public class ListenersTest extends TestCase implements ExpandListener,
         return tree;
     }
 
+    @Test
     public void testCollapseListener() {
         Tree tree = createTree(7, 15, true);
         tree.addListener((CollapseListener) this);

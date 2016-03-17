@@ -26,7 +26,7 @@ import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
-public class TicketTests {
+public class TicketTest {
 
     private JDBCConnectionPool connectionPool;
 

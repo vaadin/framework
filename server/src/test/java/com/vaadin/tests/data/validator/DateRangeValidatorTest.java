@@ -1,16 +1,20 @@
 package com.vaadin.tests.data.validator;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 
-public class DateRangeValidatorTest extends TestCase {
+public class DateRangeValidatorTest {
     Calendar startDate = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
             Locale.ENGLISH);
     Calendar endDate = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
@@ -21,9 +25,8 @@ public class DateRangeValidatorTest extends TestCase {
     private DateRangeValidator maxValidator;
     private DateRangeValidator minMaxValidator;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
         startDate.set(2000, Calendar.JANUARY, 1, 12, 0, 0);
         endDate.set(2000, Calendar.FEBRUARY, 20, 12, 0, 0);
 
@@ -37,6 +40,7 @@ public class DateRangeValidatorTest extends TestCase {
                 startDate.getTime(), endDate.getTime(), Resolution.DAY);
     }
 
+    @Test
     public void testNullValue() {
         assertTrue("Didn't accept null", cleanValidator.isValid(null));
         assertTrue("Didn't accept null", minValidator.isValid(null));
@@ -44,6 +48,7 @@ public class DateRangeValidatorTest extends TestCase {
         assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
+    @Test
     public void testMinValue() {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                 Locale.ENGLISH);
@@ -61,6 +66,7 @@ public class DateRangeValidatorTest extends TestCase {
                 minValidator.isValid(cal.getTime()));
     }
 
+    @Test
     public void testMaxValue() {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                 Locale.ENGLISH);
@@ -77,6 +83,7 @@ public class DateRangeValidatorTest extends TestCase {
                 maxValidator.isValid(cal.getTime()));
     }
 
+    @Test
     public void testMinMaxValue() {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                 Locale.ENGLISH);

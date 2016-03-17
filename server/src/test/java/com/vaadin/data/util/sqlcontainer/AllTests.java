@@ -19,6 +19,6 @@ import com.vaadin.data.util.sqlcontainer.query.TableQueryTest;
         FreeformQueryTest.class, RowIdTest.class, SQLContainerTest.class,
         SQLContainerTableQueryTest.class, ColumnPropertyTest.class,
         TableQueryTest.class, SQLGeneratorsTest.class, UtilTest.class,
-        TicketTests.class, BetweenTest.class, ReadOnlyRowIdTest.class })
+        TicketTest.class, BetweenTest.class, ReadOnlyRowIdTest.class })
 public class AllTests {
 }

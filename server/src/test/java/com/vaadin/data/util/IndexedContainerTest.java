@@ -1,10 +1,15 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -13,31 +18,38 @@ import com.vaadin.data.Item;
 
 public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(new IndexedContainer());
     }
 
+    @Test
     public void testFiltering() {
         testContainerFiltering(new IndexedContainer());
     }
 
+    @Test
     public void testSorting() {
         testContainerSorting(new IndexedContainer());
     }
 
+    @Test
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(new IndexedContainer());
     }
 
+    @Test
     public void testContainerOrdered() {
         testContainerOrdered(new IndexedContainer());
     }
 
+    @Test
     public void testContainerIndexed() {
         testContainerIndexed(new IndexedContainer(), sampleData[2], 2, true,
                 "newItemId", true);
     }
 
+    @Test
     public void testItemSetChangeListeners() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -109,6 +121,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
 
     }
 
+    @Test
     public void testAddRemoveContainerFilter() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -131,6 +144,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
 
     // TODO other tests should check positions after removing filter etc,
     // here concentrating on listeners
+    @Test
     public void testItemSetChangeListenersFiltering() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -276,6 +290,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         counter.assertNone();
     }
 
+    @Test
     public void testItemAdd_idSequence() {
         IndexedContainer container = new IndexedContainer();
         Object itemId;
@@ -293,6 +308,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         assertEquals(Integer.valueOf(4), itemId);
     }
 
+    @Test
     public void testItemAddRemove_idSequence() {
         IndexedContainer container = new IndexedContainer();
         Object itemId;
@@ -308,6 +324,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
                 Integer.valueOf(2), itemId);
     }
 
+    @Test
     public void testItemAddedEvent() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -319,6 +336,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         EasyMock.verify(addListener);
     }
 
+    @Test
     public void testItemAddedEvent_AddedItem() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -330,6 +348,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemAddedEvent_IndexOfAddedItem() {
         IndexedContainer container = new IndexedContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -342,6 +361,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemRemovedEvent() {
         IndexedContainer container = new IndexedContainer();
         Object itemId = container.addItem();
@@ -355,6 +375,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         EasyMock.verify(removeListener);
     }
 
+    @Test
     public void testItemRemovedEvent_RemovedItem() {
         IndexedContainer container = new IndexedContainer();
         Object itemId = container.addItem();
@@ -367,6 +388,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemRemovedEvent_indexOfRemovedItem() {
         IndexedContainer container = new IndexedContainer();
         container.addItem();
@@ -380,6 +402,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemRemovedEvent_amountOfRemovedItems() {
         IndexedContainer container = new IndexedContainer();
         container.addItem();
@@ -416,74 +439,46 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
     }
 
     // Ticket 8028
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testGetItemIdsRangeIndexOutOfBounds() {
         IndexedContainer ic = new IndexedContainer();
-        try {
-            ic.getItemIds(-1, 10);
-            fail("Container returned items starting from index -1, something very wrong here!");
-        } catch (IndexOutOfBoundsException e) {
-            // This is expected...
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw unspecified exception when fetching a range of items and the range started from -1");
-        }
-
+        ic.getItemIds(-1, 10);
     }
 
     // Ticket 8028
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testGetItemIdsRangeIndexOutOfBounds2() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        try {
-            ic.getItemIds(2, 1);
-            fail("Container returned items starting from index -1, something very wrong here!");
-        } catch (IndexOutOfBoundsException e) {
-            // This is expected...
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw unspecified exception when fetching a out of bounds range of items");
-        }
-
+        ic.getItemIds(2, 1);
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeZeroRange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        try {
-            List<Object> itemIds = ic.getItemIds(1, 0);
+        List<Object> itemIds = ic.getItemIds(1, 0);
 
-            assertTrue(
-                    "Container returned actual values when asking for 0 items...",
-                    itemIds.isEmpty());
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw unspecified exception when fetching 0 items...");
-        }
-
+        assertTrue(
+                "Container returned actual values when asking for 0 items...",
+                itemIds.isEmpty());
     }
 
     // Ticket 8028
+    @Test(expected = IllegalArgumentException.class)
     public void testGetItemIdsRangeNegativeRange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        try {
-            List<Object> itemIds = ic.getItemIds(1, -1);
+        List<Object> itemIds = ic.getItemIds(1, -1);
 
-            assertTrue(
-                    "Container returned actual values when asking for -1 items...",
-                    itemIds.isEmpty());
-        } catch (IllegalArgumentException e) {
-            // this is expected
-
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw unspecified exception when fetching -1 items...");
-        }
-
+        assertTrue(
+                "Container returned actual values when asking for -1 items...",
+                itemIds.isEmpty());
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
@@ -493,6 +488,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeBaseCase() {
         IndexedContainer ic = new IndexedContainer();
         String object1 = new String("Obj1");
@@ -507,20 +503,15 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         ic.addItem(object4);
         ic.addItem(object5);
 
-        try {
-            List<Object> itemIds = ic.getItemIds(1, 2);
+        List<Object> itemIds = ic.getItemIds(1, 2);
 
-            assertTrue(itemIds.contains(object2));
-            assertTrue(itemIds.contains(object3));
-            assertEquals(2, itemIds.size());
-
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw  exception when fetching a range of items ");
-        }
+        assertTrue(itemIds.contains(object2));
+        assertTrue(itemIds.contains(object3));
+        assertEquals(2, itemIds.size());
     }
 
     // test getting non-existing property (#10445)
+    @Test
     public void testNonExistingProperty() {
         IndexedContainer ic = new IndexedContainer();
         String object1 = new String("Obj1");
@@ -529,11 +520,11 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
     }
 
     // test getting null property id (#10445)
+    @Test
     public void testNullPropertyId() {
         IndexedContainer ic = new IndexedContainer();
         String object1 = new String("Obj1");
         ic.addItem(object1);
         assertNull(ic.getContainerProperty(object1, null));
     }
-
 }

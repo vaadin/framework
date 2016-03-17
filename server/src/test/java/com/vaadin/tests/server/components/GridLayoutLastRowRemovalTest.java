@@ -1,12 +1,17 @@
 package com.vaadin.tests.server.components;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
-public class GridLayoutLastRowRemovalTest extends TestCase {
+public class GridLayoutLastRowRemovalTest {
 
+    @Test
     public void testRemovingLastRow() {
         GridLayout grid = new GridLayout(2, 1);
         grid.addComponent(new Label("Col1"));

@@ -1,6 +1,7 @@
 package com.vaadin.data.util.filter;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -11,6 +12,7 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
     protected Item item1 = new BeanItem<Integer>(1);
     protected Item item2 = new BeanItem<Integer>(2);
 
+    @Test
     public void testNot() {
         Filter origFilter = new SameItemFilter(item1);
         Filter filter = new Not(origFilter);
@@ -21,6 +23,7 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
         Assert.assertTrue(filter.passesFilter(null, item2));
     }
 
+    @Test
     public void testANotAppliesToProperty() {
         Filter filterA = new Not(new SameItemFilter(item1, "a"));
         Filter filterB = new Not(new SameItemFilter(item1, "b"));
@@ -31,6 +34,7 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
         Assert.assertTrue(filterB.appliesToProperty("b"));
     }
 
+    @Test
     public void testNotEqualsHashCode() {
         Filter origFilter = new SameItemFilter(item1);
         Filter filter1 = new Not(origFilter);

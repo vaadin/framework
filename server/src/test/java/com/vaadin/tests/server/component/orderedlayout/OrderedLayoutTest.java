@@ -2,7 +2,7 @@ package com.vaadin.tests.server.component.orderedlayout;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
@@ -10,12 +10,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class OrderedLayoutTest extends TestCase {
+public class OrderedLayoutTest {
 
+    @Test
     public void testVLIteration() {
         testIndexing(new VerticalLayout(), 10);
     }
 
+    @Test
     public void testHLIteration() {
         testIndexing(new HorizontalLayout(), 12);
     }

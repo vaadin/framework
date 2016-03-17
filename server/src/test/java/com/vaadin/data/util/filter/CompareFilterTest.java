@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -65,6 +66,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         itemB = null;
     }
 
+    @Test
     public void testCompareString() {
         Assert.assertFalse(equalB.passesFilter(null, itemEmpty));
         Assert.assertFalse(equalB.passesFilter(null, itemA));
@@ -92,6 +94,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertFalse(lessEqualB.passesFilter(null, itemC));
     }
 
+    @Test
     public void testCompareWithNull() {
         // null comparisons: null is less than any other value
         Assert.assertFalse(equalB.passesFilter(null, itemNull));
@@ -113,6 +116,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertTrue(lessEqualNull.passesFilter(null, itemA));
     }
 
+    @Test
     public void testCompareInteger() {
         int negative = -1;
         int zero = 0;
@@ -154,6 +158,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertFalse(isNonPositive.passesFilter(null, itemPositive));
     }
 
+    @Test
     public void testCompareBigDecimal() {
         BigDecimal negative = new BigDecimal(-1);
         BigDecimal zero = new BigDecimal(0);
@@ -207,6 +212,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
 
     }
 
+    @Test
     public void testCompareDate() {
         Date now = new Date();
         // new Date() is only accurate to the millisecond, so repeating it gives
@@ -250,6 +256,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertFalse(beforeOrNow.passesFilter(null, itemLater));
     }
 
+    @Test
     public void testCompareAppliesToProperty() {
         Filter filterA = new Equal("a", 1);
         Filter filterB = new Equal("b", 1);
@@ -260,6 +267,7 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertTrue(filterB.appliesToProperty("b"));
     }
 
+    @Test
     public void testCompareEqualsHashCode() {
         // most checks with Equal filter, then only some with others
         Filter equalNull2 = new Equal(PROPERTY1, null);

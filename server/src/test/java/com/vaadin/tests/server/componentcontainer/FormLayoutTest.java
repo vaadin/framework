@@ -1,5 +1,9 @@
 package com.vaadin.tests.server.componentcontainer;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

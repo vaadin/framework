@@ -1,8 +1,10 @@
 package com.vaadin.tests.server.component.abstractfield;
 
-import java.util.Locale;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +23,7 @@ import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
-public class AbsFieldValueConversionsTest extends TestCase {
+public class AbsFieldValueConversionsTest {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
             34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
@@ -33,6 +35,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
      */
     private static final char FORMATTED_SPACE = 160;
 
+    @Test
     public void testWithoutConversion() {
         TextField tf = new TextField();
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
@@ -45,6 +48,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
         assertEquals("abc", paulaBean.getFirstName());
     }
 
+    @Test
     public void testNonmodifiedBufferedFieldConversion() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         TextField tf = new TextField("salary");
@@ -61,6 +65,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
 
     }
 
+    @Test
     public void testModifiedBufferedFieldConversion() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         TextField tf = new TextField("salary");
@@ -80,6 +85,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
         assertEquals("123,123", tf.getValue());
     }
 
+    @Test
     public void testStringIdentityConversion() {
         TextField tf = new TextField();
         tf.setConverter(new Converter<String, String>() {
@@ -116,6 +122,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
         assertEquals("abc", paulaBean.getFirstName());
     }
 
+    @Test
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 
@@ -131,6 +138,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
         assertEquals("42", tf.getValue());
     }
 
+    @Test
     public void testChangeReadOnlyFieldLocale() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
@@ -147,6 +155,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
                 tf.getValue());
     }
 
+    @Test
     public void testBooleanNullConversion() {
         CheckBox cb = new CheckBox();
         cb.setConverter(new Converter<Boolean, Boolean>() {
@@ -219,6 +228,7 @@ public class AbsFieldValueConversionsTest extends TestCase {
 
     }
 
+    @Test
     public void testNumberDoubleConverterChange() {
         final VaadinSession a = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(a);

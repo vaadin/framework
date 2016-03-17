@@ -1,5 +1,7 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -17,8 +19,9 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Form;
 
-public class SerializationTest extends TestCase {
+public class SerializationTest {
 
+    @Test
     public void testValidators() throws Exception {
         RegexpValidator validator = new RegexpValidator(".*", "Error");
         validator.validate("aaa");
@@ -26,6 +29,7 @@ public class SerializationTest extends TestCase {
         validator2.validate("aaa");
     }
 
+    @Test
     public void testForm() throws Exception {
         Form f = new Form();
         String propertyId = "My property";
@@ -38,6 +42,7 @@ public class SerializationTest extends TestCase {
 
     }
 
+    @Test
     public void testIndedexContainerItemIds() throws Exception {
         IndexedContainer ic = new IndexedContainer();
         ic.addContainerProperty("prop1", String.class, null);
@@ -50,24 +55,28 @@ public class SerializationTest extends TestCase {
         serializeAndDeserialize(ic);
     }
 
+    @Test
     public void testMethodPropertyGetter() throws Exception {
         MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
                 "dummyGetter");
         serializeAndDeserialize(mp);
     }
 
+    @Test
     public void testMethodPropertyGetterAndSetter() throws Exception {
         MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
                 "dummyGetterAndSetter");
         serializeAndDeserialize(mp);
     }
 
+    @Test
     public void testMethodPropertyInt() throws Exception {
         MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
                 "dummyInt");
         serializeAndDeserialize(mp);
     }
 
+    @Test
     public void testVaadinSession() throws Exception {
         VaadinSession session = new VaadinSession(null);
 

@@ -1,10 +1,13 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.validator.FloatRangeValidator;
 
-public class FloatRangeValidatorTest extends TestCase {
+public class FloatRangeValidatorTest {
 
     private FloatRangeValidator cleanValidator = new FloatRangeValidator(
             "no values", null, null);
@@ -15,6 +18,7 @@ public class FloatRangeValidatorTest extends TestCase {
     private FloatRangeValidator minMaxValidator = new FloatRangeValidator(
             "no values", 10.5f, 100.5f);
 
+    @Test
     public void testNullValue() {
         assertTrue("Didn't accept null", cleanValidator.isValid(null));
         assertTrue("Didn't accept null", minValidator.isValid(null));
@@ -22,6 +26,7 @@ public class FloatRangeValidatorTest extends TestCase {
         assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
+    @Test
     public void testMinValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(-15.0f));
@@ -29,6 +34,7 @@ public class FloatRangeValidatorTest extends TestCase {
         assertFalse("Accepted too small value", minValidator.isValid(10.0f));
     }
 
+    @Test
     public void testMaxValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(1120.0f));
@@ -36,6 +42,7 @@ public class FloatRangeValidatorTest extends TestCase {
         assertFalse("Accepted too large value", maxValidator.isValid(100.6f));
     }
 
+    @Test
     public void testMinMaxValue() {
         assertTrue("Didn't accept valid value", minMaxValidator.isValid(10.5f));
         assertTrue("Didn't accept valid value", minMaxValidator.isValid(100.5f));

@@ -1,6 +1,7 @@
 package com.vaadin.data.util.filter;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -9,6 +10,7 @@ import com.vaadin.data.util.PropertysetItem;
 
 public class IsNullFilterTest extends AbstractFilterTestBase<IsNull> {
 
+    @Test
     public void testIsNull() {
         Item item1 = new PropertysetItem();
         item1.addItemProperty("a", new ObjectProperty<String>(null,
@@ -30,6 +32,7 @@ public class IsNullFilterTest extends AbstractFilterTestBase<IsNull> {
         Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
+    @Test
     public void testIsNullAppliesToProperty() {
         Filter filterA = new IsNull("a");
         Filter filterB = new IsNull("b");
@@ -40,6 +43,7 @@ public class IsNullFilterTest extends AbstractFilterTestBase<IsNull> {
         Assert.assertTrue(filterB.appliesToProperty("b"));
     }
 
+    @Test
     public void testIsNullEqualsHashCode() {
         Filter filter1 = new IsNull("a");
         Filter filter1b = new IsNull("a");

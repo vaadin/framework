@@ -1,5 +1,11 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -8,6 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -41,7 +49,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         return new BeanContainer<String, ClassName>(ClassName.class);
     }
 
-    @Override
+    @Before
     public void setUp() {
         nameToBean.clear();
 
@@ -68,6 +76,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         return false;
     }
 
+    @Test
     public void testGetType_existingProperty_typeReturned() {
         BeanContainer<String, ClassName> container = getContainer();
         Assert.assertEquals(
@@ -75,30 +84,36 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
                 String.class, container.getType("simpleName"));
     }
 
+    @Test
     public void testGetType_notExistingProperty_nullReturned() {
         BeanContainer<String, ClassName> container = getContainer();
         Assert.assertNull("Not null type is returned for property ''",
                 container.getType(""));
     }
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(getContainer());
     }
 
+    @Test
     public void testFiltering() {
         testContainerFiltering(getContainer());
     }
 
+    @Test
     public void testSorting() {
         testContainerSorting(getContainer());
     }
 
+    @Test
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(getContainer());
     }
 
     // duplicated from parent class and modified - adding items to
     // BeanContainer differs from other containers
+    @Test
     public void testContainerOrdered() {
         BeanContainer<String, String> container = new BeanContainer<String, String>(
                 String.class);
@@ -175,6 +190,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
     // TODO test Container.Indexed interface operation - testContainerIndexed()?
 
+    @Test
     public void testAddItemAt() {
         BeanContainer<String, String> container = new BeanContainer<String, String>(
                 String.class);
@@ -198,6 +214,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals("id4", container.getIdByIndex(3));
     }
 
+    @Test
     public void testUnsupportedMethods() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -255,6 +272,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(1, container.size());
     }
 
+    @Test
     public void testRemoveContainerProperty() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -271,6 +289,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         Assert.assertNull(container.getItem("John").getItemProperty("name"));
     }
 
+    @Test
     public void testAddNullBeans() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -282,6 +301,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(0, container.size());
     }
 
+    @Test
     public void testAddNullId() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -295,6 +315,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(0, container.size());
     }
 
+    @Test
     public void testEmptyContainer() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -307,6 +328,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         // could test more about empty container
     }
 
+    @Test
     public void testAddBeanWithoutResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -340,6 +362,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(0, container.size());
     }
 
+    @Test
     public void testAddAllWithNullItemId() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -372,6 +395,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(3, container.size());
     }
 
+    @Test
     public void testAddBeanWithNullResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -400,6 +424,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(0, container.size());
     }
 
+    @Test
     public void testAddBeanWithResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -422,6 +447,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(5, container.size());
     }
 
+    @Test
     public void testAddNullBeansWithResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -434,6 +460,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(0, container.size());
     }
 
+    @Test
     public void testAddBeanWithPropertyResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
@@ -456,6 +483,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         assertEquals(5, container.size());
     }
 
+    @Test
     public void testAddNestedContainerProperty() {
         BeanContainer<String, NestedMethodPropertyTest.Person> container = new BeanContainer<String, NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);
@@ -470,6 +498,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
                         .getValue());
     }
 
+    @Test
     public void testNestedContainerPropertyWithNullBean() {
         BeanContainer<String, NestedMethodPropertyTest.Person> container = new BeanContainer<String, NestedMethodPropertyTest.Person>(
                 NestedMethodPropertyTest.Person.class);

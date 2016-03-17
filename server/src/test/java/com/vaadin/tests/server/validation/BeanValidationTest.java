@@ -85,6 +85,7 @@ public class BeanValidationTest {
         Assert.assertEquals(2, causes.length);
     }
 
+    @Test
     public void testBeanValidationNotAddedTwice() {
         // See ticket #11045
         BeanFieldGroup<BeanToValidate> fieldGroup = new BeanFieldGroup<BeanToValidate>(
@@ -100,8 +101,9 @@ public class BeanValidationTest {
         try {
             nameField.validate();
         } catch (InvalidValueException e) {
-            // NOTE: causes are empty if only one validation fails
-            Assert.assertEquals(0, e.getCauses().length);
+            // The 1 cause is from BeanValidator, where it tells what failed
+            // 1 validation exception never gets wrapped.
+            Assert.assertEquals(1, e.getCauses().length);
         }
 
         // Create new, identical bean to cause duplicate validator unless #11045
@@ -115,9 +117,9 @@ public class BeanValidationTest {
         try {
             nameField.validate();
         } catch (InvalidValueException e) {
-            // NOTE: if more than one validation fails, we get the number of
-            // failed validations
-            Assert.assertEquals(0, e.getCauses().length);
+            // The 1 cause is from BeanValidator, where it tells what failed
+            // 1 validation exception never gets wrapped.
+            Assert.assertEquals(1, e.getCauses().length);
         }
 
     }

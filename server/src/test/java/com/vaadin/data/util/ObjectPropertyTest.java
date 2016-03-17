@@ -1,10 +1,9 @@
 package com.vaadin.data.util;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
-public class ObjectPropertyTest extends TestCase {
+public class ObjectPropertyTest {
 
     public static class TestSuperClass {
         private String name;
@@ -32,6 +31,7 @@ public class ObjectPropertyTest extends TestCase {
     private TestSuperClass super1 = new TestSuperClass("super1");
     private TestSubClass sub1 = new TestSubClass("sub1");
 
+    @Test
     public void testSimple() {
         ObjectProperty<TestSuperClass> prop1 = new ObjectProperty<TestSuperClass>(
                 super1, TestSuperClass.class);
@@ -46,6 +46,7 @@ public class ObjectPropertyTest extends TestCase {
         Assert.assertEquals("Subclass: sub1", prop2.getValue().getName());
     }
 
+    @Test
     public void testSetValueObjectSuper() {
         ObjectProperty<TestSuperClass> prop = new ObjectProperty<TestSuperClass>(
                 super1, TestSuperClass.class);
@@ -55,6 +56,7 @@ public class ObjectPropertyTest extends TestCase {
         Assert.assertEquals("super2", prop.getValue().getName());
     }
 
+    @Test
     public void testSetValueObjectSub() {
         ObjectProperty<TestSubClass> prop = new ObjectProperty<TestSubClass>(
                 sub1, TestSubClass.class);
@@ -64,6 +66,7 @@ public class ObjectPropertyTest extends TestCase {
         Assert.assertEquals("Subclass: sub2", prop.getValue().getName());
     }
 
+    @Test
     public void testSetValueStringSuper() {
         ObjectProperty<TestSuperClass> prop = new ObjectProperty<TestSuperClass>(
                 super1, TestSuperClass.class);
@@ -73,6 +76,7 @@ public class ObjectPropertyTest extends TestCase {
         Assert.assertEquals("super2", prop.getValue().getName());
     }
 
+    @Test
     public void testSetValueStringSub() {
         ObjectProperty<TestSubClass> prop = new ObjectProperty<TestSubClass>(
                 sub1, TestSubClass.class);
@@ -82,6 +86,7 @@ public class ObjectPropertyTest extends TestCase {
         Assert.assertEquals("Subclass: sub2", prop.getValue().getName());
     }
 
+    @Test
     public void testMixedGenerics() {
         ObjectProperty<TestSuperClass> prop = new ObjectProperty<TestSuperClass>(
                 sub1);

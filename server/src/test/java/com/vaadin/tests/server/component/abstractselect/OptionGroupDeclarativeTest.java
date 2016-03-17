@@ -22,7 +22,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.OptionGroup;
 
-public class OptionGroupDeclarativeTests extends
+public class OptionGroupDeclarativeTest extends
         DeclarativeTestBase<OptionGroup> {
 
     private OptionGroup og;

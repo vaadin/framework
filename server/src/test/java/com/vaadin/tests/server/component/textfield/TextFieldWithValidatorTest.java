@@ -1,6 +1,9 @@
 package com.vaadin.tests.server.component.textfield;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -10,14 +13,13 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.TextField;
 
-public class TextFieldWithValidatorTest extends TestCase {
+public class TextFieldWithValidatorTest {
 
     private TextField field;
     private ObjectProperty<String> property;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
 
         field = new TextField();
         field.setInvalidAllowed(false);
@@ -25,6 +27,7 @@ public class TextFieldWithValidatorTest extends TestCase {
         field.setPropertyDataSource(property);
     }
 
+    @Test
     public void testMultipleValidators() {
         field.addValidator(new StringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false));
@@ -49,6 +52,7 @@ public class TextFieldWithValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testRemoveValidator() {
         Validator validator1 = new StringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false);
@@ -72,6 +76,7 @@ public class TextFieldWithValidatorTest extends TestCase {
         field.setValue("abcd");
     }
 
+    @Test
     public void testRemoveAllValidators() {
         Validator validator1 = new StringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false);
@@ -88,6 +93,7 @@ public class TextFieldWithValidatorTest extends TestCase {
         field.setValue("abcd");
     }
 
+    @Test
     public void testEmailValidator() {
         field.addValidator(new EmailValidator("Invalid e-mail address"));
 
@@ -144,6 +150,7 @@ public class TextFieldWithValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testRegexpValidator() {
         field.addValidator(new RegexpValidator("pattern", true,
                 "Validation failed"));

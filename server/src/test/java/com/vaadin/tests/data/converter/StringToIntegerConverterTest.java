@@ -1,22 +1,28 @@
 package com.vaadin.tests.data.converter;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 
-public class StringToIntegerConverterTest extends TestCase {
+public class StringToIntegerConverterTest {
 
     StringToIntegerConverter converter = new StringToIntegerConverter();
 
+    @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Integer.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel(null, Integer.class, null));
     }
 
+    @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Integer.class, null));
+        Assert.assertEquals(null,
+                converter.convertToModel("", Integer.class, null));
     }
 
+    @Test
     public void testValueOutOfRange() {
         Double[] values = new Double[] { Integer.MAX_VALUE * 2.0,
                 Integer.MIN_VALUE * 2.0, Long.MAX_VALUE * 2.0,
@@ -31,11 +37,12 @@ public class StringToIntegerConverterTest extends TestCase {
             } catch (ConversionException expected) {
             }
         }
-        assertFalse("Accepted value outside range of int", accepted);
+        Assert.assertFalse("Accepted value outside range of int", accepted);
     }
 
+    @Test
     public void testValueConversion() {
-        assertEquals(Integer.valueOf(10),
+        Assert.assertEquals(Integer.valueOf(10),
                 converter.convertToModel("10", Integer.class, null));
     }
 }

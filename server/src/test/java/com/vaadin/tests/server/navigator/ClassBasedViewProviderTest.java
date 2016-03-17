@@ -16,14 +16,19 @@
 
 package com.vaadin.tests.server.navigator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 import com.vaadin.navigator.Navigator.ClassBasedViewProvider;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Label;
 
-public class ClassBasedViewProviderTest extends TestCase {
+public class ClassBasedViewProviderTest {
 
     public static class TestView extends Label implements View {
         public String parameters = null;
@@ -39,26 +44,24 @@ public class ClassBasedViewProviderTest extends TestCase {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateProviderWithNullName() throws Exception {
-        try {
-            new ClassBasedViewProvider(null, TestView.class);
-            fail("Should not be able to create view provider with null name");
-        } catch (IllegalArgumentException e) {
-        }
+        new ClassBasedViewProvider(null, TestView.class);
+        fail("Should not be able to create view provider with null name");
     }
 
+    @Test
     public void testCreateProviderWithEmptyStringName() throws Exception {
         new ClassBasedViewProvider("", TestView.class);
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateProviderNullViewClass() throws Exception {
-        try {
-            new ClassBasedViewProvider("test", null);
-            fail("Should not be able to create view provider with null view class");
-        } catch (IllegalArgumentException e) {
-        }
+        new ClassBasedViewProvider("test", null);
+        fail("Should not be able to create view provider with null view class");
     }
 
+    @Test
     public void testViewNameGetter() throws Exception {
         ClassBasedViewProvider provider1 = new ClassBasedViewProvider("",
                 TestView.class);
@@ -70,6 +73,7 @@ public class ClassBasedViewProviderTest extends TestCase {
                 provider2.getViewName());
     }
 
+    @Test
     public void testViewClassGetter() throws Exception {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);
@@ -77,6 +81,7 @@ public class ClassBasedViewProviderTest extends TestCase {
                 provider.getViewClass());
     }
 
+    @Test
     public void testGetViewNameForNullString() throws Exception {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);
@@ -84,6 +89,7 @@ public class ClassBasedViewProviderTest extends TestCase {
                 provider.getViewName((String) null));
     }
 
+    @Test
     public void testGetViewNameForEmptyString() throws Exception {
         ClassBasedViewProvider provider1 = new ClassBasedViewProvider("",
                 TestView.class);
@@ -98,6 +104,7 @@ public class ClassBasedViewProviderTest extends TestCase {
                 provider2.getViewName(""));
     }
 
+    @Test
     public void testGetViewNameWithParameters() throws Exception {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);
@@ -111,6 +118,7 @@ public class ClassBasedViewProviderTest extends TestCase {
                 "test", provider.getViewName("test/params/are/here"));
     }
 
+    @Test
     public void testGetView() throws Exception {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);
@@ -120,6 +128,7 @@ public class ClassBasedViewProviderTest extends TestCase {
         assertEquals("Incorrect view type", TestView.class, view.getClass());
     }
 
+    @Test
     public void testGetViewIncorrectViewName() throws Exception {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);

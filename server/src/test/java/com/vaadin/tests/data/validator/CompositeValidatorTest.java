@@ -1,6 +1,12 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.CompositeValidator;
@@ -8,7 +14,7 @@ import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.RegexpValidator;
 
-public class CompositeValidatorTest extends TestCase {
+public class CompositeValidatorTest {
 
     CompositeValidator and = new CompositeValidator(CombinationMode.AND,
             "One validator not valid");
@@ -18,10 +24,8 @@ public class CompositeValidatorTest extends TestCase {
     RegexpValidator regex = new RegexpValidator("@mail.com", false,
             "Partial match validator error");
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() {
         and.addValidator(email);
         and.addValidator(regex);
 
@@ -29,6 +33,7 @@ public class CompositeValidatorTest extends TestCase {
         or.addValidator(regex);
     }
 
+    @Test
     public void testCorrectValue() {
         String testString = "user@mail.com";
         assertTrue(email.isValid(testString));
@@ -49,6 +54,7 @@ public class CompositeValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testCorrectRegex() {
 
         String testString = "@mail.com";
@@ -71,6 +77,7 @@ public class CompositeValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testCorrectEmail() {
 
         String testString = "user@gmail.com";
@@ -91,6 +98,7 @@ public class CompositeValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testBothFaulty() {
 
         String testString = "gmail.com";

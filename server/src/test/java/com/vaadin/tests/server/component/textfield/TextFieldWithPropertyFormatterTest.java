@@ -1,8 +1,12 @@
 package com.vaadin.tests.server.component.textfield;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collections;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -11,7 +15,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
 import com.vaadin.ui.TextField;
 
-public class TextFieldWithPropertyFormatterTest extends TestCase {
+public class TextFieldWithPropertyFormatterTest {
 
     private static final String INPUT_VALUE = "foo";
     private static final String PARSED_VALUE = "BAR";
@@ -24,9 +28,8 @@ public class TextFieldWithPropertyFormatterTest extends TestCase {
     private int listenerCalled;
     private int repainted;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
 
         field = new TextField() {
             @Override
@@ -70,6 +73,7 @@ public class TextFieldWithPropertyFormatterTest extends TestCase {
         repainted = 0;
     }
 
+    @Test
     public void testWithServerApi() {
         checkInitialState();
 
@@ -93,6 +97,7 @@ public class TextFieldWithPropertyFormatterTest extends TestCase {
         assertEquals(FORMATTED_VALUE, field.getValue());
     }
 
+    @Test
     public void testWithSimulatedClientSideChange() {
         checkInitialState();
 

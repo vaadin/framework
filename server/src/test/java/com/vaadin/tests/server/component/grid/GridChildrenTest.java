@@ -26,7 +26,7 @@ import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Label;
 
-public class GridChildren {
+public class GridChildrenTest {
 
     @Test
     public void componentsInMergedHeader() {

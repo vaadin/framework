@@ -27,7 +27,7 @@ import com.vaadin.ui.Table;
  * 
  * @author Vaadin Ltd
  */
-public class TableSelectable {
+public class TableSelectableTest {
 
     @Test
     public void setSelectable_explicitSelectable_tableIsSelectable() {

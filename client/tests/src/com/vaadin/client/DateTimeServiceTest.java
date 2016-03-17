@@ -5,9 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class DateTimeServiceTest extends TestCase {
+public class DateTimeServiceTest {
 
     final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
 
@@ -66,6 +67,7 @@ public class DateTimeServiceTest extends TestCase {
      * calculates the ISO week number like we do.
      * 
      */
+    @Test
     public void testISOWeekNumbers() {
         Calendar c = Calendar.getInstance();
         c.set(1990, 1, 1);
@@ -75,7 +77,7 @@ public class DateTimeServiceTest extends TestCase {
             Date d = new Date(start + i * MILLISECONDS_PER_DAY);
             int expected = getCalendarISOWeekNr(d);
             int calculated = DateTimeService.getISOWeekNumber(d);
-            assertEquals(d + " should be week " + expected, expected,
+            Assert.assertEquals(d + " should be week " + expected, expected,
                     calculated);
 
         }
@@ -86,15 +88,16 @@ public class DateTimeServiceTest extends TestCase {
      * {@link Calendar}).
      * 
      */
+    @Test
     public void testSampleISOWeekNumbers() {
         for (Date d : isoWeekNumbers.keySet()) {
             // System.out.println("Sample: " + d);
             int expected = isoWeekNumbers.get(d);
             int calculated = DateTimeService.getISOWeekNumber(d);
-            assertEquals(d + " should be week " + expected
+            Assert.assertEquals(d + " should be week " + expected
                     + " (Java Calendar is wrong?)", expected,
                     getCalendarISOWeekNr(d));
-            assertEquals(d + " should be week " + expected, expected,
+            Assert.assertEquals(d + " should be week " + expected, expected,
                     calculated);
 
         }

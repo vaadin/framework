@@ -26,7 +26,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignException;
 
-public class InvalidTagNames {
+public class InvalidTagNamesTest {
 
     @Test(expected = DesignException.class)
     public void tagWithoutDash() {

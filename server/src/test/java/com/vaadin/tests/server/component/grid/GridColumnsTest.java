@@ -50,7 +50,7 @@ import com.vaadin.ui.Grid.ColumnResizeEvent;
 import com.vaadin.ui.Grid.ColumnResizeListener;
 import com.vaadin.ui.TextField;
 
-public class GridColumns {
+public class GridColumnsTest {
 
     private Grid grid;
 

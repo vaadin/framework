@@ -4,12 +4,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
 
-public class FinalMethodTest extends TestCase {
+public class FinalMethodTest {
 
     // public void testThatContainersHaveNoFinalMethods() {
     // HashSet<Class<?>> tested = new HashSet<Class<?>>();
@@ -20,6 +20,7 @@ public class FinalMethodTest extends TestCase {
     // }
     // }
 
+    @Test
     public void testThatComponentsHaveNoFinalMethods() {
         HashSet<Class<?>> tested = new HashSet<Class<?>>();
         for (Class<? extends Component> c : VaadinClasses.getComponents()) {

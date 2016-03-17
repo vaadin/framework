@@ -30,7 +30,7 @@ import com.vaadin.server.VaadinPortlet.VaadinGateInRequest;
 import com.vaadin.server.VaadinPortlet.VaadinLiferayRequest;
 import com.vaadin.server.VaadinPortlet.VaadinWebSpherePortalRequest;
 
-public class VaadinPortletTests {
+public class VaadinPortletTest {
 
     private VaadinPortlet sut;
     private PortletRequest portletRequest;

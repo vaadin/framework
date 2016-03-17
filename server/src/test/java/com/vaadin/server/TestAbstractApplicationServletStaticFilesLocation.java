@@ -9,22 +9,23 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
+public class TestAbstractApplicationServletStaticFilesLocation {
 
     VaadinServlet servlet;
 
     // private Method getStaticFilesLocationMethod;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         servlet = new VaadinServlet();
         servlet.init(new MockServletConfig());
     }
 
+    @Test
     public void testWidgetSetLocation() throws Exception {
         String location;
 
@@ -33,30 +34,30 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // should return . (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "");
-        assertEquals(".", location);
+        Assert.assertEquals(".", location);
 
         // http://dummy.host:8080/contextpath/servlet/
         // should return ./.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "/");
-        assertEquals("./..", location);
+        Assert.assertEquals("./..", location);
 
         // http://dummy.host:8080/servlet
         // should return "."
         location = testLocation("http://dummy.host:8080", "", "/servlet", "");
-        assertEquals(".", location);
+        Assert.assertEquals(".", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath",
                 "/servlet", "/extra/stuff");
-        assertEquals("./../..", location);
+        Assert.assertEquals("./../..", location);
 
         // http://dummy.host/context/path/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /context/path)
         location = testLocation("http://dummy.host", "/context/path",
                 "/servlet", "/extra/stuff");
-        assertEquals("./../..", location);
+        Assert.assertEquals("./../..", location);
 
         /* Include requests */
         // Include request support dropped with support for portlet1

@@ -1,12 +1,15 @@
 package com.vaadin.client;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.shared.VBrowserDetails;
 
-public class VBrowserDetailsUserAgentParserTest extends TestCase {
+public class VBrowserDetailsUserAgentParserTest {
 
     private static final String FIREFOX30_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
     private static final String FIREFOX30_LINUX = "Mozilla/5.0 (X11; U; Linux x86_64; es-ES; rv:1.9.0.12) Gecko/2009070811 Ubuntu/9.04 (jaunty) Firefox/3.0.12";
@@ -58,6 +61,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
 
     private static final String EDGE_WINDOWS_10 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240";
 
+    @Test
     public void testSafari3() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI3_WINDOWS);
         assertWebKit(bd);
@@ -68,6 +72,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testSafari4() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI4_MAC);
         assertWebKit(bd);
@@ -78,6 +83,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertMacOSX(bd);
     }
 
+    @Test
     public void testIPhoneIOS6Homescreen() {
         VBrowserDetails bd = new VBrowserDetails(
                 IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR);
@@ -91,6 +97,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertIPhone(bd);
     }
 
+    @Test
     public void testIPhoneIOS5() {
         VBrowserDetails bd = new VBrowserDetails(IPHONE_IOS_5_1);
         assertWebKit(bd);
@@ -102,6 +109,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertIPhone(bd);
     }
 
+    @Test
     public void testIPhoneIOS4() {
         VBrowserDetails bd = new VBrowserDetails(IPHONE_IOS_4_0);
         assertWebKit(bd);
@@ -113,6 +121,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertIPhone(bd);
     }
 
+    @Test
     public void testIPadIOS4() {
         VBrowserDetails bd = new VBrowserDetails(IPAD_IOS_4_3_1);
         assertWebKit(bd);
@@ -124,6 +133,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertIPad(bd);
     }
 
+    @Test
     public void testAndroid21() {
         VBrowserDetails bd = new VBrowserDetails(ANDROID_HTC_2_1);
         assertWebKit(bd);
@@ -135,6 +145,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
 
     }
 
+    @Test
     public void testAndroid22() {
         VBrowserDetails bd = new VBrowserDetails(ANDROID_GOOGLE_NEXUS_2_2);
         assertWebKit(bd);
@@ -145,6 +156,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertAndroid(bd, 2, 2);
     }
 
+    @Test
     public void testAndroid30() {
         VBrowserDetails bd = new VBrowserDetails(ANDROID_MOTOROLA_3_0);
         assertWebKit(bd);
@@ -155,6 +167,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertAndroid(bd, 3, 0);
     }
 
+    @Test
     public void testAndroid40Chrome() {
         VBrowserDetails bd = new VBrowserDetails(
                 ANDROID_GALAXY_NEXUS_4_0_4_CHROME);
@@ -174,6 +187,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertEquals(i, bd.getOperatingSystemMinorVersion());
     }
 
+    @Test
     public void testChrome3() {
         VBrowserDetails bd = new VBrowserDetails(CHROME3_MAC);
         assertWebKit(bd);
@@ -184,6 +198,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertMacOSX(bd);
     }
 
+    @Test
     public void testChrome4() {
         VBrowserDetails bd = new VBrowserDetails(CHROME4_WINDOWS);
         assertWebKit(bd);
@@ -194,6 +209,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testFirefox3() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX30_WINDOWS);
         assertGecko(bd);
@@ -212,6 +228,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertLinux(bd);
     }
 
+    @Test
     public void testFirefox33Android() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX33_ANDROID);
         assertGecko(bd);
@@ -221,6 +238,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertAndroid(bd, -1, -1);
     }
 
+    @Test
     public void testFirefox35() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX35_WINDOWS);
         assertGecko(bd);
@@ -231,6 +249,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testFirefox36() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX36_WINDOWS);
         assertGecko(bd);
@@ -241,6 +260,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testFirefox30b5() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX_30B5_MAC);
         assertGecko(bd);
@@ -251,6 +271,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertMacOSX(bd);
     }
 
+    @Test
     public void testFirefox40b11() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX_40B11_WIN);
         assertGecko(bd);
@@ -261,6 +282,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testFirefox40b7() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX_40B7_WIN);
         assertGecko(bd);
@@ -271,12 +293,14 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testKonquerorLinux() {
         // Just ensure detection does not crash
         VBrowserDetails bd = new VBrowserDetails(KONQUEROR_LINUX);
         assertLinux(bd);
     }
 
+    @Test
     public void testFirefox36b() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX36B_MAC);
         assertGecko(bd);
@@ -287,6 +311,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertMacOSX(bd);
     }
 
+    @Test
     public void testOpera964() {
         VBrowserDetails bd = new VBrowserDetails(OPERA964_WINDOWS);
         assertPresto(bd);
@@ -296,6 +321,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testOpera1010() {
         VBrowserDetails bd = new VBrowserDetails(OPERA1010_WINDOWS);
         assertPresto(bd);
@@ -305,6 +331,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testOpera1050() {
         VBrowserDetails bd = new VBrowserDetails(OPERA1050_WINDOWS);
         assertPresto(bd);
@@ -314,6 +341,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE6() {
         VBrowserDetails bd = new VBrowserDetails(IE6_WINDOWS);
         assertEngineVersion(bd, -1);
@@ -323,6 +351,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE7() {
         VBrowserDetails bd = new VBrowserDetails(IE7_WINDOWS);
         assertEngineVersion(bd, -1);
@@ -332,6 +361,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE8() {
         VBrowserDetails bd = new VBrowserDetails(IE8_WINDOWS);
         assertTrident(bd);
@@ -342,6 +372,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE8CompatibilityMode() {
         VBrowserDetails bd = new VBrowserDetails(IE8_IN_IE7_MODE_WINDOWS);
         bd.setIEMode(7);
@@ -355,6 +386,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE9() {
         VBrowserDetails bd = new VBrowserDetails(IE9_BETA_WINDOWS_7);
         assertTrident(bd);
@@ -365,6 +397,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE9InIE7CompatibilityMode() {
         VBrowserDetails bd = new VBrowserDetails(IE9_IN_IE7_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
@@ -378,6 +411,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE9InIE8CompatibilityMode() {
         VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE8_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
@@ -395,6 +429,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE10() {
         VBrowserDetails bd = new VBrowserDetails(IE10_WINDOWS_8);
         assertTrident(bd);
@@ -405,6 +440,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE11() {
         VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_7);
         assertTrident(bd);
@@ -415,6 +451,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd);
     }
 
+    @Test
     public void testIE11WindowsPhone81Update() {
         VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_PHONE_8_1_UPDATE);
         assertTrident(bd);
@@ -425,6 +462,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
         assertWindows(bd, true);
     }
 
+    @Test
     public void testEdgeWindows10() {
         VBrowserDetails bd = new VBrowserDetails(EDGE_WINDOWS_10);
         assertEdge(bd);
@@ -439,7 +477,7 @@ public class VBrowserDetailsUserAgentParserTest extends TestCase {
 
     private void assertEngineVersion(VBrowserDetails browserDetails,
             float version) {
-        assertEquals(version, browserDetails.getBrowserEngineVersion());
+        assertEquals(version, browserDetails.getBrowserEngineVersion(), 0.01d);
 
     }
 

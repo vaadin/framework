@@ -2,7 +2,8 @@ package com.vaadin.tests.server.componentcontainer;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.ComponentContainer;
@@ -11,8 +12,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.components.colorpicker.ColorPickerPreview;
 
-public class AddRemoveComponentTest extends TestCase {
+public class AddRemoveComponentTest {
 
+    @Test
     public void testRemoveComponentFromWrongContainer()
             throws InstantiationException, IllegalAccessException {
         List<Class<? extends ComponentContainer>> containerClasses = VaadinClasses
@@ -35,8 +37,7 @@ public class AddRemoveComponentTest extends TestCase {
         hl.addComponent(label);
 
         componentContainer.removeComponent(label);
-        assertEquals(
-                "Parent no longer correct for " + componentContainer.getClass(),
-                hl, label.getParent());
+        Assert.assertEquals("Parent no longer correct for "
+                + componentContainer.getClass(), hl, label.getParent());
     }
 }

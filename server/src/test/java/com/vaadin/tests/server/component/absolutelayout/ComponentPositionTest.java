@@ -1,13 +1,16 @@
 package com.vaadin.tests.server.component.absolutelayout;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 
-public class ComponentPositionTest extends TestCase {
+public class ComponentPositionTest {
 
     private static final String CSS = "top:7.0px;right:7.0%;bottom:7.0pc;left:7.0em;z-index:7;";
     private static final String PARTIAL_CSS = "top:7.0px;left:7.0em;";
@@ -18,6 +21,7 @@ public class ComponentPositionTest extends TestCase {
     /**
      * Add component w/o giving positions, assert that everything is unset
      */
+    @Test
     public void testNoPosition() {
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
@@ -42,6 +46,7 @@ public class ComponentPositionTest extends TestCase {
     /**
      * Add component, setting all attributes using CSS, assert getter agree
      */
+    @Test
     public void testFullCss() {
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
@@ -68,6 +73,7 @@ public class ComponentPositionTest extends TestCase {
     /**
      * Add component, setting some attributes using CSS, assert getters agree
      */
+    @Test
     public void testPartialCss() {
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
@@ -93,6 +99,7 @@ public class ComponentPositionTest extends TestCase {
      * Add component setting all attributes using CSS, then reset using partial
      * CSS; assert getters agree and the appropriate attributes are unset.
      */
+    @Test
     public void testPartialCssReset() {
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
@@ -120,6 +127,7 @@ public class ComponentPositionTest extends TestCase {
      * Add component, then set all position attributes with individual setters
      * for value and units; assert getters agree.
      */
+    @Test
     public void testSetPosition() {
         final Float SIZE = Float.valueOf(12);
 
@@ -153,6 +161,7 @@ public class ComponentPositionTest extends TestCase {
      * Add component, then set all position attributes with combined setters for
      * value and units; assert getters agree.
      */
+    @Test
     public void testSetPosition2() {
         final Float SIZE = Float.valueOf(12);
         AbsoluteLayout layout = new AbsoluteLayout();
@@ -180,6 +189,7 @@ public class ComponentPositionTest extends TestCase {
      * Add component, set all attributes using CSS, unset some using method
      * calls, assert getters agree.
      */
+    @Test
     public void testUnsetPosition() {
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();

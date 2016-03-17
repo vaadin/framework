@@ -25,7 +25,7 @@ import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Slider;
 
-public class FieldDefaultValues {
+public class FieldDefaultValuesTest {
 
     @Test
     public void testFieldsHaveDefaultValueAfterClear() throws Exception {

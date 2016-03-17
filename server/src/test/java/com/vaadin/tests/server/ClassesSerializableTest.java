@@ -14,11 +14,10 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-public class ClassesSerializableTest extends TestCase {
+public class ClassesSerializableTest {
 
     /**
      * JARs that will be scanned for classes to test, in addition to classpath
@@ -89,6 +88,7 @@ public class ClassesSerializableTest extends TestCase {
      * 
      * @throws Exception
      */
+    @Test
     public void testClassesSerializable() throws Exception {
         List<String> rawClasspathEntries = getRawClasspathEntries();
 
@@ -149,7 +149,7 @@ public class ClassesSerializableTest extends TestCase {
                     nonSerializableString += ")";
                 }
             }
-            fail("Serializable not implemented by the following classes and interfaces: "
+            Assert.fail("Serializable not implemented by the following classes and interfaces: "
                     + nonSerializableString);
         }
     }

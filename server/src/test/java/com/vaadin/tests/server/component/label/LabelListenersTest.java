@@ -7,6 +7,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.easymock.EasyMock;
+import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -15,11 +16,14 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Label.ValueChangeEvent;
 
 public class LabelListenersTest extends AbstractListenerMethodsTestBase {
+
+    @Test
     public void testValueChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Label.class, ValueChangeEvent.class,
                 ValueChangeListener.class);
     }
 
+    @Test
     public void testValueChangeFiredWhenSettingValue() {
         Label underTest = new Label();
 
@@ -39,6 +43,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
 
     }
 
+    @Test
     public void testValueChangeFiredWhenSettingPropertyDataSource() {
         // setup
         Label underTest = new Label();
@@ -63,6 +68,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
 
     }
 
+    @Test
     public void testValueChangeNotFiredWhenNotSettingValue() {
         Label underTest = new Label();
         // setup the mock listener
@@ -75,6 +81,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
         verify(mockListener);
     }
 
+    @Test
     public void testNoValueChangeFiredWhenSettingPropertyDataSourceToNull() {
         Label underTest = new Label();
         // setup the mock Listener

@@ -1,14 +1,18 @@
 package com.vaadin.tests.server.validation;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.validator.IntegerRangeValidator;
 
-public class RangeValidatorTest extends TestCase {
+public class RangeValidatorTest {
 
     // This test uses IntegerRangeValidator for simplicity.
     // IntegerRangeValidator contains no code so we really are testing
     // RangeValidator
+    @Test
     public void testMinValueNonInclusive() {
         IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
         iv.setMinValueIncluded(false);
@@ -18,6 +22,7 @@ public class RangeValidatorTest extends TestCase {
         assertFalse(iv.isValid(-1));
     }
 
+    @Test
     public void testMinMaxValuesInclusive() {
         IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
         assertTrue(iv.isValid(0));
@@ -27,6 +32,7 @@ public class RangeValidatorTest extends TestCase {
         assertFalse(iv.isValid(-1));
     }
 
+    @Test
     public void testMaxValueNonInclusive() {
         IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
         iv.setMaxValueIncluded(false);
@@ -37,6 +43,7 @@ public class RangeValidatorTest extends TestCase {
         assertFalse(iv.isValid(-1));
     }
 
+    @Test
     public void testMinMaxValuesNonInclusive() {
         IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
         iv.setMinValueIncluded(false);

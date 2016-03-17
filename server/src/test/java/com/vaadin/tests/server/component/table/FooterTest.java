@@ -1,6 +1,12 @@
 package com.vaadin.tests.server.component.table;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -11,11 +17,12 @@ import com.vaadin.ui.Table;
  * Test case for testing the footer API
  * 
  */
-public class FooterTest extends TestCase {
+public class FooterTest {
 
     /**
      * Tests if setting the footer visibility works properly
      */
+    @Test
     public void testFooterVisibility() {
         Table table = new Table("Test table", createContainer());
 
@@ -31,6 +38,7 @@ public class FooterTest extends TestCase {
     /**
      * Tests adding footers to the columns
      */
+    @Test
     public void testAddingFooters() {
         Table table = new Table("Test table", createContainer());
 
@@ -54,6 +62,7 @@ public class FooterTest extends TestCase {
     /**
      * Test removing footers
      */
+    @Test
     public void testRemovingFooters() {
         Table table = new Table("Test table", createContainer());
         table.setColumnFooter("col1", "Footer1");

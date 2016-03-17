@@ -1,10 +1,13 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.vaadin.data.validator.ByteRangeValidator;
 
-public class ByteRangeValidatorTest extends TestCase {
+public class ByteRangeValidatorTest {
 
     private ByteRangeValidator cleanValidator = new ByteRangeValidator(
             "no values", null, null);
@@ -15,6 +18,7 @@ public class ByteRangeValidatorTest extends TestCase {
     private ByteRangeValidator minMaxValidator = new ByteRangeValidator(
             "no values", (byte) 10, (byte) 100);
 
+    @Test
     public void testNullValue() {
         assertTrue("Didn't accept null", cleanValidator.isValid(null));
         assertTrue("Didn't accept null", minValidator.isValid(null));
@@ -22,6 +26,7 @@ public class ByteRangeValidatorTest extends TestCase {
         assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
+    @Test
     public void testMinValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid((byte) -15));
@@ -29,6 +34,7 @@ public class ByteRangeValidatorTest extends TestCase {
         assertFalse("Accepted too small value", minValidator.isValid((byte) 9));
     }
 
+    @Test
     public void testMaxValue() {
         assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid((byte) 112));
@@ -37,6 +43,7 @@ public class ByteRangeValidatorTest extends TestCase {
                 maxValidator.isValid((byte) 120));
     }
 
+    @Test
     public void testMinMaxValue() {
         assertTrue("Didn't accept valid value",
                 minMaxValidator.isValid((byte) 15));

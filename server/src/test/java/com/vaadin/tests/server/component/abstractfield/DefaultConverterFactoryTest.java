@@ -1,9 +1,11 @@
 package com.vaadin.tests.server.component.abstractfield;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.VaadinSession;
@@ -14,7 +16,7 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
-public class DefaultConverterFactoryTest extends TestCase {
+public class DefaultConverterFactoryTest {
 
     public static class FloatBean {
         float f1;
@@ -80,6 +82,7 @@ public class DefaultConverterFactoryTest extends TestCase {
         paulaBean.setRent(rent);
     }
 
+    @Test
     public void testFloatConversion() {
         VaadinSession sess = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(sess);
@@ -95,6 +98,7 @@ public class DefaultConverterFactoryTest extends TestCase {
         assertEquals(24f, tf.getPropertyDataSource().getValue());
     }
 
+    @Test
     public void testLongConversion() {
         VaadinSession sess = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(sess);
@@ -110,6 +114,7 @@ public class DefaultConverterFactoryTest extends TestCase {
         assertEquals(1982739187239L, tf.getPropertyDataSource().getValue());
     }
 
+    @Test
     public void testDefaultNumberConversion() {
         VaadinSession app = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(app);

@@ -1,12 +1,15 @@
 package com.vaadin.tests.server;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.Embedded;
 
-public class MimeTypesTest extends TestCase {
+public class MimeTypesTest {
 
+    @Test
     public void testEmbeddedPDF() {
         Embedded e = new Embedded("A pdf", new ClassResource("file.pddf"));
         assertEquals("Invalid mimetype", "application/octet-stream",

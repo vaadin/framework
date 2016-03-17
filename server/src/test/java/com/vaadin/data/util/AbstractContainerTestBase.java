@@ -1,10 +1,14 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.junit.Assert;
 
@@ -17,7 +21,7 @@ import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 
-public abstract class AbstractContainerTestBase extends TestCase {
+public abstract class AbstractContainerTestBase {
 
     /**
      * Helper class for testing e.g. listeners expecting events to be fired.

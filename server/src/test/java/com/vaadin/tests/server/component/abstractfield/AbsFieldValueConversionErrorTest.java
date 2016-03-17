@@ -1,8 +1,9 @@
 package com.vaadin.tests.server.component.abstractfield;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.MethodProperty;
@@ -14,12 +15,13 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
 
-public class AbsFieldValueConversionErrorTest extends TestCase {
+public class AbsFieldValueConversionErrorTest {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
             34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
                     Country.FINLAND));
 
+    @Test
     public void testValidateConversionErrorParameters() {
         TextField tf = new TextField();
         tf.setConverter(new StringToIntegerConverter());
@@ -37,6 +39,7 @@ public class AbsFieldValueConversionErrorTest extends TestCase {
 
     }
 
+    @Test
     public void testConvertToModelConversionErrorParameters() {
         TextField tf = new TextField();
         tf.setConverter(new StringToIntegerConverter());
@@ -54,6 +57,7 @@ public class AbsFieldValueConversionErrorTest extends TestCase {
 
     }
 
+    @Test
     public void testNullConversionMessages() {
         TextField tf = new TextField();
         tf.setConverter(new StringToIntegerConverter());
@@ -69,6 +73,7 @@ public class AbsFieldValueConversionErrorTest extends TestCase {
 
     }
 
+    @Test
     public void testDefaultConversionErrorMessage() {
         TextField tf = new TextField();
         tf.setConverter(new StringToIntegerConverter());

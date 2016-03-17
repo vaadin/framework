@@ -1,26 +1,31 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.validator.EmailValidator;
 
-public class EmailValidatorTest extends TestCase {
+public class EmailValidatorTest {
 
     private EmailValidator validator = new EmailValidator("Error");
 
+    @Test
     public void testEmailValidatorWithNull() {
-        assertTrue(validator.isValid(null));
+        Assert.assertTrue(validator.isValid(null));
     }
 
+    @Test
     public void testEmailValidatorWithEmptyString() {
-        assertTrue(validator.isValid(""));
+        Assert.assertTrue(validator.isValid(""));
     }
 
+    @Test
     public void testEmailValidatorWithFaultyString() {
-        assertFalse(validator.isValid("not.an.email"));
+        Assert.assertFalse(validator.isValid("not.an.email"));
     }
 
+    @Test
     public void testEmailValidatorWithOkEmail() {
-        assertTrue(validator.isValid("my.name@email.com"));
+        Assert.assertTrue(validator.isValid("my.name@email.com"));
     }
 }

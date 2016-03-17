@@ -1,35 +1,48 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
+
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 
 public class HierarchicalContainerTest extends
         AbstractHierarchicalContainerTestBase {
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(new HierarchicalContainer());
     }
 
+    @Test
     public void testFiltering() {
         testContainerFiltering(new HierarchicalContainer());
     }
 
+    @Test
     public void testSorting() {
         testContainerSorting(new HierarchicalContainer());
     }
 
+    @Test
     public void testOrdered() {
         testContainerOrdered(new HierarchicalContainer());
     }
 
+    @Test
     public void testHierarchicalSorting() {
         testHierarchicalSorting(new HierarchicalContainer());
     }
 
+    @Test
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(new HierarchicalContainer());
     }
 
+    @Test
     public void testRemovingItemsFromFilteredContainer() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);
@@ -50,6 +63,7 @@ public class HierarchicalContainerTest extends
 
     }
 
+    @Test
     public void testParentWhenRemovingFilterFromContainer() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);
@@ -67,6 +81,7 @@ public class HierarchicalContainerTest extends
 
     }
 
+    @Test
     public void testChangeParentInFilteredContainer() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);
@@ -93,6 +108,7 @@ public class HierarchicalContainerTest extends
 
     }
 
+    @Test
     public void testHierarchicalFilteringWithParents() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);
@@ -144,6 +160,7 @@ public class HierarchicalContainerTest extends
 
     }
 
+    @Test
     public void testRemoveLastChild() {
         HierarchicalContainer c = new HierarchicalContainer();
 
@@ -162,6 +179,7 @@ public class HierarchicalContainerTest extends
         assertFalse(c.hasChildren("root"));
     }
 
+    @Test
     public void testRemoveLastChildFromFiltered() {
         HierarchicalContainer c = new HierarchicalContainer();
 
@@ -195,6 +213,7 @@ public class HierarchicalContainerTest extends
         assertFalse(c.hasChildren("root"));
     }
 
+    @Test
     public void testHierarchicalFilteringWithoutParents() {
         HierarchicalContainer container = new HierarchicalContainer();
 

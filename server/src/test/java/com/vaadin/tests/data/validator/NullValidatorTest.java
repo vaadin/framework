@@ -1,15 +1,19 @@
 package com.vaadin.tests.data.validator;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.NullValidator;
 
-public class NullValidatorTest extends TestCase {
+public class NullValidatorTest {
 
     NullValidator notNull = new NullValidator("Null not accepted", false);
     NullValidator onlyNull = new NullValidator("Only null accepted", true);
 
+    @Test
     public void testNullValue() {
         try {
             notNull.validate(null);
@@ -24,6 +28,7 @@ public class NullValidatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testNonNullValue() {
         try {
             onlyNull.validate("Not a null value");

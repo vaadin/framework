@@ -1,6 +1,7 @@
 package com.vaadin.data.util.filter;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -12,12 +13,14 @@ public class AndOrFilterTest extends
     protected Item item1 = new BeanItem<Integer>(1);
     protected Item item2 = new BeanItem<Integer>(2);
 
+    @Test
     public void testNoFilterAnd() {
         Filter filter = new And();
 
         Assert.assertTrue(filter.passesFilter(null, item1));
     }
 
+    @Test
     public void testSingleFilterAnd() {
         Filter filter = new And(new SameItemFilter(item1));
 
@@ -25,6 +28,7 @@ public class AndOrFilterTest extends
         Assert.assertFalse(filter.passesFilter(null, item2));
     }
 
+    @Test
     public void testTwoFilterAnd() {
         Filter filter1 = new And(new SameItemFilter(item1), new SameItemFilter(
                 item1));
@@ -38,6 +42,7 @@ public class AndOrFilterTest extends
         Assert.assertFalse(filter2.passesFilter(null, item2));
     }
 
+    @Test
     public void testThreeFilterAnd() {
         Filter filter1 = new And(new SameItemFilter(item1), new SameItemFilter(
                 item1), new SameItemFilter(item1));
@@ -51,12 +56,14 @@ public class AndOrFilterTest extends
         Assert.assertFalse(filter2.passesFilter(null, item2));
     }
 
+    @Test
     public void testNoFilterOr() {
         Filter filter = new Or();
 
         Assert.assertFalse(filter.passesFilter(null, item1));
     }
 
+    @Test
     public void testSingleFilterOr() {
         Filter filter = new Or(new SameItemFilter(item1));
 
@@ -64,6 +71,7 @@ public class AndOrFilterTest extends
         Assert.assertFalse(filter.passesFilter(null, item2));
     }
 
+    @Test
     public void testTwoFilterOr() {
         Filter filter1 = new Or(new SameItemFilter(item1), new SameItemFilter(
                 item1));
@@ -77,6 +85,7 @@ public class AndOrFilterTest extends
         Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
+    @Test
     public void testThreeFilterOr() {
         Filter filter1 = new Or(new SameItemFilter(item1), new SameItemFilter(
                 item1), new SameItemFilter(item1));
@@ -90,6 +99,7 @@ public class AndOrFilterTest extends
         Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
+    @Test
     public void testAndEqualsHashCode() {
         Filter filter0 = new And();
         Filter filter0b = new And();
@@ -129,6 +139,7 @@ public class AndOrFilterTest extends
         Assert.assertEquals(filter2b.hashCode(), filter2b2.hashCode());
     }
 
+    @Test
     public void testOrEqualsHashCode() {
         Filter filter0 = new Or();
         Filter filter0b = new Or();
@@ -168,6 +179,7 @@ public class AndOrFilterTest extends
         Assert.assertEquals(filter2b.hashCode(), filter2b2.hashCode());
     }
 
+    @Test
     public void testAndAppliesToProperty() {
         Filter filter0 = new And();
         Filter filter1a = new And(new SameItemFilter(item1, "a"));
@@ -199,6 +211,7 @@ public class AndOrFilterTest extends
         Assert.assertFalse(filter3abc.appliesToProperty("d"));
     }
 
+    @Test
     public void testOrAppliesToProperty() {
         Filter filter0 = new Or();
         Filter filter1a = new Or(new SameItemFilter(item1, "a"));

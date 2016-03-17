@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
-public class PerformanceTestIndexedContainerTest extends TestCase {
+public class PerformanceTestIndexedContainerTest {
 
     private static final int REPEATS = 10;
     private final static int ITEMS = 50000;
@@ -21,6 +20,7 @@ public class PerformanceTestIndexedContainerTest extends TestCase {
     private static final long ADD_ITEM_AFTER_LAST_FAIL_THRESHOLD = 5000;
     private static final long ADD_ITEMS_CONSTRUCTOR_FAIL_THRESHOLD = 200;
 
+    @Test
     public void testAddItemPerformance() {
         Collection<Long> times = new ArrayList<Long>();
         for (int j = 0; j < REPEATS; ++j) {
@@ -35,6 +35,7 @@ public class PerformanceTestIndexedContainerTest extends TestCase {
                 ADD_ITEM_FAIL_THRESHOLD);
     }
 
+    @Test
     public void testAddItemAtPerformance() {
         Collection<Long> times = new ArrayList<Long>();
         for (int j = 0; j < REPEATS; ++j) {
@@ -49,6 +50,7 @@ public class PerformanceTestIndexedContainerTest extends TestCase {
                 ADD_ITEM_AT_FAIL_THRESHOLD);
     }
 
+    @Test
     public void testAddItemAfterPerformance() {
         Object initialId = "Item0";
         Collection<Long> times = new ArrayList<Long>();
@@ -65,6 +67,7 @@ public class PerformanceTestIndexedContainerTest extends TestCase {
                 ADD_ITEM_AFTER_FAIL_THRESHOLD);
     }
 
+    @Test
     public void testAddItemAfterLastPerformance() {
         // TODO running with less items because slow otherwise
         Collection<Long> times = new ArrayList<Long>();
@@ -81,6 +84,7 @@ public class PerformanceTestIndexedContainerTest extends TestCase {
                 ADD_ITEM_AFTER_LAST_FAIL_THRESHOLD);
     }
 
+    @Test
     public void testAddItemsConstructorPerformance() {
         Collection<Object> items = new ArrayList<Object>(50000);
         for (int i = 0; i < ITEMS; ++i) {

@@ -15,16 +15,19 @@
  */
 package com.vaadin.tests.util;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.lang.SerializationUtils;
+import org.junit.Test;
 
 import com.vaadin.ui.UniqueSerializable;
 
-public class UniqueSerializableTest extends TestCase implements Serializable {
+public class UniqueSerializableTest implements Serializable {
 
+    @Test
     public void testUniqueness() {
         UniqueSerializable o1 = new UniqueSerializable() {
         };
@@ -34,6 +37,7 @@ public class UniqueSerializableTest extends TestCase implements Serializable {
         assertFalse(o1.equals(o2));
     }
 
+    @Test
     public void testSerialization() {
         UniqueSerializable o1 = new UniqueSerializable() {
         };

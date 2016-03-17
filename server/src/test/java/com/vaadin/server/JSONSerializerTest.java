@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.server.JsonCodec.BeanProperty;
 import com.vaadin.shared.communication.UidlValue;
@@ -40,10 +40,11 @@ import elemental.json.JsonValue;
  * @since 7.0
  * 
  */
-public class JSONSerializerTest extends TestCase {
+public class JSONSerializerTest {
     HashMap<String, AbstractSplitPanelState> stringToStateMap;
     HashMap<AbstractSplitPanelState, String> stateToStringMap;
 
+    @Test
     public void testStringToBeanMapSerialization() throws Exception {
         Type mapType = getClass().getDeclaredField("stringToStateMap")
                 .getGenericType();
@@ -63,6 +64,7 @@ public class JSONSerializerTest extends TestCase {
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
     }
 
+    @Test
     public void testBeanToStringMapSerialization() throws Exception {
         Type mapType = getClass().getDeclaredField("stateToStringMap")
                 .getGenericType();
@@ -80,34 +82,30 @@ public class JSONSerializerTest extends TestCase {
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }
 
+    @Test
     public void testNullLegacyValue() throws JsonException {
         JsonArray inputArray = Json.createArray();
         inputArray.set(0, "n");
         inputArray.set(1, Json.createNull());
         UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
                 UidlValue.class, true, inputArray, null);
-        assertNull(decodedObject.getValue());
+        Assert.assertNull(decodedObject.getValue());
     }
 
+    @Test(expected = JsonException.class)
     public void testNullTypeOtherValue() {
-        try {
-            JsonArray inputArray = Json.createArray();
-            inputArray.set(0, "n");
-            inputArray.set(1, "a");
-            UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
-                    UidlValue.class, true, inputArray, null);
-
-            throw new AssertionFailedError("No JsonException thrown");
-        } catch (JsonException e) {
-            // Should throw exception
-        }
+        JsonArray inputArray = Json.createArray();
+        inputArray.set(0, "n");
+        inputArray.set(1, "a");
+        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
+                UidlValue.class, true, inputArray, null);
     }
 
     private void ensureDecodedCorrectly(Object original, JsonValue encoded,
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);
-        assertTrue("Server decoded", equals(original, serverSideDecoded));
+        Assert.assertTrue("Server decoded", equals(original, serverSideDecoded));
 
     }
 

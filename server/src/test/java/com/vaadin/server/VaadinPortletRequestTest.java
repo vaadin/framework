@@ -13,7 +13,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class VaadinPortletRequestTests {
+public class VaadinPortletRequestTest {
 
     private PortletRequest request;
     private VaadinPortletRequest sut;

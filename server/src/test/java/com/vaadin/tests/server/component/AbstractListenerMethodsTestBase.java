@@ -6,15 +6,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
 
-public abstract class AbstractListenerMethodsTestBase extends TestCase {
+public abstract class AbstractListenerMethodsTestBase {
 
     public static void main(String[] args) {
         findAllListenerMethods();
@@ -163,7 +161,7 @@ public abstract class AbstractListenerMethodsTestBase extends TestCase {
             SecurityException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         Collection<?> registeredListeners = getListeners(c, eventClass);
-        assertEquals("Number of listeners", expectedListeners.length,
+        Assert.assertEquals("Number of listeners", expectedListeners.length,
                 registeredListeners.size());
 
         Assert.assertArrayEquals(expectedListeners,

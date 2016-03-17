@@ -31,7 +31,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SelectionModel;
 
-public class GridSelection {
+public class GridSelectionTest {
 
     private static class MockSelectionChangeListener implements
             SelectionListener {

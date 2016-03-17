@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.tests.util.TestUtil;
 
-public class ContainerSortingTest extends TestCase {
+public class ContainerSortingTest {
 
     private static final String ITEM_DATA_MINUS2_NULL = "Data -2 null";
     private static final String ITEM_DATA_MINUS2 = "Data -2";
@@ -26,11 +26,7 @@ public class ContainerSortingTest extends TestCase {
     private static final String PROPERTY_STRING_NULL = "string-null";
     private static final String PROPERTY_STRING_ID = "string-not-null";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
+    @Test
     public void testEmptyFilteredIndexedContainer() {
         IndexedContainer ic = new IndexedContainer();
 
@@ -42,6 +38,7 @@ public class ContainerSortingTest extends TestCase {
 
     }
 
+    @Test
     public void testFilteredIndexedContainer() {
         IndexedContainer ic = new IndexedContainer();
 
@@ -56,6 +53,7 @@ public class ContainerSortingTest extends TestCase {
                         ITEM_DATA_MINUS2_NULL, });
     }
 
+    @Test
     public void testIndexedContainer() {
         IndexedContainer ic = new IndexedContainer();
 
@@ -83,6 +81,7 @@ public class ContainerSortingTest extends TestCase {
 
     }
 
+    @Test
     public void testHierarchicalContainer() {
         HierarchicalContainer hc = new HierarchicalContainer();
         populateContainer(hc);

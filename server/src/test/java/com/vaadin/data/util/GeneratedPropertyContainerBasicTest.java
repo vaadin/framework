@@ -1,10 +1,16 @@
 package com.vaadin.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
@@ -17,6 +23,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 public class GeneratedPropertyContainerBasicTest extends
         AbstractInMemoryContainerTestBase {
 
+    @Test
     public void testBasicOperations() {
         testBasicContainerOperations(createContainer());
     }
@@ -25,27 +32,33 @@ public class GeneratedPropertyContainerBasicTest extends
         return new GeneratedPropertyContainer(new IndexedContainer());
     }
 
+    @Test
     public void testFiltering() {
         testContainerFiltering(createContainer());
     }
 
+    @Test
     public void testSorting() {
         testContainerSorting(createContainer());
     }
 
+    @Test
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(createContainer());
     }
 
+    @Test
     public void testContainerOrdered() {
         testContainerOrdered(createContainer());
     }
 
+    @Test
     public void testContainerIndexed() {
         testContainerIndexed(createContainer(), sampleData[2], 2, true,
                 "newItemId", true);
     }
 
+    @Test
     public void testItemSetChangeListeners() {
         GeneratedPropertyContainer container = createContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -117,6 +130,7 @@ public class GeneratedPropertyContainerBasicTest extends
 
     }
 
+    @Test
     public void testAddRemoveContainerFilter() {
         GeneratedPropertyContainer container = createContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -142,6 +156,7 @@ public class GeneratedPropertyContainerBasicTest extends
 
     // TODO other tests should check positions after removing filter etc,
     // here concentrating on listeners
+    @Test
     public void testItemSetChangeListenersFiltering() {
         Container.Indexed container = createContainer();
         ItemSetChangeCounter counter = new ItemSetChangeCounter();
@@ -289,6 +304,7 @@ public class GeneratedPropertyContainerBasicTest extends
         counter.assertNone();
     }
 
+    @Test
     public void testItemAdd_idSequence() {
         GeneratedPropertyContainer container = createContainer();
         Object itemId;
@@ -306,6 +322,7 @@ public class GeneratedPropertyContainerBasicTest extends
         assertEquals(Integer.valueOf(4), itemId);
     }
 
+    @Test
     public void testItemAddRemove_idSequence() {
         GeneratedPropertyContainer container = createContainer();
         Object itemId;
@@ -321,6 +338,7 @@ public class GeneratedPropertyContainerBasicTest extends
                 Integer.valueOf(2), itemId);
     }
 
+    @Test
     public void testItemAddedEvent() {
         GeneratedPropertyContainer container = createContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -332,6 +350,7 @@ public class GeneratedPropertyContainerBasicTest extends
         EasyMock.verify(addListener);
     }
 
+    @Test
     public void testItemAddedEvent_AddedItem() {
         GeneratedPropertyContainer container = createContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -343,6 +362,7 @@ public class GeneratedPropertyContainerBasicTest extends
         assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemAddedEvent_IndexOfAddedItem() {
         GeneratedPropertyContainer container = createContainer();
         ItemSetChangeListener addListener = createListenerMockFor(container);
@@ -355,6 +375,7 @@ public class GeneratedPropertyContainerBasicTest extends
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemRemovedEvent() {
         GeneratedPropertyContainer container = createContainer();
         Object itemId = container.addItem();
@@ -368,6 +389,7 @@ public class GeneratedPropertyContainerBasicTest extends
         EasyMock.verify(removeListener);
     }
 
+    @Test
     public void testItemRemovedEvent_RemovedItem() {
         GeneratedPropertyContainer container = createContainer();
         Object itemId = container.addItem();
@@ -380,6 +402,7 @@ public class GeneratedPropertyContainerBasicTest extends
         assertEquals(itemId, capturedEvent.getValue().getFirstItemId());
     }
 
+    @Test
     public void testItemRemovedEvent_indexOfRemovedItem() {
         GeneratedPropertyContainer container = createContainer();
         container.addItem();
@@ -393,6 +416,7 @@ public class GeneratedPropertyContainerBasicTest extends
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
 
+    @Test
     public void testItemRemovedEvent_amountOfRemovedItems() {
         GeneratedPropertyContainer container = createContainer();
         container.addItem();
@@ -429,6 +453,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeIndexOutOfBounds() {
         GeneratedPropertyContainer ic = createContainer();
         try {
@@ -444,6 +469,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeIndexOutOfBounds2() {
         GeneratedPropertyContainer ic = createContainer();
         ic.addItem(new Object());
@@ -460,6 +486,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeZeroRange() {
         GeneratedPropertyContainer ic = createContainer();
         ic.addItem(new Object());
@@ -477,6 +504,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeNegativeRange() {
         GeneratedPropertyContainer ic = createContainer();
         ic.addItem(new Object());
@@ -497,6 +525,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         GeneratedPropertyContainer ic = createContainer();
         ic.addItem(new Object());
@@ -506,6 +535,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // Ticket 8028
+    @Test
     public void testGetItemIdsRangeBaseCase() {
         GeneratedPropertyContainer ic = createContainer();
         String object1 = new String("Obj1");
@@ -534,6 +564,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // test getting non-existing property (#10445)
+    @Test
     public void testNonExistingProperty() {
         Container ic = createContainer();
         String object1 = new String("Obj1");
@@ -542,6 +573,7 @@ public class GeneratedPropertyContainerBasicTest extends
     }
 
     // test getting null property id (#10445)
+    @Test
     public void testNullPropertyId() {
         Container ic = createContainer();
         String object1 = new String("Obj1");

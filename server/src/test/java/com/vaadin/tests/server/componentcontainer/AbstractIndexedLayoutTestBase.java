@@ -1,19 +1,23 @@
 package com.vaadin.tests.server.componentcontainer;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
-public abstract class AbstractIndexedLayoutTestBase extends TestCase {
+public abstract class AbstractIndexedLayoutTestBase {
 
     private Layout layout;
 
     protected abstract Layout createLayout();
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         layout = createLayout();
     }
 
@@ -21,6 +25,7 @@ public abstract class AbstractIndexedLayoutTestBase extends TestCase {
         return layout;
     }
 
+    @Test
     public void testAddRemoveComponent() {
         Label c1 = new Label();
         Label c2 = new Label();
@@ -46,6 +51,7 @@ public abstract class AbstractIndexedLayoutTestBase extends TestCase {
 
     protected abstract int getComponentIndex(Component c);
 
+    @Test
     public void testGetComponentIndex() {
         Label c1 = new Label();
         Label c2 = new Label();
@@ -62,6 +68,7 @@ public abstract class AbstractIndexedLayoutTestBase extends TestCase {
         assertEquals(-1, getComponentIndex(c1));
     }
 
+    @Test
     public void testGetComponent() {
         Label c1 = new Label();
         Label c2 = new Label();

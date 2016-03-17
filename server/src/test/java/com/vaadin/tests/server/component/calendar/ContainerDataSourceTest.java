@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.server.component.calendar;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container.Indexed;
@@ -33,11 +35,11 @@ import com.vaadin.ui.components.calendar.ContainerEventProvider;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
-public class ContainerDataSourceTest extends TestCase {
+public class ContainerDataSourceTest {
 
     private Calendar calendar;
 
-    @Override
+    @Before
     public void setUp() {
         calendar = new Calendar();
     }

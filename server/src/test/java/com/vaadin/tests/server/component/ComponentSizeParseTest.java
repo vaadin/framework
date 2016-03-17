@@ -16,15 +16,14 @@
 
 package com.vaadin.tests.server.component;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.ui.Label;
 
-public class ComponentSizeParseTest extends TestCase {
+public class ComponentSizeParseTest {
 
     private final class LabelWithPublicState extends Label {
         @Override
@@ -33,6 +32,7 @@ public class ComponentSizeParseTest extends TestCase {
         }
     }
 
+    @Test
     public void testAllTheUnit() {
         testUnit("10.0px", 10, Unit.PIXELS);
         testUnit("10.0pt", 10, Unit.POINTS);

@@ -3,13 +3,15 @@ package com.vaadin.tests.server.component.menubar;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public class MenuBarIdsTest extends TestCase implements Command {
+public class MenuBarIdsTest implements Command {
 
     private MenuItem lastSelectedItem;
     private MenuItem menuFile;
@@ -25,7 +27,7 @@ public class MenuBarIdsTest extends TestCase implements Command {
 
     private MenuBar menuBar;
 
-    @Override
+    @Before
     public void setUp() {
         menuBar = new MenuBar();
         menuFile = menuBar.addItem("File", this);
@@ -51,6 +53,7 @@ public class MenuBarIdsTest extends TestCase implements Command {
         menuItems.add(menuFileExit);
     }
 
+    @Test
     public void testMenubarIdUniqueness() {
         // Ids within a menubar must be unique
         assertUniqueIds(menuBar);
@@ -78,7 +81,7 @@ public class MenuBarIdsTest extends TestCase implements Command {
     private static void assertUniqueIds(Set<Object> ids, MenuItem item) {
         int id = item.getId();
         System.out.println("Item " + item.getText() + ", id: " + id);
-        assertFalse(ids.contains(id));
+        Assert.assertFalse(ids.contains(id));
         ids.add(id);
         if (item.getChildren() != null) {
             for (MenuItem subItem : item.getChildren()) {
@@ -89,7 +92,8 @@ public class MenuBarIdsTest extends TestCase implements Command {
 
     @Override
     public void menuSelected(MenuItem selectedItem) {
-        assertNull("lastSelectedItem was not cleared before selecting an item",
+        Assert.assertNull(
+                "lastSelectedItem was not cleared before selecting an item",
                 lastSelectedItem);
 
         lastSelectedItem = selectedItem;

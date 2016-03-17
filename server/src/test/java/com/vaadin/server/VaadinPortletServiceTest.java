@@ -30,7 +30,7 @@ import org.mockito.Mockito;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
-public class VaadinPortletServiceTests {
+public class VaadinPortletServiceTest {
 
     private VaadinPortletService sut;
     private VaadinPortletRequest request;

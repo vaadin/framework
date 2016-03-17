@@ -1,20 +1,24 @@
 package com.vaadin.tests.server.component.table;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
 
-public class MultipleSelectionTest extends TestCase {
+public class MultipleSelectionTest {
 
     /**
      * Tests weather the multiple select mode is set when using Table.set
      */
+    @Test
     @SuppressWarnings("unchecked")
     public void testSetMultipleItems() {
         Table table = new Table("", createTestContainer());
@@ -33,6 +37,7 @@ public class MultipleSelectionTest extends TestCase {
      * Tests setting the multiselect mode of the Table. The multiselect mode
      * affects how mouse selection is made in the table by the user.
      */
+    @Test
     public void testSetMultiSelectMode() {
         Table table = new Table("", createTestContainer());
 
