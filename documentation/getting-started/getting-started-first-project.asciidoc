@@ -21,10 +21,8 @@ Vaadin Plugin. The task will include the following steps:
 
 We also show how you can debug the application in the debug mode in Eclipse.
 
-This walkthrough assumes that you have already installed the Vaadin Plugin for
-Eclipse and set up your development environment, as instructed in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
-up the Development Environment">>.
+This walkthrough assumes that you have already installed the Eclipse IDE, the Vaadin Plugin, and a development server, as instructed in
+<<dummy/../../../framework/installing/installing-eclipse#installing.eclipse, "Installing the Eclipse IDE and Plugin">>.
 
 ifdef::web[]
 [[getting-started.first-project.ivy]]
@@ -32,7 +30,7 @@ ifdef::web[]
 endif::web[]
 
 ifdef::web[]
-_The following describes the creation of an Ivy project. The upcoming version of the Eclipse plug-in creates Maven projects. For that, see <<getting-started.first-project.maven>>._
+_The following describes the creation of an Ivy project. The upcoming version of the Eclipse plug-in creates Maven projects. For that, see <<getting-started.first-project.creation>>._
 endif::web[]
 
 ifdef::web[]
