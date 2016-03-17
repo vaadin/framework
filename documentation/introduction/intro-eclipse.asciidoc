@@ -27,6 +27,6 @@ Downloading the installation package that contains the JARs or defining Vaadin a
 *_Vaadin Designer_* is a commercial Eclipse plug-in that enables visual editing of Vaadin UIs and composites.
 See <<dummy/../../../designer/designer-overview#designer.overview, "Vaadin Designer">> for its complete reference.
 
-Installation of the Eclipse plug-in is covered in <<dummy/../../../framework/getting-started/getting-started-eclipse#getting-started.eclipse,"Vaadin plug-in for Eclipse">>.
-The creation of a new Vaadin project using the plug-in is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.creation,"Creating the Project">>.
+Installation of the Eclipse IDE and the plug-in is covered in <<dummy/../../../framework/installing/installing-eclipse#installing.eclipse,"Installing the Eclipse IDE">>.
+The creation of a new Vaadin project using the plug-in is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.creation,"Creating a Project in the Eclipse IDE">>.
 See <<dummy/../../../framework/themes/themes-eclipse#themes.eclipse,"Creating a Theme in Eclipse">> and <<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse,"Starting It Simple With Eclipse">> for instructions on using the different features of the plug-in.

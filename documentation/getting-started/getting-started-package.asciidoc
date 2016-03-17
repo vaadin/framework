@@ -1,6 +1,6 @@
 ---
 title: Vaadin Installation Package
-order: 9
+order: 900
 layout: page
 ---
 

@@ -1,75 +1,58 @@
 ---
-title: Overview of Vaadin Libraries
-order: 3
+title: Vaadin Libraries
+order: 20
 layout: page
 ---
 
 [[getting-started.libraries]]
-= Overview of Vaadin Libraries
+= Vaadin Libraries
 
 Vaadin comes as a set of library JARs, of which some are optional or alternative
 ones, depending on whether you are developing server-side or client-side
 applications, whether you use add-on components, or use CSS or Sass themes.
 
-[filename]#vaadin-server-7.x.x.jar#:: The main library for developing server-side Vaadin applications, as described in
-<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
-a Server-Side Web Application">>. It requires the [filename]#vaadin-shared# and
-the [filename]#vaadin-themes# libraries. You can use the prebuilt
-[filename]#vaadin-client-compiled# for server-side development, unless you need
-add-on components or custom widgets.
+[filename]#vaadin-server-7.x.x.jar#::
+The main library for developing server-side Vaadin applications, as described in
+<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing a Server-Side Web Application">>.
+It requires the [filename]#vaadin-shared# and the [filename]#vaadin-themes# libraries.
+You can use the pre-built [filename]#vaadin-client-compiled# for server-side development, unless you need add-on components or custom widgets.
 
-[filename]#vaadin-shared-7.x.x.jar#:: A shared library for server-side and client-side development. It is always
-needed.
+[filename]#vaadin-shared-7.x.x.jar#::
+A shared library for server-side and client-side development.
+It is always needed.
 
-[filename]#vaadin-client-7.x.x.jar#:: The client-side Vaadin framework, including the basic GWT API and
-Vaadin-specific widgets and other additions. It is required when using the
-[filename]#vaadin-client-compiler# to compile client-side modules. It is not
-needed if you just use the server-side framework with the precompiled
-Client-Side Engine. You should not deploy it with a web application.
+[filename]#vaadin-client-7.x.x.jar#::
+The client-side Vaadin framework, including the basic GWT API and Vaadin-specific widgets and other additions.
+It is required when using the [filename]#vaadin-client-compiler# to compile client-side modules.
+It is not needed if you just use the server-side framework with the pre-compiled Client-Side Engine.
+You should not deploy it with a web application.
 
-[filename]#vaadin-client-compiler-7.x.x.jar#:: The Vaadin Client Compiler is a Java-to-JavaScript compiler that allows building
-client-side modules, such as the Client-Side Engine (widget set) required for
-server-side applications. The compiler is needed, for example, for compiling
-add-on components to the application widget set, as described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
-Vaadin Add-ons">>.
+[filename]#vaadin-client-compiler-7.x.x.jar#::
+The Vaadin Client Compiler is a Java-to-JavaScript compiler that allows building client-side modules, such as the Client-Side Engine (widget set) required for server-side applications.
+The compiler is needed, for example, for compiling add-on components to the application widget set, as described in <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">>.
 +
-//TODO There's a need for such
-section.
+//TODO There's a need for such section.
 For detailed information regarding the compiler, see
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
-a Client-Side Module">>. Note that you should not deploy this library with a web
-application.
+<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">>.
+Note that you should not deploy this library with a web application.
 
-[filename]#vaadin-client-compiled-7.x.x.jar#:: A precompiled Vaadin Client-Side Engine (widget set) that includes all the basic
-built-in widgets in Vaadin. This library is not needed if you compile the
-application widget set with the Vaadin Client Compiler.
+[filename]#vaadin-client-compiled-7.x.x.jar#::
+A pre-compiled Vaadin Client-Side Engine (widget set) that includes all the basic built-in widgets in Vaadin.
+This library is not needed if you compile the application widget set with the Vaadin Client Compiler.
 
-[filename]#vaadin-themes-7.x.x.jar#:: Vaadin built-in themes both as SCSS source files and precompiled CSS files. The
-library is required both for basic use with CSS themes and for compiling custom
-Sass themes.
+[filename]#vaadin-themes-7.x.x.jar#::
+Vaadin built-in themes both as SCSS source files and precompiled CSS files.
+The library is required both for basic use with CSS themes and for compiling custom Sass themes.
 
-[filename]#vaadin-sass-compiler-1.x.x.jar#:: The Vaadin Sass Compiler compiles Sass themes to CSS, as described in
-<<dummy/../../../framework/themes/themes-sass#themes.sass,"Syntactically Awesome
-Stylesheets (Sass)">>. It requires the [filename]#vaadin-themes-7.x.x.jar#
-library, which contains the Sass sources for the built-in themes. The library
-needs to be included in deployment in development mode to allow on-the-fly
-compilation of themes, but it is not needed in production deployment, when the
-themes are compiled before deployment.
+[filename]#vaadin-sass-compiler-1.x.x.jar#::
+The Vaadin Sass Compiler compiles Sass themes to CSS, as described in <<dummy/../../../framework/themes/themes-sass#themes.sass,"Syntactically Awesome
+Stylesheets (Sass)">>.
+It requires the [filename]#vaadin-themes-7.x.x.jar# library, which contains the Sass sources for the built-in themes.
+The library needs to be included in deployment in development mode to allow on-the-fly compilation of themes, but it is not needed in production deployment, when the themes are compiled before deployment.
 
+Some of the libraries depend on each other as well as on the dependency libraries provided in the [filename]#lib# folder of the installation package, especially the [filename]#lib/vaadin-shared-deps.jar#.
 
+The different ways to install the libraries are described in the subsequent sections.
 
-Some of the libraries depend on each other as well as on the dependency
-libraries provided in the [filename]#lib# folder of the installation package,
-especially the [filename]#lib/vaadin-shared-deps.jar#.
-
-The different ways to install the libraries are described in the subsequent
-sections.
-
-Note that the [filename]#vaadin-client-compiler# and [filename]#vaadin-client#
-JARs should not be deployed with the web application by including them in
-[filename]#WEB-INF/lib#. Some other libraries, such as
-[filename]#vaadin-sass-compiler#, are not needed in production deployment.
-
-
-
+Note that the [filename]#vaadin-client-compiler# and [filename]#vaadin-client# JARs should not be deployed with the web application by including them in [filename]#WEB-INF/lib#.
+Some other libraries, such as [filename]#vaadin-sass-compiler#, are not needed in production deployment.

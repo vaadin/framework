@@ -1,11 +1,11 @@
 ---
-title: Creating and Running a Project with Eclipse
-order: 5
+title: Creating a Project in Eclipse
+order: 100
 layout: page
 ---
 
 [[getting-started.first-project]]
-= Creating and Running a Project with Eclipse
+= Creating and Running a Project in Eclipse
 
 This section gives instructions for creating a new Eclipse project using the
 Vaadin Plugin. The task will include the following steps:
@@ -26,8 +26,8 @@ Eclipse and set up your development environment, as instructed in
 <<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
 up the Development Environment">>.
 
-[[getting-started.first-project.creation]]
 ifdef::web[]
+[[getting-started.first-project.ivy]]
 == Creating the Project
 endif::web[]
 
@@ -222,7 +222,7 @@ For a more detailed treatment of the deployment, see
 <<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using a web.xml Deployment Descriptor">>.
 endif::web[]
 
-[[getting-started.first-project.maven]]
+[[getting-started.first-project.creation]]
 == Creating a Maven Project
 
 ifdef::web[]
@@ -425,3 +425,66 @@ image::img/debuggingMyProject.png[]
 Above, we described how to debug a server-side application.
 Debugging client-side applications and widgets is described in
 <<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.
+
+[[getting-started.eclipse.mavenlibraryupdate]]
+== Updating the Vaadin Libraries in Maven Projects
+
+Updating the Vaadin plugin does not update Vaadin libraries. The libraries are
+project specific, as a different version might be required for different
+projects, so you have to update them separately for each project.
+
+. Open the [filename]#pom.xml# in an editor in Eclipse.
+
+. Edit the [propertyname]#vaadin.version# property to set the Vaadin version.
++
+Updating the libraries can take several minutes. You can see the progress in the
+Eclipse status bar. You can get more details about the progress by clicking the
+indicator.
+
+. If you have compiled the widget set for your project, recompile it by clicking
+the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+
+. Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
+right-clicking the server and selecting [guilabel]#Clean# as well as
+[guilabel]#Clean Tomcat Work Directory#, and restart it.
+
+If you experience problems after updating the libraries, you can try using
+"Maven > Update Project".
+
+[[getting-started.eclipse.libraryupdate]]
+== Updating the Vaadin Libraries in Ivy Projects
+
+Updating the Vaadin plugin does not update Vaadin libraries.
+The libraries are project specific, as a different version might be required for different projects, so you have to update them separately for each project.
+
+. Open the [filename]#ivy.xml# in an editor in Eclipse.
+
+. Edit the entity definition at the beginning of the file to set the Vaadin
+version.
++
+[subs="normal"]
+----
+&lt;!ENTITY vaadin.version "**7.x.x**"&gt;
+----
++
+You can specify either a fixed version number, as shown in the above example, or
+a dynamic revision tag such as [literal]#++latest.release++#.
+You can find more information about the dependency declarations in Ivy documentation.
+
+. Right-click the project and select "Ivy > Resolve".
++
+Updating the libraries can take several minutes. You can see the progress in the
+Eclipse status bar. You can get more details about the progress by clicking the
+indicator.
+
+. If you have compiled the widget set for your project, recompile it by clicking
+the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+
+. Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
+right-clicking the server and selecting Clean as well as Clean Tomcat Work
+Directory, and restart it.
+
+If you experience problems after updating the libraries, you can try clearing
+the Ivy resolution caches by right-clicking the project and selecting "Ivy >
+Clean all caches".
+Then, do the "Ivy > Resolve" and other tasks again.

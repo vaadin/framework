@@ -1,0 +1,54 @@
+---
+title: Installing IntelliJ IDEA
+order: 120
+layout: page
+---
+
+[[intalling.idea]]
+= Installing and Configuring IntelliJ IDEA
+
+With IntelliJ IDEA, you have two choices: use the commercial Ultimate Edition or the free Community Edition.
+In the following, we cover the installation and configuration of them both.
+
+The Ultimate Edition::
+The Ultimate Edition includes built-in support for creating Vaadin applications and running or debugging them in an integrated application server.
+
+Community Edition::
+You can create a Vaadin application most easily with a Maven archetype and deploy it to a server using a Maven run/debug configuration.
+
+You can get the both editions from the website at https://www.jetbrains.com/idea/[jetbrains.com/idea].
+
+[[installing.idea.ultimate]]
+== Installing the Ultimate Edition
+
+Follow the installation instructions given at the website.
+
+[[installing.idea.ultimate.server]]
+=== Configuring an Application Server
+
+To run a Vaadin application during development in the Ultimate Edition of IntelliJ IDEA, you first need to install and configure an application server that is integrated with the IDE.
+The edition includes integration with many commonly used application servers.
+
+In the following, we configure Apache Tomcat:
+
+. Download and extract Tomcat installation package to a local directory, as
+instructed in <<installing-server#installing.server.tomcat, "Installing Apache Tomcat">>.
+
+. Select "Configure > Settings".
+
+. Select "IDE Settings > Application Servers".
+
+. Click [guibutton]#+# and select [guilabel]#Tomcat Server# to add a Tomcat server, or any of the other supported servers.
+A WebSocket-enabled server, such as Glassfish or TomEE, is required for server push.
+
+. In the Tomcat Server dialog, specify the home directory for the server.
++
+image::img/idea-server-1.png[]
++
+Click [guibutton]#OK#.
+
+. Review the application server settings page to check that it is OK.
++
+image::img/idea-server-2.png[]
++
+Then, click [guibutton]#OK#.

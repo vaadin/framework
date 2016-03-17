@@ -1,6 +1,6 @@
 ---
 title: Using Vaadin with Scala
-order: 10
+order: 1000
 layout: page
 ---
 
