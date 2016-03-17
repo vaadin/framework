@@ -8,7 +8,7 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SharedUtilTests {
+public class SharedUtilTest {
 
     @Test
     public void trailingSlashIsTrimmed() {
