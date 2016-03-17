@@ -1,19 +1,17 @@
 ---
-title: Using Vaadin with Maven
-order: 6
+title: Creating a Project with Maven
+order: 200
 layout: page
 ---
 
 [[getting-started.maven]]
-= Using Vaadin with Maven
+= Creating a Project with Maven
 
 ((("Maven", "creating a project", id="term.maven.creating", range="startofrange")))
 
-
-Maven is a commonly used build and dependency management system. The Vaadin core
-library and all Vaadin add-ons are available through Maven. You can use a Maven
-with a front-end from Eclipse or NetBeans, or by using the command-line as
-described in this section.
+In previous sections, we looked into creating a Vaadin Maven project in different IDEs.
+In this section, we look how to create such a project on command-line.
+You can then import such a project to your IDE.
 
 In addition to regular Maven, you can use any Maven-compatible build or
 dependency management system, such as Ivy or Gradle. For Gradle, see the

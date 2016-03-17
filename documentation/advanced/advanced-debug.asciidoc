@@ -143,8 +143,7 @@ properties.
 
 To view the HTML structure and CSS styles in more detail, you can use Firebug in
 Firefox, or the Developer Tools in Chrome, as described in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment.firefox,"Firefox
-and Firebug">>. Firefox also has a built-in feature for inspecting HTML and CSS.
+<<dummy/../../../framework/installing/installing-other#installing.other.firefox,"Firefox and Firebug">>. Firefox also has a built-in feature for inspecting HTML and CSS.
 
 
 [[advanced.debug.hierarchy.analyze]]
@@ -208,7 +207,3 @@ The [guilabel]#Menu# tab in the window opens a sub-menu to select various
 settings. Here you can also launch the GWT SuperDevMode, as described in
 <<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
 Client-Side Code">>.
-
-
-
-

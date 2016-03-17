@@ -1,0 +1,38 @@
+---
+title: Installing Other Tools
+order: 200
+layout: page
+---
+
+= Installing Other Tools
+
+We recommend using a browser with either integrated or external development tools.
+
+At least Mozilla Firefox and Google Chrome have an integrated web inspector, which supports inspecting the DOM structure of a web page, as well as CSS styles and debug JavaScript execution.
+
+[[installing.other.firefox]]
+== Firefox and Firebug
+
+While Firefox has an integrated web inspector, the Firebug inspector has some additional features.
+
+[[installing.other.firefox.firebug]]
+=== Using Firebug with Vaadin
+
+After installing Firefox, use it to open
+link:http://www.getfirebug.com/[http://www.getfirebug.com/]. Follow the
+instructions on the site to install the latest stable version of Firebug
+available for the browser. You may need to allow Firefox to install the plugin
+by clicking the yellow warning bar at the top of the browser window.
+
+After Firebug is installed, it can be enabled at any time from the Firefox
+toolbar. <<figure.firebug.calc>> shows Firebug in action.
+
+[[figure.firebug.calc]]
+.Firebug Debugger for Firefox
+image::img/firebug.png[]
+
+The most important feature in Firebug is inspecting HTML elements. Right-click
+on an element and select [guilabel]#Inspect Element with Firebug# to inspect it.
+In addition to HTML tree, it also shows the CSS rules matching the element,
+which you can use for building themes. You can even edit the CSS styles live, to
+experiment with styling.

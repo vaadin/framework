@@ -1,0 +1,72 @@
+---
+title: Installing Java
+order: 30
+layout: page
+---
+
+[[installing.java]]
+= Installing Java SDK
+
+A Java SDK is required by Vaadin and also by any of the Java IDEs.
+Vaadin is compatible with Java 1.6 and later editions, be we recommend using Java 8 for Vaadin development.
+Java EE 7 is required for proper server push support with WebSockets.
+
+[[installing.java.windows]]
+== Windows
+
+Follow the following steps:
+
+. Download Oracle Java SE 8.0 from
+link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[http://www.oracle.com/technetwork/java/javase/downloads/index.html]
+
+. Install the Java SDK by running the installer.
+The default options are fine.
+
+[[installing.linux]]
+== Linux / UNIX
+
+Most Linux systems either have JDK preinstalled or allow installing it through a
+package management system. Notice however that they have OpenJDK as the default
+Java implementation. While it is known to have worked with Vaadin and possibly
+also with the development toolchain, we do not especially support it.
+
+Regarding OS X, notice that JDK 1.6 or newer is included in OS X 10.6 and newer.
+
+Otherwise:
+
+. Download Oracle Java SE 8.0 from
+link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[http://www.oracle.com/technetwork/java/javase/downloads/]
+
+. Decompress it under a suitable base directory, such as [filename]#/opt#. For
+example, for Java SDK, enter (either as root or with [command]#sudo# in Linux):
+
++
+[subs="normal"]
+----
+[prompt]#+++#+++# [command]#cd# [replaceable]#/opt#
+[prompt]#+++#+++# [command]#sh# [replaceable]##<path>##/jdk-[replaceable]##<version>##.bin
+----
++
+and follow the instructions in the installer.
+
+. Set up the [literal]#++JAVA_HOME++# environment variable to point to the Java
+installation directory. Also, include the [literal]#++$JAVA_HOME/bin++# in the
+[literal]#++PATH++#. How you do that varies by the UNIX variant. For example, in
+Linux and using the Bash shell, you would add lines such as the following to the
+[filename]#.bashrc# or [filename]#.profile# script in your home directory:
+
++
+----
+export JAVA_HOME=/opt/jdk1.8.0_31
+export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+----
++
+You could also make the setting system-wide in a file such as
+[filename]#/etc/bash.bashrc#, [filename]#/etc/profile#, or an equivalent file.
+If you install Apache Ant or Maven, you may also want to set up those in the
+path.
+
++
+Settings done in a [filename]#bashrc# file require that you open a new shell
+window. Settings done in a [filename]#profile# file require that you log in into
+the system. You can, of course, also give the commands in the current shell.

@@ -1,4 +1,4 @@
-IMAGES = myproject-created-annotated netbeans-created-annotated
+IMAGES = installation-steps installation-eclipse installation-netbeans
 
 SRCIMAGES := $(foreach file, $(IMAGES), $(file).svg)
 TRGIMAGES_HI := $(foreach file, $(IMAGES), ../img/$(file)-hi.png)

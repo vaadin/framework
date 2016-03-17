@@ -1,0 +1,135 @@
+---
+title: Installing Eclipse IDE
+order: 100
+layout: page
+---
+
+[[installing.eclipse]]
+= Installing the Eclipse IDE and Plugin
+
+If you are using the Eclipse IDE, using the Vaadin Plugin for Eclipse helps
+greatly. The plugin includes wizards for creating new Vaadin-based projects,
+themes, and client-side widgets and widget sets. Notice that you can also create
+Vaadin projects as Maven projects in Eclipse.
+
+Using Eclipse IDE for Vaadin development requires installing the IDE itself and the Vaadin Plugin for Eclipse.
+You are adviced to also configure a web server in Eclipse.
+You can then use the server for running the Vaadin applications that you create.
+
+.Installation of the Eclipse IDE toolchain
+image::img/installation-eclipse-hi.png[]
+
+Vaadin Designer is a visual design tool for professional developers.
+It allows for easy creation of declarative designs.
+It is also good as a sketching tool, as well as an easy way to learn about Vaadin components and layouts.
+
+Once you have installed the Eclipse IDE and the plug-in, you can create a Vaadin application project as described in <<DUMMY/../../getting-started/getting-started-first-project#getting-started.first-project, "Creating a Project in Eclipse">>.
+
+[[installing.eclipse.ide]]
+== Installing the Eclipse IDE
+
+=== Windows
+
+. Download the Eclipse IDE for Java EE Developers from
+link:http://www.eclipse.org/downloads/[http://www.eclipse.org/downloads/]
+
+. Decompress the Eclipse IDE package to a suitable directory.
+You are free to select any directory and to use any ZIP decompressor, but in this example we decompress the ZIP file by just double-clicking it and selecting "Extract all files" task from Windows compressed folder task.
+In our installation example, we use [filename]#C:\dev# as the target directory.
+
+Eclipse is now installed in [filename]#C:\dev\eclipse#.
+You can start it from there by double clicking [filename]#eclipse.exe#.
+
+=== Linux / OS X / UNIX
+
+We recommend that you install Eclipse manually in Linux and other UNIX variants.
+They may have it available from a package repository, but using such an installation may cause problems with installing plug-ins.
+
+You can install Eclipse as follows:
+
+. Download Eclipse IDE for Java EE Developers from
+link:http://www.eclipse.org/downloads/[http://www.eclipse.org/downloads/]
+
+. Decompress the Eclipse package into a suitable base directory.
+It is important to make sure that there is no old Eclipse installation in the target directory.
+Installing a new version on top of an old one probably renders Eclipse unusable.
+
+. Eclipse should normally be installed as a regular user, which makes installation of plug-ins easier.
+Eclipse also stores some user settings in the installation directory.
++
+To install the package, enter:
++
+[subs="normal"]
+----
+[prompt]#$# [command]#tar# zxf [replaceable]##<path>##/eclipse-jee-[replaceable]##<version>##.tar.gz
+----
++
+This will extract the package to a subdirectory with the name
+[filename]#eclipse#.
+
+. If you wish to enable starting Eclipse from command-line, you need to add the
+Eclipse installation directory to your system or user PATH, or make a symbolic
+link or script to point to the executable.
+
+An alternative to the above procedure would be to use an Eclipse version
+available through the package management system of your operating system. It is,
+however, __not recommended__, because you will need write access to the Eclipse
+installation directory to install Eclipse plugins, and you may face
+incompatibility issues with Eclipse plugins installed by the package management
+of the operating system.
+
+[[installing.eclipse.plugin]]
+== Installing the Vaadin Plugin
+
+You can install the plugin as follows:
+
+. Select "Help > Install New Software...".
+
+. Add the Vaadin plugin update site by clicking [guibutton]#Add...# button.
+
++
+image::img/plugin-install-addsite.png[]
+
++
+Enter a name such as "Vaadin Update Site" and the URL of the update site:
+http://vaadin.com/eclipse. If you want or need to use the latest unstable
+plugin, which is usually more compatible with development and beta releases of
+Vaadin, you can use http://vaadin.com/eclipse/experimental and give it a
+distinctive name such as "Vaadin Experimental Site". Then click [guibutton]#OK#.
+The Vaadin site should now appear in the [guilabel]#Available Software# window.
+
+. Currently, if using the stable plugin, the [guilabel]#Group items by category# should be enabled. If using the experimental plugin, it should be disabled. This may change in future.
+
+. Select all the Vaadin plugins in the tree.
++
+image::img/plugin-install-available.png[]
++
+Then, click [guibutton]#Next#.
+
+. Review the installation details and click [guibutton]#Next#.
+
+. Accept or unaccept the license. Finally, click [guibutton]#Finish#.
+
+. After the plugin is installed, Eclipse will ask to restart itself. Click
+[guibutton]#Restart#.
+
+More installation instructions for the Eclipse plugin can be found at
+http://vaadin.com/eclipse.
+
+[[installing.eclipse.update]]
+== Updating the Plugins
+
+If you have automatic updates enabled in Eclipse (see "Window > Preferences >
+Install/Update > Automatic Updates"), the Vaadin plugin will be updated
+automatically along with other plugins. Otherwise, you can update the Vaadin
+plugin manually as follows:
+
+. Select "Help > Check for Updates".
+Eclipse will contact the update sites of the installed software.
+
+. After the updates are installed, Eclipse will ask to restart itself.
+Click [guibutton]#Restart#.
+
+Notice that updating the Vaadin plugin only updates the plugin and __not__ the
+Vaadin libraries, which are project specific. See below for instructions for
+updating the libraries.

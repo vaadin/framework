@@ -1,0 +1,44 @@
+---
+title: Installing a Web Server
+order: 40
+layout: page
+---
+
+[[installing.server]]
+= Installing a Web Server
+
+You can run Vaadin applications in any Java servlet container that supports at least Servlet API 2.4.
+However, a server supporting Servlet API 3.0 is recommended.
+It is required for using Vaadin CDI, for which also a CDI container is required, a standard feature in Java EE 6 or newer servers.
+It is also required by the Vaadin Spring add-on.
+Server push can benefit from using communication modes, such as WebSocket, enabled by features in some latest servers.
+For Java EE containers, at least Wildfly, Glassfish, and Apache TomEE Web Profile are recommended.
+
+Also, if you use Java 8 for Vaadin development, you need to make sure that the server supports it.
+
+Some Java IDEs have server integration, so we describe installation of the server before the IDEs.
+
+Some IDE bundles also include a development server; for example, NetBeans IDE includes GlassFish and Apache Tomcat.
+
+You can also opt to install a development server from a Maven dependency and let the IDE control it through Maven executions.
+
+[[installing.server.tomcat]]
+== Installing Apache Tomcat
+
+Apache Tomcat is a lightweight Java web server suitable for both development and
+production. There are many ways to install it, but here we simply decompress the
+installation package.
+
+__Apache Tomcat should be installed with user permissions.__
+During development, you will be running Eclipse or some other IDE with user permissions, but deploying web applications to a Tomcat server that is installed system-wide requires administrator or root permissions.
+
+. Download the installation package:
++
+Apache Tomcat 8.0 (Core Binary Distribution) from http://tomcat.apache.org/
+
+. Decompress Apache Tomcat package to a suitable target directory, such as
+[filename]#C:\dev# (Windows) or [filename]#/opt# (Linux or Mac OS X).
+The Apache Tomcat home directory will be [filename]#C:\dev\apache-tomcat-8.0.x# or [filename]#/opt/apache-tomcat-8.0.x#, respectively.
+
+Do not start the server.
+If you use an IDE integration, the IDE will control starting and stopping the server.

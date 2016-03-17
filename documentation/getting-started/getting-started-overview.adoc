@@ -1,0 +1,22 @@
+---
+title: Overview
+order: 1
+layout: page
+---
+
+[[getting-started.overview]]
+= Overview
+
+Once you have installed a development environment, as described in the previous chapter, creating a Vaadin project proceeds in the IDE that you have chosen.
+
+The Vaadin core library and all Vaadin add-ons are available through Maven, a commonly used build and dependency management system.
+
+The recommended way to create a Vaadin application project is to use a Maven archetype.
+The archetypes contain all the needed dependencies, which Maven takes care of.
+The Eclipse IDE plugin currently also supports creating a normal Eclipse web project using the Ivy dependency manager.
+
+In this chapter, we give:
+
+. An overview of the Vaadin libraries
+. List the available Maven archetypes
+. Step-by-step instructions for creating a project in the Eclipse IDE, NetBeans IDE, and IntelliJ IDEA, as well as with command-line.

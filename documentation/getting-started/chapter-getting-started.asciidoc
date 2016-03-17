@@ -1,18 +1,16 @@
 [[getting-started]]
-== Getting Started with Vaadin
+== Creating a Vaadin Application
 
-This chapter gives practical instructions for installing the recommended
-toolchain, the Vaadin libraries and its dependencies, and creating a new Vaadin
-project.
+This chapter gives practical instructions for creating a Vaadin application project and deploying it to a server to run it. We also consider topics such as debugging.
+
+The instructions are given separately for the Eclipse IDE, NetBeans, and IntelliJ IDEA.
 
 
-include::getting-started-overview.asciidoc[leveloffset=+2]
-
-include::getting-started-environment.asciidoc[leveloffset=+2]
+include::getting-started-overview.adoc[leveloffset=+2]
 
 include::getting-started-libraries.asciidoc[leveloffset=+2]
 
-include::getting-started-eclipse.asciidoc[leveloffset=+2]
+include::getting-started-archetypes.asciidoc[leveloffset=+2]
 
 include::getting-started-first-project.asciidoc[leveloffset=+2]
 

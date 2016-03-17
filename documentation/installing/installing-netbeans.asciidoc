@@ -1,0 +1,112 @@
+---
+title: Installing NetBeans IDE
+order: 110
+layout: page
+---
+
+[[installing.netbeans]]
+= Installing the NetBeans IDE and Plugin
+
+Vaadin offers official support for the NetBeans IDE.
+The Vaadin Plug-in for NetBeans supports creating Vaadin projects, updating Vaadin libraries, compiling widget sets, and more.
+It also allows directly downloading Vaadin add-ons from the Vaadin Directory.
+
+.Installation of the NetBeans IDE toolchain
+image::img/installation-netbeans-hi.png[width=60%]
+
+The installation bundle includes a web server, so you do not need that.
+
+Once done with the installation, you can proceed to create a Vaadin project, as described in <<DUMMY/../../../framework/getting-started/getting-started-netbeans#getting-started.netbeans, "Creating a Project with the NetBeans IDE">>.
+
+[[installing.netbeans.ide]]
+== Installing the NetBeans IDE
+
+Download NetBeans IDE from the website at https://netbeans.org/downloads/[netbeans.org].
+We recommend using the _Java EE_ download bundle, which includes support for Java EE, and also both the GlassFish and Tomcat application servers.
+
+. Run the installer
+
+.. In OS X and Linux:
++
+[subs="normal"]
+----
+[prompt]#$# [command]#sh# [replaceable]#netbeans-<version>.sh#
+----
+
+. Select to install either GlassFish or Apache Tomcat, or both.
+GlassFish supports Java EE, which is required by Vaadin CDI and Vaadin Spring add-ons, while standard Tomcat does not support it.
+Click [guibutton]#Next#.
+ifdef::web[]
++
+image::img/installing-netbeans-1.png[width=60%]
+endif::web[]
+
+. If you accept the license, click [guibutton]#Next#.
+
+. Choose installation folder and Java SDK.
+ifdef::web[]
++
+image::img/installing-netbeans-3.png[width=60%]
+endif::web[]
++
+In OS X and Linux, if you ran the installer with root permissions or can write to [filename]#/opt#, the [filename]#/opt# path is standard for such system-wide packages.
++
+Click [guibutton]#Next#.
+
+. Choose the folder for installing the server.
+ifdef::web[]
++
+image::img/installing-netbeans-4.png[width=60%]
+endif::web[]
+
+. Check the settings.
+ifdef::web[]
++
+image::img/installing-netbeans-5.png[width=60%]
+endif::web[]
++
+Click [guibutton]#Finish#.
+It takes a while to install the NetBeans IDE.
+
+. Finally, click [guibutton]#Done# to exit the installer.
+
+You can now start NetBeans by starting the [filename]#bin/netbeans# from under the installation folder.
+
+In Linux and OS X:
+
+[subs="normal"]
+----
+[prompt]#$# [replaceable]#/opt/netbeans-8.1#/bin/netbeans
+----
+
+You can now proceed to install the Vaadin Plug-in for NetBeans IDE.
+
+[[installing.netbeans.plugin]]
+== Installing the Vaadin Plug-in for NetBeans IDE
+
+You can install the plug-in from the NetBeans Plugin Portal Update Center as follows.
+
+. Select "Tools > Plugins" from the NetBeans main menu.
+
+. Select the [guilabel]#Available Plugins# tab.
+.. Type "Vaadin" in the [guilabel]#Search# box and press kbd:Enter[].
+.. Select the [guilabel]#Install# check box for the [guilabel]#Vaadin Plugin for NetBeans#.
+ifdef::web[]
++
+image::img/installing-netbeans-plugin-1.png[width=80%]
+endif::web[]
+
+.. Click [guibutton]#Install#.
+
+. In the plugin installation window, click [guibutton]#Next#.
+. Accept the license if choose to do so.
+Click [guibutton]#Install#.
+
+. The Vaadin Plugin is not signed, so you need to verify the certificate.
+Click [guibutton]#Continue#.
+
+. In the final step, select [guilabel]#Restart IDE now" and click [guibutton]#Finish#.
+
+You can now proceed to create a Vaadin project, as described in <<DUMMY/../../../framework/getting-started/getting-started-netbeans#getting-started.netbeans, "Creating a Project with the NetBeans IDE">>.
+
+The Vaadin Plug-in for NetBeans IDE can also be downloaded from the plug-in page at http://plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans[plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans].
