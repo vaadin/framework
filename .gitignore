@@ -88,6 +88,10 @@ push/target/
 shared/target/
 server/target/
 client/target/
+client-compiler/target/
 
 .sass-cache
 phantomjsdriver.log
+
+*.iml
+.idea

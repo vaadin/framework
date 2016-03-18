@@ -35,7 +35,11 @@ import static com.vaadin.tools.CvalCheckerTest.unreachableLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validEvaluationLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validLicenseProvider;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tools.CvalChecker.CvalServer;
@@ -81,59 +85,111 @@ public class CvalAddonstCheckerUseCasesTest {
         }
     }
 
+    @Before
+    public void setUp() {
+        // Set up a new URLClassLoader for the thread
+        Thread thread = Thread.currentThread();
+        thread.setContextClassLoader(new URLClassLoader(new URL[0], null));
+    }
+
+    /* TODO: Use more descriptive test names */
+    
     @Test
-    public void testUseCases() throws Exception {
+    public void testUseCase1() throws Exception {
         useCase(1, License.NONE, Version.AGPL, Validated.NO, Network.OFF,
                 Compile.YES, Cached.NO, Message.AGPL);
+    }
 
+    @Test
+    public void testUseCase2() throws Exception {
         useCase(2, License.NONE, Version.CVAL, Validated.NO, Network.ON,
                 Compile.NO, Cached.NO, Message.NO_LICENSE);
+    }
 
+    @Test
+    public void testUseCase3() throws Exception {
         useCase(3, License.NONE, Version.CVAL, Validated.NO, Network.OFF,
                 Compile.NO, Cached.NO, Message.NO_LICENSE);
+    }
 
+    @Test
+    public void testUseCase4() throws Exception {
         useCase(4, License.EVAL, Version.CVAL, Validated.NO, Network.ON,
                 Compile.YES, Cached.YES, Message.EVALUATION);
+    }
 
+    @Test
+    public void testUseCase5() throws Exception {
         useCase(5, License.INVALID, Version.CVAL, Validated.NO, Network.OFF,
                 Compile.YES, Cached.NO, Message.NO_VALIDATED);
+    }
 
+    @Test
+    public void testUseCase6() throws Exception {
         useCase(6, License.INVALID, Version.CVAL, Validated.NO, Network.ON,
                 Compile.NO, Cached.NO, Message.INVALID);
+    }
 
+    @Test
+    public void testUseCase7() throws Exception {
         useCase(7, License.REAL, Version.CVAL, Validated.NO, Network.ON,
                 Compile.YES, Cached.YES, Message.VALID);
+    }
 
+    @Test
+    public void testUseCase8() throws Exception {
         useCase(8, License.REAL, Version.CVAL, Validated.NO, Network.OFF,
                 Compile.YES, Cached.NO, Message.NO_VALIDATED);
+    }
 
+    @Test
+    public void testUseCase9() throws Exception {
         useCase(9, License.REAL, Version.CVAL, Validated.YES, Network.OFF,
                 Compile.YES, Cached.YES, Message.VALID);
+    }
 
+    @Test
+    public void testUseCase10() throws Exception {
         useCase(10, License.EVAL_EXPIRED, Version.CVAL, Validated.NO,
                 Network.ON, Compile.NO, Cached.YES, Message.EXPIRED);
+    }
 
+    @Test
+    public void testUseCase11() throws Exception {
         useCase(11, License.EVAL_EXPIRED, Version.CVAL, Validated.YES,
                 Network.OFF, Compile.NO, Cached.YES, Message.EXPIRED);
+    }
 
+    @Test
+    public void testUseCase12() throws Exception {
         useCase(12, License.REAL_EXPIRED, Version.CVAL, Validated.YES,
                 Network.OFF, Compile.NO, Cached.YES, Message.EXPIRED);
+    }
 
+    @Test
+    public void testUseCase13() throws Exception {
         useCase(13, License.REAL_EXPIRED, Version.CVAL, Validated.NO,
                 Network.ON, Compile.NO, Cached.YES, Message.EXPIRED);
+    }
 
+    @Test
+    public void testUseCase14() throws Exception {
         useCase(14, License.INVALID, Version.CVAL, Validated.OLD_KEY,
                 Network.OFF, Compile.YES, Cached.NO, Message.NO_VALIDATED);
     }
 
     @Test
-    public void testMultipleLicenseUseCases() throws Exception {
+    public void testMultipleLicenseUseCase15() throws Exception {
         addLicensedJarToClasspath("test.foo", VAADIN_CVAL);
         System.setProperty(computeLicenseName("test.foo"), VALID_KEY);
-
         useCase(15, License.REAL, Version.CVAL, Validated.YES, Network.OFF,
                 Compile.YES, Cached.YES, Message.NO_VALIDATED);
+    }
 
+    @Test
+    public void testMultipleLicenseUseCase16() throws Exception {
+        addLicensedJarToClasspath("test.foo", VAADIN_CVAL);
+        System.setProperty(computeLicenseName("test.foo"), VALID_KEY);
         useCase(16, License.REAL, Version.CVAL, Validated.YES, Network.ON,
                 Compile.NO, Cached.YES, Message.INVALID);
     }

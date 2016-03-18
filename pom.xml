@@ -16,6 +16,7 @@
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Used version numbers for dependencies -->
 		<commons-io.version>2.4</commons-io.version>
@@ -50,6 +51,7 @@
 		<module>push</module>
 		<module>server</module>
 		<module>client</module>
+		<module>client-compiler</module>
 	</modules>
 
 </project>

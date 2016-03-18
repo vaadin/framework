@@ -304,14 +304,14 @@ public class CvalCheckerTest {
         testManifest.getMainAttributes().putValue(VAADIN_ADDON_VERSION, "2");
 
         // Create a temporary Jar
-        File testJarFile = File.createTempFile("vaadin." + productName, "jar");
+        File testJarFile = File.createTempFile("vaadin." + productName, ".jar");
         testJarFile.deleteOnExit();
         JarOutputStream target = new JarOutputStream(new FileOutputStream(
                 testJarFile), testManifest);
         target.close();
 
         // Add the new jar to our classpath (use reflection)
-        URL url = new URL("file://" + testJarFile.getAbsolutePath());
+        URL url = testJarFile.toURI().toURL();
         final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL",
                 new Class[] { URL.class });
         addURL.setAccessible(true);

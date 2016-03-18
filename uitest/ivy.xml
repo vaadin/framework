@@ -61,7 +61,7 @@
 
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"
-            rev="${vaadin.version}" conf="build-provided-> build">
+            rev="${vaadin.version}" conf="build-provided-> default">
             <exclude type="pom" />
         </dependency>
 

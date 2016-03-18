@@ -5,8 +5,8 @@
 	<classpathentry kind="src" path="shared/src/test/java"/>
 	<classpathentry kind="src" path="client/src/main/java"/>
 	<classpathentry kind="src" path="server/src/main/java"/>
-	<classpathentry kind="src" path="client-compiler/src"/>
-	<classpathentry kind="src" path="client-compiler/tests/src"/>
+	<classpathentry kind="src" path="client-compiler/src/main/java"/>
+	<classpathentry kind="src" path="client-compiler/src/test/java"/>
 	<classpathentry kind="src" path="uitest/src"/>
 	<classpathentry kind="src" path="shared/src/main/java"/>
 	<classpathentry kind="src" path="shared/src/main/java-templates"/>

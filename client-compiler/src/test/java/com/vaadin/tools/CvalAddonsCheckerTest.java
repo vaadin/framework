@@ -33,6 +33,8 @@ import static com.vaadin.tools.CvalCheckerTest.saveCache;
 import static com.vaadin.tools.CvalCheckerTest.unreachableLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validLicenseProvider;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 
 import org.junit.Assert;
@@ -58,6 +60,10 @@ public class CvalAddonsCheckerTest {
 
         deleteCache(productNameCval);
         System.getProperties().remove(licenseName);
+
+        // Set up a new URLClassLoader for the thread
+        Thread thread = Thread.currentThread();
+        thread.setContextClassLoader(new URLClassLoader(new URL[0], null));
     }
 
     @Test
@@ -83,7 +89,7 @@ public class CvalAddonsCheckerTest {
         // We have a license that has never been validated from the server and
         // we are offline
         // -> Show a message on compile time (“Your license for TouchKit 4 has
-        // not been validated.”)
+        // not been validated.")
         System.setProperty(licenseName, VALID_KEY);
         addonChecker.setLicenseProvider(unreachableLicenseProvider);
         captureSystemOut();
@@ -153,7 +159,7 @@ public class CvalAddonsCheckerTest {
         // -> Work as expected
         // -> Show info message “Using TouchKit 4 license
         // 312-312321-321312-3-12-312-312
-        // licensed to <licensee> (1 developer license)”
+        // licensed to <licensee> (1 developer license)"
         System.setProperty(licenseName, VALID_KEY);
         addonChecker.setLicenseProvider(validLicenseProvider);
         captureSystemOut();
