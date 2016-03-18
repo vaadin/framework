@@ -47,6 +47,12 @@
 			<version>${vaadin.gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.vaadin.external.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${vaadin.gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -82,20 +88,31 @@
 						<id>unpack-dependencies</id>
 						<phase>prepare-package</phase>
 						<goals>
-							<goal>unpack-dependencies</goal>
+							<goal>unpack</goal>
 						</goals>
 						<configuration>
 							<artifactItems>
 								<artifactItem>
 									<groupId>com.vaadin.external.gwt</groupId>
 									<artifactId>gwt-elemental</artifactId>
+									<includes>
+										elemental/json/**,
+										elemental/util/Array*,
+										elemental/util/Can*,
+										elemental/util/Map*
+									</includes>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.vaadin.external.gwt</groupId>
 									<artifactId>gwt-user</artifactId>
+									<includes>
+										com/google/gwt/*/shared/**,
+										com/google/gwt/*/*/shared/**,
+										com/google/web/bindery/*/shared/**,
+										com/google/gwt/user/client/rpc/IsSerializable.*
+									</includes>
 								</artifactItem>
 							</artifactItems>
-							<includes>elemental/json/**,elemental/util/Array*,elemental/util/Can*,elemental/util/Map*,com/google/gwt/*/shared/**,com/google/gwt/*/*/shared/**,com/google/web/bindery/*/shared/**,com/google/gwt/user/client/rpc/IsSerializable.*</includes>
 							<outputDirectory>${project.build.directory}/classes</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
