@@ -41,7 +41,8 @@
             <exclude type="pom" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}" conf="build->build">
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.validation"></exclude>
             <exclude type="pom" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"

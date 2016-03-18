@@ -8,43 +8,13 @@
         revision="${vaadin.version}" />
 
     <configurations>
-        <conf name="build" />
-        <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="test" />
     </configurations>
-    <publications>
-        <artifact type="jar" ext="jar" />
-        <artifact type="source" ext="jar" m:classifier="sources" />
-        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
-        <artifact type="pom" ext="pom" />
-    </publications>
-    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
-        <!-- API DEPENDENCIES -->
-
-        <!-- LIBRARY DEPENDENCIES (compile time) -->
-        <!-- Project modules -->
-        <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->default">
-            <exclude type="pom" conf="test" />
-        </dependency>
-        <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build,test->default">
-            <exclude type="pom" conf="test" />
-        </dependency>
-
-        <!-- gwt-user dependencies -->
-        <dependency org="org.w3c.css" name="sac" rev="1.3" />
-
-        <dependency org="junit" name="junit" rev="4.11"
-            conf="test->default" />
-
-        <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build->default,sources" />
+    <dependencies defaultconf="build" defaultconfmapping="ide->default">
 
         <!-- Testing dependencies -->
         <dependency org="org.easymock" name="easymock" rev="3.0"
-            conf="test,ide-> default" />
+            conf="ide-> default" />
 
     </dependencies>
 

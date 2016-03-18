@@ -87,6 +87,7 @@ result
 push/target/
 shared/target/
 server/target/
+client/target/
 
 .sass-cache
 phantomjsdriver.log

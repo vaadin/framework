@@ -25,7 +25,7 @@
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}" conf="build,test" />
+            rev="${vaadin.version}" conf="build,test -> default" />
         <dependency org="com.vaadin" name="vaadin-sass-compiler"
             rev="${vaadin.sass.version}" conf="build,ide->default">
             <!-- remove cssparser override once sass-compiler is updated -->

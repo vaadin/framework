@@ -49,6 +49,7 @@
 		<module>shared</module>
 		<module>push</module>
 		<module>server</module>
+		<module>client</module>
 	</modules>
 
 </project>
