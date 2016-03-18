@@ -86,10 +86,8 @@ You can install the plugin as follows:
 . Select "Help > Install New Software...".
 
 . Add the Vaadin plugin update site by clicking [guibutton]#Add...# button.
-
 +
 image::img/plugin-install-addsite.png[]
-
 +
 Enter a name such as "Vaadin Update Site" and the URL of the update site:
 http://vaadin.com/eclipse. If you want or need to use the latest unstable

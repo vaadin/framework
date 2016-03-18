@@ -29,14 +29,13 @@ model and the "business logic" of the application, typically as beans or POJOs.
 A user interface is built on top of the domain model, in our context with the
 Vaadin Framework. The Vaadin user interface could be bound directly to the data
 model through the Vaadin Data Model, described in
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
-Components to Data">>. Beneath the domain model lies a data store, such as a
-relational database. The dependencies between the layers are restricted so that
-a higher layer may depend on a lower one, but never the other way around.
+<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
+Beneath the domain model lies a data store, such as a relational database.
+The dependencies between the layers are restricted so that a higher layer may depend on a lower one, but never the other way around.
 
 [[figure.advanced.architecture.layering]]
-.Three-Layer Architecture
-image::img/three-layer-architecture-hi.png[]
+.Three-layer architecture
+image::img/three-layer-architecture-hi.png[width=80%]
 
 An __application layer__ (or __service layer__) is often distinguished from the
 domain layer, offering the domain logic as a service, which can be used by the
@@ -65,8 +64,8 @@ implementation better than in MVC and allows easier unit testing of the
 presenter and model.
 
 [[figure.advanced.architecture.mvp]]
-.Model-View-Presenter Pattern
-image::img/mvp-pattern-hi.png[]
+.Model-View-Presenter pattern
+image::img/mvp-pattern-hi.png[width=60%]
 
 <<figure.advanced.architecture.mvp>> illustrates the MVP pattern with a simple
 calculator. The domain model is realized in the [classname]#Calculator# class,
@@ -88,10 +87,10 @@ the following example:
 // Create the model and the Vaadin view implementation
 CalculatorModel    model = new CalculatorModel();
 CalculatorViewImpl view  = new CalculatorViewImpl();
-    
+
 // The presenter binds the model and view together
 new CalculatorPresenter(model, view);
-    
+
 // The view implementation is a Vaadin component
 layout.addComponent(view);
 ----
@@ -111,7 +110,7 @@ for manipulating it.
 /** The model **/
 class CalculatorModel {
     private double value = 0.0;
-    
+
     public void clear() {
         value = 0.0;
     }
@@ -128,11 +127,11 @@ class CalculatorModel {
         if (arg != 0.0)
             value /= arg;
     }
-    
+
     public double getValue() {
         return value;
     }
-    
+
     public void setValue(double value) {
         this.value = value;
     }
@@ -181,7 +180,7 @@ class CalculatorViewImpl extends CustomComponent
         // Create a result label that spans over all
         // the 4 columns in the first row
         layout.addComponent(display, 0, 0, 3, 0);
-    
+
         // The operations for the calculator in the order
         // they appear on the screen (left to right, top
         // to bottom)
@@ -196,7 +195,7 @@ class CalculatorViewImpl extends CustomComponent
 
         setCompositionRoot(layout);
     }
-    
+
     public void setDisplay(double value) {
         display.setValue(Double.toString(value));
     }
@@ -239,13 +238,13 @@ class CalculatorPresenter
 
     private double current = 0.0;
     private char   lastOperationRequested = 'C';
-    
+
     public CalculatorPresenter(CalculatorModel model,
                                CalculatorView  view) {
         this.model = model;
         this.view  = view;
-        
-        view.setDisplay(current);            
+
+        view.setDisplay(current);
         view.addListener(this);
     }
 
@@ -291,8 +290,3 @@ class CalculatorPresenter
 In the above example, we held some state information in the presenter.
 Alternatively, we could have had an intermediate controller between the
 presenter and the model to handle the low-level button logic.
-
-
-
-
-

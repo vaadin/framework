@@ -59,7 +59,7 @@ Creating the project can take a while as Maven loads all the needed
 dependencies.
 
 [[getting-started.netbeans.exploring]]
-== Exploring a Project
+== Exploring the Project
 
 The project wizard has done all the work for you: a UI class skeleton has been written to the [filename]#src# directory.
 The project hierarchy shown in the Project Explorer is shown in <<figure.getting-started.netbeans.exploring>>.
@@ -67,6 +67,14 @@ The project hierarchy shown in the Project Explorer is shown in <<figure.getting
 [[figure.getting-started.netbeans.exploring]]
 .A new Vaadin project in NetBeans
 image::img/netbeans-created-annotated-hi.png[width=80%]
+
+[filename]#mytheme#::
+The theme of the UI.
+See <<DUMMY/../../../framework/themes/themes-overview#themes.overview, "Themes">> for information about themes.
+
+[filename]#MyUI.java#::
+The UI class, which is the main entry-point of your application.
+See <<DUMMY/../../../framework/application/application-overview#application.overview, "Server-Side Applications">> for information about the basic structure of Vaadin applications.
 
 The Vaadin libraries and other dependencies are managed by Maven.
 Notice that the libraries are not stored under the project folder, even though they are listed in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
@@ -78,16 +86,16 @@ Once created, you can run it in a server as follows.
 
 . In [guilabel]#Projects# tab, select the project and click in the [guilabel]#Run Project# button in the tool bar (or press kbd:[F6]).
 
-. In the [guilabel]#Select deployment server#, select a server from the [guilabel]#Server# list.
-It should show either GlassFish or Apache Tomcat, depending on what you chose in NetBeans installation.
+. In the [guilabel]#Select deployment server# window, select a server from the [guilabel]#Server# list.
+It should show either GlassFish or Apache Tomcat or both, depending on what you chose in NetBeans installation.
 +
-image::img/netbeans-server.png[width=60%]
+image::img/netbeans-server.png[width=75%]
 +
 Also, select [guilabel]#Remember Permanently# if you want to use the same server also in future while developing applications.
 +
 Click [guibutton]#OK#.
-.
-It will compile the widget set at this point, which may take a while.
++
+The widget set will be compiled at this point, which may take a while.
 
 If all goes well, NetBeans starts the server in port 8080 and, depending on your
 system configuration, launches the default browser to display the web

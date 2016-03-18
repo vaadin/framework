@@ -154,8 +154,8 @@ currently visible UI and makes a report of possible layout related problems. All
 detected layout problems are displayed in the log and also printed to the
 console.
 
-[[]]
-.Debug Window Showing the Result of Layout Analysis.
+[[figure.advanced.debug.hierarchy.analyze]]
+.Debug window showing the result of layout analysis.
 image::img/debug-window-analyze-layouts.png[]
 
 Clicking on a reported problem highlights the component with the problem in the
@@ -166,7 +166,7 @@ relative size inside a container (layout) that has undefined size in the
 particular direction (height or width). For example, adding a
 [classname]#Button# with 100% width inside a [classname]#VerticalLayout# with
 undefined width. In such a case, the error would look as shown in
-<<dummy/../../../framework//-overview.asciidoc#figure.advanced.debug.hierarchy.analyze,"">>.
+<<figure.advanced.debug.hierarchy.analyze>>.
 
 [classname]#CustomLayout# components can not be analyzed in the same way as
 other layouts. For custom layouts, the button analyzes all contained
