@@ -27,7 +27,7 @@ It has two modules: one for the add-on and another for a demo application.
 
 `vaadin-archetype-touchkit`::
 A mobile development starter project using Vaadin TouchKit.
-See <<dummy/../../../touchkit/touchkit-overview#touchkit.overview,"Vaadin TouchKit">>.
+See <<dummy/../../../touchkit/mobile-overview#mobile.overview,"Vaadin TouchKit">>.
 Notice that this archetype uses the AGPL-licensed version of TouchKit, which requires that your project must also be licensed under the AGPL license.
 
 `vaadin-archetype-liferay-portlet`::
