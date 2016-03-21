@@ -280,7 +280,7 @@ public class DesignFormatterTest {
         String themePath = "icons/icon.png";
         String fontAwesomeUrl = "fonticon://FontAwesome/f0f9";
         String someOtherFontUrl = "fonticon://SomeOther/F0F9";
-        String fileSystemPath = "c:\\app\\resources\\icon.png";
+        String fileSystemPath = "c:/app/resources/icon.png";
 
         assertEquals(httpUrl, formatter.format(new ExternalResource(httpUrl)));
         assertEquals(httpsUrl, formatter.format(new ExternalResource(httpsUrl)));
