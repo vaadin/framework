@@ -47,6 +47,7 @@
 	<description>Vaadin Framework Root Pom</description>
 
 	<modules>
+		<module>bom</module>
 		<module>shared</module>
 		<module>push</module>
 		<module>server</module>

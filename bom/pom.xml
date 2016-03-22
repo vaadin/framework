@@ -3,12 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>vaadin-root</artifactId>
+        <version>7.7.0-SNAPSHOT</version>
     </parent>
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
-    <version>@vaadin.version@</version>
     <packaging>pom</packaging>
     <name>Vaadin Framework (Bill of Materials)</name>
     <description>Vaadin Framework (Bill of Materials)</description>
@@ -61,42 +60,42 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-shared</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-server</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-push</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-widgets</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-client</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-client-compiler</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-client-compiled</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-themes</artifactId>
-                <version>@vaadin.version@</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
