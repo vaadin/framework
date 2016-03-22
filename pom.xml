@@ -58,6 +58,7 @@
 		<module>server</module>
 		<module>client</module>
 		<module>client-compiler</module>
+		<module>client-compiled</module>
 	</modules>
 
 	<build>

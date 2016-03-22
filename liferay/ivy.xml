@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
-            rev="${vaadin.version}" conf="deps -> build" transitive="false"/>
+            rev="${vaadin.version}" conf="deps -> default" transitive="false"/>
         <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="deps -> build" transitive="false"/>
         <dependency org="com.vaadin" name="vaadin-push"
