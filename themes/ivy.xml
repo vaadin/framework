@@ -23,7 +23,7 @@
             rev="${vaadin.sass.version}" conf="compile-theme->default" />
 
         <dependency org="com.vaadin" name="vaadin-buildhelpers"
-                    rev="${vaadin.version}" conf="compile-theme->build">
+                    rev="${vaadin.version}" conf="compile-theme->default">
             <exclude type="pom" conf="test" />
         </dependency>
 

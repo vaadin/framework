@@ -89,6 +89,7 @@ shared/target/
 server/target/
 client/target/
 client-compiler/target/
+buildhelpers/target/
 
 .sass-cache
 phantomjsdriver.log

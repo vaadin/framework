@@ -117,7 +117,7 @@
                 <include name="**/*.gwtar" />
             </fileset>
             <union refid="client-compiled-cache.gwt.includes" />
-            <fileset dir="${common.jarfiles.dir}" />
+            <!-- <fileset dir="${common.jarfiles.dir}" /> -->
         </jar>
     </target>
 

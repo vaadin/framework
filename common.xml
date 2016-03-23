@@ -84,7 +84,7 @@
                     <include name="**/*.properties" />
                 </patternset>
             </fileset>
-            <fileset dir="${common.jarfiles.dir}" />
+<!--            <fileset dir="${common.jarfiles.dir}" /> -->
             <restrict>
                 <union refid="extra.jar.includes" />
                 <name name="*.java" />
@@ -110,7 +110,7 @@
             <isset property="nojavadoc" />
             <then>
                 <jar file="${javadoc.jar}" compress="true">
-                    <fileset dir="${common.jarfiles.dir}" />
+             		<!-- <fileset dir="${common.jarfiles.dir}" /> -->
                 </jar>
             </then>
             <else>
@@ -128,7 +128,7 @@
                 <!-- Create a javadoc jar -->
                 <jar file="${javadoc.jar}" compress="true">
                     <fileset dir="${javadoc.dir}" />
-                    <fileset dir="${common.jarfiles.dir}" />
+                    <!-- <fileset dir="${common.jarfiles.dir}" /> -->
                 </jar>
             </else>
         </antcontrib:if>
@@ -145,7 +145,7 @@
         <union id="jar.files">
             <fileset dir="${classes}" excludes="${classes.exclude}" erroronmissingdir="false" />
             <fileset dir="${src}" excludes="${jar.exclude}" erroronmissingdir="false" />
-            <fileset dir="${common.jarfiles.dir}" />
+            <!-- <fileset dir="${common.jarfiles.dir}" /> -->
             <union refid="extra.jar.includes" />
         </union>
 

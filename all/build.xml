@@ -45,7 +45,7 @@
             <isset property="nojavadoc" />
             <then>
                 <jar file="${javadoc.jar}" compress="true">
-                    <fileset dir="${common.jarfiles.dir}" />
+                    <!-- <fileset dir="${common.jarfiles.dir}" /> -->
                 </jar>
             </then>
             <else>
@@ -80,7 +80,7 @@
                 <!-- Create a javadoc jar -->
                 <jar file="${javadoc.jar}" compress="true">
                     <fileset dir="${javadoc.dir}" />
-                    <fileset dir="${common.jarfiles.dir}" />
+                    <!-- <fileset dir="${common.jarfiles.dir}" /> -->
                 </jar>
             </else>
         </antcontrib:if>
@@ -116,7 +116,7 @@
                 <exclude name="*-javadoc.jar" />
                 <exclude name="*-sources.jar" />
             </fileset>
-            <fileset dir="${common.jarfiles.dir}" />
+            <!-- <fileset dir="${common.jarfiles.dir}" /> -->
             <fileset dir="${result.dir}/..">
                 <include name="README.TXT" />
             </fileset>

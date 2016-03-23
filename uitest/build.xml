@@ -132,7 +132,7 @@
         </delete>
 
         <war destfile="${result.war}" duplicate="fail" index="true">
-            <fileset dir="${common.jarfiles.dir}" />
+            <!-- <fileset dir="${common.jarfiles.dir}" /> -->
             <fileset dir="${result.dir}">
                 <include name="VAADIN/widgetsets/**/*" />
                 <include name="VAADIN/themes/tests-valo*/**" />
