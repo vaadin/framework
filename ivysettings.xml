@@ -50,7 +50,7 @@
         <module organisation="com.vaadin" name="vaadin-client-compiled"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
-            resolver="build-temp" />
+            resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-push"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"

@@ -37,7 +37,7 @@
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-themes"
-            rev="${vaadin.version}" conf="build-provided,test->build">
+            rev="${vaadin.version}" conf="build-provided,test->default">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-sass-compiler"

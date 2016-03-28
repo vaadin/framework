@@ -144,7 +144,7 @@
 
 	<profiles>
 		<profile>
-			<id>release-build</id>
+			<id>release</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
