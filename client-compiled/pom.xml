@@ -73,7 +73,7 @@
 								<!-- TODO: Do we need these? -->
 								<!-- <jvmarg value="-Xss8M" /> -->
 								<!-- <jvmarg value="-XX:MaxPermSize=256M" /> -->
-								<!-- <jvmarg value="-Djava.awt.headless=true" /> -->
+								<jvmarg value="-Djava.awt.headless=true" />
 								<argument>-Dgwt.persistentunitcachedir=${project.build.directory}/compile</argument>
 								<argument>-DvFailIfNotSerializable=true</argument>
 
