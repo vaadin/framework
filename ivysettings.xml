@@ -54,7 +54,7 @@
         <module organisation="com.vaadin" name="vaadin-push"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"
-            resolver="build-temp" />
+            resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-bom"
             resolver="local-maven" />
         <module organisation="com.vaadin" name="vaadin-liferay"

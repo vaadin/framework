@@ -61,6 +61,7 @@
 		<module>client-compiler</module>
 		<module>client-compiled</module>
 		<module>themes</module>
+		<module>widgets</module>
 	</modules>
 
 	<build>
