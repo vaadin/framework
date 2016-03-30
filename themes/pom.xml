@@ -63,6 +63,7 @@
 				<filtering>false</filtering>
 				<excludes>
 					<exclude>**/base.scss</exclude>
+					<exclude>**/valo/shared/_global.scss</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -70,6 +71,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>**/base.scss</include>
+					<include>**/valo/shared/_global.scss</include>
 				</includes>
 			</resource>
 		</resources>

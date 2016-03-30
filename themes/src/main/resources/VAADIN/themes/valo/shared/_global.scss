@@ -26,7 +26,7 @@ $valo-global-included: false !default;
 
     // Version info for the debug window
     .v-vaadin-version:after {
-      content: "@version@";
+      content: "${project.version}";
     }
 
     // Core widget styles come before any other component (and are always included),
