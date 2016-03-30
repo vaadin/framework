@@ -61,18 +61,16 @@ select {
 	background-position: -65px -4px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem span {
-	display: block;
-	width: 100%;
 	height: 18px;
-	border: 1px solid #fff;
-	border-style: solid none;
-	
 }
 
-.v-filterselect-suggestmenu .gwt-MenuItem-selected span {
-	color: #000;
-	background: #dfe8f6;
-	border-color: #a3bae9;
+.v-filterselect-suggestmenu .gwt-MenuItem {
+	border: 1px solid transparent;
+	&.gwt-MenuItem-selected {
+		background-color: #dfe8f6;
+		border: 1px solid #333;
+		color: #000;
+	}
 }
 
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {

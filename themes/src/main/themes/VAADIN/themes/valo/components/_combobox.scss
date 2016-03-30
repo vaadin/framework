@@ -358,26 +358,30 @@
 
   [class$="suggestmenu"] {
     @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
-    @include box-sizing(border-box);
+    @include box-sizing(content-box);
     position: relative;
     z-index: 1;
-
-    &[style*="height"] {
-      @include box-sizing(content-box);
-    }
+    display: block;
   }
 
-   margin-top: ceil($v-unit-size/8) !important;
+  margin-top: ceil($v-unit-size/8) !important;
 
-  table,
-  tbody,
-  tr,
-  td {
+  table, tbody, tr, td {
     display: block;
+    width: 100%;
+    overflow-y: hidden;
+
+    // float & clear needs to be set so that IE 8 & 9 displays the elements as block
+    float: left;
+    clear: both;
   }
 
   .gwt-MenuItem {
     @include valo-selection-item-style;
+    height: $v-selection-item-height;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
   }
 
   .gwt-MenuItem-selected {

@@ -31,9 +31,11 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -658,7 +660,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS.SP: setPosition(" + offsetWidth + ", " + offsetHeight
                     + ")");
 
-            int top;
+            int top = topPosition;
             int left = getPopupLeft();
 
             // reset menu size and retrieve its "natural" size
@@ -675,27 +677,55 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     + "]");
 
             Element menuFirstChild = menu.getElement().getFirstChildElement();
-            final int naturalMenuWidth = WidgetUtil
-                    .getRequiredWidth(menuFirstChild);
+            int naturalMenuWidth;
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                // On IE 8 & 9 visibility is set to hidden and measuring
+                // elements while they are hidden yields incorrect results
+                String before = menu.getElement().getParentElement().getStyle()
+                        .getVisibility();
+                menu.getElement().getParentElement().getStyle()
+                        .setVisibility(Visibility.VISIBLE);
+                naturalMenuWidth = WidgetUtil.getRequiredWidth(menuFirstChild);
+                menu.getElement().getParentElement().getStyle()
+                        .setProperty("visibility", before);
+            } else {
+                naturalMenuWidth = WidgetUtil.getRequiredWidth(menuFirstChild);
+            }
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = WidgetUtil
-                        .measureHorizontalPaddingAndBorder(getElement(), 2);
+                        .measureHorizontalPaddingAndBorder(menu.getElement(), 2)
+                        + WidgetUtil.measureHorizontalPaddingAndBorder(
+                                suggestionPopup.getElement(), 0);
             }
 
-            if (naturalMenuWidth < desiredWidth) {
-                menu.setWidth((desiredWidth - popupOuterPadding) + "px");
-                menuFirstChild.getStyle().setWidth(100, Unit.PCT);
-            }
+            updateMenuWidth(desiredWidth, naturalMenuWidth);
 
             if (BrowserInfo.get().isIE()
                     && BrowserInfo.get().getBrowserMajorVersion() < 11) {
                 // Must take margin,border,padding manually into account for
                 // menu element as we measure the element child and set width to
                 // the element parent
-                double naturalMenuOuterWidth = WidgetUtil
-                        .getRequiredWidthDouble(menuFirstChild)
-                        + getMarginBorderPaddingWidth(menu.getElement());
+
+                double naturalMenuOuterWidth;
+                if (BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                    // On IE 8 & 9 visibility is set to hidden and measuring
+                    // elements while they are hidden yields incorrect results
+                    String before = menu.getElement().getParentElement()
+                            .getStyle().getVisibility();
+                    menu.getElement().getParentElement().getStyle()
+                            .setVisibility(Visibility.VISIBLE);
+                    naturalMenuOuterWidth = WidgetUtil
+                            .getRequiredWidthDouble(menuFirstChild)
+                            + getMarginBorderPaddingWidth(menu.getElement());
+                    menu.getElement().getParentElement().getStyle()
+                            .setProperty("visibility", before);
+                } else {
+                    naturalMenuOuterWidth = WidgetUtil
+                            .getRequiredWidthDouble(menuFirstChild)
+                            + getMarginBorderPaddingWidth(menu.getElement());
+                }
 
                 /*
                  * IE requires us to specify the width for the container
@@ -756,10 +786,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
                 menu.setHeight(menuHeight + "px");
 
-                final int naturalMenuWidthPlusScrollBar = naturalMenuWidth
-                        + WidgetUtil.getNativeScrollbarSize();
-                if (offsetWidth < naturalMenuWidthPlusScrollBar) {
-                    menu.setWidth(naturalMenuWidthPlusScrollBar + "px");
+                if (suggestionPopupWidth == null) {
+                    final int naturalMenuWidthPlusScrollBar = naturalMenuWidth
+                            + WidgetUtil.getNativeScrollbarSize();
+                    if (offsetWidth < naturalMenuWidthPlusScrollBar) {
+                        menu.setWidth(naturalMenuWidthPlusScrollBar + "px");
+                    }
                 }
             }
 
@@ -769,11 +801,114 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 if (left < 0) {
                     left = 0;
                     menu.setWidth(Window.getClientWidth() + "px");
+
+                }
+                if (BrowserInfo.get().isIE()
+                        && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                    setTdWidth(menu.getElement(), Window.getClientWidth() - 8);
                 }
             }
 
             setPopupPosition(left, top);
             menu.scrollSelectionIntoView();
+        }
+
+        /**
+         * Adds in-line CSS rules to the DOM according to the
+         * suggestionPopupWidth field
+         * 
+         * @param desiredWidth
+         * @param naturalMenuWidth
+         */
+        private void updateMenuWidth(final int desiredWidth,
+                final int naturalMenuWidth) {
+            /**
+             * Three different width modes for the suggestion pop-up:
+             * 
+             * 1. Legacy "null"-mode: width is determined by the longest item
+             * caption for each page while still maintaining minimum width of
+             * (desiredWidth - popupOuterPadding)
+             * 
+             * 2. relative to the component itself
+             * 
+             * 3. fixed width
+             */
+            String width = "auto";
+            if (suggestionPopupWidth == null) {
+                if (naturalMenuWidth < desiredWidth) {
+                    width = (desiredWidth - popupOuterPadding) + "px";
+                }
+            } else if (isrelativeUnits(suggestionPopupWidth)) {
+                float mainComponentWidth = desiredWidth - popupOuterPadding;
+                // convert percentage value to fraction
+                int widthInPx = Math.round(mainComponentWidth
+                        * asFraction(suggestionPopupWidth));
+                width = widthInPx + "px";
+            } else {
+                // use as fixed width CSS definition
+                width = WidgetUtil.escapeAttribute(suggestionPopupWidth);
+            }
+            menu.setWidth(width);
+
+            // IE8 or 9?
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                // using legacy mode?
+                if (suggestionPopupWidth == null) {
+                    // set the TD widths manually as these browsers do not
+                    // respect display: block; width:100% rules
+                    setTdWidth(menu.getElement(), naturalMenuWidth);
+                } else {
+                    int compensation = WidgetUtil
+                            .measureHorizontalPaddingAndBorder(
+                                    menu.getElement(), 4);
+                    setTdWidth(menu.getElement(), menu.getOffsetWidth()
+                            - compensation);
+                }
+
+            }
+        }
+
+        /**
+         * Descends to child elements until finds TD elements and sets their
+         * width in pixels. Can be used to workaround IE8 & 9 TD element
+         * display: block issues
+         * 
+         * @param parent
+         * @param width
+         */
+        private void setTdWidth(Node parent, int width) {
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                Node child = parent.getChild(i);
+                if ("td".equals(child.getNodeName().toLowerCase())) {
+                    ((Element) child).getStyle().setWidth(width, Unit.PX);
+                } else {
+                    setTdWidth(child, width);
+                }
+
+            }
+        }
+
+        /**
+         * Returns the percentage value as a fraction, e.g. 42% -> 0.42
+         * 
+         * @param percentage
+         */
+        private float asFraction(String percentage) {
+            String trimmed = percentage.trim();
+            String withoutPercentSign = trimmed.substring(0,
+                    trimmed.length() - 1);
+            float asFraction = Float.parseFloat(withoutPercentSign) / 100;
+            return asFraction;
+        }
+
+        /**
+         * @since
+         * @param suggestionPopupWidth
+         * @return
+         */
+        private boolean isrelativeUnits(String suggestionPopupWidth) {
+            return suggestionPopupWidth.trim().endsWith("%");
         }
 
         /**
@@ -931,6 +1066,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 }
 
                 isFirstIteration = false;
+            }
+            if (suggestionPopupWidth != null && BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                // set TD width to a low value so that they won't mandate the
+                // suggestion pop-up width
+                suggestionPopup
+                        .setTdWidth(suggestionPopup.menu.getElement(), 1);
             }
         }
 
@@ -1354,6 +1496,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public int suggestionPopupMinWidth = 0;
+
+    public String suggestionPopupWidth = null;
 
     private int popupWidth = -1;
     /**

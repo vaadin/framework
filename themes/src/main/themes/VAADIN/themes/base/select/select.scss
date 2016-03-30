@@ -104,9 +104,33 @@ $select-button-negative-width : -1em;
 	border-collapse: collapse;
 	border: none;
 	vertical-align:top;
+	display: block;
+	width: 100%;
+
+	// float & clear needs to be set so that IE 8 & 9 displays the elements as block
+	float: left;
+	clear: both;
+
+	& > tbody,
+	& > tbody > tr,
+	& > tbody > tr > td {
+		display: block;
+		width: 100%;
+		// float & clear needs to be set so that IE 8 & 9 displays the elements as block
+		float: left;
+		clear: both;
+		overflow-y: hidden;
+	}
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
 	white-space: nowrap;
+	padding-left: 1px;
+	padding-right: 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;

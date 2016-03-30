@@ -77,7 +77,7 @@ $select-button-negative-width: -25px;
 .#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
 	padding: 1px 6px;
 	cursor: pointer;
-	height: 18px;
+	min-height: 21px;
 }
 .#{$primaryStyleName}-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;

@@ -126,7 +126,10 @@ $chameleon-line-height: 1.4;
 		-moz-user-select: none;
 		-ms-user-select: none;
 		cursor: default;
-		}
+	    }
+	.v-filterselect-suggestpopup .gwt-MenuItem {
+		padding: 0 .7em;
+	    }
 	
 	.v-contextmenu td.gwt-MenuItem-selected div,
 	.v-filterselect-suggestpopup td.gwt-MenuItem-selected,
