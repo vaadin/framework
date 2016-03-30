@@ -91,6 +91,7 @@ client/target/
 client-compiler/target/
 buildhelpers/target/
 client-compiled/target/
+liferay/target/
 themes/target/
 widgets/target/
 
