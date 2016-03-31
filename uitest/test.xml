@@ -169,19 +169,4 @@
 
     <!-- The default target. -->
     <target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tb2-tests" />
-
-    <!-- Runs all TestBench 2 tests -->
-    <target name="tb2-tests" unless="tests.tb2.skip">
-        <property name="test-output-dir" location="${test.xml.dir}/result/testbench-junit-classes" />
-        <property name="retries" value="2" />
-
-        <!-- Parameters for the test.xml script. -->
-        <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined." />
-        <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
-        <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined." />
-        <property name="com.vaadin.testbench.screenshot.block.error" value="0.025" />
-        <property name="com.vaadin.testbench.debug" value="false" />
-
-        <antcall inheritall="true" inheritrefs="true" target="run-tb2-tests" />
-    </target>
 </project>
