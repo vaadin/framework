@@ -60,6 +60,7 @@
 	<description>Vaadin Framework Root Pom</description>
 
 	<modules>
+		<module>all</module>
 		<module>buildhelpers</module>
 		<module>bom</module>
 		<module>shared</module>

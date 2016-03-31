@@ -12,13 +12,6 @@
 	<name>vaadin-buildhelpers</name>
 	<packaging>jar</packaging>
 
-	<properties>
-		<relnotes.tickets.file>${project.build.directory}/generated-resources/releasenotes/release-notes-tickets.html</relnotes.tickets.file>
-		<relnotes.authors.file>${project.build.directory}/generated-resources/releasenotes/release-notes-authors.html</relnotes.authors.file>
-		<webcontent.dir>${project.build.outputDirectory}/WebContent/</webcontent.dir>
-		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
-	</properties>
-
 	<organization>
 		<name>Vaadin Ltd</name>
 	</organization>
@@ -52,68 +45,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<phase>initialize</phase>
-						<id>parse-version</id>
-						<goals>
-							<goal>parse-version</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>filter-release-notes</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<loadfile property="release-notes-tickets" srcFile="${relnotes.tickets.file}"
-									failonerror="false" />
-								<loadfile property="release-notes-authors" srcFile="${relnotes.authors.file}"
-									failonerror="false" />
-								<copy todir="${webcontent.dir}">
-									<fileset dir="src/main/templates/">
-										<patternset>
-											<include name="release-notes.html" />
-										</patternset>
-									</fileset>
-									<filterchain>
-										<expandproperties />
-										<replacetokens begintoken="@" endtoken="@">
-											<token key="version" value="${project.version}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
-											<token key="version-minor"
-												value="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
-											<token key="builddate" value="${maven.build.timestamp}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
-											<token key="release-notes-tickets" value="${release-notes-tickets}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
-											<token key="release-notes-authors" value="${release-notes-authors}" />
-										</replacetokens>
-									</filterchain>
-								</copy>
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -126,14 +57,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/*.properties</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
@@ -141,62 +64,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.4.0</version>
-						<executions>
-							<execution>
-								<id>fetch-release-notes-tickets</id>
-								<phase>process-classes</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<classpathScope>compile</classpathScope>
-									<executable>${java.home}/bin/java</executable>
-									<arguments>
-										<argument>-Dvaadin.version=${project.version}</argument>
-										<argument>-classpath</argument>
-										<classpath />
-
-										<argument>com.vaadin.buildhelpers.FetchReleaseNotesTickets</argument>
-									</arguments>
-									<outputFile>${relnotes.tickets.file}</outputFile>
-								</configuration>
-							</execution>
-							<execution>
-								<id>fetch-release-notes-authors</id>
-								<phase>process-classes</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<classpathScope>compile</classpathScope>
-									<executable>${java.home}/bin/java</executable>
-									<arguments>
-										<argument>-Dvaadin.version=${project.version}</argument>
-										<argument>-classpath</argument>
-										<classpath />
-
-										<argument>com.vaadin.buildhelpers.FetchReleaseNotesAuthors</argument>
-									</arguments>
-									<outputFile>${relnotes.authors.file}</outputFile>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

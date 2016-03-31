@@ -27,7 +27,7 @@
 		<path id="build-path">
 			<!--    <path location="buildhelpers/build.xml" /> -->
 			<path refid="ivy.build.path" />
-			<path location="all/build.xml" />
+			<!-- <path location="all/build.xml" /> -->
 		</path>
 	</target>
 	<target name="clean" depends="buildorder">

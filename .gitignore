@@ -84,6 +84,7 @@ scripts/*.pyc
 # build result folders
 */result
 result
+all/target/
 push/target/
 shared/target/
 server/target/
