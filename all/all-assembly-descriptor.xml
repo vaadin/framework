@@ -14,6 +14,23 @@
 			<unpack>false</unpack>
 			<useTransitiveDependencies>false</useTransitiveDependencies>
 		</dependencySet>
+		<dependencySet>
+			<scope>compile</scope>
+			<outputDirectory>lib</outputDirectory>
+			<useProjectArtifact>false</useProjectArtifact>
+			<unpack>false</unpack>
+			<useTransitiveDependencies>true</useTransitiveDependencies>
+			<excludes>
+				<exclude>${project.groupId}:vaadin-shared</exclude>
+				<exclude>${project.groupId}:vaadin-push</exclude>
+				<exclude>${project.groupId}:vaadin-server</exclude>
+				<exclude>${project.groupId}:vaadin-themes</exclude>
+				<exclude>${project.groupId}:vaadin-client</exclude>
+				<exclude>${project.groupId}:vaadin-client-compiler</exclude>
+				<exclude>${project.groupId}:vaadin-client-compiled</exclude>
+				<exclude>${project.groupId}:vaadin-widgets</exclude>
+			</excludes>
+		</dependencySet>
 	</dependencySets>
 	<fileSets>
 		<fileSet>
