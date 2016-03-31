@@ -80,7 +80,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.10</version>
 				<executions>
 					<execution>
 						<phase>initialize</phase>
@@ -142,9 +142,7 @@
 			<!-- vaadin-all zip -->
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -167,7 +165,6 @@
 			<!-- Skip install and deploy -->
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
@@ -175,13 +172,12 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Release notes helpers and resources -->
 
 			<plugin>
@@ -222,7 +218,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.4.0</version>
 						<executions>
 							<execution>
 								<id>fetch-release-notes-tickets</id>
@@ -238,7 +233,8 @@
 										<argument>-classpath</argument>
 										<classpath />
 
-										<argument>com.vaadin.buildhelpers.FetchReleaseNotesTickets</argument>
+										<argument>com.vaadin.buildhelpers.FetchReleaseNotesTickets
+										</argument>
 									</arguments>
 									<outputFile>${relnotes.tickets.file}</outputFile>
 								</configuration>
@@ -257,7 +253,8 @@
 										<argument>-classpath</argument>
 										<classpath />
 
-										<argument>com.vaadin.buildhelpers.FetchReleaseNotesAuthors</argument>
+										<argument>com.vaadin.buildhelpers.FetchReleaseNotesAuthors
+										</argument>
 									</arguments>
 									<outputFile>${relnotes.authors.file}</outputFile>
 								</configuration>
