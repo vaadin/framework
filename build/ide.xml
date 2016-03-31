@@ -33,10 +33,11 @@
             <path refid="buildhelpers.deps" />
             <path refid="gwt.deps" />
             <path refid="uitest.deps" />
-            <path location="server/src" />
+            <path location="server/src/main/java" />
             <path location="shared/src/main/java" />
+            <path location="shared/src/main/java-templates" />
             <path location="uitest/src" />
-            <path location="client/src" />
+            <path location="client/src/main/java" />
         </path>
         <property name="resolve.done" value="true" />
     </target>
