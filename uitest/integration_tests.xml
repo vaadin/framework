@@ -81,29 +81,6 @@
         </subant>
     </target>
 
-    <!-- Run integration test on GAE -->
-    <target name="integration-test-test-GAE">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE.html" />
-        <pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
-
-        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test-hrd.appspot.com/" />
-            <property name="server.start.succeeded" value="1" />
-            <property name="browsers" value="${test_browsers}" />
-            <property name="testfiles" value="${test-GAE}" />
-            <property name="test-output-dir" value="../build/integration-test-gae-output" />
-            <property name="report.qualifier" value="integration-gae-tb2/${server-name}" />
-
-            <fileset dir="." includes="test.xml" />
-        </subant>
-    </target>
-
-    <target name="integration-test-deploy-to-GAE">
-        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
-    </target>
-
     <target name="run-tb3-servlet-test">
         <antcall target="run-tb3-test" inheritall="true">
             <param name="junit.test.suite" value="com.vaadin.tests.tb3.ServletIntegrationTests" />
@@ -275,32 +252,10 @@
         <fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6/Liferay6-theme.html" />
         <pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
-
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
             <param name="test_browsers" value="winxp-firefox17-esr" />
             <param name="target-server" value="liferay6" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-liferay5">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
-            <param name="test_browsers" value="winxp-firefox17-esr" />
-            <param name="target-server" value="liferay5" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-gatein3">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
-            <param name="test_browsers" value="winxp-googlechrome21" />
-            <param name="target-server" value="gatein3" />
         </antcall>
     </target>
 
@@ -353,11 +308,6 @@
         </antcall>
     </target>
 
-    <target name="integration-test-GAE">
-        <antcall target="integration-test-deploy-to-GAE" />
-        <antcall target="integration-test-test-GAE" />
-    </target>
-
     <!-- Upload demo, clean error screenshots and test deployment on all
         servers -->
     <target name="integration-test-all" unless="tests.integration.skip">
@@ -368,37 +318,11 @@
         <mkdir dir="${report.dir}" />
 
         <parallel>
-            <antcontrib:trycatch property="tried">
-                <try>
-                    <!-- Still running GAE test from the old server which
-                    requires its own lock -->
-
-                    <echo message="Getting lock" />
-                    <antcall target="integration-test-get-lock" />
-                    <echo message="Got lock" />
-                    <antcall target="integration-test-upload-demo" />
-
-                    <antcall target="run-integration-test">
-                        <param name="target-server" value="GAE" />
-                    </antcall>
-
-                    <antcall target="integration-test-clean" />
-                    <echo message="Getting lock" />
-                    <antcall target="integration-test-release-lock" />
-                    <echo message="Lock released" />
-
-                </try>
-                <catch>
-                    <echo message="Uploading of demo.war failed. ${tried}" />
-                </catch>
-            </antcontrib:trycatch>
             <antcall target="integration-test-liferay6" />
             <antcall target="integration-test-liferay6-theme" />
             <antcall target="integration-test-weblogicPortal" />
-            <antcall target="integration-test-liferay5" />
             <antcall target="integration-test-weblogic10" />
             <antcall target="integration-test-weblogic12" />
-            <antcall target="integration-test-gatein3" />
             <antcall target="integration-test-glassfish3" />
             <antcall target="integration-test-glassfish4" />
             <antcall target="integration-test-jboss4" />
@@ -418,8 +342,6 @@
             <antcall target="integration-test-osgi" />
             <antcall target="integration-test-tomcat7apacheproxy" />
             <antcall target="integration-test-websphere8" />
-            <!-- Currently the test system does not have a server for automatic testing of WebSphere Portal 8 -->
-            <!-- <antcall target="integration-test-websphereportal8" /> -->
         </parallel>
 
     </target>
