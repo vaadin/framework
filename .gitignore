@@ -94,6 +94,7 @@ buildhelpers/target/
 client-compiled/target/
 liferay/target/
 themes/target/
+uitest/target/
 widgets/target/
 
 .sass-cache

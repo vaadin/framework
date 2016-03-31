@@ -251,7 +251,8 @@
 
     <target name="test-tb3" depends="clean-testbench-errors">
         <property name="war.file"
-            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+            location="${vaadin.basedir}/uitest/result/lib/vaadin-uitest-${vaadin.version}.war" />
+        <mkdir dir="${vaadin.basedir}/result" />
         <parallel>
             <daemons>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
