@@ -92,8 +92,8 @@
 			<version>8.1.12.v20130726</version>
 			<exclusions>
 				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>orbit</artifactId>
+					<groupId>org.eclipse.jetty.orbit</groupId>
+					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -103,8 +103,8 @@
 			<version>8.1.12.v20130726</version>
 			<exclusions>
 				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>orbit</artifactId>
+					<groupId>org.eclipse.jetty.orbit</groupId>
+					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
 
