@@ -8,36 +8,23 @@
     <property name="threadsPerProcessor" value="1" />
 
     <target name="resolve" unless="resolve.done">
-        <ivy:resolve log="download-only" file="client-compiler/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="client-compiler.deps" conf="ide" />
-        <ivy:resolve log="download-only" file="server/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="server.deps" conf="ide" />
-        <ivy:resolve log="download-only" file="client/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="client.deps" conf="ide" />
-        <ivy:resolve log="download-only" file="shared/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="shared.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="build/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="ide.deps" conf="ide" />
         <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
         <ivy:cachepath pathid="uitest.deps" conf="ide" />
-        <ivy:resolve log="download-only" file="buildhelpers/ivy.xml" />
-        <ivy:cachepath pathid="buildhelpers.deps" />
-        <ivy:resolve log="download-only" file="gwt/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="gwt.deps" conf="ide" />
 
         <path id="classpath">
             <path location="bin" />
             <path location="build/classes" />
-            <path refid="client-compiler.deps" />
-            <path refid="server.deps" />
-            <path refid="shared.deps" />
-            <path refid="client.deps" />
-            <path refid="buildhelpers.deps" />
-            <path refid="gwt.deps" />
+            <path refid="ide.deps" />
             <path refid="uitest.deps" />
             <path location="server/src/main/java" />
+            <path location="server/src/main/resources" />
             <path location="shared/src/main/java" />
             <path location="shared/src/main/java-templates" />
             <path location="uitest/src" />
             <path location="client/src/main/java" />
+            <path location="client/src/main/resources" />
         </path>
         <property name="resolve.done" value="true" />
     </target>
@@ -72,40 +59,54 @@
             <antcall target="compile-theme" inheritRefs="true">
                 <param name="theme" value="valo" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-dark" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-metro" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-flat" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-flatdark" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-facebook" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-blueprint" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
               <param name="theme" value="tests-valo-light" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
               <param name="theme" value="tests-valo-disabled-animations" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
+            <antcall target="compile-test-theme" inheritRefs="true">
               <param name="theme" value="tests-valo-no-font-awesome" />
             </antcall>
         </parallel>
     </target>
 
     <target name="compile-theme" depends="resolve">
+        <java classname="com.vaadin.buildhelpers.CompileTheme" failonerror="yes" fork="yes">
+            <classpath refid="classpath" />
+            <jvmarg value="-Djava.awt.headless=true" />
+            <arg value="--theme" />
+            <arg value="${theme}" />
+            <arg value="--theme-folder" />
+            <arg value="themes/src/main/resources/VAADIN/themes" />
+            <arg value="--version" />
+            <arg value="${vaadin.version}" />
+        </java>
+
+    </target>
+
+    <target name="compile-test-theme" depends="resolve">
         <java classname="com.vaadin.buildhelpers.CompileTheme" failonerror="yes" fork="yes">
             <classpath refid="classpath" />
             <jvmarg value="-Djava.awt.headless=true" />
