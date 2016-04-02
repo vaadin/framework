@@ -9,15 +9,16 @@
 
     <target name="resolve" unless="resolve.done">
         <ivy:resolve log="download-only" file="build/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="early.deps" conf="early" />
+        <ivy:resolve log="download-only" file="build/ivy.xml" conf="ide" />
         <ivy:cachepath pathid="ide.deps" conf="ide" />
         <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
         <ivy:cachepath pathid="uitest.deps" conf="ide" />
 
         <path id="classpath">
+            <path refid="early.deps" />
             <path location="bin" />
             <path location="build/classes" />
-            <path refid="ide.deps" />
-            <path refid="uitest.deps" />
             <path location="server/src/main/java" />
             <path location="server/src/main/resources" />
             <path location="shared/src/main/java" />
@@ -25,6 +26,8 @@
             <path location="uitest/src" />
             <path location="client/src/main/java" />
             <path location="client/src/main/resources" />
+            <path refid="uitest.deps" />
+            <path refid="ide.deps" />
         </path>
         <property name="resolve.done" value="true" />
     </target>
@@ -98,8 +101,9 @@
             <jvmarg value="-Djava.awt.headless=true" />
             <arg value="--theme" />
             <arg value="${theme}" />
+            <!-- this assumes "mvn package" has been run for vaadin-themes -->
             <arg value="--theme-folder" />
-            <arg value="themes/src/main/resources/VAADIN/themes" />
+            <arg value="themes/target/classes/VAADIN/themes" />
             <arg value="--version" />
             <arg value="${vaadin.version}" />
         </java>

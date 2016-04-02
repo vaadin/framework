@@ -17,137 +17,27 @@
         <conf name="build" />
         <conf name="ide" visibility="private" />
         <conf name="test" visibility="private" />
+        <!-- Dependencies that must be early on the classpath for ide.xml -->
+        <conf name="early" visibility="private" />
     </configurations>
     <dependencies>
 
-        <!-- vaadin-client-compiler dependencies -->
+        <!-- Vaadin dependencies -->
 
-        <dependency org="com.vaadin" name="vaadin-sass-compiler"
-            rev="${vaadin.sass.version}" conf="ide->default">
-            <!-- remove cssparser override once sass-compiler is updated -->
-            <exclude name="cssparser" />
-        </dependency>
-
-        <dependency org="commons-collections" name="commons-collections"
-            rev="3.1" conf="ide -> default" />
-        <dependency org="commons-logging" name="commons-logging"
-            rev="1.1.3" conf="ide -> default" />
-
-        <dependency org="ant" name="ant" rev="1.6.5"
-            conf="ide -> default" />
-        <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.11" conf="build,ide -> default" />
-        <dependency org="ant" name="ant-launcher" rev="1.6.5"
-            conf="ide -> default" />
-
-        <dependency org="org.eclipse.jetty" name="jetty-annotations"
-            rev="8.1.12.v20130726" conf="ide -> default">
-            <exclude org="org.eclipse.jetty.orbit"></exclude>
-        </dependency>
-        <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="8.1.12.v20130726" conf="ide -> default">
-            <exclude org="org.eclipse.jetty.orbit"></exclude>
-        </dependency>
-
-        <dependency org="org.eclipse.jetty" name="jetty-util"
-            rev="8.1.12.v20130726" conf="ide -> default" />
-
-        <dependency org="org.jdesktop" name="swing-worker"
-            rev="1.1" conf="ide -> default" />
-        <dependency org="commons-codec" name="commons-codec"
-            rev="1.8" conf="ide -> default" />
-        <dependency org="commons-io" name="commons-io"
-            rev="${commons-io.version}" conf="ide -> default" />
-        <dependency org="org.apache.commons" name="commons-lang3"
-            rev="3.1" conf="ide -> default" />
-        <dependency org="org.apache.james" name="apache-mime4j"
-            rev="0.6" conf="ide -> default" />
-
-        <dependency org="org.apache.httpcomponents" name="httpclient"
-            rev="4.3.1" conf="ide -> default" />
-        <dependency org="org.apache.httpcomponents" name="httpcore"
-            rev="4.3" conf="ide -> default" />
-        <dependency org="org.apache.httpcomponents" name="httpmime"
-            rev="4.3.1" conf="ide -> default" />
-
-        <dependency org="net.sourceforge.nekohtml" name="nekohtml"
-            rev="1.9.19" conf="ide -> default" />
-        <dependency org="xalan" name="serializer" rev="2.7.1"
-            conf="ide -> default" />
-        <dependency org="xerces" name="xercesImpl" rev="2.11.0"
-            conf="ide -> default" />
-        <dependency org="xml-apis" name="xml-apis" rev="1.4.01"
-            conf="ide -> default" />
-
-        <dependency org="com.ibm.icu" name="icu4j" rev="50.1.1"
-            conf="ide -> default" />
-
-        <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
-            rev="1.2.0" conf="ide -> default" />
-
-        <!-- vaadin-server dependencies -->
-
-        <!-- API DEPENDENCIES -->
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" conf="ide -> default" transitive="true" />
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="ide -> default" transitive="true" />
+        <dependency org="com.vaadin" name="vaadin-push"
+            rev="${vaadin.version}" conf="ide -> default" transitive="true" />
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+            rev="${vaadin.version}" conf="ide -> default" transitive="true" />
 
         <!-- Liferay Portal Service -->
         <dependency org="com.liferay.portal" name="portal-service"
             rev="6.0.2" conf="ide -> default" />
 
-        <!--Servlet API version 3.0 -->
-        <dependency org="javax.servlet" name="javax.servlet-api"
-            rev="3.0.1" conf="ide -> default" />
-
-        <!--Portlet API version 2.0 (JSR-286) -->
-        <dependency org="javax.portlet" name="portlet-api"
-            rev="2.0" conf="ide -> default" />
-
-        <!-- Google App Engine -->
-        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.7.7" conf="ide -> default" />
-
-        <!-- Bean Validation API -->
-        <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="ide -> default" />
-
-        <!-- Jsoup for BootstrapHandler -->
-        <dependency org="org.jsoup" name="jsoup" rev="1.8.3"
-            conf="ide -> default" />
-
-        <!-- vaadin-shared dependencies -->
-
-        <dependency org="com.vaadin.external.flute" name="flute"
-            rev="1.3.0.gg2" conf="ide->default" />
-        <dependency org="com.vaadin.external.streamhtmlparser"
-            name="streamhtmlparser-jsilver" rev="0.0.10.vaadin1"
-            conf="ide->default" />
-        <dependency org="com.vaadin.external.google" name="guava"
-            rev="16.0.1.vaadin1" conf="ide->default" />
-
-        <!-- vaadin-push dependencies -->
-
-        <!-- Atmosphere -->
-        <dependency org="com.vaadin.external.atmosphere"
-            name="atmosphere-runtime" rev="&atmosphere.runtime.version;"
-            conf="ide -> default" />
-        <dependency org="com.vaadin.external.atmosphere.client"
-            name="jquery" rev="&atmosphere.js.version;" conf="ide -> default" />
-
-        <!-- vaadin-buildhelpers dependencies -->
-
-        <dependency org="commons-cli" name="commons-cli" rev="1.2" />
-
-        <!-- Internally used, for now -->
-        <dependency org="com.carrotsearch" name="smartsprites"
-                    rev="0.2.10" />
-
-        <!-- GWT dependencies -->
-
-        <dependency org="com.vaadin.external.gwt" name="gwt-dev" rev="${gwt.version}" conf="ide->default" />
-        <dependency org="com.vaadin.external.gwt" name="gwt-user" rev="${gwt.version}" conf="ide->default" />
-        <dependency org="com.vaadin.external.gwt" name="gwt-codeserver" rev="${gwt.version}" conf="ide->default" />
-        <dependency org="com.vaadin.external.gwt" name="gwt-elemental" rev="${gwt.version}" conf="ide->default" />
-
-        <!-- Testing dependencies -->
+        <!-- Testing dependencies for Eclipse -->
 
         <dependency org="junit" name="junit" rev="4.11"
             conf="test -> default" />
@@ -155,16 +45,10 @@
         <dependency org="org.easymock" name="easymock" rev="3.0"
             conf="test-> default" transitive="true" />
 
-        <dependency org="junit" name="junit" rev="4.11"
-            conf="test -> default" />
         <dependency org="org.mockito" name="mockito-all" rev="1.9.5"
             conf="test ->default" />
         <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3"
                     conf="test ->default" />
-        <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
-            conf="test -> default" />
-        <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
-            conf="test->default" />
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="test ->default" />
         <!-- Bean Validation implementation -->
@@ -176,6 +60,12 @@
         <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
         <!-- <dependency org="postgresql" name="postgresql" rev="9.1-901.jdbc3" 
             conf="test->default" /> -->
+
+        <!-- Needed by SmartSprites -->
+        <dependency org="com.google.guava" name="guava"
+            rev="14.0.1" conf="early->default" />
+        <dependency org="org.ow2.asm" name="asm"
+            rev="5.0.3" conf="early->default" />
 
         <!-- version overrides -->
 
