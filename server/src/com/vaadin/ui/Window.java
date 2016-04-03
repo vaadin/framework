@@ -1051,7 +1051,9 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         @Override
         public void handleAction(Object sender, Object target) {
-            window.close();
+            if (window.isClosable()) {
+                window.close();
+            }
         }
 
         public boolean equals(int keyCode, int... modifiers) {
