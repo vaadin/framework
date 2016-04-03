@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="server/src/test/java"/>
-	<classpathentry kind="src" path="client/src/test/java"/>
-	<classpathentry kind="src" path="shared/src/test/java"/>
-	<classpathentry kind="src" path="client/src/main/java"/>
-	<classpathentry kind="src" path="server/src/main/java"/>
-	<classpathentry kind="src" path="client-compiler/src/main/java"/>
-	<classpathentry kind="src" path="client-compiler/src/test/java"/>
-	<classpathentry kind="src" path="uitest/src"/>
-	<classpathentry kind="src" path="shared/src/main/java"/>
-	<classpathentry kind="src" path="shared/src/main/java-templates"/>
-	<classpathentry kind="src" path="buildhelpers/src/main/java"/>
-	<classpathentry kind="src" path="widgets/src/main/java"/>
-	<classpathentry kind="src" path="widgets/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
-			<attribute name="owner.project.facets" value="java"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=build%2Fivy.xml&amp;confs=ide,test&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Avaadin%2Fbuild.properties%7D"/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=uitest%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Avaadin%2Fbuild.properties%7D"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
