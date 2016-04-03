@@ -6,7 +6,6 @@
     </tstamp>
 
     <dirname property="vaadin.basedir" file="${ant.file.common}" />
-    <property name="gwt.basedir" location="${vaadin.basedir}/../gwt" />
     <property file="${vaadin.basedir}/build.properties" />
 
     <property name="modules.producing.jar" value="shared,server,client,client-compiler,client-compiled,themes,push,widgets" />
