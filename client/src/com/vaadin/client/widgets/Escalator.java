@@ -3105,6 +3105,15 @@ public class Escalator extends Widget implements RequiresResize,
                                 logicalTargetIndex);
 
                         /*
+                         * moveAndUpdateEscalatorRows recalculates the rows, but
+                         * logical top row index bookkeeping is handled in this
+                         * method.
+                         * 
+                         * TODO: Redesign how to keep it easy to track this.
+                         */
+                        updateTopRowLogicalIndex(-removedLogicalInside.length());
+
+                        /*
                          * Scrolling the body to the correct location will be
                          * fixed automatically. Because the amount of rows is
                          * decreased, the viewport is pushed up as the scrollbar

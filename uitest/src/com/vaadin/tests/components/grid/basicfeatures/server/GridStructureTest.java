@@ -295,6 +295,20 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         filterSomeAndAssert();
     }
 
+    @Test
+    public void testBareItemSetChangeWithBottomScrollAndSmallViewport()
+            throws Exception {
+        openTestURL();
+        selectMenuPath("Component", "Size", "HeightMode Row");
+        getGridElement().getRow(GridBasicFeatures.ROWS - 1);
+        // filter
+        selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
+
+        String text = getGridElement().getCell(10, 0).getText();
+
+        assertFalse(text.isEmpty());
+    }
+
     private void filterSomeAndAssert() {
         selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
         boolean foundElements = false;
