@@ -87,7 +87,10 @@ Creation of the container depends on its type. For some containers, such as the
 (columns) as was done above, while some others determine them otherwise. The
 definition of a property with [methodname]#addContainerProperty()# requires a
 unique property ID, type, and a default value. You can also give
-[parameter]#null#.
+[parameter]#null#. If the container of a component is replaced and the new container
+contains a different set of columns, such as a property with the same ID but a
+different data type, the component should be reinitialized. For a table or grid,
+it means redefining their columns.
 
 Vaadin has a several built-in in-memory container implementations, such as
 [classname]#IndexedContainer# and [classname]#BeanItemContainer#, which are easy
