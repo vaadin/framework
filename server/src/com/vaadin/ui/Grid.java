@@ -4855,8 +4855,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Sets the grid data source.
-     * 
+     * Sets the grid data source.<p>
+     *
+     * <strong>Note</strong> Grid columns are based on properties and try to detect a correct converter for
+     * the data type. The columns are not reinitialized automatically if the container is changed, and if the same
+     * properties are present after container change, the columns are reused.
+     * Properties with same names, but different data types will lead to unpredictable behaviour.
+     *
      * @param container
      *            The container data source. Cannot be null.
      * @throws IllegalArgumentException
