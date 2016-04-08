@@ -87,24 +87,21 @@ public abstract class VLayoutSlot {
                 : null;
         int captionWidth = getCaptionWidth();
 
-        boolean captionAboveCompnent;
+        boolean captionAboveComponent;
         if (caption == null) {
-            captionAboveCompnent = false;
-            style.clearPaddingRight();
+            captionAboveComponent = false;
         } else {
-            captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
-            if (!captionAboveCompnent) {
+            captionAboveComponent = !caption.shouldBePlacedAfterComponent();
+            if (!captionAboveComponent) {
                 availableWidth -= captionWidth;
                 if (availableWidth < 0) {
                     availableWidth = 0;
                 }
-                captionStyle.clearLeft();
-                captionStyle.setRight(0, Unit.PX);
+
                 style.setPaddingRight(captionWidth, Unit.PX);
+                widget.getElement().getStyle().setPosition(Position.RELATIVE);
             } else {
                 captionStyle.setLeft(0, Unit.PX);
-                captionStyle.clearRight();
-                style.clearPaddingRight();
             }
         }
 
@@ -125,34 +122,36 @@ public abstract class VLayoutSlot {
             reportActualRelativeWidth(Math.round((float) allocatedContentWidth));
         }
 
+        double usedWidth; // widget width in px
+        if (isRelativeWidth()) {
+            usedWidth = allocatedContentWidth;
+        } else {
+            usedWidth = getWidgetWidth();
+        }
+
         style.setLeft(Math.round(currentLocation), Unit.PX);
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isLeft()) {
-            double usedWidth;
-            if (isRelativeWidth()) {
-                usedWidth = allocatedContentWidth;
-            } else {
-                usedWidth = getWidgetWidth();
-            }
-
-            double padding = (allocatedSpace - usedWidth);
+            double padding = availableWidth - usedWidth;
             if (alignment.isHorizontalCenter()) {
                 padding = padding / 2;
             }
 
             long roundedPadding = Math.round(padding);
-            if (captionAboveCompnent) {
-                captionStyle.setLeft(roundedPadding, Unit.PX);
+            if (captionStyle != null) {
+                captionStyle.setLeft(captionAboveComponent ? roundedPadding
+                        : roundedPadding + usedWidth, Unit.PX);
             }
             widget.getElement().getStyle().setLeft(roundedPadding, Unit.PX);
         } else {
-            if (captionAboveCompnent) {
-                captionStyle.setLeft(0, Unit.PX);
+            if (captionStyle != null) {
+                captionStyle.setLeft(captionAboveComponent ? 0 : usedWidth,
+                        Unit.PX);
             }
+
             // Reset left when changing back to align left
             widget.getElement().getStyle().clearLeft();
         }
-
     }
 
     private double parsePercent(String size) {
