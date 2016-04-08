@@ -35,8 +35,8 @@ public interface MyComponentServerRpc extends ServerRpc {
 }
 ----
 
-The above example defines a single [methodname]#clicks()# RPC call, which takes
-a [classname]#MouseEventDetails# object as the parameter.
+The above example defines a single [methodname]#clicked()# RPC call, which takes
+a [classname]#String# object as the parameter.
 
 You can pass the most common standard Java types, such as primitive and boxed
 primitive types, [classname]#String#, and arrays and some collections (
