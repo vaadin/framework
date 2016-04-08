@@ -116,7 +116,7 @@ Chrome supports source maps, which allow debugging Java source code from which
 the JavaScript was compiled.
 
 Open the Chrome Inspector by right-clicking and selecting [guilabel]#Inspect
-Element#. Click the settings icon in the lower corner of the window and check
+Element#. Click the settings icon in the upper right corner of the window and check
 the "Scripts > Enable source maps" option. Refresh the page with the Inspector
 open, and you will see Java code instead of JavaScript in the scripts tab.
 
