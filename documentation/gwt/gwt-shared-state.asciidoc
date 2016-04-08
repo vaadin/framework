@@ -80,7 +80,7 @@ public MyComponent() {
 
 
 [[gwt.shared-state.connector]]
-== Handing Shared State in a Connector
+== Handling Shared State in a Connector
 
 A connector can access a shared state with the [methodname]#getState()# method.
 The access should be read-only. It is required that you override the base
