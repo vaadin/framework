@@ -46,7 +46,8 @@ the compiled JavaScript with any static resources included in the module.
 == Compiling in Eclipse
 
 When the Vaadin Plugin is installed in Eclipse, you can simply click the
-[guibutton]#Compile Vaadin widgets# button in the toolbar. It will compile the
+[guibutton]#*.# button in the toolbar (it looks like two cogs, and you can
+choose the desired option in the drop-down menu). It will compile the
 widget set it finds from the project. If the project has multiple widget sets,
 such as one for custom widgets and another one for the project, you need to
 select the module descriptor of the widget set to compile before clicking the
