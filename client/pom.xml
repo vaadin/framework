@@ -53,7 +53,7 @@
 			<version>${javax.validation.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
@@ -101,7 +101,7 @@
 				<executions>
 					<execution>
 						<id>unpack-dependencies</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -129,9 +129,6 @@
 									<excludes>META-INF/**</excludes>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
 				</executions>
@@ -150,7 +147,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/resources</directory>

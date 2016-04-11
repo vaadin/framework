@@ -9,7 +9,7 @@
     <fileSets>
         <fileSet>
             <outputDirectory/>
-            <directory>${project.build.directory}/dependency</directory>
+            <directory>${dependency.unpack.directory}</directory>
             <includes>
                 <include>**</include>
             </includes>

@@ -168,7 +168,6 @@
 
 	<build>
 		<plugins>
-
 			<!-- Copy needed GWT dependencies to package -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -176,7 +175,7 @@
 				<executions>
 					<execution>
 						<id>unpack-dependencies</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -188,9 +187,6 @@
 								</artifactItem>
 							</artifactItems>
 							<includes>com/google/gwt/*/server/**</includes>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
 				</executions>
@@ -209,7 +205,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/resources</directory>

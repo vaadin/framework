@@ -85,7 +85,7 @@
 				<executions>
 					<execution>
 						<id>unpack-dependencies</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -112,14 +112,10 @@
 									</includes>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
 
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -133,7 +129,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/java</directory>

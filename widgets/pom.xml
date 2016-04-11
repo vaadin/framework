@@ -89,7 +89,7 @@
                 <executions>
                     <execution>
                         <id>unpack-dependencies</id>
-                        <phase>prepare-package</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -156,9 +156,6 @@
                                     <outputDirectory>${project.build.directory}/themes</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
                     </execution>
                 </executions>
@@ -175,7 +172,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/java</directory>
@@ -192,8 +189,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/classes/com/vaadin/themes/public
-                            </outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/com/vaadin/themes/public</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/themes/VAADIN/themes</directory>

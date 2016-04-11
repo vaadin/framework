@@ -47,10 +47,10 @@ public class Version implements Serializable {
 
     /* Initialize version numbers from string replaced by build-script. */
     static {
-        if ("${vaadin.version}".equals("${" + "vaadin.version" + "}")) {
+        if ("${project.version}".equals("${" + "project.version" + "}")) {
             VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
-            VERSION = "${vaadin.version}";
+            VERSION = "${project.version}";
         }
         final String[] digits = VERSION.split("\\.", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
