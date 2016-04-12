@@ -723,8 +723,8 @@ public class ConnectorTracker implements Serializable {
         // JsonObject is not serializable
         HashMap<ClientConnector, String> stringDiffStates = new HashMap<ClientConnector, String>(
                 diffStates.size() * 2);
-        for (ClientConnector key : diffStates.keySet()) {
-            stringDiffStates.put(key, diffStates.get(key).toString());
+        for (Map.Entry<ClientConnector, JsonObject> entry : diffStates.entrySet().toArray(new Map.Entry[0])) {
+            stringDiffStates.put(entry.getKey(), entry.getValue().toString());
         }
         out.writeObject(stringDiffStates);
     }
