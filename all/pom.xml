@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>vaadin-all</artifactId>
 	<name>vaadin-all</name>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
 	<properties>
 		<relnotes.tickets.file>${project.build.directory}/generated-resources/releasenotes/release-notes-tickets.html</relnotes.tickets.file>
@@ -160,50 +160,52 @@
 					</descriptors>
 				</configuration>
 			</plugin>
-
-			<!-- Skip install and deploy -->
-
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-install-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-
-			<!-- Release notes helpers and resources -->
-
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>resources</id>
-						<goals>
-							<goal>resources</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- TODO: Combination javadocs -->
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- Skip install, deploy and javadoc -->
+
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>default-jar</id>
+							<phase>never</phase>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<configuration>
+						<skipSource>true</skipSource>
+					</configuration>
+				</plugin>
+
+
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>
@@ -256,6 +258,85 @@
 										</argument>
 									</arguments>
 									<outputFile>${relnotes.authors.file}</outputFile>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Extract sources for JavaDoc -->
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>extract-sources</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>vaadin-shared</artifactId>
+											<classifier>sources</classifier>
+										</artifactItem>
+
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>vaadin-server</artifactId>
+											<classifier>sources</classifier>
+										</artifactItem>
+
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>vaadin-client</artifactId>
+											<classifier>sources</classifier>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Add extracted sources -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>add-source-path</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>${dependency.unpack.directory}</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Make Combined JavaDoc -->
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-combined-javadoc</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<failOnError>false</failOnError>
+									<excludePackageNames>com.vaadin.builhelpers</excludePackageNames>
+									<skip>false</skip>
+									<stylesheetfile>javadoc.css</stylesheetfile>
+									<links>
+										<link>http://docs.oracle.com/javase/6/docs/api/</link>
+										<link>http://docs.oracle.com/j2ee/1.4/docs/api/</link>
+									</links>
 								</configuration>
 							</execution>
 						</executions>
