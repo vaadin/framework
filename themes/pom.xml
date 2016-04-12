@@ -97,6 +97,102 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>compile-legacy-base</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<classpathScope>compile</classpathScope>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+
+								<argument>com.vaadin.sass.SassCompiler</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.scss</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.css</argument>
+							</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>compile-legacy-chameleon</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<classpathScope>compile</classpathScope>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+
+								<argument>com.vaadin.sass.SassCompiler</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.scss</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.css</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-legacy-liferay</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<classpathScope>compile</classpathScope>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+
+								<argument>com.vaadin.sass.SassCompiler</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.scss</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.css</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-legacy-reindeer</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<classpathScope>compile</classpathScope>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+
+								<argument>com.vaadin.sass.SassCompiler</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.scss</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.css</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-legacy-runo</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<classpathScope>compile</classpathScope>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath />
+
+								<argument>com.vaadin.sass.SassCompiler</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.scss</argument>
+								<argument> ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.css</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
 						<id>smart-sprite-reindeer</id>
 						<phase>process-resources</phase>
 						<goals>
@@ -167,6 +263,9 @@
 
 								<move file="${reindeer.theme.path}/styles-sprite.css"
 									tofile="${reindeer.theme.path}/styles.css" />
+
+								<move file="${reindeer.theme.path}/legacy-styles-sprite.css"
+									tofile="${reindeer.theme.path}/legacy-styles.css" />
 
 								<gzip src="${reindeer.theme.path}/styles.css" destfile="${reindeer.theme.path}/styles.css.gz" />
 							</target>
