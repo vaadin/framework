@@ -12,9 +12,6 @@
 	<name>vaadin-buildhelpers</name>
 	<packaging>jar</packaging>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin build helpers</description>
 

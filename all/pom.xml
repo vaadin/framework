@@ -18,9 +18,6 @@
 		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
 	</properties>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin All package</description>
 

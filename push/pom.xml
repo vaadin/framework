@@ -14,9 +14,6 @@
 
 	</properties>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin server push support</description>
 

@@ -11,9 +11,6 @@
 	<name>vaadin-client-compiler</name>
 	<packaging>jar</packaging>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin client compiler</description>
 

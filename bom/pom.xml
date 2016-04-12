@@ -11,50 +11,7 @@
     <packaging>pom</packaging>
     <name>Vaadin Framework (Bill of Materials)</name>
     <description>Vaadin Framework (Bill of Materials)</description>
-    <organization>
-        <name>Vaadin Ltd</name>
-        <url>http://vaadin.com</url>
-    </organization>
     <url>http://vaadin.com</url>
-    <licenses>
-        <license>
-            <name>Apache License Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
-    <scm>
-        <connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
-        <developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
-        <url>https://github.com/vaadin/vaadin</url>
-    </scm>
-    <developers>
-        <developer>
-            <id>artur</id>
-            <name>Artur Signell</name>
-            <email>artur.signell@vaadin.com</email>
-            <url>http://vaadin.com/web/artur</url>
-            <organization>Vaadin Ltd</organization>
-            <organizationUrl>http://vaadin.com/</organizationUrl>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-                <role>team manager</role>
-            </roles>
-            <timezone>2</timezone>
-        </developer>
-        <developer>
-            <id>hesara</id>
-            <name>Henri Sara</name>
-            <email>hesara@vaadin.com</email>
-            <organization>Vaadin Ltd</organization>
-            <organizationUrl>http://vaadin.com/</organizationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>2</timezone>
-        </developer>
-    </developers>
     <dependencyManagement>
         <dependencies>
             <dependency>

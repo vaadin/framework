@@ -11,10 +11,7 @@
     <name>vaadin-liferay</name>
     <packaging>pom</packaging>
 
-    <organization>
-        <name>Vaadin Ltd</name>
-    </organization>
-    <url>https://vaadin.com/</url>
+	<url>https://vaadin.com/</url>
     <description>Vaadin Liferay package</description>
 
     <dependencies>

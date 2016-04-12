@@ -18,9 +18,6 @@
 		<widgetset.local.workers>6</widgetset.local.workers>
 	</properties>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin client compiled</description>
 

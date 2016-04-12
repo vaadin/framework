@@ -16,9 +16,6 @@
 		<streamhtmlparser.version>0.0.10.vaadin1</streamhtmlparser.version>
 	</properties>
 
-	<organization>
-		<name>Vaadin Ltd</name>
-	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin shared</description>
 

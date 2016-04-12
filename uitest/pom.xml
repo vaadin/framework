@@ -14,10 +14,7 @@
         <jetty.version>8.1.12.v20130726</jetty.version>
     </properties>
 
-    <organization>
-        <name>Vaadin Ltd</name>
-    </organization>
-    <url>https://vaadin.com/</url>
+	<url>https://vaadin.com/</url>
     <description>Vaadin UI tests</description>
 
     <repositories>
