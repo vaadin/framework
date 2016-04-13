@@ -188,9 +188,10 @@ public class ServerRpcQueue {
      * Triggers a send of server RPC and legacy variable changes to the server.
      */
     public void flush() {
-        if (flushScheduled) {
+        if (flushScheduled || isEmpty()) {
             return;
         }
+
         flushPending = true;
         flushScheduled = true;
         Scheduler.get().scheduleFinally(scheduledFlushCommand);
