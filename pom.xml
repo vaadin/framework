@@ -269,6 +269,17 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<!-- These are overridden by the release build on the CI -->
+						<configuration>
+							<nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+							<serverId>local-nexus</serverId>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
