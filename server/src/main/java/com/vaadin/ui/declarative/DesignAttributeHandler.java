@@ -37,7 +37,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Alignment;
 
 /**
  * Default attribute handler implementation used when parsing designs to
@@ -452,4 +454,55 @@ public class DesignAttributeHandler implements Serializable {
             return (methods != null && methods.length > 1) ? methods[1] : null;
         }
     }
+
+    /**
+     * Read the alignment from the given child component attributes.
+     * 
+     * @since 7.6.4
+     * @param attr
+     *            the child component attributes
+     * @return the component alignment
+     */
+    public static Alignment readAlignment(Attributes attr) {
+        int bitMask = 0;
+        if (attr.hasKey(":middle")) {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
+        } else if (attr.hasKey(":bottom")) {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
+        } else {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
+        }
+        if (attr.hasKey(":center")) {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
+        } else if (attr.hasKey(":right")) {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
+        } else {
+            bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
+        }
+
+        return new Alignment(bitMask);
+    }
+
+    /**
+     * Writes the alignment to the given child element attributes.
+     * 
+     * @since 7.6.4
+     * @param childElement
+     *            the child element
+     * @param alignment
+     *            the component alignment
+     */
+    public static void writeAlignment(Element childElement, Alignment alignment) {
+        if (alignment.isMiddle()) {
+            childElement.attr(":middle", true);
+        } else if (alignment.isBottom()) {
+            childElement.attr(":bottom", true);
+        }
+        if (alignment.isCenter()) {
+            childElement.attr(":center", true);
+        } else if (alignment.isRight()) {
+            childElement.attr(":right", true);
+        }
+    }
+
 }

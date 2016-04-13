@@ -22,12 +22,11 @@ hierarchy is illustrated in <<figure.clientside.widgets>>. Please see the GWT
 API documentation for a complete description of the widget classes.
 
 [[figure.clientside.widgets]]
-.GWT Widget Base Class Hierarchy
+.GWT widget base class hierarchy
 image::img/gwt-widgets-hi.png[]
 
 For example, we could extend the [classname]#Label# widget to display some
 custom text.
-
 
 ----
 package com.example.myapp.client;
@@ -70,7 +69,3 @@ public class MyEntryPoint implements EntryPoint {
     }
 }
 ----
-
-
-
-

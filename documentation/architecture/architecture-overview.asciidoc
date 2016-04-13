@@ -63,7 +63,7 @@ User Interface Components/Widgets:: ((("component")))
 ((("field")))
 The user interface of a Vaadin application consists of components that are
 created and laid out by the application. Each server-side component has a
-client-side counterpart, a " __widget__", by which it is rendered in the browser
+client-side counterpart, a __widget__, by which it is rendered in the browser
 and with which the user interacts. The client-side widgets can also be used by
 client-side applications. The server-side components relay these events to the
 application logic. Field components that have a value, which the user can view
@@ -155,8 +155,3 @@ run in the same servlet as the UI code, usually separated at least by a Java
 API, possibly as EJBs, or distributed to a remote back-end service. The data
 storage is usually distributed to a database management system, and is typically
 accessed through a persistence solution, such as JPA.
-
-
-
-
-

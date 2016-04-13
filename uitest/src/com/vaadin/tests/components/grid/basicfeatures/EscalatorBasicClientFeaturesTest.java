@@ -89,6 +89,13 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String ROW_99 = "Row 99";
 
     @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        setDebug(true);
+    }
+
+    @Override
     protected Class<?> getUIClass() {
         return EscalatorBasicClientFeatures.class;
     }
@@ -272,6 +279,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
                 By.className("v-escalator-scroller-horizontal"));
     }
 
+    @Override
     protected Object executeScript(String script, Object... args) {
         return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }

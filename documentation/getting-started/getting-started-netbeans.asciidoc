@@ -1,18 +1,15 @@
 ---
-title: Creating a Project with NetBeans IDE
-order: 7
+title: Creating a Project in NetBeans
+order: 110
 layout: page
 ---
 
 [[getting-started.netbeans]]
-= Creating a Project with NetBeans IDE
+= Creating a Project with the NetBeans IDE
 
-The easiest way to develop Vaadin application with the NetBeans IDE is to use
-the Vaadin Plugin for NetBeans. It allows you to create new Vaadin projects
-easily and provides many features for working on a project. You can download the
-plugin at http://plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans.
-The download page contains a link to a plugin features overview in NetBeans
-Wiki.
+In the following, we walk you through the creation of a Vaadin project in NetBeans and show how to run it.
+
+Installation of NetBeans and the Vaadin plugin is covered in <<DUMMY/../../../framework/installing/installing-netbeans#installing.netbeans, "Installing the NetBeans IDE and Plugin">>.
 
 Without the plugin, you can most easily create a Vaadin project as a Maven
 project using a Vaadin archetype. You can also create a Vaadin project as a
@@ -20,42 +17,90 @@ regular web application project, but it requires many manual steps to install
 all the Vaadin libraries, create the UI class, configure the servlet, create
 theme, and so on.
 
-[[getting-started.netbeans.maven]]
-== Maven Project from a Vaadin Archetype
+[[getting-started.netbeans.creating]]
+== Creating a Project
 
-Creating a Maven project with a Vaadin archetype creates an application skeleton
-with a UI class and project theme, defines the [filename]#web.xml# deployment
-descriptor, and also retrieves the latest Vaadin library automatically.
+. Select "File > Net Project..." from the main menu or press kbd:[Ctrl+Shift+N].
 
-. Select "File > New Project".
+. In the [guilabel]#New Project# window that opens, select the [guilabel]#Vaadin# category and one of the Vaadin archetypes from the right.
++
+image::img/netbeans-newproject-1.png[]
++
+The archetypes are described in more detail in <<getting-started-archetypes#getting-started.archetypes, "Overview of Maven Archetypes">>.
 
-. Select "Maven > Project from Archetype" and click [guibutton]#Next#.
+. In the [guilabel]#Name and Location# step, enter the project parameters.
++
+image::img/netbeans-newproject-2.png[]
 
-. Find [literal]#++vaadin-archetype-application++#, select it, and click
-[guilabel]#Next#.
+[guilabel]#Project Name#:: A project name.
+The name must be a valid identifier that may only contains alphanumerics, minus, and underscore.
+It is appended to the group ID to obtain the Java package name for the sources.
 
-. In the [guilabel]#Name and Location# step, enter [guilabel]#Project Name#, which
-is recommended to be only lower-case alphabetics, as it is used also as a
-suggestion for the Java package name of the project. Modify the other parameters
-for your project and click [guibutton]#Finish#.
+[guilabel]#Project Location#::
+Path to the folder where the project is to be created.
+
+[guilabel]#Group Id#:: A Maven group ID for your project.
+It is normally your organization domain name in reverse order, such as `com.example`.
+The group ID is also used as a prefix for the Java source package, so it should be Java-compatible package name.
+
+[guilabel]#Version#:: Initial version of your application.
+The number must obey the Maven version numbering format.
+
+[guilabel]#Package#:: The Java package name to put sources in.
+
+[guilabel]#Additional Creation Properties#::
+The properties control various names.
+They are specific to the archetype you chose.
 
 +
-[[figure.getting-started.netbeans.maven.new-project]]
-.Adding a New Maven Project in NetBeans
-image::img/netbeans-maven-newproject-name.png[]
-
+Click [guibutton]#Finish#.
 
 Creating the project can take a while as Maven loads all the needed
-dependencies. Once created, you can run it by right-clicking on the project in
-the [guilabel]#Projects# view and selecting [guilabel]#Run#. In the
-[guilabel]#Select deployment server# window that opens, select
-[guilabel]#Glassfish# or [guilabel]#Apache Tomcat#, and click [guibutton]#OK#.
+dependencies.
+
+[[getting-started.netbeans.exploring]]
+== Exploring the Project
+
+The project wizard has done all the work for you: a UI class skeleton has been written to the [filename]#src# directory.
+The project hierarchy shown in the Project Explorer is shown in <<figure.getting-started.netbeans.exploring>>.
+
+[[figure.getting-started.netbeans.exploring]]
+.A new Vaadin project in NetBeans
+image::img/netbeans-created-annotated-hi.png[width=80%]
+
+[filename]#mytheme#::
+The theme of the UI.
+See <<DUMMY/../../../framework/themes/themes-overview#themes.overview, "Themes">> for information about themes.
+
+[filename]#MyUI.java#::
+The UI class, which is the main entry-point of your application.
+See <<DUMMY/../../../framework/application/application-overview#application.overview, "Server-Side Applications">> for information about the basic structure of Vaadin applications.
+
+The Vaadin libraries and other dependencies are managed by Maven.
+Notice that the libraries are not stored under the project folder, even though they are listed in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
+
+[[getting-started.netbeans.running]]
+== Running the Application
+
+Once created, you can run it in a server as follows.
+
+. In [guilabel]#Projects# tab, select the project and click in the [guilabel]#Run Project# button in the tool bar (or press kbd:[F6]).
+
+. In the [guilabel]#Select deployment server# window, select a server from the [guilabel]#Server# list.
+It should show either GlassFish or Apache Tomcat or both, depending on what you chose in NetBeans installation.
++
+image::img/netbeans-server.png[width=75%]
++
+Also, select [guilabel]#Remember Permanently# if you want to use the same server also in future while developing applications.
++
+Click [guibutton]#OK#.
++
+The widget set will be compiled at this point, which may take a while.
+
 If all goes well, NetBeans starts the server in port 8080 and, depending on your
 system configuration, launches the default browser to display the web
 application. If not, you can open it manually, for example, at
 http://localhost:8080/myproject. The project name is used by default as the
 context path of the application.
 
-
-
-
+Now when you edit the UI class in the source editor and save it, NetBeans will automatically redeploy the application. After it has finished after a few seconds, you can reload the application in the browser.

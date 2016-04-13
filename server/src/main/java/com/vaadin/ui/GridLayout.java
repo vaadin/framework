@@ -1330,7 +1330,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
         setRows(Math.max(rows.size(), 1));
-
+        Map<Component, Alignment> alignments = new HashMap<Component, Alignment>();
         List<Integer> columnExpandRatios = new ArrayList<Integer>();
         for (int row = 0; row < rowElements.size(); ++row) {
             Element rowElement = rowElements.get(row);
@@ -1357,7 +1357,10 @@ public class GridLayout extends AbstractLayout implements
                 Component child = null;
 
                 if (col.children().size() > 0) {
-                    child = designContext.readDesign(col.child(0));
+                    Element childElement = col.child(0);
+                    child = designContext.readDesign(childElement);
+                    alignments.put(child, DesignAttributeHandler
+                            .readAlignment(childElement.attributes()));
                     // TODO: Currently ignoring any extra children.
                     // Needs Error handling?
                 } // Else: Empty placeholder. No child component.
@@ -1441,6 +1444,7 @@ public class GridLayout extends AbstractLayout implements
 
                 // Add component with area
                 addComponent(child, j, i, j + colspan, i + rowspan);
+                setComponentAlignment(child, alignments.get(child));
             }
         }
         // Set cursor position explicitly
@@ -1511,16 +1515,8 @@ public class GridLayout extends AbstractLayout implements
                     ChildComponentData coords = childData.get(child);
 
                     Alignment alignment = getComponentAlignment(child);
-                    if (alignment.isMiddle()) {
-                        childElement.attr(":middle", true);
-                    } else if (alignment.isBottom()) {
-                        childElement.attr(":bottom", true);
-                    }
-                    if (alignment.isCenter()) {
-                        childElement.attr(":center", true);
-                    } else if (alignment.isRight()) {
-                        childElement.attr(":right", true);
-                    }
+                    DesignAttributeHandler.writeAlignment(childElement,
+                            alignment);
 
                     col.appendChild(childElement);
                     if (coords.row1 != coords.row2) {

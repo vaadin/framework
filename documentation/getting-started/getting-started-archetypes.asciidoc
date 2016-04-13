@@ -1,0 +1,34 @@
+---
+title: Maven Archetypes
+order: 30
+layout: page
+---
+
+[[getting-started.archetypes]]
+= Overview of Maven Archetypes
+
+Vaadin currently offers the following Maven archetypes for different kinds of projects:
+
+`vaadin-archetype-application`::
+This is a single-module project for simple applications.
+It is good for quick demos and trying out Vaadin.
+It is also useful when you are experienced with Vaadin and want to build all the aspects of the application yourself.
+
+`vaadin-archetype-application-multimodule`::
+A complete Vaadin application development setup.
+It features separate production and development profiles.
+
+`vaadin-archetype-application-example`::
+An example CRUD web application using multi-module project setup.
+
+`vaadin-archetype-widget`::
+A multi-module project for a new Vaadin add-on.
+It has two modules: one for the add-on and another for a demo application.
+
+`vaadin-archetype-touchkit`::
+A mobile development starter project using Vaadin TouchKit.
+See <<dummy/../../../touchkit/mobile-overview#mobile.overview,"Vaadin TouchKit">>.
+Notice that this archetype uses the AGPL-licensed version of TouchKit, which requires that your project must also be licensed under the AGPL license.
+
+`vaadin-archetype-liferay-portlet`::
+A portlet development setup for the open-source Liferay portal.

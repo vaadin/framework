@@ -14,14 +14,20 @@ debug features for Vaadin developers:
 * Debug Window
 * Display debug information in the Debug Window and server console
 * On-the-fly compilation of Sass themes
+* Timings of server calls for Vaadin TestBench
+
+It is recommended to always deploy production applications in production mode
+for security reasons.
 
 [[advanced.debug.mode]]
 == Enabling the Debug Mode
 
 The debug mode is enabled and production mode disabled by default in the UI
-templates created with the Eclipse plugin or the Maven archetypes. The debug
-mode can be enabled by giving a [parameter]#productionMode=false# parameter to
-the Vaadin servlet configuration:
+templates created with the Eclipse plugin or the Maven archetypes. Some
+archetypes have a separate module and profile for producing a production mode
+application. The debug mode can be enabled by giving a
+[parameter]#productionMode=false# parameter to the Vaadin servlet
+configuration:
 
 [subs="normal"]
 ----
@@ -137,8 +143,7 @@ properties.
 
 To view the HTML structure and CSS styles in more detail, you can use Firebug in
 Firefox, or the Developer Tools in Chrome, as described in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment.firefox,"Firefox
-and Firebug">>. Firefox also has a built-in feature for inspecting HTML and CSS.
+<<dummy/../../../framework/installing/installing-other#installing.other.firefox,"Firefox and Firebug">>. Firefox also has a built-in feature for inspecting HTML and CSS.
 
 
 [[advanced.debug.hierarchy.analyze]]
@@ -149,8 +154,8 @@ currently visible UI and makes a report of possible layout related problems. All
 detected layout problems are displayed in the log and also printed to the
 console.
 
-[[]]
-.Debug Window Showing the Result of Layout Analysis.
+[[figure.advanced.debug.hierarchy.analyze]]
+.Debug window showing the result of layout analysis.
 image::img/debug-window-analyze-layouts.png[]
 
 Clicking on a reported problem highlights the component with the problem in the
@@ -161,7 +166,7 @@ relative size inside a container (layout) that has undefined size in the
 particular direction (height or width). For example, adding a
 [classname]#Button# with 100% width inside a [classname]#VerticalLayout# with
 undefined width. In such a case, the error would look as shown in
-<<dummy/../../../framework//-overview.asciidoc#figure.advanced.debug.hierarchy.analyze,"">>.
+<<figure.advanced.debug.hierarchy.analyze>>.
 
 [classname]#CustomLayout# components can not be analyzed in the same way as
 other layouts. For custom layouts, the button analyzes all contained
@@ -202,7 +207,3 @@ The [guilabel]#Menu# tab in the window opens a sub-menu to select various
 settings. Here you can also launch the GWT SuperDevMode, as described in
 <<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
 Client-Side Code">>.
-
-
-
-

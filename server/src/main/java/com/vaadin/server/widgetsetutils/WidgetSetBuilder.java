@@ -61,16 +61,17 @@ public class WidgetSetBuilder {
         Map<String, URL> availableWidgetSets = ClassPathExplorer
                 .getAvailableWidgetSets();
 
+        String widgetsetFileName = widgetset.replace(".", "/") + ".gwt.xml";
         URL sourceUrl = availableWidgetSets.get(widgetset);
         if (sourceUrl == null) {
             // find first/default source directory
-            sourceUrl = ClassPathExplorer.getDefaultSourceDirectory();
+            sourceUrl = ClassPathExplorer
+                    .getWidgetsetSourceDirectory(widgetsetFileName);
         }
 
-        String widgetsetfilename = sourceUrl.getFile() + "/"
-                + widgetset.replace(".", "/") + ".gwt.xml";
+        String wsFullPath = sourceUrl.getFile() + "/" + widgetsetFileName;
 
-        File widgetsetFile = new File(widgetsetfilename);
+        File widgetsetFile = new File(wsFullPath);
         if (!widgetsetFile.exists()) {
             // create empty gwt module file
             File parent = widgetsetFile.getParentFile();
@@ -137,7 +138,7 @@ public class WidgetSetBuilder {
 
             changed = changed || !content.equals(originalContent);
             if (changed) {
-                commitChanges(widgetsetfilename, content);
+                commitChanges(wsFullPath, content);
             }
         } else {
             System.out

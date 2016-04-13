@@ -1,15 +1,13 @@
 ---
 title: Vaadin Installation Package
-order: 9
+order: 900
 layout: page
 ---
 
 [[getting-started.package]]
 = Vaadin Installation Package
 
-While the recommended way to install Vaadin is to use the Eclipse plugin, one of
-the other IDE plugins, or a dependency management system, such as Maven, Vaadin
-is also available as a ZIP distribution package.
+While the recommended way to create a Vaadin project and install the libraries is to use an IDE plugin or a dependency management system, such as Maven, Vaadin is also available as a ZIP distribution package.
 
 You can download the newest Vaadin installation package from the download page
 at http://vaadin.com/download/. Please use a ZIP decompression utility available
@@ -18,23 +16,17 @@ in your operating system to extract the files from the ZIP package.
 [[getting-started.package.contents]]
 == Package Contents
 
-[filename]#README.TXT#:: This Readme file gives simple instructions for installing Vaadin in your
-project.
+[filename]#README.TXT#:: This README file gives simple instructions for installing Vaadin in your project.
 
-[filename]#release-notes.html#:: The Release Notes contain information about the new features in the particular
-release, give upgrade instructions, describe compatibility, etc. Please open the
-HTML file with a web browser.
+[filename]#release-notes.html#:: The Release Notes contain information about the new features in the particular release, give upgrade instructions, describe compatibility, etc.
+Please open the HTML file with a web browser.
 
-[filename]#license.html#:: Apache License version 2.0. Please open the HTML file with a web browser.
+[filename]#license.html#:: Apache License version 2.0.
+Please open the HTML file with a web browser.
 
-[filename]#lib#folder:: All dependency libraries required by Vaadin are contained within the
-[filename]#lib# folder.
+[filename]#lib# folder:: All dependency libraries required by Vaadin are contained within the [filename]#lib# folder.
 
-[filename]#*.jar#:: Vaadin libraries, as described in
-<<dummy/../../../framework/getting-started/getting-started-libraries#getting-started.libraries,"Overview
-of Vaadin Libraries">>.
-
-
+[filename]#*.jar#:: Vaadin libraries, as described in <<getting-started-libraries#getting-started.libraries,"Overview of Vaadin Libraries">>.
 
 
 [[getting-started.package.install]]
@@ -58,8 +50,3 @@ organization, which depends on the development environment.
 * In Eclipse Dynamic Web Application projects: [filename]#WebContent/WEB-INF/lib#.
 
 * In Maven projects: [filename]#src/main/webapp/WEB-INF/lib#.
-
-
-
-
-

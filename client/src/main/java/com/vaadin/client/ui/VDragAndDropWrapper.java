@@ -45,6 +45,7 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
@@ -106,23 +107,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 final int deltaX = Math.abs(event.getClientX() - startX);
                 final int deltaY = Math.abs(event.getClientY() - startY);
                 if ((deltaX + deltaY) < MIN_PX_DELTA) {
-                    setFocusOnLastElement(event);
+                    Element clickedElement = WidgetUtil.getElementFromPoint(
+                            event.getClientX(), event.getClientY());
+                    clickedElement.focus();
                 }
-            }
-
-            private void setFocusOnLastElement(final MouseUpEvent event) {
-                Element el = event.getRelativeElement();
-                getLastChildElement(el).focus();
-            }
-
-            private Element getLastChildElement(Element el) {
-                do {
-                    if (el == null) {
-                        break;
-                    }
-                    el = el.getFirstChildElement();
-                } while (el.getFirstChildElement() != null);
-                return el;
             }
 
         }, MouseUpEvent.getType());
@@ -196,6 +184,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /** For internal use only. May be removed or replaced in the future. */
     public VAbstractDropHandler dropHandler;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public UploadHandler uploadHandler;
+
     private VDragEvent vaadinDragEvent;
 
     int filecounter = 0;
@@ -239,9 +230,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-                // visit server for possible
-                // variable changes
-                client.sendPendingVariableChanges();
+                // #19616 Notify the upload handler that the request is complete
+                // and let it poll the server for changes.
+                uploadHandler.uploadDone();
                 uploading = false;
                 startNextUpload();
                 xhr.clearOnReadyStateChange();
@@ -725,6 +716,19 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      */
     public Widget getDragImageWidget() {
         return dragImageWidget;
+    }
+
+    /**
+     * Internal client side interface used by the connector and the widget for
+     * the drag and drop wrapper to signal the completion of an HTML5 file
+     * upload.
+     * 
+     * @since 7.6.4
+     */
+    public interface UploadHandler {
+
+        public void uploadDone();
+
     }
 
 }

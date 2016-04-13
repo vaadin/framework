@@ -1,11 +1,11 @@
 ---
-title: Creating and Running a Project with Eclipse
-order: 5
+title: Creating a Project in Eclipse
+order: 100
 layout: page
 ---
 
 [[getting-started.first-project]]
-= Creating and Running a Project with Eclipse
+= Creating and Running a Project in Eclipse
 
 This section gives instructions for creating a new Eclipse project using the
 Vaadin Plugin. The task will include the following steps:
@@ -21,30 +21,33 @@ Vaadin Plugin. The task will include the following steps:
 
 We also show how you can debug the application in the debug mode in Eclipse.
 
-This walkthrough assumes that you have already installed the Vaadin Plugin for
-Eclipse and set up your development environment, as instructed in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
-up the Development Environment">>.
+This walkthrough assumes that you have already installed the Eclipse IDE, the Vaadin Plugin, and a development server, as instructed in
+<<dummy/../../../framework/installing/installing-eclipse#installing.eclipse, "Installing the Eclipse IDE and Plugin">>.
 
-[[getting-started.first-project.creation]]
+ifdef::web[]
+[[getting-started.first-project.ivy]]
 == Creating the Project
+endif::web[]
 
+ifdef::web[]
+_The following describes the creation of an Ivy project. The upcoming version of the Eclipse plug-in creates Maven projects. For that, see <<getting-started.first-project.creation>>._
+endif::web[]
+
+ifdef::web[]
 Let us create the first application project with the tools installed in the
 previous section. First, launch Eclipse and follow the following steps:
 
 . Start creating a new project by selecting from the menu "File > New > Project...".
 . In the [guilabel]#New Project# window that opens, select "Vaadin > Vaadin 7
 Project" and click [guibutton]#Next#.
-
 +
-image::img/myproject-new-vaadin.png[]
+image::img/myproject-ivy-new-vaadin.png[width=70%]
 
 . In the [guilabel]#Vaadin Project# step, you need to set the basic web project
 settings. You need to give at least the __project name__ and the runtime; the
 default values should be good for the other settings.
-
 +
-image::img/myproject-settings.png[]
+image::img/myproject-ivy-settings.png[width=70%]
 
 [guilabel]#Project name#:: Give the project a name. The name should be a valid identifier usable
 cross-platform as a filename and inside a URL, so using only lower-case
@@ -80,9 +83,7 @@ configuration; the steps listed in this section are for the default servlet
 configuration.
 ifdef::web[]
 See <<dummy/../../../framework/advanced/advanced-gae#advanced.gae,"Google App
-Engine Integration">> and
-<<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal
-Integration">> for instructions regarding the use of Vaadin in the alternative
+Engine Integration">> and <<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal Integration">> for instructions regarding the use of Vaadin in the alternative
 environments.
 endif::web[]
 
@@ -96,12 +97,9 @@ You can change the version later in the [filename]#ivy.xml#.
 
 [guilabel]#Create TestBench test#:: When enabled, the application stub will include a test case for testing the UI
 with Vaadin TestBench, as described in
-<<dummy/../../../testbench/testbench-overview.asciidoc#testbench.overview,"Vaadin
-TestBench">>. Vaadin TestBench API library will be included in
-[filename]#ivy.xml# as a dependency. Vaadin version 7.3 or later is required to
-create the stub.
-
-
+<<dummy/../../../testbench/testbench-overview.asciidoc#testbench.overview,"Vaadin TestBench">>.
+Vaadin TestBench API library will be included in [filename]#ivy.xml# as a dependency.
+Vaadin version 7.3 or later is required to create the stub.
 
 +
 You can click [guibutton]#Finish# here to use the defaults for the rest of the
@@ -112,7 +110,7 @@ settings, or click [guibutton]#Next#.
 the settings are pre-filled, and you should normally accept them as they are.
 
 +
-image::img/myproject-web.png[]
+image::img/myproject-ivy-web.png[]
 
 [guilabel]#Context Root#:: The context root (of the application) identifies the application in the URL used
 for accessing it. For example, if the project has a [literal]#++myproject++#
@@ -125,16 +123,13 @@ Eclipse project properties.
 (WAR) that is deployed to the web server. The directory is relative to the root
 directory of the project.
 
-
-
 +
 You can just accept the defaults and click [guibutton]#Next#.
 
-. The [guilabel]#Vaadin project# step page has various Vaadin-specific application
-settings. If you are trying out Vaadin for the first time, you should not need
+. The [guilabel]#Vaadin project# step page has various Vaadin-specific application settings.
+If you are trying out Vaadin for the first time, you should not need
 to change anything. You can set most of the settings afterwards, except the
 creation of the portlet configuration.
-
 +
 image::img/myproject-vaadin.png[]
 
@@ -153,12 +148,8 @@ will create the files needed for running the application in a portal. See
 <<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal
 Integration">> for more information on portlets.
 
-
-
 +
 Finally, click [guibutton]#Finish# to create the project.
-
-
 
 [[getting-started.first-project.exploring]]
 == Exploring the Project
@@ -171,7 +162,7 @@ project hierarchy shown in the Project Explorer is shown in
 
 [[figure.getting-started.first-project.exploring]]
 .A New Vaadin Project
-image::img/myproject-created.png[]
+image::img/myproject-ivy-created.png[scaledwidth=60%]
 
 The Vaadin libraries and other dependencies are managed by Ivy. Notice that the
 libraries are not stored under the project folder, even though they are listed
@@ -181,7 +172,6 @@ in the "Java Resources > Libraries > ivy.xml" virtual folder.
 === The UI Class
 
 The UI class created by the plugin contains the following code:
-
 
 [source, java]
 ----
@@ -227,10 +217,122 @@ In a Servlet 2.3 project, you would have a [filename]#web.xml# deployment
 descriptor.
 
 For a more detailed treatment of the deployment, see
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
-a web.xml Deployment Descriptor">>.
+<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using a web.xml Deployment Descriptor">>.
+endif::web[]
 
+[[getting-started.first-project.creation]]
+== Creating a Maven Project
 
+ifdef::web[]
+_The following describes project creation in the upcoming version of the Eclipse plug-in, which creates Maven rather than Ivy projects.
+To use it, you must have installed the experimental version of the plug-in._
+endif::web[]
+
+Let us create the first application project with the tools installed in the previous section.
+First, launch Eclipse and follow the following steps:
+
+. Start creating a new project by selecting from the menu "File > New > Project...".
+
+. In the [guilabel]#New Project# window that opens, select "Vaadin > Vaadin 7
+Project (Maven)" and click [guibutton]#Next#.
++
+image::img/myproject-new-vaadin.png[width=70%]
+
+. In the [guilabel]#Select a Maven archetype# step, you need to select the project type.
+To create a simple test project, select the [guilabel]#Single-module Application Project#.
++
+image::img/myproject-archetype-selection.png[width=70%]
+
+. In the [guilabel]#Specify archetype parameters# step, you need to give at least the [guilabel]#Group Id# and the [guilabel]#Artifact Id#.
+The default values should be good for the other settings.
++
+image::img/myproject-settings.png[width=70%]
+
+[guilabel]#Group Id#::
+Give the project an organization-level identifier, for example, [packagename]#com.example#.
+It is used as a prefix for your Java package names, and hence must be a valid Java package name itself.
+
+[guilabel]#Artifact Id#:: Give the project a name, for example, `myproject`.
+The artifact ID must be a valid Java sub-package name.
+
+[guilabel]#Version#:: Give the project a Maven compatible version number, for example, `1.0-SNAPSHOT`.
+The version number should typically start with two or more integers separated with dots, and
+should not contain spaces.
+
+[guilabel]#Package#:: Give the base package name for the project, for example,
+[packagename]#com.example.myproject#.
+It is by default generated from the group ID and the artifact ID.
+
+[guilabel]#Properties#:: Enter values for archetype-specific properties that control naming of various elements in the created project, such as the UI class name.
++
+You can change the version later in the [filename]#pom.xml#.
++
+Finally, click [guibutton]#Finish# to create the project.
+
+[[getting-started.first-project.exploring]]
+== Exploring the Project
+
+After the [guilabel]#New Project# wizard exits, it has done all the work for you: a UI class skeleton has been written to the [filename]#src# directory.
+The project hierarchy shown in the Project Explorer is shown in <<figure.getting-started.first-project.exploring>>.
+
+[[figure.getting-started.first-project.exploring]]
+.A new Vaadin Project
+image::img/myproject-created-annotated-hi.png[width=80%]
+
+The Vaadin libraries and other dependencies are managed by Maven.
+Notice that the libraries are not stored under the project folder, even though they are listed in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
+
+[[getting-started.first-project.exploring.ui]]
+=== The UI Class
+
+The UI class created by the plug-in contains the following code:
+
+[source, java]
+----
+package com.example.myproject;
+
+import com.vaadin.ui.UI;
+...
+
+@Theme("mytheme")
+@Widgetset("com.example.myproject.MyAppWidgetset")
+public class MyUI extends UI {
+
+    @Override
+    protected void init(VaadinRequest vaadinRequest) {
+        final VerticalLayout layout = new VerticalLayout();
+
+        final TextField name = new TextField();
+        name.setCaption("Type your name here:");
+
+        Button button = new Button("Click Me");
+        button.addClickListener( e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue()
+                    + ", it works!"));
+        });
+
+        layout.addComponents(name, button);
+        layout.setMargin(true);
+        layout.setSpacing(true);
+
+        setContent(layout);
+    }
+
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    public static class MyUIServlet extends VaadinServlet {
+    }
+}
+----
+
+[[getting-started.first-project.widgetset]]
+== Compiling the Widget Set and Theme
+
+Before running the project for the first time, select [guilabel]#Compile Widgetset and Theme# from the menu shown in <<figure.getting-started.first-project.compilewidgetset>>.
+
+[[figure.getting-started.first-project.compilewidgetset]]
+.Compile Widgetset and Theme Menu
+image::img/myproject-compilewidgetset.png[width=50%]
 
 [[getting-started.first-project.coding]]
 == Coding Tips for Eclipse
@@ -257,8 +359,7 @@ server-side development.
 
 [[figure.getting-started.first-project.coding.import]]
 .Importing Classes Automatically
-image::img/codingtips-automaticimports.png[]
-
+image::img/codingtips-automaticimports.png[scaledwidth=80%]
 
 [[getting-started.first-project.server]]
 == Setting Up and Starting the Web Server
@@ -272,29 +373,31 @@ web server in Eclipse will fail if the user does not have write permissions to
 the configuration and deployment directories under the Tomcat installation
 directory.
 
-Follow the following steps.
+Follow the following steps:
 
-. Switch to the Servers tab in the lower panel in Eclipse. List of servers should be empty after Eclipse is installed. Right-click on the empty area in the panel and select "New > Server". +
+. Switch to the Servers tab in the lower panel in Eclipse. List of servers should be empty after Eclipse is installed. Right-click on the empty area in the panel and select "New > Server".
++
 image::img/tomcat-startserver-1.png[]
 
 
-. Select "Apache > Tomcat v7.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#. +
+. Select "Apache > Tomcat v7.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#.
++
 image::img/tomcat-startserver-2.png[]
 
 
-. Add your project to the server by selecting it on the left and clicking [guibutton]#Add# to add it to the configured projects on the right. Click [guibutton]#Finish#. +
+. Add your project to the server by selecting it on the left and clicking [guibutton]#Add# to add it to the configured projects on the right. Click [guibutton]#Finish#.
++
 image::img/tomcat-startserver-3.png[]
 
-
-. The server and the project are now installed in Eclipse and are shown in the [guilabel]#Servers# tab. To start the server, right-click on the server and select Debug. To start the server in non-debug mode, select Start. +
+. The server and the project are now installed in Eclipse and are shown in the [guilabel]#Servers# tab.
+To start the server, right-click on the server and select [guilabel]#Debug#.
+To start the server in non-debug mode, select [guilabel]#Start#.
++
 image::img/tomcat-startserver-4.png[]
 
-
-. The server starts and the WebContent directory of the project is published to the server on http://localhost:8080/myproject/. +
+. The server starts and the WebContent directory of the project is published to the server on http://localhost:8080/myproject/.
++
 image::img/tomcat-startserver-5.png[]
-
-
-
 
 [[getting-started.first-project.run]]
 == Running and Debugging
@@ -304,20 +407,82 @@ Starting your application is as easy as selecting [guilabel]#myproject# from the
 Eclipse then opens the application in built-in web browser.
 
 .Running a Vaadin Application
-image::img/runningMyProject.png[]
+image::img/runningMyProject.png[width=60%]
 
 You can insert break points in the Java code by double-clicking on the left
 margin bar of the source code window. For example, if you insert a breakpoint in
 the [methodname]#buttonClick()# method and click the [guibutton]#What is the
 time?# button, Eclipse will ask to switch to the Debug perspective. Debug
 perspective will show where the execution stopped at the breakpoint. You can
-examine and change the state of the application. To continue execution, select
-Resume from Run menu.
+examine and change the state of the application.
+To continue execution, select [guilabel]#Resume# from [guilabel]#Run# menu.
 
 .Debugging a Vaadin Application
 image::img/debuggingMyProject.png[]
 
-Above, we described how to debug a server-side application. Debugging
-client-side applications and widgets is described in
-<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
-Client-Side Code">>.
+Above, we described how to debug a server-side application.
+Debugging client-side applications and widgets is described in
+<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.
+
+[[getting-started.eclipse.mavenlibraryupdate]]
+== Updating the Vaadin Libraries in Maven Projects
+
+Updating the Vaadin plugin does not update Vaadin libraries. The libraries are
+project specific, as a different version might be required for different
+projects, so you have to update them separately for each project.
+
+. Open the [filename]#pom.xml# in an editor in Eclipse.
+
+. Edit the [propertyname]#vaadin.version# property to set the Vaadin version.
++
+Updating the libraries can take several minutes. You can see the progress in the
+Eclipse status bar. You can get more details about the progress by clicking the
+indicator.
+
+. If you have compiled the widget set for your project, recompile it by clicking
+the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+
+. Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
+right-clicking the server and selecting [guilabel]#Clean# as well as
+[guilabel]#Clean Tomcat Work Directory#, and restart it.
+
+If you experience problems after updating the libraries, you can try using
+"Maven > Update Project".
+
+[[getting-started.eclipse.libraryupdate]]
+== Updating the Vaadin Libraries in Ivy Projects
+
+Updating the Vaadin plugin does not update Vaadin libraries.
+The libraries are project specific, as a different version might be required for different projects, so you have to update them separately for each project.
+
+. Open the [filename]#ivy.xml# in an editor in Eclipse.
+
+. Edit the entity definition at the beginning of the file to set the Vaadin
+version.
++
+[subs="normal"]
+----
+&lt;!ENTITY vaadin.version "**7.x.x**"&gt;
+----
++
+You can specify either a fixed version number, as shown in the above example, or
+a dynamic revision tag such as [literal]#++latest.release++#.
+You can find more information about the dependency declarations in Ivy documentation.
+
+. Right-click the project and select "Ivy > Resolve".
++
+Updating the libraries can take several minutes. You can see the progress in the
+Eclipse status bar. You can get more details about the progress by clicking the
+indicator.
+
+. If you have compiled the widget set for your project, recompile it by clicking
+the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+
+. Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
+right-clicking the server and selecting Clean as well as Clean Tomcat Work
+Directory, and restart it.
+
+If you experience problems after updating the libraries, you can try clearing
+the Ivy resolution caches by right-clicking the project and selecting "Ivy >
+Clean all caches".
+Then, do the "Ivy > Resolve" and other tasks again.

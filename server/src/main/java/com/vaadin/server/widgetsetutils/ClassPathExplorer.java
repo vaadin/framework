@@ -495,7 +495,24 @@ public class ClassPathExplorer {
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
+        return getWidgetsetSourceDirectory(null);
+    }
 
+    /**
+     * Find and return the source directory which contains the given widgetset
+     * file.
+     * 
+     * If not applicable or widgetsetFileName is null, return the first
+     * directory (not a JAR file etc.) on the classpath.
+     * 
+     * TODO this could be done better...
+     * 
+     * @param widgetsetFileName
+     *            relative path for the widgetset
+     * 
+     * @return URL
+     */
+    public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {
         if (debug) {
             debug("classpathLocations values:");
             ArrayList<String> locations = new ArrayList<String>(
@@ -505,6 +522,7 @@ public class ClassPathExplorer {
             }
         }
 
+        URL firstDirectory = null;
         Iterator<String> it = rawClasspathEntries.iterator();
         while (it.hasNext()) {
             String entry = it.next();
@@ -513,13 +531,18 @@ public class ClassPathExplorer {
             if (directory.exists() && !directory.isHidden()
                     && directory.isDirectory()) {
                 try {
-                    return new URL("file://" + directory.getCanonicalPath());
-                } catch (MalformedURLException e) {
-                    // ignore: continue to the next classpath entry
-                    if (debug) {
-                        e.printStackTrace();
+                    URL directoryUrl = directory.toURI().toURL();
+
+                    // Store the first directory encountered.
+                    if (firstDirectory == null) {
+                        firstDirectory = directoryUrl;
                     }
-                } catch (IOException e) {
+
+                    if (widgetsetFileName == null
+                            || new File(directory, widgetsetFileName).exists()) {
+                        return directoryUrl;
+                    }
+                } catch (MalformedURLException e) {
                     // ignore: continue to the next classpath entry
                     if (debug) {
                         e.printStackTrace();
@@ -527,7 +550,8 @@ public class ClassPathExplorer {
                 }
             }
         }
-        return null;
+
+        return firstDirectory;
     }
 
     /**

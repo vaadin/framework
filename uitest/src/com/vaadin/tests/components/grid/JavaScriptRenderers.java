@@ -55,6 +55,7 @@ public class JavaScriptRenderers extends AbstractTestUI {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty("id", Integer.class, Integer.valueOf(0));
         container.addContainerProperty("bean", MyBean.class, null);
+        container.addContainerProperty("string", String.class, "");
 
         for (int i = 0; i < 1000; i++) {
             Integer itemId = Integer.valueOf(i);
@@ -62,12 +63,15 @@ public class JavaScriptRenderers extends AbstractTestUI {
             item.getItemProperty("id").setValue(itemId);
             item.getItemProperty("bean").setValue(
                     new MyBean(i + 1, Integer.toString(i - 1)));
+            item.getItemProperty("string").setValue("string" + i);
         }
 
         Grid grid = new Grid(container);
 
         grid.getColumn("bean").setRenderer(new MyBeanJSRenderer());
         grid.getColumn("bean").setWidth(250);
+
+        grid.getColumn("string").setRenderer(new JavaScriptStringRenderer());
 
         addComponent(grid);
     }

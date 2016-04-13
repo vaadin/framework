@@ -21,16 +21,14 @@ automatically enabled in the Valo theme. For other themes, you need to include
 it with the following line in your project theme, after importing the base
 theme:
 
-
 ----
 @include fonticons;
 ----
 
 If you use other icon fonts, as described in <<themes.fonticon.custom>>, and the
 font is not loaded by a base theme, you need to load it with a
-[literal]#++font++# mixin in Sass, as described in
-<<dummy/../../../framework/themes/themes-fonts#themes.fonts.loading,"Loading
-Local Fonts">>.
+`font` mixin in Sass, as described in
+<<themes-fonts#themes.fonts.loading,"Loading Local Fonts">>.
 
 
 [[themes.fonticon.using]]
@@ -46,7 +44,7 @@ of all the icons included in the font.
 
 Most typically, you set a component icon as follows:
 
-
+[source, Java]
 ----
 TextField name = new TextField("Name");
 name.setIcon(FontAwesome.USER);
@@ -73,7 +71,6 @@ As font icons are regular text, you can specify their color with the
 HTML elements that display icons in Vaadin have the [literal]#++v-icon++# style
 name.
 
-
 ----
 .v-icon {
     color: blue;
@@ -84,14 +81,13 @@ If you use the font icon resources in other ways, such as in an
 [classname]#Image# component, the style name will be different.
 
 
-
 [[themes.fonticon.html]]
 == Using Font icons in HTML
 
 You can use font icons in HTML code, such as in a [classname]#Label#, by
 generating the HTML to display the icon with the [methodname]#getHtml()# method.
 
-
+[source, Java]
 ----
 Label label = new Label("I " +
     FontAwesome.HEART.getHtml() + " Vaadin",
@@ -101,9 +97,9 @@ layout.addComponent(label);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.fonticon.html[on-line example, window="_blank"].
 
-The HTML code has the [literal]#++v-icon++# style, which you can modify in CSS:
+The HTML code has the [stylename]#v-icon# style, which you can modify in CSS:
 
-
+[source, css]
 ----
 .redicon .v-icon {
     color: red;
@@ -111,10 +107,11 @@ The HTML code has the [literal]#++v-icon++# style, which you can modify in CSS:
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.fonticon.html[on-line example, window="_blank"].
 
-The result is illustrated in <<figure.themes.fonticon.html>>, with the color
+The result is illustrated in <<figure.themes.fonticon-html.label>>, with the color
 styling described next.
 
-[[figure.themes.fonticon.html]]
+// The ID may not end in ".html"
+[[figure.themes.fonticon-html.label]]
 .Using Font Icons in Label
 image::img/fonticons-html.png[]
 
@@ -125,7 +122,6 @@ You can easily use font icons in HTML code in other ways as well. You just need
 to use the correct font family and then use the hex-formatted Unicode codepoint
 for the icon. See for example the implementation of the [methodname]#getHtml()#
 method in [classname]#FontAwesome#:
-
 
 ----
 @Override
@@ -212,30 +208,30 @@ using a normal sans-serif font built-in in the browser.
 // Font icon definition with a single symbol
 public enum MyFontIcon implements FontIcon {
     EURO(0x20AC);
-    
+
     private int codepoint;
-    
+
     MyFontIcon(int codepoint) {
         this.codepoint = codepoint;
     }
-    
+
     @Override
     public String getMIMEType() {
         throw new UnsupportedOperationException(
             FontIcon.class.getSimpleName()
             + " should not be used where a MIME type is needed.");
     }
-    
+
     @Override
     public String getFontFamily() {
         return "sans-serif";
     }
-    
+
     @Override
     public int getCodepoint() {
         return codepoint;
     }
-    
+
     @Override
     public String getHtml() {
         return "<span class=\"v-icon\" style=\"font-family: " +
@@ -260,7 +256,3 @@ You could make the implementation a class as well, instead of an enumeration, to
 allow other ways to specify the icons.
 
 endif::web[]
-
-
-
-

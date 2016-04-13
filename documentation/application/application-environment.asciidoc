@@ -25,9 +25,9 @@ that form an application. Such a Java web application is typically packaged as a
 WAR package for deployment. Server-side Vaadin UIs run as servlets within such a
 Java web application. There exists also other kinds of web applications. To
 avoid confusion with the general meaning of "web application", we often refer to
-Java web applications with the slight misnomer "WAR" in this book.//TODO Vaadin
-7: What is the relationship between servlet and
-application?
+Java web applications with the slight misnomer "WAR" in this book.
+
+// TODO Vaadin 7: What is the relationship between servlet and application?
 
 [[application.environment.war-eclipse]]
 == Creating Deployable WAR in Eclipse
@@ -35,41 +35,34 @@ application?
 To deploy an application to a web server, you need to create a WAR package. Here
 we give the instructions for Eclipse.
 
-. Select "File > Export" and then "Web > WAR File". Or, right-click the project in
-the Project Explorer and select "Web > WAR File".
+. Select "File > Export" and then "Web > WAR File". Or, right-click the project in the Project Explorer and select "Web > WAR File".
 
-. Select the [guilabel]#Web project# to export. Enter [guilabel]#Destination# file
-name ( [filename]#.war#).
+. Select the [guilabel]#Web project# to export. Enter [guilabel]#Destination# file name ([filename]#.war#).
 
 . Make any other settings in the dialog, and click [guibutton]#Finish#.
-
-
 
 [[application.environment.war]]
 == Web Application Contents
 
 The following files are required in a web application in order to run it.
 
-[filename]#WEB-INF/web.xml# (optional with Servlet 3.0):: This is the web application descriptor that defines how the application is
-organized, that is, what servlets and such it has. You can refer to any Java
-book about the contents of this file. It is not needed if you define the Vaadin
-servlet with the [literal]#++@WebServlet++# annotation in Servlet API 3.0.
+[filename]#WEB-INF/web.xml# (optional with Servlet 3.0)::
+ his is the web application descriptor that defines how the application is rganized, that is, what servlets and such it has.
+You can refer to any Java book about the contents of this file.
+It is not needed if you define the Vaadin servlet with the [classname]#@WebServlet# annotation in Servlet API 3.0.
 
-[filename]#WEB-INF/lib/*.jar# :: These are the Vaadin libraries and their dependencies. They can be found in the
-installation package or as loaded by a dependency management system such as
-Maven or Ivy.
+[filename]#WEB-INF/lib/*.jar# ::
+These are the Vaadin libraries and their dependencies.
+They can be found in the installation package or as loaded by a dependency management system such as Maven or Ivy.
 
-Your UI classes:: You must include your UI classes either in a JAR file in [filename]#WEB-INF/lib#
-or as classes in [filename]#WEB-INF/classes#
+Your UI classes::
+You must include your UI classes either in a JAR file in [filename]#WEB-INF/lib# or as classes in [filename]#WEB-INF/classes#
 
-Your own theme files (OPTIONAL):: If your application uses a special theme (look and feel), you must include it in
-[filename]#VAADIN/themes/themename# directory.
+Your own theme files (OPTIONAL)::
+If your application uses a special theme (look and feel), you must include it in [filename]#VAADIN/themes/themename# directory.
 
-Widget sets (OPTIONAL):: If your application uses a project-specific widget set, it must be compiled in
-the [filename]#VAADIN/widgetset/# directory.
-
-
-
+Widget sets (OPTIONAL)::
+If your application uses a project-specific widget set, it must be compiled in the [filename]#VAADIN/widgetset/# directory.
 
 [[application.environment.webservlet]]
 == Web Servlet Class

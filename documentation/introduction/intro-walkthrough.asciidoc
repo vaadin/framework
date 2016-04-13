@@ -8,8 +8,8 @@ layout: page
 = Example Application Walkthrough
 
 Let us follow the long tradition of first saying "Hello World!" when learning a
-new programming framework. First, using the primary server-side API.
-
+new programming framework.
+First, using the primary server-side API.
 
 [source, java]
 ----
@@ -29,7 +29,7 @@ public class HelloWorld extends UI {
         // Display the greeting
         content.addComponent(new Label("Hello World!"));
 
-        // Have a clickable button        
+        // Have a clickable button
         content.addComponent(new Button("Push Me!",
             new ClickListener() {
                 @Override
@@ -77,7 +77,7 @@ The result of the Hello World application, when opened in a browser, is shown in
 
 [[figure.intro.walkthrough]]
 .Hello World Application
-image::img/HelloWorld.png[]
+image::img/HelloWorld.png[scaledwidth=70%]
 
 To run a program, you need to package it as a web application WAR package and
 deploy it to a server, as explained in
@@ -106,6 +106,3 @@ to write client-side widgets, which you can then use from a server-side Vaadin
 application. For more information regarding client-side development, see
 <<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
 Vaadin Development">>.
-
-
-

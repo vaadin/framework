@@ -1,17 +1,15 @@
 ---
-title: Creating a Project with IntelliJ IDEA
-order: 8
+title: Creating a Project in IntelliJ
+order: 120
 layout: page
 ---
 
 [[getting-started.idea]]
 = Creating a Project with IntelliJ IDEA
 
-The Ultimate Edition of IntelliJ IDEA includes support for creating Vaadin
-applications and running or debugging them in an integrated application server.
-With the Community Edition, you can create a Vaadin application most easily with
-a Maven archetype and deploy it to a server with a Maven run/debug
-configuration.
+The Ultimate Edition of IntelliJ IDEA includes support for creating Vaadin applications and running or debugging them in an integrated application server.
+
+With the Community Edition, you can create a Vaadin application most easily with a Maven archetype and deploy it to a server with a Maven run/debug configuration.
 
 ifdef::web[]
 For more information, see the article "
@@ -20,69 +18,24 @@ a simple Web application and deploying it to Tomcat]" in the IntelliJ IDEA
 Encyclopedia wiki.
 endif::web[]
 
-[[getting-started.idea.server]]
-== Configuring an Application Server
-
-To run the application during development in the Ultimate Edition of IntelliJ
-IDEA, you first need to install and configure an application server that is
-integrated with the IDE. The edition includes integration with many commonly
-used application servers.
-
-In the following, we configure Apache Tomcat:
-
-. Download and extract Tomcat installation package to a local directory, as
-instructed in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment.tomcat,"Installing
-Apache Tomcat">>.
-
-. Select "Configure > Settings".
-
-. Select "IDE Settings > Application Servers".
-
-. Select "+ > Tomcat Server" to add a Tomcat server, or any of the other supported
-servers. A WebSocket-enabled server, such as Glassfish or TomEE, is required for
-server push.
-
-. In the Tomcat Server dialog, specify the home directory for the server.
-
-+
-image::img/idea-server-1.png[]
-
-+
-Click [guibutton]#OK#.
-
-. Review the application server settings page to check that it is OK.
-
-+
-image::img/idea-server-2.png[]
-
-+
-Then, click [guibutton]#OK#.
-
-
-
 [[getting-started.idea.project]]
 == Creating a Vaadin Web Application Project
 
 In the welcome page, do the following:
 
-. Download and exctract the Vaadin installation package to a local folder, as
-instructed in
-<<dummy/../../../framework/getting-started/getting-started-package#getting-started.package,"Vaadin
-Installation Package">>.
+. Download and extract the Vaadin installation package to a local folder, as
+instructed in <<dummy/../../../framework/getting-started/getting-started-package#getting-started.package,"Vaadin Installation Package">>.
 
 . Select [menuchoice]#New Project#
 
 . In the [guilabel]#New Project# window, select [menuchoice]#Java#
 
 . Enter a [guilabel]#Project name# and [guilabel]#Project location#, and select
-the [guilabel]#Java SDK# to be used for the project. Vaadin requires at least
-Java 6. If you have not configured a Java SDK previously, you can configure it
-here.
-
+the [guilabel]#Java SDK# to be used for the project.
+Vaadin requires at least Java 6.
+If you have not configured a Java SDK previously, you can configure it here.
 +
 image::img/idea-newproject-1.png[]
-
 +
 Click [guibutton]#Next#.
 
@@ -91,16 +44,13 @@ Click [guibutton]#Next#.
 . Select Vaadin [guilabel]#Version# and [guilabel]#Distribution# installation
 path. You probably also want an application stub, so select [guilabel]#Create
 sample application# and give a name for the generated UI class.
-
 +
 image::img/idea-newproject-2.png[]
-
 +
 Do __not__ click [guibutton]#Finish# yet.
 
-. Select [guilabel]#Application Server# in the same window. Set it as an
-integrated server that you have configured in IntelliJ IDEA, as described
-previously in <<getting-started.idea.server>>.
+. Select [guilabel]#Application Server# in the same window.
+Set it as an integrated server that you have configured in IntelliJ IDEA, as described previously in <<DUMMY/../../../framework/installing/installing-idea#installing.idea.ultimate.server, "Configuring an Application Server">>.
 
 ifdef::web[]
 +
@@ -108,7 +58,6 @@ image::img/idea-newproject-3.png[]
 endif::web[]
 
 . Click [guibutton]#Finish#.
-
 
 The project is created with the UI class stub and a [filename]#web.xml#
 deployment descriptor.
@@ -127,8 +76,6 @@ To deploy the application to the integrated web server, right-click the
 'index.jsp'#. This starts the integrated server, if it was not already running,
 and launches the default browser with the application page.
 
-
-
 [[getting-started.idea.maven]]
 == Creating a Maven Project
 
@@ -140,15 +87,16 @@ server using a run/debug configuration.
 . Select [menuchoice]#New Project#
 
 . In the [guilabel]#New Project# window, select [menuchoice]#Maven#
-
 //&lt;?dbfo-need height="8cm" ?&gt;
-. Enter a project name, location, and the Java SDK to be used for the project.
-Vaadin requires at least Java 6. Click [guibutton]#Next#.
 
+. Enter a project name, location, and the Java SDK to be used for the project.
+Vaadin requires at least Java 6.
 +
 image::img/idea-maven-newproject-1.png[]
-
++
+Click [guibutton]#Next#.
 //&lt;?dbfo-need height="6cm" ?&gt;
+
 . Give a Maven [guilabel]#GroupID#, [guilabel]#ArtifactID#, and a
 [guilabel]#Version# for the project, or use the defaults.
 
@@ -156,8 +104,8 @@ image::img/idea-maven-newproject-1.png[]
 image::img/idea-maven-newproject-2.png[]
 
 . Check [guilabel]#Create from archetype#
-
 //&lt;?dbfo-need height="6cm" ?&gt;
+
 . If the Vaadin archetype is not in the list, click [guibutton]#Add archetype#,
 enter [guilabel]#GroupId# [literal]#++com.vaadin++#, [guilabel]#ArtifactId#
 [literal]#++vaadin-archetype-application++#, and [guilabel]#Version#
@@ -170,8 +118,8 @@ endif::web[]
 
 +
 Click [guibutton]#OK# in the dialog.
-
 //&lt;?dbfo-need height="8cm" ?&gt;
+
 . Select the [literal]#++com.vaadin:vaadin-archetype-application++#.
 
 ifdef::web[]
@@ -181,17 +129,17 @@ endif::web[]
 
 +
 Click [guibutton]#Next#.
-
 //&lt;?dbfo-need height="8cm" ?&gt;
-. Review the general Maven settings and settings for the new project. You may need
-to override the settings, especially if you are creating a Maven project for the
-first time. Click [guibutton]#Finish#.
+
+. Review the general Maven settings and settings for the new project.
+You may need to override the settings, especially if you are creating a Maven project for the first time.
 
 ifdef::web[]
 +
 image::img/idea-maven-newproject-5.png[]
 endif::web[]
-
++
+Click [guibutton]#Finish#.
 
 Creating the Maven project takes some time as Maven fetches the dependencies.
 Once done, the project is created and the Maven POM is opened in the editor.
@@ -226,11 +174,10 @@ launch a Vaadin Maven application on the light-weight Jetty web server.
 
 . Select "Run > Edit Configurations".
 
-. Select "+ > Maven" to create a new Maven run/debug configuration.
+. Click [guibutton]#+# and select menu:Maven[] to create a new Maven run/debug configuration.
 
-. Enter a [guilabel]#Name# for the run configuration. For the [guilabel]#Command
-line#, enter " [literal]#++package jetty:run++# to first compile and package the
-project, and then launch Jetty to run it.
+. Enter a [guilabel]#Name# for the run configuration.
+For the [guilabel]#Command line#, enter "`package jetty:run`# to first compile and package the project, and then launch Jetty to run it.
 
 ifdef::web[]
 +
@@ -253,8 +200,3 @@ Compiling the project takes some time on the first time, as it compiles the
 widget set and theme. Once the run console pane informs that Jetty Server has
 been started, you can open the browser at the default URL
 http://localhost:8080/.
-
-
-
-
-

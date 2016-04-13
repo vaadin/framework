@@ -17,6 +17,7 @@
 package com.vaadin.annotations;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -45,6 +46,7 @@ import com.vaadin.ui.UI;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 public @interface PreserveOnRefresh {
     // Empty marker annotation
 }

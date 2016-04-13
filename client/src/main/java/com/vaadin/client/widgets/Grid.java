@@ -2527,7 +2527,6 @@ public class Grid<T> extends ResizeComposite implements
             if (rowIndex == rowWithFocus
                     && cellFocusRange.contains(columnIndexDOM)
                     && container == this.containerWithFocus) {
-                refreshRow(rowWithFocus);
                 return;
             }
 
@@ -8491,6 +8490,11 @@ public class Grid<T> extends ResizeComposite implements
                 if (isEditorActive()) {
                     editor.updateVerticalScrollPosition();
                 }
+
+                // if there is a resize, we need to refresh the body to avoid an
+                // off-by-one error which occurs when the user scrolls all the
+                // way to the bottom.
+                refreshBody();
             }
         });
     }

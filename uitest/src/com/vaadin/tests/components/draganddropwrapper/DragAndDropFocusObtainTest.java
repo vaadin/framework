@@ -17,10 +17,8 @@ package com.vaadin.tests.components.draganddropwrapper;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.AbstractTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.DragAndDropWrapper;
 
@@ -36,16 +34,18 @@ public class DragAndDropFocusObtainTest extends MultiBrowserTest {
     @Test
     public void testTextAreaDndImage() {
         openTestURL();
+        int index = 1;
+        for (AbstractTextFieldElement ta : $(AbstractTextFieldElement.class)
+                .all()) {
+            String caption = ta.getCaption();
+            ta.click();
+            Assert.assertEquals(index + ". Field '" + caption + "' focused",
+                    getLogRow(0));
+            index++;
+        }
 
-        WebElement wrapper = driver.findElement(By.className("v-ddwrapper"));
-        Actions actions = new Actions(driver);
-        actions.click(wrapper);
-        actions.perform();
-
-        WebElement focusedElement = driver.findElement(By
-                .className("v-textarea-focus"));
-        Assert.assertNotNull("Text area did not obtain focus after click",
-                focusedElement);
+        // Make sure we checked all fields
+        Assert.assertEquals(8 + 1, index);
 
     }
 
