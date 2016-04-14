@@ -325,4 +325,27 @@
 		</pluginManagement>
 	</build>
 
+	<profiles>
+		<profile>
+			<!-- Profile used to deploy the uitest war for testing -->
+			<id>dev-build</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-deploy-plugin</artifactId>
+							<configuration>
+								<skip>false</skip>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
