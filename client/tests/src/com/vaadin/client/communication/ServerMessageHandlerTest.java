@@ -20,7 +20,7 @@ import org.junit.Test;
 
 /**
  * 
- * @since
+ * @since 7.6.5
  * @author Vaadin Ltd
  */
 public class ServerMessageHandlerTest {
