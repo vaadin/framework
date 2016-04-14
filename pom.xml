@@ -61,24 +61,23 @@
 	</organization>
 	<url>https://vaadin.com/</url>
 	<description>Vaadin Framework Root Pom</description>
-    <licenses>
-        <license>
-            <name>Apache License Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
-    <scm>
-        <connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
-        <developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
-        <url>https://github.com/vaadin/vaadin</url>
-    </scm>
+	<licenses>
+		<license>
+			<name>Apache License Version 2.0</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
+		<developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
+		<url>https://github.com/vaadin/vaadin</url>
+	</scm>
 
 
 	<modules>
 		<module>all</module>
 		<module>buildhelpers</module>
-		<module>bom</module>
 		<module>shared</module>
 		<module>push</module>
 		<module>server</module>
@@ -89,6 +88,8 @@
 		<module>widgets</module>
 		<module>uitest</module>
 		<module>liferay</module>
+		<!-- Nexus staging bug needs the last module to be deployed. -->
+		<module>bom</module>
 	</modules>
 
 	<build>
