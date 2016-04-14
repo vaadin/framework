@@ -274,6 +274,9 @@
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.7</version>
 						<extensions>true</extensions>
+						<configuration>
+							<skipLocalStaging>true</skipLocalStaging>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
