@@ -58,7 +58,7 @@ image::img/finalUI.jpg[]
 You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
 Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
 To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
-If do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
+If you do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
 
 [[framework.tutorial.overview.tools]]
 === Installing the Development Tools
