@@ -507,8 +507,16 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             @Override
             public void onKeyDown(KeyDownEvent event) {
                 if (getWidget().actionHandler != null) {
-                    getWidget().actionHandler.handleKeyboardEvent((Event) event
-                            .getNativeEvent().cast());
+                    Element target = Element.as(event.getNativeEvent()
+                            .getEventTarget());
+                    if (target == Document.get().getBody()
+                            || getWidget().getElement().isOrHasChild(target)) {
+                        // Only react to body and elements inside the UI
+                        getWidget().actionHandler
+                                .handleKeyboardEvent((Event) event
+                                        .getNativeEvent().cast());
+                    }
+
                 }
             }
         }, KeyDownEvent.getType());
