@@ -12,6 +12,7 @@
 	<packaging>war</packaging>
 	<properties>
 		<jetty.version>8.1.12.v20130726</jetty.version>
+		<skip.uitest.deployment>true</skip.uitest.deployment>
 	</properties>
 
 	<url>https://vaadin.com/</url>
@@ -341,7 +342,7 @@
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
-					<skip>true</skip>
+					<skip>${skip.uitest.deployment}</skip>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -371,19 +372,9 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-deploy-plugin</artifactId>
-							<configuration>
-								<skip>false</skip>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
+			<properties>
+				<skip.uitest.deployment>false</skip.uitest.deployment>
+			</properties>
 		</profile>
 	</profiles>
 
