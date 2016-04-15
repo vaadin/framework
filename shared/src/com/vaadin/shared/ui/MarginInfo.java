@@ -71,6 +71,16 @@ public class MarginInfo implements Serializable {
         doSetMargins(top, right, bottom, left);
     }
 
+    /**
+     * Creates a MarginInfo object by having horizontal and vertical margins specified (analogous to CSS).
+     *
+     * @since 7.6.5
+     *
+     * @param vertical
+     *            enable or disable top and bottom margins
+     * @param horizontal
+     *            enable or disable left and right margins
+     */
     public MarginInfo(boolean vertical, boolean horizontal) {
         this(vertical, horizontal, vertical, horizontal);
     }

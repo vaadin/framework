@@ -506,6 +506,8 @@ public class ClassPathExplorer {
      * directory (not a JAR file etc.) on the classpath.
      * 
      * TODO this could be done better...
+     *
+     * @since 7.6.5
      * 
      * @param widgetsetFileName
      *            relative path for the widgetset
