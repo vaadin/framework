@@ -60,7 +60,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     /**
      * Creates the ServerRpcHandler to use
      * 
-     * @since 7.6.5
+     * @since 7.7
      * @return the ServerRpcHandler to use
      */
     protected ServerRpcHandler createRpcHandler() {
