@@ -34,28 +34,25 @@
 
         <fail unless="module.name" message="No module name given" />
         <property name="result.dir" location="result" />
-        <property name="src" location="${result.dir}/../src" />
+        <property name="src" location="${result.dir}/../src/main/java" />
+        <property name="test.src" location="${result.dir}/../src/test/java" />
         <property name="classes" location="${result.dir}/classes" />
         <property name="server.test.sources" location="${result.dir}/../../server/src/test/java" />
         <mkdir dir="${classes}" />
-
-        <!-- TODO: Get rid of this -->
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
-            <src path="${server.test.sources}" />
-            <include name="com/vaadin/tests/data/bean/**" />
-            <include name="com/vaadin/tests/VaadinClasses.java" />
-            <include
-                name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
-            <classpath refid="classpath.compile.dependencies" />
-            <classpath refid="classpath.compile.custom" />
-        </javac>
 
         <javac destdir="${classes}" source="${vaadin.java.version}"
             target="${vaadin.java.version}" debug="true" encoding="UTF-8"
             includeantruntime="false">
             <src path="${src}" />
+            <classpath location="${classes}" />
+            <classpath refid="classpath.compile.dependencies" />
+            <classpath refid="classpath.compile.custom" />
+        </javac>
+        
+        <javac destdir="${classes}" source="${vaadin.java.version}"
+            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
+            includeantruntime="false">
+            <src path="${test.src}" />
             <classpath location="${classes}" />
             <classpath refid="classpath.compile.dependencies" />
             <classpath refid="classpath.compile.custom" />
@@ -204,7 +201,7 @@
 
     <target name="test-server" depends="clean-testbench-errors">
         <property name="war.file"
-            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+            location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <daemons>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
@@ -220,9 +217,9 @@
         </parallel>
     </target>
 
-    <target name="test-tb3" depends="clean-testbench-errors">
+    <target name="test-tb3" depends="clean-testbench-errors,compile">
         <property name="war.file"
-            location="${vaadin.basedir}/uitest/result/lib/vaadin-uitest-${vaadin.version}.war" />
+            location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
         <mkdir dir="${vaadin.basedir}/result" />
         <parallel>
             <daemons>

@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>vaadin-uitest</artifactId>
 	<name>vaadin-uitest</name>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 	<properties>
 		<jetty.version>8.1.12.v20130726</jetty.version>
 	</properties>
@@ -23,6 +23,7 @@
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 
 		<!-- API DEPENDENCIES -->
@@ -30,6 +31,7 @@
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
 			<version>2.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -48,6 +50,7 @@
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<version>1.7.7</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- LIBRARY DEPENDENCIES (compile time) -->
@@ -101,6 +104,7 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiler</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Servlet 3.0 API -->
@@ -108,7 +112,9 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
+			<scope>provided</scope>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
@@ -119,8 +125,11 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
+-->
 		<!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
+<!-- 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlets</artifactId>
@@ -131,6 +140,7 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -143,6 +153,7 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -154,6 +165,7 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -165,6 +177,7 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -176,17 +189,20 @@
 					<artifactId>orbit</artifactId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<version>1.3</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.jcraft</groupId>
@@ -213,6 +229,7 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-testbench</artifactId>
 			<version>4.0.3</version>
+            <scope>test</scope>
 		</dependency>
 		<!-- This should be removed once tests have been updated to use lang3 -->
 		<dependency>
@@ -225,12 +242,6 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-sass-compiler</artifactId>
 			<version>${vaadin.sass.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-buildhelpers</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
@@ -246,67 +257,95 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/tests-valo*/**</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
 				<configuration>
-					<filesets>
-						<fileset>
-							<directory>result</directory>
-						</fileset>
-					</filesets>
+					<warSourceDirectory>${project.build.directory}/compile-themes</warSourceDirectory>
+					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
 				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>war</id>
-						<phase>package</phase>
 						<goals>
-							<goal>run</goal>
+							<goal>compile</goal>
+							<goal>compile-theme</goal>
 						</goals>
-						<!-- <inherited>false</inherited> -->
-						<configuration>
-							<target>
-								<ant antfile="build.xml" target="war">
-									<property name="build.compiler" value="extJavac" />
-									<property name="vaadin.version" value="${project.version}" />
-								</ant>
-							</target>
-						</configuration>
 					</execution>
-					<!-- <execution> <id>test-tb3</id> <phase>integration-test</phase> <goals> 
-						<goal>run</goal> </goals> <configuration> <target> <ant antfile="build.xml" 
-						target="test-tb3"> <property name="browsers.include" value="phantomjs1"/> 
-						<property name="categories.exclude" value="push"/> <property name="com.vaadin.testbench.max.retries" 
-						value="4"/> <property name="com.vaadin.testbench.screenshot.directory" value="../../vaadin-screenshots"/> 
-						<property name="extraParams" value="-ea"/> <property name="teamcity.ant.junit-support.enabled" 
-						value="false"/> <property name="useLocalWebDriver" value="true"/> <property 
-						name="vaadin.maven.version" value="7.6.LATEST"/> <property name="vaadin.version" 
-						value="${project.version}"/> </ant> </target> </configuration> </execution> -->
-
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.ivy</groupId>
-						<artifactId>ivy</artifactId>
-						<version>2.4.0</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty.version}</version>
+			</plugin>
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-theme-sources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/compile-themes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>false</filtering>
+									<includes>
+										<include>**/tests-valo*/**</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-compiled-themes</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/compile-themes</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<artifactId>maven-install-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
