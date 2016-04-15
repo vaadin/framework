@@ -316,7 +316,7 @@ public class ServerRpcHandler implements Serializable {
      * 6 semantics for components and add-ons that do not use Vaadin 7 RPC
      * directly.
      *
-     * @param ui
+     * @param uI
      *            the UI receiving the invocations data
      * @param lastSyncIdSeenByClient
      *            the most recent sync id the client has seen at the time the
@@ -324,21 +324,20 @@ public class ServerRpcHandler implements Serializable {
      * @param invocationsData
      *            JSON containing all information needed to execute all
      *            requested RPC calls.
-     * @since
      */
-    protected void handleInvocations(UI ui, int lastSyncIdSeenByClient,
+    private void handleInvocations(UI uI, int lastSyncIdSeenByClient,
             JsonArray invocationsData) {
         // TODO PUSH Refactor so that this is not needed
-        LegacyCommunicationManager manager = ui.getSession()
+        LegacyCommunicationManager manager = uI.getSession()
                 .getCommunicationManager();
 
         try {
-            ConnectorTracker connectorTracker = ui.getConnectorTracker();
+            ConnectorTracker connectorTracker = uI.getConnectorTracker();
 
             Set<Connector> enabledConnectors = new HashSet<Connector>();
 
             List<MethodInvocation> invocations = parseInvocations(
-                    ui.getConnectorTracker(), invocationsData,
+                    uI.getConnectorTracker(), invocationsData,
                     lastSyncIdSeenByClient);
             for (MethodInvocation invocation : invocations) {
                 final ClientConnector connector = connectorTracker
@@ -405,11 +404,35 @@ public class ServerRpcHandler implements Serializable {
                 }
 
                 if (invocation instanceof ServerRpcMethodInvocation) {
-                    handleInvocation(ui, connector,
-                            (ServerRpcMethodInvocation) invocation);
+                    try {
+                        ServerRpcManager.applyInvocation(connector,
+                                (ServerRpcMethodInvocation) invocation);
+                    } catch (RpcInvocationException e) {
+                        manager.handleConnectorRelatedException(connector, e);
+                    }
                 } else {
+
+                    // All code below is for legacy variable changes
                     LegacyChangeVariablesInvocation legacyInvocation = (LegacyChangeVariablesInvocation) invocation;
-                    handleInvocation(ui, connector, legacyInvocation);
+                    Map<String, Object> changes = legacyInvocation
+                            .getVariableChanges();
+                    try {
+                        if (connector instanceof VariableOwner) {
+                            // The source parameter is never used anywhere
+                            changeVariables(null, (VariableOwner) connector,
+                                    changes);
+                        } else {
+                            throw new IllegalStateException(
+                                    "Received legacy variable change for "
+                                            + connector.getClass().getName()
+                                            + " ("
+                                            + connector.getConnectorId()
+                                            + ") which is not a VariableOwner. The client-side connector sent these legacy varaibles: "
+                                            + changes.keySet());
+                        }
+                    } catch (Exception e) {
+                        manager.handleConnectorRelatedException(connector, e);
+                    }
                 }
             }
         } catch (JsonException e) {
@@ -418,63 +441,6 @@ public class ServerRpcHandler implements Serializable {
                             + e.getMessage());
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Handles the given RPC method invocation for the given connector
-     * 
-     * @since
-     * @param ui
-     *            the UI containing the connector
-     * @param connector
-     *            the connector the RPC is targeted to
-     * @param invocation
-     *            information about the rpc to invoke
-     */
-    protected void handleInvocation(UI ui, ClientConnector connector,
-            ServerRpcMethodInvocation invocation) {
-        try {
-            ServerRpcManager.applyInvocation(connector, invocation);
-        } catch (RpcInvocationException e) {
-            ui.getSession().getCommunicationManager()
-                    .handleConnectorRelatedException(connector, e);
-        }
-
-    }
-
-    /**
-     * Handles the given Legacy variable change RPC method invocation for the
-     * given connector
-     * 
-     * @since
-     * @param ui
-     *            the UI containing the connector
-     * @param connector
-     *            the connector the RPC is targeted to
-     * @param invocation
-     *            information about the rpc to invoke
-     */
-    protected void handleInvocation(UI ui, ClientConnector connector,
-            LegacyChangeVariablesInvocation legacyInvocation) {
-        Map<String, Object> changes = legacyInvocation.getVariableChanges();
-        try {
-            if (connector instanceof VariableOwner) {
-                // The source parameter is never used anywhere
-                changeVariables(null, (VariableOwner) connector, changes);
-            } else {
-                throw new IllegalStateException(
-                        "Received legacy variable change for "
-                                + connector.getClass().getName()
-                                + " ("
-                                + connector.getConnectorId()
-                                + ") which is not a VariableOwner. The client-side connector sent these legacy varaibles: "
-                                + changes.keySet());
-            }
-        } catch (Exception e) {
-            ui.getSession().getCommunicationManager()
-                    .handleConnectorRelatedException(connector, e);
-        }
-
     }
 
     /**
