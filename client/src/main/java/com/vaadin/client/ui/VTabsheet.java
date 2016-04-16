@@ -531,6 +531,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         public void selectTab(int index) {
             final Tab newSelected = getTab(index);
             final Tab oldSelected = selected;
+            if (oldSelected == newSelected) {
+                return;
+            }
 
             newSelected.setStyleNames(true, isFirstVisibleTab(index), true);
             newSelected.setTabulatorIndex(getTabsheet().tabulatorIndex);
@@ -552,6 +555,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             // The selected tab might need more (or less) space
             newSelected.recalculateCaptionWidth();
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
+
+            // Scroll the tab into view if it is not already
+            getTabsheet().scrollIntoView(getTab(tabsheet.activeTabIndex));
+
         }
 
         public Tab navigateTab(int fromIndex, int toIndex) {

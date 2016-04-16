@@ -9,6 +9,8 @@ import com.vaadin.ui.TabSheet.Tab;
 
 public class TabsheetScrolling extends TestBase {
 
+    public static final String SELECT_FIRST = "selFirst";
+    public static final String SELECT_LAST = "selLast";
     private TabSheet fixedSizeTabSheet;
     private TabSheet autoWideTabSheet;
 
@@ -60,7 +62,28 @@ public class TabsheetScrolling extends TestBase {
         }
 
         addComponent(autoWideTabSheet);
-
+        Button selectFirst = new Button("Select first tab in both tabsheets",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        fixedSizeTabSheet.setSelectedTab(0);
+                        autoWideTabSheet.setSelectedTab(0);
+                    }
+                });
+        selectFirst.setId(SELECT_FIRST);
+        addComponent(selectFirst);
+        Button selectLast = new Button("Select last tab in both tabsheets",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        int lastFixed = fixedSizeTabSheet.getComponentCount() - 1;
+                        fixedSizeTabSheet.setSelectedTab(lastFixed);
+                        int lastAuto = autoWideTabSheet.getComponentCount() - 1;
+                        autoWideTabSheet.setSelectedTab(lastAuto);
+                    }
+                });
+        selectLast.setId(SELECT_LAST);
+        addComponent(selectLast);
     }
 
     @Override
