@@ -6,7 +6,6 @@
         Provides a uitest WAR containing Vaadin UI tests
     </description>
     <include file="../common.xml" as="common" />
-    <include file="../build.xml" as="vaadin" />
 
     <!-- global properties -->
     <property name="module.name" value="vaadin-uitest" />
@@ -60,7 +59,8 @@
     </target>
 
     <target name="clean">
-        <antcall target="common.clean" />
+        <fail unless="result.dir" message="No result.dir parameter given" />
+        <delete dir="${result.dir}" />
     </target>
     <target name="checkstyle">
         <echo>Checkstyle is disabled for uitest for now</echo>
