@@ -13,21 +13,20 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" visibility="private" />
-        <conf name="ide" visibility="private" />
         <conf name="jetty-run" visibility="private" />
     </configurations>
-    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
+    <dependencies defaultconf="build" defaultconfmapping="build->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"
-            rev="2.0" conf="build-provided,ide -> default" />
+            rev="2.0" conf="build-provided -> default" />
 
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build,ide -> default,sources" />
+            rev="1.0.0.GA" conf="build -> default,sources" />
         <dependency org="org.hibernate" name="hibernate-validator"
-            rev="4.2.0.Final" conf="build,ide -> default" />
+            rev="4.2.0.Final" conf="build -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.7.7" conf="build-provided,ide -> default" />
+            rev="1.7.7" conf="build-provided -> default" />
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
@@ -63,55 +62,55 @@
 
         <!-- Servlet 3.0 API -->
         <dependency org="javax.servlet" name="javax.servlet-api"
-            rev="3.0.1" conf="build-provided,ide -> default" />
+            rev="3.0.1" conf="build-provided -> default" />
 
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
         <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-websocket"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-util"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
 
         <dependency org="junit" name="junit" rev="4.11"
-            conf="build,ide -> default" />
+            conf="build -> default" />
         <dependency org="org.hamcrest" name="hamcrest-all"
-            rev="1.3" conf="build,ide->default" />
+            rev="1.3" conf="build->default" />
         <dependency org="com.jcraft" name="jsch" rev="0.1.52"
-            conf="ide, build->default" />
+            conf="build->default" />
         <dependency org="commons-codec" name="commons-codec"
-            rev="1.5" conf="build,ide->default" />
+            rev="1.5" conf="build->default" />
         <dependency org="commons-io" name="commons-io"
-            rev="${commons-io.version}" conf="build,ide->default" />
+            rev="${commons-io.version}" conf="build->default" />
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
-            conf="build,ide -> default" />
+            conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-testbench"
-            rev="4.0.3" conf="build-provided,ide -> default" />
+            rev="4.0.3" conf="build-provided -> default" />
         <!-- This should be removed once tests have been updated to use lang3 -->
         <dependency org="commons-lang" name="commons-lang"
-            rev="2.6" conf="build,ide -> default" />
+            rev="2.6" conf="build -> default" />
 
         <dependency org="org.eclipse.jgit" name="org.eclipse.jgit"
-            rev="3.5.1.201410131835-r" conf="ide,build->default">
+            rev="3.5.1.201410131835-r" conf="build->default">
             <exclude org="org.apache.httpcomponents"></exclude>
         </dependency>
 

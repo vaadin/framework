@@ -12,8 +12,6 @@
         <ivy:cachepath pathid="early.deps" conf="early" />
         <ivy:resolve log="download-only" file="build/ivy.xml" conf="ide" />
         <ivy:cachepath pathid="ide.deps" conf="ide" />
-        <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
-        <ivy:cachepath pathid="uitest.deps" conf="ide" />
 
         <path id="classpath">
             <path refid="early.deps" />
@@ -26,7 +24,6 @@
             <path location="uitest/src" />
             <path location="client/src/main/java" />
             <path location="client/src/main/resources" />
-            <path refid="uitest.deps" />
             <path refid="ide.deps" />
         </path>
         <property name="resolve.done" value="true" />
@@ -117,7 +114,8 @@
             <arg value="--theme" />
             <arg value="${theme}" />
             <arg value="--theme-folder" />
-            <arg value="WebContent/VAADIN/themes" />
+        	<!-- TODO relative paths in these are broken -->
+            <arg value="uitest/target/classes/VAADIN/themes" />
             <arg value="--version" />
             <arg value="${vaadin.version}" />
         </java>
@@ -128,18 +126,20 @@
     <target name="default-widgetset">
         <antcall target="compile-widgetset" inheritRefs="true">
             <param name="widgetset" value="com.vaadin.DefaultWidgetSet" />
+            <param name="widgetset.output.dir" location="client-compiled/target/classes/VAADIN/widgetsets" />
         </antcall>
     </target>
 
     <target name="testing-widgetset">
         <antcall target="compile-widgetset" inheritRefs="true">
             <param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+            <param name="widgetset.output.dir" location="uitest/target/classes/VAADIN/widgetsets" />
         </antcall>
     </target>
 
     <target name="compile-widgetset" depends="resolve">
         <property name="module" value="${widgetset}" />
-        <property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
+        <property name="module.output.dir" location="${widgetset.output.dir}" />
         <property name="logLevel" value="TRACE" />
         <property name="style" value="PRETTY" />
         <property name="localWorkers" value="2" />
@@ -157,6 +157,8 @@
 
         <!--<ivy:resolve log="download-only" inline="true" organisation="javax.validation" module="validation-api" 
             revision="1.0.0.GA"/> -->
+
+    	<!-- TODO this does not work -->
 
         <!-- compile the module -->
         <java classname="com.google.gwt.dev.Compiler" classpathref="classpath" failonerror="yes" fork="yes" maxmemory="512m">
@@ -185,6 +187,7 @@
             <jvmarg value="-Dgwt.persistentunitcache=${gwt.persistentunitcache}" />
         </java>
     </target>
+	<!-- TODO this should probably be removed - compiles the file to the wrong location -->
     <target name="vaadinPush.js" depends="resolve">
         <property name="project.root" location="."/>
         <ivy:resolve log="download-only" file="${project.root}/ivy-taskdefs.xml" conf="taskdefs" />
