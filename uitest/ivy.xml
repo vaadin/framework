@@ -15,11 +15,7 @@
         <conf name="build-provided" visibility="private" />
         <conf name="ide" visibility="private" />
         <conf name="jetty-run" visibility="private" />
-        <conf name="compile-theme" visibility="private" />
     </configurations>
-    <publications>
-        <artifact type="war" ext="war" />
-    </publications>
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"
@@ -114,11 +110,6 @@
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build,ide -> default" />
 
-        <dependency org="com.vaadin" name="vaadin-sass-compiler"
-            rev="${vaadin.sass.version}" conf="compile-theme->default" />
-
-        <dependency org="com.vaadin" name="vaadin-buildhelpers"
-            rev="${vaadin.version}" conf="compile-theme->default" />
         <dependency org="org.eclipse.jgit" name="org.eclipse.jgit"
             rev="3.5.1.201410131835-r" conf="ide,build->default">
             <exclude org="org.apache.httpcomponents"></exclude>

@@ -19,12 +19,6 @@
             <ivy
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom" />
         </filesystem>
-        <filesystem name="build-temp">
-            <ivy
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/ivy-[revision].xml" />
-            <artifact
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
-        </filesystem>
     </resolvers>
     <modules>
         <module organisation="com.vaadin" name="vaadin-testbench"

@@ -3,31 +3,15 @@
 <project name="vaadin" basedir="." default="package" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<include file="common.xml" as="common" />
 
-	<path id="vaadin.buildhelpers.classpath" location="${vaadin.basedir}/buildhelpers/result/classes" />
-
 	<!-- ================================= target: all ================================= -->
 	<!--<target name="all" description="Compiles all parts of the project" 
         depends="buildhelpers,theme-compiler,shared,server,client"> -->
 	<target name="package" description="Compiles and packages all modules in the project" depends="buildorder">
-		<subant buildpathref="build-path" target="publish-local">
-		</subant>
 	</target>
 
 	<target name="buildorder" depends="official.build.checks">
-		<!-- Find out a good build order -->
-		<ivy:buildlist reference="ivy.build.path">
-			<fileset dir="." includes="**/build.xml">
-				<exclude name="build.xml" />
-				<exclude name="build/**" />
-				<exclude name="bin/**" />
-				<exclude name="buildhelpers/**" />
-				<exclude name="all/**" />
-			</fileset>
-		</ivy:buildlist>
 		<path id="build-path">
-			<!--    <path location="buildhelpers/build.xml" /> -->
-			<path refid="ivy.build.path" />
-			<!-- <path location="all/build.xml" /> -->
+			<path location="uitest/build.xml" />
 		</path>
 	</target>
 	<target name="clean" depends="buildorder">

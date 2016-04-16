@@ -313,5 +313,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!--todo .javadoc.jar file -->
 </project>
