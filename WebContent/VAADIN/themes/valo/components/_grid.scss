@@ -228,6 +228,8 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
       .#{$primary-stylename}-sidebar-content {
         margin: 0 0 2px;
         padding: 4px 4px 2px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
     }
 
