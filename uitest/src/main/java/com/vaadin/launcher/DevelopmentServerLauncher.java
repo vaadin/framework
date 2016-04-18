@@ -61,7 +61,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  */
 public class DevelopmentServerLauncher {
 
-    private static final String KEYSTORE = "uitest/src/com/vaadin/launcher/keystore";
+    private static final String KEYSTORE = "src/main/resources/com/vaadin/launcher/keystore";
     private final static int serverPort = 8888;
 
     /**
@@ -142,7 +142,7 @@ public class DevelopmentServerLauncher {
             String mode) throws Exception {
 
         // Assign default values for some arguments
-        assignDefault(serverArgs, "webroot", "WebContent");
+        assignDefault(serverArgs, "webroot", "src/main/webapp");
         assignDefault(serverArgs, "httpPort", "" + serverPort);
         assignDefault(serverArgs, "context", "");
         assignDefault(serverArgs, "slowdown", "/run/APP/PUBLISHED/js_label.js");

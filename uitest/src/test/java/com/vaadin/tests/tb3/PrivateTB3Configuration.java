@@ -57,7 +57,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String DEPLOYMENT_PROPERTY = "com.vaadin.testbench.deployment.url";
     private static final String HUB_URL = "com.vaadin.testbench.hub.url";
     private static final Properties properties = new Properties();
-    private static final File propertiesFile = new File("work",
+    private static final File propertiesFile = new File("../work",
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
     private static final String PHANTOMJS_PATH = "phantomjs.binary.path";

@@ -115,7 +115,6 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-<!--
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
@@ -128,9 +127,7 @@
 			</exclusions>
 			<scope>provided</scope>
 		</dependency>
--->
 		<!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
-<!-- 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlets</artifactId>
@@ -192,7 +189,7 @@
 			</exclusions>
 			<scope>provided</scope>
 		</dependency>
--->
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

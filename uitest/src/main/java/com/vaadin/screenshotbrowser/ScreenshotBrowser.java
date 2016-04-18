@@ -398,7 +398,7 @@ public class ScreenshotBrowser extends UI {
 
     private static File findScreenshotDir() {
         File propertiesFile = new File(
-                "work/eclipse-run-selected-test.properties");
+                "../work/eclipse-run-selected-test.properties");
         if (!propertiesFile.exists()) {
             throw new RuntimeException("File "
                     + propertiesFile.getAbsolutePath() + " not found.");
