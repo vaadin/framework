@@ -19,6 +19,12 @@
             <ivy
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom" />
         </filesystem>
+        <ibiblio name="vaadin-build" usepoms="true"
+            m2compatible="true" root="${vaadin.build.repository}" />
+        <chain name="vaadin-maven" returnFirst="true">
+            <resolver ref="local-maven" />
+            <resolver ref="vaadin-build" />
+        </chain>
     </resolvers>
     <modules>
         <module organisation="com.vaadin" name="vaadin-testbench"
@@ -30,29 +36,29 @@
         <module organisation="com.vaadin" name="vaadin-testbench-api"
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-root"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-shared"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiler"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiled"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-push"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-bom"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-liferay"
-            resolver="local-maven" />
+            resolver="vaadin-maven" />
     </modules>
 
 

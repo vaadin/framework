@@ -15,6 +15,9 @@
     <property name="result.war"
         location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
+    <!-- Need to give a default value to keep Ivy happy -->
+    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prerelease"/>
+
     <path id="classpath.compile.custom">
     </path>
 
