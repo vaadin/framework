@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+<project name="common" basedir="." default="checkstyle" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
     <tstamp>
         <format property="build.date" pattern="yyyy-MM-dd" />
