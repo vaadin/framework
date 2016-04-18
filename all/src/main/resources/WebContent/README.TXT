@@ -1,13 +1,25 @@
 This Vaadin zip contains all the jars of the Vaadin Framework. Additionally all dependencies are provided in the lib folder.
 
 To use in a web project:
-1. Copy all vaadin-* files except vaadin-client and vaadin-client-compiler to WEB-INF/lib in your project
-2. Copy lib/*.jar to WEB-INF/lib in your project
-3. Copy vaadin-client and vaadin-client-compiler to a lib folder which is on your classpath but will not be deployed. These files are only needed when compiling a module (widget set) to Javascript.
+1. Copy following files from the archive root into WEB-INF/lib in your project:
+   - vaadin-server-*.jar
+   - vaadin-shared-*.jar
+   - vaadin-themes-*.jar
+   - vaadin-push-*.jar (if you need push)
 
-If you are using Eclipse and a standard WTP (Dynamic Web Project or Vaadin Project), step 3 can be:
-Create a /lib folder, copy the files there and right click the lib folder and select "Build Path" -> "Add to Build Path".
-Once this is done, the "Compile widgetset" button provided by the Vaadin Plug-in for Eclipse will work correctly.
+2. Copy following files from the archive /lib into WEB-INF/lib in your project:
+   - vaadin-slf4j-jdk14-*.jar
+   - flute-*.jar
+   - guava-*.jar
+   - js-*.jar
+   - jsoup-*.jar
+   - sac-*.jar
+   - streamhtmlparser-jsilver-*.jar
+   - atmosphere-runtime-*.jar  (if you need push)
 
+3. Copy vaadin-client and vaadin-client-compiler to a lib folder which is on your classpath but will not be deployed.
+These files are only needed when compiling a module (widget set) to Javascript.
+
+4. Read https://vaadin.com/docs/-/part/framework/application/application-overview.html#application.overview to start your development
 
 
