@@ -712,7 +712,7 @@ private Button save = new Button("Save");
 private Button delete = new Button("Delete");
 ----
 
-Also, we will laterneed a reference to the currently edited Customer object,
+Also, we will later need a reference to the currently edited Customer object,
 CustomerService and the MyUI that uses this class. Add these fields and a
 basic constructor that accepts MyUI as a parameter to the CustomerForm class:
 
