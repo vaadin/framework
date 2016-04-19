@@ -105,6 +105,7 @@
     </target>
 
     <target name="fetch-war">
+        <mkdir dir="${vaadin.basedir}/uitest/target"/>
         <get src="${vaadin.build.repository}/com/vaadin/vaadin-uitest/${vaadin.version}/vaadin-uitest-${vaadin.version}.war" dest="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war"/>
     </target>
 
