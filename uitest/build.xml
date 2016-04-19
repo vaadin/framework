@@ -104,6 +104,10 @@
         </parallel>
     </target>
 
+    <target name="fetch-war">
+        <get src="${vaadin.build.repository}/com/vaadin/vaadin-uitest/${vaadin.version}/vaadin-uitest-${vaadin.version}.war" dest="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war"/>
+    </target>
+
     <target name="test-server" depends="clean-testbench-errors">
         <property name="war.file"
             location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
