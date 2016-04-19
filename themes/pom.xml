@@ -77,7 +77,6 @@
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
-				<version>${vaadin.plugin.version}</version>
 				<configuration>
 					<compressTheme>true</compressTheme>
 					<warSourceDirectory>${project.build.outputDirectory}</warSourceDirectory>

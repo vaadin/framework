@@ -272,6 +272,7 @@
 				<configuration>
 					<warSourceDirectory>${project.build.directory}/compile-themes</warSourceDirectory>
 					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
+					<persistentunitcachedir>${project.build.directory}/gwt-unitCache</persistentunitcachedir>
 				</configuration>
 				<executions>
 					<execution>

@@ -58,52 +58,6 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<!-- TODO: Do we need these? -->
-								<!-- <jvmarg value="-Xss8M" /> -->
-								<!-- <jvmarg value="-XX:MaxPermSize=256M" /> -->
-								<jvmarg value="-Djava.awt.headless=true" />
-								<argument>-Dgwt.persistentunitcachedir=${project.build.directory}/compile</argument>
-								<argument>-DvFailIfNotSerializable=true</argument>
-
-								<argument>-classpath</argument>
-								<classpath />
-
-								<argument>com.google.gwt.dev.Compiler</argument>
-
-								<argument>-workDir</argument>
-								<argument>${project.build.directory}/compile</argument>
-								<argument>-logLevel</argument>
-								<argument>TRACE</argument>
-								<argument>-war</argument>
-								<!-- This will write the result directly to target/classes for packaging -->
-								<argument>${project.build.outputDirectory}/VAADIN/widgetsets/</argument>
-								<argument>-style</argument>
-								<argument>${widgetset.style}</argument>
-								<argument>-localWorkers</argument>
-								<argument>${widgetset.local.workers}</argument>
-
-								<argument>-strict</argument>
-
-								<!-- Move unnecessary stuff to compile folder -->
-								<argument>-deploy</argument>
-								<argument>${project.build.directory}/compile</argument>
-								<argument>-extra</argument>
-								<argument>${project.build.directory}/compile</argument>
-
-								<argument>${widgetset.name}</argument>
-							</arguments>
-						</configuration>
-					</execution>
-
-					<execution>
 						<id>generate-export-package</id>
 						<phase>package</phase>
 						<goals>
@@ -125,6 +79,25 @@
 								<argument>VAADIN/widgetsets</argument>
 							</arguments>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<configuration>
+					<modules>
+						<module>com.vaadin.DefaultWidgetSet</module>
+					</modules>
+					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
+					<persistentunitcachedir>${project.build.directory}/gwt-unitCache</persistentunitcachedir>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
