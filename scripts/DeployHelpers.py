@@ -25,6 +25,10 @@ def testServer():
 
 	if serverUp is not None:
 		return serverUp
+	if getUrl() is None:
+		print("No deploy URL provided")
+		serverUp = False
+		return serverUp
 
 	print("Checking server status")
 	i = 0

@@ -36,32 +36,9 @@ if __name__ == "__main__":
 		sys.exit(1)
 	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser
 	from DeployHelpers import deployWar
-
-	# Add command line argument for staging repos
-	parser.add_argument("--repo", type=str, help="Staging repository URL", default=None)
-
 	# Add command line agrument for ignoring failing demos
 	parser.add_argument("--ignore", type=str, help="Ignored demos", default="")
-
 	args = getArgs()
-	if hasattr(args, "artifactPath") and args.artifactPath is not None:
-		version = False
-		basePath = args.artifactPath
-		poms = []
-		for root, dirs, files in os.walk(basePath):
-			for name in files:
-				if fnmatch(name, "*.pom"):
-					poms.append(join(root, name))
-		for pom in poms:
-			jarFile = pom.replace(".pom", ".jar")
-			if isfile(jarFile):
-				mavenInstall(pom, jarFile)
-			else:
-				mavenInstall(pom)
-			if "vaadin-server" in pom:
-				pomXml, nameSpace = readPomFile(pom)
-				for version in pomXml.getroot().findall("./{%s}version" % (nameSpace)):
-					args.version = version.text
 	demosFailed = False
 	ignoredDemos = args.ignore.split(",")
 	
@@ -75,8 +52,10 @@ if __name__ == "__main__":
 				checkout(demo, repo[0], repo[1])
 			else:
 				checkout(demo, repo)
-			if hasattr(args, "repo") and args.repo is not None:
-				updateRepositories(join(resultPath, demo), args.repo)
+			if hasattr(args, "fwRepo") and args.fwRepo is not None:
+				updateRepositories(join(resultPath, demo), args.fwRepo)
+			if hasattr(args, "pluginRepo") and args.pluginRepo is not None:
+				updateRepositories(join(resultPath, demo), args.pluginRepo, postfix="plugin")
 			mavenValidate(demo, logFile=getLogFile(demo))
 			wars.extend(copyWarFiles(demo))
 			print("%s demo validation succeeded!" % (demo))
