@@ -125,14 +125,14 @@ public class DefaultDeploymentConfiguration extends
             String defaultValue) {
         String val = null;
 
-        // Try application properties
-        val = getApplicationProperty(propertyName);
+        // Try system properties
+        val = getSystemProperty(propertyName);
         if (val != null) {
             return val;
         }
 
-        // Try system properties
-        val = getSystemProperty(propertyName);
+        // Try application properties
+        val = getApplicationProperty(propertyName);
         if (val != null) {
             return val;
         }
@@ -175,6 +175,12 @@ public class DefaultDeploymentConfiguration extends
 
         // Try lowercased system properties
         val = System.getProperty(pkgName + parameterName.toLowerCase());
+        if (val != null) {
+            return val;
+        }
+
+        // version prefixed with just "vaadin."
+        val = System.getProperty("vaadin." + parameterName);
         return val;
     }
 
