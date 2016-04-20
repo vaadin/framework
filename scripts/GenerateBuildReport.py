@@ -45,7 +45,6 @@ except subprocess.CalledProcessError as e:
 	else:
 		raise e
 
-content += """<tr><td><a href="{url}">Build result page (See test results, pin and tag build and dependencies)</a></td></tr>""".format(url=args.buildResultUrl)
 content += "<tr><td>Try demos<ul>"
 
 for demo in demos:
@@ -68,12 +67,12 @@ content += """</pre>
     <tr><td><a href="https://dev.vaadin.com/milestone/Vaadin {version}">Close Trac Milestone</a></td></tr>
     <tr><td><a href="https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&col=id&col=summary&col=component&col=milestone&col=status&col=type">Verify pending release tickets still have milestone {version}</a></td></tr>
     <tr><td><a href="https://dev.vaadin.com/admin/ticket/versions">Add version {version} to Trac</td></tr>
-    <tr><td><a href="{url}">Staging result page (See test results, pin and tag build and dependencies)</a></td></tr>
+    <tr><td><a href="{url}">Result page (See test results, pin and tag build and dependencies)</a></td></tr>
     <tr><td>Commands to tag all repositories (warning: do not run as a single script but set variables and check before any push commands - this has not been tested yet and the change IDs are missing)</td></tr>
     <tr><td><pre>
-    VERSION={version}
-    
     GERRIT_USER=[fill in your gerrit username]
+
+    VERSION={version}
     FRAMEWORK_REVISION={frameworkRevision}
     SCREENSHOTS_REVISION={screenshotRevision}
     ARCHETYPES_REVISION={archetypeRevision}
