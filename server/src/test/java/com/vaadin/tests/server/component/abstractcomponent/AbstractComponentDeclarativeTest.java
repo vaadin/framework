@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.abstractcomponent;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -220,6 +222,18 @@ public class AbstractComponentDeclarativeTest extends
         component.readDesign(design, new DesignContext());
         assertEquals("Component should have only one extension", 1, component
                 .getExtensions().size());
+    }
+
+    @Test
+    public void testUnknownProperties() {
+        String design = "<vaadin-label foo=\"bar\"/>";
+
+        DesignContext context = readAndReturnContext(design);
+        Label label = (Label) context.getRootComponent();
+        assertTrue("Custom attribute was preserved in custom attributes",
+                context.getCustomAttributes(label).containsKey("foo"));
+
+        testWrite(label, design, context);
     }
 
     private Element createDesign(boolean responsive) {

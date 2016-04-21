@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -1041,10 +1043,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
         supported.addAll(getDefaultAttributes());
         supported.addAll(getCustomAttributes());
         for (Attribute a : attr) {
-            if (!a.getKey().startsWith(":") && !supported.contains(a.getKey())) {
-                getLogger().info(
-                        "Unsupported attribute found when reading from design : "
-                                + a.getKey());
+            if (!a.getKey().startsWith(":")
+                    && !supported.contains(a.getKey())) {
+                // Add unknown attributes as custom attributes to the context
+                designContext.setCustomAttribute(this, a.getKey(),
+                        a.getValue());
             }
         }
     }
@@ -1326,7 +1329,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     ((Focusable) this).getTabIndex(),
                     ((Focusable) def).getTabIndex(), Integer.class);
         }
-
+        // handle custom attributes
+        Map<String, String> customAttributes = designContext
+                .getCustomAttributes(this);
+        if (customAttributes != null) {
+            for (Entry<String, String> entry : customAttributes.entrySet()) {
+                attr.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /*
