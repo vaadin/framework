@@ -153,6 +153,10 @@ public abstract class AbstractContainerTestBase {
 
         }
 
+        // getItemProperty
+        Assert.assertNull(container.getItem(itemIdInSet).getItemProperty(
+                "notinset"));
+
     }
 
     protected static final Object FULLY_QUALIFIED_NAME = "fullyQualifiedName";

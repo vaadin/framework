@@ -324,7 +324,7 @@ public class ServerRpcHandler implements Serializable {
      * @param invocationsData
      *            JSON containing all information needed to execute all
      *            requested RPC calls.
-     * @since
+     * @since 7.7
      */
     protected void handleInvocations(UI ui, int lastSyncIdSeenByClient,
             JsonArray invocationsData) {
@@ -423,7 +423,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * Handles the given RPC method invocation for the given connector
      * 
-     * @since
+     * @since 7.7
      * @param ui
      *            the UI containing the connector
      * @param connector
@@ -446,7 +446,7 @@ public class ServerRpcHandler implements Serializable {
      * Handles the given Legacy variable change RPC method invocation for the
      * given connector
      * 
-     * @since
+     * @since 7.7
      * @param ui
      *            the UI containing the connector
      * @param connector
