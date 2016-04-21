@@ -95,60 +95,28 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>New configurable client-server automatic reconnect handling and warning dialogs</li>
-            <li>Grid columns can be resized by the user</li>
-            <li>Grid non-modal editor mode and unbuffered datasource binding</li>
-            <li>More fluent Grid scrolling for touch devices</li>
-            <li>Better customizability of Grid (data generators for communication, customizable selection models etc.)</li>
-            <li>Configurable keyboard, touch and mouse navigation support for Grid editor</li>
-            <li>Declarative HTML serialization enhancements for Vaadin Designer 1.0</li>
-            <li>Better handling of closing a window with keyboard shortcuts</li>
-            <li>Column collapsing events for Table</li>
-            <li>Most Components fire a ContextClickEvent when the user tries to open a context menu.
-                This event is specialised to contain some extra context for Grid, Table, TreeTable and Tree,
-                and used by the <a href="https://vaadin.com/addon/vaadin-contextmenu">ContextMenu add-on</a>.</li>
-            <li>New push transport mode WEBSOCKET_XHR (WebSockets from server to client, XHR from client to
-                server) which allows setting of cookies, using request scopes with CDI/Spring etc.</li>
-            <li>Navigator is more extensible and can be used with dependency injection</li>
-            <li>It is possible to customize the push URL using PushConfiguration.setPushUrl().
-                This enables implementing some push related add-ons such as push on portals.</li>
+            <li>Vaadin Framework is now built with Maven</li>
+            <li>System properties can now override application properties, e.g. -DproductionMode=true
+                (<a href="http://dev.vaadin.com/ticket/19683">#19683</a>)</li>
+            <li>Vaadin can now automatically use default widgetset AppWidgetset optionally generated
+                by the latest Vaadin Maven plug-in (<a href="http://dev.vaadin.com/ticket/19675">#19675</a>)</li>
         </ul>
 
         <p>
-            For enhancements introduced in Vaadin 7.5, see the <a
-                href="http://vaadin.com/download/release/7.5/7.5.0/release-notes.html">Release
-                Notes for Vaadin 7.5.0</a>.
+            For enhancements introduced in Vaadin 7.6, see the <a
+                href="http://vaadin.com/download/release/7.6/7.6.0/release-notes.html">Release
+                Notes for Vaadin 7.6.0</a>.
         </p>
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>Window.setCloseShortcut() is now deprecated. ESCAPE is no longer a hard-coded default, but rather a soft one, and
-                can be removed. If the close-shortcut attribute of the v-windowelement is present, it must list all close
-                shortcuts, including ESCAPE, separated by whitespace. Existing, unchanged code should behave as before.
-                See ticket <a href="https://dev.vaadin.com/ticket/17383">#17383</a> for more information on the reasoning
-                behind the change.</li>
-            <li>Grid SelectionModels are now Extensions. This update removes all selection related variables and API from 
-                GridConnector, GridState, GridServerRpc and GridClientRpc</li>
-            <li>StringToEnumConverter now explicitly supports Enum types with custom toString() implementations.
-                This may affect applications that relied on the undefined behavior in previous versions.</li>
-            <li>The Section enumeration from client-side of the Grid has been moved to GridConstants</li>
-            <li>The order in which AttachEvents are fired has been changed. When attaching a component with child components,
-                events are now fired first for the children and last for the root component. The order is thus the same as
-                the order in which custom code in overridden Component.attach methods would be executed. Please refer to
-                ticket <a href="https://dev.vaadin.com/ticket/16348">#16348</a> for more information on this change.</li>
-            <li>Jsoup library version 1.8.3 is incompatible with the version 1.8.1 used in early 7.6 alphas and 7.5. This might 
-                cause problems with external libraries compiled against said versions.</li>
-            <li>Declarative format is now using "vaadin-" as a default prefix instead of the "v-" prefix used in 7.5. 
-                This default can be changed in deployment configuration.</li>
-            <li>The annotations @PreserveOnRefresh, @Push, @Theme, @Title, @VaadinServletConfiguration and @Widgetset now use
-                @Inherited. The annotation is also looked up in extended interfaces for backwards compatibility.</li>
-            <li>Server-side timings of request processing are only sent to the client when not in production mode. Using the
-                timings in TestBench tests requires the server not to be in production mode.</li>
-            <li>System properties now override application parameters for settings such as production mode.</li>
+            <li>Vaadin artifacts no longer bring a transitive dependency to javax.servlet:servlet-api.</li>
+            <li>System properties now override application parameters for settings such as production mode (see above).</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
-            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with 7.6. Please use version 4.1.0 or above.</li>
+            <li>OSGi support is has some issues</li>
+            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with Vaadin 7.7. Please use version 4.1.0 or above.</li>
             <li>Context click events are not generated on iOS devices
                 (<a href="http://dev.vaadin.com/ticket/19367">#19367</a>)</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
@@ -195,7 +163,7 @@
             your users happy. <b>Vaadin</b> is available under the
             Apache License, Version 2.0 (see the
             <tt>license.html</tt>
-            in the Vaadin ZIP or JAR package).
+            in the Vaadin ZIP package).
         </p>
 
         <p>
