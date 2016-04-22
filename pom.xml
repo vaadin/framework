@@ -176,6 +176,11 @@
 					<version>2.17</version>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>animal-sniffer-maven-plugin</artifactId>
+					<version>1.15</version>
+				</plugin>
+				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
 					<version>1.0.0</version>
@@ -212,7 +217,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
 				<dependencies>
 					<dependency>
 						<groupId>com.vaadin</groupId>
@@ -234,6 +238,30 @@
 					<failsOnError>false</failsOnError>
 					<linkXRef>false</linkXRef>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>java6compatibility</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java16</artifactId>
+								<version>1.0</version>
+							</signature>
+							<ignores>
+								<ignore>com.google.gwt.*</ignore>
+							</ignores>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Unpacked Dependencies as resource -->
