@@ -76,7 +76,6 @@
 
 
 	<modules>
-		<module>all</module>
 		<module>buildhelpers</module>
 		<module>shared</module>
 		<module>push</module>
@@ -88,6 +87,7 @@
 		<module>widgets</module>
 		<module>uitest</module>
 		<module>liferay</module>
+		<module>all</module>
 		<!-- Nexus staging bug needs the last module to be deployed. -->
 		<module>bom</module>
 	</modules>
@@ -171,6 +171,11 @@
 					<version>${vaadin.plugin.version}</version>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>2.17</version>
+				</plugin>
+				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
 					<version>1.0.0</version>
@@ -204,6 +209,33 @@
 		</pluginManagement>
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.17</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.vaadin</groupId>
+						<artifactId>vaadin-buildhelpers</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+					<!-- Needed because of a JavadocMethodCheck bug in 6.11 -->
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>6.17</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<configLocation>checkstyle/vaadin-checkstyle.xml</configLocation>
+					<headerLocation>checkstyle/header</headerLocation>
+					<encoding>UTF-8</encoding>
+					<consoleOutput>false</consoleOutput>
+					<failsOnError>false</failsOnError>
+					<linkXRef>false</linkXRef>
+				</configuration>
+			</plugin>
+
 			<!-- Unpacked Dependencies as resource -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

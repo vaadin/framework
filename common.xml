@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="common" basedir="." default="checkstyle" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
     <tstamp>
         <format property="build.date" pattern="yyyy-MM-dd" />
@@ -14,29 +14,4 @@
     <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
     <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
 
-
-    <!-- Checkstyle conf -->
-    <property name="cs.dir" location="${vaadin.basedir}/checkstyle" />
-    <property name="cs.xml" location="${cs.dir}/vaadin-checkstyle.xml" />
-    <property name="cs.header-file" location="${cs.dir}/header" />
-    <property name="cs.import-control-file" location="${cs.dir}/import-control.xml" />
-    <taskdef resource="checkstyletask.properties" uri="antlib:com.puppycrawl.tools.checkstyle" classpathref="taskdefs.classpath" />
-
-    <target name="checkstyle">
-        <fail unless="result.dir" message="No result.dir parameter given" />
-        <fail unless="cs.src" message="No cs.src parameter given" />
-        <property name="result.dir.full" location="${result.dir}" />
-        <mkdir dir="${result.dir}" />
-        <echo>##teamcity[importData type='checkstyle' path='${result.dir.full}/checkstyle-errors.xml']</echo>
-        <cs:checkstyle config="${cs.xml}" failOnViolation="false">
-            <fileset dir="${cs.src}" includes="**/*.java">
-                <exclude name="com/vaadin/sass/internal/parser/Parser.java" />
-                <exclude name="com/vaadin/sass/internal/parser/ParserConstants.java" />
-                <exclude name="com/vaadin/sass/internal/parser/ParserTokenManager.java" />
-            </fileset>
-            <formatter type="xml" toFile="${result.dir}/checkstyle-errors.xml" />
-            <property key="checkstyle.header.file" file="${cs.header-file}" />
-            <property key="checkstyle.importControl.file" file="${cs.import-control-file}" />
-        </cs:checkstyle>
-    </target>
 </project>

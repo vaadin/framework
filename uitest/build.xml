@@ -65,10 +65,7 @@
         <fail unless="result.dir" message="No result.dir parameter given" />
         <delete dir="${result.dir}" />
     </target>
-    <target name="checkstyle">
-        <echo>Checkstyle is disabled for uitest for now</echo>
-    </target>
-    <target name="test" depends="checkstyle">
+    <target name="test">
     </target>
 
     <target name="test-testbench" depends="clean-testbench-errors"
