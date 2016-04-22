@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-uitest" basedir="." default="compile"
+<project name="vaadin-uitest" basedir="." default="test-tb3"
     xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Provides a uitest WAR containing Vaadin UI tests
@@ -16,89 +16,11 @@
         location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
     <!-- Need to give a default value to keep Ivy happy -->
-    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prerelease"/>
-
-    <path id="classpath.compile.custom">
-    </path>
-
-    <target name="dependencies">
-        <!-- This is copied from common.xml to be able to add server.test.source 
-            to the source path -->
-
-        <ivy:resolve log="download-only" resolveid="common"
-            conf="build, build-provided" />
-        <ivy:cachepath pathid="classpath.compile.dependencies"
-            conf="build, build-provided" />
-    </target>
-
-    <target name="compile" description="Compiles the module"
-        depends="dependencies">
-
-        <fail unless="module.name" message="No module name given" />
-        <property name="result.dir" location="result" />
-        <property name="src" location="${result.dir}/../src/main/java" />
-        <property name="test.src" location="${result.dir}/../src/test/java" />
-        <property name="classes" location="${result.dir}/classes" />
-        <property name="server.test.sources" location="${result.dir}/../../server/src/test/java" />
-        <mkdir dir="${classes}" />
-
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
-            <src path="${src}" />
-            <classpath location="${classes}" />
-            <classpath refid="classpath.compile.dependencies" />
-            <classpath refid="classpath.compile.custom" />
-        </javac>
-        
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
-            <src path="${test.src}" />
-            <classpath location="${classes}" />
-            <classpath refid="classpath.compile.dependencies" />
-            <classpath refid="classpath.compile.custom" />
-        </javac>
-    </target>
+    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>
 
     <target name="clean">
         <fail unless="result.dir" message="No result.dir parameter given" />
         <delete dir="${result.dir}" />
-    </target>
-    <target name="test">
-    </target>
-
-    <target name="test-testbench" depends="clean-testbench-errors"
-        description="Run all TestBench based tests, including server tests">
-        <parallel>
-            <daemons>
-                <!-- Start server -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml"
-                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
-            </daemons>
-            <sequential>
-                <!-- Server tests -->
-
-                <!-- Sleep before running integration tests so testbench 
-                    2 tests have time to compile and start -->
-                <sleep minutes="4" />
-                <ant antfile="${uitest.dir}/integration_tests.xml"
-                    target="integration-test-all" inheritall="false"
-                    inheritrefs="false">
-                    <property name="demo.war" value="${war.file}" />
-                </ant>
-            </sequential>
-            <sequential>
-                <!-- Wait for server to start -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml"
-                    target="wait-for-startup" />
-
-                    <!-- TestBench 3 tests -->
-                    <ant antfile="${uitest.dir}/tb3test.xml"
-                        target="run-all-tb3-tests" inheritall="true" />
-                    <echo message="TestBench 3 tests complete" />
-            </sequential>
-        </parallel>
     </target>
 
     <target name="fetch-war">
@@ -124,7 +46,7 @@
         </parallel>
     </target>
 
-    <target name="test-tb3" depends="clean-testbench-errors,compile">
+    <target name="test-tb3" depends="clean-testbench-errors">
         <property name="war.file"
             location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
         <mkdir dir="${vaadin.basedir}/result" />
@@ -136,7 +58,7 @@
             <sequential>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
                     target="wait-for-startup" />
-                <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests"
+            	<ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests"
                     inheritall="true" />
             </sequential>
         </parallel>
