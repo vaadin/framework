@@ -41,14 +41,23 @@
 		return (typeof window[className]) != "undefined";
 	};
 	
-	var loadWidgetset = function(url, widgetset) {
+	var loadWidgetset = function(url, widgetset, ready) {
 		if (widgetsets[widgetset]) {
 			return;
 		}
 		log("load widgetset", url, widgetset);
 		setTimeout(function() {
 			if (!isWidgetsetLoaded(widgetset)) {
-				alert("Failed to load the widgetset: " + url);
+				if (ready) {
+					alert("Failed to load the widgetset: " + url);
+				} else {
+					if (window.confirm("Failed to load the widgetset. If using CDN for the widgetset, it is possible that compiling it takes up to a few minutes. Would you like to try again?")) {
+						window[widgetset] = undefined;
+						window.location.reload(false);
+					} else {
+						alert("Failed to load the widgetset: " + url);
+					}
+				}
 			}
 		}, 15000);
 	
@@ -216,7 +225,8 @@
 				if (!widgetsetUrl) {
 					widgetsetUrl = vaadinDir + 'widgetsets/' + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
 				}
-				loadWidgetset(widgetsetUrl, widgetset);
+				var widgetsetReady = getConfig('widgetsetReady');
+				loadWidgetset(widgetsetUrl, widgetset, widgetsetReady);
 				
 				if (getConfig('uidl') === undefined) {
 					if (mayDefer) {

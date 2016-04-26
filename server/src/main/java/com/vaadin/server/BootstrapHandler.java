@@ -55,10 +55,10 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
@@ -76,12 +76,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private final VaadinResponse response;
         private final BootstrapFragmentResponse bootstrapResponse;
 
-        private String widgetsetName;
         private String themeName;
         private String appId;
         private PushMode pushMode;
         private JsonObject applicationParameters;
         private VaadinUriResolver uriResolver;
+        private WidgetsetInfo widgetsetInfo;
 
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
@@ -105,11 +105,20 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return bootstrapResponse.getUiClass();
         }
 
-        public String getWidgetsetName() {
-            if (widgetsetName == null) {
-                widgetsetName = getWidgetsetForUI(this);
+        public WidgetsetInfo getWidgetsetInfo() {
+            if (widgetsetInfo == null) {
+                widgetsetInfo = getWidgetsetForUI(this);
             }
-            return widgetsetName;
+            return widgetsetInfo;
+        }
+
+        /**
+         * @return returns the name of the widgetset to use
+         * @deprecated use {@link #getWidgetsetInfo()} instead
+         */
+        @Deprecated
+        public String getWidgetsetName() {
+            return getWidgetsetInfo().getWidgetsetName();
         }
 
         public String getThemeName() {
@@ -455,18 +464,19 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         return null;
     }
 
-    public String getWidgetsetForUI(BootstrapContext context) {
+    public WidgetsetInfo getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
         UICreateEvent event = new UICreateEvent(context.getRequest(),
                 context.getUIClass());
-        String widgetset = context.getBootstrapResponse().getUIProvider()
-                .getWidgetset(event);
+        WidgetsetInfo widgetset = context.getBootstrapResponse()
+                .getUIProvider().getWidgetset(event);
         if (widgetset == null) {
-            widgetset = request.getService().getConfiguredWidgetset(request);
+            // TODO do we want to move WidgetsetInfoImpl elsewhere?
+            widgetset = new WidgetsetInfoImpl(request.getService()
+                    .getConfiguredWidgetset(request));
         }
 
-        widgetset = VaadinServlet.stripSpecialChars(widgetset);
         return widgetset;
     }
 
@@ -477,9 +487,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      * Override this method if you want to add some custom html around around
      * the div element into which the actual Vaadin application will be
      * rendered.
-     * 
+     *
      * @param context
-     * 
+     *
      * @throws IOException
      */
     private void setupMainDiv(BootstrapContext context) throws IOException {
@@ -618,7 +628,15 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
 
         appConfig.put("versionInfo", versionInfo);
-        appConfig.put("widgetset", context.getWidgetsetName());
+
+        WidgetsetInfo widgetsetInfo = context.getWidgetsetInfo();
+        appConfig.put("widgetset", VaadinServlet
+                .stripSpecialChars(widgetsetInfo.getWidgetsetName()));
+        // add widgetset url if not null
+        if (widgetsetInfo.getWidgetsetUrl() != null) {
+            appConfig.put("widgetsetUrl", widgetsetInfo.getWidgetsetUrl());
+        }
+        appConfig.put("widgetsetReady", !widgetsetInfo.isCdn());
 
         // Use locale from session if set, else from the request
         Locale locale = ServletPortletHelper.findLocale(null,
@@ -694,13 +712,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Get the URI for the application theme.
-     * 
+     *
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
-     * 
+     *
      * @param context
      * @param themeName
-     * 
+     *
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
@@ -713,7 +731,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Override if required
-     * 
+     *
      * @param context
      * @return
      */
@@ -725,7 +743,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Do not override.
-     * 
+     *
      * @param context
      * @return
      */
