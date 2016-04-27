@@ -1133,6 +1133,10 @@ public class Escalator extends Widget implements RequiresResize,
 
         private double defaultRowHeight = INITIAL_DEFAULT_ROW_HEIGHT;
 
+        private boolean autodetectRowHeightLaterQueued = false;
+
+        private Element detectionTr, cellElem;
+
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
@@ -1928,41 +1932,45 @@ public class Escalator extends Widget implements RequiresResize,
         }
 
         public void autodetectRowHeightLater() {
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    if (defaultRowHeightShouldBeAutodetected && isAttached()) {
-                        autodetectRowHeightNow();
-                        defaultRowHeightShouldBeAutodetected = false;
+            if (!autodetectRowHeightLaterQueued) {
+                autodetectRowHeightLaterQueued = true;
+                Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (isAttached()) {
+                            autodetectRowHeightLaterQueued = false;
+                            autodetectRowHeightNow();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         public void autodetectRowHeightNow() {
-            if (!isAttached()) {
-                // Run again when attached
-                defaultRowHeightShouldBeAutodetected = true;
+            if (!defaultRowHeightShouldBeAutodetected && !isAttached()) {
                 return;
             }
+            if (detectionTr == null) {
+                detectionTr = DOM.createTR();
+                detectionTr.setClassName(getStylePrimaryName() + "-row");
+                cellElem = DOM.createElement(getCellElementTagName());
+                cellElem.setClassName(getStylePrimaryName() + "-cell");
+                cellElem.setInnerText("Ij");
+                detectionTr.appendChild(cellElem);
+            }
 
-            final Element detectionTr = DOM.createTR();
-            detectionTr.setClassName(getStylePrimaryName() + "-row");
-
-            final Element cellElem = DOM.createElement(getCellElementTagName());
-            cellElem.setClassName(getStylePrimaryName() + "-cell");
-            cellElem.setInnerText("Ij");
-
-            detectionTr.appendChild(cellElem);
             root.appendChild(detectionTr);
-            double boundingHeight = WidgetUtil
-                    .getRequiredHeightBoundingClientRectDouble(cellElem);
-            defaultRowHeight = Math.max(1.0d, boundingHeight);
+            double boundingHeight = WidgetUtil.getRequiredHeightBoundingClientRectDouble(cellElem);
             root.removeChild(detectionTr);
 
-            if (root.hasChildNodes()) {
-                reapplyDefaultRowHeights();
-                applyHeightByRows();
+            // Height lesser than 1px causes serious performance problems, skip this hit.
+            if (boundingHeight >= 1 && defaultRowHeight != boundingHeight) {
+                defaultRowHeight = boundingHeight;
+                defaultRowHeightShouldBeAutodetected = false;
+                if (root.hasChildNodes()) {
+                    reapplyDefaultRowHeights();
+                    applyHeightByRows();
+                }
             }
         }
 
