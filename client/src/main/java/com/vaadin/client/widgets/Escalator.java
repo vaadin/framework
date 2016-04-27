@@ -6104,7 +6104,7 @@ public class Escalator extends Widget implements RequiresResize,
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
                 validateScrollDestination(destination, padding);
