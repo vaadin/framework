@@ -41,7 +41,7 @@ def generateArchetype(archetype, artifactId, repo):
 	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
 	cmd.append("-DarchetypeArtifactId=%s" % (archetype))
 	cmd.append("-DarchetypeVersion=%s" % (args.version))
-	if hasattr(args, "repo") and args.repo != None:
+	if repo is not None:
 		cmd.append("-DarchetypeRepository=%s" % repo)
 	cmd.append("-DgroupId=%s" % (group))
 	cmd.append("-DartifactId=%s" % (artifactId))
@@ -62,16 +62,10 @@ if __name__ == "__main__":
 	from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, mavenCmd, updateRepositories, getArgs, removeDir, parser, resultPath
 	from DeployHelpers import deployWar
 
-	# Add command line arguments for staging repos
-	parser.add_argument("--repo", type=str, help="Staging repository URL", required=True)
-
 	archetypesFailed = False
 
 	# Parse the arguments
 	args = getArgs()
-
-	if hasattr(args, "artifactPath") and args.artifactPath is not None:
-		raise Exception("Archetype validation build does not support artifactPath")
 
 	wars = {}
 
@@ -79,8 +73,11 @@ if __name__ == "__main__":
 		artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
 		try:
 			log = getLogFile(archetype)
-			generateArchetype(archetype, artifactId, args.repo)
-			updateRepositories(join(resultPath, artifactId), args.repo)
+			generateArchetype(archetype, artifactId, args.pluginRepo)
+			if hasattr(args, "fwRepo") and args.fwRepo is not None:
+				updateRepositories(join(resultPath, artifactId), args.fwRepo)
+			if hasattr(args, "pluginRepo") and args.pluginRepo is not None:
+				updateRepositories(join(resultPath, artifactId), args.pluginRepo, postfix="plugin")
 			mavenValidate(artifactId, logFile=log)	
 			warFiles = copyWarFiles(artifactId, name=archetype)
 			for war in warFiles:

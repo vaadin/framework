@@ -144,11 +144,12 @@
         <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
         <module name="RedundantImport" />
         <module name="UnusedImports" />
+<!--
         <module name="ImportControl">
             <property name="file" value="${checkstyle.importControl.file}" />
             <property name="severity" value="error" />
         </module>
-
+-->
 
         <!-- Checks for Size Violations. -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->

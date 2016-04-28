@@ -41,7 +41,8 @@
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
     <path id="classpath.tb3">
         <path refid="classpath.tb3.lib" />
-        <path location="result/classes" />
+        <path location="target/classes" />
+        <path location="target/test-classes" />
     </path>
 
     <!-- Upload war to deploy to ssh host -->

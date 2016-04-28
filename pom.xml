@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<groupId>com.vaadin</groupId>
+	<artifactId>vaadin-root</artifactId>
+	<name>vaadin-root</name>
+	<packaging>pom</packaging>
+	<version>7.7.0-SNAPSHOT</version>
+
+	<prerequisites>
+		<maven>3.0.5</maven>
+	</prerequisites>
+
+	<properties>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Used version numbers for dependencies -->
+		<commons-io.version>2.4</commons-io.version>
+		<google.appengine.version>1.7.7</google.appengine.version>
+		<guava.version>16.0.1.vaadin1</guava.version>
+		<jsoup.version>1.8.3</jsoup.version>
+		<liferay.portal.version>6.0.2</liferay.portal.version>
+
+		<vaadin.sass.version>0.9.13</vaadin.sass.version>
+		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
+		<vaadin.plugin.version>7.7.0.alpha1</vaadin.plugin.version>
+
+		<javax.portlet.version>2.0</javax.portlet.version>
+		<javax.servlet.version>3.0.1</javax.servlet.version>
+		<javax.validation.version>1.0.0.GA</javax.validation.version>
+
+		<!-- Test dependencies -->
+		<junit.version>4.11</junit.version>
+
+		<!-- Atmosphere versions -->
+		<atmosphere.runtime.version>2.2.7.vaadin1</atmosphere.runtime.version>
+		<atmosphere.js.version>2.2.6.vaadin4</atmosphere.js.version>
+
+		<!-- Dependency unpack directory -->
+		<dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
+	</properties>
+
+	<!-- TODO: remove this after maven plugin has been released -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>vaadin-prereleases</id>
+			<url>http://maven.vaadin.com/vaadin-prereleases</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<organization>
+		<name>Vaadin Ltd</name>
+	</organization>
+	<url>https://vaadin.com/</url>
+	<description>Vaadin Framework Root Pom</description>
+	<licenses>
+		<license>
+			<name>Apache License Version 2.0</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
+		<developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
+		<url>https://github.com/vaadin/vaadin</url>
+	</scm>
+
+
+	<modules>
+		<module>buildhelpers</module>
+		<module>shared</module>
+		<module>push</module>
+		<module>server</module>
+		<module>client</module>
+		<module>client-compiler</module>
+		<module>client-compiled</module>
+		<module>themes</module>
+		<module>widgets</module>
+		<module>uitest</module>
+		<module>liferay</module>
+		<module>all</module>
+		<!-- Nexus staging bug needs the last module to be deployed. -->
+		<module>bom</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.5.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<!-- Downgraded due to filtering related bug -->
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.5</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.19.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>3.0.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+					<configuration>
+						<outputDirectory>${dependency.unpack.directory}</outputDirectory>
+						<overWriteReleases>false</overWriteReleases>
+						<overWriteSnapshots>true</overWriteSnapshots>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.4.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.10</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>com.vaadin</groupId>
+					<artifactId>vaadin-maven-plugin</artifactId>
+					<version>${vaadin.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>2.17</version>
+					<dependencies>
+						<!-- Needed because of a JavadocMethodCheck bug in 6.11 -->
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>6.17</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
+						<headerLocation>../checkstyle/header</headerLocation>
+						<encoding>UTF-8</encoding>
+						<consoleOutput>false</consoleOutput>
+						<failsOnError>false</failsOnError>
+						<linkXRef>false</linkXRef>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>animal-sniffer-maven-plugin</artifactId>
+					<version>1.15</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.8,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>java6compatibility</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java16</artifactId>
+								<version>1.0</version>
+							</signature>
+							<ignores>
+								<ignore>com.google.gwt.*</ignore>
+							</ignores>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Unpacked Dependencies as resource -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+
+				<!-- Needs extra resource folder for unpacked dependencies -->
+				<executions>
+					<execution>
+						<id>add-dependency-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${dependency.unpack.directory}</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sources-jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<!-- Only include java files -->
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.3</version>
+						<executions>
+							<execution>
+								<id>generate-javadoc</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<failOnError>false</failOnError>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

@@ -25,9 +25,10 @@ args = None
 parser = argparse.ArgumentParser(description="Automated staging validation")
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("--version", help="Vaadin version to use")
-group.add_argument("--artifactPath", help="Path to local folder with Vaadin artifacts")
 
 parser.add_argument("--maven", help="Additional maven command line parameters", default=None)
+parser.add_argument("--fwRepo", help="Framework staging repository URL", default=None)
+parser.add_argument("--pluginRepo", help="Maven plugin repository URL", default=None)
 
 # Parse command line arguments <version>
 def parseArgs():
@@ -109,7 +110,7 @@ def readPomFile(pomFile):
 	return ElementTree.parse(pomFile), nameSpace 
 
 # Recursive pom.xml update script
-def updateRepositories(path, repoUrl = None, version = None):
+def updateRepositories(path, repoUrl = None, version = None, postfix = "staging"):
 	# If versions are not supplied, parse arguments
 	if version is None:
 		version = getArgs().version
@@ -129,7 +130,7 @@ def updateRepositories(path, repoUrl = None, version = None):
 		print("Add staging repositories to " + pomXml)
 		
 		# Add framework staging repository
-		addRepo(repoNode, "repository", "vaadin-%s-staging" % (version), repoUrl)
+		addRepo(repoNode, "repository", "vaadin-%s-%s" % (version, postfix), repoUrl)
 		
 		# Find the correct pluginRepositories node
 		pluginRepo = tree.getroot().find("{%s}pluginRepositories" % (nameSpace))
@@ -138,7 +139,7 @@ def updateRepositories(path, repoUrl = None, version = None):
 			pluginRepo = ElementTree.SubElement(tree.getroot(), "pluginRepositories")
 		
 		# Add plugin staging repository
-		addRepo(pluginRepo, "pluginRepository", "vaadin-%s-plugin-staging" % (version), repoUrl)
+		addRepo(pluginRepo, "pluginRepository", "vaadin-%s-%s" % (version, postfix), repoUrl)
 		
 		# Overwrite the modified pom.xml
 		tree.write(pomXml, encoding='UTF-8')
@@ -147,7 +148,7 @@ def updateRepositories(path, repoUrl = None, version = None):
 	for i in listdir(path):
 		file = join(path, i)
 		if isdir(file):
-			updateRepositories(join(path, i), repoUrl, version)
+			updateRepositories(join(path, i), repoUrl, version, postfix)
 
 # Add a repository of repoType to given repoNode with id and URL
 def addRepo(repoNode, repoType, id, url):

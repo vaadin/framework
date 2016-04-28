@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-uitest" basedir="." default="publish-local"
+<project name="vaadin-uitest" basedir="." default="test-tb3"
     xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Provides a uitest WAR containing Vaadin UI tests
     </description>
     <include file="../common.xml" as="common" />
-    <include file="../build.xml" as="vaadin" />
 
     <!-- global properties -->
     <property name="module.name" value="vaadin-uitest" />
@@ -16,195 +15,22 @@
     <property name="result.war"
         location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
-    <path id="classpath.compile.custom">
-    </path>
-
-    <target name="dependencies">
-        <!-- This is copied from common.xml to be able to add server.test.source 
-            to the source path -->
-
-        <ivy:resolve log="download-only" resolveid="common"
-            conf="build, build-provided" />
-        <ivy:cachepath pathid="classpath.compile.dependencies"
-            conf="build, build-provided" />
-    </target>
-
-    <target name="compile" description="Compiles the module"
-        depends="dependencies">
-
-        <fail unless="module.name" message="No module name given" />
-        <property name="result.dir" location="result" />
-        <property name="src" location="${result.dir}/../src" />
-        <property name="classes" location="${result.dir}/classes" />
-        <property name="server.test.sources" location="${result.dir}/../../server/tests/src" />
-        <mkdir dir="${classes}" />
-
-        <!-- TODO: Get rid of this -->
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
-            <src path="${server.test.sources}" />
-            <include name="com/vaadin/tests/data/bean/**" />
-            <include name="com/vaadin/tests/VaadinClasses.java" />
-            <include
-                name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
-            <classpath refid="classpath.compile.dependencies" />
-            <classpath refid="classpath.compile.custom" />
-        </javac>
-
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
-            <src path="${src}" />
-            <classpath location="${classes}" />
-            <classpath refid="classpath.compile.dependencies" />
-            <classpath refid="classpath.compile.custom" />
-        </javac>
-    </target>
-
-    <target name="testing-widgetset" depends="dependencies,compile">
-        <property name="module"
-            value="com.vaadin.tests.widgetset.TestingWidgetSet" />
-        <property name="style" value="OBF" />
-        <property name="localWorkers" value="6" />
-        <property name="extraParams" value="" />
-        <property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
-        <property name="work.dir" location="${result.dir}/work" />
-
-        <mkdir dir="${module.output.dir}" />
-
-        <echo>Compiling ${module} to ${module.output.dir}</echo>
-
-        <!-- compile the module -->
-        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies"
-            failonerror="yes" fork="yes" maxmemory="512m">
-            <classpath location="src" />
-            <classpath location="${classes}" />
-            <arg value="-workDir" />
-            <arg value="${work.dir}" />
-            <arg value="-logLevel" />
-            <arg value="TRACE" />
-            <arg value="-war" />
-            <arg value="${module.output.dir}" />
-            <arg value="-style" />
-            <arg value="${style}" />
-
-            <arg value="-localWorkers" />
-            <arg value="${localWorkers}" />
-            <arg value="-strict" />
-            <arg line="${extraParams}" />
-            <arg value="${module}" />
-
-            <sysproperty key="vFailIfNotSerializable" value="true" />
-
-            <jvmarg value="-Xss8M" />
-            <jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-Djava.awt.headless=true" />
-        </java>
-
-    </target>
-
-    <target name="war"
-        depends="dependencies, compile, compile-test-themes, testing-widgetset">
-        <property name="result.dir" location="result" />
-        <property name="classes" location="${result.dir}/classes" />
-        <property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
-        <property name="deps.dir" location="${result.dir}/deps" />
-        <property name="src" location="${result.dir}/../src" />
-
-        <ivy:resolve log="download-only" resolveid="common"
-            conf="build" />
-        <ivy:cachepath pathid="classpath.runtime.dependencies"
-            conf="build" />
-
-        <delete dir="${deps.dir}" />
-        <mkdir dir="${deps.dir}" />
-
-        <copy todir="${deps.dir}" flatten="true">
-            <path refid="classpath.runtime.dependencies" />
-        </copy>
-
-        <delete>
-            <!-- Avoid including some potentially conflicting jars in the 
-                war -->
-            <fileset dir="${deps.dir}" includes="jetty-*.jar" />
-            <fileset dir="${deps.dir}" includes="servlet-api-*.jar" />
-        </delete>
-
-        <war destfile="${result.war}" duplicate="fail" index="true">
-            <fileset dir="${common.jarfiles.dir}" />
-            <fileset dir="${result.dir}">
-                <include name="VAADIN/widgetsets/**/*" />
-                <include name="VAADIN/themes/tests-valo*/**" />
-            </fileset>
-            <fileset dir="${WebContent.dir}">
-                <include name="statictestfiles/**" />
-                <include name="VAADIN/themes/tests-*/**" />
-                <!-- Scss themes compiled and included above -->
-                <exclude name="VAADIN/themes/tests-valo*/**" />
-                <include name="VAADIN/themes/reindeer-tests/**" />
-                <include name="VAADIN/jquery.atmosphere.js" />
-                <include name="WEB-INF/*.xml" />
-                <include name="WEB-INF/web.xml.2.4" />
-            </fileset>
-            <classes dir="${classes}" />
-            <classes dir="${src}" />
-            <lib dir="${deps.dir}" />
-        </war>
-
-    </target>
-
-    <target name="publish-local" depends="war">
-        <antcall target="common.publish-local">
-            <param name="conf" value="build" />
-        </antcall>
-    </target>
+    <!-- Need to give a default value to keep Ivy happy -->
+    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>
 
     <target name="clean">
-        <antcall target="common.clean" />
-    </target>
-    <target name="checkstyle">
-        <echo>Checkstyle is disabled for uitest for now</echo>
-    </target>
-    <target name="test" depends="checkstyle">
+        <fail unless="result.dir" message="No result.dir parameter given" />
+        <delete dir="${result.dir}" />
     </target>
 
-    <target name="test-testbench" depends="clean-testbench-errors"
-        description="Run all TestBench based tests, including server tests">
-        <parallel>
-            <daemons>
-                <!-- Start server -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml"
-                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
-            </daemons>
-            <sequential>
-                <!-- Server tests -->
-
-                <!-- Sleep before running integration tests so testbench 
-                    2 tests have time to compile and start -->
-                <sleep minutes="4" />
-                <ant antfile="${uitest.dir}/integration_tests.xml"
-                    target="integration-test-all" inheritall="false"
-                    inheritrefs="false">
-                    <property name="demo.war" value="${war.file}" />
-                </ant>
-            </sequential>
-            <sequential>
-                <!-- Wait for server to start -->
-                <ant antfile="${uitest.dir}/vaadin-server.xml"
-                    target="wait-for-startup" />
-
-                    <!-- TestBench 3 tests -->
-                    <ant antfile="${uitest.dir}/tb3test.xml"
-                        target="run-all-tb3-tests" inheritall="true" />
-                    <echo message="TestBench 3 tests complete" />
-            </sequential>
-        </parallel>
+    <target name="fetch-war">
+        <mkdir dir="${vaadin.basedir}/uitest/target"/>
+        <get src="${vaadin.build.repository}/com/vaadin/vaadin-uitest/${vaadin.version}/vaadin-uitest-${vaadin.version}.war" dest="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war"/>
     </target>
 
     <target name="test-server" depends="clean-testbench-errors">
         <property name="war.file"
-            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+            location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <daemons>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
@@ -222,7 +48,8 @@
 
     <target name="test-tb3" depends="clean-testbench-errors">
         <property name="war.file"
-            location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+            location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
+        <mkdir dir="${vaadin.basedir}/result" />
         <parallel>
             <daemons>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
@@ -231,7 +58,7 @@
             <sequential>
                 <ant antfile="${uitest.dir}/vaadin-server.xml"
                     target="wait-for-startup" />
-                <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests"
+            	<ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests"
                     inheritall="true" />
             </sequential>
         </parallel>
@@ -247,88 +74,6 @@
                 <include name="*" />
             </fileset>
         </delete>
-    </target>
-
-    <target name="compile-test-themes">
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-dark" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-metro" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-flat" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-flatdark" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-facebook" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-blueprint" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-light" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-disabled-animations" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="tests-valo-no-font-awesome" />
-        </antcall>
-
-    </target>
-    <target name="compile-theme" depends="copy-theme">
-        <fail unless="theme"
-            message="You must give the theme name to compile in the 'theme' parameter" />
-
-        <ivy:resolve log="download-only" resolveid="common"
-            conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.compile.theme"
-            conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.runtime.theme"
-            conf="build" />
-
-        <echo>Compiling ${theme}</echo>
-        <mkdir dir="${theme.result.dir}" />
-
-        <!-- compile the theme -->
-        <java classname="com.vaadin.buildhelpers.CompileTheme"
-            classpathref="classpath.compile.theme" failonerror="yes"
-            fork="yes" maxmemory="512m">
-            <arg value="--theme" />
-            <arg value="${theme}" />
-            <arg value="--theme-folder" />
-            <arg value="${theme.result.dir}" />
-            <arg value="--version" />
-            <arg value="${vaadin.version}" />
-            <jvmarg value="-Xss8M" />
-            <jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-Djava.awt.headless=true" />
-        </java>
-
-    </target>
-
-    <target name="copy-theme">
-        <fail unless="theme"
-            message="You must give the theme name to copy n the 'theme' parameter" />
-        <property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
-
-        <copy todir="${theme.result.dir}">
-            <fileset dir="${theme.source.dir}">
-                <include name="${theme}/**/*.scss" />
-            </fileset>
-            <filterset refid="filter-vaadin.version" />
-        </copy>
-        <copy todir="${theme.result.dir}">
-            <fileset dir="${theme.source.dir}">
-                <exclude name="${theme}/**/*.scss" />
-            </fileset>
-        </copy>
     </target>
 
 

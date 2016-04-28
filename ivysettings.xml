@@ -16,13 +16,15 @@
         <filesystem name="local-maven" m2compatible="true">
             <artifact
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
-        </filesystem>
-        <filesystem name="build-temp">
             <ivy
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/ivy-[revision].xml" />
-            <artifact
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
+                pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom" />
         </filesystem>
+        <ibiblio name="vaadin-build" usepoms="true"
+            m2compatible="true" root="${vaadin.build.repository}" />
+        <chain name="vaadin-maven" returnFirst="true">
+            <resolver ref="local-maven" />
+            <resolver ref="vaadin-build" />
+        </chain>
     </resolvers>
     <modules>
         <module organisation="com.vaadin" name="vaadin-testbench"
@@ -34,27 +36,29 @@
         <module organisation="com.vaadin" name="vaadin-testbench-api"
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-root"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-shared"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiler"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiled"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-push"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-bom"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-liferay"
-            resolver="build-temp" />
+            resolver="vaadin-maven" />
     </modules>
 
 

@@ -16,8 +16,9 @@
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
     <path id="classpath.tb3">
+        <path location="${tb3test.dir}/target/test-classes" />
         <path refid="classpath.tb3.lib" />
-        <path location="${tb3test.dir}/result/classes" />
+        <path location="${tb3test.dir}/target/classes" />
     </path>
 
     <target name="run-all-tb3-tests" unless="tests.tb3.skip"

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-root</artifactId>
+		<version>7.7.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>vaadin-push</artifactId>
+	<name>vaadin-push</name>
+	<packaging>jar</packaging>
+	<properties>
+
+	</properties>
+
+	<url>https://vaadin.com/</url>
+	<description>Vaadin server push support</description>
+
+	<dependencies>
+		<!-- Atmosphere -->
+		<dependency>
+			<groupId>com.vaadin.external.atmosphere</groupId>
+			<artifactId>atmosphere-runtime</artifactId>
+			<version>${atmosphere.runtime.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.external.atmosphere.client</groupId>
+			<artifactId>jquery</artifactId>
+			<version>${atmosphere.js.version}</version>
+			<type>war</type>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<!-- <inherited>false</inherited> -->
+						<configuration>
+							<target>
+								<property name="jquery.unpack" location="${project.build.directory}/temp" />
+								<property name="vaadinPush.js"
+									location="${project.build.outputDirectory}/VAADIN/vaadinPush.debug.js" />
+								<property name="templates.dir"
+									location="${project.build.sourceDirectory}/../templates" />
+
+								<!-- Unzip to temp dir -->
+								<unzip
+									src="${maven.dependency.com.vaadin.external.atmosphere.client.jquery.war.path}"
+									dest="${jquery.unpack}">
+									<patternset>
+										<include name="**/jquery.atmosphere.js" />
+									</patternset>
+									<mapper type="flatten" />
+								</unzip>
+								<loadfile srcfile="${templates.dir}/jquery-1.11.0.js"
+									property="jquery.js.contents" />
+								<loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js"
+									property="jquery.atmosphere.js.contents" />
+
+								<loadfile srcfile="${templates.dir}/vaadinPush.js.tpl"
+									property="vaadinPush.js.contents">
+									<filterchain>
+										<replacetokens begintoken="@" endtoken="@">
+											<token key="jquery.js" value="${jquery.js.contents}" />
+											<token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
+										</replacetokens>
+									</filterchain>
+								</loadfile>
+								<!-- Non-obfuscated version for debugging -->
+								<echo file="${vaadinPush.js}">${vaadinPush.js.contents}</echo>
+
+							</target>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>compresspush</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<property name="vaadinPush.debug.js"
+									location="${project.build.outputDirectory}/VAADIN/vaadinPush.debug.js" />
+								<property name="vaadinPush-min.js"
+									location="${project.build.outputDirectory}/VAADIN/vaadinPush.debug-min.js" />
+								<property name="vaadinPush.js"
+									location="${project.build.outputDirectory}/VAADIN/vaadinPush.js" />
+
+								<move file="${vaadinPush-min.js}" tofile="${vaadinPush.js}" />
+
+								<!-- Gzipped versions -->
+								<gzip src="${vaadinPush.debug.js}" destfile="${vaadinPush.debug.js}.gz" />
+								<gzip src="${vaadinPush.js}" destfile="${vaadinPush.js}.gz" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<id>minifyjs</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<sourceDirectory>${project.build.outputDirectory}/VAADIN</sourceDirectory>
+					<includes>
+						<include>vaadinPush.debug.js</include>
+					</includes>
+					<outputDirectory>${project.build.outputDirectory}/VAADIN</outputDirectory>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+						<Export-Package>VAADIN</Export-Package>
+						<Require-Bundle>com.vaadin.external.atmosphere.runtime;bundle-version="${atmosphere.runtime.version}";visibility:=reexport</Require-Bundle>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+						<index>false</index>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

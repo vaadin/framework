@@ -14,7 +14,7 @@
         <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3"
             conf="taskdefs ->master" />
         <dependency org="org.apache.maven" name="maven-ant-tasks"
-            rev="2.0.10" conf="taskdefs ->master" />
+            rev="2.1.2" conf="taskdefs ->master" />
         <dependency org="com.googlecode.jarjar" name="jarjar"
             rev="1.3" conf="taskdefs ->master" />
         <dependency org="com.puppycrawl.tools" name="checkstyle"

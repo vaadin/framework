@@ -1,10 +1,11 @@
+# Eclipse
+.classpath
+.project
+.settings
 
 # /
-/.classpath
 /.cvsignore
-/.project
 /.tomcatplugin
-/.settings
 /work
 /.gwt-cache
 /.externalToolBuilders
@@ -83,6 +84,22 @@ scripts/*.pyc
 # build result folders
 */result
 result
+target/
+all/target/
+push/target/
+shared/target/
+server/target/
+client/target/
+client-compiler/target/
+buildhelpers/target/
+client-compiled/target/
+liferay/target/
+themes/target/
+uitest/target/
+widgets/target/
 
 .sass-cache
 phantomjsdriver.log
+
+*.iml
+.idea
