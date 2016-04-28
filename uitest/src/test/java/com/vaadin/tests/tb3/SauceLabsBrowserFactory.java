@@ -48,8 +48,13 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
             caps.setVersion(version);
             break;
         case PHANTOMJS:
-            throw new IllegalArgumentException(
-                    "PhantomJS is not supported by SauceLabs");
+            // This will not work on SauceLabs - should be filtered with
+            // browsers.exclude. However, we cannot throw an exception here as
+            // filtering only takes place if there is no exception.
+            caps = DesiredCapabilities.phantomjs();
+            caps.setVersion("1");
+            caps.setPlatform(Platform.LINUX);
+            break;
         case SAFARI:
             caps = DesiredCapabilities.safari();
             caps.setVersion(version);

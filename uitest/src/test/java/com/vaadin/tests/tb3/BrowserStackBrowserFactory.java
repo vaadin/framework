@@ -41,8 +41,13 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
             caps.setVersion(version);
             break;
         case PHANTOMJS:
-            throw new IllegalArgumentException(
-                    "PhantomJS is not supported by BrowserStack");
+            // This will not work on BrowserStack - should be filtered with
+            // browsers.exclude. However, we cannot throw an exception here as
+            // filtering only takes place if there is no exception.
+            caps = DesiredCapabilities.phantomjs();
+            caps.setVersion("1");
+            caps.setPlatform(Platform.LINUX);
+            break;
         case SAFARI:
             caps = DesiredCapabilities.safari();
             caps.setVersion(version);
@@ -96,9 +101,11 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
         // BrowserStack specific parts
 
         // for now, run all tests on Windows 7
-        caps.setCapability("os", "Windows");
-        caps.setCapability("os_version", "7");
-        caps.setPlatform(Platform.WINDOWS);
+        if (!Browser.PHANTOMJS.equals(browser)) {
+            caps.setCapability("os", "Windows");
+            caps.setCapability("os_version", "7");
+            caps.setPlatform(Platform.WINDOWS);
+        }
 
         // enable logging on BrowserStack
         caps.setCapability("browserstack.debug", "true");
