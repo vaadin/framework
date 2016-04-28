@@ -30,9 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.Animation;
-import com.google.gwt.animation.client.AnimationScheduler;
-import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
-import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -56,6 +53,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -2388,63 +2386,23 @@ public class Escalator extends Widget implements RequiresResize,
             setTopRowLogicalIndex(topRowLogicalIndex + diff);
         }
 
-        private class DeferredDomSorter {
-            private static final int SORT_DELAY_MILLIS = 50;
-
-            // as it happens, 3 frames = 50ms @ 60fps.
-            private static final int REQUIRED_FRAMES_PASSED = 3;
-
-            private final AnimationCallback frameCounter = new AnimationCallback() {
-                @Override
-                public void execute(double timestamp) {
-                    framesPassed++;
-                    boolean domWasSorted = sortIfConditionsMet();
-                    if (!domWasSorted) {
-                        animationHandle = AnimationScheduler.get()
-                                .requestAnimationFrame(this);
-                    } else {
-                        waiting = false;
-                        bodyElem.removeClassName("scrolling");
-                    }
-                }
-            };
-
-            private int framesPassed;
-            private double startTime;
-            private AnimationHandle animationHandle;
-
-            /** <code>true</code> if a sort is scheduled */
-            public boolean waiting = false;
+        private class DeferredDomSorter extends Timer implements ScheduledCommand {
+            // 1000/50 (@50fps)
+            private static final int SORT_DELAY_MILLIS = 20;
 
             public void reschedule() {
-                waiting = true;
-                resetConditions();
-                animationHandle = AnimationScheduler.get()
-                        .requestAnimationFrame(frameCounter);
+                schedule(SORT_DELAY_MILLIS);
             }
 
-            private boolean sortIfConditionsMet() {
-                boolean enoughFramesHavePassed = framesPassed >= REQUIRED_FRAMES_PASSED;
-                boolean enoughTimeHasPassed = (Duration.currentTimeMillis() - startTime) >= SORT_DELAY_MILLIS;
-                boolean notTouchActivity = !scroller.touchHandlerBundle.touching;
-                boolean conditionsMet = enoughFramesHavePassed
-                        && enoughTimeHasPassed && notTouchActivity;
-
-                if (conditionsMet) {
-                    resetConditions();
-                    sortDomElements();
-                }
-
-                return conditionsMet;
+            @Override
+            public void run() {
+                Scheduler.get().scheduleFinally(this);
             }
 
-            private void resetConditions() {
-                if (animationHandle != null) {
-                    animationHandle.cancel();
-                    animationHandle = null;
-                }
-                startTime = Duration.currentTimeMillis();
-                framesPassed = 0;
+            @Override
+            public void execute() {
+                sortDomElements();
+                bodyElem.removeClassName("scrolling");
             }
         }
 
@@ -6521,7 +6479,7 @@ public class Escalator extends Widget implements RequiresResize,
 
     @Override
     public boolean isWorkPending() {
-        return body.domSorter.waiting || verticalScrollbar.isWorkPending()
+        return body.domSorter.isRunning() || verticalScrollbar.isWorkPending()
                 || horizontalScrollbar.isWorkPending() || layoutIsScheduled;
     }
 
