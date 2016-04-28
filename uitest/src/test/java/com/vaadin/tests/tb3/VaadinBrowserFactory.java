@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.testbench.parallel.TestBenchBrowserFactory;
 
 public class VaadinBrowserFactory extends DefaultBrowserFactory {
 
-	TestBenchBrowserFactory delegate = null;
+    TestBenchBrowserFactory delegate = null;
 
     @Override
     public DesiredCapabilities create(Browser browser) {
@@ -42,14 +42,16 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
                             .getClassLoader().loadClass(browserFactoryClass)
                             .newInstance();
                 } catch (Exception e) {
-                    getLogger().warning("Failed to instantiate browser factory " + browserFactoryClass);
+                    getLogger().warning(
+                            "Failed to instantiate browser factory "
+                                    + browserFactoryClass);
                     throw new RuntimeException(e);
                 }
             }
             return delegate.create(browser);
         }
 
-    	return doCreate(browser);
+        return doCreate(browser);
     }
 
     public DesiredCapabilities doCreate(Browser browser) {
