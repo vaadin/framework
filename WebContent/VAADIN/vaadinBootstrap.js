@@ -113,6 +113,9 @@
 				if (!url) {
 					// No special url defined, use the same URL that loaded this page (without the fragment)
 					url = window.location.href.replace(/#.*/,'');
+				} else if ((/\?/).test(window.location.href)) {
+					// Special url defined; make sure GET arguments from original url are added
+					url += ((/\?/).test(url) ? "&" : "?") + window.location.href.replace(/.*\?/,'');
 				}
 				// Timestamp to avoid caching
 				url += ((/\?/).test(url) ? "&" : "?") + "v-" + (new Date()).getTime();		
