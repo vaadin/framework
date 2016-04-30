@@ -423,7 +423,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      */
     protected boolean updateCursorPosition() {
         if (WidgetUtil.isAttachedAndDisplayed(this)) {
-            int cursorPos = getCursorPos();
+            int cursorPos = prompting ? 0 : getCursorPos();
             if (lastCursorPos != cursorPos) {
                 client.updateVariable(paintableId,
                         TextFieldConstants.VAR_CURSOR, cursorPos, false);
