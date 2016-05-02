@@ -20,29 +20,10 @@
 	<description>Vaadin shared</description>
 
 	<dependencies>
-		<!-- Actual dependencies -->
-		<dependency>
-			<groupId>com.vaadin.external.flute</groupId>
-			<artifactId>flute</artifactId>
-			<version>${flute.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin.external.streamhtmlparser</groupId>
-			<artifactId>streamhtmlparser-jsilver</artifactId>
-			<version>${streamhtmlparser.version}</version>
-		</dependency>
-
-
 		<!-- Needed GWT dependencies. Required parts are packaged to jar -->
 		<dependency>
 			<groupId>com.vaadin.external.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
-			<version>${vaadin.gwt.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
 			<version>${vaadin.gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -94,21 +75,12 @@
 										elemental/util/Map*
 									</includes>
 								</artifactItem>
-								<artifactItem>
-									<groupId>com.vaadin.external.gwt</groupId>
-									<artifactId>gwt-user</artifactId>
-									<includes>
-										com/google/gwt/*/shared/**,
-										com/google/gwt/*/*/shared/**,
-										com/google/web/bindery/*/shared/**,
-										com/google/gwt/user/client/rpc/IsSerializable.*
-									</includes>
-								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			
 
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -145,7 +117,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}",com.google.*;version="${project.version}",elemental.*;version="${project.version}"</Export-Package>
+						<Export-Package>com.vaadin.*;version="${project.version}",elemental.*;version="${project.version}"</Export-Package>
 						<Import-Package>com.google.gwt.thirdparty.streamhtmlparser;version="${streamhtmlparser.version}",
 							com.google.gwt.thirdparty.streamhtmlparser.impl;version="${streamhtmlparser.version}",
 							com.google.gwt.thirdparty.streamhtmlparser.util;version="${streamhtmlparser.version}",

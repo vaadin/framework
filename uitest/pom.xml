@@ -106,6 +106,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client</artifactId>
@@ -117,6 +118,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin.external.gwt</groupId>
+			<artifactId>gwt-elemental</artifactId>
+			<version>${vaadin.gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.external.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${vaadin.gwt.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiled</artifactId>
