@@ -36,8 +36,6 @@ In Eclipse this is done by right clicking on vaadin-themes project it and choosi
 
 Set up extra workspace preferences
 --------
-TODO check if it's relevant
-=====
 The following preferences need to be set to keep the project consistent. You need to do this especially to be able to contribute changes to the project.
 
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
@@ -56,12 +54,10 @@ Indentation size: 4
 
 Running a UI test
 ------
-TODO
-=====
-The *vaadin* project includes an embedded Jetty (*com.vaadin.launcher.DevelopmentServerLauncher*) which is used for running the UI tests.
-In Eclipse you can launch it using the included launch configuration: Right click on *eclipse/Development Server (vaadin).launch" and select *Debug As* -> *Development Server (vaadin)*.
-
-This launches a Jetty on port 8888 which allows you to run any UI class in the project by opening http://localhost:8888/run/&lt;UI class name&gt;?restartApplication in your browser, e.g. [http://localhost:8888/run/com.vaadin.tests.components.label.LabelModes?restartApplication](http://localhost:8888/run/com.vaadin.tests.components.label.LabelModes?restartApplication) (Use ?restartApplication to ensure the correct UI is shown).
+1. In a Project Explorer  right-click *vaadin-uitest*
+1. Open *Run As* -> *Maven build...*
+1. Type in <code>jetty:run-exploded</code> into *Goals* and click *Run*
+1. Open URL *http://localhost:8080/run/<testUI>*
 
 Building a package
 =====
@@ -72,37 +68,18 @@ in the project root directory.
 To use a specific version number, modify <code>&lt;version&gt;</code> tag in root pom.xml file.
 This goal runs all project tests TestBench tests, which require access to a a TestBench cluster, currently only available internally at Vaadin Ltd.
 
-Running TestBench tests
-=====
-TODO
-=====
-The unit tests for the projects can be run using
-<pre><code>ant test</code></pre>
-
 Setting up IntelliJ IDEA to Develop Vaadin 7
 =========
 1. Intall and run IDEA. Ultimate Edition is better but Community Edition should also work.
 1. Ensure if Git and Maven plugins are installed, properly configured and enabled.
-1. Formatting settings _TODO_
 1. Clone the repository, using menu VCS -> Checkout from Version Control -> Git -> Git Repository URL -> https://github.com/vaadin/vaadin.git.
   When the repository is cloned, do **NOT** open it as a project.
 1. Open cloned repository as a maven object. Use File -> Open and choose root _pom.xml_ file
 1. Have a coffee break while IDEA is loading dependencies and indexing the project
-1. Use Maven tool window to compile modules and the whole project
-1. Run UI tests
- 1. Open *File* -> *Project Structure* -> *vaadin-uitest*
- 1. Click *Dependencies* tab
- 1. Click green *+* -> *Library...*
- 1. From project libraries select *Maven: com.vaadin.external.gwt:gwt-** and click *Add selected*
- 1. Compile default themes and widgetset (see above)
- 1. Click *Run* -> *Edit Configurations...* -> Green *+* -> *Application*
- 1. Set *Main class* into `com.vaadin.launcher.DevelopmentServerLauncher`, *Working dir* into `$MODULE_DIR$`,
-*Use classpath of module* into `vaadin-uitest` and click *Apply*. Now you have a run configuration for UI tests
+1. Run Maven targets <code>clean</code> and <code>install</code> using *Maven Projects* tool window to compile the whole project
 
-
-1. Run SuperDev mode _TODO_
-
-TODO remove following & ask Sauli to add a notification about outdated instructions
-=============
-- Unofficial instructions
-  - IntelliJ IDEA: http://github.com/Saulis/vaadin-idea-workspace/
+Running a UI test
+------
+1. Open *Maven Projects*
+1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
+1. Open URL *http://localhost:8080/run/<testUI>*
