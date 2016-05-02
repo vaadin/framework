@@ -158,6 +158,8 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
 
     .#{$primaryStyleName}-sidebar-content {
       padding: 4px 0;
+      overflow-y: auto;
+      overflow-x: hidden;
 
       .gwt-MenuBar {
         .gwt-MenuItem .column-hiding-toggle {

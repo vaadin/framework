@@ -82,6 +82,7 @@ public class DesignContext implements Serializable {
     // namespace mappings
     private Map<String, String> packageToPrefix = new HashMap<String, String>();
     private Map<String, String> prefixToPackage = new HashMap<String, String>();
+    private final Map<Component, Map<String, String>> customAttributes = new HashMap<Component, Map<String, String>>();
 
     // component creation listeners
     private List<ComponentCreationListener> listeners = new ArrayList<ComponentCreationListener>();
@@ -792,4 +793,37 @@ public class DesignContext implements Serializable {
         return shouldWriteDataDelegate;
     }
 
+    /**
+     * Gets the attributes that the component did not handle
+     * 
+     * @since
+     * @param component
+     *            the component to get the attributes for
+     * @return map of the attributes which were not recognized by the component
+     */
+    public Map<String, String> getCustomAttributes(Component component) {
+        return customAttributes.get(component);
+    }
+
+    /**
+     * Sets a custom attribute not handled by the component. These attributes
+     * are directly written to the component tag.
+     * 
+     * @since
+     * @param component
+     *            the component to set the attribute for
+     * @param attribute
+     *            the attribute to set
+     * @param value
+     *            the value of the attribute
+     */
+    public void setCustomAttribute(Component component, String attribute,
+            String value) {
+        Map<String, String> map = customAttributes.get(component);
+        if (map == null) {
+            customAttributes.put(component,
+                    map = new HashMap<String, String>());
+        }
+        map.put(attribute, value);
+    }
 }

@@ -67,16 +67,29 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
     }
 
+    protected DesignContext readAndReturnContext(String design) {
+        try {
+            return Design.read(
+                    new ByteArrayInputStream(design.getBytes("UTF-8")), null);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected String write(T object, boolean writeData) {
+        DesignContext dc = new DesignContext();
+        if (writeData) {
+            dc.setShouldWriteDataDelegate(
+                    DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        }
+        return write(object, dc);
+    }
+
+    protected String write(T object, DesignContext context) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            DesignContext dc = new DesignContext();
-            if (writeData) {
-                dc.setShouldWriteDataDelegate(DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
-            }
-            dc.setRootComponent(object);
-            Design.write(dc, outputStream);
+            context.setRootComponent(object);
+            Design.write(context, outputStream);
             return outputStream.toString("UTF-8");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -209,6 +222,18 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
         Element producedElem = Jsoup.parse(written).body().child(0);
         Element comparableElem = Jsoup.parse(design).body().child(0);
+
+        String produced = elementToHtml(producedElem);
+        String comparable = elementToHtml(comparableElem);
+
+        Assert.assertEquals(comparable, produced);
+    }
+
+    public void testWrite(T component, String expected, DesignContext context) {
+        String written = write(component, context);
+
+        Element producedElem = Jsoup.parse(written).body().child(0);
+        Element comparableElem = Jsoup.parse(expected).body().child(0);
 
         String produced = elementToHtml(producedElem);
         String comparable = elementToHtml(comparableElem);

@@ -220,6 +220,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         contentPanel.addKeyDownHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
+        if (!BrowserInfo.get().isIE8() && !BrowserInfo.get().isIE9()) {
+            addTransitionEndLayoutListener(getElement());
+        }
+
     }
 
     @Override
@@ -1172,6 +1176,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 this));
         layoutManager.layoutNow();
     }
+
+    private native void addTransitionEndLayoutListener(Element e)
+    /*-{
+        var self = this;
+        e.addEventListener("transitionend", function(e) {
+            if (e.propertyName == "width" || e.propertyName == 'height') {
+                $entry(function() {
+                  self.@com.vaadin.client.ui.VWindow::updateContentsSize()();
+                })();
+            }
+        });
+    }-*/;
 
     @Override
     public void setWidth(String width) {

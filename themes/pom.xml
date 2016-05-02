@@ -54,26 +54,42 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/base.scss</exclude>
-					<exclude>**/valo/shared/_global.scss</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/base.scss</include>
-					<include>**/valo/shared/_global.scss</include>
-				</includes>
-			</resource>
-		</resources>
-
 		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-theme-sources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/themes</directory>
+									<filtering>false</filtering>
+									<excludes>
+										<exclude>**/base.scss</exclude>
+										<exclude>**/valo/shared/_global.scss</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>src/main/themes</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/base.scss</include>
+										<include>**/valo/shared/_global.scss</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>

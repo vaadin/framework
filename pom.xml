@@ -31,7 +31,7 @@
 
 		<vaadin.sass.version>0.9.13</vaadin.sass.version>
 		<vaadin.gwt.version>2.7.0.vaadin3</vaadin.gwt.version>
-		<vaadin.plugin.version>7.7.0.appwidgetset4</vaadin.plugin.version>
+		<vaadin.plugin.version>7.7.0.alpha1</vaadin.plugin.version>
 
 		<javax.portlet.version>2.0</javax.portlet.version>
 		<javax.servlet.version>3.0.1</javax.servlet.version>
@@ -174,6 +174,27 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>2.17</version>
+					<dependencies>
+						<!-- Needed because of a JavadocMethodCheck bug in 6.11 -->
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>6.17</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
+						<headerLocation>../checkstyle/header</headerLocation>
+						<encoding>UTF-8</encoding>
+						<consoleOutput>false</consoleOutput>
+						<failsOnError>false</failsOnError>
+						<linkXRef>false</linkXRef>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>animal-sniffer-maven-plugin</artifactId>
+					<version>1.15</version>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -210,30 +231,27 @@
 
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.vaadin</groupId>
-						<artifactId>vaadin-buildhelpers</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-					<!-- Needed because of a JavadocMethodCheck bug in 6.11 -->
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>6.17</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<configLocation>checkstyle/vaadin-checkstyle.xml</configLocation>
-					<headerLocation>checkstyle/header</headerLocation>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>false</consoleOutput>
-					<failsOnError>false</failsOnError>
-					<linkXRef>false</linkXRef>
-				</configuration>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>java6compatibility</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java16</artifactId>
+								<version>1.0</version>
+							</signature>
+							<ignores>
+								<ignore>com.google.gwt.*</ignore>
+							</ignores>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Unpacked Dependencies as resource -->

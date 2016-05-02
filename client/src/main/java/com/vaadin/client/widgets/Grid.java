@@ -3760,6 +3760,7 @@ public class Grid<T> extends ResizeComposite implements
                     addStyleName("closed");
                 }
             });
+            overlay.setFitInWindow(true);
         }
 
         /**

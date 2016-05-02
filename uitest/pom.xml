@@ -255,23 +255,13 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/tests-valo*/**</exclude>
-				</excludes>
-			</resource>
-		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<configuration>
 					<warSourceDirectory>${project.build.directory}/compile-themes</warSourceDirectory>
-					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
+					<webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
 					<persistentunitcachedir>${project.build.directory}/gwt-unitCache</persistentunitcachedir>
 				</configuration>
 				<executions>
@@ -303,11 +293,8 @@
 							<outputDirectory>${project.build.directory}/compile-themes</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/resources</directory>
+									<directory>src/main/themes</directory>
 									<filtering>false</filtering>
-									<includes>
-										<include>**/tests-valo*/**</include>
-									</includes>
 								</resource>
 							</resources>
 						</configuration>
@@ -319,7 +306,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>${project.build.directory}/compile-themes</directory>
@@ -350,8 +337,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
 				</configuration>

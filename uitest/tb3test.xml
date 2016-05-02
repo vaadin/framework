@@ -5,6 +5,7 @@
     <property name="report.dir" location="${tb3test.dir}/result/reports-tb3" />
     <property name="browsers.include" value="" />
     <property name="browsers.exclude" value="" />
+    <property name="browser.factory" value="" />
     <property name="categories.include" value="" />
     <property name="categories.exclude" value="" />
     <property name="useLocalWebDriver" value="false" />
@@ -39,6 +40,7 @@
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Dbrowsers.include=${browsers.include}" />
             <jvmarg value="-Dbrowsers.exclude=${browsers.exclude}" />
+            <jvmarg value="-Dbrowser.factory=${browser.factory}" />
             <jvmarg value="-Dcategories.include=${categories.include}" />
             <jvmarg value="-Dcategories.exclude=${categories.exclude}" />
             <jvmarg value="-DuseLocalWebDriver=${useLocalWebDriver}" />

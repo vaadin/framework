@@ -58,10 +58,10 @@ public abstract class PropertyValueGenerator<T> implements Serializable {
     /**
      * Translates sorting of the generated property in a specific direction to a
      * set of property ids and directions in the underlying container.
-     * 
+     * <p>
      * SortOrder is similar to (or the same as) the SortOrder already defined
      * for Grid.
-     * 
+     * <p>
      * The default implementation of this method returns an empty array, which
      * means that the property will not be included in
      * getSortableContainerPropertyIds(). Attempting to sort by that column
@@ -80,17 +80,19 @@ public abstract class PropertyValueGenerator<T> implements Serializable {
     /**
      * Return an updated filter that should be compatible with the underlying
      * container.
-     * 
+     * <p>
      * This function is called when setting a filter for this generated
      * property. Returning null from this function causes
      * GeneratedPropertyContainer to discard the filter and not use it.
-     * 
+     * <p>
      * By default this function throws UnsupportedFilterException.
      * 
      * @param filter
      *            original filter for this property
      * @return modified filter that is compatible with the underlying container
      * @throws UnsupportedFilterException
+     *             if the implementation doesn't support modifying the provided
+     *             filter
      */
     public Filter modifyFilter(Filter filter) throws UnsupportedFilterException {
         throw new UnsupportedFilterException("Filter" + filter

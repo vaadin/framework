@@ -16,6 +16,9 @@
 
 package com.vaadin.client.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -29,6 +32,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -238,6 +242,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Deprecated
     private boolean sinkShadowEvents = false;
 
+    private List<Command> runOnClose = new ArrayList<Command>();
+
     public Overlay() {
         super();
         adjustZIndex();
@@ -362,6 +368,58 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     @Override
     public void setPopupPosition(int left, int top) {
+
+        // PopupPanel tries to position the popup on screen (by
+        // default right, below) and will move it if there is not
+        // enough space right or below but only if there is
+        // sufficient space left or above. If the popup is too big
+        // to fit on either side, it will be in the original
+        // position.
+
+        if (isFitInWindow()) {
+            int windowLeft = Window.getScrollLeft();
+            int windowRight = Window.getScrollLeft() + Window.getClientWidth();
+            int width = getOffsetWidth();
+            int popupRight = left + width;
+            int popupRightOfWindow = popupRight - windowRight;
+            if (popupRightOfWindow > 0) {
+                // Popup is too large to fit
+                left -= popupRightOfWindow;
+                if (left < 0) {
+                    // Would move left of screen, shrink to fit in window
+                    setOuterWidthThroughWidget(windowRight - windowLeft);
+                    runOnClose.add(new Command() {
+                        @Override
+                        public void execute() {
+                            getWidget().setWidth("");
+                        }
+                    });
+                    left = 0;
+                }
+            }
+
+            int windowTop = Window.getScrollTop();
+            int windowBottom = Window.getScrollTop() + Window.getClientHeight();
+            int height = getOffsetHeight();
+            int popupBottom = top + height;
+            int popupBelowWindow = popupBottom - windowBottom;
+            if (popupBelowWindow > 0) {
+                // Popup is too large to fit
+                top -= popupBelowWindow;
+                if (top < 0) {
+                    // Would move above screen, shrink to fit in window
+                    setOuterHeightThroughWidget(windowBottom - windowTop);
+                    runOnClose.add(new Command() {
+                        @Override
+                        public void execute() {
+                            getWidget().setHeight("");
+                        }
+                    });
+                    top = 0;
+                }
+            }
+        }
+
         // TODO, this should in fact be part of
         // Document.get().getBodyOffsetLeft/Top(). Would require overriding DOM
         // for all permutations. Now adding fix as margin instead of fixing
@@ -371,6 +429,30 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
         positionOrSizeUpdated(isAnimationEnabled() ? 0 : 1);
+    }
+
+    private void setOuterHeightThroughWidget(int outerHeight) {
+        getWidget().setHeight(outerHeight + "px");
+
+        // Take margin/border/padding into account if needed
+        // (the height is for the overlay root but we set it on the
+        // widget)
+        int adjustedHeight = outerHeight - (getOffsetHeight() - outerHeight);
+        if (adjustedHeight != outerHeight) {
+            getWidget().setHeight(adjustedHeight + "px");
+        }
+    }
+
+    private void setOuterWidthThroughWidget(int outerWidth) {
+        getWidget().setWidth(outerWidth + "px");
+
+        // Take margin/border/padding into account if needed
+        // (the height is for the overlay root but we set it on the
+        // widget)
+        int adjustedWidth = outerWidth - (getOffsetWidth() - outerWidth);
+        if (adjustedWidth != outerWidth) {
+            getWidget().setWidth(adjustedWidth + "px");
+        }
     }
 
     private IFrameElement getShimElement() {
@@ -464,6 +546,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private JavaScriptObject animateInListener;
+
+    private boolean fitInWindow = false;
 
     private boolean maybeShowWithAnimation() {
         boolean isAttached = isAttached() && isShowing();
@@ -933,7 +1017,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     public void hide(final boolean autoClosed, final boolean animateIn,
             final boolean animateOut) {
         if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
-            super.hide(autoClosed);
+            reallyHide(autoClosed);
         } else {
             if (animateIn
                     && getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
@@ -945,7 +1029,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                         .getAnimationName(event)
                                         .contains(
                                                 ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    Overlay.this.hide(autoClosed);
+                                    reallyHide(autoClosed);
                                 }
                             }
                         });
@@ -990,7 +1074,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                                     + "-"
                                                     + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                                         }
-                                        Overlay.super.hide(autoClosed);
+                                        reallyHide(autoClosed);
                                     }
                                 }
                             });
@@ -1003,10 +1087,55 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                         shadow.removeClassName(CLASSNAME_SHADOW + "-"
                                 + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                     }
-                    super.hide(autoClosed);
+                    reallyHide(autoClosed);
                 }
             }
         }
     }
 
+    private void reallyHide(boolean autoClosed) {
+        super.hide(autoClosed);
+        for (Command c : runOnClose) {
+            c.execute();
+        }
+        runOnClose.clear();
+    }
+
+    /**
+     * Sets whether the overlay should be moved or shrunk to fit inside the
+     * window.
+     * <p>
+     * When this is <code>false</code>, the default {@link PopupPanel} behavior
+     * is used, which tries to position the popup primarly below and to the
+     * right of a reference UIObject and, if there is not enough space, above or
+     * to the left.
+     * <p>
+     * When this is <code>true</code>, the popup will be moved up/left in case
+     * it does not fit on either side. If the popup is larger than the window,
+     * it will be shrunk to fit and assume that scrolling e.g. using
+     * <code>overflow:auto</code>, is taken care of by the overlay user.
+     * 
+     * @since
+     * @param fitInWindow
+     *            <code>true</code> to ensure that no part of the popup is
+     *            outside the visible view, <code>false</code> to use the
+     *            default {@link PopupPanel} behavior
+     */
+    public void setFitInWindow(boolean fitInWindow) {
+        this.fitInWindow = fitInWindow;
+    }
+
+    /**
+     * Checks whether the overlay should be moved or shrunk to fit inside the
+     * window.
+     * 
+     * @see #setFitInWindow(boolean)
+     * 
+     * @since
+     * @return <code>true</code> if the popup will be moved and/or shrunk to fit
+     *         inside the window, <code>false</code> otherwise
+     */
+    public boolean isFitInWindow() {
+        return fitInWindow;
+    }
 }

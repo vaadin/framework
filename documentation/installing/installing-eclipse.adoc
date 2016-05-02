@@ -184,26 +184,27 @@ You can open the settings by selecting "Eclipse... > Preferences".
 .The settings pane
 image::img/preferences.png[]
 
-
-
 The options are as follows:
 
-[guilabel]#Enable Vaadin Notifications# :: Disabling this disables all notifications.
+[guilabel]#Enable automatic widgetset compilation# :: Compiles the widgetset
+of Maven-based projects whenever there are changes and the project is rebuilt.
 
-[guilabel]#Inform me about new notifications using a popup# :: Disabling this stops
+[guilabel]#Enable Vaadin pre-release archetypes# :: Adds pre-release
+(alpha/beta) archetypes to the archetype selection list when creating a new
+Vaadin project.
+
+[guilabel]#Enable# :: Disabling this disables all notifications.
+
+[guilabel]#Show popups# :: Disabling this stops
 pop-ups from appearing. The notifications can still be viewed by opening
 the notification center window.
 
-In the [guilabel]#Update Schedule# panel, you can set the polling frequency.
+[guilabel]#Check for new Vaadin versions# ::
+Polls for new Vaadin versions once every 24h and gives a notification if there
+are new versions available.
 
-[guilabel]#Refresh notifications from scratch each time when list is shown# ::
-Forces the notifications center to poll all notifications every time.
-
-[guilabel]#Get notifications on IDE start# :: Immediately request notifications when the
-IDE starts without waiting for the polling interval.
-
-[guilabel]#Look for new notifications / Vaadin versions# :: Interval for polling new notifications.
-
+[guilabel]#Check for new notifications from vaadin.com# :: Polls the Vaadin site
+for notifications once every 4 hours.
 
 
 [[installing.eclipse.update]]

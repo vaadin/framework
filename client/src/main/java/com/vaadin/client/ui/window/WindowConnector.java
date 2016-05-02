@@ -216,6 +216,17 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     public void layout() {
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
+
+        // ensure window is not larger than browser window
+        if (window.getOffsetWidth() > Window.getClientWidth()) {
+            window.setWidth(Window.getClientWidth() + "px");
+            lm.setNeedsMeasure(getContent());
+        }
+        if (window.getOffsetHeight() > Window.getClientHeight()) {
+            window.setHeight(Window.getClientHeight() + "px");
+            lm.setNeedsMeasure(getContent());
+        }
+
         ComponentConnector content = getContent();
         boolean hasContent = (content != null);
         Element contentElement = window.contentPanel.getElement();
@@ -414,14 +425,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             });
         }
         window.setVisible(true);
-
-        // ensure window is not larger than browser window
-        if (window.getOffsetWidth() > Window.getClientWidth()) {
-            window.setWidth(Window.getClientWidth() + "px");
-        }
-        if (window.getOffsetHeight() > Window.getClientHeight()) {
-            window.setHeight(Window.getClientHeight() + "px");
-        }
     }
 
     // Need to override default because of window mode
