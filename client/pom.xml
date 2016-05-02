@@ -36,28 +36,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- gwt-user dependencies -->
-		<dependency>
-			<groupId>org.w3c.css</groupId>
-			<artifactId>sac</artifactId>
-			<version>1.3</version>
-		</dependency>
-
-		<!-- Bean Validation API -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${javax.validation.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${javax.validation.version}</version>
-			<classifier>sources</classifier>
-		</dependency>
-
 		<!-- Testing dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -76,62 +54,13 @@
 		<!-- Needed GWT dependencies. Required parts are packaged to jar -->
 		<dependency>
 			<groupId>com.vaadin.external.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<version>${vaadin.gwt.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
 			<version>${vaadin.gwt.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-
-			<!-- Copy needed GWT dependencies to package -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-dependencies</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>com.vaadin.external.gwt</groupId>
-									<artifactId>gwt-user</artifactId>
-									<excludes>
-										META-INF/**,
-										**/*.gwtar,
-										com/google/gwt/*/server/**,
-										com/google/gwt/*/shared/**,
-										com/google/gwt/*/*/shared/**,
-										com/google/web/bindery/*/shared/**,
-										com/google/gwt/user/client/rpc/IsSerializable.*,
-										com/google/gwt/thirdparty/streamhtmlparser/**,
-										org/w3c/**,
-										javax/servlet/**
-									</excludes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.vaadin.external.gwt</groupId>
-									<artifactId>gwt-elemental</artifactId>
-									<excludes>META-INF/**</excludes>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -167,7 +96,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}",com.google.*;version="${project.version}"</Export-Package>
+						<Export-Package>com.vaadin.*;version="${project.version}"</Export-Package>
 						<Import-Package></Import-Package>
 					</instructions>
 				</configuration>

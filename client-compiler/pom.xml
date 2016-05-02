@@ -69,21 +69,6 @@
 			<version>1.6.5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>5.0.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
-			<version>5.0.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-commons</artifactId>
-			<version>5.0.3</version>
-		</dependency>
-		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-annotations</artifactId>
 			<version>8.1.12.v20130726</version>
@@ -185,7 +170,6 @@
 			<groupId>com.vaadin.external.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 			<version>${vaadin.gwt.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -205,50 +189,6 @@
 		</resources>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-dependencies</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>com.vaadin.external.gwt</groupId>
-									<artifactId>gwt-dev</artifactId>
-									<includes>
-										about_files/**,
-										com/google/gwt/core/**,
-										com/google/gwt/dev/**,
-										com/google/gwt/lang/**,
-										com/google/gwt/soyc/**,
-										com/google/gwt/thirdparty/json/**,
-										com/google/gwt/util/**,
-										license/LICENSE.sax.txt,
-										netscape/**,
-										org/apache/COPYING,
-										org/apache/jasper/**,
-										org/apache/commons/el/**,
-										org/apache/commons/lang3/**,
-										templates/*,
-										about.html,
-										jetty-dir.css,
-										plugin.properties
-									</includes>
-									<excludes>
-										com/google/gwt/dev/protobuf/**,
-										com/google/gwt/dev/About.properties
-									</excludes>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -291,7 +231,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}",com.google.gwt.*;version="${project.version}"</Export-Package>
+						<Export-Package>com.vaadin.*;version="${project.version}"</Export-Package>
 						<!--TODO decide gwt packages version number<Export-Package>com.vaadin.*;version="${project.version}",com.google.gwt.*;version="${vaadin.gwt.version}"</Export-Package> -->
 						<Import-Package></Import-Package> <!--todo find out what should be in Import-Package -->
 					</instructions>

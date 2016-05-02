@@ -67,6 +67,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client</artifactId>
@@ -78,6 +79,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin.external.gwt</groupId>
+			<artifactId>gwt-elemental</artifactId>
+			<version>${vaadin.gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.external.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${vaadin.gwt.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiled</artifactId>
@@ -227,7 +241,7 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-testbench</artifactId>
 			<version>4.0.3</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<!-- This should be removed once tests have been updated to use lang3 -->
 		<dependency>
