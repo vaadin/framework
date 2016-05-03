@@ -103,3 +103,5 @@ phantomjsdriver.log
 
 *.iml
 .idea
+
+*/.checkstyle
