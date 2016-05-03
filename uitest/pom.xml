@@ -266,6 +266,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>compile</goal>
 							<goal>compile-theme</goal>
