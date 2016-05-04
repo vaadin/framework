@@ -814,7 +814,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     /**
-     * @since 7.7
+     * @since 7.6
      * @return the default value used for nullRepresentation
      */
     public static String getNullRepresentationDefault() {
@@ -824,7 +824,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * A static helper to define the default value used for nullRepresentation.
      * <p>
-     * In 7.7 the infamous default value "null" for
+     * In 7.6 the infamous default value "null" for
      * AbstractTextField.nullRepresentation was changed to "", which may cause
      * unexpected issues in certain applications that don't tackle null values.
      * If there are several places in your application that depend on the old
@@ -834,7 +834,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * "com.vaadin.nullrepresentationlegacymode" (before AbstractTextField class
      * is loaded by your class loader).
      * 
-     * @since 7.7
+     * @since 7.6
      * @param nullRepresentationString
      *            the value that will be used as a default for
      *            {@link AbstractTextField#getNullRepresentation()} in new
