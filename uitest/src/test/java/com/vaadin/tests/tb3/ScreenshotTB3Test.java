@@ -311,14 +311,18 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         String browserVersion = capabilities.getVersion();
 
+        // compare against screenshots for this version and older
+        // default such that if no particular version is requested, compare with
+        // any version
+        int maxVersion = 100;
         if (browserVersion.matches("\\d+")) {
-            for (int version = Integer.parseInt(browserVersion); version > 0; version--) {
-                String fileName = getScreenshotReferenceName(identifier,
-                        version);
-                File oldVersionFile = new File(fileName);
-                if (oldVersionFile.exists()) {
-                    return oldVersionFile;
-                }
+            maxVersion = Integer.parseInt(browserVersion);
+        }
+        for (int version = maxVersion; version > 0; version--) {
+            String fileName = getScreenshotReferenceName(identifier, version);
+            File oldVersionFile = new File(fileName);
+            if (oldVersionFile.exists()) {
+                return oldVersionFile;
             }
         }
 
