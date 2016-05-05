@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -146,10 +145,11 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
 
         @Override
         public Collection<?> getItemPropertyIds() {
-            Set<?> wrappedProperties = asSet(wrappedItem.getItemPropertyIds());
-            return Sets.union(
-                    Sets.difference(wrappedProperties, removedProperties),
-                    propertyGenerators.keySet());
+            Set<Object> wrappedProperties = new LinkedHashSet<Object>(
+                    wrappedItem.getItemPropertyIds());
+            wrappedProperties.removeAll(removedProperties);
+            wrappedProperties.addAll(propertyGenerators.keySet());
+            return wrappedProperties;
         }
 
         @Override
@@ -364,14 +364,6 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
             final Object propertyId, final Object itemId,
             final PropertyValueGenerator<T> generator) {
         return new GeneratedProperty<T>(item, propertyId, itemId, generator);
-    }
-
-    private static <T> LinkedHashSet<T> asSet(Collection<T> collection) {
-        if (collection instanceof LinkedHashSet) {
-            return (LinkedHashSet<T>) collection;
-        } else {
-            return new LinkedHashSet<T>(collection);
-        }
     }
 
     /* Listener functionality */
@@ -618,11 +610,11 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
      */
     @Override
     public Collection<?> getContainerPropertyIds() {
-        Set<?> wrappedProperties = asSet(wrappedContainer
-                .getContainerPropertyIds());
-        return Sets.union(
-                Sets.difference(wrappedProperties, removedProperties),
-                propertyGenerators.keySet());
+        Set<Object> wrappedProperties = new LinkedHashSet<Object>(
+                wrappedContainer.getContainerPropertyIds());
+        wrappedProperties.removeAll(removedProperties);
+        wrappedProperties.addAll(propertyGenerators.keySet());
+        return wrappedProperties;
     }
 
     /**

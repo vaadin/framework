@@ -17,7 +17,9 @@ package com.vaadin.server;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,10 +28,11 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,8 +51,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gwt.thirdparty.guava.common.base.Charsets;
-import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
@@ -1069,7 +1070,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return null;
         }
 
-        String jsonString = Files.toString(scssCacheFile, Charsets.UTF_8);
+        String jsonString = readFile(scssCacheFile, Charset.forName("UTF-8"));
 
         JsonObject entryJson = Json.parse(jsonString);
 
@@ -1379,10 +1380,42 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String cacheEntryJsonString = cacheEntry.asJson();
 
         try {
-            Files.write(cacheEntryJsonString, cacheFile, Charsets.UTF_8);
+            writeFile(cacheEntryJsonString, cacheFile, Charset.forName("UTF-8"));
         } catch (IOException e) {
             getLogger().log(Level.WARNING,
                     "Error persisting scss cache " + cacheFile, e);
+        }
+    }
+
+    private static String readFile(File file, Charset charset)
+            throws IOException {
+        InputStream in = new FileInputStream(file);
+        try {
+            // no point in reading files over 2GB to a String
+            byte[] b = new byte[(int) file.length()];
+            int len = b.length;
+            int total = 0;
+
+            while (total < len) {
+                int result = in.read(b, total, len - total);
+                if (result == -1) {
+                    break;
+                }
+                total += result;
+            }
+            return new String(b, charset);
+        } finally {
+            in.close();
+        }
+    }
+
+    private static void writeFile(String content, File file, Charset charset)
+            throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        try {
+            fos.write(content.getBytes(charset));
+        } finally {
+            fos.close();
         }
     }
 
