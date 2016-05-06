@@ -1115,7 +1115,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * it will be shrunk to fit and assume that scrolling e.g. using
      * <code>overflow:auto</code>, is taken care of by the overlay user.
      * 
-     * @since
+     * @since 7.6.6
      * @param fitInWindow
      *            <code>true</code> to ensure that no part of the popup is
      *            outside the visible view, <code>false</code> to use the
@@ -1131,7 +1131,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * 
      * @see #setFitInWindow(boolean)
      * 
-     * @since
+     * @since 7.6.6
      * @return <code>true</code> if the popup will be moved and/or shrunk to fit
      *         inside the window, <code>false</code> otherwise
      */
