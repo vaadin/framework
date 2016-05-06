@@ -72,6 +72,12 @@ public class CriticalNotificationsTest extends MultiBrowserThemeTest {
             click($(CheckBoxElement.class).caption("Include details").first());
         }
         $(ButtonElement.class).caption(buttonCaption).first().click();
+
+        // some critical notifications invalidate the session, and if a
+        // screenshot does not match, waitForVaadin would cause the screenshot
+        // comparison to crash because of a missing session
+        testBench().disableWaitForVaadin();
+
         // Give the notification some time to animate
         sleep(1000);
         compareScreen($(NotificationElement.class).first(),
