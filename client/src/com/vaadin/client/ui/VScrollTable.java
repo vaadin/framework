@@ -8005,9 +8005,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * handler is still active. (#10464)
              */
             Element focusedElement = WidgetUtil.getFocusedElement();
-            if (Util.getConnectorForElement(client, getParent(), focusedElement) == this
-                    && focusedElement != null
-                    && focusedElement != scrollBodyPanel.getFocusElement()) {
+            if (focusedElement != null
+                    && focusedElement != scrollBodyPanel.getFocusElement()
+                    && Util.getConnectorForElement(client, getParent(),
+                            focusedElement) == ConnectorMap.get(client)
+                            .getConnector(this)) {
                 /*
                  * Steal focus back to the focus handler if it was moved to some
                  * other part of the table. Avoid stealing focus in other cases.
