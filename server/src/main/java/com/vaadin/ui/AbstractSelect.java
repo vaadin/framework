@@ -530,18 +530,21 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         setValue(null, true);
                     }
                 } else {
-                    final Object id = itemIdMapper
-                            .get(clientSideSelectedKeys[0]);
+                    String clientSelectedKey = clientSideSelectedKeys[0];
+                    if ("null".equals(clientSelectedKey)
+                            || itemIdMapper.containsKey(clientSelectedKey)) {
+                        // Happens to work for nullselection
+                        // (get ("null") -> null))
+                        final Object id = itemIdMapper.get(clientSelectedKey);
 
-                    if (id != null) {
-                        if (isNullSelectionAllowed()
+                        if (!isNullSelectionAllowed() && id == null) {
+                            markAsDirty();
+                        } else if (id != null
                                 && id.equals(getNullSelectionItemId())) {
                             setValue(null, true);
                         } else {
                             setValue(id, true);
                         }
-                    } else {
-                        markAsDirty();
                     }
                 }
             }
