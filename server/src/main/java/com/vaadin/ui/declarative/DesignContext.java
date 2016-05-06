@@ -796,7 +796,7 @@ public class DesignContext implements Serializable {
     /**
      * Gets the attributes that the component did not handle
      * 
-     * @since
+     * @since 7.7
      * @param component
      *            the component to get the attributes for
      * @return map of the attributes which were not recognized by the component
@@ -809,7 +809,7 @@ public class DesignContext implements Serializable {
      * Sets a custom attribute not handled by the component. These attributes
      * are directly written to the component tag.
      * 
-     * @since
+     * @since 7.7
      * @param component
      *            the component to set the attribute for
      * @param attribute
