@@ -233,6 +233,12 @@
             <param name="target-server" value="glassfish4" />
         </antcall>
     </target>
+    <target name="integration-test-payara">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="payara" />
+        </antcall>
+    </target>
 
 
     <target name="integration-test-liferay6">
@@ -326,6 +332,7 @@
             <antcall target="integration-test-weblogic12" />
             <antcall target="integration-test-glassfish3" />
             <antcall target="integration-test-glassfish4" />
+            <antcall target="integration-test-payara" />
             <antcall target="integration-test-jboss4" />
             <antcall target="integration-test-jboss5" />
             <antcall target="integration-test-jboss6" />
