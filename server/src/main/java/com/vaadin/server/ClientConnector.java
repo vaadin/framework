@@ -51,7 +51,7 @@ public interface ClientConnector extends Connector {
     }
 
     /**
-     * Interface for listening {@link DetachEvent connector detach events}.
+     * Interface for listening {@link AttachEvent connector attach events}.
      * 
      */
     public static interface AttachListener extends ConnectorEventListener {
