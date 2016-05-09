@@ -1082,9 +1082,14 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * <p>
-     * Note that the component width of the GridLayout must be defined (fixed or
-     * relative, as opposed to undefined) for this method to have any effect.
-     * </p>
+     * Note, that width of this GridLayout needs to be defined (fixed or
+     * relative, as opposed to undefined height) for this method to have any
+     * effect.
+     * <p>
+     * Note that checking for relative width for the child components is done on
+     * the server so you cannot set a child component to have undefined width on
+     * the server and set it to <code>100%</code> in CSS. You must set it to
+     * <code>100%</code> on the server.
      * 
      * @see #setWidth(float, int)
      * 
@@ -1120,9 +1125,14 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * <p>
-     * Note, that height needs to be defined (fixed or relative, as opposed to
-     * undefined height) for this method to have any effect.
-     * </p>
+     * Note, that height of this GridLayout needs to be defined (fixed or
+     * relative, as opposed to undefined height) for this method to have any
+     * effect.
+     * <p>
+     * Note that checking for relative height for the child components is done
+     * on the server so you cannot set a child component to have undefined
+     * height on the server and set it to <code>100%</code> in CSS. You must set
+     * it to <code>100%</code> on the server.
      * 
      * @see #setHeight(float, int)
      * 
