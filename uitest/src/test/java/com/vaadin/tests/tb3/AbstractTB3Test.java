@@ -59,7 +59,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.gwt.thirdparty.guava.common.base.Joiner;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
@@ -279,7 +278,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
 
         if (parameters.size() > 0) {
-            url += "?" + Joiner.on("&").join(parameters);
+            url += "?" + StringUtils.join(parameters, "&");
         }
 
         driver.get(url);

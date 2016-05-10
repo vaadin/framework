@@ -273,7 +273,7 @@
 							javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
 							javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
 							com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
-						<Require-Bundle>com.google.gwt.thirdparty.guava;bundle-version="${guava.version}",
+						<Require-Bundle>
 							com.vaadin.shared;bundle-version="${project.version}",
 							com.vaadin.push;bundle-version="${project.version}";resolution:=optional,
 							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional"</Require-Bundle>
