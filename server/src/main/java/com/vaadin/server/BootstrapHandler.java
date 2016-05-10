@@ -470,7 +470,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         UICreateEvent event = new UICreateEvent(context.getRequest(),
                 context.getUIClass());
         WidgetsetInfo widgetset = context.getBootstrapResponse()
-                .getUIProvider().getWidgetset(event);
+                .getUIProvider().getWidgetsetInfo(event);
         if (widgetset == null) {
             // TODO do we want to move WidgetsetInfoImpl elsewhere?
             widgetset = new WidgetsetInfoImpl(request.getService()
