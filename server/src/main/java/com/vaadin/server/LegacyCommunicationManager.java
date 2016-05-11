@@ -65,9 +65,6 @@ public class LegacyCommunicationManager implements Serializable {
      */
     private final VaadinSession session;
 
-    // TODO Refactor (#11412)
-    private String requestThemeName;
-
     // TODO Refactor (#11413)
     private final Map<String, Class<?>> publishedFileContexts = new HashMap<>();
 
@@ -302,26 +299,6 @@ public class LegacyCommunicationManager implements Serializable {
         }
     }
 
-    /**
-     * @deprecated As of 7.1. See #11412.
-     */
-    @Deprecated
-    public String getTheme(UI uI) {
-        String themeName = uI.getTheme();
-        String requestThemeName = getRequestTheme();
-
-        if (requestThemeName != null) {
-            themeName = requestThemeName;
-        }
-        if (themeName == null) {
-            themeName = VaadinServlet.getDefaultTheme();
-        }
-        return themeName;
-    }
-
-    private String getRequestTheme() {
-        return requestThemeName;
-    }
 
     /**
      * @deprecated As of 7.1. In 7.2 and later, use
