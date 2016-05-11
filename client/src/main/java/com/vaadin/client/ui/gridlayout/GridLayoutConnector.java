@@ -117,8 +117,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             cell.updateCell(childComponentData);
         }
 
-        layout.colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
-        layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
+        layout.colExpandRatioArray = getState().colExpand;
+        layout.rowExpandRatioArray = getState().rowExpand;
 
         layout.updateMarginStyleNames(new MarginInfo(getState().marginsBitmask));
         layout.updateSpacingStyleName(getState().spacing);

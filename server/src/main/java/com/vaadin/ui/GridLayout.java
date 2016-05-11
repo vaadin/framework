@@ -461,57 +461,37 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        final Integer[] columnExpandRatioArray = new Integer[getColumns()];
-        final Integer[] rowExpandRatioArray = new Integer[getRows()];
+        // TODO Remove once LegacyComponent is no longer implemented
+    }
 
-        int realColExpandRatioSum = 0;
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        getState().colExpand = new float[getColumns()];
         float colSum = getExpandRatioSum(columnExpandRatio);
         if (colSum == 0) {
-            // no columns has been expanded, all cols have same expand
-            // rate
-            float equalSize = 1 / (float) getColumns();
-            int myRatio = Math.round(equalSize * 1000);
+            // no cols have been expanded
             for (int i = 0; i < getColumns(); i++) {
-                columnExpandRatioArray[i] = myRatio;
+                getState().colExpand[i] = 1f;
             }
-            realColExpandRatioSum = myRatio * getColumns();
         } else {
             for (int i = 0; i < getColumns(); i++) {
-                int myRatio = Math
-                        .round((getColumnExpandRatio(i) / colSum) * 1000);
-                columnExpandRatioArray[i] = myRatio;
-                realColExpandRatioSum += myRatio;
+                getState().colExpand[i] = getColumnExpandRatio(i);
             }
         }
 
-        int realRowExpandRatioSum = 0;
+        getState().rowExpand = new float[getRows()];
         float rowSum = getExpandRatioSum(rowExpandRatio);
         if (rowSum == 0) {
             // no rows have been expanded
-            float equalSize = 1 / (float) getRows();
-            int myRatio = Math.round(equalSize * 1000);
             for (int i = 0; i < getRows(); i++) {
-                rowExpandRatioArray[i] = myRatio;
+                getState().rowExpand[i] = 1f;
             }
-            realRowExpandRatioSum = myRatio * getRows();
         } else {
-            for (int cury = 0; cury < getRows(); cury++) {
-                int myRatio = Math
-                        .round((getRowExpandRatio(cury) / rowSum) * 1000);
-                rowExpandRatioArray[cury] = myRatio;
-                realRowExpandRatioSum += myRatio;
+            for (int i = 0; i < getRows(); i++) {
+                getState().rowExpand[i] = getRowExpandRatio(i);
             }
         }
-
-        // correct possible rounding error
-        if (rowExpandRatioArray.length > 0) {
-            rowExpandRatioArray[0] -= realRowExpandRatioSum - 1000;
-        }
-        if (columnExpandRatioArray.length > 0) {
-            columnExpandRatioArray[0] -= realColExpandRatioSum - 1000;
-        }
-        target.addAttribute("colExpand", columnExpandRatioArray);
-        target.addAttribute("rowExpand", rowExpandRatioArray);
 
     }
 

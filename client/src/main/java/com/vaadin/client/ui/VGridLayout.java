@@ -61,10 +61,10 @@ public class VGridLayout extends ComplexPanel {
     public int[] rowHeights;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public int[] colExpandRatioArray;
+    public float[] colExpandRatioArray;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public int[] rowExpandRatioArray;
+    public float[] rowExpandRatioArray;
 
     int[] minColumnWidths;
 
@@ -142,7 +142,7 @@ public class VGridLayout extends ComplexPanel {
     void expandRows() {
         if (!isUndefinedHeight()) {
             int usedSpace = calcRowUsedSpace();
-            int[] actualExpandRatio = calcRowExpandRatio();
+            float[] actualExpandRatio = calcRowExpandRatio();
             // Round down to avoid problems with fractions (100.1px available ->
             // can use 100, not 101)
             int availableSpace = (int) LayoutManager.get(client)
@@ -150,13 +150,12 @@ public class VGridLayout extends ComplexPanel {
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
-                int expandRatioSum = 0;
+                float expandRatioSum = 0;
                 for (int i = 0; i < rowHeights.length; i++) {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < rowHeights.length; i++) {
-                    int ew = excessSpace * actualExpandRatio[i]
-                            / expandRatioSum;
+                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
                     rowHeights[i] = minRowHeights[i] + ew;
                     distributed += ew;
                 }
@@ -171,8 +170,8 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    private int[] calcRowExpandRatio() {
-        int[] actualExpandRatio = new int[minRowHeights.length];
+    private float[] calcRowExpandRatio() {
+        float[] actualExpandRatio = new float[minRowHeights.length];
         for (int i = 0; i < minRowHeights.length; i++) {
             if (hiddenEmptyRow(i)) {
                 actualExpandRatio[i] = 0;
@@ -224,7 +223,7 @@ public class VGridLayout extends ComplexPanel {
     void expandColumns() {
         if (!isUndefinedWidth()) {
             int usedSpace = calcColumnUsedSpace();
-            int[] actualExpandRatio = calcColumnExpandRatio();
+            float[] actualExpandRatio = calcColumnExpandRatio();
             // Round down to avoid problems with fractions (100.1px available ->
             // can use 100, not 101)
             int availableSpace = (int) LayoutManager.get(client)
@@ -232,13 +231,12 @@ public class VGridLayout extends ComplexPanel {
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
-                int expandRatioSum = 0;
+                float expandRatioSum = 0;
                 for (int i = 0; i < columnWidths.length; i++) {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < columnWidths.length; i++) {
-                    int ew = excessSpace * actualExpandRatio[i]
-                            / expandRatioSum;
+                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
                     columnWidths[i] = minColumnWidths[i] + ew;
                     distributed += ew;
                 }
@@ -256,8 +254,8 @@ public class VGridLayout extends ComplexPanel {
     /**
      * Calculates column expand ratio.
      */
-    private int[] calcColumnExpandRatio() {
-        int[] actualExpandRatio = new int[minColumnWidths.length];
+    private float[] calcColumnExpandRatio() {
+        float[] actualExpandRatio = new float[minColumnWidths.length];
         for (int i = 0; i < minColumnWidths.length; i++) {
             if (!hiddenEmptyColumn(i)) {
                 actualExpandRatio[i] = colExpandRatioArray[i];
@@ -537,7 +535,7 @@ public class VGridLayout extends ComplexPanel {
 
     private static void distributeSpanSize(int[] dimensions,
             int spanStartIndex, int spanSize, int spacingSize, int size,
-            int[] expansionRatios) {
+            float[] expansionRatios) {
         int allocated = dimensions[spanStartIndex];
         for (int i = 1; i < spanSize; i++) {
             allocated += spacingSize + dimensions[spanStartIndex + i];
@@ -563,8 +561,8 @@ public class VGridLayout extends ComplexPanel {
                     // expansion ratios
                     expansion = neededExtraSpace / spanSize;
                 } else {
-                    expansion = neededExtraSpace * expansionRatios[itemIndex]
-                            / totalExpansion;
+                    expansion = (int) (neededExtraSpace
+                            * expansionRatios[itemIndex] / totalExpansion);
                 }
                 dimensions[itemIndex] += expansion;
                 allocatedExtraSpace += expansion;
