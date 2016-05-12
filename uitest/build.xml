@@ -31,19 +31,11 @@
     <target name="test-server" depends="clean-testbench-errors">
         <property name="war.file"
             location="${vaadin.basedir}/uitest/target/vaadin-uitest-${vaadin.version}.war" />
-        <parallel>
-            <daemons>
-                <ant antfile="${uitest.dir}/vaadin-server.xml"
-                    inheritall="true" inheritrefs="true" target="deploy-and-start" />
-            </daemons>
-            <sequential>
-                <ant antfile="${uitest.dir}/integration_tests.xml"
-                    target="integration-test-all" inheritall="false"
-                    inheritrefs="false">
-                    <property name="demo.war" value="${war.file}" />
-                </ant>
-            </sequential>
-        </parallel>
+        <ant antfile="${uitest.dir}/integration_tests.xml"
+            target="integration-test-all" inheritall="false"
+            inheritrefs="false">
+            <property name="demo.war" value="${war.file}" />
+        </ant>
     </target>
 
     <target name="test-tb3" depends="clean-testbench-errors">
