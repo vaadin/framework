@@ -75,7 +75,7 @@ import com.vaadin.ui.declarative.DesignContext;
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
-        LayoutClickNotifier, LegacyComponent {
+        LayoutClickNotifier {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -444,24 +444,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public int getComponentCount() {
         return components.size();
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once LegacyComponent is no longer implemented
-    }
-
-    /**
-     * Paints the contents of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        // TODO Remove once LegacyComponent is no longer implemented
     }
 
     public void beforeClientResponse(boolean initial) {
