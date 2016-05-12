@@ -1,6 +1,6 @@
 ---
 title: Using Add-ons in a Maven Project
-order: 4
+order: 2
 layout: page
 ---
 
@@ -9,14 +9,15 @@ layout: page
 
 ((("Maven", "using add-ons", id="term.addons.maven", range="startofrange")))
 
+To use add-ons in a Maven project, you simply have to add them as dependencies in the project POM.
 
-To use add-ons in a Maven project, you simply have to add them as dependencies
-in the project POM. Most add-ons include a widget set, which are compiled to the
-project widget set.
+Most add-ons include client-side widgets, counterparts of the server-side components.
+The add-on widgets will be included and compiled into the _application widget set_.
+Compiling the widget set is handled by the Vaadin Maven Plugin.
+It is enabled in Maven projects created from the Vaadin archetypes, as described in <<DUMMY/../../getting-started/getting-started-overview#getting-started.overview, "Getting Started">>.
 
-Creating, compiling, and packaging a Vaadin project with Maven was described in
-<<dummy/../../../framework/getting-started/getting-started-maven#getting-started.maven,"Using
-Vaadin with Maven">>.
+The plugin will attempt to automatically detect if you need to compile the application widget set.
+It will generate a [filename]#target/generated-sources/gwt/AppWidgetset.gwt.xml# widget set descriptor, update it when necessary, and use it for compiling the widget set.
 
 [[addons.maven.dependency]]
 == Adding a Dependency
@@ -26,61 +27,106 @@ Directory.
 
 . Open the add-on page in Vaadin Directory.
 
-. Select the version. The latest is shown by default, but you can choose another
-the version from the dropdown menu in the header of the add-on details page.
-
-. Click the [guilabel]#Maven/Ivy# to display the Maven dependency declaration, as
-illustrated in Figure <<figure.addons.maven.pombutton>>. If the add-on is
-available with multiple licenses, you will be prompted to select a license for
-the dependency.
-
+. Choose the version on the _left-side menu bar_.
 +
-[[figure.addons.maven.pombutton]]
-.Maven POM Definitions
-image::img/directory-maven-pom.png[]
-
-. Copy the [literal]#++dependency++# declaration to the [filename]#pom.xml# file
-in your project, under the [literal]#++dependencies++# element.
-
-
+image::img/directory-version.png[width=60%, scaledwidth=80%]
 +
-[subs="normal"]
+The latest version is selected by default, but you can choose another version from the drop-down menu.
+
+. Click [guilabel]#Install# to display the dependency declarations.
++
+image::img/directory-install.png[width=50%, scaledwidth=70%]
++
+If the add-on is available with multiple licenses, you will be prompted to select a license for the dependency.
+
+. Select the [guilabel]#Maven# tab.
++
+image::img/directory-maven-pom.png[width=50%, scaledwidth=70%]
+
+. Open the [filename]#pom.xml# file.
+In single-module projects, you only have one, located in the root folder of the project.
+In multi-module projects, open the one in your Vaadin application module.
+
+*Eclipse IDE*:: Right-click on the [filename]#pom.xml# file and select "Open With > XML Editor".
+You can also left-click it, which opens the Maven POM editor, but directly editing the XML code is usually easier.
+You can also use the XML editor tab of the POM editor.
+
+. Copy and paste the [literal]#dependency# declaration to under the [literal]#++dependencies++# element.
++
+[source, xml, subs="normal"]
 ----
   ...
-  &lt;dependencies&gt;
+  <dependencies>
     ...
-    &lt;dependency&gt;
-      &lt;groupId&gt;**com.vaadin.addon**&lt;/groupId&gt;
-      &lt;artifactId&gt;**vaadin-charts**&lt;/artifactId&gt;
-      &lt;version&gt;**1.0.0**&lt;/version&gt;
-    &lt;/dependency&gt;
-  &lt;/dependencies&gt;
+    <dependency>
+      <groupId>[replaceable]#com.vaadin.addon#</groupId>
+      <artifactId>[replaceable]#vaadin-charts#</artifactId>
+      <version>[replaceable]#1.0.0#</version>
+    </dependency>
+  </dependencies>
 ----
 +
-You can use an exact version number, as is done in the example above, or
-[literal]#++LATEST++# to always use the latest version of the add-on.
-
+You can use an exact version number, as is done in the example above, or [literal]#++LATEST++# to always use the latest version of the add-on.
 +
-The POM excerpt given in Directory includes also a repository definition, but if
-you have used the [literal]#++vaadin-archetype-application++# to create your
-project, it already includes the definition.
+The POM excerpt given in Directory includes also a `repository` definition, but if you have used the Vaadin archetypes to create your project, it already includes the definition.
 
-. Compile the widget set as described in the following section.
+. _For commercial add-ons_, you need a license key.
++
+Click [guilabel]#Activate# to buy a license, obtain a trial license key, or get the key from your Pro Tools subscription.
++
+image::img/directory-activate.png[width=50%, scaledwidth=70%]
++
+For official Vaadin add-ons, see <<addons-cval#addons.cval, "Installing Commercial Vaadin Add-on Licence">> for more information.
 
-
+. _In Vaadin 7.6 and older_: You need to compile the widget set as described in <<addons.maven.compiling>>.
 
 [[addons.maven.compiling]]
-== Compiling the Project Widget Set
+== Compiling the Application Widget Set
 
-If you have used the [literal]#++vaadin-archetype-application++# to create the
-project, the [filename]#pom.xml# includes all necessary declarations to compile
-the widget set. The widget set compilation occurs in standard Maven build phase,
-such as with [parameter]#package# or [parameter]#install# goal.
+[NOTE]
+====
+The widget set is automatically compiled in Vaadin 7.7 and later.
+The plugin will attempt to detect any add-ons that need the widget set to be compiled.
 
+Just note that it can take a bit time to compile.
+
+To speed up, instead of compiling it locally, you can also use a public cloud service to compile it for you, and use it directly from a CDN service.
+See <<addons.maven.modes>> for instructions.
+====
+
+In projects that use Vaadin 7.6 or older, you need to manually compile the widget set as follows.
+
+[[addons.maven.widgetset]]
+=== Enabling Widget Set Compilation
+
+Compiling the widget set in Maven projects requires the Vaadin Maven plugin.
+It is included in Maven projects created with a current Vaadin archetype.
+
+If all is well, you are set to go.
+
+If you have used the Vaadin archetypes to create the project, the POM should include all necessary declarations to compile the widget set.
+
+However, if your Maven project has been created otherwise, you may need to enable widget set compilation manually.
+The simplest way to do that is to copy the definitions from a POM created with the archetype.
+Specifically, you need to copy the `vaadin-maven-plugin` definition in the `plugin` section, as well as the Vaadin dependencies and any relevant settings.
+
+=== Compiling the Widget Set
+
+The widget set compilation occurs in standard Maven build phase, such as with [parameter]#package# or [parameter]#install# goal.
+
+*Eclipse IDE*::
+ Click the *Compile Vaadin Widgetset* button in the Eclipse toolbar.
++
+image::img/widgetset-compiling-toolbar.png[width=50%, scaledwidth=60%]
+
+*Command-line*::
+Simply run the `package` goal.
++
 [subs="normal"]
 ----
-[prompt]#$# [command]#mvn# [parameter]#package#
+[prompt]#$# [command]#mvn# package
 ----
++
 Then, just deploy the WAR to your application server.
 
 [[addons.maven.compiling.recompiling]]
@@ -92,14 +138,22 @@ Running the [literal]#++clean++# goal usually helps, but causes a full
 recompilation. You can compile the widget set manually by running the
 [parameter]#vaadin:compile# goal.
 
+*Eclipse IDE*::
+ Click the *Compile Vaadin Widgetset* button in the Eclipse toolbar.
+
+*Command-line*::
+Run the `vaadin:compile` goal.
++
 [subs="normal"]
 ----
-[prompt]#$# [command]#mvn# [parameter]#vaadin:compile#
+[prompt]#$# [command]#mvn# vaadin:compile
 ----
-Note that this does not update the project widget set by searching new widget
-sets from the class path. It must be updated if you add or remove add-ons, for
-example. You can do that by running the [literal]#++vaadin:update-widgetset++#
-goal in the project directory.
+
+=== Updating the Widget Set
+
+Note that the `vaadin:compile` goal does not update the project widget set by searching new widget sets from the class path.
+It must be updated when you, for example, add or remove add-ons.
+You can do that by running the [literal]#vaadin:update-widgetset# goal in the project directory.
 
 [subs="normal"]
 ----
@@ -118,53 +172,138 @@ for Maven.
 After running the update, you need to run the [literal]#++vaadin:compile++# goal
 to actually compile the widget set.
 
+[[addons.maven.modes]]
+== Widget Set Modes
 
+The application widget set is by default compiled locally.
+You can also have it compiled in a public cloud service provided by Vaadin, and either use it directly from a CDN service or download it to serve it from your development server.
 
-[[addons.maven.widgetset]]
-== Enabling Widget Set Compilation
+.Widget set modes
+image::img/widgetset-modes.png[width=80%, scaledwidth=100%]
 
-If you are not using a POM created with the proper Vaadin archetype, you may
-need to enable widget set compilation manually. The simplest way to do that is
-to copy the definitions from a POM created with the archetype. Specifically, you
-need to copy the [literal]#++plugin++# definitions. You also need the Vaadin
-dependencies.
+The widget set mode, defined in the project POM, determines how the widget set is compiled.
 
-You need to create an empty widget set definition file, which the widget set
-compilation will populate with widget sets found from the class path. Create a
-[filename]#src/main/java/com/example/AppWidgetSet.gwt.xml# file (in the project
-package) with an empty [literal]#++<module>++# element as follows:
+`local` (default)::
+The widget set is compiled locally in your development workstation.
 
+`cdn`::
+Compilation is done in the public cloud service.
+It is served directly from the CDN (Content Delivery Network) service.
++
+Using CDN is recommended for development.
 
+`fetch`::
+Compilation is done in the public cloud service.
+The widget set is then downloaded and deployed with the rest of the application to the application server.
+
+The mode is set with a `vaadin.widgetset.mode` property in the [elementname]#properties# section at the beginning of the project POM.
+
+[[addons.maven.modes.local]]
+=== Local Widget Set Compilation
+
+If add-ons are detected, an [filename]#AppWidgetset.gwt.xml# descriptor file is generated into the [filename]#generated-resources# folder, and later updated automatically.
+The compiler uses the descriptor to compile the widget set, which is included in the web application archive.
+
+.Local widget set compilation
+image::img/widgetset-mode-local.png[width=80%, scaledwidth=60%]
+
+Local compilation is needed in projects that have custom widgets or widget sets that are not available from the Maven central repository or from the Vaadin add-ons or pre-releases repositories.
+Local compilation is necessary for completely offline work.
+
+Local compilation is currently the default mode.
+It is therefore not necessary to set it explicitly, unless you have made global Maven settings and want to override them in a particular project.
+You can set the `local` parameter in the [elementname]#properties# section of your [filename]#pom.xml#:
+
+[source, xml]
 ----
-<module>
-</module>
+<properties>
+    ...
+    <vaadin.widgetset.mode>local</vaadin.widgetset.mode>
+</properties>
+...
 ----
 
-[[addons.maven.widgetset.web]]
-=== Enabling the Widget Set in the UI
 
-If you have previously used the default widget set in the project, you need to
-enable the project widget set in the [filename]#web.xml# deployment descriptor.
-Edit the [filename]#src/main/webapp/WEB-INF/web.xml# file and add or modify the
-[literal]#++widgetset++# parameter for the servlet as follows.
+[[addons.maven.modes.cdn]]
+=== Online Widget Set Compilation and CDN
 
-[subs="normal"]
+The online compilation service makes it easier to use add-on components in Vaadin applications, by avoiding compilation of widget sets locally.
+It caches the widget sets, so often one is available immediately.
+A widget set can combine widgets from multiple add-ons and if a particular combination does not already exist, the service automatically compiles it.
+
+.Online widget set compilation and CDN
+image::img/widgetset-mode-cdn.png[width=80%, scaledwidth=100%]
+
+The CDN (Content Delivery Network) is a global network of web servers that serve the cached widget sets directly when you load your application in your browser.
+Avoiding local compilation can speed up development significantly.
+In development teams, all can use the shared widget sets immediately.
+
+[TIP]
+====
+While this gives benefits, the application will not work without online connnectivity.
+When you need to avoid the demo effect, either use the `local` or `fetch` mode.
+====
+
+The cloud service compiles a widget set with a given Vaadin version and a list of add-ons installed in your project.
+The Maven plug-in receives a public URL where the widget set is available and generates an [filename]#AppWidgetset.java# file that configures your application to use the online version.
+The file is generated to the default Java package.
+
+[NOTE]
+====
+Online compilation and CDN can only be used with publicly available add-ons.
+This means that the add-on dependencies must be available in the Maven central repository or in the Vaadin add-ons or pre-releases repositories.
+If you have custom widget implementations or non-public add-ons in your sources, you cannot use the online compilation and CDN service.
+====
+
+==== Enabling Compilation
+
+To enable online compilation and delivery from the CDN, set the widget set mode to `cdn` in the [elementname]#properties# section of your [filename]#pom.xml#:
+
+[source, xml]
 ----
-&lt;servlet&gt;
-  ...
-  &lt;init-param&gt;
-    &lt;description&gt;Widget Set to Use&lt;/description&gt;
-    &lt;param-name&gt;widgetset&lt;/param-name&gt;
-    &lt;param-value&gt;**com.example.AppWidgetSet**&lt;/param-value&gt;
-  &lt;/init-param&gt;
-&lt;/servlet&gt;
+<properties>
+    ...
+    <vaadin.widgetset.mode>cdn</vaadin.widgetset.mode>
+</properties>
+...
 ----
-The parameter is the class name of the widget set, that is, without the
-[filename]#.gwt.xml# extension and with the Java dot notation for class names
-that include the package name.
 
+When using the online compilation service, a [interfacename]#WidgetsetInfo# implementation is generated for your project; this makes it possible for your application to find the widget set from the correct location.
 
+[NOTE]
+====
+*The CDN is not meant to be used in production.*
+
+It is are meant for speeding up development for yourself and your team.
+It is also useful if you maintain your source code in GitHub or a similar service, so that your globally working development team can immediately use the widget sets without need to compile them.
+
+For production, especially in intranet applications, you should normally use the `local` or `fetch` modes.
+This ensures that separating the availability of the Vaadin CDN service from availability of the application server does not add an extra point of failure.
+
+_They can be be used for production_ if your application is intended as globally available, you want to gain the global delivery benefit of the Vaadin CDN, and the availability tradeoff is not significant.
+====
+
+=== Serving Remotely Compiled Widget Set Locally
+
+If you want to use online compilation, but still serve the files as part of your application, you can use the `fetch` mode.
+
+.Fetching online widget set compilation
+image::img/widgetset-mode-fetch.png[width=80%, scaledwidth=100%]
+
+The Maven plugin downloads the compiled widget set into the project as it was compiled locally.
+It generates an [classname]#AppWidgetset# class and used to provide a correct URL to the locally stored widget set.
+
+To enable the fetch mode, in the [elementname]#properties# section of your [filename]#pom.xml#:
+
+[source, xml]
+----
+<properties>
+    ...
+    <vaadin.widgetset.mode>fetch</vaadin.widgetset.mode>
+</properties>
+...
+----
+
+// TODO This is recommended during development, as it avoids slow local compilation and typically.
 
 (((range="endofrange", startref="term.addons.maven")))
-
-

@@ -13,15 +13,24 @@ link:http://vaadin.com/directory/[Vaadin Directory] provides a rich collection
 of add-ons for Vaadin, and you may find others from independent sources. Add-ons
 are also one way to share your own components between projects.
 
-Installation of add-ons from Vaadin Directory is simple, just adding an Ivy or
-Maven dependency, or downloading the JAR package and and dropping it in the web
-library folder of the project. Most add-ons include a widget set, which you need
-to compile, but it's usually just a click of a button or a single command.
+== Installing
 
-After trying out an add-on, you can give some feedback to the author of the
-add-on by rating the add-on with one to five stars and optionally leaving a
-comment. Most add-ons also have a discussion forum thread for user feedback and
-questions.
+Installing add-ons from Vaadin Directory is simple, just adding a Maven or an Ivy dependency, or downloading the JAR package and and dropping it in the web library folder of the project.
+
+[[figure.addons.maven.widgetset]]
+.Role of the widget set
+image::img/addon-architecture.png[width=75%, scaledwidth=80%]
+
+Most add-ons include _widgets_, client-side counterparts of the server-side components used in the Vaadin Java API, as illustrated in <<figure.addons.maven.widgetset>>.
+The _widget set_ needs to be compiled into the application widget set.
+
+Adding the dependency in Maven projects and compiling the widget set is described in <<addons-maven#addons.maven, "Using Add-ons in a Maven Project">>.
+The section also describes how to use the online compilation and CDN services during development.
+
+For Eclipse projects that use Ivy for dependency management, see <<addons-eclipse#addons.eclipse, "Installing Add-ons in Eclipse with Ivy">>.
+You can also download and install add-ons from a ZIP-package, as described in <<addons-downloading#addons.downloading, "Downloading Add-ons from Vaadin Directory">>.
+
+== Add-on Licenses
 
 Add-ons available from Vaadin Directory are distributed under different
 licenses, of which some are commercial. While the add-ons can be downloaded
@@ -30,8 +39,11 @@ offered under a dual licensing agreement so that they can be used in open source
 projects for free, and many have a trial period for closed-source development.
 Commercial Vaadin add-ons distributed under the CVAL license require installing
 a license key as instructed in
-<<dummy/../../../framework/addons/addons-cval#addons.cval,"Installing Commercial
-Vaadin Add-on Licence">>.
+<<dummy/../../../framework/addons/addons-cval#addons.cval, "Installing Commercial Vaadin Add-on Licence">>.
 
+== Feedback and Support
 
-
+After trying out an add-on, you can give some feedback to the author of the
+add-on by rating the add-on with one to five stars and optionally leaving a
+comment. Most add-ons also have a discussion forum thread for user feedback and
+questions.

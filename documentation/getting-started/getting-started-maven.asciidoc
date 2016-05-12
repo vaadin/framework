@@ -11,7 +11,7 @@ layout: page
 
 In previous sections, we looked into creating a Vaadin Maven project in different IDEs.
 In this section, we look how to create such a project on command-line.
-You can then import such a project to your IDE.
+You can then import such a project in your IDE.
 
 In addition to regular Maven, you can use any Maven-compatible build or
 dependency management system, such as Ivy or Gradle. For Gradle, see the
@@ -35,7 +35,7 @@ line):
    -DarchetypeGroupId=com.vaadin \
    -DarchetypeArtifactId=[replaceable]#vaadin-archetype-application# \
    -DarchetypeVersion=[replaceable]#7.x.x# \
-   -DgroupId=[replaceable]#your.company# \
+   -DgroupId=[replaceable]#com.pany# \
    -DartifactId=[replaceable]#project-name# \
    -Dversion=[replaceable]#0.1# \
    -Dpackaging=war
@@ -96,13 +96,14 @@ WAR package. You can do this with the [literal]#++package++# goal as follows:
 The location of the resulting WAR package should be displayed in the command
 output. You can then deploy it to your favorite application server.
 
-The easiest way to run Vaadin applications with Maven is to use the light-weight
-Jetty web server. After compiling the package, all you need to do is type:
+The easiest way to run Vaadin applications with Maven is to use the light-weight Jetty web server.
+After compiling the package, all you need to do is type:
 
 [subs="normal"]
 ----
 [prompt]#$# [command]#mvn# jetty:run
 ----
+
 The special goal starts the Jetty server in port 8080 and deploys the
 application. You can then open it in a web browser at
 http://localhost:8080/project-name.
@@ -110,17 +111,16 @@ http://localhost:8080/project-name.
 (((range="endofrange", startref="term.maven.compiling")))
 
 [[getting-started.maven.addons]]
-== Using Add-ons and Custom Widget Sets
+== Using Add-ons
 
 ((("Maven", "using add-ons", id="term.maven.addons", range="startofrange")))
 
-
-If you use Vaadin add-ons that include a widget set or make your custom widgets,
-you need to enable widget set compilation in the POM. The required configuration
-is described in
-<<dummy/../../../framework/addons/addons-maven#addons.maven,"Using Add-ons in a
+If you use Vaadin add-ons from the http://vaadin.com/directory[Vaadin Directory], you need to add them as dependencies in the project POM.
+The instructions are given in <<dummy/../../../framework/addons/addons-maven#addons.maven, "Using Add-ons in a
 Maven Project">>.
 
+_In projects that use Vaadin 7.6 or older_, you need to compile the widget set manually.
+See the add-on usage instructions.
 
 (((range="endofrange", startref="term.maven.addons")))
 (((range="endofrange", startref="term.maven.creating")))

@@ -26,11 +26,11 @@ This walkthrough assumes that you have already installed the Eclipse IDE, the Va
 
 ifdef::web[]
 [[getting-started.first-project.ivy]]
-== Creating the Project
+== Creating an Ivy Project
 endif::web[]
 
 ifdef::web[]
-_The following describes the creation of an Ivy project. The upcoming version of the Eclipse plug-in creates Maven projects. For that, see <<getting-started.first-project.creation>>._
+NOTE: The following describes the creation of an Ivy project. The upcoming version of the Eclipse plug-in creates Maven projects. For that, see <<getting-started.first-project.creation>>.
 endif::web[]
 
 ifdef::web[]
@@ -162,7 +162,7 @@ project hierarchy shown in the Project Explorer is shown in
 
 [[figure.getting-started.first-project.exploring]]
 .A New Vaadin Project
-image::img/myproject-ivy-created.png[scaledwidth=60%]
+image::img/myproject-ivy-created.png[width=40%, scaledwidth=60%]
 
 The Vaadin libraries and other dependencies are managed by Ivy. Notice that the
 libraries are not stored under the project folder, even though they are listed
@@ -224,8 +224,8 @@ endif::web[]
 == Creating a Maven Project
 
 ifdef::web[]
-_The following describes project creation in the upcoming version of the Eclipse plug-in, which creates Maven rather than Ivy projects.
-To use it, you must have installed the experimental version of the plug-in._
+NOTE: The following describes project creation in the upcoming version of the Eclipse plug-in, which creates Maven rather than Ivy projects.
+To use it, you must have installed the experimental version of the plug-in.
 endif::web[]
 
 Let us create the first application project with the tools installed in the previous section.
@@ -272,12 +272,13 @@ Finally, click [guibutton]#Finish# to create the project.
 [[getting-started.first-project.exploring]]
 == Exploring the Project
 
-After the [guilabel]#New Project# wizard exits, it has done all the work for you: a UI class skeleton has been written to the [filename]#src# directory.
+After the [guilabel]#New Project# wizard exits, it has done all the work for you.
+A UI class skeleton has been written to the [filename]#src# directory.
 The project hierarchy shown in the Project Explorer is shown in <<figure.getting-started.first-project.exploring>>.
 
 [[figure.getting-started.first-project.exploring]]
-.A new Vaadin Project
-image::img/myproject-created-annotated-hi.png[width=80%, scaledwidth=90%]
+.A new Vaadin project
+image::img/myproject-created-annotated-hi.png[width=80%, scaledwidth=100%]
 
 The Vaadin libraries and other dependencies are managed by Maven.
 Notice that the libraries are not stored under the project folder, even though they are listed in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
@@ -295,7 +296,6 @@ import com.vaadin.ui.UI;
 ...
 
 @Theme("mytheme")
-@Widgetset("com.example.myproject.MyAppWidgetset")
 public class MyUI extends UI {
 
     @Override
@@ -325,14 +325,14 @@ public class MyUI extends UI {
 }
 ----
 
-[[getting-started.first-project.widgetset]]
-== Compiling the Widget Set and Theme
+[[getting-started.first-project.theme]]
+== Compiling the Theme
 
-Before running the project for the first time, select [guilabel]#Compile Widgetset and Theme# from the menu shown in <<figure.getting-started.first-project.compilewidgetset>>.
+Before running the project for the first time, click the [guilabel]#Compile Vaadin Theme# button in the toolbar, as shown in <<figure.getting-started.first-project.compiletheme>>.
 
-[[figure.getting-started.first-project.compilewidgetset]]
-.Compile Widgetset and Theme Menu
-image::img/myproject-compilewidgetset.png[width=50%]
+[[figure.getting-started.first-project.compiletheme]]
+.Compile Vaadin Theme
+image::img/myproject-compiletheme.png[width=40%, scaledwidth=60%]
 
 [[getting-started.first-project.coding]]
 == Coding Tips for Eclipse
@@ -460,8 +460,9 @@ Updating the libraries can take several minutes. You can see the progress in the
 Eclipse status bar. You can get more details about the progress by clicking the
 indicator.
 
-. If you have compiled the widget set for your project, recompile it by clicking
-the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+. _In Vaadin 7.6 and older_: if you have compiled the widget set for your project, recompile it by clicking the *Compile Vaadin Widgetset* button in the Eclipse toolbar.
++
+image::img/myproject-compilewidgetset.png[width=50%, scaledwidth=60%]
 
 . Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
 right-clicking the server and selecting [guilabel]#Clean# as well as
@@ -497,8 +498,9 @@ Updating the libraries can take several minutes. You can see the progress in the
 Eclipse status bar. You can get more details about the progress by clicking the
 indicator.
 
-. If you have compiled the widget set for your project, recompile it by clicking
-the [guibutton]#Compile Vaadin widgets# button in Eclipse toolbar.
+. If you have compiled the widget set for your project, recompile it by clicking the *Compile Vaadin Widgetset* button in Eclipse toolbar.
++
+image::img/myproject-compilewidgetset.png[width=50%, scaledwidth=60%]
 
 . Stop the integrated Tomcat (or other server) in Eclipse, clear its caches by
 right-clicking the server and selecting Clean as well as Clean Tomcat Work
