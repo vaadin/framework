@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="260"
+   height="130"
+   id="svg1901"
+   sodipodi:version="0.32"
+   inkscape:version="0.91 r"
+   sodipodi:docname="addon-architecture.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/original-drawings/intro/architecture.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   version="1.1">
+  <defs
+     id="defs1903">
+    <marker
+       id="marker18095"
+       orient="auto"
+       markerHeight="5.7450776"
+       markerWidth="4.6297302">
+      <g
+         id="g11064"
+         transform="matrix(0.5,0,0,0.5,-185.64298,-257.19655)">
+        <path
+           sodipodi:nodetypes="csccccccsccssssssssssssssccc"
+           id="path11050"
+           d="m 370,508.65625 c -0.86067,0.0587 -1.60944,0.6213 -1.90625,1.4375 -0.26976,0.74176 -0.0577,1.53493 0.4375,2.125 l -1.75,0 c -0.0424,-0.005 -0.0824,0.002 -0.125,0 l 0,4.375 0.125,0 1.75,0 c -0.67896,0.8597 -0.69701,2.11549 0.0937,2.90625 0.85091,0.85091 2.27409,0.85091 3.125,0 l 3.34375,-3.375 c 0.033,-0.0295 0.0643,-0.0608 0.0937,-0.0937 0.0322,-0.0193 0.0635,-0.0402 0.0937,-0.0625 3.7e-4,-3.6e-4 0.21851,-0.28079 0.21875,-0.28125 5e-5,-9e-5 -0.007,-0.0447 0,-0.0625 0.001,-0.003 0.03,0.003 0.0312,0 0.0391,-0.0521 0.051,-0.0518 0.0937,-0.125 0.13699,-0.23476 0.16684,-0.37191 0.15625,-0.34375 0.0368,-0.0915 0.0185,-0.11251 0.0312,-0.15625 0.0106,-0.0102 0.021,-0.0206 0.0312,-0.0312 0.06,-0.22398 0.0881,-0.51689 0.0625,-0.78125 -0.0136,-0.20363 -0.0589,-0.29765 -0.0625,-0.3125 1.4e-4,-0.0104 1.4e-4,-0.0208 0,-0.0312 0.026,0.097 0.0153,0.016 -0.0937,-0.25 -0.0525,-0.13039 -0.0899,-0.21936 -0.125,-0.28125 -0.0524,-0.0897 -0.13346,-0.26235 -0.34375,-0.46875 L 371.75,509.3125 c -0.45645,-0.48671 -1.08509,-0.71163 -1.75,-0.65625 z"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+           inkscape:connector-curvature="0" />
+        <path
+           sodipodi:nodetypes="cccscccsssssssscccsccc"
+           id="path11035"
+           d="m 366.65625,515.40625 4.625,0 -1.8125,1.8125 c -0.39695,0.39695 -0.39695,1.04055 0,1.4375 0.39695,0.39695 1.04055,0.39695 1.4375,0 l 3.4375,-3.46875 0.0937,-0.0625 c 0.006,-0.006 -0.006,-0.0253 0,-0.0312 0.0554,-0.0572 0.1151,-0.11699 0.15625,-0.1875 0.0286,-0.0491 0.0429,-0.10409 0.0625,-0.15625 0.0124,-0.0307 0.0221,-0.0622 0.0312,-0.0937 0.0311,-0.1161 0.0427,-0.22493 0.0312,-0.34375 -0.004,-0.0578 -0.0174,-0.0996 -0.0312,-0.15625 -0.0109,-0.0407 -0.0151,-0.0857 -0.0312,-0.125 -0.0164,-0.0408 -0.0405,-0.0862 -0.0625,-0.125 -0.0455,-0.0779 -0.0936,-0.15726 -0.15625,-0.21875 l -3.53125,-3.53125 c -0.20891,-0.22276 -0.50816,-0.33785 -0.8125,-0.3125 -0.39478,0.0269 -0.73977,0.28438 -0.875,0.65625 -0.13524,0.37187 -0.0353,0.78826 0.25,1.0625 l 1.875,1.84375 -4.6875,0"
+           style="fill:#49c2f1;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           inkscape:connector-curvature="0" />
+      </g>
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective110" />
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path3520"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="scale(0.8,0.8)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <linearGradient
+       id="linearGradient3503">
+      <stop
+         style="stop-color:#37ff40;stop-opacity:0.53608245;"
+         offset="0"
+         id="stop3505" />
+      <stop
+         style="stop-color:#ffe0e0;stop-opacity:1;"
+         offset="1"
+         id="stop3507" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow2Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lstart"
+       style="overflow:visible">
+      <path
+         id="path6743"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(1.1,0,0,1.1,1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <linearGradient
+       id="linearGradient19816">
+      <stop
+         id="stop19818"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop19820"
+         offset="1"
+         style="stop-color:#e7e790;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient11516">
+      <stop
+         id="stop11518"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1" />
+      <stop
+         id="stop11520"
+         offset="1"
+         style="stop-color:#a090e7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient11508">
+      <stop
+         id="stop11510"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop11512"
+         offset="1"
+         style="stop-color:#e27979;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3286">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3288" />
+      <stop
+         style="stop-color:#79e291;stop-opacity:1;"
+         offset="1"
+         id="stop3290" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible">
+      <path
+         id="path16811"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="164.39568"
+     inkscape:cy="59.7456"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     gridtolerance="10000"
+     inkscape:window-width="1672"
+     inkscape:window-height="1019"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:showpageshadow="false"
+     borderlayer="false"
+     showgrid="true"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:object-nodes="true"
+     inkscape:object-paths="true"
+     units="pt">
+    <inkscape:grid
+       type="xygrid"
+       id="grid6362"
+       visible="true"
+       enabled="true"
+       empspacing="5"
+       snapvisiblegridlinesonly="true"
+       spacingx="1px" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-50,130"
+       id="guide3154" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata1906">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="opacity:1"
+     transform="translate(0,-922.36211)">
+    <rect
+       style="display:inline;overflow:visible;visibility:visible;fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="rect6815"
+       width="85"
+       height="119.99995"
+       x="110"
+       y="927.36212"
+       ry="3.7880721" />
+    <rect
+       style="display:inline;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;enable-background:accumulate"
+       id="rect3810"
+       width="75"
+       height="119.99995"
+       x="30"
+       y="927.36212"
+       ry="3.7880721" />
+    <rect
+       style="display:inline;overflow:visible;visibility:visible;fill:#f39300;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;enable-background:accumulate"
+       id="rect6791"
+       width="55"
+       height="119.99995"
+       x="200"
+       y="927.36212"
+       ry="3.7880721" />
+    <flowRoot
+       transform="translate(317.36739,662.01687)"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+       id="flowRoot9963-2-3-6"
+       xml:space="preserve"><flowRegion
+         id="flowRegion9965-2-7-7"><rect
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+           y="271.51425"
+           x="-113.13708"
+           height="51.315746"
+           width="68.012077"
+           id="rect9967-3-5-6" /></flowRegion><flowPara
+         id="flowPara10992">UI Logic</flowPara></flowRoot>    <g
+       id="g6827-8"
+       transform="matrix(0.06329721,0,0,0.06329721,199.30626,995.21824)">
+      <g
+         transform="matrix(29.999985,-0.03019888,0.03019888,29.999985,-11004.945,-15375.022)"
+         id="g6829-7">
+        <g
+           id="g6831-7"
+           transform="matrix(0.71644053,0,0,0.71644053,103.9698,144.62879)"
+           style="fill:#ffffff;fill-opacity:1">
+          <path
+             id="path6833-7"
+             d="M 142.5625,-6.4375 40.6875,-6.34375 C 29.868538,-6.48507 19.811533,-0.790227 14.367338,8.560208 8.9231424,17.910644 8.9351814,29.468085 14.398845,38.807157 19.862509,48.14623 29.931356,53.820109 40.75,53.65625 L 142.625,53.5625 c 10.81896,0.14132 20.87597,-5.553523 26.32016,-14.903958 5.4442,-9.350436 5.43216,-20.907877 -0.0315,-30.246949 C 163.44999,-0.92748 153.38114,-6.601359 142.5625,-6.4375 l 0,0 z"
+             style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+             transform="matrix(0.03333332,3.3554312e-5,-3.3554312e-5,0.03333332,366.53421,512.86995)"
+             inkscape:connector-curvature="0" />
+          <path
+             sodipodi:nodetypes="cccscccsssssssscccsccc"
+             id="path6835-3"
+             d="m 366.65701,514.67289 4.625,0 -1.8125,1.8125 c -0.39695,0.39695 -0.39695,1.04055 0,1.4375 0.39695,0.39695 1.04055,0.39695 1.4375,0 l 3.4375,-3.46875 0.0937,-0.0625 c 0.006,-0.006 -0.006,-0.0253 0,-0.0312 0.0554,-0.0572 0.1151,-0.11699 0.15625,-0.1875 0.0286,-0.0491 0.0429,-0.10409 0.0625,-0.15625 0.0124,-0.0307 0.0221,-0.0622 0.0312,-0.0937 0.0311,-0.1161 0.0427,-0.22493 0.0312,-0.34375 -0.004,-0.0578 -0.0174,-0.0996 -0.0312,-0.15625 -0.0109,-0.0407 -0.0151,-0.0857 -0.0312,-0.125 -0.0164,-0.0408 -0.0405,-0.0862 -0.0625,-0.125 -0.0455,-0.0779 -0.0936,-0.15726 -0.15625,-0.21875 l -3.53125,-3.53125 c -0.20891,-0.22276 -0.50816,-0.33785 -0.8125,-0.3125 -0.39478,0.0269 -0.73977,0.28438 -0.875,0.65625 -0.13524,0.37187 -0.0353,0.78826 0.25,1.0625 l 1.875,1.84375 -4.6875,0"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+    </g>
+    <rect
+       style="display:inline;overflow:visible;visibility:visible;opacity:1;fill:#a0a0a0;fill-opacity:0.75384617;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;enable-background:accumulate"
+       id="rect4680-4-4-7-0"
+       width="175"
+       height="35.000011"
+       x="5"
+       y="977.36212"
+       ry="3.7880721" />
+    <flowRoot
+       transform="translate(227.87246,661.85916)"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+       id="flowRoot9963-2-3"
+       xml:space="preserve"><flowRegion
+         id="flowRegion9965-2-7"><rect
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+           y="271.51425"
+           x="-113.13708"
+           height="37.315746"
+           width="95.012077"
+           id="rect9967-3-5" /></flowRegion><flowPara
+         id="flowPara4438">Server-side API</flowPara></flowRoot>    <rect
+       ry="3.7880721"
+       y="942.36218"
+       x="120"
+       height="95.000008"
+       width="70"
+       id="rect4680-4-4-7-0-9"
+       style="display:inline;overflow:visible;visibility:visible;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;enable-background:accumulate" />
+    <g
+       transform="translate(93.189487,766.92955)"
+       id="g28403-3-5-6-2">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#49c2f1;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5-0"
+         width="60"
+         height="25"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1-4"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.43047,-878.23713)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7-9"><rect
+             id="rect11365-5-4-6-4-2"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9-0">Built-in</flowPara><flowPara
+           id="flowPara4300-0">Components</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(93.189487,801.92955)"
+       id="g28403-3-5-6-6-7">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#4fb047;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5-5-8"
+         width="60"
+         height="25"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1-1-6"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.52461,-878.4214)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7-5-3"><rect
+             id="rect11365-5-4-6-4-5-9"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9-9-4">Add-on</flowPara><flowPara
+           id="flowPara4338-2">Components</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(93.189487,836.92955)"
+       id="g28403-3-5-6-6-6-5">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#f39300;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5-5-9-2"
+         width="60"
+         height="25"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1-1-4-4"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.52461,-878.4214)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7-5-8-5"><rect
+             id="rect11365-5-4-6-4-5-7-3"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9-9-0-2">Custom</flowPara><flowPara
+           id="flowPara4338-0-3">Components</flowPara></flowRoot>    </g>
+    <g
+       transform="matrix(-1.8989154,-0.0019115,-0.0019115,1.8989154,892.26083,22.007358)"
+       id="g6829-2-5">
+      <g
+         id="g6831-2-7"
+         transform="matrix(0.71644053,0,0,0.71644053,103.9698,144.62879)"
+         style="fill:#ffffff;fill-opacity:1">
+        <path
+           id="path6833-1-5"
+           d="M 142.5625,-6.4375 40.6875,-6.34375 C 29.868538,-6.48507 19.811533,-0.790227 14.367338,8.560208 8.9231424,17.910644 8.9351814,29.468085 14.398845,38.807157 19.862509,48.14623 29.931356,53.820109 40.75,53.65625 L 142.625,53.5625 c 10.81896,0.14132 20.87597,-5.553523 26.32016,-14.903958 5.4442,-9.350436 5.43216,-20.907877 -0.0315,-30.246949 C 163.44999,-0.92748 153.38114,-6.601359 142.5625,-6.4375 l 0,0 z"
+           style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+           transform="matrix(0.03333332,3.3554312e-5,-3.3554312e-5,0.03333332,366.53421,512.86995)"
+           inkscape:connector-curvature="0" />
+        <path
+           sodipodi:nodetypes="cccscccsssssssscccsccc"
+           id="path6835-0-9"
+           d="m 366.65701,514.67289 4.625,0 -1.8125,1.8125 c -0.39695,0.39695 -0.39695,1.04055 0,1.4375 0.39695,0.39695 1.04055,0.39695 1.4375,0 l 3.4375,-3.46875 0.0937,-0.0625 c 0.006,-0.006 -0.006,-0.0253 0,-0.0312 0.0554,-0.0572 0.1151,-0.11699 0.15625,-0.1875 0.0286,-0.0491 0.0429,-0.10409 0.0625,-0.15625 0.0124,-0.0307 0.0221,-0.0622 0.0312,-0.0937 0.0311,-0.1161 0.0427,-0.22493 0.0312,-0.34375 -0.004,-0.0578 -0.0174,-0.0996 -0.0312,-0.15625 -0.0109,-0.0407 -0.0151,-0.0857 -0.0312,-0.125 -0.0164,-0.0408 -0.0405,-0.0862 -0.0625,-0.125 -0.0455,-0.0779 -0.0936,-0.15726 -0.15625,-0.21875 l -3.53125,-3.53125 c -0.20891,-0.22276 -0.50816,-0.33785 -0.8125,-0.3125 -0.39478,0.0269 -0.73977,0.28438 -0.875,0.65625 -0.13524,0.37187 -0.0353,0.78826 0.25,1.0625 l 1.875,1.84375 -4.6875,0"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       transform="translate(28.189484,766.92954)"
+       id="g28403-3-5-6">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#49c2f1;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5"
+         width="50"
+         height="25"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.43047,-878.23713)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7"><rect
+             id="rect11365-5-4-6-4"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9">Built-in</flowPara><flowPara
+           id="flowPara4300">Widgets</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(29.189484,836.92954)"
+       id="g28403-3-5-6-6-6">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#f39300;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5-5-9"
+         width="49"
+         height="24"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1-1-4"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.52461,-878.4214)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7-5-8"><rect
+             id="rect11365-5-4-6-4-5-7"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9-9-0">Custom</flowPara><flowPara
+           id="flowPara4338-0">Widgets</flowPara></flowRoot>    </g>
+    <flowRoot
+       transform="translate(148.55364,661.85916)"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+       id="flowRoot9963-2-3-6-8-6-1"
+       xml:space="preserve"><flowRegion
+         id="flowRegion9965-2-7-7-1-9-6"><rect
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+           y="271.51425"
+           x="-113.13708"
+           height="53.315746"
+           width="70.012077"
+           id="rect9967-3-5-6-4-7-9" /></flowRegion><flowPara
+         id="flowPara11082-4">Widget Set</flowPara></flowRoot>    <g
+       transform="translate(28.189487,801.92955)"
+       id="g28403-3-5-6-6">
+      <rect
+         style="display:inline;overflow:visible;visibility:visible;fill:#4fb047;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
+         id="rect4680-7-10-5-5"
+         width="49"
+         height="24"
+         x="21.810513"
+         y="180.43254"
+         ry="3.7880721" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot11361-6-1-8-1-1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1"
+         transform="translate(-787.52461,-878.4214)"
+         inkscape:export-filename="/home/magi/itmill/toolkit5/doc/manual/img/intro/toolchain.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><flowRegion
+           id="flowRegion11363-2-0-7-7-5"><rect
+             id="rect11365-5-4-6-4-5"
+             width="138.69197"
+             height="47.876488"
+             x="813.87988"
+             y="1064.3831"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara4198-9-9">Add-on</flowPara><flowPara
+           id="flowPara4338">Widgets</flowPara></flowRoot>    </g>
+    <flowRoot
+       transform="translate(123.27856,712.26946)"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#000000;fill-opacity:1;stroke:none"
+       id="flowRoot9963-2-3-1"
+       xml:space="preserve"><flowRegion
+         id="flowRegion9965-2-7-8"><rect
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:'Helvetica Rounded LT Std';-inkscape-font-specification:'Helvetica Rounded LT Std, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1"
+           y="271.51425"
+           x="-113.13708"
+           height="37.315746"
+           width="95.012077"
+           id="rect9967-3-5-9" /></flowRegion><flowPara
+         id="flowPara10160-3">Add-on</flowPara></flowRoot>  </g>
+</svg>

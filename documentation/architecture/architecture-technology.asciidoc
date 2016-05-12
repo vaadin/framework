@@ -196,9 +196,6 @@ in
 a Server-Side Web Application">>. The class is given as a parameter to the
 Vaadin Servlet in the [filename]#web.xml# deployment descriptor.
 
-The Vaadin Client-Side Engine as well as client-side Vaadin applications are
-loaded to the browser as static JavaScript files. The client-side engine, or
-widget set in technical terms, needs to be located under the
-[filename]#VAADIN/widgetsets# path in the web application. The precompiled
-default widget set is served from the [filename]#vaadin-client-compiled# JAR by
-the Vaadin Servlet.
+The Vaadin Client-Side Engine as well as client-side Vaadin applications are loaded to the browser as static JavaScript files.
+The client-side engine, or widget set in technical terms, needs to be located under the [filename]#VAADIN/widgetsets# path in the web application.
+It is normally automatically compiled to include the default widget set, as well as any installed add-ons and custom widgets.
