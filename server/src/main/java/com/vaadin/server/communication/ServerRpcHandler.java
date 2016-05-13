@@ -157,7 +157,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Checks if this is a request to resynchronize the client side
-         * 
+         *
          * @return true if this is a resynchronization request, false otherwise
          */
         public boolean isResynchronize() {
@@ -166,7 +166,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Gets the id of the client to server message
-         * 
+         *
          * @since 7.6
          * @return the server message id
          */
@@ -190,7 +190,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Gets the widget set version reported by the client
-         * 
+         *
          * @since 7.6
          * @return The widget set version reported by the client or null if the
          *         message did not contain a widget set version
@@ -286,7 +286,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * Checks that the version reported by the client (widgetset) matches that
      * of the server.
-     * 
+     *
      * @param widgetsetVersion
      *            the widget set version reported by the client or null
      */
@@ -422,7 +422,7 @@ public class ServerRpcHandler implements Serializable {
 
     /**
      * Handles the given RPC method invocation for the given connector
-     * 
+     *
      * @since 7.7
      * @param ui
      *            the UI containing the connector
@@ -445,7 +445,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * Handles the given Legacy variable change RPC method invocation for the
      * given connector
-     * 
+     *
      * @since 7.7
      * @param ui
      *            the UI containing the connector
@@ -463,11 +463,11 @@ public class ServerRpcHandler implements Serializable {
                 changeVariables(null, (VariableOwner) connector, changes);
             } else {
                 throw new IllegalStateException(
-                        "Received legacy variable change for "
+                        "Received a legacy variable change for "
                                 + connector.getClass().getName()
                                 + " ("
                                 + connector.getConnectorId()
-                                + ") which is not a VariableOwner. The client-side connector sent these legacy varaibles: "
+                                + ") which is not a VariableOwner. The client-side connector sent these legacy variables: "
                                 + changes.keySet());
             }
         } catch (Exception e) {
