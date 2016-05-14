@@ -42,7 +42,7 @@
 		<!-- Atmosphere versions -->
 		<!-- Note that this should be kept in sync with the class Constants -->
 		<atmosphere.runtime.version>2.2.9.vaadin2</atmosphere.runtime.version>
-		<atmosphere.js.version>2.2.6.vaadin4</atmosphere.js.version>
+		<atmosphere.js.version>2.2.13.vaadin3</atmosphere.js.version>
 
 		<!-- Dependency unpack directory -->
 		<dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
