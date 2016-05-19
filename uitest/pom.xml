@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -217,18 +217,30 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/themes</directory>
+				<excludes>
+					<exclude>**/*.scss</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+
+
 		<plugins>
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<configuration>
-					<warSourceDirectory>${project.build.directory}/compile-themes</warSourceDirectory>
-					<webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+					<warSourceDirectory>src/main/themes</warSourceDirectory>
+					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
 					<persistentunitcachedir>${project.build.directory}/gwt-unitCache</persistentunitcachedir>
 				</configuration>
 				<executions>
 					<execution>
-						<phase>prepare-package</phase>
 						<goals>
 							<goal>compile</goal>
 							<goal>compile-theme</goal>
@@ -246,44 +258,6 @@
 						<port>8888</port>
 					</httpConnector>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-theme-sources</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/compile-themes</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/themes</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-compiled-themes</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/compile-themes</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>

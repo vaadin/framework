@@ -11,54 +11,10 @@
 /.externalToolBuilders
 /extras
 
-# /WebContent/VAADIN/themes/base/
-/WebContent/VAADIN/themes/base/styles.css
-/WebContent/VAADIN/themes/base/legacy-styles.css
-
-# /WebContent/VAADIN/themes/chameleon/
-/WebContent/VAADIN/themes/chameleon/styles.css
-/WebContent/VAADIN/themes/chameleon/legacy-styles.css
-
-# /WebContent/VAADIN/themes/liferay/
-/WebContent/VAADIN/themes/liferay/styles.css
-/WebContent/VAADIN/themes/liferay/legacy-styles.css
-
-# /WebContent/VAADIN/themes/reindeer/
-/WebContent/VAADIN/themes/reindeer/styles.css
-/WebContent/VAADIN/themes/reindeer/legacy-styles.css
-
-# /WebContent/VAADIN/themes/reindeer/button/img/
-/WebContent/VAADIN/themes/reindeer/button/img/*-sprites*.png
-
-# /WebContent/VAADIN/themes/reindeer/common/img/
-/WebContent/VAADIN/themes/reindeer/common/img/*-sprites*.png
-
-# /WebContent/VAADIN/themes/runo/
-/WebContent/VAADIN/themes/runo/styles.css
-/WebContent/VAADIN/themes/runo/legacy-styles.css
-
-# /WebContent/VAADIN/themes/runo/common/img/
-/WebContent/VAADIN/themes/runo/common/img/ajax-loader-red.gif
-/WebContent/VAADIN/themes/runo/common/img/ajax-loader-yellow.gif
-
-# /WebContent/VAADIN/themes/valo/
-/WebContent/VAADIN/themes/valo/styles.css
-/WebContent/VAADIN/themes/tests-valo*/styles.css
+/uitest/src/main/themes/**/styles.css
 
 # Persisted scss cache files
-/WebContent/VAADIN/themes/*/styles.scss.cache
-
-# /WebContent/VAADIN/widgetsets/
-/WebContent/VAADIN/widgetsets
-/WebContent/VAADIN/gwt-unitCache*
-
-WebContent/VAADIN/vaadinPush.js
-WebContent/VAADIN/vaadinPush.debug.js
-WebContent/VAADIN/vaadinPush.js.gz
-WebContent/VAADIN/vaadinPush.debug.js.gz
-
-# /WebContent/WEB-INF/
-/WebContent/WEB-INF/classes
+/uitest/src/main/themes/**/styles.scss.cache
 
 # /build/
 /build/result
@@ -105,3 +61,4 @@ phantomjsdriver.log
 .idea
 
 */.checkstyle
+
