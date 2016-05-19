@@ -55,7 +55,15 @@ public class Version implements Serializable {
         final String[] digits = VERSION.split("[-.]", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
         VERSION_MINOR = Integer.parseInt(digits[1]);
-        VERSION_REVISION = Integer.parseInt(digits[2]);
+
+        int revision;
+        try {
+            revision = Integer.parseInt(digits[2]);
+        } catch (NumberFormatException e) {
+            revision = 0;
+        }
+        VERSION_REVISION = revision;
+
         if (digits.length == 4) {
             VERSION_BUILD = digits[3];
         } else {
