@@ -46,8 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -166,18 +165,20 @@ public class DevelopmentServerLauncher {
 
         final Server server = new Server();
 
-        final Connector connector = new SelectChannelConnector();
+        final ServerConnector connector = new ServerConnector(server);
 
         connector.setPort(port);
         if (serverArgs.containsKey("withssl")) {
-            final SslSocketConnector sslConnector = new SslSocketConnector();
-            sslConnector.setPort(8444);
-            SslContextFactory sslFact = sslConnector.getSslContextFactory();
-            sslFact.setTrustStore(KEYSTORE);
+            SslContextFactory sslFact = new SslContextFactory();
+            sslFact.setTrustStorePath(KEYSTORE);
             sslFact.setTrustStorePassword("password");
             sslFact.setKeyStorePath(KEYSTORE);
             sslFact.setKeyManagerPassword("password");
             sslFact.setKeyStorePassword("password");
+
+            ServerConnector sslConnector = new ServerConnector(server, sslFact);
+            sslConnector.setPort(8444);
+
             server.setConnectors(new Connector[] { connector, sslConnector });
         } else {
             server.setConnectors(new Connector[] { connector });
@@ -272,7 +273,7 @@ public class DevelopmentServerLauncher {
 
                 scanner.setScanDirs(classFolders);
                 scanner.start();
-                server.getContainer().addBean(scanner);
+                server.addBean(scanner);
             }
         }
 
