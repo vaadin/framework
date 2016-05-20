@@ -12,87 +12,153 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree"]
 endif::web[]
 
-The [classname]#Tree# component allows a natural way to represent data that has
-hierarchical relationships, such as filesystems or message threads. The
-[classname]#Tree# component in Vaadin works much like the tree components of
-most modern desktop user interface toolkits, for example in directory browsing.
+The [classname]#Tree# component allows a natural way to represent data that has hierarchical relationships.
+The user can drill down in the hierarchy by expanding items by clicking on the expand arrow, and likewise collapse items.
+[classname]#Tree# is a selection component that allows selecting items.
+It also supports drag and drop, so you can drag items to and from a tree, and drop them in the hierarchy.
 
-The typical use of the [classname]#Tree# component is for displaying a
-hierachical menu, like a menu on the left side of the screen, as in
-<<figure.components.tree>>, or for displaying filesystems or other hierarchical
-datasets. The [parameter]#menu# style makes the appearance of the tree more
-suitable for this purpose.
+A typical use of the [classname]#Tree# component is for displaying a hierarchical menu, as illustrated in <<figure.components.tree>>, or for displaying file systems or hierarchical datasets.
 
+[[figure.components.tree]]
+.A [classname]#Tree# component as a menu
+image::img/tree-example1.png[width=25%, scaledwidth=50%]
+
+The data is managed in a container implementing the [interfacename]#Hierarchical# interface, such as [classname]#HierarchicalContainer# or [classname]#FilesystemContainer#.
+You can use [classname]#ContainerHierarchicalWrapper# to add hierarchical capability to any other container. [classname]#Tree# itself implements the interface and delegates operations to the underlying container.
 
 [source, java]
 ----
-final Object[][] planets = new Object[][]{
-        new Object[]{"Mercury"}, 
-        new Object[]{"Venus"},
-        new Object[]{"Earth", "The Moon"},    
-        new Object[]{"Mars", "Phobos", "Deimos"},
-        new Object[]{"Jupiter", "Io", "Europa", "Ganymedes",
-                                "Callisto"},
-        new Object[]{"Saturn",  "Titan", "Tethys", "Dione",
-                                "Rhea", "Iapetus"},
-        new Object[]{"Uranus",  "Miranda", "Ariel", "Umbriel",
-                                "Titania", "Oberon"},
-        new Object[]{"Neptune", "Triton", "Proteus", "Nereid",
-                                "Larissa"}};
-        
-Tree tree = new Tree("The Planets and Major Moons");
+// A menu tree
+Tree menu = new Tree();
 
-/* Add planets as root items in the tree. */
-for (int i=0; i<planets.length; i++) {
-    String planet = (String) (planets[i][0]);
-    tree.addItem(planet);
-    
-    if (planets[i].length == 1) {
-        // The planet has no moons so make it a leaf.
-        tree.setChildrenAllowed(planet, false);
-    } else {
-        // Add children (moons) under the planets.
-        for (int j=1; j<planets[i].length; j++) {
-            String moon = (String) planets[i][j];
-            
-            // Add the item as a regular item.
-            tree.addItem(moon);
-            
-            // Set it to be a child.
-            tree.setParent(moon, planet);
-            
-            // Make the moons look like leaves.
-            tree.setChildrenAllowed(moon, false);
-        }
+// Couple of childless root items
+menu.addItem("Mercury");
+menu.setChildrenAllowed("Mercury", false);
+menu.addItem("Venus");
+menu.setChildrenAllowed("Venus", false);
 
-        // Expand the subtree.
-        tree.expandItemsRecursively(planet);
-    }
-}
-
-main.addComponent(tree);
+// An item with hierarchy
+menu.addItem("Earth");
+menu.addItem("The Moon");
+menu.setChildrenAllowed("The Moon", false);
+menu.setParent("The Moon", "Earth");
+menu.expandItem("Earth"); // Expand programmatically
+...
 ----
 
-<<figure.components.tree>> below shows the tree from the code example in a
-practical situation.
+The result was shown in <<figure.components.tree>> in a practical situation, with the [classname]`Tree` wrapped inside a [classname]`Panel`.
+[classname]`Tree` itself does not have scrollbar, but [classname]`Panel` can be used for the purpose.
 
-[[figure.components.tree]]
-.A [classname]#Tree# Component as a Menu
-image::img/tree-example1.png[]
+The caption of tree items is by default the item ID.
+You can define how the item captions are determined with [methodname]#setItemCaptionMode()#, as explained <<components-selection#components.selection.captions, "Selection Component Item Captions">>.
 
-You can read or set the currently selected item by the value property of the
-[classname]#Tree# component, that is, with [methodname]#getValue()# and
-[methodname]#setValue()#. When the user clicks an item on a tree, the tree will
-receive an [classname]#ValueChangeEvent#, which you can catch with a
-[classname]#ValueChangeListener#. To receive the event immediately after the
-click, you need to set the tree as [classname]#setImmediate(true)#.
+[[components.tree.selection]]
+== Handling Selection and Clicks
 
-The [classname]#Tree# component uses [classname]#Container# data sources much
-like the [classname]#Table# component, with the addition that it also utilizes
-hierarchy information maintained by a [classname]#HierarchicalContainer#. The
-contained items can be of any item type supported by the container. The default
-container and its [methodname]#addItem()# assume that the items are strings and
-the string value is used as the item ID.
+[classname]#Tree# is a selection component, which are described in  <<components-selection#components.selection, "Selection Components">>.
+You can thereby get or set the currently selected item by the value property of the tree, that is, with [methodname]#getValue()# and [methodname]#setValue()#.
+When the user selects an item, the tree will receive an [classname]#ValueChangeEvent#, which you can catch with a [classname]#ValueChangeListener#.
 
+[source, Java]
+----
+// Handle selection changes
+menu.addValueChangeListener(event -> { // Java 8
+    if (event.getProperty() != null &&
+        event.getProperty().getValue() != null) {
+        location.setValue("The cat is in " +
+            event.getProperty().getValue());
+    }
+});
+----
 
+[classname]#Tree# is selectable by default; you can disallow selection with [methodname]#setSelectable(false)#.
 
+[classname]#Tree# also emits [classname]##ItemClickEvent##s when items are clicked.
+This way you can handle item clicks also when selection is not enabled or you want special user interaction specifically on clicks.
+
+[source, Java]
+----
+tree.addItemClickListener(
+  new ItemClickEvent.ItemClickListener() {
+    public void itemClick(ItemClickEvent event) {
+        // Pick only left mouse clicks
+        if (event.getButton() == ItemClickEvent.BUTTON_LEFT)
+            Notification.show("Left click",
+                        Notification.Type.HUMANIZED_MESSAGE);
+    }
+  });
+----
+
+[[components.tree.expand-collapse]]
+== Expanding and Collapsing Items
+
+An item can have children only if the [propertyname]#childrenAllowed# property is set as true.
+The expand indicator is shown when and only when the property is true.
+The property is defined in the container and can be set with [methodname]#setChildrenAllowed()#.
+
+Expanding an item fires an [classname]#Tree.ExpandEvent# and collapsing an [classname]#Tree.CollapseEvent#, which you can handle with respective listeners.
+
+[source, Java]
+----
+tree.addExpandListener(new Tree.ExpandListener() {
+    public void nodeExpand(ExpandEvent event) {
+        Notification.show("Expand!");
+    }
+});
+----
+
+You can expand and collapse items programmatically with [methodname]#expandItem()# or [methodname]#expandItemRecursively()#.
+
+[source, Java]
+----
+// Expand all items that can be
+for (Object itemId: tree.getItemIds())
+    tree.expandItem(itemId);
+----
+
+TIP: [classname]#Tree# itself does not support lazy loading, which makes it impractical for huge hierarchies.
+You can implement one kind of lazy loading by adding items in an expand listener and removing them in a collapse listener.
+For more proper lazy loading, you can use [classname]#TreeTable# or hierarchical support extension for [classname]#Grid#.
+
+[[components.tree.css]]
+== CSS Style Rules
+
+[source, css]
+----
+.v-tree {}
+  .v-tree-node {}            /* A node (item)           */
+    .v-tree-node-caption {}  /* Caption of the node     */
+    .v-tree-node-children {} /* Contains child nodes    */
+  .v-tree-node-root {}       /* If node is a root node  */
+  .v-tree-node-leaf {}       /* If node has no children */
+----
+
+[[components.tree.css.itemstyles]]
+=== Generating Item Styles
+
+You can style each tree item individually by generating a style name for them with a [interfacename]#Tree.ItemStyleGenerator#, which you assign to a tree with [methodname]#setItemStyleGenerator()#.
+The generator should return a style name for each item or `null`.
+
+[source, Java]
+----
+// Show all leaf nodes as disabled
+tree.setItemStyleGenerator(new Tree.ItemStyleGenerator() {
+    @Override
+    public String getStyle(Tree source, Object itemId) {
+        if (! tree.hasChildren(itemId))
+            return "disabled";
+        return null;
+    }
+});
+----
+
+The style names are prefixed with `v-tree-node-caption-`.
+You could thereby define the item styling as follows:
+
+[source, CSS]
+----
+.v-tree-node-caption-disabled {
+    color: graytext;
+    font-style: italic;
+}
+----

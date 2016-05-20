@@ -35,7 +35,7 @@ the [guilabel]#Java SDK# to be used for the project.
 Vaadin requires at least Java 6.
 If you have not configured a Java SDK previously, you can configure it here.
 +
-image::img/idea-newproject-1.png[]
+image::img/idea-newproject-1.png[scaledwidth=100%]
 +
 Click [guibutton]#Next#.
 
@@ -45,7 +45,7 @@ Click [guibutton]#Next#.
 path. You probably also want an application stub, so select [guilabel]#Create
 sample application# and give a name for the generated UI class.
 +
-image::img/idea-newproject-2.png[]
+image::img/idea-newproject-2.png[scaledwidth=100%]
 +
 Do __not__ click [guibutton]#Finish# yet.
 
@@ -54,7 +54,7 @@ Set it as an integrated server that you have configured in IntelliJ IDEA, as des
 
 ifdef::web[]
 +
-image::img/idea-newproject-3.png[]
+image::img/idea-newproject-3.png[scaledwidth=100%]
 endif::web[]
 
 . Click [guibutton]#Finish#.
@@ -62,7 +62,7 @@ endif::web[]
 The project is created with the UI class stub and a [filename]#web.xml#
 deployment descriptor.
 
-image::img/idea-newproject-4.png[]
+image::img/idea-newproject-4.png[scaledwidth=100%]
 
 The wizard does not currently create a servlet class automatically, and uses
 Servlet 2.4 compatible deployment with a [filename]#web.xml# deployment
@@ -92,7 +92,7 @@ server using a run/debug configuration.
 . Enter a project name, location, and the Java SDK to be used for the project.
 Vaadin requires at least Java 6.
 +
-image::img/idea-maven-newproject-1.png[]
+image::img/idea-maven-newproject-1.png[scaledwidth=100%]
 +
 Click [guibutton]#Next#.
 //&lt;?dbfo-need height="6cm" ?&gt;
@@ -101,7 +101,7 @@ Click [guibutton]#Next#.
 [guilabel]#Version# for the project, or use the defaults.
 
 +
-image::img/idea-maven-newproject-2.png[]
+image::img/idea-maven-newproject-2.png[scaledwidth=100%]
 
 . Check [guilabel]#Create from archetype#
 //&lt;?dbfo-need height="6cm" ?&gt;

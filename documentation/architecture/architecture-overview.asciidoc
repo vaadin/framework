@@ -18,7 +18,7 @@ code and services, and can be mixed together easily.
 
 [[figure.architecture.detailed]]
 .Vaadin Runtime Architecture
-image::img/architecture-detailed-hi.png[]
+image::img/architecture-detailed-hi.png[width=70%, scaledwidth=100%]
 
 <<figure.architecture.detailed>> gives a basic illustration of the client-side
 and server-side communications, in a running situation where the page with the

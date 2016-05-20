@@ -7,21 +7,13 @@ layout: page
 [[components.customfield]]
 = Composite Fields with [classname]#CustomField#
 
-The [classname]#CustomField# is a way to create composite components like with
-[classname]#CustomComponent#, except that it implements the
-[interfacename]#Field# interface and inherit [classname]#AbstractField#,
-described in
-<<dummy/../../../framework/components/components-fields#components.fields,"Field
-Components">>. A field allows editing a property value in the Vaadin data model,
-and can be bound to data with field groups, as described in
-<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding,"Creating
-Forms by Binding Fields to Items">>. The field values are buffered and can be
-validated with validators.
+The [classname]#CustomField# is a way to create composite components as with [classname]#CustomComponent#, except that it implements the [interfacename]#Field# interface and inherits [classname]#AbstractField#, described in <<dummy/../../../framework/components/components-fields#components.fields,"Field Components">>.
+A field allows editing a property value in the Vaadin data model, and can be bound to data with field groups, as described in <<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding, "Creating Forms by Binding Fields to Items">>.
+The field values are buffered and can be validated with validators.
 
-A composite field class must implement the [methodname]#getType()# and
-[methodname]#initContent()# methods. The latter should return the content
-composite of the field. It is typically a layout component, but can be any
-component.
+A composite field class must implement the [methodname]#getType()# and [methodname]#initContent()# methods.
+The latter should return the content composite of the field.
+It is typically a layout component, but can be any component.
 
 It is also possible to override [methodname]#validate()#,
 [methodname]#setInternalValue()#, [methodname]#commit()#,
@@ -29,5 +21,70 @@ It is also possible to override [methodname]#validate()#,
 to implement different functionalities in the field. Methods overriding
 [methodname]#setInternalValue()# should call the superclass method.
 
+[[components.customfield.basic]]
+== Basic Use
 
+Let us consider a simple custom switch button component that allows you to click a button to switch it "on" and "off", as illustrated in <<figure.components.customfield.basic>>.
 
+[[figure.components.customfield.basic]]
+.A custom switch button field
+image::img/customfield-basic.png[width=25%, scaledwidth=40%]
+
+The field has [classname]#Boolean# value type, which the [methodname]#getType()# returns.
+In [methodname]#initContent()#, we initialize the button and the layout.
+Notice how we handle user interaction with the button to change the field value.
+We customize the [methodname]#setValue()# method to reflect the state back to the user.
+
+[source, Java]
+----
+public class BooleanField extends CustomField<Boolean> {
+    Button button = new Button();
+
+    public BooleanField() {
+        setValue(true); // On by default
+    }
+
+    @Override
+    protected Component initContent() {
+        // Flip the field value on click
+        button.addClickListener(click ->
+            setValue(! (Boolean) getValue()));
+
+        return new VerticalLayout(
+            new Label("Click the button"), button);
+    }
+
+    @Override
+    public Class<Boolean> getType() {
+        return Boolean.class;
+    }
+
+    @Override
+    public void setValue(Boolean newFieldValue)
+        throws com.vaadin.data.Property.ReadOnlyException,
+        ConversionException {
+        button.setCaption(newFieldValue? "On" : "Off");
+        super.setValue(newFieldValue);
+    }
+}
+----
+
+We can now use the field in all the normal ways for a field:
+
+[source, Java]
+----
+// Create it
+BooleanField field = new BooleanField();
+
+// It's a field so we can set its value
+field.setValue(new Boolean(true));
+
+// ...and read the value
+Label value = new Label(field.getValue()?
+    "Initially on" : "Initially off");
+
+// ...and handle value changes
+field.addValueChangeListener(event ->
+    value.setValue(field.getValue()?
+        "It's now on" : "It's now off"));
+----

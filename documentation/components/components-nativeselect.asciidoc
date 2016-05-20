@@ -21,7 +21,7 @@ the native selection input of web browsers, using the HTML
 ----
 // Create the selection component
 NativeSelect select = new NativeSelect("Native Selection");
-        
+
 // Add some items
 select.addItems("Mercury", "Venus", ...);
 ----
@@ -31,11 +31,10 @@ The [methodname]#setColumns()# allows setting the width of the list as
 
 [[figure.components.nativeselect.basic]]
 .The [classname]#NativeSelect# Component
-image::img/nativeselect-basic.png[]
+image::img/nativeselect-basic.png[width=20%, scaledwidth=40%]
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection
-Components">>.
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
 == CSS Style Rules
 
@@ -48,7 +47,3 @@ Components">>.
 
 The component has a [literal]#++v-select++# overall style. The native
 [literal]#++select++# element has [literal]#++v-select-select++# style.
-
-
-
-

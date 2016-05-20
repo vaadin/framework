@@ -24,13 +24,13 @@ theme, and so on.
 
 . In the [guilabel]#New Project# window that opens, select the [guilabel]#Vaadin# category and one of the Vaadin archetypes from the right.
 +
-image::img/netbeans-newproject-1.png[]
+image::img/netbeans-newproject-1.png[width=80%, scaledwidth=100%]
 +
 The archetypes are described in more detail in <<getting-started-archetypes#getting-started.archetypes, "Overview of Maven Archetypes">>.
 
 . In the [guilabel]#Name and Location# step, enter the project parameters.
 +
-image::img/netbeans-newproject-2.png[]
+image::img/netbeans-newproject-2.png[width=80%, scaledwidth=100%]
 
 [guilabel]#Project Name#:: A project name.
 The name must be a valid identifier that may only contains alphanumerics, minus, and underscore.
@@ -66,7 +66,7 @@ The project hierarchy shown in the Project Explorer is shown in <<figure.getting
 
 [[figure.getting-started.netbeans.exploring]]
 .A new Vaadin project in NetBeans
-image::img/netbeans-created-annotated-hi.png[width=80%]
+image::img/netbeans-created-annotated-hi.png[width=80%, scaledwidth=100%]
 
 [filename]#mytheme#::
 The theme of the UI.
@@ -89,12 +89,12 @@ Once created, you can run it in a server as follows.
 . In the [guilabel]#Select deployment server# window, select a server from the [guilabel]#Server# list.
 It should show either GlassFish or Apache Tomcat or both, depending on what you chose in NetBeans installation.
 +
-image::img/netbeans-server.png[width=75%]
+image::img/netbeans-server.png[width=75%, scaledwidth=100%]
 +
 Also, select [guilabel]#Remember Permanently# if you want to use the same server also in future while developing applications.
 +
 Click [guibutton]#OK#.
-+
+
 The widget set will be compiled at this point, which may take a while.
 
 If all goes well, NetBeans starts the server in port 8080 and, depending on your

@@ -54,12 +54,12 @@ date.setResolution(DateField.RESOLUTION_DAY);
 grid.addComponent(date, 2, 2, 3, 3);
 ----
 
-The resulting layout will look as follows. The borders have been made visible to
-illustrate the layout cells.
+The resulting layout is shown in <<figure.layout.gridlayout>>.
+The borders have been made visible to illustrate the layout cells.
 
-[[figure.ui.gridlayout]]
-.The Grid Layout Component
-image::img/gridlayout.png[]
+[[figure.layout.gridlayout]]
+.The [classname]#GridLayout# component
+image::img/gridlayout.png[width=50%, scaledwidth=75%]
 
 A component to be placed on the grid must not overlap with existing components.
 A conflict causes throwing a [classname]#GridLayout.OverlapsException#.
@@ -103,8 +103,6 @@ the Debug Mode">>.
 
 ====
 
-
-
 Often, you want to have one or more rows or columns that take all the available
 space left over from non-expanding rows or columns. You need to set the rows or
 columns as __expanding__ with [methodname]#setRowExpandRatio()# and
@@ -115,7 +113,6 @@ expanding row or column, but its value is irrelevant if there is only one. With
 multiple expanding rows or columns, the ratio parameter sets the relative
 portion how much a specific row/column will take in relation with the other
 expanding rows/columns.
-
 
 [source, java]
 ----
@@ -153,7 +150,7 @@ for (int col=0; col<grid.getColumns(); col++) {
     for (int row=0; row<grid.getRows(); row++) {
         Component c = grid.getComponent(col, row);
         grid.setComponentAlignment(c, Alignment.TOP_CENTER);
-        
+
         // Make the labels high to illustrate the empty
         // horizontal space.
         if (col != 0 || row != 0)
@@ -163,8 +160,8 @@ for (int col=0; col<grid.getColumns(); col++) {
 ----
 
 [[figure.ui.gridlayout.sizing.expanding]]
-.Expanding Rows and Columns in [classname]#GridLayout#
-image::img/gridlayout_sizing_expanding.png[]
+.Expanding rows and columns in [classname]#GridLayout#
+image::img/gridlayout_sizing_expanding.png[width=75%, scaledwidth=100%]
 
 If the size of the contained components is undefined or fixed, the expansion
 ratio is of the __excess__ space, as in
@@ -177,9 +174,8 @@ example, if we had a 100 pixels wide grid layout with two columns with 1.0 and
 [methodname]#setWidth("100%")#, the columns would have respective widths of 20
 and 80 pixels, regardless of the minimum size of their contained components.
 
-
+[[layout.gridlayout.css]]
 == CSS Style Rules
-
 
 [source, css]
 ----
@@ -187,58 +183,9 @@ and 80 pixels, regardless of the minimum size of their contained components.
 .v-gridlayout-margin {}
 ----
 
-The v-gridlayout is the root element of the [classname]#GridLayout# component.
-The v-gridlayout-margin is a simple element inside it that allows setting a
-padding between the outer element and the cells.
+The `v-gridlayout` is the root element of the [classname]#GridLayout# component.
+The `v-gridlayout-margin` is a simple element inside it that allows setting a padding between the outer element and the cells.
 
-For styling the individual grid cells, you should style the components inserted
-in the cells. The implementation structure of the grid can change, so depending
-on it, as is done in the example below, is not generally recommended. Normally,
-if you want to have, for example, a different color for a certain cell, just
-make set the component inside it [methodname]#setSizeFull()#, and add a style
-name for it. Sometimes you may need to use a layout component between a cell and
-its actual component just for styling.
-
-The following example shows how to make the grid borders visible, as in
-<<figure.ui.gridlayout.sizing.expanding>>.
-
-
-[source, java]
-----
-.v-gridlayout-gridexpandratio {
-    background: blue; /* Creates a "border" around the grid. */
-    margin:     10px; /* Empty space around the layout. */
-}
-
-/* Add padding through which the background color shows. */
-.v-gridlayout-gridexpandratio .v-gridlayout-margin {
-    padding: 2px;     
-}
-
-/* Add cell borders and make the cell backgrounds white.
- * Warning: This depends heavily on the HTML structure. */
-.v-gridlayout-gridexpandratio > div > div > div {
-    padding:    2px;   /* Layout background will show through. */
-    background: white; /* The cells will be colored white. */
-}
-
-/* Components inside the layout are a safe way to style cells. */
-.v-gridlayout-gridexpandratio .v-label {
-    text-align: left;
-    background: #ffffc0; /* Pale yellow */
-}
-----
-
-You should beware of [literal]#++margin++#, [literal]#++padding++#, and
-[literal]#++border++# settings in CSS as they can mess up the layout. The
-dimensions of layouts are calculated in the Client-Side Engine of Vaadin and
-some settings can interfere with these calculations. For more information, on
-margins and spacing, see
-<<dummy/../../../framework/layout/layout-settings#layout.settings.spacing,"Layout
-Cell Spacing">> and
-<<dummy/../../../framework/layout/layout-settings#layout.settings.margins,"Layout
-Margins">>
-
-
-
-
+For styling the individual grid cells, you should style the components inserted in the cells.
+Normally, if you want to have, for example, a different color for a certain cell, just make set the component inside it [methodname]#setSizeFull()#, and add a style name for it.
+Sometimes, you may need to wrap a component inside a layout component just for styling the cell.

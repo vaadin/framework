@@ -20,7 +20,7 @@ selection component features are described in
 Components">>.
 
 .The [classname]#ComboBox# Component
-image::img/combobox-basic.png[]
+image::img/combobox-basic.png[width=35%, scaledwidth=50%]
 
 [classname]#ComboBox# supports adding new items when the user presses
 kbd:[Enter].
@@ -36,7 +36,7 @@ drop-down list by the text entered in the input box.
 
 [[figure.components.combobox.filter]]
 .Filtered Selection in [classname]#ComboBox#
-image::img/combobox-filtering.png[]
+image::img/combobox-filtering.png[width=35%, scaledwidth=50%]
 
 Pressing kbd:[Enter] will complete the item in the input box. Pressing kbd:[Up] and kbd:[Down] arrow keys can be used for selecting an item from the drop-down list. The
 drop-down list is paged and clicking on the scroll buttons will change to the
@@ -62,7 +62,7 @@ component.
 
 [parameter]#STARTSWITH#:: Matches only items that begin with the given string.
 
-[parameter]#OFF#(default):: Filtering is by default off and all items are shown all the time.
+[parameter]#OFF# (default):: Filtering is by default off and all items are shown all the time.
 
 
 

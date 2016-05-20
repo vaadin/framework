@@ -37,7 +37,6 @@ corresponding listener class. For example, the [classname]#Button# has
 In the following, we handle button clicks with a listener implemented as an
 anonymous class:
 
-
 [source, java]
 ----
 final Button button = new Button("Push it!");
@@ -60,15 +59,21 @@ in this case the [classname]#Button#.
 
 [[figure.eventlistenerdiagram]]
 .Class Diagram of a Button Click Listener
-image::img/events-classdiagram-hi.png[]
+image::img/events-classdiagram-hi.png[width=50%, scaledwidth=75%]
+
+In Java 8, you can implement such functional interfaces with a lambda expression:
+
+[source, java]
+----
+Button button = new Button("Push it!");
+
+button.addClickListener(event ->
+  button.setCaption("You pushed it!"));
+----
 
 In the ancient times of C programming, __callback functions__ filled largely the
 same need as listeners do now. In object-oriented languages, we usually only
 have classes and methods, not functions, so the application has to give a class
 interface instead of a callback function pointer to the framework.
 
-<<dummy/../../../framework/application/application-events#application.events,"Handling
-Events with Listeners">> goes into details of handling events in practice.
-
-
-
+<<dummy/../../../framework/application/application-events#application.events,"Handling Events with Listeners">> goes into details of handling events in practice.

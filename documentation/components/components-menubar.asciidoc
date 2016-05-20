@@ -12,18 +12,21 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/menu-bar"]
 endif::web[]
 
-The [classname]#MenuBar# component allows creating horizontal dropdown menus,
-much like the main menu in desktop applications.
+The [classname]#MenuBar# component allows creating horizontal drop-down menus, much like the main menu in desktop applications.
 
 [[figure.components.menubar]]
 .Menu Bar
-image::img/menubar-example1.png[]
+image::img/menubar-example1.png[width=40%, scaledwidth=60%]
+
+The menu items open as the user navigates them by hovering or clicking with the mouse.
+Menus can have separators to divide items into sub-sections.
+Menu items can have an icon and styling.
+They can also be checkable, so that the user can click on them to toggle between checked and unchecked.
 
 [[components.menubar.creation]]
 == Creating a Menu
 
 The actual menu bar component is first created as follows:
-
 
 [source, java]
 ----
@@ -63,7 +66,7 @@ MenuItem snacks = barmenu.addItem("Snacks", null, null);
 snacks.addItem("Weisswurst", null, mycommand);
 snacks.addItem("Bratwurst",  null, mycommand);
 snacks.addItem("Currywurst", null, mycommand);
-        
+
 // Yet another top-level item
 MenuItem servs = barmenu.addItem("Services", null, null);
 servs.addItem("Car Service", null, mycommand);
@@ -90,7 +93,7 @@ MenuBar.Command mycommand = new MenuBar.Command() {
         selection.setValue("Ordered a " +
                            selectedItem.getText() +
                            " from menu.");
-    }  
+    }
 };
 ----
 
@@ -173,13 +176,12 @@ the previously selected item. However, beware that the [literal]#++selected++#
 style for menu items, that is, [literal]#++v-menubar-menuitem-selected++#, is
 reserved for mouse-hover indication.
 
-
 [source, java]
 ----
 MenuBar barmenu = new MenuBar();
 barmenu.addStyleName("mybarmenu");
 layout.addComponent(barmenu);
-        
+
 // A feedback component
 final Label selection = new Label("-");
 layout.addComponent(selection);
@@ -197,9 +199,9 @@ MenuBar.Command mycommand = new MenuBar.Command() {
             previous.setStyleName(null);
         selectedItem.setStyleName("highlight");
         previous = selectedItem;
-    }  
+    }
 };
-        
+
 // Put some items in the menu
 barmenu.addItem("Beverages", null, mycommand);
 barmenu.addItem("Snacks", null, mycommand);
@@ -207,7 +209,6 @@ barmenu.addItem("Services", null, mycommand);
 ----
 
 You could then style the highlighting in CSS as follows:
-
 
 [source, css]
 ----
@@ -217,7 +218,3 @@ You could then style the highlighting in CSS as follows:
 ----
 
 endif::web[]
-
-
-
-

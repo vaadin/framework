@@ -46,8 +46,7 @@ The resource classes in Vaadin are grouped under two interfaces: a generic
 
 [[figure.resource.classdiagram]]
 .Resource Interface and Class Diagram
-image::img/resource_classdiagram-hi.png[]
-
+image::img/resource_classdiagram-hi.png[width=70%, scaledwidth=90%]
 
 [[application.resources.file]]
 == File Resources
@@ -70,7 +69,6 @@ folder, which is a special folder that is never accessible using an URL, unlike
 the other folders of a web application. This is a security solution - another
 would be to store the resource elsewhere in the file system.
 
-
 [source, java]
 ----
 // Find the application directory
@@ -83,7 +81,7 @@ FileResource resource = new FileResource(new File(basepath +
 
 // Show the image in the application
 Image image = new Image("Image from file", resource);
-        
+
 // Let the user view the file in browser or download it
 Link link = new Link("Link to the image file", resource);
 ----
@@ -95,7 +93,7 @@ regular Eclipse Vaadin project, is shown in
 
 [[figure.application.resources.file]]
 .File Resource
-image::img/resource-fileresource.png[]
+image::img/resource-fileresource.png[width=50%, scaledwidth=80%]
 
 
 [[application.resources.class]]
@@ -145,7 +143,7 @@ the folder structure for the theme resource file in an Eclipse project.
 
 [[figure.application.resources.theme]]
 .Theme Resources
-image::img/resource-themeimage.png[]
+image::img/resource-themeimage.png[width=40%, scaledwidth=70%]
 
 To use theme resources, you must set the theme for the UI. See
 <<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>
@@ -173,7 +171,7 @@ public class MyImageSource
              implements StreamResource.StreamSource {
     ByteArrayOutputStream imagebuffer = null;
     int reloads = 0;
-    
+
     /* We need to implement this method that returns
      * the resource as a stream. */
     public InputStream getStream () {
@@ -195,7 +193,7 @@ public class MyImageSource
             /* Write the image to a buffer. */
             imagebuffer = new ByteArrayOutputStream();
             ImageIO.write(image, "png", imagebuffer);
-            
+
             /* Return a stream from the buffer. */
             return new ByteArrayInputStream(
                          imagebuffer.toByteArray());
@@ -218,13 +216,13 @@ Below we display the image with the [classname]#Image# component.
 ----
 // Create an instance of our stream source.
 StreamResource.StreamSource imagesource = new MyImageSource ();
-	
+
 // Create a resource that uses the stream source and give it a name.
 // The constructor will automatically register the resource in
 // the application.
 StreamResource resource =
         new StreamResource(imagesource, "myimage.png");
-	
+
 // Create an image component that gets its contents
 // from the resource.
 layout.addComponent(new Image("Image title", resource));
@@ -239,7 +237,3 @@ image::img/application_streamresource.png[]
 Another way to create dynamic content is a request handler, described in
 <<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request
 Handlers">>.
-
-
-
-

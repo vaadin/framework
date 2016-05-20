@@ -133,13 +133,15 @@ in <<figure.getting-started.eclipse.notification-center.overview>>.
 
 [[figure.getting-started.eclipse.notification-center.overview]]
 .Overview of the notification center
-image::img/notification-center-overview.png[]
+image::img/notification-center-overview.png[scaledwidth=60%]
 
 By clicking a notification in the list, you can open it up.
+ifdef::web[]
 
 .Detailed view of a notification
-image::img/webinar-trainings-sneakpeek.png[]
+image::img/webinar-trainings-sneakpeek.png[scaledwidth=75%]
 
+endif::web[]
 Clicking on the [guilabel]#Clear All# icon in the main pop-up clears all notifications and marks them all as read.
 
 [[getting-started.eclipse.notification.signin]]
@@ -155,57 +157,56 @@ When you are not signed in, the top-most notification will be a
 notification that asks you to sign in.
 
 .The sign-in notification
-image::img/signin-icon.png[]
+image::img/signin-icon.png[scaledwidth=75%]
 
 When you click the sign-in item, a dialog opens for signing in.
 
-.The sign-in dialog.
-image::img/sign-in-form.png[]
+.The sign-in dialog
+image::img/sign-in-form.png[scaledwidth=60%]
 
-You can then sign in with your Vaadin
-account. If you do not have one, you can sign in using a Google,
-Facebook, or Twitter account instead. First, click on the sign-in link. It opens a second dialog, as shown
+You can then sign in with your Vaadin account.
+
+If you do not have one, you can sign in using a Google, Facebook, or Twitter account instead.
+
+First, click on the sign-in link. It opens a second dialog, as shown
 in <<figure.getting-started.eclipse.notification-center.complex-signin>>.
 
 [[figure.getting-started.eclipse.notification-center.complex-signin]]
 .Sign-in authentication dialog
-image::img/signin-via-website.png[]
+image::img/signin-via-website.png[scaledwidth=60%]
 
-By following the [url]#vaadin.com# link and logging in to the Vaadin website using your preferred
-account, you can then copy the authentication token from the resulting page.
-After that, you can paste the authorization token into the dialog and
-click [guibutton]#Submit# to log in.
+By following the [url]#vaadin.com# link and logging in to the Vaadin website using your preferred account, you can then copy the authentication token from the resulting page.
+After that, you can paste the authorization token into the dialog and click [guibutton]#Submit# to log in.
 
 [[getting-started.eclipse.notification.settings]]
 === Notification Settings
 
 You can open the settings by selecting "Eclipse... > Preferences".
 
+ifdef::web[]
 .The settings pane
-image::img/preferences.png[]
+image::img/preferences.png[scaledwidth=100%]
+endif::web[]
 
 The options are as follows:
 
-[guilabel]#Enable automatic widgetset compilation# :: Compiles the widgetset
-of Maven-based projects whenever there are changes and the project is rebuilt.
+[guilabel]#Enable automatic widgetset compilation#::
+Compiles the widgetset of Maven-based projects whenever there are changes and the project is rebuilt.
 
-[guilabel]#Enable Vaadin pre-release archetypes# :: Adds pre-release
-(alpha/beta) archetypes to the archetype selection list when creating a new
-Vaadin project.
+[guilabel]#Enable Vaadin pre-release archetypes#::
+Adds pre-release (alpha/beta) archetypes to the archetype selection list when creating a new Vaadin project.
 
 [guilabel]#Enable# :: Disabling this disables all notifications.
 
-[guilabel]#Show popups# :: Disabling this stops
-pop-ups from appearing. The notifications can still be viewed by opening
-the notification center window.
+[guilabel]#Show popups# ::
+Disabling this stops pop-ups from appearing.
+The notifications can still be viewed by opening the notification center window.
 
 [guilabel]#Check for new Vaadin versions# ::
-Polls for new Vaadin versions once every 24h and gives a notification if there
-are new versions available.
+Polls for new Vaadin versions once every 24h and gives a notification if there are new versions available.
 
-[guilabel]#Check for new notifications from vaadin.com# :: Polls the Vaadin site
-for notifications once every 4 hours.
-
+[guilabel]#Check for new notifications from vaadin.com#::
+Polls the Vaadin site for notifications once every 4 hours.
 
 [[installing.eclipse.update]]
 == Updating the Plugins

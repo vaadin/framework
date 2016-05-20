@@ -14,7 +14,7 @@
    height="297mm"
    id="svg1901"
    sodipodi:version="0.32"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r"
    sodipodi:docname="slider-example1.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.1">
@@ -68,15 +68,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="258.73755"
-     inkscape:cy="889.25792"
+     inkscape:zoom="1.4"
+     inkscape:cx="212.24603"
+     inkscape:cy="847.82098"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      gridtolerance="10000"
-     inkscape:window-width="877"
-     inkscape:window-height="739"
-     inkscape:window-x="1039"
+     inkscape:window-width="1116"
+     inkscape:window-height="882"
+     inkscape:window-x="800"
      inkscape:window-y="153"
      showgrid="false"
      inkscape:window-maximized="0" />
@@ -96,14 +96,21 @@
      inkscape:groupmode="layer"
      id="layer1"
      style="opacity:1">
+    <rect
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="rect3344"
+       width="249"
+       height="236"
+       x="67.505424"
+       y="64.081154" />
     <image
-       y="56.505013"
-       x="74.071419"
+       sodipodi:absref="/home/magi/itmill/vaadin/documentation/components/original-drawings/../img/slider-orig.png"
+       xlink:href="../img/slider-orig.png"
+       y="64.081154"
+       x="67.505424"
        id="image2463"
        height="236"
-       width="249"
-       sodipodi:absref="/home/magi/itmill/book-7/manual/img/components/slider-orig.png"
-       xlink:href="/home/magi/itmill/book-7/manual/img/components/slider-orig.png" />
+       width="249" />
     <g
        transform="matrix(0.04895833,0,0,0.04895833,85.307423,133.89853)"
        id="g1317">

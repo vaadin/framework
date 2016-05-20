@@ -15,8 +15,8 @@ The recommended way to create a Vaadin application project is to use a Maven arc
 The archetypes contain all the needed dependencies, which Maven takes care of.
 The Eclipse IDE plugin currently also supports creating a normal Eclipse web project using the Ivy dependency manager.
 
-In this chapter, we give:
+In this chapter, we:
 
-. An overview of the Vaadin libraries
-. List the available Maven archetypes
-. Step-by-step instructions for creating a project in the Eclipse IDE, NetBeans IDE, and IntelliJ IDEA, as well as with command-line.
+* Give an overview of the Vaadin libraries
+* List the available Maven archetypes
+* Give step-by-step instructions for creating a project in the Eclipse IDE, NetBeans IDE, and IntelliJ IDEA, as well as with command-line.
