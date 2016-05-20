@@ -31,14 +31,13 @@ layout.addComponent(vertical);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
 
-The component captions are placed above the component, so the layout will look
-as follows:
+In [classname]#VerticalLayout#, the captions of child components are placed above each component, so the layout would look as follows:
 
-image::img/orderedlayout_vertical.png[]
+image::img/orderedlayout_vertical.png[width=30%, scaledwidth=65%]
 
-Using [classname]#HorizontalLayout# gives the following layout:
+[classname]#HorizontalLayout# gives the following layout:
 
-image::img/orderedlayout_horizontal.png[]
+image::img/orderedlayout_horizontal.png[width=80%, scaledwidth=100%]
 
 [[layout.orderedlayout.properties]]
 == Properties or Attributes
@@ -48,17 +47,15 @@ Ordered layouts have the following properties:
 [[layout.orderedlayout.properties.table]]
 .Properties and Declarative Attributes
 
+[cols="1,2"]
 |===============
 |Property|Declarative Attribute
-|[parameter]#componentAlignment#|In child components:[literal]#++:left++#(default),[literal]#++:center++#,[literal]#++:right++#,[literal]#++:top++#(default),[literal]#++:middle++#,[literal]#++:bottom++#
-|[parameter]#spacing#|[parameter]#spacing#[replaceable]#[=&lt;boolean&gt;]#
-|[parameter]#margin#|[parameter]#margin#[replaceable]#[=&lt;boolean&gt;]#
-|[parameter]#expandRatio#|In child components:[parameter]#:expand#=[replaceable]#&lt;integer&gt;#or[parameter]#:expand#(implies ratio 1)
+|[parameter]#componentAlignment#|Alignment of a child component is specified in the child with: [literal]#++:left++# (default), [literal]#++:center++#, [literal]#++:right++#, [literal]#++:top++# (default), [literal]##++:middle++##, [literal]##++:bottom++##
+|[parameter]#spacing#|[parameter]##spacing##++[=++[replaceable]##&lt;boolean&gt;##++]++
+|[parameter]#margin#|[parameter]##margin##++[=++[replaceable]##&lt;boolean&gt;##++]++
+|[parameter]#expandRatio#|Expand ratio of a child component is specified in the child with: [parameter]#:expand#++[=++[replaceable]##&lt;integer&gt;##++]++ or [parameter]#:expand# (implies ratio 1)
 
 |===============
-
-
-
 
 [[layout.orderedlayout.spacing]]
 == Spacing in Ordered Layouts
@@ -76,9 +73,7 @@ element in a CSS selector, such as [literal]#++v-verticallayout++# for a
 [literal]#++v-horizontal++# for all vertically or horizontally ordered layouts,
 such as [classname]#FormLayout#.
 
-For example, the following sets the amount of spacing for all
-[classname]#VerticalLayout#s, as well as [classname]#FormLayout#, in the UI:
-
+For example, the following sets the amount of spacing for all [classname]##VerticalLayout##s (as well as [classname]##FormLayout##s) in the UI:
 
 [source, css]
 ----
@@ -89,14 +84,12 @@ For example, the following sets the amount of spacing for all
 
 Or for [classname]#HorizontalLayout#:
 
-
 [source, css]
 ----
 .v-horizontal > .v-spacing {
     width: 50px;
 }
 ----
-
 
 [[layout.orderedlayout.sizing]]
 == Sizing Contained Components
@@ -106,8 +99,8 @@ different ways depending on how you specify their height or width in the primary
 direction of the layout component.
 
 [[figure.layout.orderedlayout.size.summary]]
-.Component Widths in [classname]#HorizontalLayout#
-image::img/horizontallayout_sizing.png[]
+.Component widths in [classname]#HorizontalLayout#
+image::img/horizontallayout_sizing.png[width=75%, scaledwidth=100%]
 
 <<figure.layout.orderedlayout.size.summary>> gives a summary of the sizing
 options for a [classname]#HorizontalLayout#. The figure is broken down in the
@@ -154,8 +147,6 @@ Component Hierarchy">>.
 
 ====
 
-
-
 An exception to the above rule is a case where you have a layout with undefined
 size that contains a component with a fixed or undefined size together with one
 or more components with relative size. In this case, the contained component
@@ -163,6 +154,7 @@ with fixed (or undefined) size in a sense defines the size of the containing
 layout, removing the paradox. That size is then used for the relatively sized
 components.
 
+ifdef::web[]
 The technique can be used to define the width of a [classname]#VerticalLayout#
 or the height of a [classname]#HorizontalLayout#.
 
@@ -171,10 +163,10 @@ or the height of a [classname]#HorizontalLayout#.
 ----
 // Vertical layout would normally have 100% width
 VerticalLayout vertical = new VerticalLayout();
-        
+
 // Shrink to fit the width of contained components
 vertical.setWidth(Sizeable.SIZE_UNDEFINED, 0);
-        
+
 // Label has normally 100% width, but we set it as
 // undefined so that it will take only the needed space
 Label label =
@@ -182,7 +174,7 @@ Label label =
               "the width of this Label \u2192");
 label.setWidth(Sizeable.SIZE_UNDEFINED, 0);
 vertical.addComponent(label);
-        
+
 // Button has undefined width by default
 Button butt = new Button("\u2190 This Button takes 100% "+
                          "of the width \u2192");
@@ -193,8 +185,9 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.s
 
 [[figure.layout.orderedlayout.sizing.undefined.defining]]
 .Defining the Size with a Component
-image::img/orderedlayout-sizing-undefined.png[]
+image::img/orderedlayout-sizing-undefined.png[width=50%, scaledwidth=75%]
 
+endif::web[]
 
 === Layout with Defined Size
 
@@ -310,7 +303,7 @@ excess space that expands, not the components.
 for (int i = 1; i <= 3; i++) {
     // Button with undefined size.
     Button button = new Button(captions[i - 1]);
-    
+
     layout4.addComponent(button);
 
     // Expand ratios are 1:2:3.
@@ -349,8 +342,3 @@ for (int i = 1; i <= 3; i++) {
 }
 parentLayout.addComponent(layout50);
 ----
-
-
-
-
-

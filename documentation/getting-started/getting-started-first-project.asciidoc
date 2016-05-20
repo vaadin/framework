@@ -14,7 +14,7 @@ Vaadin Plugin. The task will include the following steps:
 
 . Write the source code
 
-. Configure and start Tomcat (or some other web server)
+. Configure and start web server
 
 . Open a web browser to use the web application
 
@@ -41,13 +41,13 @@ previous section. First, launch Eclipse and follow the following steps:
 . In the [guilabel]#New Project# window that opens, select "Vaadin > Vaadin 7
 Project" and click [guibutton]#Next#.
 +
-image::img/myproject-ivy-new-vaadin.png[width=70%]
+image::img/myproject-ivy-new-vaadin.png[width=70%, scaledwidth=100%]
 
 . In the [guilabel]#Vaadin Project# step, you need to set the basic web project
 settings. You need to give at least the __project name__ and the runtime; the
 default values should be good for the other settings.
 +
-image::img/myproject-ivy-settings.png[width=70%]
+image::img/myproject-ivy-settings.png[width=70%, scaledwidth=100%]
 
 [guilabel]#Project name#:: Give the project a name. The name should be a valid identifier usable
 cross-platform as a filename and inside a URL, so using only lower-case
@@ -110,7 +110,7 @@ settings, or click [guibutton]#Next#.
 the settings are pre-filled, and you should normally accept them as they are.
 
 +
-image::img/myproject-ivy-web.png[]
+image::img/myproject-ivy-web.png[scaledwidth=100%]
 
 [guilabel]#Context Root#:: The context root (of the application) identifies the application in the URL used
 for accessing it. For example, if the project has a [literal]#++myproject++#
@@ -131,7 +131,7 @@ If you are trying out Vaadin for the first time, you should not need
 to change anything. You can set most of the settings afterwards, except the
 creation of the portlet configuration.
 +
-image::img/myproject-vaadin.png[]
+image::img/myproject-vaadin.png[scaledwidth=100%]
 
 [guilabel]#Create project template#:: Make the wizard create an UI class stub.
 
@@ -236,17 +236,17 @@ First, launch Eclipse and follow the following steps:
 . In the [guilabel]#New Project# window that opens, select "Vaadin > Vaadin 7
 Project (Maven)" and click [guibutton]#Next#.
 +
-image::img/myproject-new-vaadin.png[width=70%]
+image::img/myproject-new-vaadin.png[width=70%, scaledwidth=90%]
 
 . In the [guilabel]#Select a Maven archetype# step, you need to select the project type.
 To create a simple test project, select the [guilabel]#Single-module Application Project#.
 +
-image::img/myproject-archetype-selection.png[width=70%]
+image::img/myproject-archetype-selection.png[width=70%, scaledwidth=90%]
 
 . In the [guilabel]#Specify archetype parameters# step, you need to give at least the [guilabel]#Group Id# and the [guilabel]#Artifact Id#.
 The default values should be good for the other settings.
 +
-image::img/myproject-settings.png[width=70%]
+image::img/myproject-settings.png[width=70%, scaledwidth=90%]
 
 [guilabel]#Group Id#::
 Give the project an organization-level identifier, for example, [packagename]#com.example#.
@@ -277,7 +277,7 @@ The project hierarchy shown in the Project Explorer is shown in <<figure.getting
 
 [[figure.getting-started.first-project.exploring]]
 .A new Vaadin Project
-image::img/myproject-created-annotated-hi.png[width=80%]
+image::img/myproject-created-annotated-hi.png[width=80%, scaledwidth=90%]
 
 The Vaadin libraries and other dependencies are managed by Maven.
 Notice that the libraries are not stored under the project folder, even though they are listed in the "Java Resources > Libraries > Maven Dependencies" virtual folder.
@@ -337,6 +337,8 @@ image::img/myproject-compilewidgetset.png[width=50%]
 [[getting-started.first-project.coding]]
 == Coding Tips for Eclipse
 
+=== Code Completion
+
 One of the most useful features in Eclipse is __code completion__. Pressing
 kbd:[Ctrl+Space] in the editor will display a pop-up list of possible class name and
 method name completions, as shown in
@@ -345,21 +347,20 @@ context of the cursor position.
 
 [[figure.getting-started.first-project.coding.codecompletion]]
 .Java Code Completion in Eclipse
-image::img/codingtips-codecompletion.png[]
+image::img/codingtips-codecompletion.png[scaledwidth=100%]
 
-To add an [literal]#++import++# statement for a class, such as
-[classname]#Button#, simply press kbd:[Ctrl+Shift+O] or click the red error indicator on
-the left side of the editor window. If the class is available in multiple
-packages, a list of the alternatives is displayed, as shown in
-<<figure.getting-started.first-project.coding.import>>. For server-side
-development, you should normally use the classes under the
-[package]#com.vaadin.ui# or [package]#com.vaadin.server# packages. You can not
-use client-side classes (under [package]#com.vaadin.client#) or GWT classes for
-server-side development.
+=== Generating Imports
+
+To automatically add an [literal]#++import++# statement for a class, such as
+[classname]#Button#, simply press kbd:[Ctrl+Shift+O] or click the red error indicator on the left side of the editor window.
+If the class is available in multiple packages, a list of the alternatives is displayed, as shown in <<figure.getting-started.first-project.coding.import>>.
 
 [[figure.getting-started.first-project.coding.import]]
-.Importing Classes Automatically
-image::img/codingtips-automaticimports.png[scaledwidth=80%]
+.Importing classes automatically
+image::img/codingtips-automaticimports.png[scaledwidth=70%]
+
+For server-side Vaadin development, you should generally use the classes under the [package]#com.vaadin.ui# or [package]#com.vaadin.server# packages.
+_You can not use client-side classes (under [package]#com.vaadin.client#) or GWT classes for server-side development._
 
 [[getting-started.first-project.server]]
 == Setting Up and Starting the Web Server
@@ -375,29 +376,39 @@ directory.
 
 Follow the following steps:
 
-. Switch to the Servers tab in the lower panel in Eclipse. List of servers should be empty after Eclipse is installed. Right-click on the empty area in the panel and select "New > Server".
+. Switch to the [guilabel]#Servers# tab in the lower panel in Eclipse.
+List of servers should be empty after Eclipse is installed.
+Right-click on the empty area in the panel and select "New > Server".
+ifdef::web[]
 +
-image::img/tomcat-startserver-1.png[]
-
+image::img/tomcat-startserver-1.png[width=60%, scaledwidth=100%]
+endif::web[]
 
 . Select "Apache > Tomcat v7.0 Server" and set [guilabel]#Server's host name# as [literal]#++localhost++#, which should be the default. If you have only one Tomcat installed, [guilabel]#Server runtime# has only one choice. Click [guibutton]#Next#.
+ifdef::web[]
 +
-image::img/tomcat-startserver-2.png[]
-
+image::img/tomcat-startserver-2.png[width=60%, scaledwidth=100%]
+endif::web[]
 
 . Add your project to the server by selecting it on the left and clicking [guibutton]#Add# to add it to the configured projects on the right. Click [guibutton]#Finish#.
+ifdef::web[]
 +
-image::img/tomcat-startserver-3.png[]
+image::img/tomcat-startserver-3.png[width=60%, scaledwidth=100%]
+endif::web[]
 
 . The server and the project are now installed in Eclipse and are shown in the [guilabel]#Servers# tab.
 To start the server, right-click on the server and select [guilabel]#Debug#.
 To start the server in non-debug mode, select [guilabel]#Start#.
+ifdef::web[]
 +
-image::img/tomcat-startserver-4.png[]
+image::img/tomcat-startserver-4.png[width=60%, scaledwidth=100%]
+endif::web[]
 
 . The server starts and the WebContent directory of the project is published to the server on http://localhost:8080/myproject/.
+ifdef::web[]
 +
-image::img/tomcat-startserver-5.png[]
+image::img/tomcat-startserver-5.png[width=60%, scaledwidth=100%]
+endif::web[]
 
 [[getting-started.first-project.run]]
 == Running and Debugging
@@ -406,8 +417,12 @@ Starting your application is as easy as selecting [guilabel]#myproject# from the
 [guilabel]#Project Explorer# and then "Run > Debug As > Debug on Server".
 Eclipse then opens the application in built-in web browser.
 
+////
+// This is rather irrelevant
+//
 .Running a Vaadin Application
-image::img/runningMyProject.png[width=60%]
+image::img/runningMyProject.png[width=60%, scaledwidth=80%]
+////
 
 You can insert break points in the Java code by double-clicking on the left
 margin bar of the source code window. For example, if you insert a breakpoint in
@@ -418,14 +433,20 @@ examine and change the state of the application.
 To continue execution, select [guilabel]#Resume# from [guilabel]#Run# menu.
 
 .Debugging a Vaadin Application
-image::img/debuggingMyProject.png[]
+image::img/debuggingMyProject.png[scaledwidth=100%]
 
 Above, we described how to debug a server-side application.
 Debugging client-side applications and widgets is described in
 <<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.
 
 [[getting-started.eclipse.mavenlibraryupdate]]
+ifdef::web[]
 == Updating the Vaadin Libraries in Maven Projects
+endif::web[]
+// The book only describes Maven projects
+ifndef::web[]
+== Updating the Vaadin Libraries
+endif::web[]
 
 Updating the Vaadin plugin does not update Vaadin libraries. The libraries are
 project specific, as a different version might be required for different
@@ -449,6 +470,7 @@ right-clicking the server and selecting [guilabel]#Clean# as well as
 If you experience problems after updating the libraries, you can try using
 "Maven > Update Project".
 
+ifdef::web[]
 [[getting-started.eclipse.libraryupdate]]
 == Updating the Vaadin Libraries in Ivy Projects
 
@@ -486,3 +508,5 @@ If you experience problems after updating the libraries, you can try clearing
 the Ivy resolution caches by right-clicking the project and selecting "Ivy >
 Clean all caches".
 Then, do the "Ivy > Resolve" and other tasks again.
+
+endif::web[]

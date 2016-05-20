@@ -11,16 +11,27 @@ Vaadin offers many alternative ways for selecting one or more items. The core
 library includes the following selection components, all based on the
 [classname]#AbstractSelect# class:
 
-[classname]#ComboBox# (Section <<dummy/../../../framework/components/components-combobox#components.combobox,"ComboBox">>):: A drop-down list with a text box, where the user can type text to find matching items. The component also provides an input prompt and the user can enter new items.
-[classname]#ListSelect# (Section <<dummy/../../../framework/components/components-listselect#components.listselect,"ListSelect">>):: A vertical list box for selecting items in either single or multiple selection mode.
-[classname]#NativeSelect# (Section<<dummy/../../../framework/components/components-nativeselect#components.nativeselect,"NativeSelect">>):: Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode. This uses the [literal]#++<select>++# element in HTML.
-[classname]#OptionGroup# (Section <<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>):: Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
-[classname]#TwinColSelect# (Section <<dummy/../../../framework/components/components-twincolselect#components.twincolselect,"TwinColSelect">>):: Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
+// TODO Only use section numbers here, prefixed with "Section", not include section title
 
+[classname]#ComboBox# (<<components-combobox#components.combobox,"ComboBox">>)::
+A drop-down list with a text box, where the user can type text to find matching items.
+The component also provides an input prompt and the user can enter new items.
 
-In addition, the [classname]#Tree#, [classname]#Table#, and
-[classname]#TreeTable# components allow special forms of selection. They also
-inherit the [classname]#AbstractSelect#.
+[classname]#ListSelect# (<<components-listselect#components.listselect,"ListSelect">>)::
+A vertical list box for selecting items in either single or multiple selection mode.
+
+[classname]#NativeSelect# (<<components-nativeselect#components.nativeselect, "NativeSelect">>)::
+Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode.
+This uses the [literal]#++<select>++# element in HTML.
+
+[classname]#OptionGroup# (<<components-optiongroup#components.optiongroup,"OptionGroup">>)::
+Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
+
+[classname]#TwinColSelect# (<<components-twincolselect#components.twincolselect, "TwinColSelect">>)::
+Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
+
+In addition, the [classname]#Tree#, [classname]#Table#, and [classname]#TreeTable# components allow special forms of selection.
+They also inherit [classname]#AbstractSelect#.
 
 [[components.selection.databinding]]
 == Binding Selection Components to Data
@@ -153,9 +164,10 @@ identifier.
 ----
 // Create a selection component
 ComboBox select = new ComboBox("Moons of Mars");
-select.setItemCaptionMode(ItemCaptionMode.EXPLICIT_DEFAULTS_ID);
+select.setItemCaptionMode(
+    ItemCaptionMode.EXPLICIT_DEFAULTS_ID);
 
-// Use the item ID also as the caption of this item
+// The given item ID is also used as the caption
 select.addItem(new Integer(1));
 
 // Set item caption for this item explicitly
@@ -173,7 +185,6 @@ ID:: String representation of the item identifier object is used as caption. Thi
 useful when the identifier is a string, and also when the identifier is an
 complex object that has a string representation. For example:
 
-
 +
 [source, java]
 ----
@@ -181,7 +192,8 @@ ComboBox select = new ComboBox("Inner Planets");
 select.setItemCaptionMode(ItemCaptionMode.ID);
 
 // A class that implements toString()
-class PlanetId extends Object implements Serializable {
+class PlanetId extends Object
+               implements Serializable {
     String planetName;
 
     PlanetId (String name) {
@@ -193,16 +205,19 @@ class PlanetId extends Object implements Serializable {
 }
 
 // Use such objects as item identifiers
-String planets[] = {"Mercury", "Venus", "Earth", "Mars"};
+String planets[] = {"Mercury", "Venus",
+                    "Earth", "Mars"};
 for (int i=0; i<planets.length; i++)
     select.addItem(new PlanetId(planets[i]));
 ----
-INDEX:: Index number of item is used as caption. This caption mode is applicable only to
-data sources that implement the [classname]#Container.Indexed# interface. If the
-interface is not available, the component will throw a
-[classname]#ClassCastException#. The [classname]#AbstractSelect# itself does not
-implement this interface, so the mode is not usable without a separate data
-source. An [classname]#IndexedContainer#, for example, would work.
+
+INDEX::
+Index number of item is used as caption.
+This caption mode is applicable only to data sources that implement the [interfacename]#Container.Indexed# interface.
+If the interface is not available, the component will throw a
+[classname]#ClassCastException#.
+The [classname]#AbstractSelect# itself does not implement this interface, so the mode is not usable without a separate data source.
+An [classname]#IndexedContainer#, for example, would work.
 
 ITEM:: [classname]#String# representation of item, acquired with
 [methodname]#toString()#, is used as the caption. This is applicable mainly when
@@ -220,7 +235,6 @@ and you want to use a specific property for caption.
 In the example below, we bind a selection component to a bean container and use
 a property of the bean as the caption.
 
-
 +
 [source, java]
 ----
@@ -237,29 +251,34 @@ public class Planet implements Serializable {
     ... setters and getters ...
 }
 
-public void captionproperty(VerticalLayout layout) {
+public void captionproperty(
+        VerticalLayout layout) {
     // Have a bean container to put the beans in
     BeanItemContainer<Planet> container =
-        new BeanItemContainer<Planet>(Planet.class);
+        new BeanItemContainer<Planet>(
+            Planet.class);
 
     // Put some example data in it
-    container.addItem(new Planet(1, "Mercury"));
+    container.addItem(
+        new Planet(1, "Mercury"));
     container.addItem(new Planet(2, "Venus"));
     container.addItem(new Planet(3, "Earth"));
     container.addItem(new Planet(4, "Mars"));
 
-    // Create a selection component bound to the container
-    ComboBox select = new ComboBox("Planets", container);
+    // Create a selection component bound
+    // to the container
+    ComboBox select = new ComboBox("Planets",
+                                   container);
 
-    // Set the caption mode to read the caption directly
-    // from the 'name' property of the bean
-    select.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+    // Set the caption mode to read the
+    // caption directly from the 'name'
+    // property of the bean
+    select.setItemCaptionMode(
+        ItemCaptionMode.PROPERTY);
     select.setItemCaptionPropertyId("name");
 
     ...
 ----
-
-
 
 [[components.selection.getset]]
 == Getting and Setting Selection
@@ -311,7 +330,7 @@ The result of user interaction is shown in
 
 [[figure.components.selection.valuechange]]
 .Selected Item
-image::img/select-selected1.png[]
+image::img/select-selected1.png[width=30%, scaledwidth=40%]
 
 
 [[components.selection.newitems]]

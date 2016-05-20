@@ -28,13 +28,9 @@ well as events, is handled with event listeners. Also date/time range
 selections, event dragging, and event resizing can be listened by the server.
 The weekly view has navigation buttons to navigate forward and backward in time.
 These actions are also listened by the server. Custom navigation can be
-implemented using event handlers
-
-ifdef::web[]
-, as described in
-<<components.calendar.customizing>>
-endif::web[]
-.
+implemented using event
+ifdef::web[handlers, as described in <<components.calendar.customizing>>.]
+ifndef::web[handlers.]
 
 The data source of a calendar can be practically anything, as its events are
 queried dynamically by the component. You can bind the calendar to a Vaadin
@@ -67,7 +63,7 @@ always calculated in an accuracy of one millisecond.
 
 [[figure.components.calendar.daterange.monthly]]
 .Monthly view with All-Day and Normal Events
-image::img/calendar-monthly.png[]
+image::img/calendar-monthly.png[width=60%, scaledwidth=100%]
 
 The monthly view, shown in <<figure.components.calendar.daterange.monthly>>, can
 easily be used to control all types of events, but it is best suited for events
@@ -78,7 +74,7 @@ hours. These events can not be moved by dragging in the monthly view.
 
 [[figure.components.calendar.daterange.weekly]]
 .Weekly View
-image::img/calendar-weekly.png[]
+image::img/calendar-weekly.png[width=60%, scaledwidth=100%]
 
 In <<figure.components.calendar.daterange.weekly>>, you can see four normal day
 events and also all-day events at the top of the time line grid.

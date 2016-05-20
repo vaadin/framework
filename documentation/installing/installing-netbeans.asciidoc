@@ -12,7 +12,7 @@ The Vaadin Plug-in for NetBeans supports creating Vaadin projects, updating Vaad
 It also allows directly downloading Vaadin add-ons from the Vaadin Directory.
 
 .Installation of the NetBeans IDE toolchain
-image::img/installation-netbeans-hi.png[width=60%]
+image::img/installation-netbeans-hi.png[width=80%, scaledwidth=80%]
 
 The installation bundle includes a web server, so you do not need that.
 

@@ -21,12 +21,9 @@ versatile components in Vaadin. Table cells can include text or arbitrary UI
 components. You can easily implement editing of the table data, for example
 clicking on a cell could change it to a text field for editing.
 
-The data contained in a [classname]#Table# is managed using the Data Model of
-Vaadin (see
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
-Components to Data">>), through the [classname]#Container# interface of the
-[classname]#Table#. This makes it possible to bind a table directly to a data
-source, such as a database query. Only the visible part of the table is loaded
+The data contained in a [classname]#Table# is managed using the Vaadin data model (see <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>), through the [classname]#Container# interface of the [classname]#Table#.
+This makes it possible to bind a table directly to a data source, such as a database query.
+Only the visible part of the table is loaded
 into the browser and moving the visible window with the scrollbar loads content
 from the server. While the data is being loaded, a tooltip will be displayed
 that shows the current range and total number of items in the table. The rows of
@@ -45,7 +42,6 @@ allows defining an icon for the column from a resource. The "default value"
 parameter is used when new properties (columns) are added to the table, to fill
 in the missing values. (This default has no meaning in the usual case, such as
 below, where we add items after defining the properties.)
-
 
 [source, java]
 ----
@@ -77,7 +73,7 @@ properties were added. The objects must be of the correct class, as defined in
 the [methodname]#addContainerProperty()# calls.
 
 .Basic Table Example
-image::img/table-example1.png[]
+image::img/table-example1.png[width=35%, scaledwidth=50%]
 
 Scalability of the [classname]#Table# is largely dictated by the container. The
 default [classname]#IndexedContainer# is relatively heavy and can cause
@@ -88,8 +84,7 @@ with just a few. With the current implementation of scrolling, there is a limit
 of around 500 000 rows, depending on the browser and the pixel height of rows.
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection
-Components">>.
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
 [[components.table.selecting]]
 == Selecting Items in a Table
@@ -127,8 +122,8 @@ table.addValueChangeListener(new Property.ValueChangeListener() {
 });
 ----
 
-.Table Selection Example
-image::img/table-example2.png[]
+.Table selection example
+image::img/table-example2.png[width=35%, scaledwidth=80%]
 
 If the user clicks on an already selected item, the selection will deselected
 and the table property will have [parameter]#null# value. You can disable this
@@ -221,7 +216,7 @@ table has been resized.
 
 [[figure.component.table.columnresize]]
 .Resizing Columns
-image::img/table-column-resize.png[]
+image::img/table-column-resize.png[width=50%, scaledwidth=80%]
 
 
 [[components.table.features.reordering]]
@@ -267,7 +262,7 @@ See <<figure.component.table.columncollapsing>>.
 
 [[figure.component.table.columncollapsing]]
 .Collapsing Columns
-image::img/table-column-collapsing.png[]
+image::img/table-column-collapsing.png[width=40%, scaledwidth=80%]
 
 If the table has undefined width, it minimizes its width to fit the width of the
 visible columns. If some columns are initially collapsed, the width of the table
@@ -301,8 +296,9 @@ mode, a multiline [classname]#TextField#, a [classname]#CheckBox#, and a
 
 [source, java]
 ----
-// Create a table and add a style to allow setting the row height in theme.
-final Table table = new Table();
+// Create a table and add a style to
+// allow setting the row height in theme.
+Table table = new Table();
 table.addStyleName("components-inside");
 
 /* Define the names and data types of columns.
@@ -372,7 +368,7 @@ The table will look as shown in <<figure.components.table.components-inside>>.
 
 [[figure.components.table.components-inside]]
 .Components in a Table
-image::img/table-components.png[]
+image::img/table-components.png[width=70%, scaledwidth=100%]
 
 
 [[components.table.features.iterating]]
@@ -443,7 +439,7 @@ fields, as shown in <<figure.component.table.editable>>.
 
 [[figure.component.table.editable]]
 .A Table in Normal and Editable Mode
-image::img/table-editable3.png[]
+image::img/table-editable3.png[width=100%, scaledwidth=100%]
 
 [[components.table.editing.fieldfactories]]
 === Field Factories
@@ -454,13 +450,13 @@ table are defined in a field factory that implements the
 [classname]#DefaultFieldFactory#, which offers the following crude mappings:
 
 .Type to Field Mappings in [classname]#DefaultFieldFactory#
-[options="header"]
+[options="header",cols="2,5"]
 |===============
 |Property Type|Mapped to Field Class
-|[classname]#Date#|A[classname]#DateField#.
-|[classname]#Boolean#|A[classname]#CheckBox#.
-|[classname]#Item#|A[classname]#Form#(deprecated in Vaadin 7). The fields of the form are automatically created from the item's properties using a[classname]#FormFieldFactory#. The normal use for this property type is inside a[classname]#Form#and is less useful inside a[classname]#Table#.
-|__other__|A[classname]#TextField#. The text field manages conversions from the basic types, if possible.
+|[classname]#Date#|A [classname]#DateField#.
+|[classname]#Boolean#|A [classname]#CheckBox#.
+|[classname]#Item#|A [classname]#Form# (deprecated in Vaadin 7). The fields of the form are automatically created from the item's properties using a [classname]#FormFieldFactory#. The normal use for this property type is inside a [classname]#Form# and is less useful inside a [classname]#Table#.
+|__other__|A [classname]#TextField#. The text field manages conversions from the basic types, if possible.
 
 |===============
 
@@ -683,7 +679,7 @@ The resulting table is shown in
 
 [[figure.components.table.headersfooters.footer]]
 .A Table with a Footer
-image::img/table-footer.png[]
+image::img/table-footer.png[width=25%, scaledwidth=40%]
 
 
 [[components.table.headersfooters.clicks]]
@@ -940,8 +936,8 @@ normal and editable modes.
 simply formatted (black) with column generators.
 
 [[figure.ui.table.generated]]
-.Table with Generated Columns in Normal and Editable Mode
-image::img/table-generatedcolumns1.png[]
+.Table with generated columns
+image::img/table-generatedcolumns1.png[width=90%, scaledwidth=100%]
 
 endif::web[]
 
@@ -1013,20 +1009,14 @@ A table with the formatted date and decimal value columns is shown in
 <<figure.components.table.columnformatting>>.
 
 [[figure.components.table.columnformatting]]
-.Formatted Table Columns
-image::img/table-columnformatting.png[]
+.Formatted Table columns
+image::img/table-columnformatting.png[width=40%, scaledwidth=50%]
 
-You can use CSS for further styling of table rows, columns, and individual cells
-by using a [classname]#CellStyleGenerator#. It is described in
-<<components.table.css>>.
-
+You can use CSS for further styling of table rows, columns, and individual cells by using a [classname]#CellStyleGenerator#.
+ifdef::web[It is described in <<components.table.css>>.]
 
 [[components.table.css]]
 == CSS Style Rules
-
-Styling the overall style of a [classname]#Table# can be done with the following
-CSS rules.
-
 
 [source, css]
 ----
@@ -1157,8 +1147,8 @@ You can then style the cells, for example, as follows:
 The table will look as shown in <<figure.components.table.cell-style>>.
 
 [[figure.components.table.cell-style]]
-.Cell Style Generator for a Table
-image::img/table-cellstylegenerator1.png[]
+.Cell style generator for a Table
+image::img/table-cellstylegenerator1.png[width=50%, scaledwidth=80%]
 
 endif::web[]
 

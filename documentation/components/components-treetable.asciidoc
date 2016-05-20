@@ -20,20 +20,19 @@ The default container is [classname]#HierarchicalContainer#, but you can bind
 [classname]#TreeTable# to any container implementing the interface.
 
 [[figure.components.treetable.basic]]
-.[classname]#TreeTable# Component
-image::img/treetable-basic.png[]
+.The [classname]#TreeTable# component
+image::img/treetable-basic.png[width=40%, scaledwidth=60%]
 
 As with [classname]#Tree#, you can define the parent-child relationships with
 [methodname]#setParent()#, as is shown in the following example with numeric
 item IDs:
-
 
 [source, java]
 ----
 TreeTable ttable = new TreeTable("My TreeTable");
 ttable.addContainerProperty("Name", String.class, null);
 ttable.addContainerProperty("Number", Integer.class, null);
-        
+
 // Create the tree nodes and set the hierarchy
 ttable.addItem(new Object[]{"Menu", null}, 0);
 ttable.addItem(new Object[]{"Beverages", null}, 1);
@@ -58,10 +57,10 @@ Unlike [classname]#Tree#, a [classname]#TreeTable# can have components in the
 hierarchical column, both when the property type is a component type and when
 the tree table is in editable mode.
 
-For other features, we refer you to documentation for [classname]#Table#, as
-given in
-<<dummy/../../../framework/components/components-table#components.table,"Table">>.
+For other features, we refer you to documentation for [classname]#Table# in
+<<dummy/../../../framework/components/components-table#components.table,"Table">> and [classname]#Tree# in <<dummy/../../../framework/components/components-tree#components.tree,"Tree">>.
 
+ifdef::web[]
 [[components.treetable.collapsed]]
 == Expanding and Collapsing Items
 
@@ -80,7 +79,7 @@ over all the items, but you need to get the IDs from the underlying container.
 for (Object itemId: ttable.getContainerDataSource()
                           .getItemIds()) {
     ttable.setCollapsed(itemId, false);
-    
+
     // As we're at it, also disallow children from
     // the current leaves
     if (! ttable.hasChildren(itemId))
@@ -96,6 +95,4 @@ the container, thereby avoiding the explicit settings and memory overhead. There
 are no built-in collapsible containers in the Vaadin core framework, so you
 either need to use an add-on container or implement it yourself.
 
-
-
-
+endif::web[]

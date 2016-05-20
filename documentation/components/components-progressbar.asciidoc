@@ -12,13 +12,12 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/interaction/progress-bar"]
 endif::web[]
 
-The [classname]#ProgressBar# component allows displaying the progress of a task
-graphically. The progress is specified as a floating-point value between 0.0 and
-1.0.
+The [classname]#ProgressBar# component allows visualizing progress of a task.
+The progress is specified as a floating-point value between 0.0 and 1.0.
 
 [[figure.components.progressbar.basic]]
-.The Progress Bar Component
-image::img/progressbar-basic.png[]
+.The [classname]#ProgressBar# component
+image::img/progressbar-basic.png[width=30%, scaledwidth=70%]
 
 To display upload progress with the [classname]#Upload# component, you can
 update the progress bar in a [interfacename]#ProgressListener#.
@@ -32,15 +31,13 @@ for instructions about using server push. Whichever method you use to update the
 UI, it is important to lock the user session by modifying the progress bar value
 inside [methodname]#access()# call, as illustrated in the following example and
 described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing
-UI from Another Thread">>.
-
+<<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing UI from Another Thread">>.
 
 [source, java]
 ----
 final ProgressBar bar = new ProgressBar(0.0f);
 layout.addComponent(bar);
-        
+
 layout.addComponent(new Button("Increase",
     new ClickListener() {
     @Override
@@ -67,15 +64,14 @@ bar.setIndeterminate(true);
 ----
 
 [[figure.components.progressbar.indeterminate]]
-.Indeterminate Progress Bar
-image::img/progressbar-indeterminate.png[]
-
+.Indeterminate progress bar
+image::img/progressbar-indeterminate.png[width=15%, scaledwidth=40%]
 
 ifdef::web[]
 [[components.progressbar.thread]]
 == Doing Heavy Computation
 
-The progress indicator is often used to display the progress of a heavy
+The progress bar is typically used to display the progress of a heavy
 server-side computation task, often running in a background thread. The UI,
 including the progress bar, can be updated either with polling or by using
 server push. When doing so, you must ensure thread-safety, most easily by
@@ -94,12 +90,12 @@ is displayed automatically when the browser polls the server.
 ----
 HorizontalLayout barbar = new HorizontalLayout();
 layout.addComponent(barbar);
-        
-// Create the indicator, disabled until progress is started
+
+// Create the bar, disabled until progress is started
 final ProgressBar progress = new ProgressBar(new Float(0.0));
 progress.setEnabled(false);
 barbar.addComponent(progress);
-        
+
 final Label status = new Label("not running");
 barbar.addComponent(status);
 
@@ -136,7 +132,7 @@ class WorkThread extends Thread {
                 }
             });
         }
-        
+
         // Show the "all done" for a while
         try {
             sleep(2000); // Sleep for 2 seconds
@@ -149,10 +145,10 @@ class WorkThread extends Thread {
                 // Restore the state to initial
                 progress.setValue(new Float(0.0));
                 progress.setEnabled(false);
-                        
+
                 // Stop polling
                 UI.getCurrent().setPollInterval(-1);
-                
+
                 button.setEnabled(true);
                 status.setValue("not running");
             }
@@ -181,8 +177,8 @@ button.addClickListener(new Button.ClickListener() {
 The example is illustrated in <<figure.components.progressbar.thread>>.
 
 [[figure.components.progressbar.thread]]
-.Doing Heavy Work
-image::img/progressbar-thread.png[]
+.Doing heavy work
+image::img/progressbar-thread.png[width=40%, scaledwidth=70%]
 
 endif::web[]
 
@@ -197,18 +193,13 @@ endif::web[]
     .v-progressbar-indicator {}
 ----
 
-The progress bar has a [literal]#++v-progressbar++# base style. The animation is
-the background of the element with [literal]#++v-progressbar-wrapper++# style,
-by default an animated GIF image. The progress is an element with
-[literal]#++v-progressbar-indicator++# style inside the wrapper, and therefore
-displayed on top of it. When the progress element grows, it covers more and more
-of the animated background.
+The progress bar has a [literal]#++v-progressbar++# base style.
+The progress is an element with [literal]#++v-progressbar-indicator++# style inside the wrapper, and therefore displayed on top of it.
+When the progress element grows, it covers more and more of the animated background.
+
+The progress bar can be animated (some themes use that).
+Animation is done in the element with the [literal]#v-progressbar-wrapper# style, by having an animated GIF as the background image.
 
 In the indeterminate mode, the top element also has the
-[literal]#++v-progressbar-indeterminate++# style. The built-in themes simply
-display the animated GIF in the top element and have the inner elements
-disabled.
-
-
-
-
+[literal]#++v-progressbar-indeterminate++# style.
+The built-in themes simply display the animated GIF in the top element and have the inner elements disabled.

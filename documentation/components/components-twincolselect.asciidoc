@@ -21,7 +21,7 @@ clicking on the "&lt;&lt;" button.
 
 [[figure.components.twincolselect.basic]]
 .Twin Column Selection
-image::img/twincolselect-basic.png[]
+image::img/twincolselect-basic.png[width=50%, scaledwidth=80%]
 
 [classname]#TwinColSelect# is always in multi-select mode, so its property value
 is always a collection of the item IDs of the selected items, that is, the items
@@ -94,7 +94,3 @@ button area, which has overall [literal]#++v-select-twincol-buttons++# style;
 the actual buttons reuse the styles for the [classname]#Button# component.
 Between the buttons is a divider element with
 [literal]#++v-select-twincol-deco++# style.
-
-
-
-

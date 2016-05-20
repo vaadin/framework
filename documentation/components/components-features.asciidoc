@@ -27,7 +27,6 @@ caption.
 The caption text can usually be given as the first parameter of a constructor of
 a component or with [methodname]#setCaption()#.
 
-
 [source, java]
 ----
 // New text field with caption "Name"
@@ -47,7 +46,7 @@ rendered.
 
 [[figure.components.features.caption.layoutmanaged]]
 .Caption Management by [classname]#VerticalLayout# and [classname]#FormLayout#.
-image::img/features-caption-layoutmanaged.png[]
+image::img/features-caption-layoutmanaged.png[width=50%,scaledwidth=65%]
 
 Some components, such as [classname]#Button# and [classname]#Panel#, manage the
 caption themselves and display it inside the component.
@@ -111,15 +110,14 @@ The tooltip is shown in <<figure.components.tooltip.plain>>.
 
 [[figure.components.tooltip.plain]]
 .Component Description as a Tooltip
-image::img/tooltip-plain-withpointer-hi.png[]
+image::img/tooltip-plain-withpointer-hi.png[width=30%, scaledwidth=100%]
 
 A description is rendered as a tooltip in most components.
 
 When a component error has been set with [methodname]#setComponentError()#, the
 error is usually also displayed in the tooltip, below the description.
 Components that are in error state will also display the error indicator. See
-<<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
-Indicator and Message">>.
+<<dummy/../../../framework/application/application-errors#application.errors.error-indicator, "Error Indicator and Message">>.
 
 The description is actually not plain text, but you can use HTML tags to format
 it. Such a rich text description can contain any HTML elements, including
@@ -129,7 +127,8 @@ images.
 [source, java]
 ----
 button.setDescription(
-    "<h2><img src=\"../VAADIN/themes/sampler/icons/comment_yellow.gif\"/>"+
+    "<h2><img src=\"../VAADIN/themes/sampler/"+
+    "icons/comment_yellow.gif\"/>"+
     "A richtext tooltip</h2>"+
     "<ul>"+
     "  <li>Use rich formatting with HTML</li>"+
@@ -143,7 +142,7 @@ The result is shown in <<figure.components.tooltip.richtext>>.
 
 [[figure.components.tooltip.richtext]]
 .A Rich Text Tooltip
-image::img/tooltip-richtext-withpointer-hi.png[]
+image::img/tooltip-richtext-withpointer-hi.png[width=40%, scaledwidth=75%]
 
 Notice that the setter and getter are defined for all fields in the
 [classname]#Field# interface, not for all components in the
@@ -179,7 +178,7 @@ buttons.
 
 [[figure.components.features.enabled.simple]]
 .An Enabled and Disabled [classname]#Button#
-image::img/features-enabled-simple.png[]
+image::img/features-enabled-simple.png[width=30%, scaledwidth=50%]
 
 A disabled component is automatically put in read-only state. No client
 interaction with such a component is sent to the server and, as an important
@@ -206,19 +205,11 @@ have to join the style class names with a dot as done in the example below.
 
 This would make the border of all disabled text fields dotted.
 
-
-//TODO This may change to
-$v-button-disabled-opacity
-In Valo theme, the opacity of disabled components is specified with the
-$v-disabled-opacity parameter
-
-ifdef::web[]
-, as described in
-<<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common
-Settings">>
-endif::web[]
-.
-
+// TODO This may change to $v-button-disabled-opacity
+In the Valo theme, the opacity of disabled components is specified with the
+`$v-disabled-opacity`
+ifndef::web[parameter.]
+ifdef::web[parameter, as described in <<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common Settings">>]
 
 [[components.features.icon]]
 == Icon
@@ -260,7 +251,7 @@ so if the root component has an icon, it will not be rendered.
 
 [[figure.components.features.icon]]
 .Displaying an Icon from a Theme Resource.
-image::img/features-icon.png[]
+image::img/features-icon.png[width=40%, scaledwidth=60%]
 
 Some components, such as [classname]#Button# and [classname]#Panel#, manage the
 icon themselves and display it inside the component.
@@ -307,12 +298,11 @@ layout.addComponent(date);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.simple[on-line example, window="_blank"].
 
-The resulting date field is shown in
-<<figure.components.features.locale.simple>>.
+The resulting date field is shown in <<figure.components.features.locale.simple>>.
 
 [[figure.components.features.locale.simple]]
-.Set Locale for [classname]#InlineDateField#
-image::img/features-locale-simple.png[]
+.Set locale for [classname]#InlineDateField#
+image::img/features-locale-simple.png[width=40%, scaledwidth=60%]
 
 ifdef::web[]
 [[components.features.locale.get]]
@@ -329,7 +319,6 @@ The [methodname]#getLocale()# returns null if the component is not yet attached
 to the UI, which is usually the case in most constructors, so it is a bit
 awkward to use it for internationalization. You can get the locale in
 [methodname]#attach()#, as shown in the following example:
-
 
 [source, java]
 ----
@@ -349,7 +338,6 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.loc
 However, it is normally a better practice to use the locale of the current UI to
 get the localized resource right when the component is created.
 
-
 [source, java]
 ----
 // Captions are stored in MyAppCaptions resource bundle
@@ -364,7 +352,6 @@ Button cancel =
 layout.addComponent(cancel);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.get-ui[on-line example, window="_blank"].
-
 endif::web[]
 
 ifdef::web[]
@@ -435,7 +422,7 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.loc
 The user interface is shown in <<figure.components.features.locale.selection>>.
 
 [[figure.components.features.locale.selection]]
-.Selecting a Locale
+.Selecting a locale
 image::img/features-locale-selection.png[]
 
 endif::web[]
@@ -449,7 +436,6 @@ endif::web[]
 The property defines whether the value of a component can be changed. The
 property is mainly applicable to [classname]#Field# components, as they have a
 value that can be edited by the user.
-
 
 [source, java]
 ----
@@ -468,8 +454,8 @@ The resulting read-only text field is shown in
 <<figure.components.features.readonly.simple>>.
 
 [[figure.components.features.readonly.simple]]
-.A Read-Only Component.
-image::img/features-readonly-simple.png[]
+.A read-only component
+image::img/features-readonly-simple.png[width=50%, scaledwidth=80%]
 
 Setting a layout or some other component container as read-only does not usually
 make the contained components read-only recursively. This is different from, for
@@ -559,7 +545,6 @@ a [classname]#Panel# component would conflict with the built-in
 The following CSS rule would apply the style to any component that has the
 [literal]#++mystyle++# style.
 
-
 [source, css]
 ----
 .mystyle {
@@ -571,13 +556,11 @@ The following CSS rule would apply the style to any component that has the
 }
 ----
 
-The resulting styled component is shown in
-<<figure.components.features.stylename>>
+The resulting styled component is shown in <<figure.components.features.stylename>>
 
 [[figure.components.features.stylename]]
-.Component with a Custom Style
-image::img/features-stylename-simple.png[]
-
+.Component with a custom style
+image::img/features-stylename-simple.png[width=50%, scaledwidth=75%]
 
 [[components.features.visible]]
 == Visible
@@ -592,7 +575,6 @@ rules. This feature is important for security if you have components that
 contain security-critical information that must only be shown in specific
 application states.
 
-
 [source, java]
 ----
 TextField invisible = new TextField("No-see-um");
@@ -605,7 +587,7 @@ The resulting invisible component is shown in
 <<figure.components.features.visible.simple>>.
 
 [[figure.components.features.visible.simple]]
-.An Invisible Component.
+.An invisible component
 image::img/features-visible-simple.png[]
 
 Beware that invisible beings can leave footprints. The containing layout cell
@@ -664,7 +646,7 @@ mycomponent.setWidth("100%");
 mycomponent.setHeight("400px");
 ----
 
-The " [literal]#++100%++#" percentage value makes the component take all
+The "[literal]#++100%++#" percentage value makes the component take all
 available size in the particular direction (see the description of
 [parameter]#Sizeable.UNITS_PERCENTAGE# in the table below). You can also use the
 shorthand method [methodname]#setSizeFull()# to set the size to 100% in both
@@ -677,39 +659,29 @@ can set the height or width as undefined with
 [parameter]#Sizeable.SIZE_UNDEFINED# parameter for [methodname]#setWidth()# and
 [methodname]#setHeight()#.
 
-You always need to keep in mind that __a layout with undefined size may not
-contain components with defined relative size__, such as "full size". See
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
-Size">> for details.
+Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
+See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
 
-The <<components.features.sizeable.units.table>> lists the available units and
-their codes defined in the [classname]#Sizeable# interface.
+The <<components.features.sizeable.units.table>> table lists the available units and their codes defined in the [interfacename]#Sizeable# interface.
 
 [[components.features.sizeable.units.table]]
-.Size Units
-
+.Size units
+[cols="5,2,10", options="header"]
 |===============
-|[parameter]#Unit.PIXELS#|px|The__pixel__is the basic hardware-specific measure of one physical display pixel.
-|[parameter]#Unit.POINTS#|pt|The__point__is a typographical unit, which is usually defined as 1/72 inches or about 0.35 mm. However, on displays the size can vary significantly depending on display metrics.
-|[parameter]#Unit.PICAS#|pc|The__pica__is a typographical unit, defined as 12 points, or 1/7 inches or about 4.233 mm. On displays, the size can vary depending on display metrics.
+|Constant|Unit|Description
+|[parameter]#Unit.PIXELS#|px|The _pixel_ is the basic hardware-specific measure of one physical display pixel.
+|[parameter]#Unit.POINTS#|pt|The _point_ is a typographical unit, which is usually defined as 1/72 inches or about 0.35 mm. However, on displays the size can vary significantly depending on display metrics.
+|[parameter]#Unit.PICAS#|pc|The _pica_ is a typographical unit, defined as 12 points, or 1/7 inches or about 4.233 mm. On displays, the size can vary depending on display metrics.
 |[parameter]#Unit.EM#|em|A unit relative to the used font, the width of the upper-case "M" letter.
 |[parameter]#Unit.EX#|ex|A unit relative to the used font, the height of the lower-case "x" letter.
 |[parameter]#Unit.MM#|mm|A physical length unit, millimeters on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.CM#|cm|A physical length unit,__centimeters__on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.INCH#|in|A physical length unit,__inches__on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.PERCENTAGE#|%|A relative percentage of the available size. For example, for the top-level layout[parameter]#100%#would be the full width or height of the browser window. The percentage value must be between 0 and 100.
-
+|[parameter]#Unit.CM#|cm|A physical length unit, _centimeters_ on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
+|[parameter]#Unit.INCH#|in|A physical length unit, _inches_ on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
+|[parameter]#Unit.PERCENTAGE#|%|A relative percentage of the available size. For example, for the top-level layout [parameter]#100%# would be the full width or height of the browser window. The percentage value must be between 0 and 100.
 |===============
 
-
-
-If a component inside [classname]#HorizontalLayout# or
-[classname]#VerticalLayout# has full size in the namesake direction of the
-layout, the component will expand to take all available space not needed by the
-other components. See
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
-Size">> for details.
-
+If a component inside [classname]#HorizontalLayout# or [classname]#VerticalLayout# has full size in the namesake direction of the layout, the component will expand to take all available space not needed by the other components.
+See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
 
 == Managing Input Focus
 
@@ -719,8 +691,7 @@ component allows inputting text, the focus and insertion point are indicated by
 a cursor. Pressing the Tab key moves the focus to the component next in the
 __focus order__.
 
-Focusing is supported by all [classname]#Field# components and also by
-[classname]#Upload#.
+Focusing is supported by all [classname]#Field# components and also by the [classname]#Upload# component.
 
 The focus order or __tab index__ of a component is defined as a positive integer
 value, which you can set with [methodname]#setTabIndex()# and get with

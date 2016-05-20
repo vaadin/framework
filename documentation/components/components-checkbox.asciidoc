@@ -46,7 +46,7 @@ The result is shown in <<figure.components.checkbox.basic>>.
 
 [[figure.components.checkbox.basic]]
 .An Example of a Check Box
-image::img/checkbox-example1.png[]
+image::img/checkbox-example1.png[width=35%, scaledwidth=50%]
 
 For an example on the use of check boxes in a table, see
 <<dummy/../../../framework/components/components-table#components.table,"Table">>.
@@ -64,9 +64,4 @@ For an example on the use of check boxes in a table, see
 The top-level element of a [classname]#CheckBox# has the
 [literal]#++v-checkbox++# style. It contains two sub-elements: the actual check
 box [literal]#++input++# element and the [literal]#++label++# element. If you
-want to have the label on the left, you can change the positions with "
-[literal]#++direction: rtl++#" for the top element.
-
-
-
-
+want to have the label on the left, you can change the positions with "[literal]#++direction: rtl++#" for the top element.
