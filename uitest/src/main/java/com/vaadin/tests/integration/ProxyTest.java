@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlets.ProxyServlet;
+import org.eclipse.jetty.proxy.ProxyServlet;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.ExternalResource;
@@ -88,7 +88,7 @@ public class ProxyTest extends AbstractTestUI {
 
         // Set up a server
         server = new Server();
-        SelectChannelConnector connector = new SelectChannelConnector();
+        ServerConnector connector = new ServerConnector(server);
         // Uses random available port by default, uncomment this to make local
         // testing easier (you can just reload old tab after restarting proxy)
         // connector.setPort(8889);

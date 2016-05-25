@@ -187,7 +187,6 @@
 			<version>${vaadin.gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -227,6 +226,7 @@
 										com/google/gwt/lang/**,
 										com/google/gwt/soyc/**,
 										com/google/gwt/thirdparty/json/**,
+										com/google/gwt/thirdparty/guava/**,
 										com/google/gwt/util/**,
 										license/LICENSE.sax.txt,
 										netscape/**,

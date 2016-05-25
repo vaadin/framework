@@ -66,9 +66,8 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
-    // Keep the version number in sync with push/build.xml and other locations
-    // listed in that file
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.2.7.vaadin1";
+    // Keep the version number in sync with pom.xml
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.2.9.vaadin2";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"

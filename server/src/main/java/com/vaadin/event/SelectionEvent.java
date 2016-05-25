@@ -22,8 +22,6 @@ import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
-
 /**
  * An event that specifies what in a selection has changed, and where the
  * selection took place.
@@ -52,7 +50,7 @@ public class SelectionEvent extends EventObject {
      * @return a Collection of the itemIds that became selected
      */
     public Set<Object> getAdded() {
-        return Sets.difference(newSelection, oldSelection);
+        return setDifference(newSelection, oldSelection);
     }
 
     /**
@@ -64,7 +62,27 @@ public class SelectionEvent extends EventObject {
      * @return a Collection of the itemIds that became deselected
      */
     public Set<Object> getRemoved() {
-        return Sets.difference(oldSelection, newSelection);
+        return setDifference(oldSelection, newSelection);
+    }
+
+    /**
+     * Slightly optimized set difference that can return the original set or a
+     * modified one.
+     *
+     * @param set1
+     *            original set
+     * @param set2
+     *            the set to subtract
+     * @return the difference set
+     */
+    private static <T> Set<T> setDifference(Set<T> set1, Set<T> set2) {
+        if (set2.isEmpty()) {
+            return set1;
+        } else {
+            LinkedHashSet<T> set = new LinkedHashSet<T>(set1);
+            set.removeAll(set2);
+            return set;
+        }
     }
 
     /**

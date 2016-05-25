@@ -328,12 +328,20 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param component
      *            the component in this layout which expand ratio is to be set
      * @param ratio
+     *            new expand ratio (greater or equal to 0)
+     * @throws IllegalArgumentException
+     *             if the expand ratio is negative or the component is not a
+     *             direct child of the layout
      */
     public void setExpandRatio(Component component, float ratio) {
         ChildComponentData childData = getState().childData.get(component);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");
+        }
+        if (ratio < 0.0f) {
+            throw new IllegalArgumentException(
+                    "Expand ratio can't be less than 0.0");
         }
 
         childData.expandRatio = ratio;

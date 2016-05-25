@@ -51,7 +51,7 @@ doesn't.
 === Making a Call
 
 Before making a call, you need to instantiate the server RPC object with
-[methodname]#RpcProxy.create()#. After that, you can make calls through the
+[methodname]#RpcProxy.create()#. This is usually done transparently by using [methodname]#getRpcProxy()#. After that, you can make calls through the
 server RPC interface that you defined, for example as follows:
 
 

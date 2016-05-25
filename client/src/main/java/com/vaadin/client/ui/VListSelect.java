@@ -17,11 +17,14 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.UIDL;
+import com.vaadin.shared.util.SharedUtil;
 
 public class VListSelect extends VOptionGroupBase {
 
@@ -67,34 +70,69 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     public void buildOptions(UIDL uidl) {
-        int scrollTop = select.getElement().getScrollTop();
-        int rowCount = getRows();
         select.setMultipleSelect(isMultiselect());
-        select.clear();
+
+        Set<String> previousKeys = new HashSet<String>();
+        for (int i = 0; i < select.getItemCount(); i++) {
+            previousKeys.add(select.getValue(i));
+        }
+
+        int nextIndex = 0;
         if (!isMultiselect() && isNullSelectionAllowed()
                 && !isNullSelectionItemAvailable()) {
             // can't unselect last item in singleselect mode
+            updateOrCreateItem("", "null", nextIndex++, previousKeys);
             select.addItem("", (String) null);
+
+            // Null select item can't be selected programmatically, but will
+            // remain selected if it was selected by the user. There's no
+            // need to deselect when something else is selected since it's only
+            // used in single select mode.
         }
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
-            select.addItem(optionUidl.getStringAttribute("caption"),
-                    optionUidl.getStringAttribute("key"));
+            updateOrCreateItem(optionUidl.getStringAttribute("caption"),
+                    optionUidl.getStringAttribute("key"), nextIndex,
+                    previousKeys);
             if (optionUidl.hasAttribute("selected")) {
-                int itemIndex = select.getItemCount() - 1;
-                select.setItemSelected(itemIndex, true);
-                lastSelectedIndex = itemIndex;
+                select.setItemSelected(nextIndex, true);
+                lastSelectedIndex = nextIndex;
+            } else {
+                select.setItemSelected(nextIndex, false);
             }
+            nextIndex++;
         }
+
+        // Remove any trailing items not in the UIDL
+        while (select.getItemCount() > nextIndex) {
+            select.removeItem(nextIndex);
+        }
+
         if (getRows() > 0) {
             select.setVisibleItemCount(getRows());
         }
-        // FIXME: temporary hack for preserving the scroll state when the
-        // contents haven't been changed obviously. This should be dealt with in
-        // the rewrite.
-        if (rowCount == getRows()) {
-            select.getElement().setScrollTop(scrollTop);
+    }
+
+    private void updateOrCreateItem(String caption, String key, int index,
+            Set<String> previousKeys) {
+        if (previousKeys.remove(key)) {
+            while (select.getItemCount() >= index) {
+                String keyAtIndex = select.getValue(index);
+                if (SharedUtil.equals(key, keyAtIndex)) {
+                    select.setItemText(index, caption);
+                    return;
+                } else {
+                    // Assume the item we're looking at has simply been removed
+                    // and that the next item will match our key
+                    select.removeItem(index);
+                    previousKeys.remove(keyAtIndex);
+                }
+            }
         }
+
+        // We end up here for new items or if we removed all following items
+        // while looking for a match
+        select.insertItem(caption, key, index);
     }
 
     @Override

@@ -42,6 +42,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
+import com.vaadin.client.widget.grid.events.GridEnabledEvent;
+import com.vaadin.client.widget.grid.events.GridEnabledHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
 import com.vaadin.client.widgets.Grid;
 
@@ -76,7 +78,7 @@ public class MultiSelectionRenderer<T> extends
      * @since 7.5
      */
     private final class CheckBoxEventHandler implements MouseDownHandler,
-            TouchStartHandler, ClickHandler {
+            TouchStartHandler, ClickHandler, GridEnabledHandler {
         private final CheckBox checkBox;
 
         /**
@@ -89,14 +91,18 @@ public class MultiSelectionRenderer<T> extends
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
-            if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
-                startDragSelect(event.getNativeEvent(), checkBox.getElement());
+            if(checkBox.isEnabled()) {
+                if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
+                    startDragSelect(event.getNativeEvent(), checkBox.getElement());
+                }
             }
         }
 
         @Override
         public void onTouchStart(TouchStartEvent event) {
-            startDragSelect(event.getNativeEvent(), checkBox.getElement());
+            if(checkBox.isEnabled()) {
+                startDragSelect(event.getNativeEvent(), checkBox.getElement());
+            }
         }
 
         @Override
@@ -104,6 +110,11 @@ public class MultiSelectionRenderer<T> extends
             // Clicking is already handled with MultiSelectionRenderer
             event.preventDefault();
             event.stopPropagation();
+        }
+
+        @Override
+        public void onEnabled(boolean enabled) {
+            checkBox.setEnabled(enabled);
         }
     }
 
@@ -595,6 +606,7 @@ public class MultiSelectionRenderer<T> extends
         final CheckBox checkBox = GWT.create(CheckBox.class);
         checkBox.setStylePrimaryName(grid.getStylePrimaryName()
                 + SELECTION_CHECKBOX_CLASSNAME);
+
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
         // Sink events
@@ -606,6 +618,9 @@ public class MultiSelectionRenderer<T> extends
         checkBox.addMouseDownHandler(handler);
         checkBox.addTouchStartHandler(handler);
         checkBox.addClickHandler(handler);
+        grid.addHandler(handler, GridEnabledEvent.TYPE);
+
+        checkBox.setEnabled(grid.isEnabled());
 
         return checkBox;
     }
@@ -614,7 +629,7 @@ public class MultiSelectionRenderer<T> extends
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        checkBox.setEnabled(!grid.isEditorActive());
+        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
         checkBox.getElement().setPropertyInt(LOGICAL_ROW_PROPERTY_INT,
                 cell.getRowIndex());
     }

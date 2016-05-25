@@ -93,4 +93,18 @@ public class KeyMapper<V> implements Serializable {
         objectKeyMap.clear();
         keyObjectMap.clear();
     }
+
+    /**
+     * Checks if the given key is mapped to an object.
+     * 
+     * @since
+     * 
+     * @param key
+     *            the key to check
+     * @return <code>true</code> if the key is currently mapped,
+     *         <code>false</code> otherwise
+     */
+    public boolean containsKey(String key) {
+        return keyObjectMap.containsKey(key);
+    }
 }

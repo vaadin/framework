@@ -1382,9 +1382,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     public void removeShortcutListener(ShortcutListener shortcut) {
-        if (actionManager != null) {
-            actionManager.removeAction(shortcut);
-        }
+        getActionManager().removeAction(shortcut);
     }
 
     /**

@@ -42,7 +42,7 @@ import com.vaadin.ui.GridLayout;
 
 @Connect(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
-        implements Paintable, DirectionalManagedLayout {
+        implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -95,16 +95,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
         getWidget().hideEmptyRowsAndColumns = getState().hideEmptyRowsAndColumns;
 
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VGridLayout layout = getWidget();
-
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
         initSize();
 
         for (Entry<Connector, ChildComponentData> entry : getState().childData
@@ -117,8 +107,9 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             cell.updateCell(childComponentData);
         }
 
-        layout.colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
-        layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
+        VGridLayout layout = getWidget();
+        layout.colExpandRatioArray = getState().colExpand;
+        layout.rowExpandRatioArray = getState().rowExpand;
 
         layout.updateMarginStyleNames(new MarginInfo(getState().marginsBitmask));
         layout.updateSpacingStyleName(getState().spacing);

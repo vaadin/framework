@@ -17,7 +17,9 @@ package com.vaadin.server;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,10 +28,11 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,8 +51,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gwt.thirdparty.guava.common.base.Charsets;
-import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
@@ -745,7 +746,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
-        URL resourceUrl = findResourceURL(filename, sc);
+        URL resourceUrl = findResourceURL(filename);
 
         if (resourceUrl == null) {
             // File not found, if this was a css request we still look for a
@@ -974,11 +975,21 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
-    private URL findResourceURL(String filename, ServletContext sc)
-            throws MalformedURLException {
-        URL resourceUrl = sc.getResource(filename);
+    /**
+     * Finds the given resource from the web content folder or using the class
+     * loader.
+     * 
+     * @since
+     * @param filename
+     *            The file to find, starting with a "/"
+     * @return The URL to the given file, or null if the file was not found
+     * @throws IOException
+     *             if there was a problem while locating the file
+     */
+    protected URL findResourceURL(String filename) throws IOException {
+        URL resourceUrl = getServletContext().getResource(filename);
         if (resourceUrl == null) {
-            // try if requested file is found from classloader
+            // try if requested file is found from class loader
 
             // strip leading "/" otherwise stream from JAR wont work
             if (filename.startsWith("/")) {
@@ -999,7 +1010,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         String scssFilename = filename.substring(0, filename.length() - 4)
                 + ".scss";
-        URL scssUrl = findResourceURL(scssFilename, sc);
+        URL scssUrl = findResourceURL(scssFilename);
         if (scssUrl == null) {
             // Is a css request but no scss file was found
             return false;
@@ -1069,7 +1080,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return null;
         }
 
-        String jsonString = Files.toString(scssCacheFile, Charsets.UTF_8);
+        String jsonString = readFile(scssCacheFile, Charset.forName("UTF-8"));
 
         JsonObject entryJson = Json.parse(jsonString);
 
@@ -1379,10 +1390,42 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String cacheEntryJsonString = cacheEntry.asJson();
 
         try {
-            Files.write(cacheEntryJsonString, cacheFile, Charsets.UTF_8);
+            writeFile(cacheEntryJsonString, cacheFile, Charset.forName("UTF-8"));
         } catch (IOException e) {
             getLogger().log(Level.WARNING,
                     "Error persisting scss cache " + cacheFile, e);
+        }
+    }
+
+    private static String readFile(File file, Charset charset)
+            throws IOException {
+        InputStream in = new FileInputStream(file);
+        try {
+            // no point in reading files over 2GB to a String
+            byte[] b = new byte[(int) file.length()];
+            int len = b.length;
+            int total = 0;
+
+            while (total < len) {
+                int result = in.read(b, total, len - total);
+                if (result == -1) {
+                    break;
+                }
+                total += result;
+            }
+            return new String(b, charset);
+        } finally {
+            in.close();
+        }
+    }
+
+    private static void writeFile(String content, File file, Charset charset)
+            throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        try {
+            fos.write(content.getBytes(charset));
+        } finally {
+            fos.close();
         }
     }
 

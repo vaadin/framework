@@ -2221,6 +2221,9 @@ public class Table extends AbstractSelect implements Action.Container,
             List<?> itemIds = getItemIds(firstIndex, rows);
             for (int i = 0; i < rows && i < itemIds.size(); i++) {
                 Object id = itemIds.get(i);
+                if (id == null) {
+                    throw new IllegalStateException("Null itemId returned from container");
+                }
                 // Start by parsing the values, id should already be set
                 parseItemIdToCells(cells, id, i, firstIndex, headmode, cols,
                         colids, firstIndexNotInCache, iscomponent,

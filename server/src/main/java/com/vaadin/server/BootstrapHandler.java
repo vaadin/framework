@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,7 +39,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
-import com.google.gwt.thirdparty.guava.common.net.UrlEscapers;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.annotations.Viewport;
@@ -227,7 +228,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         @Override
         protected String encodeQueryStringParameterValue(String queryString) {
-            return UrlEscapers.urlFormParameterEscaper().escape(queryString);
+            String encodedString = null;
+            try {
+                encodedString = URLEncoder.encode(queryString, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                // should never happen
+                throw new RuntimeException("Could not find UTF-8", e);
+            }
+            return encodedString;
         }
     }
 
@@ -470,7 +478,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         UICreateEvent event = new UICreateEvent(context.getRequest(),
                 context.getUIClass());
         WidgetsetInfo widgetset = context.getBootstrapResponse()
-                .getUIProvider().getWidgetset(event);
+                .getUIProvider().getWidgetsetInfo(event);
         if (widgetset == null) {
             // TODO do we want to move WidgetsetInfoImpl elsewhere?
             widgetset = new WidgetsetInfoImpl(request.getService()

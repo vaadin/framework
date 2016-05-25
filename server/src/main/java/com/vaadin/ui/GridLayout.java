@@ -75,7 +75,7 @@ import com.vaadin.ui.declarative.DesignContext;
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
-        LayoutClickNotifier, LegacyComponent {
+        LayoutClickNotifier {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -446,72 +446,34 @@ public class GridLayout extends AbstractLayout implements
         return components.size();
     }
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once LegacyComponent is no longer implemented
-    }
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
-    /**
-     * Paints the contents of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        final Integer[] columnExpandRatioArray = new Integer[getColumns()];
-        final Integer[] rowExpandRatioArray = new Integer[getRows()];
-
-        int realColExpandRatioSum = 0;
+        getState().colExpand = new float[getColumns()];
         float colSum = getExpandRatioSum(columnExpandRatio);
         if (colSum == 0) {
-            // no columns has been expanded, all cols have same expand
-            // rate
-            float equalSize = 1 / (float) getColumns();
-            int myRatio = Math.round(equalSize * 1000);
+            // no cols have been expanded
             for (int i = 0; i < getColumns(); i++) {
-                columnExpandRatioArray[i] = myRatio;
+                getState().colExpand[i] = 1f;
             }
-            realColExpandRatioSum = myRatio * getColumns();
         } else {
             for (int i = 0; i < getColumns(); i++) {
-                int myRatio = Math
-                        .round((getColumnExpandRatio(i) / colSum) * 1000);
-                columnExpandRatioArray[i] = myRatio;
-                realColExpandRatioSum += myRatio;
+                getState().colExpand[i] = getColumnExpandRatio(i);
             }
         }
 
-        int realRowExpandRatioSum = 0;
+        getState().rowExpand = new float[getRows()];
         float rowSum = getExpandRatioSum(rowExpandRatio);
         if (rowSum == 0) {
             // no rows have been expanded
-            float equalSize = 1 / (float) getRows();
-            int myRatio = Math.round(equalSize * 1000);
             for (int i = 0; i < getRows(); i++) {
-                rowExpandRatioArray[i] = myRatio;
+                getState().rowExpand[i] = 1f;
             }
-            realRowExpandRatioSum = myRatio * getRows();
         } else {
-            for (int cury = 0; cury < getRows(); cury++) {
-                int myRatio = Math
-                        .round((getRowExpandRatio(cury) / rowSum) * 1000);
-                rowExpandRatioArray[cury] = myRatio;
-                realRowExpandRatioSum += myRatio;
+            for (int i = 0; i < getRows(); i++) {
+                getState().rowExpand[i] = getRowExpandRatio(i);
             }
         }
-
-        // correct possible rounding error
-        if (rowExpandRatioArray.length > 0) {
-            rowExpandRatioArray[0] -= realRowExpandRatioSum - 1000;
-        }
-        if (columnExpandRatioArray.length > 0) {
-            columnExpandRatioArray[0] -= realColExpandRatioSum - 1000;
-        }
-        target.addAttribute("colExpand", columnExpandRatioArray);
-        target.addAttribute("rowExpand", rowExpandRatioArray);
 
     }
 
@@ -1082,9 +1044,14 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * <p>
-     * Note that the component width of the GridLayout must be defined (fixed or
-     * relative, as opposed to undefined) for this method to have any effect.
-     * </p>
+     * Note, that width of this GridLayout needs to be defined (fixed or
+     * relative, as opposed to undefined height) for this method to have any
+     * effect.
+     * <p>
+     * Note that checking for relative width for the child components is done on
+     * the server so you cannot set a child component to have undefined width on
+     * the server and set it to <code>100%</code> in CSS. You must set it to
+     * <code>100%</code> on the server.
      * 
      * @see #setWidth(float, int)
      * 
@@ -1120,9 +1087,14 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * <p>
-     * Note, that height needs to be defined (fixed or relative, as opposed to
-     * undefined height) for this method to have any effect.
-     * </p>
+     * Note, that height of this GridLayout needs to be defined (fixed or
+     * relative, as opposed to undefined height) for this method to have any
+     * effect.
+     * <p>
+     * Note that checking for relative height for the child components is done
+     * on the server so you cannot set a child component to have undefined
+     * height on the server and set it to <code>100%</code> in CSS. You must set
+     * it to <code>100%</code> on the server.
      * 
      * @see #setHeight(float, int)
      * 

@@ -127,6 +127,30 @@ public abstract class UIProvider implements Serializable {
      * Finds the widgetset to use for a specific UI. If no specific widgetset is
      * required, <code>null</code> is returned.
      * <p>
+     * This method uses the Widgetset definition priority order from
+     * {@link #getWidgetsetInfo(UICreateEvent)}.
+     * <p>
+     * <strong>Note:</strong> This method exists only for backwards
+     * compatibility and overriding it won't have the effect it used to.
+     *
+     * @param event
+     *            the UI create event with information about the UI and the
+     *            current request.
+     * @return the name of the widgetset, or <code>null</code> if the default
+     *         widgetset should be used
+     * @deprecated This method has been replaced by
+     *             {@link #getWidgetsetInfo(UICreateEvent)} in 7.7
+     */
+    @Deprecated
+    public String getWidgetset(UICreateEvent event) {
+        WidgetsetInfo widgetsetInfo = getWidgetsetInfo(event);
+        return widgetsetInfo != null ? widgetsetInfo.getWidgetsetName() : null;
+    }
+
+    /**
+     * Finds the widgetset to use for a specific UI. If no specific widgetset is
+     * required, <code>null</code> is returned.
+     * <p>
      * The default implementation uses the following order of priority for
      * finding the widgetset information:
      * <ul>
@@ -137,17 +161,15 @@ public abstract class UIProvider implements Serializable {
      * <li>null to use the default widgetset otherwise</li>
      * </ul>
      *
-     * Note that the return type of this method changed in Vaadin 7.7.
+     * @since 7.7
      *
      * @param event
      *            the UI create event with information about the UI and the
      *            current request.
-     * @return the name of the widgetset, or <code>null</code> if the default
-     *         widgetset should be used
-     *
-     * @since 7.7
+     * @return the widgetset info, or <code>null</code> if the default widgetset
+     *         should be used
      */
-    public WidgetsetInfo getWidgetset(UICreateEvent event) {
+    public WidgetsetInfo getWidgetsetInfo(UICreateEvent event) {
         Widgetset uiWidgetset = getAnnotationFor(event.getUIClass(),
                 Widgetset.class);
 

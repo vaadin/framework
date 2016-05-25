@@ -49,7 +49,9 @@ public class MarginInfo implements Serializable {
      * 
      * @param bitMask
      *            bits to set
+     * @deprecated use other constructors instead of this one
      */
+    @Deprecated
     public MarginInfo(int bitMask) {
         this.bitMask = bitMask;
     }
@@ -83,6 +85,16 @@ public class MarginInfo implements Serializable {
      */
     public MarginInfo(boolean vertical, boolean horizontal) {
         this(vertical, horizontal, vertical, horizontal);
+    }
+
+    /**
+     * Creates a MarginInfo with the same values as another MarginInfo object.
+     * 
+     * @param other
+     *            another MarginInfo object
+     */
+    public MarginInfo(MarginInfo other) {
+        setMargins(other);
     }
 
     /**
@@ -172,9 +184,12 @@ public class MarginInfo implements Serializable {
 
     /**
      * Returns the current bit mask that make up the margin settings.
+     * <p>
+     * This method is for internal use by the framework.
      * 
      * @return an integer bit mask
      */
+    @Deprecated
     public int getBitMask() {
         return bitMask;
     }

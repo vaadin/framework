@@ -30,8 +30,6 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.Cookie;
 
-import com.google.gwt.thirdparty.guava.common.html.HtmlEscapers;
-
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
  * 
@@ -139,9 +137,43 @@ public class VaadinPortletResponse implements VaadinResponse {
     public void sendError(int errorCode, String message) throws IOException {
         setStatus(errorCode);
         if (message != null) {
-            message = HtmlEscapers.htmlEscaper().escape(message);
+            message = escapeHtml(message);
         }
         getWriter().write(message);
+    }
+
+    /**
+     * Perform minimal HTML escaping similar to Guava HtmlEscapers.
+     *
+     * @param input
+     *            string to escape
+     * @return minimally escaped HTML safe string
+     */
+    private static String escapeHtml(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            switch (c) {
+            case '"':
+                sb.append("&quot;");
+                break;
+            case '\'':
+                sb.append("&#39;");
+                break;
+            case '&':
+                sb.append("&amp;");
+                break;
+            case '<':
+                sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            default:
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     @Override

@@ -40,6 +40,8 @@ public class GridLayoutState extends AbstractLayoutState {
     public Set<Integer> explicitColRatios = new HashSet<Integer>();
     public Map<Connector, ChildComponentData> childData = new HashMap<Connector, GridLayoutState.ChildComponentData>();
     public boolean hideEmptyRowsAndColumns = false;
+    public float[] rowExpand;
+    public float[] colExpand;
 
     public static class ChildComponentData implements Serializable {
         public int column1;

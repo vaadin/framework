@@ -219,6 +219,9 @@ public abstract class AbstractContainerTestBase {
             // Add again
             Item item2 = container.addItem("foo");
             Assert.assertNull(item2);
+
+            // Null is not a valid itemId
+            Assert.assertNull(container.addItem(null));
         } catch (UnsupportedOperationException e) {
             // Ignore contains which do not support addItem*
         }
@@ -256,10 +259,6 @@ public abstract class AbstractContainerTestBase {
     protected void validateAddItemAfter(Container.Ordered container) {
         if (container instanceof AbstractBeanContainer) {
             // Doesn't work as bean container requires beans
-            return;
-        }
-        if (container instanceof ContainerOrderedWrapper) {
-            // Doesn't work because of #19427
             return;
         }
 
@@ -534,7 +533,7 @@ public abstract class AbstractContainerTestBase {
     /**
      * Override in subclasses to return false if the container getItem() method
      * returns a non-null value for an item that has been filtered out.
-     * 
+     *
      * @return
      */
     protected boolean isFilteredOutItemNull() {

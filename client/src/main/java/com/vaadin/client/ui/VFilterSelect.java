@@ -28,6 +28,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -657,7 +658,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS.SP: setPosition(" + offsetWidth + ", " + offsetHeight
                     + ")");
 
-            int top = topPosition;
+            int top;
             int left = getPopupLeft();
 
             // reset menu size and retrieve its "natural" size
@@ -705,19 +706,31 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
-            final int vfsHeight = VFilterSelect.this.getOffsetHeight();
-            final int spaceAvailableAbove = top - vfsHeight;
-            final int spaceAvailableBelow = Window.getClientHeight() - top;
-            if (spaceAvailableBelow < offsetHeight
-                    && spaceAvailableBelow < spaceAvailableAbove) {
+            final int textInputHeight = VFilterSelect.this.getOffsetHeight();
+            final int textInputTopOnPage = tb.getAbsoluteTop();
+            final int viewportOffset = Document.get().getScrollTop();
+            final int textInputTopInViewport = textInputTopOnPage
+                    - viewportOffset;
+            final int textInputBottomInViewport = textInputTopInViewport
+                    + textInputHeight;
+
+            final int spaceAboveInViewport = textInputTopInViewport;
+            final int spaceBelowInViewport = Window.getClientHeight()
+                    - textInputBottomInViewport;
+
+            if (spaceBelowInViewport < offsetHeight
+                    && spaceBelowInViewport < spaceAboveInViewport) {
                 // popup on top of input instead
-                top -= offsetHeight + vfsHeight;
-                if (top < 0) {
-                    offsetHeight += top;
-                    top = 0;
+                if (offsetHeight > spaceAboveInViewport) {
+                    // Shrink popup height to fit above
+                    offsetHeight = spaceAboveInViewport;
                 }
+                top = textInputTopOnPage - offsetHeight;
             } else {
-                offsetHeight = Math.min(offsetHeight, spaceAvailableBelow);
+                // Show below, position calculated in showSuggestions for some
+                // strange reason
+                top = topPosition;
+                offsetHeight = Math.min(offsetHeight, spaceBelowInViewport);
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )

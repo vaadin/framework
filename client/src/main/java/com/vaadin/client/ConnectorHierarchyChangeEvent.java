@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.communication.AbstractServerConnectorEvent;
+import com.vaadin.client.ui.AbstractHasComponentsConnector;
 
 /**
  * Event for containing data related to a change in the {@link ServerConnector}
@@ -84,8 +85,37 @@ public class ConnectorHierarchyChangeEvent extends
         super.setConnector(connector);
     }
 
+    /**
+     * Handles connector hierarchy events. You should typically not directly
+     * implement this interface, but instead make your connector class extend
+     * {@link AbstractHasComponentsConnector} or an appropriate subclass.
+     */
     public interface ConnectorHierarchyChangeHandler extends Serializable,
             EventHandler {
+        /**
+         * Called by the framework when the list of child components of the
+         * connector implementing this interface has changed. The implementation
+         * is responsible for attaching the widgets of any new children and
+         * detaching the widgets of any removed children. Implementations should
+         * typically also make sure that the child widgets are attached
+         * according to the ordering of the child components.
+         * <p>
+         * This method is called after the shared state and hierarchy data (i.e.
+         * {@link AbstractHasComponentsConnector#setChildComponents(List)}) been
+         * updated for all affected connectors, but before updating captions,
+         * firing state change events, invoking updateFromUIDL for legacy
+         * connectors, invoking RPC and starting the layout phase.
+         * <p>
+         * Please note that hierarchy change events are fired in a
+         * non-deterministic order when a message from the server causes
+         * multiple parts of the hierarchy to change. This means that the old
+         * parent connector might not yet have detached a child widget and that
+         * the widget of a removed child might already have been attached by its
+         * new parent.
+         * 
+         * @param connectorHierarchyChangeEvent
+         *            the event with information about the hierarchy change
+         */
         public void onConnectorHierarchyChange(
                 ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent);
     }

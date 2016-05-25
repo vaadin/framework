@@ -10,6 +10,9 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class ComboBoxElement extends
         com.vaadin.testbench.elements.ComboBoxElement {
 
+    private static org.openqa.selenium.By bySuggestionPopup = By
+            .vaadin("#popup");
+
     public WebElement getInputField() {
         return findElement(By.vaadin("#textbox"));
     }
@@ -22,6 +25,10 @@ public class ComboBoxElement extends
     @Override
     public void clear() {
         getInputField().clear();
+    }
+
+    public WebElement getSuggestionPopup() {
+        return findElement(bySuggestionPopup);
     }
 
     @Override

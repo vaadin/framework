@@ -109,6 +109,10 @@ $v-letter-spacing--h4: 0 !default;
 
   .#{$primary-stylename} {
     @include user-select(text);
+
+    &.v-disabled {
+        @include opacity($v-disabled-opacity);
+    }
   }
 
   .#{$primary-stylename}-undef-w {

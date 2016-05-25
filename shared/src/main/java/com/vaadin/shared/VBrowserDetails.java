@@ -86,9 +86,10 @@ public class VBrowserDetails implements Serializable {
         // IE 11 no longer contains MSIE in the user agent
         isIE = isIE || isTrident;
 
-        isSafari = !isChrome && !isIE && userAgent.indexOf("safari") != -1;
-        isFirefox = userAgent.indexOf(" firefox/") != -1;
         isPhantomJS = userAgent.indexOf("phantomjs/") != -1;
+        isSafari = !isChrome && !isIE && !isPhantomJS
+                && userAgent.indexOf("safari") != -1;
+        isFirefox = userAgent.indexOf(" firefox/") != -1;
         if (userAgent.indexOf(" edge/") != -1) {
             isEdge = true;
             isChrome = false;
@@ -98,6 +99,7 @@ public class VBrowserDetails implements Serializable {
             isFirefox = false;
             isWebKit = false;
             isGecko = false;
+            isPhantomJS = false;
         }
 
         // chromeframe
@@ -174,6 +176,10 @@ public class VBrowserDetails implements Serializable {
             } else if (isEdge) {
                 int i = userAgent.indexOf(" edge/") + 6;
                 parseVersionString(safeSubstring(userAgent, i, i + 8));
+            } else if (isPhantomJS) {
+                String prefix = " phantomjs/";
+                int i = userAgent.indexOf(prefix) + prefix.length();
+                parseVersionString(safeSubstring(userAgent, i, i + 5));
             }
         } catch (Exception e) {
             // Browser version parsing failed
