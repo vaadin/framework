@@ -75,7 +75,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      * @param propertyId
      * @return the formatted caption string
      */
-    public static String createCaptionByPropertyId(Object propertyId) {
+    public String createCaptionByPropertyId(Object propertyId) {
         return SharedUtil.propertyIdToHumanFriendly(propertyId);
     }
 
@@ -95,7 +95,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      *            the type of the property
      * @return the most suitable generic {@link Field} for given type
      */
-    public static Field<?> createFieldByPropertyType(Class<?> type) {
+    public Field<?> createFieldByPropertyType(Class<?> type) {
         // Null typed properties can not be edited
         if (type == null) {
             return null;
