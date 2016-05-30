@@ -3011,7 +3011,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Sets whether the selection column is enabled.
          *
-         * @since
+         * @since 7.7
          * @param enabled <code>true</code> to enable the column,
          *                <code>false</code> to disable it.
          */

@@ -97,7 +97,7 @@ public class KeyMapper<V> implements Serializable {
     /**
      * Checks if the given key is mapped to an object.
      * 
-     * @since
+     * @since 7.7
      * 
      * @param key
      *            the key to check

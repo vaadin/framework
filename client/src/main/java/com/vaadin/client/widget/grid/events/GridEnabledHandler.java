@@ -18,10 +18,10 @@ package com.vaadin.client.widget.grid.events;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for a Grid enabled/disabled event, called when the Grid is enabled
- * or disabled.
+ * Handler for a Grid enabled/disabled event, called when the Grid is enabled or
+ * disabled.
  *
- * @since
+ * @since 7.7
  * @author Vaadin Ltd
  */
 public interface GridEnabledHandler extends EventHandler {
@@ -30,7 +30,8 @@ public interface GridEnabledHandler extends EventHandler {
      * Called when Grid is enabled or disabled.
      *
      * @param enabled
-     *         true if status changes from disabled to enabled, otherwise false.
+     *            true if status changes from disabled to enabled, otherwise
+     *            false.
      */
     public void onEnabled(boolean enabled);
 }
