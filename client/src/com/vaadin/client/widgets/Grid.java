@@ -5679,7 +5679,7 @@ public class Grid<T> extends ResizeComposite implements
                                     minCellWidth = escalator
                                             .getMinCellWidth(getColumns()
                                                     .indexOf(col));
-                                    for (Column<?, T> c : getColumns()) {
+                                    for (Column<?, T> c : getVisibleColumns()) {
                                         if (selectionColumn == c) {
                                             // Don't modify selection column.
                                             continue;
