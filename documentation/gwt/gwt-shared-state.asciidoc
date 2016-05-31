@@ -96,7 +96,7 @@ public MyComponentState getState() {
 
 State changes made on the server-side are communicated transparently to the
 client-side. When a state change occurs, the [methodname]#onStateChanged()#
-method in the connector is called. You should should always call the superclass
+method in the connector is called. You should always call the superclass
 method before anything else to handle changes to common component properties.
 
 
