@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -438,16 +437,16 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public void itemClick(CustomMenuItem item) {
         if (item.getCommand() != null) {
-            setSelected(null);
-
-            if (visibleChildMenu != null) {
-                visibleChildMenu.hideChildren();
+            try {
+                item.getCommand().execute();
+            } finally {
+                setSelected(null);
+                if (visibleChildMenu != null) {
+                    visibleChildMenu.hideChildren();
+                }
+                hideParents(true);
+                menuVisible = false;
             }
-
-            hideParents(true);
-            menuVisible = false;
-            Scheduler.get().scheduleDeferred(item.getCommand());
-
         } else {
             if (item.getSubMenu() != null
                     && item.getSubMenu() != visibleChildMenu) {
@@ -1526,23 +1525,19 @@ public class VMenuBar extends SimpleFocusablePanel
                 // selection there
                 openMenuAndFocusFirstIfPossible(getSelected());
             } else {
-                final Command command = getSelected().getCommand();
-
-                setSelected(null);
-                hideParents(true);
-
-                // #17076 keyboard selected menuitem without children: do
-                // not leave menu to visible ("hover open") mode
-                menuVisible = false;
-
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        if (command != null) {
-                            command.execute();
-                        }
+                try {
+                    final Command command = getSelected().getCommand();
+                    if (command != null) {
+                        command.execute();
                     }
-                });
+                } finally {
+                    setSelected(null);
+                    hideParents(true);
+
+                    // #17076 keyboard selected menuitem without children: do
+                    // not leave menu to visible ("hover open") mode
+                    menuVisible = false;
+                }
             }
         }
 
