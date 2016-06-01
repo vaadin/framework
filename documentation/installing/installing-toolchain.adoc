@@ -28,7 +28,7 @@ your entire toolchain supports it.
 
 [[figure.toolchain]]
 .Development Toolchain and Process
-image::img/toolchain-hi.png[width=70%]
+image::img/toolchain-hi.png[width=80%, scaledwidth=100%]
 
 <<figure.toolchain>> illustrates the development toolchain. You develop your
 application as an Eclipse project. The project must include, in addition to your

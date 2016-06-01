@@ -23,8 +23,8 @@ browser and the server. With the Vaadin approach, you do not need to learn and
 deal directly with browser technologies, such as HTML or JavaScript.
 
 [[figure.intro.architecture]]
-.Vaadin Application Architecture
-image::img/architecture-vaadin7-hi.png[]
+.Vaadin application architecture
+image::img/architecture.png[width=100%, scaledwidth=100%]
 
 <<figure.intro.architecture>> illustrates the basic architectures of web
 applications made with Vaadin. The server-side application architecture consists
@@ -84,6 +84,3 @@ for now. You can read more about it later in
 or jump straight to more practical things in
 <<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
 a Server-Side Web Application">>.
-
-
-

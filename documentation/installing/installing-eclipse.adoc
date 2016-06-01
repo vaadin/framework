@@ -16,8 +16,8 @@ Using Eclipse IDE for Vaadin development requires installing the IDE itself and 
 You are adviced to also configure a web server in Eclipse.
 You can then use the server for running the Vaadin applications that you create.
 
-.Installation of the Eclipse IDE toolchain
-image::img/installation-eclipse-hi.png[]
+.Installing the Eclipse IDE toolchain
+image::img/installation-eclipse-hi.png[width=90%, scaledwidth=100%]
 
 Vaadin Designer is a visual design tool for professional developers.
 It allows for easy creation of declarative designs.
