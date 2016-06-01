@@ -38,5 +38,11 @@ public enum HeightMode {
      * The height of the Component or Widget in question is defined by a number
      * of rows.
      */
-    ROW;
+    ROW,
+
+    /**
+     * The height of the Component or Widget in question is defined by its
+     * contents.
+     */
+    UNDEFINED;
 }

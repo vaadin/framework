@@ -3600,6 +3600,9 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             escalator.getBody().setSpacer(rowIndex, spacerHeight);
+            if (getHeightMode() == HeightMode.UNDEFINED) {
+                setHeightByRows(getEscalator().getBody().getRowCount());
+            }
         }
 
         @Override
@@ -3628,6 +3631,11 @@ public class Grid<T> extends ResizeComposite implements
 
                 setParent(detailsWidget, null);
                 spacerElement.removeAllChildren();
+                if (getHeightMode() == HeightMode.UNDEFINED) {
+                    // update spacer height
+                    escalator.getBody().setSpacer(spacer.getRow(), 0);
+                    setHeightByRows(getEscalator().getBody().getRowCount());
+                }
             }
         }
 
