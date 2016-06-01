@@ -19,7 +19,7 @@ by the application server or the application itself.
 
 [[figure.application.architecture]]
 .Server-Side Application Architecture
-image::img/application-architecture-hi.png[width=70%, scaledwidth=100%]
+image::img/application-architecture-hi.png[width=75%, scaledwidth=90%]
 
 <<figure.application.architecture>> illustrates the basic architecture of an
 application made with the Vaadin Framework, with all the major elements, which
