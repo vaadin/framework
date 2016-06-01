@@ -9,14 +9,13 @@ layout: page
 
 ((("[classname]#Field#", id="term.components.fields", range="startofrange")))
 
-
-__Fields__ are components that have a value that the user can change through the
-user interface. <<figure.components.fields>> illustrates the inheritance
-relationships and the important interfaces and base classes.
+_Fields_ are components that have a value that the user can change through the
+user interface.
+<<figure.components.fields>> illustrates the inheritance relationships and the important interfaces and base classes.
 
 [[figure.components.fields]]
 .Field components
-image::img/field-diagram-hi.png[width=60%, scaledwidth=100%]
+image::img/field-diagram-hi.png[width=80%, scaledwidth=100%]
 
 Field components are built upon the framework defined in the [classname]#Field#
 interface and the [classname]#AbstractField# base class.
@@ -28,6 +27,10 @@ addition to the component features inherited from
 
 The description of the field interfaces and base classes is broken down in the
 following sections.
+
+[[figure.components.fields.hasvalue]]
+.Field components having values
+image::img/field-interface-v8-hi.png[width=60%, scaledwidth=100%]
 
 [[components.fields.field]]
 == The [classname]#Field# Interface
