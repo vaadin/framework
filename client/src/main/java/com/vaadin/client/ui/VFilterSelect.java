@@ -903,7 +903,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         /**
-         * @since
+         * @since 7.7
          * @param suggestionPopupWidth
          * @return
          */
