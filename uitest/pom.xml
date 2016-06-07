@@ -168,6 +168,14 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-uitest-common</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -200,12 +208,6 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.2.6</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-testbench</artifactId>
-			<version>4.0.3</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- This should be removed once tests have been updated to use lang3 -->
 		<dependency>

@@ -72,7 +72,6 @@ import com.vaadin.testbench.elements.VerticalLayoutElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.ParallelTest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.UI;
 
 import elemental.json.JsonObject;
@@ -507,7 +506,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * For tests extending {@link AbstractTestUIWithLog}, returns the element
+     * For tests extending AbstractTestUIWithLog, returns the element
      * for the Nth log row
      * 
      * @param rowNr
@@ -519,7 +518,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * For tests extending {@link AbstractTestUIWithLog}, returns the text in
+     * For tests extending AbstractTestUIWithLog, returns the text in
      * the Nth log row
      * 
      * @param rowNr

@@ -59,6 +59,8 @@
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-liferay"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-uitest-common"
+            resolver="vaadin-maven" />
     </modules>
 
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
+package com.vaadin.tests.tb3;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -26,8 +26,6 @@ import java.util.Map;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-
-import com.vaadin.tests.tb3.TB3Runner;
 
 /**
  * TestBench test runner which supports static @Parameters annotated methods

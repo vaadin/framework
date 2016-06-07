@@ -25,8 +25,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.integration.ParameterizedTB3Runner;
-
 /**
  * Test which uses theme returned by {@link #getTheme()} for running the test
  */

@@ -30,6 +30,10 @@
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-uitest-common"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build->default">
             <exclude org="javax.servlet"></exclude>

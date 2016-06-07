@@ -100,6 +100,7 @@
 		<module>client-compiled</module>
 		<module>themes</module>
 		<module>widgets</module>
+		<module>uitest-common</module>
 		<module>uitest</module>
 		<module>liferay</module>
 		<module>all</module>

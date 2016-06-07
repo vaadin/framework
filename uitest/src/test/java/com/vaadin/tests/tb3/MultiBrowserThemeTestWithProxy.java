@@ -25,8 +25,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.integration.ParameterizedTB3Runner;
-
 @RunWith(ParameterizedTB3Runner.class)
 public abstract class MultiBrowserThemeTestWithProxy extends
         MultiBrowserTestWithProxy {
