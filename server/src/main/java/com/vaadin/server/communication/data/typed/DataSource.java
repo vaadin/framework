@@ -16,6 +16,8 @@
 package com.vaadin.server.communication.data.typed;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
@@ -61,4 +63,27 @@ public interface DataSource<T> extends Iterable<T>, Serializable {
      */
     void removeDataChangeHandler(DataChangeHandler<T> handler);
 
+    /**
+     * This method creates a new {@link ListDataSource} from a given Collection.
+     * The ListDataSource creates a protective List copy of all the contents in
+     * the Collection.
+     * 
+     * @param data
+     *            collection of data
+     * @return list data source
+     */
+    public static <T> ListDataSource<T> create(Collection<T> data) {
+        return new ListDataSource<>(data);
+    }
+
+    /**
+     * This method creates a new {@link ListDataSource} from given objects.
+     * 
+     * @param data
+     *            data objects
+     * @return list data source
+     */
+    public static <T> ListDataSource<T> create(T... data) {
+        return new ListDataSource<>(Arrays.asList(data));
+    }
 }
