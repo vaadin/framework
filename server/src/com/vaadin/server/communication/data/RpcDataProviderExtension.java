@@ -261,13 +261,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private boolean refreshCache = false;
 
     /** Set of updated item ids */
-    private Set<Object> updatedItemIds = new LinkedHashSet<Object>();
+    private transient Set<Object> updatedItemIds;
 
     /**
      * Queued RPC calls for adding and removing rows. Queue will be handled in
      * {@link beforeClientResponse}
      */
-    private List<Runnable> rowChanges = new ArrayList<Runnable>();
+    private transient List<Runnable> rowChanges;
 
     /** Size possibly changed with a bare ItemSetChangeEvent */
     private boolean bareItemSetTriggeredSizeChange = false;
@@ -334,22 +334,30 @@ public class RpcDataProviderExtension extends AbstractExtension {
             pushRowData(0, numberOfRows, 0, 0);
         } else {
             // Only do row changes if not initial response.
-            for (Runnable r : rowChanges) {
-                r.run();
+            if (rowChanges != null) {
+                for (Runnable r : rowChanges) {
+                    r.run();
+                }
             }
 
             // Send current rows again if needed.
             if (refreshCache) {
-                updatedItemIds.addAll(activeItemHandler.getActiveItemIds());
+                for (Object itemId : activeItemHandler.getActiveItemIds()) {
+                    updateRowData(itemId);
+                }
             }
         }
 
         internalUpdateRows(updatedItemIds);
 
         // Clear all changes.
-        rowChanges.clear();
+        if (rowChanges != null) {
+            rowChanges.clear();
+        }
+        if (updatedItemIds != null) {
+            updatedItemIds.clear();
+        }
         refreshCache = false;
-        updatedItemIds.clear();
         bareItemSetTriggeredSizeChange = false;
 
         super.beforeClientResponse(initial);
@@ -446,6 +454,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the number of rows inserted at <code>index</code>
      */
     private void insertRowData(final int index, final int count) {
+        if (rowChanges == null) {
+            rowChanges = new ArrayList<Runnable>();
+        }
+
         if (rowChanges.isEmpty()) {
             markAsDirty();
         }
@@ -475,6 +487,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the item id of the first removed item
      */
     private void removeRowData(final int index, final int count) {
+        if (rowChanges == null) {
+            rowChanges = new ArrayList<Runnable>();
+        }
+
         if (rowChanges.isEmpty()) {
             markAsDirty();
         }
@@ -496,6 +512,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the item Id the row that was updated
      */
     public void updateRowData(Object itemId) {
+        if (updatedItemIds == null) {
+            updatedItemIds = new LinkedHashSet<Object>();
+        }
+
         if (updatedItemIds.isEmpty()) {
             // At least one new item will be updated. Mark as dirty to actually
             // update before response to client.
@@ -506,7 +526,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     private void internalUpdateRows(Set<Object> itemIds) {
-        if (itemIds.isEmpty()) {
+        if (itemIds == null || itemIds.isEmpty()) {
             return;
         }
 
