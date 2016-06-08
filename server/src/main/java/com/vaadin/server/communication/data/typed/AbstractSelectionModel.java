@@ -18,8 +18,11 @@ package com.vaadin.server.communication.data.typed;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Extension;
+import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.components.Listing;
+
+import elemental.json.JsonObject;
 
 /**
  * Abstract base class for {@link SelectionModel}s.
@@ -28,7 +31,7 @@ import com.vaadin.ui.components.Listing;
  *            type of selected data
  */
 public abstract class AbstractSelectionModel<T> extends AbstractExtension
-        implements SelectionModel<T> {
+        implements SelectionModel<T>, TypedDataGenerator<T> {
 
     private Listing<T> parent;
 
@@ -44,8 +47,19 @@ public abstract class AbstractSelectionModel<T> extends AbstractExtension
         }
     }
 
+    // TODO: Following methods should be somewhere else being less weird.
+
     protected final Listing<T> getParentListing() {
         return parent;
+    }
+
+    protected final DataProvider<T> getDataProvider() {
+        for (Extension e : ((Component) parent).getExtensions()) {
+            if (e instanceof DataProvider) {
+                return ((DataProvider<T>) e);
+            }
+        }
+        return null;
     }
 
     protected final DataKeyMapper<T> getKeyMapper() {
@@ -63,5 +77,20 @@ public abstract class AbstractSelectionModel<T> extends AbstractExtension
             return keyMapper.get(key);
         }
         return null;
+    }
+
+    protected final void refresh(T value) {
+        getDataProvider().refresh(value);
+    }
+
+    @Override
+    public void generateData(T data, JsonObject jsonObject) {
+        if (getSelected().contains(data)) {
+            jsonObject.put(DataProviderConstants.SELECTED, true);
+        }
+    }
+
+    @Override
+    public void destroyData(T data) {
     }
 }

@@ -52,7 +52,11 @@ public class SingleSelectionConnector extends AbstractSelectionConnector {
 
         @Override
         public boolean isSelected(JsonObject item) {
-            return jsonEquals(value, item);
+            if (hasSelectedKey(item)) {
+                value = item;
+                return true;
+            }
+            return false;
         }
     }
 

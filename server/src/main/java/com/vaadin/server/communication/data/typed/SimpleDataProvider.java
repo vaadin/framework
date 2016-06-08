@@ -143,7 +143,7 @@ public class SimpleDataProvider<T> extends DataProvider<T> {
      * @param data
      *            updated data object
      */
-    protected void refresh(T data) {
+    public void refresh(T data) {
         if (updatedData.isEmpty()) {
             markAsDirty();
         }

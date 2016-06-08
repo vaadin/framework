@@ -248,6 +248,8 @@ public abstract class DataProvider<T> extends AbstractExtension {
     public DataKeyMapper<T> getKeyMapper() {
         return keyMapper;
     }
+    
+    public abstract void refresh(T data);
 
     /**
      * Sends given collection of data objects to the client-side.

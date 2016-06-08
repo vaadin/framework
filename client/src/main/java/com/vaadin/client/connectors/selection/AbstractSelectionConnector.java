@@ -58,4 +58,9 @@ public abstract class AbstractSelectionConnector extends
         }
         return a == b;
     }
+
+    protected static boolean hasSelectedKey(JsonObject item) {
+        String key = DataProviderConstants.SELECTED;
+        return item.hasKey(key) && item.getBoolean(key);
+    }
 }

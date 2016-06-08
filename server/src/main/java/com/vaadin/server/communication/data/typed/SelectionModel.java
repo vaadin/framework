@@ -76,6 +76,22 @@ public interface SelectionModel<T> extends Serializable, Extension {
     void setParentListing(Listing<T> target);
 
     /**
+     * Selects the given object.
+     * 
+     * @param value
+     *            selected value
+     */
+    void select(T value);
+
+    /**
+     * Deselects the given object.
+     * 
+     * @param value
+     *            deselected value
+     */
+    void deselect(T value);
+
+    /**
      * Dummy selection model.
      * 
      * @param <T>
@@ -104,6 +120,16 @@ public interface SelectionModel<T> extends Serializable, Extension {
         @Override
         public List<T> getSelected() {
             return Collections.emptyList();
+        }
+
+        @Override
+        public void select(T value) {
+            // NO-OP
+        }
+
+        @Override
+        public void deselect(T value) {
+            // NO-OP
         }
     }
 }

@@ -17,6 +17,7 @@ package com.vaadin.ui.components.nativeselect;
 
 import java.util.function.Function;
 
+import com.vaadin.server.Extension;
 import com.vaadin.server.communication.data.typed.DataProvider;
 import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.server.communication.data.typed.SelectionModel;
@@ -67,6 +68,11 @@ public class NativeSelect<T> extends AbstractComponent implements Listing<T> {
                 public void destroyData(T data) {
                 }
             });
+            for (Extension e : getExtensions()) {
+                if (e instanceof TypedDataGenerator) {
+                    dataProvider.addDataGenerator((TypedDataGenerator<T>) e);
+                }
+            }
         }
     }
 
@@ -92,6 +98,24 @@ public class NativeSelect<T> extends AbstractComponent implements Listing<T> {
         selectionModel = model;
         if (model != null) {
             model.setParentListing(this);
+        }
+    }
+
+    @Override
+    protected void addExtension(Extension extension) {
+        super.addExtension(extension);
+
+        if (dataProvider != null && extension instanceof TypedDataGenerator) {
+            dataProvider.addDataGenerator((TypedDataGenerator<T>) extension);
+        }
+    }
+
+    @Override
+    public void removeExtension(Extension extension) {
+        super.removeExtension(extension);
+
+        if (dataProvider != null && extension instanceof TypedDataGenerator) {
+            dataProvider.removeDataGenerator((TypedDataGenerator<T>) extension);
         }
     }
 

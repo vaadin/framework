@@ -64,7 +64,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
     public void setValue(T value) {
         if (this.value != value) {
             this.value = value;
-            // TODO: fire event
+            refresh(value);
         }
     }
 
@@ -78,5 +78,19 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
         return () -> {
             // TODO: Event registration
         };
+    }
+
+    @Override
+    public void select(T value) {
+        if (this.value != value) {
+            setValue(value);
+        }
+    }
+
+    @Override
+    public void deselect(T value) {
+        if (this.value == value) {
+            setValue(null);
+        }
     }
 }

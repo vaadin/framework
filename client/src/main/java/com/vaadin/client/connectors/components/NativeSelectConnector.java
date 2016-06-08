@@ -17,6 +17,8 @@ package com.vaadin.client.connectors.components;
 
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.ListBox;
@@ -48,6 +50,9 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
                 JsonObject item = dataSource.getRow(index);
                 getWidget().setItemText(index, item.getString("n"));
                 getWidget().setValue(index, item.getString("k"));
+                if (selectionModel.isSelected(item)) {
+                    getWidget().setSelectedIndex(index);
+                }
             }
         }
 
@@ -61,7 +66,16 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
 
         @Override
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
-            // NO-OP
+            if (getWidget().getItemCount() == firstRowIndex) {
+                for (int i = 0; i < numberOfRows; ++i) {
+                    JsonObject item = dataSource.getRow(i + firstRowIndex);
+                    getWidget().addItem(item.getString("n"),
+                            item.getString("k"));
+                    if (selectionModel.isSelected(item)) {
+                        getWidget().setSelectedIndex(i + firstRowIndex);
+                    }
+                }
+            }
         }
 
         @Override
@@ -69,9 +83,11 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
             if (getWidget().getItemCount() == firstRowIndex) {
                 for (int i = 0; i < numberOfRows; ++i) {
                     JsonObject item = dataSource.getRow(i + firstRowIndex);
-                    Logger.getLogger("foo").warning(item.toJson());
                     getWidget().addItem(item.getString("n"),
                             item.getString("k"));
+                    if (selectionModel.isSelected(item)) {
+                        getWidget().setSelectedIndex(i + firstRowIndex);
+                    }
                 }
             } else {
                 resetContent();
@@ -81,6 +97,7 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
 
     private DataSource<JsonObject> dataSource;
     private SelectionModel selectionModel;
+    private boolean scheduled;
 
     @Override
     public ListBox getWidget() {
@@ -112,7 +129,6 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
         }
         this.dataSource = dataSource;
         dataSource.setDataChangeHandler(new NativeSelectDataChangeHandler());
-        resetContent();
     }
 
     @Override
@@ -121,10 +137,25 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
     }
 
     private void resetContent() {
-        getWidget().clear();
-        for (int i = 0; i < dataSource.size(); ++i) {
-            JsonObject item = dataSource.getRow(i);
-            getWidget().addItem(item.getString("n"), item.getString("k"));
+        if (scheduled) {
+            return;
         }
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                getWidget().clear();
+                for (int i = 0; i < dataSource.size(); ++i) {
+                    JsonObject item = dataSource.getRow(i);
+                    getWidget().addItem(item.getString("n"),
+                            item.getString("k"));
+                    if (selectionModel.isSelected(item)) {
+                        getWidget().setSelectedIndex(i);
+                    }
+                }
+                scheduled = false;
+            }
+        });
+        scheduled = true;
     }
 }
