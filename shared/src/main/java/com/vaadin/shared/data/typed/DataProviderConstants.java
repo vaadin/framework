@@ -26,4 +26,5 @@ import java.io.Serializable;
 public final class DataProviderConstants implements Serializable {
     public static final String KEY = "k";
     public static final String SELECTED = "s";
+    public static final String NAME = "n";
 }

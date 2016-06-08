@@ -21,6 +21,7 @@ import com.vaadin.server.communication.data.typed.DataProvider;
 import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.server.communication.data.typed.SingleSelection;
 import com.vaadin.server.communication.data.typed.TypedDataGenerator;
+import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.ui.components.AbstractListing;
 
 import elemental.json.JsonObject;
@@ -36,7 +37,8 @@ public class NativeSelect<T> extends AbstractListing<T> {
 
             @Override
             public void generateData(T data, JsonObject jsonObject) {
-                jsonObject.put("n", nameProvider.apply(data));
+                jsonObject.put(DataProviderConstants.NAME,
+                        nameProvider.apply(data));
             }
 
             @Override
