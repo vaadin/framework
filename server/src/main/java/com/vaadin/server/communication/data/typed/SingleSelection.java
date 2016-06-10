@@ -64,7 +64,9 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
     public void setValue(T value) {
         if (this.value != value) {
             this.value = value;
-            refresh(value);
+            if (value != null) {
+                refresh(value);
+            }
         }
     }
 
