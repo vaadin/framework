@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.vaadin.event.handler.Registration;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -172,7 +173,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
     protected DataProviderClientRpc rpc;
 
     protected DataSource<T> dataSource;
-    private DataChangeHandler<T> dataChangeHandler;
+    private Registration dataChangeHandler;
     private DetachListener detachListener;
     private DataKeyMapper<T> keyMapper;
 
@@ -181,8 +182,8 @@ public abstract class DataProvider<T> extends AbstractExtension {
         this.dataSource = dataSource;
         rpc = getRpcProxy(DataProviderClientRpc.class);
         registerRpc(createRpc());
-        dataChangeHandler = createDataChangeHandler();
-        this.dataSource.addDataChangeHandler(dataChangeHandler);
+        dataChangeHandler = this.dataSource
+                .addDataChangeHandler(createDataChangeHandler());
         keyMapper = createKeyMapper();
     }
 
@@ -242,7 +243,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
     public DataKeyMapper<T> getKeyMapper() {
         return keyMapper;
     }
-    
+
     public abstract void refresh(T data);
 
     /**
@@ -311,7 +312,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
      */
     protected void cleanUp() {
         if (dataSource != null) {
-            dataSource.removeDataChangeHandler(dataChangeHandler);
+            dataChangeHandler.removeHandler();
             dataChangeHandler = null;
         }
         if (detachListener != null) {

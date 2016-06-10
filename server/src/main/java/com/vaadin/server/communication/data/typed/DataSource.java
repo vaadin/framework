@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.vaadin.event.handler.Registration;
+
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
@@ -53,15 +55,7 @@ public interface DataSource<T> extends Iterable<T>, Serializable {
      * @param handler
      *            data change handler
      */
-    void addDataChangeHandler(DataChangeHandler<T> handler);
-
-    /**
-     * Removed a DataChangeHandler from this DataSource.
-     * 
-     * @param handler
-     *            data change handler
-     */
-    void removeDataChangeHandler(DataChangeHandler<T> handler);
+    Registration addDataChangeHandler(DataChangeHandler<T> handler);
 
     /**
      * This method creates a new {@link ListDataSource} from a given Collection.

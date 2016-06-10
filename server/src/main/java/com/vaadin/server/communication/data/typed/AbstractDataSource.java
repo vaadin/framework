@@ -18,6 +18,8 @@ package com.vaadin.server.communication.data.typed;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.vaadin.event.handler.Registration;
+
 /**
  * Base class for AbstractDataSource. Provides tracking for
  * {@link DataChangeHandler}s and helper methods to call them.
@@ -26,18 +28,15 @@ import java.util.Set;
  */
 public abstract class AbstractDataSource<T> implements DataSource<T> {
 
-    protected Set<DataChangeHandler<T>> handlers = new LinkedHashSet<DataChangeHandler<T>>();
+    protected final Set<DataChangeHandler<T>> handlers = new LinkedHashSet<DataChangeHandler<T>>();
 
     @Override
-    public void addDataChangeHandler(DataChangeHandler<T> handler) {
+    public Registration addDataChangeHandler(DataChangeHandler<T> handler) {
         if (handler != null) {
             handlers.add(handler);
+            return () -> handlers.remove(handler);
         }
-    }
-
-    @Override
-    public void removeDataChangeHandler(DataChangeHandler<T> handler) {
-        handlers.remove(handler);
+        return () -> { /* NO-OP */ };
     }
 
     /**
