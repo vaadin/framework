@@ -52,6 +52,8 @@ public interface HasValue<V> extends Serializable {
      * @param handler
      *            on change event handler
      * @return registration for the handler
+     * @throws IllegalArgumentException
+     *             if handler is null
      */
     Registration onChange(Handler<V> handler);
 }

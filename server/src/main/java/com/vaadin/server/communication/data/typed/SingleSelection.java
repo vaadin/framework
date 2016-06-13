@@ -17,6 +17,8 @@ package com.vaadin.server.communication.data.typed;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.vaadin.event.handler.Handler;
 import com.vaadin.event.handler.Registration;
@@ -32,18 +34,20 @@ import com.vaadin.shared.data.selection.SelectionServerRpc;
 public class SingleSelection<T> extends AbstractSelectionModel<T> implements
         Single<T> {
 
+    private final LinkedHashSet<Handler<T>> handlers = new LinkedHashSet<>();
+
     public SingleSelection() {
         registerRpc(new SelectionServerRpc() {
 
             @Override
             public void select(String key) {
-                setValue(getData(key));
+                setValue(getData(key), true);
             }
 
             @Override
             public void deselect(String key) {
                 if (getData(key).equals(value)) {
-                    setValue(null);
+                    setValue(null, true);
                 }
             }
         });
@@ -62,10 +66,22 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
 
     @Override
     public void setValue(T value) {
+        setValue(value, false);
+    }
+
+    protected void setValue(T value, boolean userOriginated) {
         if (this.value != value) {
+            if (this.value != null) {
+                refresh(this.value);
+            }
             this.value = value;
             if (value != null) {
                 refresh(value);
+            }
+            Set<Handler<T>> copy = new LinkedHashSet<>(handlers);
+            for (Handler<T> handler : copy) {
+                handler.handleEvent(new com.vaadin.event.handler.Event<T>(this
+                        .getParent(), value, userOriginated));
             }
         }
     }
@@ -77,9 +93,11 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
 
     @Override
     public Registration onChange(Handler<T> handler) {
-        return () -> {
-            // TODO: Event registration
-        };
+        if (handler == null) {
+            throw new IllegalArgumentException("Handler can't be null");
+        }
+        handlers.add(handler);
+        return () -> handlers.remove(handler);
     }
 
     @Override
