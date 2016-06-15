@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.vaadin.event.handler.Handler;
 import com.vaadin.event.handler.Registration;
-import com.vaadin.server.Extension;
+import com.vaadin.server.ListingExtension;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.components.HasValue;
 import com.vaadin.ui.components.Listing;
@@ -34,7 +34,7 @@ import com.vaadin.ui.components.Listing;
  * @param <T>
  *            type of selected values
  */
-public interface SelectionModel<T> extends Serializable, Extension {
+public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
 
     /**
      * Selection model for selection a single value.

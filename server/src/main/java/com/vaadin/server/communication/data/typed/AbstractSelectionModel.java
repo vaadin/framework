@@ -16,10 +16,10 @@
 package com.vaadin.server.communication.data.typed;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Extension;
 import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.components.AbstractListing.AbstractListingExtension;
 import com.vaadin.ui.components.Listing;
 
 import elemental.json.JsonObject;
@@ -30,8 +30,8 @@ import elemental.json.JsonObject;
  * @param <T>
  *            type of selected data
  */
-public abstract class AbstractSelectionModel<T> extends AbstractExtension
-        implements SelectionModel<T>, TypedDataGenerator<T> {
+public abstract class AbstractSelectionModel<T> extends
+        AbstractListingExtension<T> implements SelectionModel<T> {
 
     private Listing<T> parent;
 
@@ -45,42 +45,6 @@ public abstract class AbstractSelectionModel<T> extends AbstractExtension
             throw new IllegalArgumentException(
                     "Extended object was not suitable for a SelectionModel");
         }
-    }
-
-    // TODO: Following methods should be somewhere else being less weird.
-
-    protected final Listing<T> getParentListing() {
-        return parent;
-    }
-
-    protected final DataProvider<T> getDataProvider() {
-        for (Extension e : ((Component) parent).getExtensions()) {
-            if (e instanceof DataProvider) {
-                return ((DataProvider<T>) e);
-            }
-        }
-        return null;
-    }
-
-    protected final DataKeyMapper<T> getKeyMapper() {
-        for (Extension e : ((Component) parent).getExtensions()) {
-            if (e instanceof DataProvider) {
-                return ((DataProvider<T>) e).getKeyMapper();
-            }
-        }
-        return null;
-    }
-
-    protected final T getData(String key) {
-        DataKeyMapper<T> keyMapper = getKeyMapper();
-        if (keyMapper != null) {
-            return keyMapper.get(key);
-        }
-        return null;
-    }
-
-    protected final void refresh(T value) {
-        getDataProvider().refresh(value);
     }
 
     @Override

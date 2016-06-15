@@ -17,62 +17,46 @@ package com.vaadin.ui.components.nativeselect;
 
 import java.util.function.Function;
 
-import com.vaadin.server.Extension;
 import com.vaadin.server.communication.data.typed.DataProvider;
 import com.vaadin.server.communication.data.typed.DataSource;
-import com.vaadin.server.communication.data.typed.SelectionModel;
 import com.vaadin.server.communication.data.typed.SingleSelection;
 import com.vaadin.server.communication.data.typed.TypedDataGenerator;
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.components.Listing;
+import com.vaadin.ui.components.AbstractListing;
 
 import elemental.json.JsonObject;
 
-public class NativeSelect<T> extends AbstractComponent implements Listing<T> {
+public class NativeSelect<T> extends AbstractListing<T> {
 
     private DataSource<T> dataSource;
-    private DataProvider<T> dataProvider;
-    private SelectionModel<T> selectionModel;
     private Function<T, String> nameProvider = T::toString;
 
     public NativeSelect() {
-        internalSetSelectionModel(new SingleSelection<>());
+        setSelectionModel(new SingleSelection<>());
+        addDataGenerator(new TypedDataGenerator<T>() {
+
+            @Override
+            public void generateData(T data, JsonObject jsonObject) {
+                jsonObject.put("n", nameProvider.apply(data));
+            }
+
+            @Override
+            public void destroyData(T data) {
+            }
+        });
     }
 
     public NativeSelect(DataSource<T> dataSource) {
         this();
-        internalSetDataSource(dataSource);
+        setDataSource(dataSource);
     }
 
     @Override
     public void setDataSource(DataSource<T> data) {
-        internalSetDataSource(data);
-    }
-
-    private void internalSetDataSource(DataSource<T> data) {
-        if (dataProvider != null) {
-            dataProvider.remove();
-            dataProvider = null;
-        }
         dataSource = data;
         if (dataSource != null) {
-            dataProvider = DataProvider.create(dataSource, this);
-            dataProvider.addDataGenerator(new TypedDataGenerator<T>() {
-
-                @Override
-                public void generateData(T data, JsonObject jsonObject) {
-                    jsonObject.put("n", nameProvider.apply(data));
-                }
-
-                @Override
-                public void destroyData(T data) {
-                }
-            });
-            for (Extension e : getExtensions()) {
-                if (e instanceof TypedDataGenerator) {
-                    dataProvider.addDataGenerator((TypedDataGenerator<T>) e);
-                }
-            }
+            setDataProvider(DataProvider.create(dataSource, this));
+        } else {
+            setDataProvider(null);
         }
     }
 
@@ -80,43 +64,4 @@ public class NativeSelect<T> extends AbstractComponent implements Listing<T> {
     public DataSource<T> getDataSource() {
         return dataSource;
     }
-
-    @Override
-    public SelectionModel<T> getSelectionModel() {
-        return selectionModel;
-    }
-
-    @Override
-    public void setSelectionModel(SelectionModel<T> model) {
-        internalSetSelectionModel(model);
-    }
-
-    private void internalSetSelectionModel(SelectionModel<T> model) {
-        if (selectionModel != null) {
-            selectionModel.remove();
-        }
-        selectionModel = model;
-        if (model != null) {
-            model.setParentListing(this);
-        }
-    }
-
-    @Override
-    protected void addExtension(Extension extension) {
-        super.addExtension(extension);
-
-        if (dataProvider != null && extension instanceof TypedDataGenerator) {
-            dataProvider.addDataGenerator((TypedDataGenerator<T>) extension);
-        }
-    }
-
-    @Override
-    public void removeExtension(Extension extension) {
-        super.removeExtension(extension);
-
-        if (dataProvider != null && extension instanceof TypedDataGenerator) {
-            dataProvider.removeDataGenerator((TypedDataGenerator<T>) extension);
-        }
-    }
-
 }

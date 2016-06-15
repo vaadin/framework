@@ -46,11 +46,6 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * Creates the appropriate type of DataProvider based on the type of
      * Collection provided to the method.
      * <p>
-     * <strong>Note:</strong> this method will also extend the given component
-     * with the newly created DataProvider. The user should <strong>not</strong>
-     * call the {@link #extend(com.vaadin.server.AbstractClientConnector)}
-     * method explicitly.
-     * <p>
      * TODO: Actually use different DataProviders and provide an API for the
      * back end to inform changes back.
      * 
@@ -63,7 +58,6 @@ public abstract class DataProvider<T> extends AbstractExtension {
     public static <V> SimpleDataProvider<V> create(DataSource<V> data,
             AbstractComponent component) {
         SimpleDataProvider<V> dataProvider = new SimpleDataProvider<V>(data);
-        dataProvider.extend(component);
         return dataProvider;
     }
 
