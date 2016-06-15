@@ -25,7 +25,6 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.handler.Handler;
 import com.vaadin.event.handler.Registration;
@@ -44,6 +43,17 @@ import com.vaadin.ui.declarative.DesignContext;
 public abstract class AbstractTextField extends AbstractComponent
         implements HasValue<String> {
 
+    public static class TextChangeEvent
+            extends com.vaadin.event.handler.Event<String> {
+
+        public static final String ID = TextChangeListener.EVENT_ID;
+
+        public TextChangeEvent(AbstractTextField source, String text,
+                boolean userOriginated) {
+            super(source, text, userOriginated);
+        }
+    }
+
     protected AbstractTextField() {
         registerRpc(new TextFieldServerRpc() {
 
@@ -61,18 +71,8 @@ public abstract class AbstractTextField extends AbstractComponent
             public void setText(String text) {
                 if (!isReadOnly()) {
                     setValue(text);
-                    fireEvent(new TextChangeEvent(AbstractTextField.this) {
-
-                        @Override
-                        public String getText() {
-                            return text;
-                        }
-
-                        @Override
-                        public int getCursorPosition() {
-                            return 0; // TODO
-                        }
-                    });
+                    fireEvent(new TextChangeEvent(AbstractTextField.this, text,
+                            true));
                 }
             }
         });
@@ -143,17 +143,7 @@ public abstract class AbstractTextField extends AbstractComponent
 
     @Override
     public Registration onChange(Handler<String> handler) {
-        if (handler == null)
-            throw new IllegalArgumentException("Handler can't be null");
-        
-        TextChangeListener l = e -> handler
-                .handleEvent(new com.vaadin.event.handler.Event<String>(this,
-                        e.getText(), true));
-
-        addListener(TextChangeListener.EVENT_ID, TextChangeEvent.class, l,
-                TextChangeListener.EVENT_METHOD);
-
-        return () -> removeListener(TextChangeEvent.class, l);
+        return onEvent(TextChangeEvent.ID, TextChangeEvent.class, handler);
     }
 
     /**

@@ -17,8 +17,6 @@ package com.vaadin.server.communication.data.typed;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import com.vaadin.event.handler.Handler;
 import com.vaadin.event.handler.Registration;
@@ -31,10 +29,8 @@ import com.vaadin.shared.data.selection.SelectionServerRpc;
  * @param <T>
  *            type of selected data
  */
-public class SingleSelection<T> extends AbstractSelectionModel<T> implements
-        Single<T> {
-
-    private final LinkedHashSet<Handler<T>> handlers = new LinkedHashSet<>();
+public class SingleSelection<T> extends AbstractSelectionModel<T>
+        implements Single<T> {
 
     public SingleSelection() {
         registerRpc(new SelectionServerRpc() {
@@ -78,11 +74,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
             if (value != null) {
                 refresh(value);
             }
-            Set<Handler<T>> copy = new LinkedHashSet<>(handlers);
-            for (Handler<T> handler : copy) {
-                handler.handleEvent(new com.vaadin.event.handler.Event<T>(this
-                        .getParent(), value, userOriginated));
-            }
+            fireEvent(new SelectionEvent<T>(this, value, userOriginated));
         }
     }
 
@@ -93,11 +85,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
 
     @Override
     public Registration onChange(Handler<T> handler) {
-        if (handler == null) {
-            throw new IllegalArgumentException("Handler can't be null");
-        }
-        handlers.add(handler);
-        return () -> handlers.remove(handler);
+        return onEvent(SelectionEvent.class, handler);
     }
 
     @Override

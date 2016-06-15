@@ -30,11 +30,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
+import com.vaadin.event.handler.Handler;
+import com.vaadin.event.handler.Registration;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
@@ -44,6 +46,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -54,8 +57,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public abstract class AbstractClientConnector implements ClientConnector,
-        MethodEventSource {
+public abstract class AbstractClientConnector
+        implements ClientConnector, MethodEventSource {
     /**
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
@@ -135,7 +138,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
-        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("markAsDirty()");
+        assert getSession() == null
+                || getSession().hasLock() : buildLockAssertMessage(
+                        "markAsDirty()");
         UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
@@ -167,8 +172,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     protected <T extends ServerRpc> void registerRpc(T implementation,
             Class<T> rpcInterfaceType) {
-        rpcManagerMap.put(rpcInterfaceType.getName(), new ServerRpcManager<T>(
-                implementation, rpcInterfaceType));
+        rpcManagerMap.put(rpcInterfaceType.getName(),
+                new ServerRpcManager<T>(implementation, rpcInterfaceType));
     }
 
     /**
@@ -202,7 +207,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     @SuppressWarnings("unchecked")
-    private Class<ServerRpc> getServerRpcInterface(Class<?> implementationClass) {
+    private Class<ServerRpc> getServerRpcInterface(
+            Class<?> implementationClass) {
         Class<ServerRpc> serverRpcClass = null;
         if (implementationClass != null) {
             for (Class<?> candidateInterface : implementationClass
@@ -247,7 +253,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see #getState()
      */
     protected SharedState getState(boolean markAsDirty) {
-        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("getState()");
+        assert getSession() == null
+                || getSession().hasLock() : buildLockAssertMessage(
+                        "getState()");
 
         if (null == sharedState) {
             sharedState = createState();
@@ -288,9 +296,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
         try {
             return getStateType().newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(
-                    "Error creating state of type " + getStateType().getName()
-                            + " for " + getClass().getName(), e);
+            throw new RuntimeException("Error creating state of type "
+                    + getStateType().getName() + " for " + getClass().getName(),
+                    e);
         }
     }
 
@@ -326,11 +334,11 @@ public abstract class AbstractClientConnector implements ClientConnector,
                 // Try in superclass instead
                 class1 = class1.getSuperclass();
             }
-            throw new NoSuchMethodException(getClass().getCanonicalName()
-                    + ".getState()");
+            throw new NoSuchMethodException(
+                    getClass().getCanonicalName() + ".getState()");
         } catch (Exception e) {
-            throw new RuntimeException("Error finding state type for "
-                    + getClass().getName(), e);
+            throw new RuntimeException(
+                    "Error finding state type for " + getClass().getName(), e);
         }
     }
 
@@ -365,8 +373,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
     }
 
-    private class RpcInvocationHandler implements InvocationHandler,
-            Serializable {
+    private class RpcInvocationHandler
+            implements InvocationHandler, Serializable {
 
         private String rpcInterfaceName;
 
@@ -470,10 +478,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
             connector = connector.getParent();
         }
         return null;
-    }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(AbstractClientConnector.class.getName());
     }
 
     /**
@@ -708,8 +712,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            association.
      */
     protected void setResource(String key, Resource resource) {
-        ResourceReference resourceReference = ResourceReference.create(
-                resource, this, key);
+        ResourceReference resourceReference = ResourceReference.create(resource,
+                this, key);
 
         if (resourceReference == null) {
             getState().resources.remove(key);
@@ -883,7 +887,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     @Override
     @Deprecated
-    public void addListener(Class<?> eventType, Object target, String methodName) {
+    public void addListener(Class<?> eventType, Object target,
+            String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -935,7 +940,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            listen to events of type <code>eventType</code>.
      */
     @Override
-    public void removeListener(Class<?> eventType, Object target, Method method) {
+    public void removeListener(Class<?> eventType, Object target,
+            Method method) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, method);
         }
@@ -1007,6 +1013,26 @@ public abstract class AbstractClientConnector implements ClientConnector,
         if (eventRouter != null) {
             eventRouter.fireEvent(event);
         }
+    }
+
+    private static final Method EVENT_HANDLER_METHOD = ReflectTools.findMethod(
+            Handler.class, "accept", com.vaadin.event.handler.Event.class);
+
+    @SuppressWarnings("rawtypes")
+    protected <T> Registration onEvent(
+            Class<? extends com.vaadin.event.handler.Event> eventType,
+            Handler<? super T> handler) {
+        Objects.requireNonNull(handler, "Handler cannot be null");
+        addListener(eventType, handler, EVENT_HANDLER_METHOD);
+        return () -> removeListener(eventType, handler);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected <T> Registration onEvent(String eventId,
+            Class<? extends com.vaadin.event.handler.Event> eventType,
+            Handler<? super T> handler) {
+        addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
+        return () -> removeListener(eventType, handler);
     }
 
     /*

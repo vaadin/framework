@@ -16,6 +16,7 @@
 package com.vaadin.event.handler;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * Generic interface for event handlers. Event handlers are removed using a
@@ -26,14 +27,20 @@ import java.io.Serializable;
  * @see Registration
  * @param <T>
  *            event pay load type
- * 
  */
-public interface Handler<T> extends Serializable {
+@FunctionalInterface
+public interface Handler<T> extends Consumer<Event<T>>, Serializable {
 
     /**
+     * Handles the given event.
      * 
-     * 
-     * @param event
+     * @param e
+     *            the event
      */
-    public void handleEvent(Event<T> event);
+    // TODO In addition to customizing the Javadoc, this override is needed to
+    // make ReflectTools.findMethod work as expected. It uses
+    // Class.getDeclaredMethod, but even if it used getMethod instead, the
+    // superinterface argument type is Object, not Event, after type erasure.
+    @Override
+    void accept(Event<T> e);
 }

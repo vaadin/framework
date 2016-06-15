@@ -61,7 +61,7 @@ public class Binder<T> implements Serializable {
             }
         }
     }
-    
+
     /**
      * Gets the bean that has been bound with {@link #bind}.
      * 

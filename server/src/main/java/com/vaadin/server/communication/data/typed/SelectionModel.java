@@ -17,11 +17,8 @@ package com.vaadin.server.communication.data.typed;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ListingExtension;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.components.HasValue;
@@ -35,6 +32,14 @@ import com.vaadin.ui.components.Listing;
  *            type of selected values
  */
 public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
+
+    public class SelectionEvent<T>
+            extends com.vaadin.event.handler.Event<T> {
+        public SelectionEvent(ClientConnector source, T value,
+                boolean userOriginated) {
+            super(source, value, userOriginated);
+        }
+    }
 
     /**
      * Selection model for selection a single value.
@@ -51,8 +56,8 @@ public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
      * @param <T>
      *            type of selected values
      */
-    public interface Multi<T> extends SelectionModel<T>,
-            HasValue<Collection<T>> {
+    public interface Multi<T>
+            extends SelectionModel<T>, HasValue<Collection<T>> {
     }
 
     /**

@@ -16,8 +16,6 @@
 package com.vaadin.ui.components.fields;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -35,7 +33,12 @@ import com.vaadin.ui.declarative.DesignContext;
 
 public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
 
-    private final LinkedHashSet<Handler<Boolean>> handlers = new LinkedHashSet<>();
+    public class StateChangeEvent
+            extends com.vaadin.event.handler.Event<Boolean> {
+        public StateChangeEvent(Boolean value, boolean userOriginated) {
+            super(CheckBox.this, value, userOriginated);
+        }
+    }
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
 
@@ -58,18 +61,12 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
             getUI().getConnectorTracker().getDiffState(CheckBox.this)
                     .put("checked", checked);
 
-            final Boolean oldValue = getValue();
-            final Boolean newValue = checked;
-
-            if (!newValue.equals(oldValue)) {
-                // The event is only sent if the switch state is changed
-                setValue(newValue, true);
-            }
-
+            setValue(checked, true);
         }
     };
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
         @Override
         protected void fireEvent(Event event) {
             CheckBox.this.fireEvent(event);
@@ -86,10 +83,10 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     }
 
     /**
-     * Creates a new checkbox with a set caption.
+     * Creates a new {@code CheckBox} with the given caption.
      * 
      * @param caption
-     *            the Checkbox caption.
+     *            the check box caption
      */
     public CheckBox(String caption) {
         this();
@@ -97,12 +94,12 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     }
 
     /**
-     * Creates a new checkbox with a caption and a set initial state.
+     * Creates a new {@code CheckBox} with the given caption and initial state.
      * 
      * @param caption
-     *            the caption of the checkbox
+     *            the caption of the check box
      * @param initialState
-     *            the initial state of the checkbox
+     *            the initial state of the check box
      */
     public CheckBox(String caption, boolean initialState) {
         this(caption);
@@ -114,46 +111,37 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
         setValue(value, false);
     }
 
-    protected void setValue(Boolean value, Boolean userOriginated) {
-        getState().checked = value;
-
-        if (!userOriginated)
-            markAsDirty();
-
-        if (!handlers.isEmpty()) {
-            // name conflict
-            com.vaadin.event.handler.Event<Boolean> event = new com.vaadin.event.handler.Event<Boolean>(
-                    this, new Boolean(value), userOriginated);
-            Set<Handler<Boolean>> copy = new LinkedHashSet<>(handlers);
-            for (Handler<Boolean> handler : copy) {
-                handler.handleEvent(event);
-            }
+    protected void setValue(Boolean value, boolean userOriginated) {
+        if (isReadOnly() && userOriginated) {
+            return;
         }
+        if (value == getValue()) {
+            return;
+        }
+        getState(!userOriginated).checked = value;
+        fireEvent(new StateChangeEvent(value, userOriginated));
     }
 
     @Override
     public Registration onChange(Handler<Boolean> handler) {
-        if (handler == null)
-            throw new IllegalArgumentException("Handler can't be null");
-        handlers.add(handler);
-        return () -> handlers.remove(handler);
+        return onEvent(StateChangeEvent.class, handler);
     }
 
     @Override
     public Boolean getValue() {
-        return getState().checked;
+        return getState(false).checked;
     }
 
     @Override
     protected CheckBoxState getState() {
         return (CheckBoxState) super.getState();
     }
-    
+
     @Override
     protected CheckBoxState getState(boolean markAsDirty) {
         return (CheckBoxState) super.getState(markAsDirty);
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -164,12 +152,11 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("checked")) {
-            this.setValue(
-                    DesignAttributeHandler.readAttribute("checked",
-                            design.attributes(), Boolean.class), false);
+            this.setValue(DesignAttributeHandler.readAttribute("checked",
+                    design.attributes(), Boolean.class), false);
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -184,7 +171,7 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
         DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
                 def.getValue(), Boolean.class);
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -196,5 +183,4 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
         attributes.add("checked");
         return attributes;
     }
-
 }

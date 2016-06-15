@@ -17,7 +17,7 @@ package com.vaadin.event.handler;
 
 import java.util.EventObject;
 
-import com.vaadin.ui.Component;
+import com.vaadin.server.ClientConnector;
 
 /**
  * Generic event object typed for pay load.
@@ -49,7 +49,7 @@ public class Event<T> extends EventObject {
      * @param userOriginated
      *            is the event from API call or client update
      */
-    public Event(Component source, T value, boolean userOriginated) {
+    public Event(ClientConnector source, T value, boolean userOriginated) {
         super(source);
         this.value = value;
         this.userOriginated = userOriginated;
@@ -75,7 +75,7 @@ public class Event<T> extends EventObject {
     }
 
     @Override
-    public Component getSource() {
-        return (Component) super.getSource();
+    public ClientConnector getSource() {
+        return (ClientConnector) super.getSource();
     }
 }
