@@ -22,7 +22,10 @@ import java.util.List;
 
 import com.vaadin.event.handler.Handler;
 import com.vaadin.event.handler.Registration;
+import com.vaadin.server.Extension;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.components.HasValue;
+import com.vaadin.ui.components.Listing;
 
 /**
  * Generic selection model interface.
@@ -31,7 +34,7 @@ import com.vaadin.ui.components.HasValue;
  * @param <T>
  *            type of selected values
  */
-public interface SelectionModel<T> extends Serializable {
+public interface SelectionModel<T> extends Serializable, Extension {
 
     /**
      * Selection model for selection a single value.
@@ -60,13 +63,26 @@ public interface SelectionModel<T> extends Serializable {
     Collection<T> getSelected();
 
     /**
+     * Add this extension to the target listing component. SelectionModel can
+     * only extend {@link Component}s that implement {@link Listing} interface.
+     * This method should only be called from a listing component when changing
+     * the selection model.
+     *
+     * @param target
+     *            listing component to extend.
+     *
+     * @throws IllegalArgumentException
+     */
+    void setParentListing(Listing<T> target);
+
+    /**
      * Dummy selection model.
      * 
      * @param <T>
      *            selected data type
      */
-    public static class NullSelectionModel<T> implements
-            SelectionModel.Single<T> {
+    public static class NullSelection<T> extends AbstractSelectionModel<T>
+            implements SelectionModel.Single<T> {
 
         @Override
         public void setValue(T value) {
