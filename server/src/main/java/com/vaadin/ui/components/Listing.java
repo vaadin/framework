@@ -16,6 +16,7 @@
 package com.vaadin.ui.components;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.server.communication.data.typed.SelectionModel;
@@ -35,6 +36,26 @@ public interface Listing<T> extends Serializable {
      *            data source
      */
     void setDataSource(DataSource<T> data);
+
+    /**
+     * Sets the options available for this Listing.
+     * 
+     * @param data
+     *          collection of data
+     */
+    default void setOptions(Collection<T> data) {
+        setDataSource(DataSource.create(data));
+    }
+
+    /**
+     * Sets the options available for this Listing.
+     * 
+     * @param data
+     *          array of data
+     */
+    default void setOptions(T... data) {
+        setDataSource(DataSource.create(data));
+    }
 
     /**
      * Returns the {@link DataSource} of this Listing.
