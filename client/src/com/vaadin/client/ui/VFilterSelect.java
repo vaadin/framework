@@ -242,7 +242,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     deltaY = -0.5*e.wheelDelta;
                 }
 
-                @com.vaadin.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e);
+                @com.vaadin.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
 
@@ -256,12 +256,57 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * as much as feasible.
      */
     static class JsniUtil {
+        private static final int DOM_DELTA_PIXEL = 0;
+        private static final int DOM_DELTA_LINE = 1;
+        private static final int DOM_DELTA_PAGE = 2;
+
+        // Rough estimation of item height
+        private static final int SCROLL_UNIT_PX = 25;
+
+        private static double deltaSum = 0;
+
         public static void moveScrollFromEvent(final Widget widget,
                 final double deltaX, final double deltaY,
-                final NativeEvent event) {
+                final NativeEvent event, final int deltaMode) {
 
             if (!Double.isNaN(deltaY)) {
-                ((VFilterSelect) widget).suggestionPopup.scroll(deltaY);
+                VFilterSelect filterSelect = (VFilterSelect) widget;
+
+                switch (deltaMode) {
+                case DOM_DELTA_LINE:
+                    if (deltaY >= 0) {
+                        filterSelect.suggestionPopup.selectNextItem();
+                    } else {
+                        filterSelect.suggestionPopup.selectPrevItem();
+                    }
+                    break;
+                case DOM_DELTA_PAGE:
+                    if (deltaY >= 0) {
+                        filterSelect.selectNextPage();
+                    } else {
+                        filterSelect.selectPrevPage();
+                    }
+                    break;
+                case DOM_DELTA_PIXEL:
+                default:
+                    // Accumulate dampened deltas
+                    deltaSum += Math.pow(Math.abs(deltaY), 0.7)
+                            * Math.signum(deltaY);
+
+                    // "Scroll" if change exceeds item height
+                    while (Math.abs(deltaSum) >= SCROLL_UNIT_PX) {
+                        if (!filterSelect.waitingForFilteringResponse) {
+                            // Move selection if page flip is not in progress
+                            if (deltaSum < 0) {
+                                filterSelect.suggestionPopup.selectPrevItem();
+                            } else {
+                                filterSelect.suggestionPopup.selectNextItem();
+                            }
+                        }
+                        deltaSum -= SCROLL_UNIT_PX * Math.signum(deltaSum);
+                    }
+                    break;
+                }
             }
         }
     }
@@ -327,7 +372,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         protected void onLoad() {
             super.onLoad();
-            mouseWheeler.attachMousewheelListener(getElement());
+
+            // Register mousewheel listener on paged select
+            if (pageLength > 0) {
+                mouseWheeler.attachMousewheelListener(getElement());
+            }
         }
 
         @Override
