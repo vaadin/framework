@@ -15,8 +15,12 @@
  */
 package com.vaadin.ui.components.fields;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.handler.Handler;
@@ -26,6 +30,8 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.components.HasValue;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
 
@@ -127,6 +133,8 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
 
     @Override
     public Registration onChange(Handler<Boolean> handler) {
+        if (handler == null)
+            throw new IllegalArgumentException("Handler can't be null");
         handlers.add(handler);
         return () -> handlers.remove(handler);
     }
@@ -139,6 +147,54 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     @Override
     protected CheckBoxState getState() {
         return (CheckBoxState) super.getState();
+    }
+    
+    @Override
+    protected CheckBoxState getState(boolean markAsDirty) {
+        return (CheckBoxState) super.getState(markAsDirty);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("checked")) {
+            this.setValue(
+                    DesignAttributeHandler.readAttribute("checked",
+                            design.attributes(), Boolean.class), false);
+        }
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#writeDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
+                def.getValue(), Boolean.class);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("checked");
+        return attributes;
     }
 
 }

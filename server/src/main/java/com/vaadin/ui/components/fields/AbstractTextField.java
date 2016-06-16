@@ -143,6 +143,9 @@ public abstract class AbstractTextField extends AbstractComponent
 
     @Override
     public Registration onChange(Handler<String> handler) {
+        if (handler == null)
+            throw new IllegalArgumentException("Handler can't be null");
+        
         TextChangeListener l = e -> handler
                 .handleEvent(new com.vaadin.event.handler.Event<String>(this,
                         e.getText(), true));
