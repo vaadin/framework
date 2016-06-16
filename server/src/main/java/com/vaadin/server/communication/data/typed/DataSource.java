@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Registration;
 
 /**
  * Minimal DataSource API for communication between the DataProvider and a back

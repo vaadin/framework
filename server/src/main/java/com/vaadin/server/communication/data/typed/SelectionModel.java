@@ -33,8 +33,7 @@ import com.vaadin.ui.components.Listing;
  */
 public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
 
-    public class SelectionEvent<T>
-            extends com.vaadin.event.handler.Event<T> {
+    public class SelectionEvent<T> extends com.vaadin.event.typed.Event<T> {
         public SelectionEvent(ClientConnector source, T value,
                 boolean userOriginated) {
             super(source, value, userOriginated);

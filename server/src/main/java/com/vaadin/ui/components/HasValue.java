@@ -17,8 +17,8 @@ package com.vaadin.ui.components;
 
 import java.io.Serializable;
 
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Handler;
+import com.vaadin.event.typed.Registration;
 
 /**
  * Generic interface for Components that have a value.

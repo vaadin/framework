@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataRequestRpc;

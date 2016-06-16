@@ -24,8 +24,8 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Handler;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.ui.components.field.DateFieldServerRpc;
 import com.vaadin.shared.ui.components.field.DateFieldState;
 import com.vaadin.ui.AbstractComponent;
@@ -43,8 +43,8 @@ public class DateField extends AbstractComponent
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd-MM-uuuu");
 
-    public static class DateChange extends
-            com.vaadin.event.handler.Event<LocalDate> {
+    public static class DateChange
+            extends com.vaadin.event.typed.Event<LocalDate> {
         protected DateChange(DateField source, LocalDate date,
                 boolean userOriginated) {
             super(source, date, userOriginated);
@@ -99,8 +99,7 @@ public class DateField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(
-            Handler<LocalDate> handler) {
+    public Registration onChange(Handler<LocalDate> handler) {
         return onEvent(DateChange.class, handler);
     }
 

@@ -18,7 +18,7 @@ package com.vaadin.server.communication.data.typed;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Registration;
 
 /**
  * Base class for AbstractDataSource. Provides tracking for

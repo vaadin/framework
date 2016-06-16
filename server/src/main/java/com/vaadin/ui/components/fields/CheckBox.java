@@ -21,8 +21,8 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Handler;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
@@ -34,7 +34,7 @@ import com.vaadin.ui.declarative.DesignContext;
 public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
 
     public class StateChangeEvent
-            extends com.vaadin.event.handler.Event<Boolean> {
+            extends com.vaadin.event.typed.Event<Boolean> {
         public StateChangeEvent(Boolean value, boolean userOriginated) {
             super(CheckBox.this, value, userOriginated);
         }

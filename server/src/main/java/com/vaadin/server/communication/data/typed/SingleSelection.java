@@ -18,8 +18,8 @@ package com.vaadin.server.communication.data.typed;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Handler;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.server.communication.data.typed.SelectionModel.Single;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 

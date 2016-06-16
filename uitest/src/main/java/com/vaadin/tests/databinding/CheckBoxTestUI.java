@@ -1,6 +1,6 @@
 package com.vaadin.tests.databinding;
 
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.communication.data.typed.Binder;
 import com.vaadin.tests.components.AbstractTestUIWithLog;

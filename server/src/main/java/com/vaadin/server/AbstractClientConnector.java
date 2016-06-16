@@ -35,8 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
-import com.vaadin.event.handler.Handler;
-import com.vaadin.event.handler.Registration;
+import com.vaadin.event.typed.Handler;
+import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
@@ -1016,11 +1016,11 @@ public abstract class AbstractClientConnector
     }
 
     private static final Method EVENT_HANDLER_METHOD = ReflectTools.findMethod(
-            Handler.class, "accept", com.vaadin.event.handler.Event.class);
+            Handler.class, "accept", com.vaadin.event.typed.Event.class);
 
     @SuppressWarnings("rawtypes")
     protected <T> Registration onEvent(
-            Class<? extends com.vaadin.event.handler.Event> eventType,
+            Class<? extends com.vaadin.event.typed.Event> eventType,
             Handler<? super T> handler) {
         Objects.requireNonNull(handler, "Handler cannot be null");
         addListener(eventType, handler, EVENT_HANDLER_METHOD);
@@ -1029,7 +1029,7 @@ public abstract class AbstractClientConnector
 
     @SuppressWarnings("rawtypes")
     protected <T> Registration onEvent(String eventId,
-            Class<? extends com.vaadin.event.handler.Event> eventType,
+            Class<? extends com.vaadin.event.typed.Event> eventType,
             Handler<? super T> handler) {
         addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
         return () -> removeListener(eventType, handler);

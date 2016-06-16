@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.handler;
+package com.vaadin.event.typed;
 
 import java.util.EventObject;
 
@@ -56,9 +56,9 @@ public class Event<T> extends EventObject {
     }
 
     /**
-     * Gets the pay load value.
+     * Gets the payload value.
      * 
-     * @return pay load value
+     * @return payload value
      */
     public T getValue() {
         return value;
