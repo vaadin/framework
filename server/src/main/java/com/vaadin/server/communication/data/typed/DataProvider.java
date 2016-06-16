@@ -56,8 +56,7 @@ public abstract class DataProvider<T> extends AbstractExtension {
      *            component to extend with the data provider
      * @return created data provider
      */
-    public static <V> SimpleDataProvider<V> create(DataSource<V> data,
-            AbstractComponent component) {
+    public static <V> SimpleDataProvider<V> create(DataSource<V> data) {
         SimpleDataProvider<V> dataProvider = new SimpleDataProvider<V>(data);
         return dataProvider;
     }

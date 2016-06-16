@@ -13,57 +13,48 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.nativeselect;
+package com.vaadin.ui.components.grid;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.vaadin.server.communication.data.typed.DataProvider;
 import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.server.communication.data.typed.SingleSelection;
-import com.vaadin.server.communication.data.typed.TypedDataGenerator;
-import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.ui.components.AbstractListing;
 
-import elemental.json.JsonObject;
-
-public class NativeSelect<T> extends AbstractListing<T> {
+public class Grid<T> extends AbstractListing<T> {
 
     private DataSource<T> dataSource;
-    private Function<T, String> nameProvider = T::toString;
+    private Map<String, Column<T, ?>> columns = new LinkedHashMap<>();
 
-    public NativeSelect() {
-        setSelectionModel(new SingleSelection<>());
-        addDataGenerator(new TypedDataGenerator<T>() {
-
-            @Override
-            public void generateData(T data, JsonObject jsonObject) {
-                jsonObject.put(DataProviderConstants.NAME,
-                        nameProvider.apply(data));
-            }
-
-            @Override
-            public void destroyData(T data) {
-            }
-        });
-    }
-
-    public NativeSelect(DataSource<T> dataSource) {
-        this();
-        setDataSource(dataSource);
+    public Grid() {
+        setSelectionModel(new SingleSelection<T>());
     }
 
     @Override
     public void setDataSource(DataSource<T> data) {
-        dataSource = data;
-        if (dataSource != null) {
-            setDataProvider(DataProvider.create(dataSource));
-        } else {
-            setDataProvider(null);
-        }
+        this.dataSource = data;
+        setDataProvider(DataProvider.create(data));
     }
 
     @Override
     public DataSource<T> getDataSource() {
         return dataSource;
+    }
+
+    public <V> Column<T, V> addColumn(String caption, Function<T, V> getter) {
+        Column<T, V> c = new Column<T, V>(caption, getter, this);
+        columns.put(c.getConnectorId(), c);
+        addDataGenerator(c);
+        return c;
+    }
+
+    public void removeColumn(Column<T, ?> column) {
+        if (columns.containsValue(column)) {
+            removeDataGenerator(columns.remove(column.getConnectorId()));
+            column.remove();
+        }
     }
 }

@@ -1,51 +1,95 @@
 package com.vaadin.tests.databinding;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.communication.data.typed.AbstractDataSource;
+import com.vaadin.server.communication.data.typed.DataSource;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.nativeselect.NativeSelect;
 
 @Theme("valo")
 public class ListingTestUI extends AbstractTestUI {
 
-    Random r = new Random();
+    static Random r = new Random();
+
+    static class Bean {
+        private String value;
+        private Integer intVal;
+
+        public Bean(String value, Integer intVal) {
+            this.value = value;
+            this.intVal = intVal;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public Integer getIntVal() {
+            return intVal;
+        }
+
+        public void setIntVal(Integer intVal) {
+            this.intVal = intVal;
+        }
+
+        @Override
+        public String toString() {
+            return "Bean { value: " + value + ", intVal: " + intVal + " }";
+        }
+
+        public static List<Bean> generateRandomBeans() {
+            String[] values = new String[] { "Foo", "Bar", "Baz" };
+
+            List<Bean> beans = new ArrayList<Bean>();
+            for (int i = 0; i < 100; ++i) {
+                beans.add(new Bean(values[r.nextInt(values.length)], r
+                        .nextInt(100)));
+            }
+            return beans;
+
+        }
+    }
 
     @Override
     protected void setup(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+
         final List<String> options = createOptions();
         NativeSelect<String> select = new NativeSelect<>(
-                new AbstractDataSource<String>() {
+                DataSource.create(options));
+        layout.addComponent(select);
 
-                    @Override
-                    public void save(String data) {
-                    }
-
-                    @Override
-                    public void remove(String data) {
-                    }
-
-                    @Override
-                    public Iterator<String> iterator() {
-                        return options.iterator();
-                    }
-                });
-        addComponent(select);
-
-        addComponent(new Button("Notify", e -> select.getSelectionModel()
-                .getSelected().forEach(s -> Notification.show(s))));
-        addComponent(new Button("Random select", e -> {
+        layout.addComponent(new Button("Notify", e -> select
+                .getSelectionModel().getSelected()
+                .forEach(s -> Notification.show(s))));
+        layout.addComponent(new Button("Random select", e -> {
             String value = options.get(r.nextInt(options.size()));
             select.getSelectionModel().select(value);
         }));
+
+        Grid<Bean> grid = new Grid<Bean>();
+        addComponent(layout);
+        layout.addComponent(grid);
+        grid.addColumn("String Value", Bean::getValue);
+        grid.addColumn("Integer Value", Bean::getIntVal);
+        grid.addColumn("toString", Bean::toString);
+        grid.setDataSource(DataSource.create(Bean.generateRandomBeans()));
+
     }
 
     private List<String> createOptions() {

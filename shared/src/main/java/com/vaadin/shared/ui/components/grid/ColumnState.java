@@ -13,19 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.data.typed;
+package com.vaadin.shared.ui.components.grid;
 
-import java.io.Serializable;
+import com.vaadin.shared.communication.SharedState;
 
-/**
- * Set of contants used by DataProvider. These are commonly used JsonObject keys
- * which are considered to be reserved for internal use.
- * 
- * @since
- */
-public final class DataProviderConstants implements Serializable {
-    public static final String KEY = "k";
-    public static final String SELECTED = "s";
-    public static final String NAME = "n";
-    public static final String DATA = "d";
+public class ColumnState extends SharedState {
+
+    public String caption;
 }

@@ -38,7 +38,7 @@ public class AbstractListingTest {
         @Override
         public void setDataSource(DataSource<String> data) {
             this.data = data;
-            setDataProvider(DataProvider.create(data, this));
+            setDataProvider(DataProvider.create(data));
         }
 
         @Override
