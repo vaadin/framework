@@ -44,7 +44,7 @@ public class NativeSelect extends AbstractSelect implements
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
 
         @Override
-        protected void fireEvent(Event event) {
+        protected void fireEvent(LegacyEvent event) {
             NativeSelect.this.fireEvent(event);
         }
     };

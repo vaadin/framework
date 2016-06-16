@@ -59,7 +59,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
     /**
      * This event is sent when login form is submitted.
      */
-    public static class LoginEvent extends Event {
+    public static class LoginEvent extends LegacyEvent {
 
         private Map<String, String> params;
 

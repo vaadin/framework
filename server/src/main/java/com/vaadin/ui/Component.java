@@ -801,7 +801,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see Component.Listener
      */
     @SuppressWarnings("serial")
-    public static class Event extends ConnectorEvent {
+    public static class LegacyEvent extends ConnectorEvent {
 
         /**
          * Constructs a new event with the specified source component.
@@ -809,7 +809,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * @param source
          *            the source component of the event
          */
-        public Event(Component source) {
+        public LegacyEvent(Component source) {
             super(source);
         }
 
@@ -915,7 +915,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * @param event
          *            the event that has occurred.
          */
-        public void componentEvent(Component.Event event);
+        public void componentEvent(Component.LegacyEvent event);
     }
 
     /**
@@ -966,7 +966,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @param listener
      *            the new Listener to be registered.
-     * @see Component.Event
+     * @see Component.LegacyEvent
      * @see #removeListener(Listener)
      */
     public void addListener(Component.Listener listener);
@@ -992,7 +992,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * </p>
      */
     @SuppressWarnings("serial")
-    public static class ErrorEvent extends Event {
+    public static class ErrorEvent extends LegacyEvent {
 
         private final ErrorMessage message;
 

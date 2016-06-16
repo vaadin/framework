@@ -201,7 +201,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @since 7.5.0
      */
-    public static class ColumnVisibilityChangeEvent extends Component.Event {
+    public static class ColumnVisibilityChangeEvent extends Component.LegacyEvent {
 
         private final Column column;
         private final boolean userOriginated;
@@ -687,7 +687,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * An event which is fired when saving the editor fails
      */
-    public static class CommitErrorEvent extends Component.Event {
+    public static class CommitErrorEvent extends Component.LegacyEvent {
 
         private CommitException cause;
 
@@ -786,7 +786,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @since 7.5.0
      */
-    public static class ColumnReorderEvent extends Component.Event {
+    public static class ColumnReorderEvent extends Component.LegacyEvent {
 
         private final boolean userOriginated;
 
@@ -837,7 +837,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @since 7.6
      */
-    public static class ColumnResizeEvent extends Component.Event {
+    public static class ColumnResizeEvent extends Component.LegacyEvent {
 
         private final Column column;
         private final boolean userOriginated;
@@ -922,7 +922,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Base class for editor related events
      */
-    public static abstract class EditorEvent extends Component.Event {
+    public static abstract class EditorEvent extends Component.LegacyEvent {
 
         private Object itemID;
 

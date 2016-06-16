@@ -38,7 +38,7 @@ public abstract class AbstractFocusable extends AbstractComponent implements
     protected AbstractFocusable() {
         registerRpc(new FocusAndBlurServerRpcImpl(this) {
             @Override
-            protected void fireEvent(Event event) {
+            protected void fireEvent(LegacyEvent event) {
                 AbstractFocusable.this.fireEvent(event);
             }
         });

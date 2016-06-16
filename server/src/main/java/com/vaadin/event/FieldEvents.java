@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.TextField;
@@ -144,7 +144,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public static class FocusEvent extends Component.Event {
+    public static class FocusEvent extends Component.LegacyEvent {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -184,7 +184,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public static class BlurEvent extends Component.Event {
+    public static class BlurEvent extends Component.LegacyEvent {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -242,7 +242,7 @@ public interface FieldEvents {
      * @see TextField#setTextChangeEventMode(com.vaadin.ui.TextField.TextChangeEventMode)
      * @since 6.5
      */
-    public static abstract class TextChangeEvent extends Component.Event {
+    public static abstract class TextChangeEvent extends Component.LegacyEvent {
 
         public TextChangeEvent(Component source) {
             super(source);
@@ -314,7 +314,7 @@ public interface FieldEvents {
             this.component = component;
         }
 
-        protected abstract void fireEvent(Event event);
+        protected abstract void fireEvent(LegacyEvent event);
 
         @Override
         public void blur() {

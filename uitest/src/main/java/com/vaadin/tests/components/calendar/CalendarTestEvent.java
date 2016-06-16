@@ -20,7 +20,7 @@ import com.vaadin.ui.components.calendar.event.BasicEvent;
 /**
  * Test CalendarEvent implementation.
  * 
- * @see com.vaadin.addon.calendar.test.ui.Calendar.Event
+ * @see com.vaadin.LegacyEvent.calendar.test.ui.Calendar.Event
  */
 public class CalendarTestEvent extends BasicEvent {
 

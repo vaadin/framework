@@ -5625,7 +5625,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * columns property id which was fired, the previous width of the column and
      * the width of the column after the resize.
      */
-    public static class ColumnResizeEvent extends Component.Event {
+    public static class ColumnResizeEvent extends Component.LegacyEvent {
         public static final Method COLUMN_RESIZE_METHOD;
 
         static {
@@ -5752,7 +5752,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * This event is fired when a columns are reordered by the end user user.
      */
-    public static class ColumnReorderEvent extends Component.Event {
+    public static class ColumnReorderEvent extends Component.LegacyEvent {
         public static final Method METHOD;
 
         static {
@@ -5796,7 +5796,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @since 7.6
      */
-    public static class ColumnCollapseEvent extends Component.Event {
+    public static class ColumnCollapseEvent extends Component.LegacyEvent {
 
         public static final Method METHOD = ReflectTools.findMethod(
                 ColumnCollapseListener.class, "columnCollapseStateChange",

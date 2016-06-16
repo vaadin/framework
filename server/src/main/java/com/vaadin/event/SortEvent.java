@@ -30,7 +30,7 @@ import com.vaadin.ui.Component;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class SortEvent extends Component.Event {
+public class SortEvent extends Component.LegacyEvent {
 
     private final List<SortOrder> sortOrder;
     private final boolean userOriginated;

@@ -18,6 +18,7 @@ package com.vaadin.server.communication.data.typed;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.event.typed.Event;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ListingExtension;
 import com.vaadin.ui.Component;
@@ -33,7 +34,7 @@ import com.vaadin.ui.components.Listing;
  */
 public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
 
-    public class SelectionEvent<T> extends com.vaadin.event.typed.Event<T> {
+    public class SelectionEvent<T> extends Event<T> {
         public SelectionEvent(ClientConnector source, T value,
                 boolean userOriginated) {
             super(source, value, userOriginated);

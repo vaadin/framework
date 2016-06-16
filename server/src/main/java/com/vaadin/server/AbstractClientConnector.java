@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
+import com.vaadin.event.typed.Event;
 import com.vaadin.event.typed.Handler;
 import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.communication.ClientRpc;
@@ -42,7 +43,7 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
@@ -769,7 +770,8 @@ public abstract class AbstractClientConnector
     }
 
     /**
-     * Checks if the given {@link Event} type is listened for this component.
+     * Checks if the given {@link LegacyEvent} type is listened for this
+     * component.
      * 
      * @param eventType
      *            the event type to be checked
@@ -1015,12 +1017,11 @@ public abstract class AbstractClientConnector
         }
     }
 
-    private static final Method EVENT_HANDLER_METHOD = ReflectTools.findMethod(
-            Handler.class, "accept", com.vaadin.event.typed.Event.class);
+    private static final Method EVENT_HANDLER_METHOD = ReflectTools
+            .findMethod(Handler.class, "accept", Event.class);
 
     @SuppressWarnings("rawtypes")
-    protected <T> Registration onEvent(
-            Class<? extends com.vaadin.event.typed.Event> eventType,
+    protected <T> Registration onEvent(Class<? extends Event> eventType,
             Handler<? super T> handler) {
         Objects.requireNonNull(handler, "Handler cannot be null");
         addListener(eventType, handler, EVENT_HANDLER_METHOD);
@@ -1029,8 +1030,7 @@ public abstract class AbstractClientConnector
 
     @SuppressWarnings("rawtypes")
     protected <T> Registration onEvent(String eventId,
-            Class<? extends com.vaadin.event.typed.Event> eventType,
-            Handler<? super T> handler) {
+            Class<? extends Event> eventType, Handler<? super T> handler) {
         addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
         return () -> removeListener(eventType, handler);
     }

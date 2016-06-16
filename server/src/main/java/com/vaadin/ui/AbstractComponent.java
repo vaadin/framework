@@ -785,7 +785,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private static final Method COMPONENT_EVENT_METHOD = ReflectTools
             .findMethod(Component.Listener.class, "componentEvent",
-                    Component.Event.class);
+                    Component.LegacyEvent.class);
 
     /* Component event framework */
 
@@ -796,7 +796,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void addListener(Component.Listener listener) {
-        addListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
+        addListener(Component.LegacyEvent.class, listener, COMPONENT_EVENT_METHOD);
     }
 
     /*
@@ -806,7 +806,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void removeListener(Component.Listener listener) {
-        removeListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
+        removeListener(Component.LegacyEvent.class, listener, COMPONENT_EVENT_METHOD);
     }
 
     /**
@@ -814,7 +814,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * interested in such events.
      */
     protected void fireComponentEvent() {
-        fireEvent(new Component.Event(this));
+        fireEvent(new Component.LegacyEvent(this));
     }
 
     /**

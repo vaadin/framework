@@ -68,7 +68,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
         @Override
-        protected void fireEvent(Event event) {
+        protected void fireEvent(LegacyEvent event) {
             CheckBox.this.fireEvent(event);
         }
     };

@@ -26,6 +26,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.typed.Event;
 import com.vaadin.event.typed.Handler;
 import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.ui.components.fields.TextFieldServerRpc;
@@ -44,7 +45,7 @@ public abstract class AbstractTextField extends AbstractComponent
         implements HasValue<String> {
 
     public static class TextChangeEvent
-            extends com.vaadin.event.typed.Event<String> {
+            extends Event<String> {
 
         public static final String ID = TextChangeListener.EVENT_ID;
 

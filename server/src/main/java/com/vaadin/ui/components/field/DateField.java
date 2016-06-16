@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.typed.Event;
 import com.vaadin.event.typed.Handler;
 import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.ui.components.field.DateFieldServerRpc;
@@ -43,8 +44,7 @@ public class DateField extends AbstractComponent
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd-MM-uuuu");
 
-    public static class DateChange
-            extends com.vaadin.event.typed.Event<LocalDate> {
+    public static class DateChange extends Event<LocalDate> {
         protected DateChange(DateField source, LocalDate date,
                 boolean userOriginated) {
             super(source, date, userOriginated);
