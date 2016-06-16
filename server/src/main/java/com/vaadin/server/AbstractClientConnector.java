@@ -43,7 +43,6 @@ import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
@@ -770,8 +769,7 @@ public abstract class AbstractClientConnector
     }
 
     /**
-     * Checks if the given {@link LegacyEvent} type is listened for this
-     * component.
+     * Checks if the given event type is listened for this component.
      * 
      * @param eventType
      *            the event type to be checked
@@ -1020,7 +1018,6 @@ public abstract class AbstractClientConnector
     private static final Method EVENT_HANDLER_METHOD = ReflectTools
             .findMethod(Handler.class, "accept", Event.class);
 
-    @SuppressWarnings("rawtypes")
     protected <T> Registration onEvent(Class<? extends Event> eventType,
             Handler<? super T> handler) {
         Objects.requireNonNull(handler, "Handler cannot be null");
@@ -1028,9 +1025,9 @@ public abstract class AbstractClientConnector
         return () -> removeListener(eventType, handler);
     }
 
-    @SuppressWarnings("rawtypes")
     protected <T> Registration onEvent(String eventId,
             Class<? extends Event> eventType, Handler<? super T> handler) {
+        Objects.requireNonNull(handler, "Handler cannot be null");
         addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
         return () -> removeListener(eventType, handler);
     }

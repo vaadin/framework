@@ -74,7 +74,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
             if (value != null) {
                 refresh(value);
             }
-            fireEvent(new SelectionEvent<T>(this, value, userOriginated));
+            fireEvent(new SelectionChange<T>(this, value, userOriginated));
         }
     }
 
@@ -84,8 +84,8 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
     }
 
     @Override
-    public Registration onChange(Handler<T> handler) {
-        return onEvent(SelectionEvent.class, handler);
+    public Registration onChange(Handler<ValueChange<T>> handler) {
+        return onEvent(SelectionChange.class, handler);
     }
 
     @Override

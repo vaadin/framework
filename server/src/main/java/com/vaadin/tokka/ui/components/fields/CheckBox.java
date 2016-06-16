@@ -24,7 +24,6 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
-import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.ui.components.HasValue;
@@ -34,9 +33,9 @@ import com.vaadin.ui.declarative.DesignContext;
 
 public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
 
-    public class StateChangeEvent extends Event<Boolean> {
-        public StateChangeEvent(Boolean value, boolean userOriginated) {
-            super(CheckBox.this, value, userOriginated);
+    public class StateChange extends ValueChange<Boolean> {
+        public StateChange(boolean userOriginated) {
+            super(CheckBox.this, userOriginated);
         }
     }
 
@@ -119,12 +118,12 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
             return;
         }
         getState(!userOriginated).checked = value;
-        fireEvent(new StateChangeEvent(value, userOriginated));
+        fireEvent(new StateChange(userOriginated));
     }
 
     @Override
-    public Registration onChange(Handler<Boolean> handler) {
-        return onEvent(StateChangeEvent.class, handler);
+    public Registration onChange(Handler<ValueChange<Boolean>> handler) {
+        return onEvent(StateChange.class, handler);
     }
 
     @Override

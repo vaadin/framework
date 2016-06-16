@@ -20,18 +20,12 @@ import java.util.EventObject;
 import com.vaadin.server.ClientConnector;
 
 /**
- * Generic event object typed for pay load.
+ * A base class for user interface events fired by connectors.
  * 
+ * @author Vaadin Ltd.
  * @since
- * @param <T>
- *            pay load type
  */
-public class Event<T> extends EventObject {
-
-    /**
-     * Pay load value.
-     */
-    private final T value;
+public class Event extends EventObject {
 
     /**
      * {@code true} if event from a client-side update, {@code false} if from an
@@ -49,19 +43,9 @@ public class Event<T> extends EventObject {
      * @param userOriginated
      *            is the event from API call or client update
      */
-    public Event(ClientConnector source, T value, boolean userOriginated) {
+    public Event(ClientConnector source, boolean userOriginated) {
         super(source);
-        this.value = value;
         this.userOriginated = userOriginated;
-    }
-
-    /**
-     * Gets the payload value.
-     * 
-     * @return payload value
-     */
-    public T getValue() {
-        return value;
     }
 
     /**

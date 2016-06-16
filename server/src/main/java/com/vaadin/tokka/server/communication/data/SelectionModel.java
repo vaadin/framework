@@ -15,13 +15,11 @@
  */
 package com.vaadin.tokka.server.communication.data;
 
-import java.io.Serializable;
 import java.util.Collection;
 
-import com.vaadin.server.ClientConnector;
-import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.server.ListingExtension;
 import com.vaadin.tokka.ui.components.HasValue;
+import com.vaadin.tokka.ui.components.HasValue.ValueChange;
 import com.vaadin.tokka.ui.components.Listing;
 import com.vaadin.ui.Component;
 
@@ -32,10 +30,10 @@ import com.vaadin.ui.Component;
  * @param <T>
  *            type of selected values
  */
-public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
+public interface SelectionModel<T> extends ListingExtension<T> {
 
-    public class SelectionEvent<T> extends Event<T> {
-        public SelectionEvent(ClientConnector source, T value,
+    public class SelectionChange<T> extends ValueChange<T> {
+        public SelectionChange(SelectionModel<T> source, T value,
                 boolean userOriginated) {
             super(source, value, userOriginated);
         }

@@ -19,17 +19,19 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
- * Generic interface for event handlers. Event handlers are removed using a
- * {@link Registration} object.
+ * A base interface for event handlers.
  *
+ * @param <E>
+ *            the event type
+ * 
+ * @author Vaadin Ltd.
  * @since
+ * 
  * @see Event
  * @see Registration
- * @param <T>
- *            event pay load type
  */
 @FunctionalInterface
-public interface Handler<T> extends Consumer<Event<T>>, Serializable {
+public interface Handler<E extends Event> extends Consumer<E>, Serializable {
 
     /**
      * Handles the given event.
@@ -42,5 +44,5 @@ public interface Handler<T> extends Consumer<Event<T>>, Serializable {
     // Class.getDeclaredMethod, but even if it used getMethod instead, the
     // superinterface argument type is Object, not Event, after type erasure.
     @Override
-    void accept(Event<T> e);
+    void accept(E e);
 }

@@ -25,10 +25,8 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
-import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.ui.components.HasValue;
@@ -44,14 +42,9 @@ import com.vaadin.ui.declarative.DesignContext;
 public abstract class AbstractTextField extends AbstractComponent
         implements HasValue<String> {
 
-    public static class TextChangeEvent
-            extends Event<String> {
-
-        public static final String ID = TextChangeListener.EVENT_ID;
-
-        public TextChangeEvent(AbstractTextField source, String text,
-                boolean userOriginated) {
-            super(source, text, userOriginated);
+    public static class TextChange extends ValueChange<String> {
+        public TextChange(AbstractTextField source, boolean userOriginated) {
+            super(source, userOriginated);
         }
     }
 
@@ -72,8 +65,7 @@ public abstract class AbstractTextField extends AbstractComponent
             public void setText(String text) {
                 if (!isReadOnly()) {
                     setValue(text);
-                    fireEvent(new TextChangeEvent(AbstractTextField.this, text,
-                            true));
+                    fireEvent(new TextChange(AbstractTextField.this, true));
                 }
             }
         });
@@ -143,8 +135,8 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(Handler<String> handler) {
-        return onEvent(TextChangeEvent.ID, TextChangeEvent.class, handler);
+    public Registration onChange(Handler<ValueChange<String>> handler) {
+        return onEvent(TextChange.class, handler);
     }
 
     /**

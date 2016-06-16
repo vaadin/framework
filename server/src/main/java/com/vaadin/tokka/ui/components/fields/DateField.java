@@ -25,7 +25,6 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.shared.tokka.ui.components.fields.DateFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.DateFieldState;
-import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.ui.components.HasValue;
@@ -43,10 +42,9 @@ public class DateField extends AbstractComponent
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd-MM-uuuu");
 
-    public static class DateChange extends Event<LocalDate> {
-        protected DateChange(DateField source, LocalDate date,
-                boolean userOriginated) {
-            super(source, date, userOriginated);
+    public static class DateChange extends ValueChange<LocalDate> {
+        protected DateChange(DateField source, boolean userOriginated) {
+            super(source, userOriginated);
         }
     }
 
@@ -69,7 +67,7 @@ public class DateField extends AbstractComponent
                     LocalDate localDate = FORMATTER.parse(value,
                             TemporalQueries.localDate());
                     setValue(localDate);
-                    fireEvent(new DateChange(DateField.this, localDate, true));
+                    fireEvent(new DateChange(DateField.this, true));
                 }
             }
         });
@@ -98,7 +96,7 @@ public class DateField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(Handler<LocalDate> handler) {
+    public Registration onChange(Handler<ValueChange<LocalDate>> handler) {
         return onEvent(DateChange.class, handler);
     }
 

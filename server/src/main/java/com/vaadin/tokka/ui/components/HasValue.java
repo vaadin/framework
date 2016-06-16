@@ -17,6 +17,8 @@ package com.vaadin.tokka.ui.components;
 
 import java.io.Serializable;
 
+import com.vaadin.server.ClientConnector;
+import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 
@@ -28,6 +30,31 @@ import com.vaadin.tokka.event.Registration;
  *            value type
  */
 public interface HasValue<V> extends Serializable {
+
+    public abstract class ValueChange<V> extends Event {
+
+        private final V value;
+
+        protected <C extends ClientConnector & HasValue<V>> ValueChange(
+                C source, boolean userOriginated) {
+            this(source, source.getValue(), userOriginated);
+        }
+
+        protected ValueChange(ClientConnector source, V value,
+                boolean userOriginated) {
+            super(source, userOriginated);
+            this.value = value;
+        }
+
+        /**
+         * Returns the payload value.
+         * 
+         * @return payload value
+         */
+        public V getValue() {
+            return value;
+        }
+    }
 
     /**
      * Sets the value of this object. Setting a value fires a value change
@@ -55,5 +82,5 @@ public interface HasValue<V> extends Serializable {
      * @throws IllegalArgumentException
      *             if handler is null
      */
-    Registration onChange(Handler<V> handler);
+    Registration onChange(Handler<ValueChange<V>> handler);
 }
