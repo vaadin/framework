@@ -171,6 +171,20 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
     }
 
     /**
+     * Checks if the given attribute name matches the convention used for
+     * storing AtmosphereFramework references.
+     *
+     * @param attributeName
+     *            the attribute name to check
+     * @return <code>true</code> if the attribute name matches the convention,
+     *         <code>false</code> otherwise
+     */
+    private static boolean isAtmosphereFrameworkAttribute(String attributeName) {
+        return attributeName.startsWith(JSR356WebsocketInitializer.class
+                .getName() + ".");
+    }
+
+    /**
      * Tries to determine if the given servlet registration refers to a Vaadin
      * servlet.
      * 
@@ -202,7 +216,23 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // Nothing to do here
+        // Destroy any AtmosphereFramework instance we have initialized.
+        // This must be done here to ensure that we cleanup Atmosphere instances
+        // related to servlets which are never initialized
+        ServletContext servletContext = sce.getServletContext();
+        Enumeration<String> attributeNames = servletContext.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            String attributeName = attributeNames.nextElement();
+            if (isAtmosphereFrameworkAttribute(attributeName)) {
+                Object value = servletContext.getAttribute(attributeName);
+                if (value instanceof AtmosphereFramework) {
+                    // This might result in calling destroy() twice, once from
+                    // here and once from PushRequestHandler but
+                    // AtmosphereFramework.destroy() deals with that
+                    ((AtmosphereFramework) value).destroy();
+                }
+            }
+        }
     }
 
 }
