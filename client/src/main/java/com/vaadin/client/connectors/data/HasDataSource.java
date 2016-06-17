@@ -25,11 +25,18 @@ import elemental.json.JsonObject;
 public interface HasDataSource {
 
     /**
-     * Sets the data source for this Conenctor.
+     * Sets the data source for this Connector.
      * 
      * @param dataSource
      *            new data source
      */
     public void setDataSource(DataSource<JsonObject> dataSource);
+
+    /**
+     * Gets the current data source for this Connector.
+     * 
+     * @return data source
+     */
+    DataSource<JsonObject> getDataSource();
 
 }

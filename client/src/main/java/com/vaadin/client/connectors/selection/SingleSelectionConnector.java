@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.connectors.selection;
 
+import java.util.logging.Logger;
+
+import com.vaadin.client.ServerConnector;
+import com.vaadin.client.connectors.components.AbstractListingConnector;
 import com.vaadin.client.data.selection.SelectionModel;
 import com.vaadin.client.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -60,6 +64,15 @@ public class SingleSelectionConnector extends AbstractSelectionConnector {
         }
     }
 
+    private AbstractListingConnector parent;
+
+    @Override
+    protected void extend(ServerConnector target) {
+        super.extend(target);
+
+        parent = getParent();
+    }
+
     @Override
     protected SelectionModel createSelectionModel() {
         return new SingleSelection(getRpcProxy(SelectionServerRpc.class));
@@ -68,6 +81,11 @@ public class SingleSelectionConnector extends AbstractSelectionConnector {
     @Override
     public void onUnregister() {
         super.onUnregister();
+
+        if (parent.getSelectionModel() == getSelectionModel()) {
+            // Remove from parent.
+            parent.setSelectionModel(null);
+        }
     }
 
 }

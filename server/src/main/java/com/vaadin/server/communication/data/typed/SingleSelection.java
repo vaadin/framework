@@ -113,4 +113,13 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
             setValue(null);
         }
     }
+
+    @Override
+    public void remove() {
+        if (getValue() != null) {
+            refresh(getValue());
+        }
+
+        super.remove();
+    }
 }

@@ -90,46 +90,4 @@ public interface SelectionModel<T> extends Serializable, ListingExtension<T> {
      *            deselected value
      */
     void deselect(T value);
-
-    /**
-     * Dummy selection model.
-     * 
-     * @param <T>
-     *            selected data type
-     */
-    public static class NullSelection<T> extends AbstractSelectionModel<T>
-            implements SelectionModel.Single<T> {
-
-        @Override
-        public void setValue(T value) {
-            // NO-OP
-        }
-
-        @Override
-        public T getValue() {
-            return null;
-        }
-
-        @Override
-        public Registration onChange(Handler<T> onChange) {
-            return () -> {
-                // NO-OP
-            };
-        }
-
-        @Override
-        public List<T> getSelected() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public void select(T value) {
-            // NO-OP
-        }
-
-        @Override
-        public void deselect(T value) {
-            // NO-OP
-        }
-    }
 }

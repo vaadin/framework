@@ -32,7 +32,7 @@ import com.vaadin.ui.components.nativeselect.NativeSelect;
 import elemental.json.JsonObject;
 
 @Connect(NativeSelect.class)
-public class NativeSelectConnector extends AbstractComponentConnector implements
+public class NativeSelectConnector extends AbstractListingConnector implements
         HasSelection {
 
     private final class NativeSelectDataChangeHandler implements
@@ -46,12 +46,12 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
         public void dataUpdated(int firstRowIndex, int numberOfRows) {
             for (int i = 0; i < numberOfRows; ++i) {
                 int index = i + firstRowIndex;
-                JsonObject item = dataSource.getRow(index);
+                JsonObject item = getDataSource().getRow(index);
                 getWidget().setItemText(index,
                         item.getString(DataProviderConstants.NAME));
                 getWidget().setValue(index,
                         item.getString(DataProviderConstants.KEY));
-                if (selectionModel.isSelected(item)) {
+                if (getSelectionModel().isSelected(item)) {
                     getWidget().setSelectedIndex(index);
                 }
             }
@@ -69,11 +69,11 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
             if (getWidget().getItemCount() == firstRowIndex) {
                 for (int i = 0; i < numberOfRows; ++i) {
-                    JsonObject item = dataSource.getRow(i + firstRowIndex);
+                    JsonObject item = getDataSource().getRow(i + firstRowIndex);
                     getWidget().addItem(
                             item.getString(DataProviderConstants.NAME),
                             item.getString(DataProviderConstants.KEY));
-                    if (selectionModel.isSelected(item)) {
+                    if (getSelectionModel().isSelected(item)) {
                         getWidget().setSelectedIndex(i + firstRowIndex);
                     }
                 }
@@ -84,11 +84,11 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
         public void dataAdded(int firstRowIndex, int numberOfRows) {
             if (getWidget().getItemCount() == firstRowIndex) {
                 for (int i = 0; i < numberOfRows; ++i) {
-                    JsonObject item = dataSource.getRow(i + firstRowIndex);
+                    JsonObject item = getDataSource().getRow(i + firstRowIndex);
                     getWidget().addItem(
                             item.getString(DataProviderConstants.NAME),
                             item.getString(DataProviderConstants.KEY));
-                    if (selectionModel.isSelected(item)) {
+                    if (getSelectionModel().isSelected(item)) {
                         getWidget().setSelectedIndex(i + firstRowIndex);
                     }
                 }
@@ -98,8 +98,6 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
         }
     }
 
-    private DataSource<JsonObject> dataSource;
-    private SelectionModel selectionModel;
     private boolean scheduled;
 
     @Override
@@ -115,28 +113,20 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
 
             @Override
             public void onChange(ChangeEvent event) {
-                if (selectionModel == null) {
+                if (getSelectionModel() == null) {
                     return;
                 }
                 int index = getWidget().getSelectedIndex();
-                JsonObject selected = dataSource.getRow(index);
-                selectionModel.select(selected);
+                JsonObject selected = getDataSource().getRow(index);
+                getSelectionModel().select(selected);
             }
         });
     }
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
-        if (this.dataSource != null) {
-            dataSource.setDataChangeHandler(null);
-        }
-        this.dataSource = dataSource;
+        super.setDataSource(dataSource);
         dataSource.setDataChangeHandler(new NativeSelectDataChangeHandler());
-    }
-
-    @Override
-    public void setSelectionModel(SelectionModel selectionModel) {
-        this.selectionModel = selectionModel;
     }
 
     private void resetContent() {
@@ -148,12 +138,12 @@ public class NativeSelectConnector extends AbstractComponentConnector implements
             @Override
             public void execute() {
                 getWidget().clear();
-                for (int i = 0; i < dataSource.size(); ++i) {
-                    JsonObject item = dataSource.getRow(i);
+                for (int i = 0; i < getDataSource().size(); ++i) {
+                    JsonObject item = getDataSource().getRow(i);
                     getWidget().addItem(
                             item.getString(DataProviderConstants.NAME),
                             item.getString(DataProviderConstants.KEY));
-                    if (selectionModel.isSelected(item)) {
+                    if (getSelectionModel().isSelected(item)) {
                         getWidget().setSelectedIndex(i);
                     }
                 }

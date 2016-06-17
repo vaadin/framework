@@ -8,8 +8,10 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.communication.data.typed.DataSource;
+import com.vaadin.server.communication.data.typed.SingleSelection;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.Grid;
@@ -89,6 +91,22 @@ public class ListingTestUI extends AbstractTestUI {
         grid.addColumn("Integer Value", Bean::getIntVal);
         grid.addColumn("toString", Bean::toString);
         grid.setDataSource(DataSource.create(Bean.generateRandomBeans()));
+
+        addComponent(new Button("Toggle Grid Selection",
+                new Button.ClickListener() {
+
+                    private boolean hasSelection = true;
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        if (hasSelection) {
+                            grid.setSelectionModel(null);
+                        } else {
+                            grid.setSelectionModel(new SingleSelection<>());
+                        }
+                        hasSelection = !hasSelection;
+                    }
+                }));
 
     }
 

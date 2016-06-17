@@ -18,6 +18,7 @@ package com.vaadin.client.connectors.components.grid;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import com.vaadin.client.connectors.components.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasSelection;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.selection.SelectionModel;
@@ -31,7 +32,7 @@ import com.vaadin.shared.ui.Connect;
 import elemental.json.JsonObject;
 
 @Connect(com.vaadin.ui.components.grid.Grid.class)
-public class GridConnector extends AbstractComponentConnector implements
+public class GridConnector extends AbstractListingConnector implements
         HasSelection {
 
     /**
@@ -44,15 +45,15 @@ public class GridConnector extends AbstractComponentConnector implements
     private final class SelectionModelAdapter
             implements
             com.vaadin.client.widget.grid.selection.SelectionModel.Single<JsonObject> {
-        private final SelectionModel selectionModel;
+        private final SelectionModel model;
 
         private SelectionModelAdapter(SelectionModel selectionModel) {
-            this.selectionModel = selectionModel;
+            this.model = selectionModel;
         }
 
         @Override
         public boolean isSelected(JsonObject row) {
-            return selectionModel.isSelected(row);
+            return model != null ? model.isSelected(row) : false;
         }
 
         @Override
@@ -75,13 +76,17 @@ public class GridConnector extends AbstractComponentConnector implements
 
         @Override
         public boolean select(JsonObject row) {
-            selectionModel.select(row);
+            if (model != null) {
+                model.select(row);
+            }
             return false;
         }
 
         @Override
         public boolean deselect(JsonObject row) {
-            selectionModel.deselect(row);
+            if (model != null) {
+                model.deselect(row);
+            }
             return false;
         }
 
@@ -114,11 +119,13 @@ public class GridConnector extends AbstractComponentConnector implements
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
+        super.setDataSource(dataSource);
         getWidget().setDataSource(dataSource);
     }
 
     @Override
     public void setSelectionModel(final SelectionModel selectionModel) {
+        super.setSelectionModel(selectionModel);
         getWidget()
                 .setSelectionModel(new SelectionModelAdapter(selectionModel));
     }

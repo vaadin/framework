@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.selection;
 
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.connectors.components.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasSelection;
 import com.vaadin.client.data.selection.SelectionModel;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -26,6 +27,8 @@ import elemental.json.JsonObject;
 public abstract class AbstractSelectionConnector extends
         AbstractExtensionConnector {
 
+    private SelectionModel model = null;
+
     @Override
     protected void extend(ServerConnector target) {
         if (!(target instanceof HasSelection)) {
@@ -35,7 +38,8 @@ public abstract class AbstractSelectionConnector extends
         // TODO: Provide SelectionModel API
         // TODO: Should this use "Registration" approach for easy and safe
         // removal?
-        ((HasSelection) target).setSelectionModel(createSelectionModel());
+        model = createSelectionModel();
+        ((HasSelection) target).setSelectionModel(getSelectionModel());
     }
 
     /**
@@ -62,5 +66,14 @@ public abstract class AbstractSelectionConnector extends
     protected static boolean hasSelectedKey(JsonObject item) {
         String key = DataProviderConstants.SELECTED;
         return item.hasKey(key) && item.getBoolean(key);
+    }
+
+    @Override
+    public AbstractListingConnector getParent() {
+        return (AbstractListingConnector) super.getParent();
+    }
+
+    protected SelectionModel getSelectionModel() {
+        return model;
     }
 }

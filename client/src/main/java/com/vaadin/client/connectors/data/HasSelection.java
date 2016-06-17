@@ -23,10 +23,17 @@ import com.vaadin.client.data.selection.SelectionModel;
 public interface HasSelection extends HasDataSource {
 
     /**
-     * Sets the selection model for this Conenctor.
+     * Sets the selection model for this Connector.
      * 
      * @param selectionModel
      *            selection model
      */
     public void setSelectionModel(SelectionModel selectionModel);
+
+    /**
+     * Gets the current selection model for this Connector.
+     * 
+     * @return selection model
+     */
+    public SelectionModel getSelectionModel();
 }
