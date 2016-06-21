@@ -15,10 +15,7 @@
  */
 package com.vaadin.shared.data.typed;
 
-import java.util.List;
-
 import com.vaadin.shared.communication.ClientRpc;
-
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 

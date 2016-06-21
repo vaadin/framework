@@ -65,7 +65,7 @@ public class Binder<T> implements Serializable {
     /**
      * Gets the bean that has been bound with {@link #bind}.
      * 
-     * @returns the currently bound bean.
+     * @return the currently bound bean.
      */
     public T getBean() {
         return bean;
@@ -144,7 +144,7 @@ public class Binder<T> implements Serializable {
                     getter, setter);
         } else {
             throw new IllegalArgumentException(
-                    "Listing did not have a single selection model.");
+                    "Listing did not have a multi selection model.");
         }
     }
 

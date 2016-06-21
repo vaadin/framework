@@ -16,14 +16,12 @@
 package com.vaadin.client.connectors.components.grid;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import com.vaadin.client.connectors.components.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasSelection;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.selection.SelectionModel;
 import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
@@ -53,7 +51,7 @@ public class GridConnector extends AbstractListingConnector implements
 
         @Override
         public boolean isSelected(JsonObject row) {
-            return model != null ? model.isSelected(row) : false;
+            return model != null && model.isSelected(row);
         }
 
         @Override
