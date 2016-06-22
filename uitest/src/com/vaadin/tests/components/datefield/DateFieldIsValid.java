@@ -52,7 +52,6 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
     }
 
     /**
-     * @since
      * @param value
      * @return
      */

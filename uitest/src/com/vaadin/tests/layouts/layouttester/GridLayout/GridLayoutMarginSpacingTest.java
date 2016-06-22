@@ -19,7 +19,6 @@ import com.vaadin.tests.layouts.layouttester.BaseLayoutMarginSpacingTest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class GridLayoutMarginSpacingTest extends BaseLayoutMarginSpacingTest {

@@ -37,7 +37,6 @@ import com.vaadin.ui.Window;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class HtmlInCaption extends AbstractTestUI {

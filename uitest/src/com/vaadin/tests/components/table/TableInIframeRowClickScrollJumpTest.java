@@ -32,7 +32,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * For testing that UI scroll does not jump back to up when: 1. UI is in iframe
  * 2. the window scrolled down 3. and table is clicked
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {

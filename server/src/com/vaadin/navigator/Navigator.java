@@ -1013,7 +1013,7 @@ public class Navigator implements Serializable {
      * Creates view change event for given {@code view}, {@code viewName} and
      * {@code parameters}.
      * 
-     * @since
+     * @since 7.6.7
      * @return view change event
      */
     public void destroy() {

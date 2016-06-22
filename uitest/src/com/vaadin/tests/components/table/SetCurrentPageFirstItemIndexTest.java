@@ -30,7 +30,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @Ignore

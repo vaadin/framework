@@ -84,7 +84,6 @@ import com.vaadin.ui.renderers.NumberRenderer;
 /**
  * Tests the basic features like columns, footers and headers
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {

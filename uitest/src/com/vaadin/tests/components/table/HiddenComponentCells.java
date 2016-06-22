@@ -27,7 +27,6 @@ import com.vaadin.ui.Table;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class HiddenComponentCells extends AbstractTestUI {

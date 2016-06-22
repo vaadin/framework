@@ -21,7 +21,6 @@ import com.vaadin.tests.widgetset.server.csrf.ui.CsrfTokenDisabled;
 /**
  * Mock ApplicationConnection for several issues where we need to hack it.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class MockApplicationConnection extends ApplicationConnection {

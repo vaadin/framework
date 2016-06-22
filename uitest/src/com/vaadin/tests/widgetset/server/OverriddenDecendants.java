@@ -24,7 +24,6 @@ import com.vaadin.ui.TextArea;
 /**
  * UI for testing that @DelegateToWidget works on derived widget states.
  *
- * @since
  * @author Vaadin Ltd
  */
 @Widgetset(TestingWidgetSet.NAME)

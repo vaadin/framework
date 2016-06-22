@@ -34,7 +34,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests dialogs with WAI-ARIA.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {

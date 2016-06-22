@@ -99,7 +99,6 @@ public class DateFieldTestTest extends MultiBrowserTest {
     }
 
     /**
-     * @since
      * @param string
      */
     private void menuSub(String string) {
@@ -109,7 +108,6 @@ public class DateFieldTestTest extends MultiBrowserTest {
     }
 
     /**
-     * @since
      * @param string
      */
     private void menu(String string) {

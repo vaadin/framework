@@ -30,7 +30,6 @@ import com.vaadin.ui.declarative.Design;
 /**
  * Test declarative support for {@link Table}.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TableDeclarativeTest extends TableDeclarativeTestBase {

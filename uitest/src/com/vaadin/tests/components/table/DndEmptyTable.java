@@ -30,7 +30,6 @@ import com.vaadin.ui.Table;
  * Test UI for empty table: empty table (without any data) throws client side
  * exception if it's a target for DnD.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class DndEmptyTable extends AbstractTestUI {

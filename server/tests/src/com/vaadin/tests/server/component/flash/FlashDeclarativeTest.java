@@ -26,7 +26,6 @@ import com.vaadin.ui.Flash;
  * Tests declarative support for implementations of {@link AbstractEmbedded} and
  * {@link Embedded}.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class FlashDeclarativeTest extends DeclarativeTestBase<Flash> {

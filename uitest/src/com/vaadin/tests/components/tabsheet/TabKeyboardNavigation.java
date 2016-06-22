@@ -26,7 +26,6 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * The solution was broken in ticket (#14304)
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabKeyboardNavigation extends AbstractTestUI {

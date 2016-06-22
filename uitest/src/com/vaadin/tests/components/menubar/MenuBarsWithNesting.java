@@ -31,7 +31,6 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * items with image icons: the icon should not be considered to be a part of the
  * item's caption.
  * 
- * @since
  * @author Vaadin
  */
 @SuppressWarnings("serial")

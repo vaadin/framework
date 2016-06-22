@@ -27,7 +27,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * with no error. Only the last tab should be visible, so the actual TabSheet
  * width should be small.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSheetCloseTest extends MultiBrowserTest {

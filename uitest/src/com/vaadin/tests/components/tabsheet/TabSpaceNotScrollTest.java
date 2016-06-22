@@ -29,7 +29,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Test if the page scroll when press space on a tabsheet's tab.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSpaceNotScrollTest extends MultiBrowserTest {

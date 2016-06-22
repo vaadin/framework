@@ -31,7 +31,6 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Tests declarative support for AbstractOrderedLayout.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AbstractOrderedLayoutDeclarativeTest extends

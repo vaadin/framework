@@ -26,7 +26,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Test for empty table as a DnD target: it should not throws client side
  * exception.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class DndEmptyTableTest extends MultiBrowserTest {

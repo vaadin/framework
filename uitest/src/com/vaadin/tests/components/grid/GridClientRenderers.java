@@ -43,7 +43,6 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 /**
  * Tests Grid client side renderers
  * 
- * @since
  * @author Vaadin Ltd
  */
 @TestCategory("grid")

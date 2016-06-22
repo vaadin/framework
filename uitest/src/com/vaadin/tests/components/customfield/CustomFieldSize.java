@@ -24,7 +24,6 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CustomFieldSize extends AbstractTestUI {

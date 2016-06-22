@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 /**
  * Test case for reading nested templates
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class ReadNestedTemplatesTest {

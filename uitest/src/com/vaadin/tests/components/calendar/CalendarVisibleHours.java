@@ -28,7 +28,6 @@ import com.vaadin.ui.components.calendar.event.BasicEvent;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  * 
  *         test for defect: calendar visible hours of day invalid shows invalid

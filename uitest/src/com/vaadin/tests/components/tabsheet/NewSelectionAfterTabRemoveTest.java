@@ -30,7 +30,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Automatic test of the default TabSheet selection algorithm when removing a
  * selected tab.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class NewSelectionAfterTabRemoveTest extends MultiBrowserTest {

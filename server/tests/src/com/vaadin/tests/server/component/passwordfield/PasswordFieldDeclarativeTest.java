@@ -22,7 +22,6 @@ import com.vaadin.ui.PasswordField;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class PasswordFieldDeclarativeTest extends

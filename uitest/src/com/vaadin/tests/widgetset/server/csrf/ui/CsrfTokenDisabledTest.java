@@ -20,7 +20,6 @@ import com.vaadin.shared.ApplicationConstants;
 /**
  * Test the CSRF Token issue.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CsrfTokenDisabledTest extends AbstractCsrfTokenUITest {

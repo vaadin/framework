@@ -26,7 +26,6 @@ import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 /**
  * GridBasicClientFeatures.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest {

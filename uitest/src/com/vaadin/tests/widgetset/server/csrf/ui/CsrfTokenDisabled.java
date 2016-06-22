@@ -25,7 +25,6 @@ import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
  * the parameter anyway. So now the server knows how to deal the issue if the
  * csrfToken is not present.
  *
- * @since
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")

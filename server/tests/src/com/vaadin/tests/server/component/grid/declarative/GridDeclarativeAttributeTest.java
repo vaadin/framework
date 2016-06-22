@@ -29,7 +29,6 @@ import com.vaadin.ui.Grid.SingleSelectionModel;
 /**
  * Tests declarative support for {@link Grid} properties.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {

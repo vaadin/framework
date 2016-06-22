@@ -19,7 +19,6 @@ import com.vaadin.tests.layouts.layouttester.BaseIconTest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class GridIconTest extends BaseIconTest {

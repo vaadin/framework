@@ -49,7 +49,6 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
     }
 
     /**
-     * @since
      * @param gridLayout
      * @return
      */

@@ -26,7 +26,6 @@ import com.vaadin.ui.Label;
 /**
  * Abstract UI to test the CSRF token issue as reported in (#14111)
  * 
- * @since
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")

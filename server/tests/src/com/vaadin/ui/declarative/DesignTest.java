@@ -35,7 +35,6 @@ import com.vaadin.ui.Label;
 /**
  * Tests for {@link Design} declarative support class.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class DesignTest {

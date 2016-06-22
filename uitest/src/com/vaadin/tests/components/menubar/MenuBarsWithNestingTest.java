@@ -32,7 +32,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * This class tests the method VMenuBar.getSubPartElement(String) by using
  * Vaadin locators for finding the items of a MenuBar.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class MenuBarsWithNestingTest extends MultiBrowserTest {

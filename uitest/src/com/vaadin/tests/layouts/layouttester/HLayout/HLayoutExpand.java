@@ -21,7 +21,6 @@ import com.vaadin.ui.HorizontalLayout;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 

@@ -19,7 +19,6 @@ import com.vaadin.server.VaadinRequest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class GridComponentSizing extends GridBaseLayoutTestUI {

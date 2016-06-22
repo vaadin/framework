@@ -26,7 +26,6 @@ import com.vaadin.ui.declarative.DesignException;
 /**
  * Test declarative support for {@link TreeTable}.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TreeTableDeclarativeTest extends TableDeclarativeTest {

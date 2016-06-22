@@ -101,7 +101,6 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
     }
 
     /**
-     * @since
      * @param string
      */
     private void selectPage(String string) {

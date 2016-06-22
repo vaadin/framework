@@ -45,7 +45,6 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * Test cases for reading and writing the properties of AbstractComponent.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AbstractComponentDeclarativeTest extends

@@ -22,7 +22,6 @@ import com.vaadin.ui.TabSheet;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class BaseCaption extends BaseLayoutTestUI {

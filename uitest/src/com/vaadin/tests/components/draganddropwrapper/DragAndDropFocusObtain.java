@@ -37,7 +37,6 @@ import com.vaadin.ui.VerticalLayout;
  * Test UI for text area inside {@link DragAndDropWrapper}: text area should
  * obtain focus on click.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class DragAndDropFocusObtain extends AbstractTestUIWithLog {

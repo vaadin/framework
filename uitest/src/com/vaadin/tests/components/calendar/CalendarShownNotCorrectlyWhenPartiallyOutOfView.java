@@ -28,7 +28,6 @@ import com.vaadin.ui.components.calendar.event.BasicEvent;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  * 
  *         test for defect: Calendar event not shown correctly when partially

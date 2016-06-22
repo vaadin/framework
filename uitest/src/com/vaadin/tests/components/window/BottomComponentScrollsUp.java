@@ -36,7 +36,6 @@ import com.vaadin.ui.Window;
  * the server, the window.setVisible would be call again, and the hack that
  * solved the scrollbars in a window (#11994) would cause the our bug.
  *
- * @since
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")

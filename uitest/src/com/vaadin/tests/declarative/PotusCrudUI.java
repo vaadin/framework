@@ -21,7 +21,6 @@ import com.vaadin.ui.UI;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @Theme("valo")

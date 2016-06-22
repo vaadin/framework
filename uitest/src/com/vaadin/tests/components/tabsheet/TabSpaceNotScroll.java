@@ -27,7 +27,6 @@ import com.vaadin.ui.VerticalLayout;
  * If the space is pressed on the tabs of a tabsheet the browser default scroll
  * behavior must be prevented.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSpaceNotScroll extends AbstractTestUI {

@@ -26,7 +26,6 @@ import com.vaadin.ui.Label;
 /**
  * Tests declarative support for CssLayout.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CssLayoutDeclarativeTest extends DeclarativeTestBase<CssLayout> {

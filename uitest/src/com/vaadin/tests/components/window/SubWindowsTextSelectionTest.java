@@ -33,7 +33,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Test for issue #12726, IE's make text selection when sub windows are
  * dragged(moved).
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class SubWindowsTextSelectionTest extends MultiBrowserTest {

@@ -36,7 +36,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * TB tests for the various builtin widget-based renderers.
  * 
- * @since
  * @author Vaadin Ltd
  */
 @TestCategory("grid")

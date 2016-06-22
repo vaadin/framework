@@ -27,7 +27,6 @@ import com.vaadin.tests.tb3.ChangedTB3Tests.ChangedTB3TestsSuite;
  * current workspace. If there are no changes in the workspace, it will run the
  * changes to test classes introduced in the HEAD commit.
  * 
- * @since
  * @author Vaadin Ltd
  */
 @RunWith(ChangedTB3TestsSuite.class)

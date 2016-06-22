@@ -25,7 +25,6 @@ import com.vaadin.ui.TabSheet.Tab;
  * This test UI is used for checking that when a tab is closed, another one is
  * scrolled into view.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSheetClose extends AbstractTestUI {

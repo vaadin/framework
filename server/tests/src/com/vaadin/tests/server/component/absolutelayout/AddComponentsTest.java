@@ -25,7 +25,6 @@ import com.vaadin.ui.Button;
 /**
  * Tests adding of components to {@link AbsoluteLayout}
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AddComponentsTest {

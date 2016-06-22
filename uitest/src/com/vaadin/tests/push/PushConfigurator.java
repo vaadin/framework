@@ -64,7 +64,6 @@ public class PushConfigurator extends VerticalLayout {
     }
 
     /**
-     * @since
      */
     private void refreshStatus() {
         PushConfiguration pc = ui.getPushConfiguration();
@@ -79,7 +78,6 @@ public class PushConfigurator extends VerticalLayout {
     }
 
     /**
-     * @since
      */
     private void construct() {
         pushMode.addItem(PushMode.DISABLED);
@@ -107,7 +105,6 @@ public class PushConfigurator extends VerticalLayout {
     }
 
     /**
-     * @since
      */
     private void listeners() {
         pushMode.addValueChangeListener(new ValueChangeListener() {

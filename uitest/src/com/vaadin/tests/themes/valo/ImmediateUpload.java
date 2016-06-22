@@ -22,7 +22,6 @@ import com.vaadin.ui.Upload;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @Theme("valo")

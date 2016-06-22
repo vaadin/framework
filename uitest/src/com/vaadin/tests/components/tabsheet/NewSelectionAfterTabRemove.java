@@ -27,7 +27,6 @@ import com.vaadin.ui.TabSheet.Tab;
  * In case an unselected tab is removed and the selected one is not visible, the
  * scroll should not jump to the selected one.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class NewSelectionAfterTabRemove extends AbstractTestUI {

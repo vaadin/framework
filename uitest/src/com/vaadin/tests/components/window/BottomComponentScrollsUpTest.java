@@ -31,7 +31,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * 
  * While testing without the fix, the test failed on both Chrome and PhantomJS.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class BottomComponentScrollsUpTest extends MultiBrowserTest {

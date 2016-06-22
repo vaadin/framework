@@ -25,7 +25,6 @@ import com.vaadin.ui.TextField;
 /**
  * Tests declarative support for AbstractTextField.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AbstractTextFieldDeclarativeTest extends

@@ -28,7 +28,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Test for Accordion: Tab.setId should be propagated to client side tabs.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AccordionTabIdsTest extends MultiBrowserTest {

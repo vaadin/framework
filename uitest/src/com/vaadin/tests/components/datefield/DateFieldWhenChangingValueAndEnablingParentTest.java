@@ -55,7 +55,6 @@ public class DateFieldWhenChangingValueAndEnablingParentTest extends
     }
 
     /**
-     * @since
      * @param id
      * @param widgetEnabled
      * @param textInputEnabled

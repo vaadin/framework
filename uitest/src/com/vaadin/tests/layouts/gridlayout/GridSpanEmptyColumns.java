@@ -22,7 +22,6 @@ import com.vaadin.ui.Label;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class GridSpanEmptyColumns extends AbstractTestUI {

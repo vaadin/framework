@@ -35,7 +35,6 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @Theme("valo")
@@ -89,7 +88,6 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
     }
 
     /**
-     * @since
      * @return
      */
     private Component createServerConfigPanel() {

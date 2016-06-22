@@ -26,7 +26,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests if table focus is moved correctly to the selected item
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {

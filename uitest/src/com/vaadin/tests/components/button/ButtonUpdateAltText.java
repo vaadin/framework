@@ -29,7 +29,6 @@ import com.vaadin.ui.CheckBox;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class ButtonUpdateAltText extends AbstractTestUI {

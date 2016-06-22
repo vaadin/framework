@@ -29,7 +29,6 @@ import com.vaadin.ui.TextField;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class BaseAddReplaceMove extends BaseLayoutTestUI {

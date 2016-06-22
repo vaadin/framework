@@ -27,7 +27,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Class for unit testing that @DelegateToWidget works on derived widget states.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class OverriddenDecendantsTest extends MultiBrowserTest {

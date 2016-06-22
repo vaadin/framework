@@ -30,7 +30,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests opening and closing of calendar notifications.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CalendarNotificationsTest extends MultiBrowserTest {

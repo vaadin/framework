@@ -29,7 +29,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * from a server side selection listener. This test makes sure that actually
  * happen.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabSelectionRevertedByServerTest extends MultiBrowserTest {

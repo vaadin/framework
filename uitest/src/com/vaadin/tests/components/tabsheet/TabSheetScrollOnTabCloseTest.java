@@ -33,7 +33,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Tests removing tabs that have been scrolled out of view. This should cause no
  * change to the scroll position.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {

@@ -20,7 +20,6 @@ import com.vaadin.ui.AbstractOrderedLayout;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 abstract public class BaseAlignment extends BaseLayoutTestUI {

@@ -32,7 +32,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Regular click cases already covered by @LabelEmbeddedClickThroughForTableTest
  * Testing cases when mouse down and mouse up positions are different
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TableMatchesMouseDownMouseUpElementTest extends MultiBrowserTest {

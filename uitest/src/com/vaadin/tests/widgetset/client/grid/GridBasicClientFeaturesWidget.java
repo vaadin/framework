@@ -93,7 +93,6 @@ import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data
 /**
  * Grid basic client features test application.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class GridBasicClientFeaturesWidget extends
@@ -215,7 +214,6 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     /**
-     * @since
      * @return
      */
     private List<List<Data>> createData(int rowCount) {

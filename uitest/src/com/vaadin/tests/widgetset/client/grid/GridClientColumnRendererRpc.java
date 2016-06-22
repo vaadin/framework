@@ -37,12 +37,10 @@ public interface GridClientColumnRendererRpc extends ClientRpc {
     void triggerClientSorting();
 
     /**
-     * @since
      */
     void triggerClientSortingTest();
 
     /**
-     * @since
      */
     void shuffle();
 }

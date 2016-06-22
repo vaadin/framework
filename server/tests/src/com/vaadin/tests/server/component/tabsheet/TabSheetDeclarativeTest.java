@@ -28,7 +28,6 @@ import com.vaadin.ui.TextField;
 /**
  * Tests declarative support for TabSheet.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {

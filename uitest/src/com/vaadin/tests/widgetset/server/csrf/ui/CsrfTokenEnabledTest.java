@@ -18,7 +18,6 @@ package com.vaadin.tests.widgetset.server.csrf.ui;
 /**
  * Test the CSRF Token issue.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CsrfTokenEnabledTest extends AbstractCsrfTokenUITest {

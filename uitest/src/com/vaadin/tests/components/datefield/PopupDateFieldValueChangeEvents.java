@@ -34,7 +34,6 @@ import com.vaadin.ui.NativeSelect;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {

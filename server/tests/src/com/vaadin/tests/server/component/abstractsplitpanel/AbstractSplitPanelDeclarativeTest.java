@@ -29,7 +29,6 @@ import com.vaadin.ui.VerticalSplitPanel;
 /**
  * Tests declarative support for AbstractSplitPanel.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class AbstractSplitPanelDeclarativeTest extends

@@ -25,7 +25,6 @@ import com.vaadin.ui.Label;
 /**
  * Tests declarative support for {@link CustomLayout}.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class CustomLayoutDeclarativeTest extends

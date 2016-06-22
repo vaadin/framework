@@ -27,7 +27,6 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 /**
  * Test for server-side Grid focus features.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class GridFocusTest extends GridBasicFeaturesTest {

@@ -36,7 +36,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * pagination works when the matching results number more than those that can be
  * displayed.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class ComboBoxSlowTest extends MultiBrowserTest {

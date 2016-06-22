@@ -29,7 +29,6 @@ import com.vaadin.ui.TabSheet.Tab;
  * not change when tabs are removed. The exception is removing the leftmost
  * visible tab.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TabSheetScrollOnTabClose extends AbstractTestUI {

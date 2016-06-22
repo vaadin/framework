@@ -30,7 +30,6 @@ public class ProgressBarGenericTest extends AbstractFieldTest<ProgressBar> {
     }
 
     /**
-     * @since
      */
     protected void createPrimaryStyleNameSelect() {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();

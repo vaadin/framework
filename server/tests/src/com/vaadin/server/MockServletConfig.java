@@ -27,7 +27,6 @@ import javax.servlet.ServletContext;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class MockServletConfig implements ServletConfig {

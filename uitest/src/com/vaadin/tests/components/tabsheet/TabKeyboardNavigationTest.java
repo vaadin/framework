@@ -29,7 +29,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Add TB3 test as the TB2 one failed on keyboard events.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabKeyboardNavigationTest extends MultiBrowserTest {

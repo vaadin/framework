@@ -39,7 +39,6 @@ import com.vaadin.ui.TextField;
  * the state will confirm the change of the text, but the width and height
  * didn't change in the state either client or server before the fix.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TextAreaSizeResetted extends AbstractTestUI {

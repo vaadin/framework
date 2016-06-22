@@ -24,7 +24,6 @@ import com.vaadin.ui.Image;
 /**
  * Tests declarative support for implementations of {@link Image}.
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class ImageDeclarativeTest extends DeclarativeTestBase<Image> {

@@ -30,7 +30,6 @@ import com.vaadin.ui.Table;
 
 /**
  * 
- * @since
  * @author Vaadin Ltd
  */
 @Push(transport = Transport.STREAMING)
@@ -82,7 +81,6 @@ public class TablePushStreaming extends AbstractTestUI {
 
     /**
      * @param iter
-     * @since
      * @return
      */
     private Container generateContainer(int rows, int cols, int iter) {
