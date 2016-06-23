@@ -634,6 +634,24 @@ public class DateField extends AbstractField<Date> implements
         }
     }
 
+    @Override
+    public void discard() {
+        Property prop = getPropertyDataSource();
+        if (prop != null) {
+            Object value = prop.getValue();
+            if (!isValid() && value == null) {
+                // If the user entered an invalid value in the date field
+                // getInternalValue() returns null.
+                // If the datasource also contains null, then
+                // updateValueFromDataSource() will then not clear the internal state
+                // and error indicators (ticket #8069).
+                setInternalValue(null);
+            } else {
+                super.discard();
+            }
+        }
+    }
+
     /*
      * only fires the event if preventValueChangeEvent flag is false
      */
