@@ -28,7 +28,7 @@ Notification.show("This is the caption",
 
 [[figure.notification.example1]]
 .Notification
-image::img/notification-example2.png[]
+image::img/notification-example2.png[width=50%, scaledwidth=80%]
 
 For more control, you can create a [classname]#Notification# object. Different
 constructors exist for taking just the caption, and optionally the description,
@@ -57,7 +57,7 @@ User Input to Prevent Cross-Site Scripting">>.
 
 [[figure.notification.example2]]
 .Notification with HTML Formatting
-image::img/notification-example3.png[]
+image::img/notification-example3.png[width=30%, scaledwidth=60%]
 
 [[application.notifications.type]]
 == Notification Type
@@ -67,29 +67,39 @@ notification. If no notification type is given, the "humanized" type is used as
 the default. The notification types, listed below, are defined in the
 [classname]#Notification.Type# class.
 
-[parameter]#TYPE_HUMANIZED_MESSAGE# image:[]:: A user-friendly message that does not annoy too much: it does not require
+[parameter]#TYPE_HUMANIZED_MESSAGE#::
+image:img/notification-humanized.png[width=30%, scaledwidth=50%]
++
+A user-friendly message that does not annoy too much: it does not require
 confirmation by clicking and disappears quickly. It is centered and has a
 neutral gray color.
 
-[parameter]#TYPE_WARNING_MESSAGE# image:[]:: Warnings are messages of medium importance. They are displayed with colors that
+[parameter]#TYPE_WARNING_MESSAGE#::
+image:img/notification-warning.png[width=30%, scaledwidth=50%]
++
+Warnings are messages of medium importance. They are displayed with colors that
 are neither neutral nor too distractive. A warning is displayed for 1.5 seconds,
 but the user can click the message box to dismiss it. The user can continue to
 interact with the application while the warning is displayed.
 
-[parameter]#TYPE_ERROR_MESSAGE# image:[]:: Error messages are notifications that require the highest user attention, with
+[parameter]#TYPE_ERROR_MESSAGE#::
+image:img/notification-error.png[width=30%, scaledwidth=50%]
++
+Error messages are notifications that require the highest user attention, with
 alert colors, and they require the user to click the message to dismiss it. The
 error message box does not itself include an instruction to click the message,
 although the close box in the upper right corner indicates it visually. Unlike
 with other notifications, the user can not interact with the application while
 the error message is displayed.
 
-[parameter]#TYPE_TRAY_NOTIFICATION# image:[]:: Tray notifications are displayed in the "system tray" area, that is, in the
+[parameter]#TYPE_TRAY_NOTIFICATION#::
+image:img/notification-tray.png[width=30%, scaledwidth=50%]
++
+Tray notifications are displayed in the "system tray" area, that is, in the
 lower-right corner of the browser view. As they do not usually obscure any user
 interface, they are displayed longer than humanized or warning messages, 3
 seconds by default. The user can continue to interact with the application
 normally while the tray notification is displayed.
-
-
 
 
 ifdef::web[]
@@ -114,7 +124,7 @@ notif.setDelayMsec(20000);
 notif.setPosition(Position.BOTTOM_RIGHT);
 notif.setStyleName("mystyle");
 notif.setIcon(new ThemeResource("img/reindeer.png"));
-                
+
 // Show it in the page
 notif.show(Page.getCurrent());
 ----
@@ -170,8 +180,4 @@ The result is shown, with the icon set earlier in the customization example, in
 
 [[figure.application.errors.notifications.css]]
 .A Styled Notification
-image::img/notification-customization.png[]
-
-
-
-
+image::img/notification-customization.png[width=40%, scaledwidth=60%]
