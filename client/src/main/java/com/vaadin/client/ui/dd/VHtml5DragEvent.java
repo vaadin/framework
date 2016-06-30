@@ -80,6 +80,32 @@ public class VHtml5DragEvent extends NativeEvent {
             return this.dataTransfer.files[fileIndex];
      }-*/;
 
+    /**
+     * Detects if dropped element is a file. <br>
+     * Always returns <code>true</code> on Safari even if the dropped element is
+     * a folder.
+     */
+    public final native boolean isFile(int fileIndex)
+    /*-{
+        // Chrome >= v21 and Opera >= v?
+        if (this.dataTransfer.items) {
+            var item = this.dataTransfer.items[fileIndex];
+            if (item.webkitGetAsEntry) {
+                return item.webkitGetAsEntry().isFile;
+            }
+        }
+
+        // Zero sized files without a type are also likely to be folders
+        var file = this.dataTransfer.files[fileIndex];
+        if (file.size == 0 && !file.type) {
+            return false;
+        }
+
+        // TODO Make it detect folders on all browsers
+
+        return true;
+    }-*/;
+
     public final native void setHtml5DataFlavor(String flavor, String data)
     /*-{
         this.dataTransfer.setData(flavor, data);
