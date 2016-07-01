@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
+   width="70.273331mm"
+   height="66.604446mm"
    id="svg1901"
    sodipodi:version="0.32"
    inkscape:version="0.91 r"
@@ -66,11 +66,11 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="212.24603"
-     inkscape:cy="847.82098"
+     inkscape:cx="140.18358"
+     inkscape:cy="87.607372"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      gridtolerance="10000"
@@ -79,7 +79,11 @@
      inkscape:window-x="800"
      inkscape:window-y="153"
      showgrid="false"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata1906">
     <rdf:RDF>
@@ -88,6 +92,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -95,7 +100,8 @@
      inkscape:label="Taso 1"
      inkscape:groupmode="layer"
      id="layer1"
-     style="opacity:1">
+     style="opacity:1"
+     transform="translate(-67.505424,-64.081154)">
     <rect
        style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
        id="rect3344"
@@ -106,11 +112,11 @@
     <image
        sodipodi:absref="/home/magi/itmill/vaadin/documentation/components/original-drawings/../img/slider-orig.png"
        xlink:href="../img/slider-orig.png"
-       y="64.081154"
-       x="67.505424"
-       id="image2463"
+       width="249"
        height="236"
-       width="249" />
+       id="image2463"
+       x="67.505424"
+       y="64.081154" />
     <g
        transform="matrix(0.04895833,0,0,0.04895833,85.307423,133.89853)"
        id="g1317">
@@ -118,17 +124,17 @@
          id="path6080"
          style="fill:url(#linearGradient7607)"
          inkscape:connector-curvature="0"
-         d="m 70.29,24.826 v 602.34 h 35.44 v -35.44 h 35.44 v -35.4 h 35.4 v -35.44 h 70.88 v 70.84 h 35.43 v 70.88 h 35.44 v 70.87 h 35.44 v 35.44 h 70.84 v -35.44 h 35.44 v -70.87 H 424.6 v -70.88 h -35.4 v -70.84 h -35.44 v -70.88 h 141.72 v -35.43 h -35.44 v -35.44 H 424.6 v -35.44 h -35.4 v -35.41 h -35.44 v -35.43 h -35.44 v -35.44 h -35.44 v -35.44 h -35.43 v -35.44 h -35.44 v -35.43 h -35.44 v -35.44 h -35.4 V 60.256 H 105.73 V 24.818 H 70.29 z" />
+         d="m 70.29,24.826 0,602.34 35.44,0 0,-35.44 35.44,0 0,-35.4 35.4,0 0,-35.44 70.88,0 0,70.84 35.43,0 0,70.88 35.44,0 0,70.87 35.44,0 0,35.44 70.84,0 0,-35.44 35.44,0 0,-70.87 -35.44,0 0,-70.88 -35.4,0 0,-70.84 -35.44,0 0,-70.88 141.72,0 0,-35.43 -35.44,0 0,-35.44 -35.44,0 0,-35.44 -35.4,0 0,-35.41 -35.44,0 0,-35.43 -35.44,0 0,-35.44 -35.44,0 0,-35.44 -35.43,0 0,-35.44 -35.44,0 0,-35.43 -35.44,0 0,-35.44 -35.4,0 0,-35.41 -35.44,0 0,-35.438 -35.44,0 z" />
       <path
          id="rect1430"
          style="fill:#000000;fill-rule:evenodd"
          inkscape:connector-curvature="0"
-         d="m 35.438,24.812 v 602.35 h 35.437 v -35.44 h 35.435 v -35.41 H 70.875 V 95.662 L 106.31,95.66 V 60.254 H 70.875 V 24.816 H 35.438 z m 70.872,70.844 v 35.434 h 35.41 V 95.656 h -35.41 z m 35.41,35.434 v 35.44 h 35.44 v -35.44 h -35.44 z m 35.44,35.44 v 35.44 h 35.43 v -35.44 h -35.43 z m 35.43,35.44 v 35.44 h 35.44 v -35.44 h -35.44 z m 35.44,35.44 v 35.43 h 35.44 v -35.43 h -35.44 z m 35.44,35.43 v 35.44 h 35.44 v -35.44 h -35.44 z m 35.44,35.44 v 35.41 h 35.43 v -35.41 h -35.43 z m 35.43,35.41 v 35.43 h 35.41 v -35.43 h -35.41 z m 35.41,35.43 v 35.44 H 283.47 v 106.32 h 35.44 V 450 h 141.71 v -35.44 h -35.43 v -35.44 h -35.44 z m -70.84,141.76 v 70.84 h 35.43 v -70.84 h -35.43 z m 35.43,70.84 v 70.87 h 35.41 v -70.87 h -35.41 z m 35.41,70.87 v 70.88 h 35.44 v -70.88 h -35.44 z m 0,70.88 h -70.84 v 35.44 h 70.84 v -35.44 z m -70.84,0 v -70.88 h -35.44 v 70.88 h 35.44 z m -35.44,-70.88 v -70.87 h -35.44 v 70.87 h 35.44 z m -35.44,-70.87 v -70.84 h -35.44 v 70.84 h 35.44 z M 212.59,520.88 V 450 h -35.43 v 35.44 h -35.44 v 35.44 h 70.87 z m -70.87,0 h -35.41 v 35.43 h 35.41 v -35.43 z" />
+         d="m 35.438,24.812 0,602.35 35.437,0 0,-35.44 35.435,0 0,-35.41 -35.435,0 0,-460.65 35.435,-0.002 0,-35.406 -35.435,0 0,-35.438 -35.437,0 z m 70.872,70.844 0,35.434 35.41,0 0,-35.434 -35.41,0 z m 35.41,35.434 0,35.44 35.44,0 0,-35.44 -35.44,0 z m 35.44,35.44 0,35.44 35.43,0 0,-35.44 -35.43,0 z m 35.43,35.44 0,35.44 35.44,0 0,-35.44 -35.44,0 z m 35.44,35.44 0,35.43 35.44,0 0,-35.43 -35.44,0 z m 35.44,35.43 0,35.44 35.44,0 0,-35.44 -35.44,0 z m 35.44,35.44 0,35.41 35.43,0 0,-35.41 -35.43,0 z m 35.43,35.41 0,35.43 35.41,0 0,-35.43 -35.41,0 z m 35.41,35.43 0,35.44 -106.28,0 0,106.32 35.44,0 0,-70.88 141.71,0 0,-35.44 -35.43,0 0,-35.44 -35.44,0 z m -70.84,141.76 0,70.84 35.43,0 0,-70.84 -35.43,0 z m 35.43,70.84 0,70.87 35.41,0 0,-70.87 -35.41,0 z m 35.41,70.87 0,70.88 35.44,0 0,-70.88 -35.44,0 z m 0,70.88 -70.84,0 0,35.44 70.84,0 0,-35.44 z m -70.84,0 0,-70.88 -35.44,0 0,70.88 35.44,0 z m -35.44,-70.88 0,-70.87 -35.44,0 0,70.87 35.44,0 z m -35.44,-70.87 0,-70.84 -35.44,0 0,70.84 35.44,0 z m -35.44,-70.84 0,-70.88 -35.43,0 0,35.44 -35.44,0 0,35.44 70.87,0 z m -70.87,0 -35.41,0 0,35.43 35.41,0 0,-35.43 z" />
       <path
          id="rect3779"
          style="fill:#ffffff"
          inkscape:connector-curvature="0"
-         d="m 70.875,95.656 v 460.65 h 35.435 v -35.43 h 35.41 v -35.44 h 35.44 v -35.44 h 35.43 v 70.88 h 35.44 v 70.84 h 35.44 v 70.87 h 35.44 v 70.88 h 70.84 v -70.88 h -35.41 v -70.87 h -35.43 v -70.84 h -35.44 v -106.32 h 106.28 v -35.44 h -35.41 v -35.43 h -35.43 v -35.41 h -35.44 v -35.44 h -35.44 v -35.43 h -35.44 v -35.44 h -35.43 v -35.44 h -35.44 v -35.44 H 106.31 V 95.648 H 70.875 z" />
+         d="m 70.875,95.656 0,460.65 35.435,0 0,-35.43 35.41,0 0,-35.44 35.44,0 0,-35.44 35.43,0 0,70.88 35.44,0 0,70.84 35.44,0 0,70.87 35.44,0 0,70.88 70.84,0 0,-70.88 -35.41,0 0,-70.87 -35.43,0 0,-70.84 -35.44,0 0,-106.32 106.28,0 0,-35.44 -35.41,0 0,-35.43 -35.43,0 0,-35.41 -35.44,0 0,-35.44 -35.44,0 0,-35.43 -35.44,0 0,-35.44 -35.43,0 0,-35.44 -35.44,0 0,-35.44 -35.41,0 0,-35.438 -35.435,0 z" />
     </g>
   </g>
 </svg>
