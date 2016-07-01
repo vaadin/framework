@@ -4,9 +4,10 @@
 
 For instructions about _using_ Vaadin to develop applications, please refer to [Vaadin tutorial](https://vaadin.com/docs/-/part/framework/tutorial.html) and other [documentation](https://vaadin.com/docs/).
 
-To contribute, first refer to [Contributing Code](https://vaadin.com/wiki/-/wiki/Main/Contributing+Code) for general instructions and requirements for contributing code to the Vaadin framework.
+To contribute, first refer to [Contributing Code](https://github.com/vaadin/vaadin/blob/master/CONTRIBUTING.md)
+for general instructions and requirements for contributing code to the Vaadin framework.
 
-Instructions on how to set up a working environments for developing the Vaadin Framework follow below.
+Instructions on how to set up a working environment for developing the Vaadin Framework follow below.
 
 ## Building a package
 
