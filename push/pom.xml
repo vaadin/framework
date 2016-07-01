@@ -138,6 +138,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>VAADIN</Export-Package>
 						<Require-Bundle>com.vaadin.external.atmosphere.runtime;bundle-version="${atmosphere.runtime.version}";visibility:=reexport</Require-Bundle>

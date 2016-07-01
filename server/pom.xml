@@ -150,7 +150,7 @@
 	</dependencies>
 
 	<build>
-		<plugins>
+		<plugins>		
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -221,7 +221,8 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}"</Export-Package>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
+						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
 						<Import-Package>javax.servlet;version="${javax.servlet.version}",
 							javax.servlet.http;version="${javax.servlet.version}",
 							javax.validation;version="${javax.validation.version}";resolution:=optional,
@@ -235,8 +236,8 @@
 							javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
 							com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
 						<Require-Bundle>
-							com.vaadin.shared;bundle-version="${project.version}",
-							com.vaadin.push;bundle-version="${project.version}";resolution:=optional,
+							com.vaadin.shared;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",
+							com.vaadin.push;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}";resolution:=optional,
 							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional"</Require-Bundle>
 					</instructions>
 				</configuration>
