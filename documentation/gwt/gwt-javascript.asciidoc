@@ -26,7 +26,7 @@ component.
 The example library includes a single [classname]#MyComponent# component,
 defined in [filename]#mylibrary.js#.
 
-
+[source,javascript]
 ----
 // Define the namespace
 var mylibrary = mylibrary || {};
@@ -70,7 +70,7 @@ mylibrary.MyComponent = function (element) {
 When used in an HTML page, the library would be included with the following
 definition:
 
-
+[source,html]
 ----
 <script type="text/javascript"
         src="mylibrary.js"></script>
@@ -78,7 +78,7 @@ definition:
 
 You could then use it anywhere in the HTML document as follows:
 
-
+[source,html]
 ----
 <!-- Placeholder for the component -->    
 <div id="foo"></div>
@@ -99,7 +99,7 @@ image::img/javascript-component.png[]
 
 You could interact with the component with JavaScript for example as follows:
 
-
+[source,html]
 ----
 <a href="javascript:foo.setValue('New value')">Click here</a>
 ----
@@ -112,7 +112,7 @@ To begin integrating such a JavaScript component, you would need to sketch a bit
 how it would be used from a server-side Vaadin application. The component should
 support writing the value as well as listening for changes to it.
 
-
+[source,java]
 ----
 final MyComponent mycomponent = new MyComponent();
 
@@ -137,7 +137,7 @@ layout.addComponent(mycomponent);
 A JavaScript component extends the [classname]#AbstractJavaScriptComponent#,
 which handles the shared state and RPC for the component.
 
-
+[source,java]
 ----
 package com.vaadin.book.examples.client.js;
 
@@ -173,7 +173,7 @@ package name of this server-side class.
 
 The shared state of the component is as follows:
 
-
+[source,java]
 ----
 public class MyComponentState extends JavaScriptComponentState {
     public String value;
@@ -189,9 +189,8 @@ for them, which you can use in the component.
 == Defining a JavaScript Connector
 
 A JavaScript connector is a function that initializes the JavaScript component
-and handles communication between the server-side and the JavaScript code.//TOD
-Clarify -
-code?
+and handles communication between the server-side and the JavaScript code.
+//TODO Clarify - code?
 
 A connector is defined as a connector initializer function that is added to the
 [literal]#++window++# object. The name of the function must match the
@@ -203,7 +202,7 @@ function. The [methodname]#this.getElement()# method returns the HTML DOM
 element of the component. The [methodname]#this.getState()# returns a shared
 state object with the current state as synchronized from the server-side.
 
-
+[source,javascript]
 ----
 window.com_vaadin_book_examples_client_js_MyComponent =
 function() {
@@ -251,7 +250,7 @@ object.
 Continuing from the server-side [classname]#MyComponent# example we defined
 earlier, we add a constructor to it that registers the function.
 
-
+[source,java]
 ----
 public MyComponent() {
     addFunction("onClick", new JavaScriptFunction() {
@@ -273,7 +272,7 @@ An RPC call is made simply by calling the RPC method in the connector. In the
 constructor function of the JavaScript connector, you could write as follows
 (the complete connector code was given earlier):
 
-
+[source,javascript]
 ----
 window.com_vaadin_book_examples_gwt_js_MyComponent =
     function() {
