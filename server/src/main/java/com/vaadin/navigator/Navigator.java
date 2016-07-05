@@ -558,26 +558,29 @@ public class Navigator implements Serializable {
             longestViewName = errorProvider.getViewName(navigationState);
             viewWithLongestName = errorProvider.getView(longestViewName);
         }
-        if (viewWithLongestName != null) {
-            String parameters = "";
-            if (navigationState.length() > longestViewName.length() + 1) {
-                parameters = navigationState
-                        .substring(longestViewName.length() + 1);
-            }
-            if (getCurrentView() == null
-                    || !SharedUtil
-                            .equals(getCurrentView(), viewWithLongestName)) {
-                navigateTo(viewWithLongestName, longestViewName, parameters);
-            } else {
-                updateNavigationState(new ViewChangeEvent(this,
-                        getCurrentView(), viewWithLongestName, longestViewName,
-                        parameters));
-            }
-        } else {
+
+        if (viewWithLongestName == null) {
             throw new IllegalArgumentException(
                     "Trying to navigate to an unknown state '"
                             + navigationState
                             + "' and an error view provider not present");
+        }
+
+        String parameters = "";
+        if (navigationState.length() > longestViewName.length() + 1) {
+            parameters = navigationState
+                    .substring(longestViewName.length() + 1);
+        } else if (navigationState.endsWith("/")) {
+            navigationState = navigationState.substring(0,
+                    navigationState.length() - 1);
+        }
+        if (getCurrentView() == null
+                || !SharedUtil.equals(getCurrentView(), viewWithLongestName)
+                || !SharedUtil.equals(currentNavigationState, navigationState)) {
+            navigateTo(viewWithLongestName, longestViewName, parameters);
+        } else {
+            updateNavigationState(new ViewChangeEvent(this, getCurrentView(),
+                    viewWithLongestName, longestViewName, parameters));
         }
     }
 
@@ -677,8 +680,8 @@ public class Navigator implements Serializable {
             }
             if (!navigationState.equals(getStateManager().getState())) {
                 getStateManager().setState(navigationState);
-                currentNavigationState = navigationState;
             }
+            currentNavigationState = navigationState;
         }
     }
 
