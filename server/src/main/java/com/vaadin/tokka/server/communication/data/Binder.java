@@ -103,7 +103,7 @@ public class Binder<T> implements Serializable {
             binding.setFieldValue(bean);
         }
 
-        field.onChange(value -> handleChangeEvent(field));
+        field.addValueChangeListener(e -> handleChangeEvent(field));
     }
 
     /**

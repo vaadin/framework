@@ -122,8 +122,8 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     }
 
     @Override
-    public Registration onChange(EventListener<ValueChange<Boolean>> handler) {
-        return onEvent(StateChange.class, handler);
+    public Registration addValueChangeListener(EventListener<ValueChange<Boolean>> listener) {
+        return addListener(StateChange.class, listener);
     }
 
     @Override

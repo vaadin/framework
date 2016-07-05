@@ -1015,22 +1015,22 @@ public abstract class AbstractClientConnector
         }
     }
 
-    private static final Method EVENT_HANDLER_METHOD = ReflectTools
+    private static final Method EVENT_LISTENER_METHOD = ReflectTools
             .findMethod(EventListener.class, "accept", Event.class);
 
-    protected <T> Registration onEvent(Class<? extends Event> eventType,
-            EventListener<? super T> handler) {
-        Objects.requireNonNull(handler, "Handler cannot be null");
-        addListener(eventType, handler, EVENT_HANDLER_METHOD);
-        return () -> removeListener(eventType, handler);
+    protected <T> Registration addListener(Class<? extends Event> eventType,
+            EventListener<? super T> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(eventType, listener, EVENT_LISTENER_METHOD);
+        return () -> removeListener(eventType, listener);
     }
 
-    protected <T> Registration onEvent(String eventId,
+    protected <T> Registration addListener(String eventId,
             Class<? extends Event> eventType,
-            EventListener<? super T> handler) {
-        Objects.requireNonNull(handler, "Handler cannot be null");
-        addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
-        return () -> removeListener(eventType, handler);
+            EventListener<? super T> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(eventId, eventType, listener, EVENT_LISTENER_METHOD);
+        return () -> removeListener(eventType, listener);
     }
 
     /*

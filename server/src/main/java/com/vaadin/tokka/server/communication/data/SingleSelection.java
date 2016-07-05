@@ -84,8 +84,8 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
     }
 
     @Override
-    public Registration onChange(EventListener<ValueChange<T>> handler) {
-        return onEvent(SelectionChange.class, handler);
+    public Registration addValueChangeListener(EventListener<ValueChange<T>> listener) {
+        return addListener(SelectionChange.class, listener);
     }
 
     @Override

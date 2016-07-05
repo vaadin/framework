@@ -96,9 +96,9 @@ public class DateField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(
-            EventListener<ValueChange<LocalDate>> handler) {
-        return onEvent(DateChange.class, handler);
+    public Registration addValueChangeListener(
+            EventListener<ValueChange<LocalDate>> listener) {
+        return addListener(DateChange.class, listener);
     }
 
     @Override

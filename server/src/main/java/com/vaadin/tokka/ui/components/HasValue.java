@@ -73,14 +73,12 @@ public interface HasValue<V> extends Serializable {
     V getValue();
 
     /**
-     * Adds a {@link EventListener}. Handler is called when value is changed by
-     * the user or through the API
+     * Adds an {@link EventListener}. The listener is called when the value of
+     * this {@code hasValue} is changed either by the user or programmatically.
      * 
-     * @param handler
-     *            on change event handler
-     * @return registration for the handler
-     * @throws IllegalArgumentException
-     *             if handler is null
+     * @param listener
+     *            the value change listener, not null
+     * @return a registration for the listener
      */
-    Registration onChange(EventListener<ValueChange<V>> handler);
+    Registration addValueChangeListener(EventListener<ValueChange<V>> listener);
 }

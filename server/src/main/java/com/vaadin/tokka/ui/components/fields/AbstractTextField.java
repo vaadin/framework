@@ -135,8 +135,8 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(EventListener<ValueChange<String>> handler) {
-        return onEvent(TextChange.class, handler);
+    public Registration addValueChangeListener(EventListener<ValueChange<String>> listener) {
+        return addListener(TextChange.class, listener);
     }
 
     /**
