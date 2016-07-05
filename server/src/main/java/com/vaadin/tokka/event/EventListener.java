@@ -31,7 +31,8 @@ import java.util.function.Consumer;
  * @see Registration
  */
 @FunctionalInterface
-public interface Handler<E extends Event> extends Consumer<E>, Serializable {
+public interface EventListener<E extends Event>
+        extends Consumer<E>, Serializable {
 
     /**
      * Handles the given event.

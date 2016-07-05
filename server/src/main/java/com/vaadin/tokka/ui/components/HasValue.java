@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.tokka.event.Event;
-import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 
 /**
@@ -73,8 +73,8 @@ public interface HasValue<V> extends Serializable {
     V getValue();
 
     /**
-     * Adds a {@link Handler}. Handler is called when value is changed by the
-     * user or through the API
+     * Adds a {@link EventListener}. Handler is called when value is changed by
+     * the user or through the API
      * 
      * @param handler
      *            on change event handler
@@ -82,5 +82,5 @@ public interface HasValue<V> extends Serializable {
      * @throws IllegalArgumentException
      *             if handler is null
      */
-    Registration onChange(Handler<ValueChange<V>> handler);
+    Registration onChange(EventListener<ValueChange<V>> handler);
 }

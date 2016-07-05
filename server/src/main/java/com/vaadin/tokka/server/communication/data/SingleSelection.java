@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.vaadin.shared.tokka.data.selection.SelectionServerRpc;
-import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.server.communication.data.SelectionModel.Single;
 
@@ -29,8 +29,8 @@ import com.vaadin.tokka.server.communication.data.SelectionModel.Single;
  * @param <T>
  *            type of selected data
  */
-public class SingleSelection<T> extends AbstractSelectionModel<T> implements
-        Single<T> {
+public class SingleSelection<T> extends AbstractSelectionModel<T>
+        implements Single<T> {
 
     public SingleSelection() {
         registerRpc(new SelectionServerRpc() {
@@ -84,7 +84,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T> implements
     }
 
     @Override
-    public Registration onChange(Handler<ValueChange<T>> handler) {
+    public Registration onChange(EventListener<ValueChange<T>> handler) {
         return onEvent(SelectionChange.class, handler);
     }
 

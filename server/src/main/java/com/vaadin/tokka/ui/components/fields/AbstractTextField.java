@@ -27,7 +27,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
-import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.ui.AbstractComponent;
@@ -135,7 +135,7 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(Handler<ValueChange<String>> handler) {
+    public Registration onChange(EventListener<ValueChange<String>> handler) {
         return onEvent(TextChange.class, handler);
     }
 

@@ -40,7 +40,7 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.tokka.event.Event;
-import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
@@ -67,7 +67,7 @@ public abstract class AbstractClientConnector
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
-     * sends ourgoing RPC calls for that interface.
+     * sends outgoing RPC calls for that interface.
      */
     private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<Class<?>, ClientRpc>();
 
@@ -1016,17 +1016,18 @@ public abstract class AbstractClientConnector
     }
 
     private static final Method EVENT_HANDLER_METHOD = ReflectTools
-            .findMethod(Handler.class, "accept", Event.class);
+            .findMethod(EventListener.class, "accept", Event.class);
 
     protected <T> Registration onEvent(Class<? extends Event> eventType,
-            Handler<? super T> handler) {
+            EventListener<? super T> handler) {
         Objects.requireNonNull(handler, "Handler cannot be null");
         addListener(eventType, handler, EVENT_HANDLER_METHOD);
         return () -> removeListener(eventType, handler);
     }
 
     protected <T> Registration onEvent(String eventId,
-            Class<? extends Event> eventType, Handler<? super T> handler) {
+            Class<? extends Event> eventType,
+            EventListener<? super T> handler) {
         Objects.requireNonNull(handler, "Handler cannot be null");
         addListener(eventId, eventType, handler, EVENT_HANDLER_METHOD);
         return () -> removeListener(eventType, handler);

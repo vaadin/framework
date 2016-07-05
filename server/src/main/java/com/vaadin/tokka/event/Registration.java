@@ -18,7 +18,7 @@ package com.vaadin.tokka.event;
 import java.io.Serializable;
 
 /**
- * Registration object for removing {@link Handler}s.
+ * Registration object for removing {@link EventListener}s.
  * 
  * @since
  */

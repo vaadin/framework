@@ -25,7 +25,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.shared.tokka.ui.components.fields.DateFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.DateFieldState;
-import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.ui.AbstractComponent;
@@ -96,7 +96,8 @@ public class DateField extends AbstractComponent
     }
 
     @Override
-    public Registration onChange(Handler<ValueChange<LocalDate>> handler) {
+    public Registration onChange(
+            EventListener<ValueChange<LocalDate>> handler) {
         return onEvent(DateChange.class, handler);
     }
 
