@@ -35,10 +35,11 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.shared.ui.Orientation;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
-public class VSlider extends SimpleFocusablePanel implements Field,
-        HasValue<Double>, SubPartAware {
+public class VSlider extends SimpleFocusablePanel
+        implements Field, HasValue<Double>, SubPartAware {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -61,7 +62,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     protected double max;
     protected int resolution;
     protected Double value;
-    protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
+    protected Orientation orientation = Orientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
@@ -137,7 +138,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         updateStyleNames(style, true);
     }
 
-    protected void updateStyleNames(String styleName, boolean isPrimaryStyleName) {
+    protected void updateStyleNames(String styleName,
+            boolean isPrimaryStyleName) {
 
         feedbackPopup.removeStyleName(getStylePrimaryName() + "-feedback");
         removeStyleName(getStylePrimaryName() + "-vertical");
@@ -282,8 +284,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             increaseValue(true);
         } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
-        } else if ((BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYPRESS)
-                || (!BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
+        } else if ((BrowserInfo.get().isGecko()
+                && DOM.eventGetType(event) == Event.ONKEYPRESS)
+                || (!BrowserInfo.get().isGecko()
+                        && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -403,8 +407,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
 
         if (isVertical()) {
-            v = ((baseSize - (coord - baseOffset)) / (double) (baseSize - handleSize))
-                    * (max - min) + min;
+            v = ((baseSize - (coord - baseOffset))
+                    / (double) (baseSize - handleSize)) * (max - min) + min;
         } else {
             v = ((coord - baseOffset) / (double) (baseSize - handleSize))
                     * (max - min) + min;
@@ -564,10 +568,19 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     private boolean isVertical() {
-        return orientation == SliderOrientation.VERTICAL;
+        return orientation == Orientation.VERTICAL;
     }
 
+    @Deprecated
     public void setOrientation(SliderOrientation orientation) {
+        if (orientation == SliderOrientation.HORIZONTAL) {
+            setOrientation(Orientation.HORIZONTAL);
+        } else {
+            setOrientation(Orientation.VERTICAL);
+        }
+    }
+
+    public void setOrientation(Orientation orientation) {
         if (this.orientation != orientation) {
             this.orientation = orientation;
             updateStyleNames(getStylePrimaryName(), true);
@@ -657,7 +670,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.equals("popup")) {
             feedbackPopup.show();
             return feedbackPopup.getElement();
@@ -666,7 +680,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (feedbackPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }
