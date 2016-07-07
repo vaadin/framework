@@ -19,13 +19,17 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.data.typed.DataProviderClientRpc;
 import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.tokka.event.Registration;
 
 import elemental.json.Json;
@@ -40,24 +44,27 @@ import elemental.json.JsonObject;
  * 
  * @since
  */
-public abstract class DataProvider<T> extends AbstractExtension {
+public class DataProvider<T> extends AbstractExtension {
 
     /**
-     * Creates the appropriate type of DataProvider based on the type of
-     * Collection provided to the method.
-     * <p>
-     * TODO: Actually use different DataProviders and provide an API for the
-     * back end to inform changes back.
-     * 
-     * @param data
-     *            collection of data objects
-     * @param component
-     *            component to extend with the data provider
-     * @return created data provider
+     * Simple implementation of collection data provider communication. All data
+     * is sent by server automatically and no data is requested by client.
      */
-    public static <V> SimpleDataProvider<V> create(DataSource<V> data) {
-        SimpleDataProvider<V> dataProvider = new SimpleDataProvider<V>(data);
-        return dataProvider;
+    protected class SimpleDataRequestRpc implements DataRequestRpc {
+
+        @Override
+        public void requestRows(int firstRowIndex, int numberOfRows,
+                int firstCachedRowIndex, int cacheSize) {
+            pushRows = Range.withLength(firstRowIndex, numberOfRows);
+            markAsDirty();
+        }
+
+        @Override
+        public void dropRows(JsonArray keys) {
+            for (int i = 0; i < keys.length(); ++i) {
+                handler.dropActiveData(keys.getString(i));
+            }
+        }
     }
 
     /**
@@ -92,12 +99,10 @@ public abstract class DataProvider<T> extends AbstractExtension {
          * @param dataObjects
          *            collection of new active data objects
          */
-        public void addActiveData(Iterable<T> dataObjects) {
-            for (T data : dataObjects) {
-                if (!activeData.contains(getKeyMapper().key(data))) {
-                    activeData.add(getKeyMapper().key(data));
-                }
-            }
+        public void addActiveData(Stream<T> dataObjects) {
+            dataObjects.map(getKeyMapper()::key)
+                    .filter(key -> !activeData.contains(key))
+                    .forEach(activeData::add);
         }
 
         /**
@@ -109,15 +114,12 @@ public abstract class DataProvider<T> extends AbstractExtension {
          * having all data at the client, the collection should be all the data
          * in the back end.
          * 
-         * @see DataProvider#pushData(long, Collection)
          * @param dataObjects
          *            collection of most recently sent data to the client
          */
-        public void cleanUp(Iterable<T> dataObjects) {
-            Collection<String> keys = new HashSet<String>();
-            for (T data : dataObjects) {
-                keys.add(getKeyMapper().key(data));
-            }
+        public void cleanUp(Stream<T> dataObjects) {
+            Collection<String> keys = dataObjects.map(getKeyMapper()::key)
+                    .collect(Collectors.toSet());
 
             // Remove still active rows that were dropped by the client
             droppedData.removeAll(keys);
@@ -175,7 +177,11 @@ public abstract class DataProvider<T> extends AbstractExtension {
     private DetachListener detachListener;
     private DataKeyMapper<T> keyMapper;
 
-    protected DataProvider(DataSource<T> dataSource) {
+    private boolean reset = false;
+    private final Set<T> updatedData = new HashSet<T>();
+    private Range pushRows = Range.withLength(0, 40);
+
+    public DataProvider(DataSource<T> dataSource) {
         addDataGenerator(handler);
         this.dataSource = dataSource;
         rpc = getRpcProxy(DataProviderClientRpc.class);
@@ -183,6 +189,38 @@ public abstract class DataProvider<T> extends AbstractExtension {
         dataChangeHandler = this.dataSource
                 .addDataChangeHandler(createDataChangeHandler());
         keyMapper = createKeyMapper();
+    }
+
+    /**
+     * Initially and in the case of a reset all data should be pushed to the
+     * client.
+     */
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        if (initial || reset) {
+            rpc.reset(dataSource.size());
+        }
+
+        if (!pushRows.isEmpty()) {
+            Stream<T> rowsToPush = dataSource.request()
+                    .skip(pushRows.getStart()).limit(pushRows.length());
+            pushData(pushRows.getStart(), rowsToPush);
+        }
+
+        if (!updatedData.isEmpty()) {
+            JsonArray dataArray = Json.createArray();
+            int i = 0;
+            for (T data : updatedData) {
+                dataArray.set(i++, getDataObject(data));
+            }
+            rpc.updateData(dataArray);
+        }
+
+        pushRows = Range.withLength(0, 0);
+        reset = false;
+        updatedData.clear();
     }
 
     @Override
@@ -242,8 +280,6 @@ public abstract class DataProvider<T> extends AbstractExtension {
         return keyMapper;
     }
 
-    public abstract void refresh(T data);
-
     /**
      * Sends given collection of data objects to the client-side.
      * 
@@ -252,17 +288,18 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * @param data
      *            data objects to send as an iterable
      */
-    protected void pushData(long firstIndex, Iterable<T> data) {
+    protected void pushData(int firstIndex, Stream<T> data) {
         JsonArray dataArray = Json.createArray();
 
         int i = 0;
-        for (T item : data) {
+        List<T> collected = data.collect(Collectors.toList());
+        for (T item : collected) {
             dataArray.set(i++, getDataObject(item));
         }
 
         rpc.setData(firstIndex, dataArray);
-        handler.addActiveData(data);
-        handler.cleanUp(data);
+        handler.addActiveData(collected.stream());
+        handler.cleanUp(collected.stream());
     }
 
     /**
@@ -320,13 +357,64 @@ public abstract class DataProvider<T> extends AbstractExtension {
     }
 
     /**
+     * Informs the DataProvider that a data object has been added. It is assumed
+     * to be the last object in the collection.
+     * 
+     * @param data
+     *            data object added to collection
+     */
+    protected void add(T data) {
+        rpc.add(0);
+    }
+
+    /**
+     * Informs the DataProvider that a data object has been removed.
+     * 
+     * @param data
+     *            data object removed from collection
+     */
+    protected void remove(T data) {
+        if (handler.getActiveData().contains(data)) {
+            rpc.drop(0);
+        }
+    }
+
+    /**
+     * Informs the DataProvider that the collection has changed.
+     */
+    protected void reset() {
+        if (reset) {
+            return;
+        }
+
+        reset = true;
+        markAsDirty();
+    }
+
+    /**
+     * Informs the DataProvider that a data object has been updated.
+     * 
+     * @param data
+     *            updated data object
+     */
+    public void refresh(T data) {
+        if (updatedData.isEmpty()) {
+            markAsDirty();
+        }
+
+        updatedData.add(data);
+    }
+
+    /**
      * Creates a {@link DataKeyMapper} to use with this {@link DataProvider}.
      * <p>
      * This method is called from the constructor.
      * 
      * @return key mapper
      */
-    protected abstract DataKeyMapper<T> createKeyMapper();
+    protected DataKeyMapper<T> createKeyMapper() {
+        return new KeyMapper<T>();
+    }
 
     /**
      * Creates a {@link DataRequestRpc} used with this {@link DataProvider}.
@@ -335,7 +423,9 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * 
      * @return data request rpc implementation
      */
-    protected abstract DataRequestRpc createRpc();
+    protected DataRequestRpc createRpc() {
+        return new SimpleDataRequestRpc();
+    }
 
     /**
      * Creates a {@link DataChangeHandler} to use with the {@link DataSource}.
@@ -344,5 +434,28 @@ public abstract class DataProvider<T> extends AbstractExtension {
      * 
      * @return data change handler
      */
-    protected abstract DataChangeHandler<T> createDataChangeHandler();
+    protected DataChangeHandler<T> createDataChangeHandler() {
+        return new DataChangeHandler<T>() {
+
+            @Override
+            public void onDataChange() {
+                reset();
+            }
+
+            @Override
+            public void onDataAppend(T data) {
+                add(data);
+            }
+
+            @Override
+            public void onDataRemove(T data) {
+                remove(data);
+            }
+
+            @Override
+            public void onDataUpdate(T data) {
+                refresh(data);
+            }
+        };
+    }
 }

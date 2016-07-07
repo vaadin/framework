@@ -49,7 +49,7 @@ public class ListDataSourceTest {
     @Test
     public void testListContainsAllData() {
         EasyMock.replay(handler);
-        dataSource.forEach(str -> assertTrue(data.contains(str)));
+        dataSource.request().forEach(str -> assertTrue(data.contains(str)));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ListDataSourceTest {
         handler.onDataAppend(strBean);
         EasyMock.expectLastCall().times(1);
         EasyMock.replay(handler);
-        
+
         dataSource.addDataChangeHandler(handler);
         dataSource.save(strBean);
     }
@@ -69,7 +69,7 @@ public class ListDataSourceTest {
         handler.onDataRemove(strBean);
         EasyMock.expectLastCall().times(1);
         EasyMock.replay(handler);
-        
+
         dataSource.addDataChangeHandler(handler);
         dataSource.remove(strBean);
     }
@@ -80,7 +80,7 @@ public class ListDataSourceTest {
         handler.onDataUpdate(strBean);
         EasyMock.expectLastCall().times(1);
         EasyMock.replay(handler);
-        
+
         dataSource.addDataChangeHandler(handler);
         strBean.setValue("Fuu");
         dataSource.save(strBean);

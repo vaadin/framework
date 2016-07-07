@@ -36,7 +36,7 @@ public class Grid<T> extends AbstractListing<T> {
     @Override
     public void setDataSource(DataSource<T> data) {
         this.dataSource = data;
-        setDataProvider(DataProvider.create(data));
+        setDataProvider(new DataProvider<>(data));
     }
 
     @Override

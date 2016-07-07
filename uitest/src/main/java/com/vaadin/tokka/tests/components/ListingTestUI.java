@@ -3,17 +3,18 @@ package com.vaadin.tokka.tests.components;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
+import com.vaadin.tokka.ui.components.fields.TextField;
 import com.vaadin.tokka.ui.components.grid.Grid;
 import com.vaadin.tokka.ui.components.nativeselect.NativeSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
@@ -71,18 +72,28 @@ public class ListingTestUI extends AbstractTestUI {
         layout.setMargin(true);
         layout.setSpacing(true);
 
-        final List<String> options = createOptions();
         NativeSelect<String> select = new NativeSelect<>(
-                DataSource.create(options));
+                DataSource.create(createOptions(50)));
         layout.addComponent(select);
 
-        layout.addComponent(new Button("Notify", e -> select
+        HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.addComponent(new Button("Notify", e -> select
                 .getSelectionModel().getSelected()
                 .forEach(s -> Notification.show(s))));
-        layout.addComponent(new Button("Random select", e -> {
-            String value = options.get(r.nextInt(options.size()));
-            select.getSelectionModel().select(value);
+        hLayout.addComponent(new Button("Random select", e -> {
+            DataSource<String> ds = select.getDataSource();
+            int skip = r.nextInt(ds.size());
+            ds.request().skip(skip).findFirst()
+                    .ifPresent(select.getSelectionModel()::select);
         }));
+
+        TextField textField = new TextField();
+        hLayout.addComponent(textField);
+        hLayout.addComponent(new Button("Reset options",
+                e -> select.setOptions(createOptions(Integer.parseInt(textField
+                        .getValue())))));
+
+        layout.addComponent(hLayout);
 
         Grid<Bean> grid = new Grid<Bean>();
         addComponent(layout);
@@ -110,9 +121,11 @@ public class ListingTestUI extends AbstractTestUI {
 
     }
 
-    private List<String> createOptions() {
+    private List<String> createOptions(int max) {
         List<String> options = new ArrayList<>();
-        Stream.of(1, 2, 3, 4, 5).map(i -> "Option " + i).forEach(options::add);
+        for (int i = 0; i < max; ++i) {
+            options.add("Option " + i);
+        }
         return options;
     }
 

@@ -28,8 +28,11 @@ public interface DataProviderClientRpc extends ClientRpc {
 
     /**
      * Informs the client-side DataSource that all data has been invalidated.
+     * 
+     * @param size
+     *            size of the data source
      */
-    void reset();
+    void reset(int size);
 
     /**
      * Sets the data of the client-side DataSource to match the given data
@@ -43,24 +46,24 @@ public interface DataProviderClientRpc extends ClientRpc {
      * @param data
      *            array of new data
      */
-    void setData(long firstIndex, JsonArray data);
+    void setData(int firstIndex, JsonArray data);
 
     /**
-     * Adds a new data object to the client-side DataSource. The new data object
-     * is added at the end of the data source.
+     * Adds a new data object to the client-side DataSource. Client-side will
+     * request the new data if needed.
      * 
-     * @param dataObject
-     *            single added data object
+     * @param index
+     *            added row index
      */
-    void add(JsonObject dataObject);
+    void add(int index);
 
     /**
-     * Removes data identified by given key from the client-side DataSource.
+     * Removes data with given index from the client-side DataSource.
      * 
-     * @param key
-     *            key identifying the object to be removed
+     * @param index
+     *            removed row index
      */
-    void drop(String key);
+    void drop(int index);
 
     /**
      * Updates an array of objects based on their identifying key.

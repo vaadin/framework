@@ -18,6 +18,7 @@ package com.vaadin.tokka.server.communication.data;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.vaadin.tokka.event.Registration;
 
@@ -29,7 +30,14 @@ import com.vaadin.tokka.event.Registration;
  * @param <T>
  *            data type
  */
-public interface DataSource<T> extends Iterable<T>, Serializable {
+public interface DataSource<T> extends Serializable {
+
+    /**
+     * Requests data from the back end.
+     * 
+     * @return stream of results
+     */
+    Stream<T> request(/* Query query */);
 
     /**
      * Saves a data object to the back end. If it's a new object, it should be
@@ -47,6 +55,13 @@ public interface DataSource<T> extends Iterable<T>, Serializable {
      *            data object to remove
      */
     void remove(T data);
+
+    /**
+     * TODO: Decide the fate of the size method.
+     * 
+     * @return size of the data source
+     */
+    int size();
 
     /**
      * Adds a new DataChangeHandler to this DataSource. DataChangeHandler is

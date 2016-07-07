@@ -2,8 +2,7 @@ package com.vaadin.tokka.ui.components;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +38,7 @@ public class AbstractListingTest {
         @Override
         public void setDataSource(DataSource<String> data) {
             this.data = data;
-            setDataProvider(DataProvider.create(data));
+            setDataProvider(new DataProvider<>(data));
         }
 
         @Override
@@ -61,8 +60,13 @@ public class AbstractListingTest {
             }
 
             @Override
-            public Iterator<String> iterator() {
-                return Arrays.asList("Foo").iterator();
+            public Stream<String> request() {
+                return Stream.of("Foo");
+            }
+
+            @Override
+            public int size() {
+                return 1;
             }
         });
     }

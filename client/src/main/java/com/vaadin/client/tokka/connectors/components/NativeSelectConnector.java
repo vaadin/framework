@@ -44,6 +44,10 @@ public class NativeSelectConnector extends AbstractListingConnector implements
         public void dataUpdated(int firstRowIndex, int numberOfRows) {
             for (int i = 0; i < numberOfRows; ++i) {
                 int index = i + firstRowIndex;
+                if (i == getWidget().getItemCount()) {
+                    getWidget().addItem("");
+                }
+
                 JsonObject item = getDataSource().getRow(index);
                 getWidget().setItemText(index,
                         item.getString(DataProviderConstants.NAME));
@@ -75,6 +79,8 @@ public class NativeSelectConnector extends AbstractListingConnector implements
                         getWidget().setSelectedIndex(i + firstRowIndex);
                     }
                 }
+            } else {
+                resetContent();
             }
         }
 
@@ -97,6 +103,7 @@ public class NativeSelectConnector extends AbstractListingConnector implements
     }
 
     private boolean scheduled;
+    private DataChangeHandler dataChangeHandler = new NativeSelectDataChangeHandler();
 
     @Override
     public ListBox getWidget() {
@@ -124,7 +131,20 @@ public class NativeSelectConnector extends AbstractListingConnector implements
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
         super.setDataSource(dataSource);
-        dataSource.setDataChangeHandler(new NativeSelectDataChangeHandler());
+        dataSource.setDataChangeHandler(dataChangeHandler);
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                getDataSource().ensureAvailability(0, getDataSource().size());
+            }
+        });
+    }
+
+    @Override
+    protected void removeDataSource(DataSource<JsonObject> dataSource) {
+        dataSource.setDataChangeHandler(null);
+        super.removeDataSource(dataSource);
     }
 
     private void resetContent() {
@@ -138,6 +158,9 @@ public class NativeSelectConnector extends AbstractListingConnector implements
                 getWidget().clear();
                 for (int i = 0; i < getDataSource().size(); ++i) {
                     JsonObject item = getDataSource().getRow(i);
+                    if (item == null) {
+                        continue;
+                    }
                     getWidget().addItem(
                             item.getString(DataProviderConstants.NAME),
                             item.getString(DataProviderConstants.KEY));

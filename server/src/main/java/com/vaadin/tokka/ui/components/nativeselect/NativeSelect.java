@@ -56,7 +56,7 @@ public class NativeSelect<T> extends AbstractListing<T> {
     public void setDataSource(DataSource<T> data) {
         dataSource = data;
         if (dataSource != null) {
-            setDataProvider(DataProvider.create(dataSource));
+            setDataProvider(new DataProvider<>(dataSource));
         } else {
             setDataProvider(null);
         }

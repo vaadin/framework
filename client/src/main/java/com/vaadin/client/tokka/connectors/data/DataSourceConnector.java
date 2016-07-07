@@ -15,178 +15,133 @@
  */
 package com.vaadin.client.tokka.connectors.data;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.data.AbstractRemoteDataSource;
+import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.data.typed.DataProviderClientRpc;
 import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.tokka.server.communication.data.SimpleDataProvider;
+import com.vaadin.tokka.server.communication.data.DataProvider;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * A simple connector for DataProvider class. Based on {@link ListDataSource}
- * and does not support lazy loading or paging.
+ * A connector for DataProvider class.
  * 
  * @since
  */
-@Connect(SimpleDataProvider.class)
+@Connect(DataProvider.class)
 public class DataSourceConnector extends AbstractExtensionConnector {
 
-    private Map<String, JsonObject> keyToJson = new HashMap<String, JsonObject>();
-    private Set<String> droppedKeys = new HashSet<String>();
-    private ListDataSource<JsonObject> ds = new ListDataSource<JsonObject>();
-    private boolean pendingDrop = false;
+    public class VaadinDataSource extends AbstractRemoteDataSource<JsonObject> {
+
+        private Set<String> droppedKeys = new HashSet<String>();
+
+        protected VaadinDataSource() {
+            registerRpc(DataProviderClientRpc.class,
+                    new DataProviderClientRpc() {
+
+                        @Override
+                        public void reset(int size) {
+                            resetDataAndSize(size);
+                        }
+
+                        @Override
+                        public void setData(int firstIndex, JsonArray data) {
+                            ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
+                                    data.length());
+                            for (int i = 0; i < data.length(); i++) {
+                                JsonObject rowObject = data.getObject(i);
+                                rows.add(rowObject);
+                            }
+
+                            setRowData(firstIndex, rows);
+                        }
+
+                        @Override
+                        public void add(int index) {
+                            VaadinDataSource.this.insertRowData(index, 1);
+                        }
+
+                        @Override
+                        public void drop(int index) {
+                            VaadinDataSource.this.removeRowData(index, 1);
+                        }
+
+                        @Override
+                        public void updateData(JsonArray data) {
+                            for (int i = 0; i < data.length(); ++i) {
+                                updateRowData(data.getObject(i));
+                            }
+                        }
+                    });
+        }
+
+        public RowHandle<JsonObject> getHandleByKey(String key) {
+            JsonObject row = Json.createObject();
+            row.put(DataProviderConstants.KEY, key);
+            return new RowHandleImpl(row, key);
+        }
+
+        @Override
+        protected void requestRows(int firstRowIndex, int numberOfRows,
+                RequestRowsCallback<JsonObject> callback) {
+            getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
+                    numberOfRows, 0, 0);
+
+            JsonArray dropped = Json.createArray();
+            int i = 0;
+            for (String key : droppedKeys) {
+                dropped.set(i++, key);
+            }
+
+            getRpcProxy(DataRequestRpc.class).dropRows(dropped);
+        }
+
+        @Override
+        public String getRowKey(JsonObject row) {
+            return row.getString(DataProviderConstants.KEY);
+        }
+
+        @Override
+        protected void onDropFromCache(int rowIndex, JsonObject removed) {
+            droppedKeys.add(getRowKey(removed));
+
+            super.onDropFromCache(rowIndex, removed);
+        }
+
+        /**
+         * Updates row data based on row key.
+         * 
+         * @param row
+         *            new row object
+         */
+        protected void updateRowData(JsonObject row) {
+            int index = indexOfKey(getRowKey(row));
+            if (index >= 0) {
+                setRowData(index, Collections.singletonList(row));
+            }
+        }
+    }
+
+    private DataSource<JsonObject> ds = new VaadinDataSource();
 
     @Override
     protected void extend(ServerConnector target) {
-        registerRpc(DataProviderClientRpc.class, new DataProviderClientRpc() {
-
-            @Override
-            public void reset() {
-                ds.asList().clear();
-                // Inform the server-side that all keys are now dropped.
-                Set<String> keySet = new HashSet<String>(keyToJson.keySet());
-                for (String key : keySet) {
-                    dropKey(key);
-                }
-                sendDroppedKeys();
-            }
-
-            @Override
-            public void setData(long firstIndex, JsonArray data) {
-                List<JsonObject> l = ds.asList();
-                assert firstIndex <= l.size() : "Gap in data. First Index: "
-                        + firstIndex + ", Size: " + l.size();
-                for (long i = 0; i < data.length(); ++i) {
-                    JsonObject object = data.getObject((int) i);
-                    if (i + firstIndex == l.size()) {
-                        l.add(object);
-                    } else if (i + firstIndex < l.size()) {
-                        int index = (int) (i + firstIndex);
-                        dropKey(getKey(l.get(index)));
-                        l.set(index, object);
-                    }
-                    keyToJson.put(getKey(object), object);
-                }
-                sendDroppedKeys();
-            }
-
-            @Override
-            public void add(JsonObject dataObject) {
-                ds.asList().add(dataObject);
-                keyToJson.put(getKey(dataObject), dataObject);
-            }
-
-            @Override
-            public void drop(String key) {
-                if (keyToJson.containsKey(key)) {
-                    ds.asList().remove(keyToJson.get(key));
-                    dropKey(key);
-                    sendDroppedKeys();
-                }
-            }
-
-            @Override
-            public void updateData(JsonArray data) {
-                List<JsonObject> list = ds.asList();
-                for (int i = 0; i < data.length(); ++i) {
-                    JsonObject json = data.getObject(i);
-                    String key = getKey(json);
-
-                    if (keyToJson.containsKey(key)) {
-                        int index = list.indexOf(keyToJson.get(key));
-                        list.set(index, json);
-                        keyToJson.put(key, json);
-                    } else {
-                        dropKey(key);
-                    }
-                }
-                sendDroppedKeys();
-            }
-        });
-
         ServerConnector parent = getParent();
         if (parent instanceof HasDataSource) {
             ((HasDataSource) parent).setDataSource(ds);
         } else {
             assert false : "Parent not implementing HasDataSource";
         }
-    }
-
-    /**
-     * Marks a key as dropped. Call to
-     * {@link DataSourceConnector#sendDroppedKeys()} should be called to make
-     * sure the information is sent to the server-side.
-     * 
-     * @param key
-     *            dropped key
-     */
-    private void dropKey(String key) {
-        droppedKeys.add(key);
-        if (keyToJson.containsKey(key)) {
-            keyToJson.remove(key);
-        }
-    }
-
-    /**
-     * Sends dropped keys to the server-side with a deferred scheduled command.
-     * Multiple calls to this method will only result to one command being
-     * executed.
-     */
-    private void sendDroppedKeys() {
-        if (pendingDrop) {
-            return;
-        }
-
-        pendingDrop = true;
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                pendingDrop = false;
-                if (droppedKeys.isEmpty()) {
-                    return;
-                }
-
-                JsonArray keyArray = Json.createArray();
-                int i = 0;
-                for (String key : droppedKeys) {
-                    keyArray.set(i++, key);
-                }
-
-                getRpcProxy(DataRequestRpc.class).dropRows(keyArray);
-
-                // Force RPC since it's delayed.
-                getConnection().getServerRpcQueue().flush();
-
-                droppedKeys.clear();
-            }
-        });
-    }
-
-    /**
-     * Gets the mapping key from given {@link JsonObject}.
-     * 
-     * @param jsonObject
-     *            json object to get the key from
-     */
-    protected String getKey(JsonObject jsonObject) {
-        if (jsonObject.hasKey(DataProviderConstants.KEY)) {
-            return jsonObject.getString(DataProviderConstants.KEY);
-        }
-        return null;
     }
 }

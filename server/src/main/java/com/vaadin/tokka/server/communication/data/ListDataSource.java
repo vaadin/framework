@@ -17,9 +17,8 @@ package com.vaadin.tokka.server.communication.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * {@link DataSource} wrapper for {@link Collection}s.
@@ -61,7 +60,12 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return Collections.unmodifiableList(backend).iterator();
+    public Stream<T> request() {
+        return backend.stream();
+    }
+
+    @Override
+    public int size() {
+        return backend.size();
     }
 }
