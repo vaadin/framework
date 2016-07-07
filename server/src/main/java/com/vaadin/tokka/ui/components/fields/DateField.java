@@ -27,8 +27,6 @@ import com.vaadin.shared.tokka.ui.components.fields.DateFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.DateFieldState;
 import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
-import com.vaadin.tokka.ui.components.HasValue;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -36,15 +34,14 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd.
  */
-public class DateField extends AbstractComponent
-        implements HasValue<LocalDate> {
+public class DateField extends AbstractField<LocalDate> {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd-MM-uuuu");
 
-    public static class DateChange extends ValueChange<LocalDate> {
-        protected DateChange(DateField source, boolean userOriginated) {
-            super(source, userOriginated);
+    public class DateChange extends ValueChange<LocalDate> {
+        protected DateChange(boolean userOriginated) {
+            super(DateField.this, userOriginated);
         }
     }
 
@@ -63,14 +60,28 @@ public class DateField extends AbstractComponent
 
             @Override
             public void setDate(String value) {
-                if (!isReadOnly()) {
-                    LocalDate localDate = FORMATTER.parse(value,
-                            TemporalQueries.localDate());
-                    setValue(localDate);
-                    fireEvent(new DateChange(DateField.this, true));
-                }
+                LocalDate localDate = FORMATTER.parse(value,
+                        TemporalQueries.localDate());
+                setValue(localDate, true);
             }
         });
+    }
+
+    @Override
+    public LocalDate getValue() {
+        DateFieldState state = getState(false);
+        return FORMATTER.parse(state.date, LocalDate::from);
+    }
+
+    @Override
+    public Registration addValueChangeListener(
+            EventListener<ValueChange<LocalDate>> listener) {
+        return addListener(DateChange.class, listener);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
     }
 
     @Override
@@ -84,25 +95,12 @@ public class DateField extends AbstractComponent
     }
 
     @Override
-    public void setValue(LocalDate date) {
-        DateFieldState state = getState();
-        state.value = date.format(FORMATTER);
+    protected void doSetValue(LocalDate value) {
+        getState().date = value.format(FORMATTER);
     }
 
     @Override
-    public LocalDate getValue() {
-        DateFieldState state = getState(false);
-        return FORMATTER.parse(state.value, TemporalQueries.localDate());
-    }
-
-    @Override
-    public Registration addValueChangeListener(
-            EventListener<ValueChange<LocalDate>> listener) {
-        return addListener(DateChange.class, listener);
-    }
-
-    @Override
-    public void readDesign(Element design, DesignContext designContext) {
-        super.readDesign(design, designContext);
+    protected DateChange createValueChange(boolean userOriginated) {
+        return new DateChange(userOriginated);
     }
 }

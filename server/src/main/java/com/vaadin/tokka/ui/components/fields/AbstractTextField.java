@@ -29,8 +29,6 @@ import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
 import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
-import com.vaadin.tokka.ui.components.HasValue;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -39,12 +37,11 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd.
  */
-public abstract class AbstractTextField extends AbstractComponent
-        implements HasValue<String> {
+public abstract class AbstractTextField extends AbstractField<String> {
 
-    public static class TextChange extends ValueChange<String> {
-        public TextChange(AbstractTextField source, boolean userOriginated) {
-            super(source, userOriginated);
+    public class TextChange extends ValueChange<String> {
+        public TextChange(boolean userOriginated) {
+            super(AbstractTextField.this, userOriginated);
         }
     }
 
@@ -63,22 +60,9 @@ public abstract class AbstractTextField extends AbstractComponent
 
             @Override
             public void setText(String text) {
-                if (!isReadOnly()) {
-                    setValue(text);
-                    fireEvent(new TextChange(AbstractTextField.this, true));
-                }
+                setValue(text, true);
             }
         });
-    }
-
-    @Override
-    protected TextFieldState getState() {
-        return (TextFieldState) super.getState();
-    }
-
-    @Override
-    protected TextFieldState getState(boolean markAsDirty) {
-        return (TextFieldState) super.getState(markAsDirty);
     }
 
     /**
@@ -124,18 +108,13 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
-    public void setValue(String text) {
-        // TODO Accept nulls or not?
-        getState().text = text;
-    }
-
-    @Override
     public String getValue() {
         return getState(false).text;
     }
 
     @Override
-    public Registration addValueChangeListener(EventListener<ValueChange<String>> listener) {
+    public Registration addValueChangeListener(
+            EventListener<ValueChange<String>> listener) {
         return addListener(TextChange.class, listener);
     }
 
@@ -176,24 +155,20 @@ public abstract class AbstractTextField extends AbstractComponent
         setSelection(pos, 0);
     }
 
-    @Deprecated
     public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
-    @Deprecated
     public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
@@ -209,6 +184,16 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbstractTextField def = (AbstractTextField) designContext
+                .getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
+                def.getMaxLength(), Integer.class);
+    }
+
+    @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("maxlength");
@@ -219,12 +204,22 @@ public abstract class AbstractTextField extends AbstractComponent
     }
 
     @Override
-    public void writeDesign(Element design, DesignContext designContext) {
-        super.writeDesign(design, designContext);
-        AbstractTextField def = (AbstractTextField) designContext
-                .getDefaultInstance(this);
-        Attributes attr = design.attributes();
-        DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
-                def.getMaxLength(), Integer.class);
+    protected TextFieldState getState() {
+        return (TextFieldState) super.getState();
+    }
+
+    @Override
+    protected TextFieldState getState(boolean markAsDirty) {
+        return (TextFieldState) super.getState(markAsDirty);
+    }
+
+    @Override
+    protected void doSetValue(String value) {
+        getState().text = value;
+    }
+
+    @Override
+    protected TextChange createValueChange(boolean userOriginated) {
+        return new TextChange(userOriginated);
     }
 }

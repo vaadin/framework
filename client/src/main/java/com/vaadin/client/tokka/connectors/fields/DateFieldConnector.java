@@ -66,7 +66,7 @@ public class DateFieldConnector extends AbstractComponentConnector {
 
         w.getElement().setAttribute("placeholder", "DD-MM-YYYY");
         w.getElement().setAttribute("maxlength", "10");
-        w.setValue(state.value);
+        w.setValue(state.date);
 
     }
 }

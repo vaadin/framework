@@ -13,26 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.tokka.ui.components.fields;
+package com.vaadin.shared.ui.components.fields;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.NoLayout;
 
-public class DateFieldState extends AbstractComponentState {
+public class CheckBoxState extends AbstractComponentState {
     {
-        primaryStyleName = "v-datefield";
+        primaryStyleName = "v-checkbox";
     }
 
     /**
-     * The datefield value.
+     * The checkbox value.
      */
     @NoLayout
-    public String date;
-
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    @NoLayout
-    public String placeholder = "DD-MM-YYYY";
-
+    public boolean checked = false;
 }

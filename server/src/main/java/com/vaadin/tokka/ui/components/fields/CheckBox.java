@@ -26,12 +26,10 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
-import com.vaadin.tokka.ui.components.HasValue;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
+public class CheckBox extends AbstractField<Boolean> {
 
     public class StateChange extends ValueChange<Boolean> {
         public StateChange(boolean userOriginated) {
@@ -106,29 +104,39 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
     }
 
     @Override
-    public void setValue(Boolean value) {
-        setValue(value, false);
-    }
-
-    protected void setValue(Boolean value, boolean userOriginated) {
-        if (isReadOnly() && userOriginated) {
-            return;
-        }
-        if (value == getValue()) {
-            return;
-        }
-        getState(!userOriginated).checked = value;
-        fireEvent(new StateChange(userOriginated));
-    }
-
-    @Override
-    public Registration addValueChangeListener(EventListener<ValueChange<Boolean>> listener) {
+    public Registration addValueChangeListener(
+            EventListener<ValueChange<Boolean>> listener) {
         return addListener(StateChange.class, listener);
     }
 
     @Override
     public Boolean getValue() {
         return getState(false).checked;
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("checked")) {
+            this.setValue(DesignAttributeHandler.readAttribute("checked",
+                    design.attributes(), Boolean.class), false);
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
+                def.getValue(), Boolean.class);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("checked");
+        return attributes;
     }
 
     @Override
@@ -141,45 +149,13 @@ public class CheckBox extends AbstractComponent implements HasValue<Boolean> {
         return (CheckBoxState) super.getState(markAsDirty);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element,
-     * com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
-    public void readDesign(Element design, DesignContext designContext) {
-        super.readDesign(design, designContext);
-        if (design.hasAttr("checked")) {
-            this.setValue(DesignAttributeHandler.readAttribute("checked",
-                    design.attributes(), Boolean.class), false);
-        }
+    protected void doSetValue(Boolean value) {
+        getState().checked = value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#writeDesign(org.jsoup.nodes.Element,
-     * com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
-    public void writeDesign(Element design, DesignContext designContext) {
-        super.writeDesign(design, designContext);
-        CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
-        Attributes attr = design.attributes();
-        DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
-                def.getValue(), Boolean.class);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#getCustomAttributes()
-     */
-    @Override
-    protected Collection<String> getCustomAttributes() {
-        Collection<String> attributes = super.getCustomAttributes();
-        attributes.add("checked");
-        return attributes;
+    protected StateChange createValueChange(boolean userOriginated) {
+        return new StateChange(userOriginated);
     }
 }
