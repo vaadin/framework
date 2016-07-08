@@ -62,7 +62,6 @@ public class ListingTestUI extends AbstractTestUI {
                         .nextInt(100)));
             }
             return beans;
-
         }
     }
 
@@ -82,8 +81,8 @@ public class ListingTestUI extends AbstractTestUI {
                 .forEach(s -> Notification.show(s))));
         hLayout.addComponent(new Button("Random select", e -> {
             DataSource<String> ds = select.getDataSource();
-            int skip = r.nextInt(ds.size());
-            ds.request().skip(skip).findFirst()
+            int skip = r.nextInt((int) ds.apply(null).count());
+            ds.apply(null).skip(skip).findFirst()
                     .ifPresent(select.getSelectionModel()::select);
         }));
 

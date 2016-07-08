@@ -18,6 +18,7 @@ package com.vaadin.tokka.server.communication.data;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.tokka.event.Registration;
@@ -25,74 +26,40 @@ import com.vaadin.tokka.event.Registration;
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
+ * <p>
+ * FIXME: Missing Query class
  * 
  * @since
  * @param <T>
  *            data type
  */
-public interface DataSource<T> extends Serializable {
+public interface DataSource<T> extends Function<Object, Stream<T>>,
+        Serializable {
 
     /**
-     * Requests data from the back end.
-     * 
-     * @return stream of results
-     */
-    Stream<T> request(/* Query query */);
-
-    /**
-     * Saves a data object to the back end. If it's a new object, it should be
-     * created in the back end. Existing objects with changes should be stored.
-     * 
-     * @param data
-     *            data object to save
-     */
-    void save(T data);
-
-    /**
-     * Removes the given data object from the back end.
-     * 
-     * @param data
-     *            data object to remove
-     */
-    void remove(T data);
-
-    /**
-     * TODO: Decide the fate of the size method.
-     * 
-     * @return size of the data source
-     */
-    int size();
-
-    /**
-     * Adds a new DataChangeHandler to this DataSource. DataChangeHandler is
-     * called when changes occur in DataSource.
-     * 
-     * @param handler
-     *            data change handler
-     */
-    Registration addDataChangeHandler(DataChangeHandler<T> handler);
-
-    /**
-     * This method creates a new {@link ListDataSource} from a given Collection.
-     * The ListDataSource creates a protective List copy of all the contents in
-     * the Collection.
+     * This method creates a new {@link InMemoryDataSource} from a given
+     * Collection. The InMemoryDataSource creates a protective List copy of all
+     * the contents in the Collection.
      * 
      * @param data
      *            collection of data
-     * @return list data source
+     * @return in-memory data source
      */
-    public static <T> ListDataSource<T> create(Collection<T> data) {
-        return new ListDataSource<>(data);
+    public static <T> InMemoryDataSource<T> create(Collection<T> data) {
+        return new InMemoryDataSource<>(data);
     }
 
     /**
-     * This method creates a new {@link ListDataSource} from given objects.
+     * This method creates a new {@link InMemoryDataSource} from given
+     * objects.The InMemoryDataSource creates a protective List copy of all the
+     * contents in the array.
      * 
      * @param data
      *            data objects
-     * @return list data source
+     * @return in-memory data source
      */
-    public static <T> ListDataSource<T> create(T... data) {
-        return new ListDataSource<>(Arrays.asList(data));
+    @SafeVarargs
+    public static <T> InMemoryDataSource<T> create(T... data) {
+        return new InMemoryDataSource<>(Arrays.asList(data));
     }
 }

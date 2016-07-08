@@ -2,15 +2,11 @@ package com.vaadin.tokka.ui.components;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.stream.Stream;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.tokka.server.communication.data.AbstractDataSource;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.ui.components.AbstractListing;
 import com.vaadin.tokka.ui.components.AbstractListing.AbstractListingExtension;
 
 import elemental.json.JsonObject;
@@ -49,26 +45,7 @@ public class AbstractListingTest {
 
     @Before
     public void setUp() {
-        testComponent.setDataSource(new AbstractDataSource<String>() {
-
-            @Override
-            public void save(String data) {
-            }
-
-            @Override
-            public void remove(String data) {
-            }
-
-            @Override
-            public Stream<String> request() {
-                return Stream.of("Foo");
-            }
-
-            @Override
-            public int size() {
-                return 1;
-            }
-        });
+        testComponent.setDataSource(DataSource.create("Foo"));
     }
 
     @Test

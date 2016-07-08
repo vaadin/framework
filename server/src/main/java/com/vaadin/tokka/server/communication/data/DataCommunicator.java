@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.data.typed.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.typed.DataProviderConstants;
@@ -72,8 +71,8 @@ public class DataCommunicator<T> extends AbstractExtension {
      * longer needed. Data tracking is based on key string provided by
      * {@link DataKeyMapper}.
      * <p>
-     * When the {@link DataCommunicator} is pushing new data to the client-side via
-     * {@link DataCommunicator#pushData(long, Collection)},
+     * When the {@link DataCommunicator} is pushing new data to the client-side
+     * via {@link DataCommunicator#pushData(long, Collection)},
      * {@link #addActiveData(Collection)} and {@link #cleanUp(Collection)} are
      * called with the same parameter. In the clean up method any dropped data
      * objects that are not in the given collection will be cleaned up and
@@ -173,8 +172,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     protected DataCommunicatorClientRpc rpc;
 
     protected DataSource<T> dataSource;
-    private Registration dataChangeHandler;
-    private DetachListener detachListener;
     private DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
@@ -186,8 +183,6 @@ public class DataCommunicator<T> extends AbstractExtension {
         this.dataSource = dataSource;
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
-        dataChangeHandler = this.dataSource
-                .addDataChangeHandler(createDataChangeHandler());
         keyMapper = createKeyMapper();
     }
 
@@ -200,11 +195,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         super.beforeClientResponse(initial);
 
         if (initial || reset) {
-            rpc.reset(dataSource.size());
+            // FIXME: Rethink the size question.
+            rpc.reset((int) dataSource.apply(null).count());
         }
 
         if (!pushRows.isEmpty()) {
-            Stream<T> rowsToPush = dataSource.request()
+            // FIXME: Query object
+            Stream<T> rowsToPush = dataSource.apply(null)
                     .skip(pushRows.getStart()).limit(pushRows.length());
             pushData(pushRows.getStart(), rowsToPush);
         }
@@ -221,32 +218,6 @@ public class DataCommunicator<T> extends AbstractExtension {
         pushRows = Range.withLength(0, 0);
         reset = false;
         updatedData.clear();
-    }
-
-    @Override
-    public void attach() {
-        super.attach();
-
-        if (detachListener == null) {
-            detachListener = new DetachListener() {
-
-                @Override
-                public void detach(DetachEvent event) {
-                    cleanUp();
-                }
-            };
-            getUI().addDetachListener(detachListener);
-        }
-    }
-
-    @Override
-    public void setParent(ClientConnector parent) {
-        if (getParent() != null && parent == null) {
-            // Removing from parent, clean up.
-            cleanUp();
-        }
-
-        super.setParent(parent);
     }
 
     /**
@@ -341,22 +312,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Clean up method for removing all listeners attached by the
-     * {@link DataCommunicator}. This method is called from {@link #remove()} or
-     * when the UI gets detached.
-     */
-    protected void cleanUp() {
-        if (dataSource != null) {
-            dataChangeHandler.removeHandler();
-            dataChangeHandler = null;
-        }
-        if (detachListener != null) {
-            getUI().removeDetachListener(detachListener);
-            detachListener = null;
-        }
-    }
-
-    /**
      * Informs the DataProvider that a data object has been added. It is assumed
      * to be the last object in the collection.
      * 
@@ -406,7 +361,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Creates a {@link DataKeyMapper} to use with this {@link DataCommunicator}.
+     * Creates a {@link DataKeyMapper} to use with this DataCommunicator.
      * <p>
      * This method is called from the constructor.
      * 
@@ -425,37 +380,5 @@ public class DataCommunicator<T> extends AbstractExtension {
      */
     protected DataRequestRpc createRpc() {
         return new SimpleDataRequestRpc();
-    }
-
-    /**
-     * Creates a {@link DataChangeHandler} to use with the {@link DataSource}.
-     * <p>
-     * This method is called from the constructor.
-     * 
-     * @return data change handler
-     */
-    protected DataChangeHandler<T> createDataChangeHandler() {
-        return new DataChangeHandler<T>() {
-
-            @Override
-            public void onDataChange() {
-                reset();
-            }
-
-            @Override
-            public void onDataAppend(T data) {
-                add(data);
-            }
-
-            @Override
-            public void onDataRemove(T data) {
-                remove(data);
-            }
-
-            @Override
-            public void onDataUpdate(T data) {
-                refresh(data);
-            }
-        };
     }
 }

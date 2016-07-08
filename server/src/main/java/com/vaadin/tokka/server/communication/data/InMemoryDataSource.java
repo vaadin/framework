@@ -18,6 +18,7 @@ package com.vaadin.tokka.server.communication.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -26,9 +27,10 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class ListDataSource<T> extends AbstractDataSource<T> {
+public class InMemoryDataSource<T> implements DataSource<T> {
 
-    private List<T> backend;
+    // FIXME: Missing Query object
+    private Function<Object, Stream<T>> request;
 
     /**
      * Constructs a new ListDataSource. This method makes a protective copy of
@@ -37,35 +39,13 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
      * @param collection
      *            initial data
      */
-    public ListDataSource(Collection<T> collection) {
-        backend = new ArrayList<T>(collection);
+    public InMemoryDataSource(Collection<T> collection) {
+        final List<T> backend = new ArrayList<T>(collection);
+        request = query -> backend.stream();
     }
 
     @Override
-    public void save(T data) {
-        if (!backend.contains(data)) {
-            backend.add(data);
-            fireDataAppend(data);
-        } else {
-            fireDataUpdate(data);
-        }
-    }
-
-    @Override
-    public void remove(T data) {
-        if (backend.contains(data)) {
-            backend.remove(data);
-            fireDataRemove(data);
-        }
-    }
-
-    @Override
-    public Stream<T> request() {
-        return backend.stream();
-    }
-
-    @Override
-    public int size() {
-        return backend.size();
+    public Stream<T> apply(Object query) {
+        return request.apply(query);
     }
 }
