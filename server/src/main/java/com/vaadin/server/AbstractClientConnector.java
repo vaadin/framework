@@ -35,13 +35,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
-import com.vaadin.event.typed.Event;
-import com.vaadin.event.typed.Handler;
-import com.vaadin.event.typed.Registration;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.tokka.event.Event;
+import com.vaadin.tokka.event.Handler;
+import com.vaadin.tokka.event.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.HasComponents;
