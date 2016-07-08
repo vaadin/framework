@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.tokka.connectors.components;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.ListBox;
@@ -29,84 +27,62 @@ import com.vaadin.tokka.ui.components.nativeselect.NativeSelect;
 
 import elemental.json.JsonObject;
 
+/**
+ * Connector class for NativeSelect.
+ */
 @Connect(NativeSelect.class)
 public class NativeSelectConnector extends AbstractListingConnector implements
         HasSelection {
 
+    /**
+     * DataChangeHandler for NativeSelect client-side. This class handles
+     * updates from the server.
+     */
     private final class NativeSelectDataChangeHandler implements
             DataChangeHandler {
         @Override
-        public void resetDataAndSize(int estimatedNewDataSize) {
-            resetContent();
+        public void resetDataAndSize(int size) {
+            int count = getWidget().getItemCount();
+            if (count < size) {
+                for (int i = count; i < size; ++i) {
+                    getWidget().addItem("");
+                }
+            } else if (count > size) {
+                for (int i = count; i > size; --i) {
+                    getWidget().removeItem(i - 1);
+                }
+            }
+            requestAllData();
         }
 
         @Override
         public void dataUpdated(int firstRowIndex, int numberOfRows) {
-            for (int i = 0; i < numberOfRows; ++i) {
-                int index = i + firstRowIndex;
-                if (i == getWidget().getItemCount()) {
-                    getWidget().addItem("");
-                }
-
-                JsonObject item = getDataSource().getRow(index);
-                getWidget().setItemText(index,
-                        item.getString(DataProviderConstants.NAME));
-                getWidget().setValue(index,
-                        item.getString(DataProviderConstants.KEY));
-                if (getSelectionModel().isSelected(item)) {
-                    getWidget().setSelectedIndex(index);
-                }
-            }
+            updateContent(firstRowIndex, numberOfRows);
         }
 
         @Override
         public void dataRemoved(int firstRowIndex, int numberOfRows) {
             for (int i = 0; i < numberOfRows; ++i) {
-                int index = i + firstRowIndex;
-                getWidget().removeItem(index);
+                getWidget().removeItem(i + firstRowIndex);
             }
         }
 
         @Override
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
-            if (getWidget().getItemCount() == firstRowIndex) {
-                for (int i = 0; i < numberOfRows; ++i) {
-                    JsonObject item = getDataSource().getRow(i + firstRowIndex);
-                    getWidget().addItem(
-                            item.getString(DataProviderConstants.NAME),
-                            item.getString(DataProviderConstants.KEY));
-                    if (getSelectionModel().isSelected(item)) {
-                        getWidget().setSelectedIndex(i + firstRowIndex);
-                    }
-                }
-            } else {
-                resetContent();
-            }
+            updateContent(firstRowIndex, numberOfRows);
         }
 
         @Override
         public void dataAdded(int firstRowIndex, int numberOfRows) {
-            if (getWidget().getItemCount() == firstRowIndex) {
-                for (int i = 0; i < numberOfRows; ++i) {
-                    JsonObject item = getDataSource().getRow(i + firstRowIndex);
-                    getWidget().addItem(
-                            item.getString(DataProviderConstants.NAME),
-                            item.getString(DataProviderConstants.KEY));
-                    if (getSelectionModel().isSelected(item)) {
-                        getWidget().setSelectedIndex(i + firstRowIndex);
-                    }
-                }
-            } else {
-                resetContent();
-            }
+            requestAllData();
         }
     }
 
-    private boolean scheduled;
     private DataChangeHandler dataChangeHandler = new NativeSelectDataChangeHandler();
 
     @Override
     public ListBox getWidget() {
+        // FIXME: Should we use ListBox or modify VNativeSelect to work
         return (ListBox) super.getWidget();
     }
 
@@ -132,45 +108,41 @@ public class NativeSelectConnector extends AbstractListingConnector implements
     public void setDataSource(DataSource<JsonObject> dataSource) {
         super.setDataSource(dataSource);
         dataSource.setDataChangeHandler(dataChangeHandler);
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                getDataSource().ensureAvailability(0, getDataSource().size());
-            }
-        });
     }
 
     @Override
     protected void removeDataSource(DataSource<JsonObject> dataSource) {
+        // Make sure we no longer get updates from the old data source.
         dataSource.setDataChangeHandler(null);
         super.removeDataSource(dataSource);
     }
 
-    private void resetContent() {
-        if (scheduled) {
-            return;
-        }
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+    /**
+     * Sends a request to the DataSource to get all data from the server-side.
+     */
+    private void requestAllData() {
+        getDataSource().ensureAvailability(0, getDataSource().size());
+    }
 
-            @Override
-            public void execute() {
-                getWidget().clear();
-                for (int i = 0; i < getDataSource().size(); ++i) {
-                    JsonObject item = getDataSource().getRow(i);
-                    if (item == null) {
-                        continue;
-                    }
-                    getWidget().addItem(
-                            item.getString(DataProviderConstants.NAME),
-                            item.getString(DataProviderConstants.KEY));
-                    if (getSelectionModel().isSelected(item)) {
-                        getWidget().setSelectedIndex(i);
-                    }
-                }
-                scheduled = false;
+    /**
+     * Updates the item values and texts for all items in given range.
+     * 
+     * @param firstRowIndex
+     *            first row to update
+     * @param numberOfRows
+     *            count of updated rows
+     */
+    private void updateContent(int firstRowIndex, int numberOfRows) {
+        for (int i = 0; i < numberOfRows; ++i) {
+            int index = i + firstRowIndex;
+            JsonObject item = getDataSource().getRow(i + firstRowIndex);
+            getWidget().setItemText(index,
+                    item.getString(DataProviderConstants.NAME));
+            getWidget().setValue(index,
+                    item.getString(DataProviderConstants.KEY));
+            if (getSelectionModel().isSelected(item)) {
+                getWidget().setSelectedIndex(i + firstRowIndex);
             }
-        });
-        scheduled = true;
+        }
     }
 }
