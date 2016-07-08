@@ -1148,6 +1148,9 @@ public class Escalator extends Widget implements RequiresResize,
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = rows;
+            }
 
             if (!isAttached()) {
                 return;
@@ -1271,6 +1274,9 @@ public class Escalator extends Widget implements RequiresResize,
             }
 
             rows += numberOfRows;
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = rows;
+            }
 
             /*
              * only add items in the DOM if the widget itself is attached to the
@@ -5826,7 +5832,13 @@ public class Escalator extends Widget implements RequiresResize,
         if (height != null && !height.isEmpty()) {
             heightByCss = height;
         } else {
-            heightByCss = DEFAULT_HEIGHT;
+            if (getHeightMode() == HeightMode.UNDEFINED) {
+                heightByRows = body.getRowCount();
+                applyHeightByRows();
+                return;
+            } else {
+                heightByCss = DEFAULT_HEIGHT;
+            }
         }
 
         if (getHeightMode() == HeightMode.CSS) {
@@ -5840,7 +5852,16 @@ public class Escalator extends Widget implements RequiresResize,
         if (height != null && !height.isEmpty()) {
             super.setHeight(height);
         } else {
-            super.setHeight(DEFAULT_HEIGHT);
+            if (getHeightMode() == HeightMode.UNDEFINED) {
+                int newHeightByRows = body.getRowCount();
+                if (heightByRows != newHeightByRows) {
+                    heightByRows = newHeightByRows;
+                    applyHeightByRows();
+                }
+                return;
+            } else {
+                super.setHeight(DEFAULT_HEIGHT);
+            }
         }
 
         recalculateElementSizes();
@@ -6318,7 +6339,7 @@ public class Escalator extends Widget implements RequiresResize,
      * define its height that way.
      */
     private void applyHeightByRows() {
-        if (heightMode != HeightMode.ROW) {
+        if (heightMode != HeightMode.ROW && heightMode != HeightMode.UNDEFINED) {
             return;
         }
 
@@ -6327,9 +6348,13 @@ public class Escalator extends Widget implements RequiresResize,
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle() ? horizontalScrollbar
                 .getScrollbarThickness() : 0;
+        double spacerHeight = 0; // ignored if HeightMode.ROW
+        if (heightMode == HeightMode.UNDEFINED) {
+            spacerHeight = body.spacerContainer.getSpacerHeightsSum();
+        }
 
-        double totalHeight = headerHeight + bodyHeight + scrollbar
-                + footerHeight;
+        double totalHeight = headerHeight + bodyHeight + spacerHeight
+                + scrollbar + footerHeight;
         setHeightInternal(totalHeight + "px");
     }
 
@@ -6369,6 +6394,9 @@ public class Escalator extends Widget implements RequiresResize,
                 break;
             case ROW:
                 setHeightByRows(heightByRows);
+                break;
+            case UNDEFINED:
+                setHeightByRows(body.getRowCount());
                 break;
             default:
                 throw new IllegalStateException("Unimplemented feature "

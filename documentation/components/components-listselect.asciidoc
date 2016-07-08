@@ -23,7 +23,7 @@ visually identical in both modes.
 ----
 // Create the selection component
 ListSelect select = new ListSelect("The List");
-        
+
 // Add some items (here by the item ID as the caption)
 select.addItems("Mercury", "Venus", "Earth", ...);
 
@@ -37,11 +37,10 @@ The number of visible items is set with [methodname]#setRows()#.
 
 [[figure.components.listselect.basic]]
 .The [classname]#ListSelect# Component
-image::img/listselect-basic.png[]
+image::img/listselect-basic.png[width=35%, scaledwidth=50%]
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection
-Components">>.
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
 == CSS Style Rules
 
@@ -56,7 +55,3 @@ Components">>.
 The component has an overall [literal]#++v-select++# style. The native
 [literal]#++<select>++# element has [literal]#++v-select-select++# style. The
 items are represented as [literal]#++<option>++# elements.
-
-
-
-

@@ -15,17 +15,35 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.communication.data.RpcDataProviderExtension;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 
 public class GridContainerTest {
+
+    /**
+     * Null Stream used with serialization tests
+     */
+    protected static OutputStream NULLSTREAM = new OutputStream() {
+        @Override
+        public void write(int b) {
+        }
+    };
 
     @Test
     public void testDetailsGeneratorDoesNotResetOnContainerChange() {
@@ -118,5 +136,26 @@ public class GridContainerTest {
         Grid grid = new Grid();
         grid.addColumn("foo");
         grid.addColumn("foo");
+    }
+
+    @Test
+    public void testSerializeRpcDataProviderWithRowChanges() throws IOException {
+        Grid grid = new Grid();
+        IndexedContainer container = new IndexedContainer();
+        grid.setContainerDataSource(container);
+        container.addItem();
+        serializeComponent(grid);
+    }
+
+    protected void serializeComponent(Component component) throws IOException {
+        ObjectOutputStream stream = null;
+        try {
+            stream = new ObjectOutputStream(NULLSTREAM);
+            stream.writeObject(component);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
     }
 }

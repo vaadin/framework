@@ -165,7 +165,7 @@ dynamic content. This is illustrated in
 
 [[figure.architecture.technology.servlet]]
 .Java Web Applications and Servlets
-image::img/java-servlet-hi.png[]
+image::img/java-servlet-hi.png[width=40%, scaledwidth=70%]
 
 Web applications are usually packaged and deployed to a server as __WAR__ (
 __Web application ARchive__) files, which are Java JAR packages, which in turn
@@ -202,7 +202,3 @@ widget set in technical terms, needs to be located under the
 [filename]#VAADIN/widgetsets# path in the web application. The precompiled
 default widget set is served from the [filename]#vaadin-client-compiled# JAR by
 the Vaadin Servlet.
-
-
-
-

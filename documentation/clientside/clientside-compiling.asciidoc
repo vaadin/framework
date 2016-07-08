@@ -35,8 +35,7 @@ The compiler compiles a __client module__, which can be either a pure
 client-side module or a Vaadin widget set, that is, the Vaadin Client-Side
 Engine that includes the widgets used in the application. The client module is
 defined with a module descriptor, which was described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
-Module Descriptor">>.
+<<clientside-module#clientside.module, "Client-Side Module Descriptor">>.
 
 The compiler writes the compilation result to a target folder that will include
 the compiled JavaScript with any static resources included in the module.
@@ -46,11 +45,9 @@ the compiled JavaScript with any static resources included in the module.
 == Compiling in Eclipse
 
 When the Vaadin Plugin is installed in Eclipse, you can simply click the
-[guibutton]#Compile Vaadin widgets# button in the toolbar. It will compile the
-widget set it finds from the project. If the project has multiple widget sets,
-such as one for custom widgets and another one for the project, you need to
-select the module descriptor of the widget set to compile before clicking the
-button.
+button in the toolbar.
+It will compile the widget set it finds from the project.
+If the project has multiple widget sets, such as one for custom widgets and another one for the project, you need to select the module descriptor of the widget set to compile before clicking the button.
 
 The compilation with Vaadin Plugin for Eclipse currently requires that the
 module descriptor has suffix [filename]#Widgetset.gwt.xml#, although you can use
@@ -62,9 +59,8 @@ written under [filename]#WebContent/VAADIN/widgetsets# folder.
 == Compiling with Ant
 
 You can find a script template for compiling widget sets with Ant and Ivy at the
-link:http://vaadin.com/download/[Vaadin download page]. You can copy the build
-script to your project and, once configured, run it with Ant.
-
+link:http://vaadin.com/download/[Vaadin download page].
+You can copy the build script to your project and, once configured, run it with Ant.
 
 [[clientside.compiling.maven]]
 == Compiling with Maven

@@ -30,8 +30,8 @@ easily. The grid data can be sorted by clicking on a column header;
 shift-clicking a column header enables secondary sorting criteria.
 
 [[figure.components.grid.features]]
-.A [classname]#Grid# Component
-image::img/grid-features.png[]
+.A [classname]#Grid#
+image::img/grid-features.png[width=70%, scaledwidth=100%]
 
 The data area can be scrolled both vertically and horizontally. The leftmost
 columns can be frozen, so that they are never scrolled out of the view. The data
@@ -263,7 +263,7 @@ Space bar is the default key for toggling the selection, but it can be customize
 
 [[figure.components.grid.selection.multi]]
 .Multiple Selection in  [classname]#Grid#
-image::img/grid-selection-multi.png[]
+image::img/grid-selection-multi.png[width=50%, scaledwidth=75%]
 
 The selection is managed through the [classname]#MultiSelectionMode# class. The
 currently selected rows can be set with [methodname]#setSelected()# by a
@@ -296,7 +296,7 @@ Button delSelected = new Button("Delete Selected", e -> {
     // Delete all selected data items
     for (Object itemId: selection.getSelectedRows())
         grid.getContainerDataSource().removeItem(itemId);
-    
+
     // Otherwise out of sync with container
     grid.getSelectionModel().reset();
 
@@ -498,7 +498,6 @@ Note that, while [classname]#GeneratedPropertyContainer# implements
 sorting on the generated properties requires special handling. In such cases,
 generated properties or the entire container might not actually be sortable.
 
-
 [[components.grid.renderer]]
 == Column Renderers
 
@@ -506,12 +505,11 @@ A __renderer__ is a feature that draws the client-side representation of a data
 value. This allows having images, HTML, and buttons in grid cells.
 
 [[figure.components.grid.renderer]]
-.Column Renderers: Image, Date, HTML, and Button
-image::img/grid-renderers.png[]
+.Column renderers: image, date, HTML, and button
+image::img/grid-renderers.png[width=75%, scaledwidth=100%]
 
-Renderers implement the [interfacename]#Renderer# interface. You set the column
-renderer in the [classname]#Grid.Column# object as follows:
-
+Renderers implement the [interfacename]#Renderer# interface.
+You set the column renderer in the [classname]#Grid.Column# object as follows:
 
 [source, java]
 ----
@@ -531,16 +529,14 @@ client-side to be rendered with the renderer.
 The following renderers are available, as defined in the server-side
 [package]#com.vaadin.ui.renderers# package:
 
-[classname]#ButtonRenderer#:: Renders the data value as the caption of a button. A
-[interfacename]#RendererClickListener# can be given to handle the button clicks.
+[classname]#ButtonRenderer#:: Renders the data value as the caption of a button. A [interfacename]#RendererClickListener# can be given to handle the button clicks.
 
 ifdef::web[]
++
 Typically, a button renderer is used to display buttons for operating on a data
 item, such as edit, view, delete, etc. It is not meaningful to store the button
 captions in the data source, rather you want to generate them, and they are
 usually all identical.
-
-
 +
 [source, java]
 ----
@@ -579,15 +575,15 @@ grid.getColumn("delete")
         .removeItem(e.getItemId())));
 ----
 endif::web[]
-[classname]#ImageRenderer#:: Renders the cell as an image. The column type must be a
-[interfacename]#Resource#, as described in
-<<dummy/../../../framework/application/application-resources#application.resources,"Images
-and Other Resources">>; only [classname]#ThemeResource# and
+
+[classname]#ImageRenderer#:: Renders the cell as an image.
+The column type must be a [interfacename]#Resource#, as described in
+<<dummy/../../../framework/application/application-resources#application.resources,"Images and Other Resources">>; only [classname]#ThemeResource# and
 [classname]#ExternalResource# are currently supported for images in
 [classname]#Grid#.
 
 ifdef::web[]
-
++
 [source, java]
 ----
 grid.addColumn("picture", Resource.class)
@@ -604,7 +600,6 @@ grid.addRow(new ThemeResource("img/galileo-128px.jpg"),
 Instead of creating the resource objects explicitly, as was done above, you
 could generate them dynamically from file name strings using a
 [interfacename]#Converter# for the column.
-
 
 +
 [source, java]
@@ -678,13 +673,14 @@ endif::web[]
 }
 ----
 endif::web[]
+
 [classname]#DateRenderer#:: Formats a column with a [classname]#Date# type using string formatter. The
 format string is same as for [methodname]#String.format()# in Java API. The date
 is passed in the parameter index 1, which can be omitted if there is only one
-format specifier, such as " [literal]#++%tF++#".
+format specifier, such as "[literal]#++%tF++#".
 
 ifdef::web[]
-
++
 [source, java]
 ----
 Grid.Column bornColumn = grid.getColumn("born");
@@ -698,13 +694,13 @@ Optionally, a locale can be given. Otherwise, the default locale (in the
 component tree) is used.
 
 endif::web[]
+
 [classname]#HTMLRenderer#:: Renders the cell as HTML. This allows formatting cell content, as well as using
 HTML features such as hyperlinks.
 
 ifdef::web[]
++
 First, set the renderer in the [classname]#Grid.Column# object:
-
-
 +
 [source, java]
 ----
@@ -716,7 +712,6 @@ ifdef::web[]
 Then, in the grid data, give the cell content:
 endif::web[]
 
-
 +
 [source, java]
 ----
@@ -727,8 +722,8 @@ grid.addRow("Nicolaus Copernicus", 1543,
 +
 You could also use a [interfacename]#PropertyFormatter# or a generated column to
 generate the HTML for the links.
-
 endif::web[]
+
 [classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
 [classname]#Integer#, [classname]#Double#, etc. The format can be specified
 either by the subclasses of [classname]#java.text.NumberFormat#, namely
@@ -736,9 +731,8 @@ either by the subclasses of [classname]#java.text.NumberFormat#, namely
 [methodname]#String.format()#.
 
 ifdef::web[]
++
 For example:
-
-
 +
 [source, java]
 ----
@@ -770,9 +764,8 @@ endif::web[]
 must be between 0.0 and 1.0.
 
 ifdef::web[]
++
 For example:
-
-
 +
 [source, java]
 ----
@@ -973,7 +966,7 @@ the container must be of type that implements
 
 [[figure.components.grid.filtering]]
 .Filtering Grid
-image::img/grid-filtering.png[]
+image::img/grid-filtering.png[width=50%, scaledwidth=80%]
 
 The filtering illustrated in <<figure.components.grid.filtering>> can be created
 as follows:
@@ -997,16 +990,16 @@ HeaderRow filterRow = grid.appendHeaderRow();
 for (Object pid: grid.getContainerDataSource()
                      .getContainerPropertyIds()) {
     HeaderCell cell = filterRow.getCell(pid);
-    
+
     // Have an input field to use for filter
     TextField filterField = new TextField();
     filterField.setColumns(8);
-    
+
     // Update filter When the filter input is changed
     filterField.addTextChangeListener(change -> {
         // Can't modify filters so need to replace
         container.removeContainerFilters(pid);
-        
+
         // (Re)create the filter if necessary
         if (! change.getText().isEmpty())
             container.addContainerFilter(
@@ -1028,7 +1021,7 @@ secondary or more sort criteria.
 
 [[figure.components.grid.sorting]]
 .Sorting Grid on Multiple Columns
-image::img/grid-sorting.png[]
+image::img/grid-sorting.png[width=50%, scaledwidth=75%]
 
 Defining sort criteria programmatically can be done with the various
 alternatives of the [methodname]#sort()# method. You can sort on a specific
@@ -1052,7 +1045,7 @@ direction can be given with an optional parameter.
 
 [source, java]
 ----
-// Sort first by city and then by name 
+// Sort first by city and then by name
 grid.sort(Sort.by("city", SortDirection.ASCENDING)
               .then("name", SortDirection.DESCENDING));
 ----
@@ -1098,7 +1091,7 @@ A row under editing is illustrated in <<figure.components.grid.editing>>.
 
 [[figure.components.grid.editing]]
 .Editing a Grid Row
-image::img/grid-editor-basic.png[]
+image::img/grid-editor-basic.png[width=50%, scaledwidth=75%]
 
 [[components.grid.editing.unbuffered]]
 === Unbuffered Mode
@@ -1196,9 +1189,9 @@ public class Person implements Serializable {
     @NotNull
     @Size(min=2, max=10)
     private String name;
-    
+
     @Min(1)
-    @Max(130)       
+    @Max(130)
     private int age;
     ...]
 ----
@@ -1241,7 +1234,7 @@ first error in the editor.
 
 [[figure.components.grid.errors]]
 .Editing a Grid Row
-image::img/grid-editor-errors.png[]
+image::img/grid-editor-errors.png[width=50%, scaledwidth=75%]
 
 You can modify the error handling by implementing a custom
 [interfacename]#EditorErrorHandler# or by extending the
@@ -1403,5 +1396,3 @@ element, as well as the buttons.
 
 
 ((()))
-
-

@@ -14,7 +14,6 @@ way you like to think about it), from the [classname]#UI# class of the
 application. You normally set a layout component as the content of the UI and
 fill it with other components.
 
-
 [source, java]
 ----
 public class MyHierarchicalUI extends UI {
@@ -24,10 +23,10 @@ public class MyHierarchicalUI extends UI {
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull(); // Use entire window
         setContent(content);   // Attach to the UI
-        
+
         // Add some component
         content.addComponent(new Label("Hello!"));
-        
+
         // Layout inside layout
         HorizontalLayout hor = new HorizontalLayout();
         hor.setSizeFull(); // Use all available space
@@ -64,8 +63,8 @@ UI
 The result is shown in <<figure.application.architecture.example>>.
 
 [[figure.application.architecture.example]]
-.Simple Hierarchical UI
-image::img/ui-architecture-hierarchical.png[]
+.Simple hierarchical UI
+image::img/ui-architecture-hierarchical.png[width=70%, scaledwidth=90%]
 
 Instead of building the layout in Java, you can also use a declarative design,
 as described later in
@@ -131,7 +130,7 @@ class MyView extends VerticalLayout {
         addComponent(entry);
         addComponent(display);
         addComponent(click);
-        
+
         // Configure it a bit
         setSizeFull();
         addStyleName("myview");
@@ -164,13 +163,13 @@ class MyView extends CustomComponent {
 
     public MyView() {
         Layout layout = new VerticalLayout();
-        
+
         layout.addComponent(entry);
         layout.addComponent(display);
         layout.addComponent(click);
-        
+
         setCompositionRoot(layout);
-        
+
         setSizeFull();
     }
 }
@@ -233,7 +232,7 @@ UI.getCurrent().setLocale(new Locale("en"));
 
 // Set the page title (window or tab caption)
 Page.getCurrent().setTitle("My Page");
-        
+
 // Set a session attribute
 VaadinSession.getCurrent().setAttribute("myattrib", "hello");
 
@@ -252,7 +251,3 @@ ifdef::web[]
 <<dummy/../../../framework/advanced/advanced-global#advanced.global.threadlocal,"ThreadLocal
 Pattern">>.
 endif::web[]
-
-
-
-

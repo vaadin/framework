@@ -27,7 +27,6 @@ is typically a layout component that contains other components.
 
 For example:
 
-
 [source, java]
 ----
 class MyComposite extends CustomComponent {
@@ -37,7 +36,7 @@ class MyComposite extends CustomComponent {
         VerticalLayout panelContent = new VerticalLayout();
         panelContent.setMargin(true); // Very useful
         panel.setContent(panelContent);
-        
+
         // Compose from multiple components
         Label label = new Label(message);
         label.setSizeUndefined(); // Shrink
@@ -62,7 +61,6 @@ separate.
 
 You can use the component as follows:
 
-
 [source, java]
 ----
 MyComposite mycomposite = new MyComposite("Hello");
@@ -71,17 +69,14 @@ MyComposite mycomposite = new MyComposite("Hello");
 The rendered component is shown in <<figure.components.customcomponent>>.
 
 [[figure.components.customcomponent]]
-.A Custom Composite Component
-image::img/customcomponent-example1.png[]
+.A custom composite component
+image::img/customcomponent-example1.png[width=25%, scaledwidth=40%]
 
 You can also inherit any other components, such as layouts, to attain similar
-composition. ((("Google Web
-Toolkit")))
+composition.
+((("Google Web Toolkit")))
 Even further, you can create entirely new low-level components, by integrating
 pure client-side components or by extending the client-side functionality of
 built-in components. Development of new components is covered in
 <<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">>.
-
-
-

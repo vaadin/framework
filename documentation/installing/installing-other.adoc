@@ -29,7 +29,7 @@ toolbar. <<figure.firebug.calc>> shows Firebug in action.
 
 [[figure.firebug.calc]]
 .Firebug Debugger for Firefox
-image::img/firebug.png[]
+image::img/firebug.png[scaledwidth=100%]
 
 The most important feature in Firebug is inspecting HTML elements. Right-click
 on an element and select [guilabel]#Inspect Element with Firebug# to inspect it.

@@ -15,8 +15,8 @@ user interface. <<figure.components.fields>> illustrates the inheritance
 relationships and the important interfaces and base classes.
 
 [[figure.components.fields]]
-.Field Components
-image::img/field-diagram-hi.png[]
+.Field components
+image::img/field-diagram-hi.png[width=60%, scaledwidth=100%]
 
 Field components are built upon the framework defined in the [classname]#Field#
 interface and the [classname]#AbstractField# base class.
@@ -30,7 +30,7 @@ The description of the field interfaces and base classes is broken down in the
 following sections.
 
 [[components.fields.field]]
-== [classname]#Field# Interface
+== The [classname]#Field# Interface
 
 The [classname]#Field# interface inherits the [classname]#Component#
 superinterface and also the [classname]#Property# interface to have a value for
@@ -39,8 +39,8 @@ the field. [classname]#AbstractField# is the only class implementing the
 <<figure.components.fields.field>>.
 
 [[figure.components.fields.field]]
-.[classname]#Field# Interface Inheritance Diagram
-image::img/field-interface-hi.png[]
+.[classname]#Field# interface inheritance
+image::img/field-interface-hi.png[width=60%, scaledwidth=100%]
 
 You can set the field value with the [methodname]#setValue()# and read with the
 [methodname]#getValue()# method defined in the [classname]#Property# interface.
@@ -60,9 +60,6 @@ guide.
 [methodname]#requiredError#:: Defines the error message to show when a value is required, but none is entered.
 The error message is set as the component error for the field and is usually
 displayed in a tooltip when the mouse pointer hovers over the error indicator.
-
-
-
 
 [[components.fields.databinding]]
 == Data Binding and Conversions
@@ -180,28 +177,30 @@ requires that the value type of the property data source is
 Vaadin includes the following built-in validators. The property value type is
 indicated.
 
-[classname]#BeanValidator#:: Validates a bean property according to annotations defined in the Bean
-Validation API 1.0 (JSR-303). This validator is usually not used explicitly, but
-they are created implicitly when binding fields in a
-[classname]#BeanFieldGroup#. Using bean validation requires an implementation
-library of the API. See
-<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding.beanvalidation,"Bean
-Validation">> for details.
+[classname]#BeanValidator#::
+Validates a bean property according to annotations defined in the Bean Validation API 1.0 (JSR-303).
+This validator is usually not used explicitly, but they are created implicitly when binding fields in a [classname]#BeanFieldGroup#.
+Using bean validation requires an implementation library of the API.
+See <<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding.beanvalidation,"Bean Validation">> for details.
 
-[classname]#CompositeValidator#:: Combines validators using logical AND and OR operators.
+[classname]#CompositeValidator#::
+Combines validators using logical AND and OR operators.
 
-[classname]#DateRangeValidator#:[classname]#Date#:: Checks that the date value is within the range at or between two given
-dates/times.
+[classname]#DateRangeValidator#: [classname]#Date#::
+Checks that the date value is within the range at or between two given dates/times.
 
-[classname]#DoubleRangeValidator#:[classname]#Double#:: Checks that the double value is at or between two given values.
+[classname]#DoubleRangeValidator#: [classname]#Double#::
+Checks that the double value is at or between two given values.
 
-[classname]#EmailValidator#:[classname]#String#:: Checks that the string value is a syntactically valid email address. The
-validated syntax is close to the RFC 822 standard regarding email addresses.
+[classname]#EmailValidator#: [classname]#String#::
+Checks that the string value is a syntactically valid email address.
+The validated syntax is close to the RFC 822 standard regarding email addresses.
 
-[classname]#IntegerRangeValidator#:[classname]#Integer#:: Checks that the integer value is at or between two given values.
+[classname]#IntegerRangeValidator#: [classname]#Integer#::
+Checks that the integer value is at or between two given values.
 
-[classname]#NullValidator#:: Checks that the value is or is not a null value.
-
+[classname]#NullValidator#::
+Checks whether the value is or is not a null value.
 +
 For the validator to be meaningful, the component must support inputting null
 values. For example, for selection components and [classname]#TextField#,
@@ -216,9 +215,11 @@ Setting field as __required__ can be used for similar effect, and it also
 enables an indicator to indicate that a value is required.
 endif::web[]
 
-[classname]#RegexpValidator#:[classname]#String#:: Checks that the value matches with the given regular expression.
+[classname]#RegexpValidator#: [classname]#String#::
+Checks that the value matches with the given regular expression.
 
-[classname]#StringLengthValidator#:[classname]#String#:: Checks that the length of the input string is at or between two given lengths.
+[classname]#StringLengthValidator#: [classname]#String#::
+Checks that the length of the input string is at or between two given lengths.
 
 ifdef::web[]
 +
@@ -228,15 +229,12 @@ length, so it will be invalid if the minimum length is greater than zero.
 Allowing null value is meaningful only if inputting null values is enabled with
 [methodname]#setNullSettingAllowed(true)#, and typically in such case, you want
 to set the null representation to empty string with
-[methodname]#setNullRepresentation("")#. Note that __this parameter is
-deprecated__ and should normally be [parameter]#true#; then you can use
+[methodname]#setNullRepresentation("")#. Note that _this parameter is
+deprecated_ and should normally be [parameter]#true#; then you can use
 [methodname]#setRequired()# (for the false case) or [classname]#NullValidator#.
 endif::web[]
 
-
-
 Please see the API documentation for more details.
-
 
 [[components.fields.validation.automatic]]
 === Automatic Validation
@@ -275,12 +273,12 @@ final TextField field = new TextField("Name");
 field.setNullRepresentation("");
 field.setNullSettingAllowed(true);
 layout.addComponent(field);
-        
+
 // Define validation as usual
 field.addValidator(new StringLengthValidator(
     "The name must be 1-10 letters (was {0})",
     1, 10, true));
-        
+
 // Run validation explicitly
 Button validate = new Button("Validate");
 validate.addClickListener(new ClickListener() {
@@ -321,7 +319,7 @@ class MyValidator implements Validator {
     }
 }
 
-final TextField field = new TextField("Say hello");
+TextField field = new TextField("Say hello");
 field.addValidator(new MyValidator());
 field.setImmediate(true);
 layout.addComponent(field);
@@ -338,8 +336,4 @@ Forms by Binding Fields to Items">>, calling [methodname]#commit()# for the
 group runs the validation for all the fields in the group, and if successful,
 writes the input values to the data source.
 
-
-
 (((range="endofrange", startref="term.components.fields")))
-
-
