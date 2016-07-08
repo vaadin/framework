@@ -24,7 +24,7 @@ import elemental.json.JsonObject;
  * 
  * @since
  */
-public interface DataProviderClientRpc extends ClientRpc {
+public interface DataCommunicatorClientRpc extends ClientRpc {
 
     /**
      * Informs the client-side DataSource that all data has been invalidated.

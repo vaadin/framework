@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tokka.server.communication.data.AbstractDataSource;
-import com.vaadin.tokka.server.communication.data.DataProvider;
+import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.ui.components.AbstractListing;
 import com.vaadin.tokka.ui.components.AbstractListing.AbstractListingExtension;
@@ -38,7 +38,7 @@ public class AbstractListingTest {
         @Override
         public void setDataSource(DataSource<String> data) {
             this.data = data;
-            setDataProvider(new DataProvider<>(data));
+            setDataCommunicator(new DataCommunicator<>(data));
         }
 
         @Override
@@ -76,7 +76,7 @@ public class AbstractListingTest {
         CountGenerator countGenerator = new CountGenerator();
 
         countGenerator.extend(testComponent);
-        testComponent.getDataProvider().beforeClientResponse(true);
+        testComponent.getDataCommunicator().beforeClientResponse(true);
 
         assertEquals("Generator was not called.", 1, countGenerator.callCount);
     }
@@ -87,7 +87,7 @@ public class AbstractListingTest {
 
         countGenerator.extend(testComponent);
         countGenerator.remove();
-        testComponent.getDataProvider().beforeClientResponse(true);
+        testComponent.getDataCommunicator().beforeClientResponse(true);
 
         assertEquals("Generator was called.", 0, countGenerator.callCount);
     }

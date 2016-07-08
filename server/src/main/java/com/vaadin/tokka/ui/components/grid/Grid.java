@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.vaadin.tokka.server.communication.data.DataProvider;
+import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
 import com.vaadin.tokka.ui.components.AbstractListing;
@@ -36,7 +36,7 @@ public class Grid<T> extends AbstractListing<T> {
     @Override
     public void setDataSource(DataSource<T> data) {
         this.dataSource = data;
-        setDataProvider(new DataProvider<>(data));
+        setDataCommunicator(new DataCommunicator<>(data));
     }
 
     @Override

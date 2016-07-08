@@ -20,7 +20,7 @@ import java.io.Serializable;
 import elemental.json.JsonObject;
 
 /**
- * Simple typed data generator for {@link DataProvider}.
+ * Simple typed data generator for {@link DataCommunicator}.
  * 
  * @since
  */

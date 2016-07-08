@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.data.typed.DataProviderClientRpc;
+import com.vaadin.shared.data.typed.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.tokka.event.Registration;
@@ -44,7 +44,7 @@ import elemental.json.JsonObject;
  * 
  * @since
  */
-public class DataProvider<T> extends AbstractExtension {
+public class DataCommunicator<T> extends AbstractExtension {
 
     /**
      * Simple implementation of collection data provider communication. All data
@@ -72,8 +72,8 @@ public class DataProvider<T> extends AbstractExtension {
      * longer needed. Data tracking is based on key string provided by
      * {@link DataKeyMapper}.
      * <p>
-     * When the {@link DataProvider} is pushing new data to the client-side via
-     * {@link DataProvider#pushData(long, Collection)},
+     * When the {@link DataCommunicator} is pushing new data to the client-side via
+     * {@link DataCommunicator#pushData(long, Collection)},
      * {@link #addActiveData(Collection)} and {@link #cleanUp(Collection)} are
      * called with the same parameter. In the clean up method any dropped data
      * objects that are not in the given collection will be cleaned up and
@@ -170,7 +170,7 @@ public class DataProvider<T> extends AbstractExtension {
 
     private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
     protected ActiveDataHandler handler = new ActiveDataHandler();
-    protected DataProviderClientRpc rpc;
+    protected DataCommunicatorClientRpc rpc;
 
     protected DataSource<T> dataSource;
     private Registration dataChangeHandler;
@@ -181,10 +181,10 @@ public class DataProvider<T> extends AbstractExtension {
     private final Set<T> updatedData = new HashSet<T>();
     private Range pushRows = Range.withLength(0, 40);
 
-    public DataProvider(DataSource<T> dataSource) {
+    public DataCommunicator(DataSource<T> dataSource) {
         addDataGenerator(handler);
         this.dataSource = dataSource;
-        rpc = getRpcProxy(DataProviderClientRpc.class);
+        rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
         dataChangeHandler = this.dataSource
                 .addDataChangeHandler(createDataChangeHandler());
@@ -250,7 +250,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Adds a {@link TypedDataGenerator} to this {@link DataProvider}.
+     * Adds a {@link TypedDataGenerator} to this {@link DataCommunicator}.
      * 
      * @param generator
      *            typed data generator
@@ -260,7 +260,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Removes a {@link TypedDataGenerator} from this {@link DataProvider}.
+     * Removes a {@link TypedDataGenerator} from this {@link DataCommunicator}.
      * 
      * @param generator
      *            typed data generator
@@ -270,7 +270,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Gets the {@link DataKeyMapper} used by this {@link DataProvider}. Key
+     * Gets the {@link DataKeyMapper} used by this {@link DataCommunicator}. Key
      * mapper can be used to map keys sent to the client-side back to their
      * respective data objects.
      * 
@@ -342,7 +342,7 @@ public class DataProvider<T> extends AbstractExtension {
 
     /**
      * Clean up method for removing all listeners attached by the
-     * {@link DataProvider}. This method is called from {@link #remove()} or
+     * {@link DataCommunicator}. This method is called from {@link #remove()} or
      * when the UI gets detached.
      */
     protected void cleanUp() {
@@ -406,7 +406,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Creates a {@link DataKeyMapper} to use with this {@link DataProvider}.
+     * Creates a {@link DataKeyMapper} to use with this {@link DataCommunicator}.
      * <p>
      * This method is called from the constructor.
      * 
@@ -417,7 +417,7 @@ public class DataProvider<T> extends AbstractExtension {
     }
 
     /**
-     * Creates a {@link DataRequestRpc} used with this {@link DataProvider}.
+     * Creates a {@link DataRequestRpc} used with this {@link DataCommunicator}.
      * <p>
      * This method is called from the constructor.
      * 

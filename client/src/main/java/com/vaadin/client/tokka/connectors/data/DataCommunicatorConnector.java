@@ -25,30 +25,30 @@ import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.data.typed.DataProviderClientRpc;
+import com.vaadin.shared.data.typed.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.typed.DataProviderConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.tokka.server.communication.data.DataProvider;
+import com.vaadin.tokka.server.communication.data.DataCommunicator;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * A connector for DataProvider class.
+ * A connector for DataCommunicator class.
  * 
  * @since
  */
-@Connect(DataProvider.class)
-public class DataSourceConnector extends AbstractExtensionConnector {
+@Connect(DataCommunicator.class)
+public class DataCommunicatorConnector extends AbstractExtensionConnector {
 
     public class VaadinDataSource extends AbstractRemoteDataSource<JsonObject> {
 
         private Set<String> droppedKeys = new HashSet<String>();
 
         protected VaadinDataSource() {
-            registerRpc(DataProviderClientRpc.class,
-                    new DataProviderClientRpc() {
+            registerRpc(DataCommunicatorClientRpc.class,
+                    new DataCommunicatorClientRpc() {
 
                         @Override
                         public void reset(int size) {
