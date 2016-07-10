@@ -238,7 +238,7 @@
 						<Require-Bundle>
 							com.vaadin.shared;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",
 							com.vaadin.push;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}";resolution:=optional,
-							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional"</Require-Bundle>
+							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
 					</instructions>
 				</configuration>
 				<executions>
