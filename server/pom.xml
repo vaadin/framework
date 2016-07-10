@@ -223,8 +223,8 @@
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
 						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
-						<Import-Package>javax.servlet;version="${javax.servlet.version}",
-							javax.servlet.http;version="${javax.servlet.version}",
+						<Import-Package>javax.servlet;version="[2.4,${javax.servlet.version}]",
+							javax.servlet.http;version="[2.4,${javax.servlet.version}]",
 							javax.validation;version="${javax.validation.version}";resolution:=optional,
 							org.jsoup;version="${jsoup.version}",
 							org.jsoup.parser;version="${jsoup.version}",
