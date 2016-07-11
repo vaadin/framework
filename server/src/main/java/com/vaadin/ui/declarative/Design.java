@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -146,9 +147,24 @@ public class Design implements Serializable {
         @Override
         public Component createComponent(String fullyQualifiedClassName,
                 DesignContext context) {
-            Class<? extends Component> componentClass = resolveComponentClass(
-                    fullyQualifiedClassName, context);
+            Class<? extends Component> componentClass;
+            try {
+                componentClass = resolveComponentClass(fullyQualifiedClassName,
+                        context);
+            } catch (DesignException e) {
+                // Try with an inner class.
+                int lastDot = fullyQualifiedClassName.lastIndexOf('.');
+                if (lastDot != -1) {
+                    String qualifiedInnerClassName = fullyQualifiedClassName
+                            .substring(0, lastDot)
+                            + "$"
+                            + fullyQualifiedClassName.substring(lastDot + 1);
+                    return createComponent(qualifiedInnerClassName, context);
+                } else {
+                    throw e;
+                }
 
+            }
             assert Component.class.isAssignableFrom(componentClass) : "resolveComponentClass returned "
                     + componentClass + " which is not a Vaadin Component class";
 
@@ -234,10 +250,11 @@ public class Design implements Serializable {
         @Override
         public String componentToTag(Component component, DesignContext context) {
             Class<?> componentClass = component.getClass();
-            String packageName = componentClass.getPackage().getName();
+            String packageName = getPackageName(componentClass);
             String prefix = context.getPackagePrefix(packageName);
             if (prefix == null) {
-                prefix = packageName.replace('.', '_');
+                prefix = packageName.replace('.', '_').toLowerCase(
+                        Locale.ENGLISH);
                 context.addPackagePrefix(prefix, packageName);
             }
             prefix = prefix + "-";
@@ -246,6 +263,16 @@ public class Design implements Serializable {
             String tagName = prefix + className;
 
             return tagName;
+        }
+
+        private String getPackageName(Class<?> componentClass) {
+            if (componentClass.isMemberClass()) {
+                Class<?> enclosingClass = componentClass.getEnclosingClass();
+                return getPackageName(enclosingClass) + "."
+                        + enclosingClass.getSimpleName();
+            } else {
+                return componentClass.getPackage().getName();
+            }
         }
 
         /**
