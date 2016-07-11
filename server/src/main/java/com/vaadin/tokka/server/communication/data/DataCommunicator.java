@@ -171,14 +171,14 @@ public class DataCommunicator<T> extends AbstractExtension {
     protected ActiveDataHandler handler = new ActiveDataHandler();
     protected DataCommunicatorClientRpc rpc;
 
-    protected DataSource<T> dataSource;
+    protected DataSource<T, ?> dataSource;
     private DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
     private Range pushRows = Range.withLength(0, 40);
 
-    public DataCommunicator(DataSource<T> dataSource) {
+    public DataCommunicator(DataSource<T, ?> dataSource) {
         addDataGenerator(handler);
         this.dataSource = dataSource;
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);

@@ -35,7 +35,7 @@ public interface Listing<T> extends Serializable {
      * @param data
      *            data source
      */
-    void setDataSource(DataSource<T> data);
+    void setDataSource(DataSource<T, ?> data);
 
     /**
      * Sets the options available for this Listing.
@@ -62,7 +62,7 @@ public interface Listing<T> extends Serializable {
      * 
      * @return data source
      */
-    DataSource<T> getDataSource();
+    DataSource<T, ?> getDataSource();
 
     /**
      * Gets the {@link SelectionModel} for this Listing.

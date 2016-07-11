@@ -17,6 +17,7 @@ package com.vaadin.tokka.server.communication.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class InMemoryDataSource<T> implements DataSource<T> {
+public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
 
     // FIXME: Missing Query object
     private Function<Object, Stream<T>> request;
@@ -44,8 +45,26 @@ public class InMemoryDataSource<T> implements DataSource<T> {
         request = query -> backend.stream();
     }
 
+    /**
+     * Chaining constructor for making modified {@link InMemoryDataSource}s.
+     * This Constructor is used internally for making sorted and filtered
+     * variants of a base data source with actual data.
+     * 
+     * @param request
+     *            request for the new data source
+     */
+    protected InMemoryDataSource(Function<Object, Stream<T>> request) {
+        this.request = request;
+    }
+
     @Override
     public Stream<T> apply(Object query) {
         return request.apply(query);
+    }
+
+    @Override
+    public DataSource<T, Comparator<T>> sortingBy(Comparator<T> sortOrder) {
+        return new InMemoryDataSource<T>(q -> request.apply(q)
+                .sorted(sortOrder));
     }
 }

@@ -33,8 +33,17 @@ import com.vaadin.tokka.event.Registration;
  * @param <T>
  *            data type
  */
-public interface DataSource<T> extends Function<Object, Stream<T>>,
+public interface DataSource<T, SORT> extends Function<Object, Stream<T>>,
         Serializable {
+
+    /**
+     * Sets a default sorting order to the data source.
+     * 
+     * @param sortOrder
+     *            an object providing the needed sorting information
+     * @return new data source with modified sorting
+     */
+    DataSource<T, SORT> sortingBy(SORT sortOrder);
 
     /**
      * This method creates a new {@link InMemoryDataSource} from a given

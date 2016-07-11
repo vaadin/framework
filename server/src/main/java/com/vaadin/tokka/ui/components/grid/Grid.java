@@ -26,7 +26,7 @@ import com.vaadin.tokka.ui.components.AbstractListing;
 
 public class Grid<T> extends AbstractListing<T> {
 
-    private DataSource<T> dataSource;
+    private DataSource<T, ?> dataSource;
     private Map<String, Column<T, ?>> columns = new LinkedHashMap<>();
 
     public Grid() {
@@ -34,13 +34,13 @@ public class Grid<T> extends AbstractListing<T> {
     }
 
     @Override
-    public void setDataSource(DataSource<T> data) {
+    public void setDataSource(DataSource<T, ?> data) {
         this.dataSource = data;
         setDataCommunicator(new DataCommunicator<>(data));
     }
 
     @Override
-    public DataSource<T> getDataSource() {
+    public DataSource<T, ?> getDataSource() {
         return dataSource;
     }
 

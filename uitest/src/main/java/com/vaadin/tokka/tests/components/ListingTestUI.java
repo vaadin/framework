@@ -1,6 +1,7 @@
 package com.vaadin.tokka.tests.components;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -80,7 +81,7 @@ public class ListingTestUI extends AbstractTestUI {
                 .getSelectionModel().getSelected()
                 .forEach(s -> Notification.show(s))));
         hLayout.addComponent(new Button("Random select", e -> {
-            DataSource<String> ds = select.getDataSource();
+            DataSource<String, ?> ds = select.getDataSource();
             int skip = r.nextInt((int) ds.apply(null).count());
             ds.apply(null).skip(skip).findFirst()
                     .ifPresent(select.getSelectionModel()::select);
@@ -100,7 +101,8 @@ public class ListingTestUI extends AbstractTestUI {
         grid.addColumn("String Value", Bean::getValue);
         grid.addColumn("Integer Value", Bean::getIntVal);
         grid.addColumn("toString", Bean::toString);
-        grid.setDataSource(DataSource.create(Bean.generateRandomBeans()));
+        grid.setDataSource(DataSource.create(Bean.generateRandomBeans())
+                .sortingBy(Comparator.comparing(Bean::getValue)));
 
         addComponent(new Button("Toggle Grid Selection",
                 new Button.ClickListener() {

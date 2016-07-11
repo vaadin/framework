@@ -28,7 +28,7 @@ import elemental.json.JsonObject;
 
 public class NativeSelect<T> extends AbstractListing<T> {
 
-    private DataSource<T> dataSource;
+    private DataSource<T, ?> dataSource;
     private Function<T, String> nameProvider = T::toString;
 
     public NativeSelect() {
@@ -47,13 +47,13 @@ public class NativeSelect<T> extends AbstractListing<T> {
         });
     }
 
-    public NativeSelect(DataSource<T> dataSource) {
+    public NativeSelect(DataSource<T, ?> dataSource) {
         this();
         setDataSource(dataSource);
     }
 
     @Override
-    public void setDataSource(DataSource<T> data) {
+    public void setDataSource(DataSource<T, ?> data) {
         dataSource = data;
         if (dataSource != null) {
             setDataCommunicator(new DataCommunicator<>(dataSource));
@@ -63,7 +63,7 @@ public class NativeSelect<T> extends AbstractListing<T> {
     }
 
     @Override
-    public DataSource<T> getDataSource() {
+    public DataSource<T, ?> getDataSource() {
         return dataSource;
     }
 }

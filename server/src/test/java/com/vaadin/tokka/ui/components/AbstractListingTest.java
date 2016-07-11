@@ -29,16 +29,16 @@ public class AbstractListingTest {
 
     AbstractListing<String> testComponent = new AbstractListing<String>() {
 
-        DataSource<String> data;
+        DataSource<String, ?> data;
 
         @Override
-        public void setDataSource(DataSource<String> data) {
+        public void setDataSource(DataSource<String, ?> data) {
             this.data = data;
             setDataCommunicator(new DataCommunicator<>(data));
         }
 
         @Override
-        public DataSource<String> getDataSource() {
+        public DataSource<String, ?> getDataSource() {
             return data;
         }
     };
