@@ -205,7 +205,7 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
          * Returns the wrapped Item that belongs to the wrapped container
          * 
          * @return wrapped item.
-         * @since
+         * @since 7.6.8
          */
         public Item getWrappedItem() {
             return wrappedItem;
