@@ -83,4 +83,21 @@ public class InMemoryDataSourceTest {
             }
         }
     }
+
+    @Test
+    public void testDefatulSortWithFunction() {
+        List<StrBean> list = dataSource.sortingBy(StrBean::getValue)
+                .apply(null).collect(Collectors.toList());
+
+        Assert.assertEquals("Sorted data and original data sizes don't match",
+                data.size(), list.size());
+
+        for (int i = 1; i < list.size(); ++i) {
+            StrBean prev = list.get(i - 1);
+            StrBean cur = list.get(i);
+
+            // Test default sort
+            Assert.assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
+        }
+    }
 }

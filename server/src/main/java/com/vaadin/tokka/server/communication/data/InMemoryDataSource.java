@@ -30,7 +30,6 @@ import java.util.stream.Stream;
  */
 public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
 
-    // FIXME: Missing Query object
     private Function<Object, Stream<T>> request;
 
     /**
@@ -63,8 +62,13 @@ public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
     }
 
     @Override
-    public DataSource<T, Comparator<T>> sortingBy(Comparator<T> sortOrder) {
+    public InMemoryDataSource<T> sortingBy(Comparator<T> sortOrder) {
         return new InMemoryDataSource<T>(q -> request.apply(q)
                 .sorted(sortOrder));
+    }
+
+    public <U extends Comparable<? super U>> InMemoryDataSource<T> sortingBy(
+            Function<T, U> sortOrder) {
+        return sortingBy(Comparator.comparing(sortOrder));
     }
 }
