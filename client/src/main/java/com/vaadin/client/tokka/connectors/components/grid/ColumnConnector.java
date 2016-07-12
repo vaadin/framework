@@ -40,7 +40,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             @Override
             public JsonValue getValue(JsonObject row) {
                 return row.getObject(DataProviderConstants.DATA).get(
-                        getConnectorId());
+                        getState().communicationId);
             }
         };
         getParent().addColumn(column);

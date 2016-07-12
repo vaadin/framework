@@ -20,4 +20,5 @@ import com.vaadin.shared.communication.SharedState;
 public class ColumnState extends SharedState {
 
     public String caption;
+    public String communicationId;
 }

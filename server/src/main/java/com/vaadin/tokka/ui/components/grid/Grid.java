@@ -15,33 +15,38 @@
  */
 package com.vaadin.tokka.ui.components.grid;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
-import com.vaadin.tokka.server.communication.data.DataSource;
+import com.vaadin.tokka.server.communication.data.KeyMapper;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
 import com.vaadin.tokka.ui.components.AbstractListing;
 
 public class Grid<T> extends AbstractListing<T> {
 
-    private DataSource<T, ?> dataSource;
-    private Map<String, Column<T, ?>> columns = new LinkedHashMap<>();
+    private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
+    private Set<Column<T, ?>> columnSet = new HashSet<>();
 
     public Grid() {
         setSelectionModel(new SingleSelection<T>());
     }
 
     public <V> Column<T, V> addColumn(String caption, Function<T, V> getter) {
-        Column<T, V> c = new Column<T, V>(caption, getter, this);
-        columns.put(c.getConnectorId(), c);
+        Column<T, V> c = new Column<T, V>(caption, getter);
+
+        c.extend(this);
+        c.setCommunicationId(columnKeys.key(c));
+        columnSet.add(c);
         addDataGenerator(c);
+
         return c;
     }
 
     public void removeColumn(Column<T, ?> column) {
-        if (columns.containsValue(column)) {
-            removeDataGenerator(columns.remove(column.getConnectorId()));
+        if (columnSet.remove(column)) {
+            columnKeys.remove(column);
+            removeDataGenerator(column);
             column.remove();
         }
     }

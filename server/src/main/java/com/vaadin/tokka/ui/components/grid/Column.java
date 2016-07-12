@@ -30,10 +30,9 @@ public class Column<T, V> extends AbstractExtension implements
 
     private Function<T, V> getter;
 
-    Column(String caption, Function<T, V> getter, Grid<T> grid) {
+    Column(String caption, Function<T, V> getter) {
         this.getter = getter;
         getState().caption = caption;
-        extend(grid);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class Column<T, V> extends AbstractExtension implements
         }
         JsonObject obj = jsonObject.getObject(DataProviderConstants.DATA);
         // TODO: Renderers
-        obj.put(getConnectorId(), getter.apply(data).toString());
+        obj.put(getState(false).communicationId, getter.apply(data).toString());
     }
 
     @Override
@@ -51,6 +50,18 @@ public class Column<T, V> extends AbstractExtension implements
     }
 
     public ColumnState getState() {
-        return (ColumnState) super.getState();
+        return getState(true);
+    }
+
+    public ColumnState getState(boolean markAsDirty) {
+        return (ColumnState) super.getState(markAsDirty);
+    }
+
+    void extend(Grid<T> grid) {
+        super.extend(grid);
+    }
+
+    void setCommunicationId(String key) {
+        getState().communicationId = key;
     }
 }
