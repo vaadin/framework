@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
 import com.vaadin.tokka.ui.components.AbstractListing;
@@ -31,17 +30,6 @@ public class Grid<T> extends AbstractListing<T> {
 
     public Grid() {
         setSelectionModel(new SingleSelection<T>());
-    }
-
-    @Override
-    public void setDataSource(DataSource<T, ?> data) {
-        this.dataSource = data;
-        setDataCommunicator(new DataCommunicator<>(data));
-    }
-
-    @Override
-    public DataSource<T, ?> getDataSource() {
-        return dataSource;
     }
 
     public <V> Column<T, V> addColumn(String caption, Function<T, V> getter) {

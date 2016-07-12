@@ -30,7 +30,6 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.tokka.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.tokka.event.Registration;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -172,16 +171,15 @@ public class DataCommunicator<T> extends AbstractExtension {
     protected ActiveDataHandler handler = new ActiveDataHandler();
     protected DataCommunicatorClientRpc rpc;
 
-    protected DataSource<T, ?> dataSource;
+    private DataSource<T, ?> dataSource;
     private DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
     private Range pushRows = Range.withLength(0, 40);
 
-    public DataCommunicator(DataSource<T, ?> dataSource) {
+    public DataCommunicator() {
         addDataGenerator(handler);
-        this.dataSource = dataSource;
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
         keyMapper = createKeyMapper();
@@ -195,13 +193,17 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        if (getDataSource() == null) {
+            return;
+        }
+
         // FIXME: Sorting and Filtering with Backend
         List<Object> sortOrders = Collections.emptyList();
         Set<Object> filters = Collections.emptySet();
 
         if (initial || reset) {
             // FIXME: Rethink the size question.
-            int dataSourceSize = (int) dataSource.apply(
+            int dataSourceSize = (int) getDataSource().apply(
                     new Query(0, Integer.MAX_VALUE, sortOrders, filters))
                     .count();
             rpc.reset(dataSourceSize);
@@ -213,14 +215,14 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             Stream<T> rowsToPush;
 
-            if (dataSource instanceof InMemoryDataSource) {
+            if (getDataSource() instanceof InMemoryDataSource) {
                 // We can safely request all the data when in memory
                 // FIXME: sorted and filter.
-                rowsToPush = dataSource.apply(new Query()).skip(offset)
+                rowsToPush = getDataSource().apply(new Query()).skip(offset)
                         .limit(limit);
             } else {
                 Query query = new Query(offset, limit, sortOrders, filters);
-                rowsToPush = dataSource.apply(query);
+                rowsToPush = getDataSource().apply(query);
             }
 
             pushData(offset, rowsToPush);
@@ -400,5 +402,25 @@ public class DataCommunicator<T> extends AbstractExtension {
      */
     protected DataRequestRpc createRpc() {
         return new SimpleDataRequestRpc();
+    }
+
+    /**
+     * Gets the current data source from this DataCommunicator.
+     * 
+     * @return the data source
+     */
+    public DataSource<T, ?> getDataSource() {
+        return dataSource;
+    }
+
+    /**
+     * Sets the current data source for this DataCommunicator.
+     * 
+     * @param dataSource
+     *            the data source to set
+     */
+    public void setDataSource(DataSource<T, ?> dataSource) {
+        this.dataSource = dataSource;
+        reset();
     }
 }

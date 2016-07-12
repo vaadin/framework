@@ -18,7 +18,6 @@ package com.vaadin.tokka.ui.components.nativeselect;
 import java.util.function.Function;
 
 import com.vaadin.shared.tokka.data.DataProviderConstants;
-import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
@@ -28,7 +27,6 @@ import elemental.json.JsonObject;
 
 public class NativeSelect<T> extends AbstractListing<T> {
 
-    private DataSource<T, ?> dataSource;
     private Function<T, String> nameProvider = T::toString;
 
     public NativeSelect() {
@@ -50,20 +48,5 @@ public class NativeSelect<T> extends AbstractListing<T> {
     public NativeSelect(DataSource<T, ?> dataSource) {
         this();
         setDataSource(dataSource);
-    }
-
-    @Override
-    public void setDataSource(DataSource<T, ?> data) {
-        dataSource = data;
-        if (dataSource != null) {
-            setDataCommunicator(new DataCommunicator<>(dataSource));
-        } else {
-            setDataCommunicator(null);
-        }
-    }
-
-    @Override
-    public DataSource<T, ?> getDataSource() {
-        return dataSource;
     }
 }

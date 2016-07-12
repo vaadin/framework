@@ -15,19 +15,18 @@
  */
 package com.vaadin.tokka.ui.components;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.tokka.server.ListingExtension;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
+import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SelectionModel;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractComponent;
 
 /**
  * Base class for Listing components. Provides common handling for
- * {@link DataCommunicator}, {@link SelectionModel} and {@link TypedDataGenerator}s.
+ * {@link DataCommunicator}, {@link SelectionModel} and
+ * {@link TypedDataGenerator}s.
  * 
  * @param <T>
  *            listing data type
@@ -83,7 +82,8 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
          * @return the data object
          */
         protected T getData(String key) {
-            DataCommunicator<T> dataProvider = getParent().getDataCommunicator();
+            DataCommunicator<T> dataProvider = getParent()
+                    .getDataCommunicator();
             if (dataProvider != null) {
                 return dataProvider.getKeyMapper().get(key);
             }
@@ -103,7 +103,8 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
          *            data object to refresh
          */
         protected void refresh(T data) {
-            DataCommunicator<T> dataProvider = getParent().getDataCommunicator();
+            DataCommunicator<T> dataProvider = getParent()
+                    .getDataCommunicator();
             if (dataProvider != null) {
                 dataProvider.refresh(data);
             }
@@ -111,25 +112,37 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
     }
 
     /* DataProvider for this Listing component */
-    private DataCommunicator<T> dataCommunicator;
-    /* TypedDataGenerators used by this Listing */
-    private Set<TypedDataGenerator<T>> generators = new LinkedHashSet<>();
+    private final DataCommunicator<T> dataCommunicator;
     /* SelectionModel for this Listing */
     private SelectionModel<T> selectionModel;
 
     /**
-     * Adds a {@link TypedDataGenerator} for the {@link DataCommunicator} of this
-     * Listing component.
+     * Constructs a new AbstractListing with a default {@link DataCommunicator}.
+     */
+    protected AbstractListing() {
+        this(new DataCommunicator<T>());
+    }
+
+    /**
+     * Constructs a new AbstractListing with given {@link DataCommunicator}.
+     * 
+     * @param dataCommunicator
+     *            data communicator to use
+     */
+    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
+        this.dataCommunicator = dataCommunicator;
+        addExtension(dataCommunicator);
+    }
+
+    /**
+     * Adds a {@link TypedDataGenerator} for the {@link DataCommunicator} of
+     * this Listing component.
      * 
      * @param generator
      *            typed data generator
      */
     protected void addDataGenerator(TypedDataGenerator<T> generator) {
-        generators.add(generator);
-
-        if (dataCommunicator != null) {
-            dataCommunicator.addDataGenerator(generator);
-        }
+        dataCommunicator.addDataGenerator(generator);
     }
 
     /**
@@ -140,40 +153,7 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
      *            typed data generator
      */
     protected void removeDataGenerator(TypedDataGenerator<T> generator) {
-        generators.remove(generator);
-
-        if (dataCommunicator != null) {
-            dataCommunicator.removeDataGenerator(generator);
-        }
-    }
-
-    /**
-     * Extends this listing component with a data provider. This method
-     * reapplies all data generators to the new data provider.
-     * 
-     * @param dataProvider
-     *            new data provider
-     */
-    protected void setDataCommunicator(DataCommunicator<T> dataProvider) {
-        if (this.dataCommunicator == dataProvider) {
-            return;
-        }
-
-        if (this.dataCommunicator != null) {
-            this.dataCommunicator.remove();
-        }
-
-        this.dataCommunicator = dataProvider;
-        if (dataProvider != null) {
-            addExtension(dataProvider);
-
-            if (dataProvider != null) {
-                // Reapply all data generators to the new data provider.
-                for (TypedDataGenerator<T> generator : generators) {
-                    dataProvider.addDataGenerator(generator);
-                }
-            }
-        }
+        dataCommunicator.removeDataGenerator(generator);
     }
 
     /**
@@ -185,7 +165,6 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
         return dataCommunicator;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void setSelectionModel(SelectionModel<T> model) {
         if (selectionModel != null) {
@@ -200,5 +179,15 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
     @Override
     public SelectionModel<T> getSelectionModel() {
         return selectionModel;
+    }
+
+    @Override
+    public void setDataSource(DataSource<T, ?> data) {
+        getDataCommunicator().setDataSource(data);
+    }
+
+    @Override
+    public DataSource<T, ?> getDataSource() {
+        return getDataCommunicator().getDataSource();
     }
 }
