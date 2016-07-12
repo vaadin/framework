@@ -25,8 +25,8 @@ import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.data.typed.DataCommunicatorClientRpc;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataCommunicatorClientRpc;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
 

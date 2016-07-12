@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.data.typed.DataCommunicatorClientRpc;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataCommunicatorClientRpc;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.tokka.event.Registration;
 

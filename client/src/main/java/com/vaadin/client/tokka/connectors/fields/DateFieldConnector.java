@@ -21,10 +21,10 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.tokka.ui.components.fields.DateFieldServerRpc;
+import com.vaadin.shared.tokka.ui.components.fields.DateFieldState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.components.field.DateFieldServerRpc;
-import com.vaadin.shared.ui.components.field.DateFieldState;
 
 @Connect(value = com.vaadin.tokka.ui.components.fields.DateField.class, loadStyle = LoadStyle.EAGER)
 public class DateFieldConnector extends AbstractComponentConnector {

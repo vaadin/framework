@@ -23,8 +23,8 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.shared.ui.components.field.DateFieldServerRpc;
-import com.vaadin.shared.ui.components.field.DateFieldState;
+import com.vaadin.shared.tokka.ui.components.fields.DateFieldServerRpc;
+import com.vaadin.shared.tokka.ui.components.fields.DateFieldState;
 import com.vaadin.tokka.event.Event;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;

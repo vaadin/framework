@@ -13,28 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.data.selection;
 
-import com.vaadin.shared.communication.ServerRpc;
+package com.vaadin.shared.tokka.ui.components.fields;
 
-/**
- * Simple API for SelectionModel client to server communication
- */
-public interface SelectionServerRpc extends ServerRpc {
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 
-    /**
-     * Select an item based on it's key.
-     * 
-     * @param key
-     *            key of item
-     */
-    void select(String key);
+public interface DateFieldServerRpc extends FocusAndBlurServerRpc {
 
-    /**
-     * Deselect an item based on it's key.
-     * 
-     * @param key
-     *            key of item
-     */
-    void deselect(String key);
+    void setDate(String value);
 }

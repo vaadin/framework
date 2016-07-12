@@ -19,9 +19,9 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid.Column;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
+import com.vaadin.shared.tokka.ui.components.grid.ColumnState;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.components.grid.ColumnState;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

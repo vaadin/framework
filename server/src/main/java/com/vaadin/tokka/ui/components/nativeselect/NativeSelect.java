@@ -17,7 +17,7 @@ package com.vaadin.tokka.ui.components.nativeselect;
 
 import java.util.function.Function;
 
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SingleSelection;

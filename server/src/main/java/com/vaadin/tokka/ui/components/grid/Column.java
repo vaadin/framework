@@ -18,8 +18,8 @@ package com.vaadin.tokka.ui.components.grid;
 import java.util.function.Function;
 
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.shared.data.typed.DataProviderConstants;
-import com.vaadin.shared.ui.components.grid.ColumnState;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
+import com.vaadin.shared.tokka.ui.components.grid.ColumnState;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 
 import elemental.json.Json;

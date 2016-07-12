@@ -18,7 +18,7 @@ package com.vaadin.tokka.server.communication.data;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.vaadin.shared.data.selection.SelectionServerRpc;
+import com.vaadin.shared.tokka.data.selection.SelectionServerRpc;
 import com.vaadin.tokka.event.Handler;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.tokka.server.communication.data.SelectionModel.Single;

@@ -13,26 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.components.field;
 
-import com.vaadin.shared.AbstractFieldState;
-import com.vaadin.shared.annotations.NoLayout;
+package com.vaadin.shared.tokka.ui.components.fields;
 
-public class DateFieldState extends AbstractFieldState {
-    {
-        primaryStyleName = "v-datefield";
-    }
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 
-    /*
-     * Year field
-     */
-    @NoLayout
-    public String value;
+public interface TextFieldServerRpc extends FocusAndBlurServerRpc {
 
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    @NoLayout
-    public String placeholder = "DD-MM-YYYY";
-
+    public void setText(String text);
 }

@@ -13,19 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.data.typed;
+package com.vaadin.shared.tokka.data.selection;
 
-import java.io.Serializable;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
- * Set of contants used by DataProvider. These are commonly used JsonObject keys
- * which are considered to be reserved for internal use.
- * 
- * @since
+ * Simple API for SelectionModel client to server communication
  */
-public final class DataProviderConstants implements Serializable {
-    public static final String KEY = "k";
-    public static final String SELECTED = "s";
-    public static final String NAME = "n";
-    public static final String DATA = "d";
+public interface SelectionServerRpc extends ServerRpc {
+
+    /**
+     * Select an item based on it's key.
+     * 
+     * @param key
+     *            key of item
+     */
+    void select(String key);
+
+    /**
+     * Deselect an item based on it's key.
+     * 
+     * @param key
+     *            key of item
+     */
+    void deselect(String key);
 }

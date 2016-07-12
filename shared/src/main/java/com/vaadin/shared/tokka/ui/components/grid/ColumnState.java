@@ -13,12 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.shared.tokka.ui.components.grid;
 
-package com.vaadin.shared.ui.components.field;
+import com.vaadin.shared.communication.SharedState;
 
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+public class ColumnState extends SharedState {
 
-public interface DateFieldServerRpc extends FocusAndBlurServerRpc {
-
-    void setDate(String value);
+    public String caption;
 }

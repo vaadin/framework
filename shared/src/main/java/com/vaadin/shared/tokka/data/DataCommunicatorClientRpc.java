@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.data.typed;
+package com.vaadin.shared.tokka.data;
 
 import com.vaadin.shared.communication.ClientRpc;
 import elemental.json.JsonArray;

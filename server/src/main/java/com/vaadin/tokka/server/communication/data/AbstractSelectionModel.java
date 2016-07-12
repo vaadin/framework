@@ -16,7 +16,7 @@
 package com.vaadin.tokka.server.communication.data;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.tokka.ui.components.AbstractListing.AbstractListingExtension;
 import com.vaadin.tokka.ui.components.Listing;
 import com.vaadin.ui.Component;

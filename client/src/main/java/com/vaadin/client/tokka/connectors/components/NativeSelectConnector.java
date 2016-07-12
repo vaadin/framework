@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.tokka.connectors.data.HasSelection;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tokka.ui.components.nativeselect.NativeSelect;
 

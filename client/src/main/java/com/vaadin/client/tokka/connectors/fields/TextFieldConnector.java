@@ -23,10 +23,10 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
+import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.components.fields.TextFieldServerRpc;
-import com.vaadin.shared.ui.components.fields.TextFieldState;
 
 @Connect(value = com.vaadin.tokka.ui.components.fields.TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractComponentConnector {

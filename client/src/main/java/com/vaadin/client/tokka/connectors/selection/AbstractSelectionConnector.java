@@ -20,7 +20,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.tokka.connectors.components.AbstractListingConnector;
 import com.vaadin.client.tokka.connectors.data.HasSelection;
 import com.vaadin.client.tokka.data.selection.SelectionModel;
-import com.vaadin.shared.data.typed.DataProviderConstants;
+import com.vaadin.shared.tokka.data.DataProviderConstants;
 
 import elemental.json.JsonObject;
 

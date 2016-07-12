@@ -15,13 +15,11 @@
  */
 package com.vaadin.client.tokka.connectors.selection;
 
-import java.util.logging.Logger;
-
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.tokka.connectors.components.AbstractListingConnector;
 import com.vaadin.client.tokka.data.selection.SelectionModel;
 import com.vaadin.client.tokka.data.selection.SelectionModel.Single;
-import com.vaadin.shared.data.selection.SelectionServerRpc;
+import com.vaadin.shared.tokka.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 
 import elemental.json.JsonObject;
