@@ -103,6 +103,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
             for (String key : droppedKeys) {
                 dropped.set(i++, key);
             }
+            droppedKeys.clear();
 
             getRpcProxy(DataRequestRpc.class).dropRows(dropped);
         }
