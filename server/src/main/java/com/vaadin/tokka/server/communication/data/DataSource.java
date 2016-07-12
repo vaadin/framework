@@ -33,7 +33,7 @@ import com.vaadin.tokka.event.Registration;
  * @param <T>
  *            data type
  */
-public interface DataSource<T, SORT> extends Function<Object, Stream<T>>,
+public interface DataSource<T, SORT> extends Function<Query, Stream<T>>,
         Serializable {
 
     /**

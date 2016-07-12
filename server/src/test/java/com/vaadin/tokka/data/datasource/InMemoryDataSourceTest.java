@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.InMemoryDataSource;
+import com.vaadin.tokka.server.communication.data.Query;
 
 public class InMemoryDataSourceTest {
 
@@ -26,7 +27,7 @@ public class InMemoryDataSourceTest {
 
     @Test
     public void testListContainsAllData() {
-        dataSource.apply(null).forEach(
+        dataSource.apply(new Query()).forEach(
                 str -> assertTrue(
                         "Data source contained values not in original data",
                         data.remove(str)));
@@ -39,7 +40,7 @@ public class InMemoryDataSourceTest {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(StrBean::getRandomNumber)
                 .thenComparing(StrBean::getId);
-        List<StrBean> list = dataSource.sortingBy(comp).apply(null)
+        List<StrBean> list = dataSource.sortingBy(comp).apply(new Query())
                 .collect(Collectors.toList());
 
         // First value in data is { Xyz, 10, 100 } which should be last in list
@@ -60,7 +61,7 @@ public class InMemoryDataSourceTest {
     public void testDefatulSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        List<StrBean> list = dataSource.sortingBy(comp).apply(null)
+        List<StrBean> list = dataSource.sortingBy(comp).apply(new Query())
                 // The sort here should come e.g from a Component
                 .sorted(Comparator.comparing(StrBean::getRandomNumber))
                 .collect(Collectors.toList());
@@ -87,7 +88,7 @@ public class InMemoryDataSourceTest {
     @Test
     public void testDefatulSortWithFunction() {
         List<StrBean> list = dataSource.sortingBy(StrBean::getValue)
-                .apply(null).collect(Collectors.toList());
+                .apply(new Query()).collect(Collectors.toList());
 
         Assert.assertEquals("Sorted data and original data sizes don't match",
                 data.size(), list.size());

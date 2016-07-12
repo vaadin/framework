@@ -23,14 +23,15 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * {@link DataSource} wrapper for {@link Collection}s.
+ * {@link DataSource} wrapper for {@link Collection}s. This class does not
+ * actually handle the {@link Query} parameters.
  *
  * @param <T>
  *            data type
  */
 public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
 
-    private Function<Object, Stream<T>> request;
+    private Function<Query, Stream<T>> request;
 
     /**
      * Constructs a new ListDataSource. This method makes a protective copy of
@@ -52,12 +53,12 @@ public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
      * @param request
      *            request for the new data source
      */
-    protected InMemoryDataSource(Function<Object, Stream<T>> request) {
+    protected InMemoryDataSource(Function<Query, Stream<T>> request) {
         this.request = request;
     }
 
     @Override
-    public Stream<T> apply(Object query) {
+    public Stream<T> apply(Query query) {
         return request.apply(query);
     }
 

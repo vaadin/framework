@@ -17,6 +17,7 @@ package com.vaadin.tokka.server.communication.data;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -194,16 +195,35 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        // FIXME: Sorting and Filtering with Backend
+        List<Object> sortOrders = Collections.emptyList();
+        Set<Object> filters = Collections.emptySet();
+
         if (initial || reset) {
             // FIXME: Rethink the size question.
-            rpc.reset((int) dataSource.apply(null).count());
+            int dataSourceSize = (int) dataSource.apply(
+                    new Query(0, Integer.MAX_VALUE, sortOrders, filters))
+                    .count();
+            rpc.reset(dataSourceSize);
         }
 
         if (!pushRows.isEmpty()) {
-            // FIXME: Query object
-            Stream<T> rowsToPush = dataSource.apply(null)
-                    .skip(pushRows.getStart()).limit(pushRows.length());
-            pushData(pushRows.getStart(), rowsToPush);
+            int offset = pushRows.getStart();
+            int limit = pushRows.length();
+
+            Stream<T> rowsToPush;
+
+            if (dataSource instanceof InMemoryDataSource) {
+                // We can safely request all the data when in memory
+                // FIXME: sorted and filter.
+                rowsToPush = dataSource.apply(new Query()).skip(offset)
+                        .limit(limit);
+            } else {
+                Query query = new Query(offset, limit, sortOrders, filters);
+                rowsToPush = dataSource.apply(query);
+            }
+
+            pushData(offset, rowsToPush);
         }
 
         if (!updatedData.isEmpty()) {
