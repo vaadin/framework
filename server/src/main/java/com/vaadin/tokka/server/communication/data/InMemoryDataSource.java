@@ -72,4 +72,9 @@ public class InMemoryDataSource<T> implements DataSource<T, Comparator<T>> {
             Function<T, U> sortOrder) {
         return sortingBy(Comparator.comparing(sortOrder));
     }
+
+    @Override
+    public boolean isInMemory() {
+        return true;
+    }
 }

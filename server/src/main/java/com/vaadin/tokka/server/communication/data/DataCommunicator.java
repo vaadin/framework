@@ -215,7 +215,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             Stream<T> rowsToPush;
 
-            if (getDataSource() instanceof InMemoryDataSource) {
+            if (getDataSource().isInMemory()) {
                 // We can safely request all the data when in memory
                 // FIXME: sorted and filter.
                 rowsToPush = getDataSource().apply(new Query()).skip(offset)

@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.vaadin.tokka.event.Registration;
-
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
@@ -44,6 +42,14 @@ public interface DataSource<T, SORT> extends Function<Query, Stream<T>>,
      * @return new data source with modified sorting
      */
     DataSource<T, SORT> sortingBy(SORT sortOrder);
+
+    /**
+     * Gets whether the DataSource content all available in memory or does it
+     * use some external backend.
+     * 
+     * @return {@code true} if all data is in memory; {@code false} if not
+     */
+    boolean isInMemory();
 
     /**
      * This method creates a new {@link InMemoryDataSource} from a given
