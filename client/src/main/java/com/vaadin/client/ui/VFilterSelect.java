@@ -870,7 +870,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @param naturalMenuWidth
          */
         private void updateMenuWidth(final int desiredWidth,
-                final int naturalMenuWidth) {
+                int naturalMenuWidth) {
             /**
              * Three different width modes for the suggestion pop-up:
              * 
@@ -885,6 +885,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             String width = "auto";
             if (suggestionPopupWidth == null) {
                 if (naturalMenuWidth < desiredWidth) {
+                    naturalMenuWidth = desiredWidth - popupOuterPadding;
                     width = (desiredWidth - popupOuterPadding) + "px";
                 }
             } else if (isrelativeUnits(suggestionPopupWidth)) {
