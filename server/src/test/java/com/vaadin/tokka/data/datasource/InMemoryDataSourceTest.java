@@ -26,7 +26,12 @@ public class InMemoryDataSourceTest {
 
     @Test
     public void testListContainsAllData() {
-        dataSource.apply(null).forEach(str -> assertTrue(data.contains(str)));
+        dataSource.apply(null).forEach(
+                str -> assertTrue(
+                        "Data source contained values not in original data",
+                        data.remove(str)));
+        assertTrue("Not all values from original data were in data source",
+                data.isEmpty());
     }
 
     @Test
@@ -40,6 +45,9 @@ public class InMemoryDataSourceTest {
         // First value in data is { Xyz, 10, 100 } which should be last in list
         Assert.assertNotEquals("First value should not match", data.get(0),
                 list.get(0));
+
+        Assert.assertEquals("Sorted data and original data sizes don't match",
+                data.size(), list.size());
 
         data.sort(comp);
         for (int i = 0; i < data.size(); ++i) {
@@ -56,6 +64,9 @@ public class InMemoryDataSourceTest {
                 // The sort here should come e.g from a Component
                 .sorted(Comparator.comparing(StrBean::getRandomNumber))
                 .collect(Collectors.toList());
+
+        Assert.assertEquals("Sorted data and original data sizes don't match",
+                data.size(), list.size());
 
         for (int i = 1; i < list.size(); ++i) {
             StrBean prev = list.get(i - 1);
