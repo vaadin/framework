@@ -110,8 +110,6 @@ public abstract class TooltipTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // TODO Once we figure out how to get mouse hovering work with the IE
-        // webdriver, exclude them from these tests (#13854)
-        return getBrowsersExcludingIE();
+        return getBrowsersSupportingTooltip();
     }
 }

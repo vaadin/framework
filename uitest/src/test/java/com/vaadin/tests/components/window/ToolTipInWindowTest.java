@@ -71,7 +71,7 @@ public class ToolTipInWindowTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Test with the same browsers as in the other tooltip tests
-        return getBrowsersExcludingIE();
+        return getBrowsersSupportingTooltip();
     }
 
 }

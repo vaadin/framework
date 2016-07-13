@@ -18,8 +18,11 @@ package com.vaadin.tests.components.grid.basicfeatures;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
 
@@ -69,6 +72,11 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
         getGridElement().getCell(5, 3).showTooltip();
         tooltipText = findElement(By.className("v-tooltip-text")).getText();
         assertEquals("Tooltip text", "Row tooltip for row 5", tooltipText);
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return getBrowsersExcludingFirefox();
     }
 
 }
