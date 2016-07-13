@@ -21,9 +21,8 @@ Field components are built upon the framework defined in the [classname]#Field#
 interface and the [classname]#AbstractField# base class.
 [classname]#AbstractField# is the base class for all field components. In
 addition to the component features inherited from
-[classname]#AbstractComponent#, it implements a number of features defined in
-[classname]#Property#, [classname]#Buffered#, [classname]#Validatable#, and
-[classname]#Component.Focusable# interfaces.
+[classname]#AbstractComponent#, it implements the features defined in the
+[classname]#HasValue# and [classname]#Component.Focusable# interfaces.
 
 The description of the field interfaces and base classes is broken down in the
 following sections.
@@ -36,7 +35,7 @@ image::img/field-interface-v8-hi.png[width=60%, scaledwidth=100%]
 == The [classname]#Field# Interface
 
 The [classname]#Field# interface inherits the [classname]#Component#
-superinterface and also the [classname]#Property# interface to have a value for
+superinterface and also the [classname]#HasValue# interface to have a value for
 the field. [classname]#AbstractField# is the only class implementing the
 [classname]#Field# interface directly. The relationships are illustrated in
 <<figure.components.fields.field>>.
@@ -46,7 +45,7 @@ the field. [classname]#AbstractField# is the only class implementing the
 image::img/field-interface-hi.png[width=60%, scaledwidth=100%]
 
 You can set the field value with the [methodname]#setValue()# and read with the
-[methodname]#getValue()# method defined in the [classname]#Property# interface.
+[methodname]#getValue()# method defined in the [classname]#HasValue# interface.
 The actual value type depends on the component.
 
 The [classname]#Field# interface defines a number of properties, which you can
@@ -67,19 +66,18 @@ displayed in a tooltip when the mouse pointer hovers over the error indicator.
 [[components.fields.databinding]]
 == Data Binding and Conversions
 
-Fields are strongly coupled with the Vaadin data model. The field value is
-handled as a [classname]#Property# of the field component, as documented in
-<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties,"Properties">>.
-Selection fields allow management of the selectable items through the
-[classname]#Container# interface.
+Fields and selects can be coupled with business data objects with the [classname]#Binder# class.
+Select components also allow management of the selectable items through the
+[classname]#DataSource# interface. [classname]#Binder# and [classname]#DataSource#
+can be thought of as bridges between the __presentation__ and __model__ architectural layers.
 
-Fields are __editors__ for some particular type. For example,
+Fields are __editors__ for values of some particular type. For example,
 [classname]#TextField# allows editing [classname]#String# values. When bound to
-a data source, the property type of the data model can be something different,
+a data source, the type of the source property can be something different,
 say an [classname]#Integer#. __Converters__ are used for converting the values
-between the representation and the model. They are described in
+between the presentation and the model. They are described in
 <<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
-Between Property Type and Representation">>.
+Between Model and Presentation Types">>.
 
 
 [[components.fields.valuechanges]]
