@@ -15,9 +15,11 @@
  */
 package com.vaadin.tokka.ui.components.grid;
 
+import java.util.Comparator;
 import java.util.function.Function;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.tokka.ui.components.grid.ColumnState;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
@@ -93,5 +95,18 @@ public class Column<T, V> extends AbstractExtension implements
 
     public String getCaption() {
         return getState(false).caption;
+    }
+
+    Comparator<T> getComparator(SortDirection sortDirection) {
+        Comparator<T> c = new Comparator<T>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public int compare(T o1, T o2) {
+                Comparable<V> comp = (Comparable<V>) getter.apply(o1);
+                return comp.compareTo(getter.apply(o2));
+            }
+        };
+        return sortDirection == SortDirection.ASCENDING ? c : c.reversed();
     }
 }

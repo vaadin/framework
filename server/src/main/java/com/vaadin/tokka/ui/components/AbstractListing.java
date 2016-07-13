@@ -37,7 +37,7 @@ public abstract class AbstractListing<T> extends AbstractComponent implements
     /**
      * Helper base class for creating extensions for Listing components. This
      * class provides helpers for accessing the underlying parts of the
-     * component and it's communicational mechanism.
+     * component and its communicational mechanism.
      *
      * @param <T>
      *            listing data type

@@ -10,13 +10,14 @@ public class GridSortable extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Grid<Bean> grid = new Grid<Bean>();
-        grid.addColumn("Never sortable", Bean::getValue).setSortable(false);
+        grid.addColumn("Sortable String", Bean::getValue);
         grid.addColumn("Sortable Integer", Bean::getIntVal);
-        grid.addColumn("Sortable toString()", Bean::toString);
+        grid.addColumn("Not sortable toString()", Bean::toString).setSortable(
+                false);
 
-        grid.setDataSource(DataSource.create(Bean.generateRandomBeans()));
+        grid.setDataSource(DataSource.create(new Bean("Foo", 0), new Bean(
+                "Bar", 1), new Bean("Bar", 0)));
 
         addComponent(grid);
     }
-
 }

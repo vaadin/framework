@@ -15,6 +15,7 @@
  */
 package com.vaadin.tokka.ui.components.grid;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,15 +42,32 @@ public class Grid<T> extends AbstractListing<T> {
             public void setSortOrder(List<String> columnIds,
                     List<SortDirection> sortDirections) {
                 assert columnIds.size() == sortDirections.size() : "Column and sort direction counts don't match.";
-                Map<Column<T, ?>, SortDirection> sortOrder = new LinkedHashMap<>();
-                for (int i = 0; i < columnIds.size(); ++i) {
-                    sortOrder.put(columnKeys.get(columnIds.get(i)),
-                            sortDirections.get(i));
+                if (columnIds.size() == 0) {
+                    // Somehow there's suddenly no sort order anymore..
+                    return;
                 }
-                // FIXME: Handle the sortOrder map so DataSource can understand
-                sortOrder.forEach((col, dir) -> System.err
-                        .println("Sorting column: " + col.getCaption() + " to "
-                                + dir));
+
+                if (getDataCommunicator().getDataSource().isInMemory()) {
+                    Comparator<T> c = columnKeys.get(columnIds.get(0))
+                            .getComparator(sortDirections.get(0));
+                    for (int i = 1; i < columnIds.size(); ++i) {
+                        c = c.thenComparing(columnKeys.get(columnIds.get(i))
+                                .getComparator(sortDirections.get(i)));
+                    }
+                    getDataCommunicator().setInMemorySorting(c);
+                } else {
+                    Map<Column<T, ?>, SortDirection> sortOrder = new LinkedHashMap<>();
+                    for (int i = 0; i < columnIds.size(); ++i) {
+                        sortOrder.put(columnKeys.get(columnIds.get(i)),
+                                sortDirections.get(i));
+                    }
+                    // FIXME: Handle the sortOrder map so DataSource can
+                    // understand
+                    sortOrder.forEach((col, dir) -> System.err
+                            .println("Sorting column: " + col.getCaption()
+                                    + " to " + dir));
+                }
+
             }
         });
     }

@@ -18,6 +18,7 @@ package com.vaadin.tokka.server.communication.data;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -177,6 +178,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
     private Range pushRows = Range.withLength(0, 40);
+    private Comparator<T> inMemorySorting;
 
     public DataCommunicator() {
         addDataGenerator(handler);
@@ -218,8 +220,11 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (getDataSource().isInMemory()) {
                 // We can safely request all the data when in memory
                 // FIXME: sorted and filter.
-                rowsToPush = getDataSource().apply(new Query()).skip(offset)
-                        .limit(limit);
+                rowsToPush = getDataSource().apply(new Query());
+                if (inMemorySorting != null) {
+                    rowsToPush = rowsToPush.sorted(inMemorySorting);
+                }
+                rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
                 Query query = new Query(offset, limit, sortOrders, filters);
                 rowsToPush = getDataSource().apply(query);
@@ -380,6 +385,11 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         updatedData.add(data);
+    }
+
+    public void setInMemorySorting(Comparator<T> comparator) {
+        inMemorySorting = comparator;
+        reset();
     }
 
     /**
