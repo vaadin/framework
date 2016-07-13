@@ -2526,6 +2526,9 @@ public class Grid<T> extends ResizeComposite implements
          */
         private void setCellFocus(int rowIndex, int columnIndexDOM,
                 RowContainer container) {
+            if (container == null){
+                return;
+            }
             if (rowIndex == rowWithFocus
                     && cellFocusRange.contains(columnIndexDOM)
                     && container == this.containerWithFocus) {
