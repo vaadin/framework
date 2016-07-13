@@ -139,15 +139,11 @@ Layouts">>, and theme resources in
 <<dummy/../../../framework/application/application-resources#application.resources.theme,"Theme
 Resources">>.
 
-Data Binding:: Field components are essentially views to data, represented in the __Vaadin Data
-Model__. Using the data model, the components can get their values from and
-update user input to the data model directly, without the need for any control
-code. A field component is always bound to a __property__ and a group of fields
-to an __item__ that holds the properties. Items can be collected in a
-__container__, which can act as a data source for some components such as tables
-or lists. While all the components have a default data model, they can be bound
-to a user-defined data source. For example, you can bind a [classname]#Table#
-component to an SQL query response. For a complete overview of data binding in
-Vaadin, please refer to
+Data Binding:: With data binding, any Vaadin field component can be bound to the properties
+of business objects such as JavaBeans and grouped together as forms. The components
+can get their values from and update user input to the data model directly, without
+the need for any control code. Similarly, any select component can be bound to a
+__data source__, fetching its items from a Java Collection or a backend such as an SQL database.
+For a complete overview of data binding in Vaadin, please refer to
 <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.
