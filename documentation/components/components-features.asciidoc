@@ -620,8 +620,8 @@ above methods. The available units are listed in
 
 [source, java]
 ----
-mycomponent.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-mycomponent.setWidth(400, Sizeable.UNITS_PIXELS);
+mycomponent.setWidth(100, Unit.PERCENTAGE);
+mycomponent.setWidth(400, Unit.PIXELS);
 ----
 
 Alternatively, you can speficy the size as a string. The format of such a string
@@ -636,16 +636,15 @@ mycomponent.setHeight("400px");
 
 The "[literal]#++100%++#" percentage value makes the component take all
 available size in the particular direction (see the description of
-[parameter]#Sizeable.UNITS_PERCENTAGE# in the table below). You can also use the
+[parameter]#Unit.PERCENTAGE# in the table below). You can also use the
 shorthand method [methodname]#setSizeFull()# to set the size to 100% in both
 directions.
 
 The size can be __undefined__ in either or both dimensions, which means that the
 component will take the minimum necessary space. Most components have undefined
 size by default, but some layouts have full size in horizontal direction. You
-can set the height or width as undefined with
-[parameter]#Sizeable.SIZE_UNDEFINED# parameter for [methodname]#setWidth()# and
-[methodname]#setHeight()#.
+can set the height, width, or both as undefined with the methods [methodname]#setWidthUndefined()#,
+[methodname]#setHeightUndefined()#, and [methodname]#setHeightUndefined()#, respectively.
 
 Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
