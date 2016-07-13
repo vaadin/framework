@@ -43,12 +43,17 @@ public class ColumnConnector extends AbstractExtensionConnector {
                         getState().communicationId);
             }
         };
-        getParent().addColumn(column);
+        getParent().addColumn(column, getState().communicationId);
     }
 
     @OnStateChange("caption")
     void updateCaption() {
         column.setHeaderCaption(getState().caption);
+    }
+
+    @OnStateChange("sortable")
+    void updateSortable() {
+        column.setSortable(getState().sortable);
     }
 
     @Override

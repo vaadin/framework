@@ -33,10 +33,14 @@ public class Column<T, V> extends AbstractExtension implements
     Column(String caption, Function<T, V> getter) {
         this.getter = getter;
         getState().caption = caption;
+        getState().sortable = true;
     }
 
     @Override
     public void generateData(T data, JsonObject jsonObject) {
+        assert getState(false).communicationId != null : "No communication ID set for column "
+                + getState(false).caption;
+
         if (!jsonObject.hasKey(DataProviderConstants.DATA)) {
             jsonObject.put(DataProviderConstants.DATA, Json.createObject());
         }
@@ -63,5 +67,31 @@ public class Column<T, V> extends AbstractExtension implements
 
     void setCommunicationId(String key) {
         getState().communicationId = key;
+    }
+
+    /**
+     * Sets whether the user can sort this Column or not.
+     * 
+     * @param sortable
+     *            is column sortable
+     * @return the column
+     */
+    public Column<T, V> setSortable(boolean sortable) {
+        getState().sortable = sortable;
+        return this;
+    }
+
+    /**
+     * Returns the state of sorting for this Column.
+     * 
+     * @return {@code true} if column can be sorted by user; {@code false} if
+     *         not
+     */
+    public boolean isSortable() {
+        return getState(false).sortable;
+    }
+
+    public String getCaption() {
+        return getState(false).caption;
     }
 }

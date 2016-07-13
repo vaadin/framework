@@ -15,11 +15,13 @@
  */
 package com.vaadin.shared.tokka.ui.components.grid;
 
-import com.vaadin.shared.communication.SharedState;
+import java.util.List;
 
-public class ColumnState extends SharedState {
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.data.sort.SortDirection;
 
-    public String caption;
-    public String communicationId;
-    public boolean sortable;
+public interface GridServerRpc extends ServerRpc {
+
+    void setSortOrder(List<String> columnIds, List<SortDirection> sortDirections);
+
 }

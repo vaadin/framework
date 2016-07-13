@@ -15,7 +15,11 @@
  */
 package com.vaadin.client.tokka.connectors.components.grid;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.Renderer;
@@ -23,8 +27,13 @@ import com.vaadin.client.tokka.connectors.components.AbstractListingConnector;
 import com.vaadin.client.tokka.connectors.data.HasSelection;
 import com.vaadin.client.tokka.data.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
+import com.vaadin.client.widget.grid.sort.SortEvent;
+import com.vaadin.client.widget.grid.sort.SortHandler;
+import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.tokka.ui.components.grid.GridServerRpc;
 import com.vaadin.shared.ui.Connect;
 
 import elemental.json.JsonObject;
@@ -103,6 +112,9 @@ public class GridConnector extends AbstractListingConnector implements
         }
     }
 
+    /* Map to keep track of all added columns */
+    private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
+
     @Override
     public Grid<JsonObject> getWidget() {
         return (Grid<JsonObject>) super.getWidget();
@@ -113,6 +125,22 @@ public class GridConnector extends AbstractListingConnector implements
         super.init();
 
         new ClickSelectHandler<JsonObject>(getWidget());
+        getWidget().addSortHandler(new SortHandler<JsonObject>() {
+
+            @Override
+            public void sort(SortEvent<JsonObject> event) {
+                List<String> columnIds = new ArrayList<>();
+                List<SortDirection> sortDirections = new ArrayList<>();
+                for (SortOrder so : event.getOrder()) {
+                    if (columnToIdMap.containsKey(so.getColumn())) {
+                        columnIds.add(columnToIdMap.get(so.getColumn()));
+                        sortDirections.add(so.getDirection());
+                    }
+                    getRpcProxy(GridServerRpc.class).setSortOrder(columnIds,
+                            sortDirections);
+                }
+            }
+        });
     }
 
     @Override
@@ -128,11 +156,16 @@ public class GridConnector extends AbstractListingConnector implements
                 .setSelectionModel(new SelectionModelAdapter(selectionModel));
     }
 
-    public void addColumn(Column<?, JsonObject> column) {
+    public void addColumn(Column<?, JsonObject> column, String id) {
+        assert !columnToIdMap.containsKey(column)
+                && !columnToIdMap.containsValue(id) : "Column with given id already exists.";
         getWidget().addColumn(column);
+        columnToIdMap.put(column, id);
     }
 
     public void removeColumn(Column<?, JsonObject> column) {
+        assert columnToIdMap.containsKey(column) : "Given Column does not exist.";
         getWidget().removeColumn(column);
+        columnToIdMap.remove(column);
     }
 }

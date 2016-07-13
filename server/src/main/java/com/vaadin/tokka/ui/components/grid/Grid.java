@@ -16,9 +16,14 @@
 package com.vaadin.tokka.ui.components.grid;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.tokka.ui.components.grid.GridServerRpc;
 import com.vaadin.tokka.server.communication.data.KeyMapper;
 import com.vaadin.tokka.server.communication.data.SingleSelection;
 import com.vaadin.tokka.ui.components.AbstractListing;
@@ -30,6 +35,23 @@ public class Grid<T> extends AbstractListing<T> {
 
     public Grid() {
         setSelectionModel(new SingleSelection<T>());
+        registerRpc(new GridServerRpc() {
+
+            @Override
+            public void setSortOrder(List<String> columnIds,
+                    List<SortDirection> sortDirections) {
+                assert columnIds.size() == sortDirections.size() : "Column and sort direction counts don't match.";
+                Map<Column<T, ?>, SortDirection> sortOrder = new LinkedHashMap<>();
+                for (int i = 0; i < columnIds.size(); ++i) {
+                    sortOrder.put(columnKeys.get(columnIds.get(i)),
+                            sortDirections.get(i));
+                }
+                // FIXME: Handle the sortOrder map so DataSource can understand
+                sortOrder.forEach((col, dir) -> System.err
+                        .println("Sorting column: " + col.getCaption() + " to "
+                                + dir));
+            }
+        });
     }
 
     public <V> Column<T, V> addColumn(String caption, Function<T, V> getter) {
