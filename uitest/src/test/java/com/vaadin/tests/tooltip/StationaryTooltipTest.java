@@ -19,10 +19,7 @@ public class StationaryTooltipTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // With IEDriver, the cursor seems to jump to default position after the
-        // mouse move,
-        // so we are not able to test the tooltip behaviour properly.
-        return getBrowsersExcludingIE();
+        return getBrowsersSupportingTooltip();
     }
 
     @Test

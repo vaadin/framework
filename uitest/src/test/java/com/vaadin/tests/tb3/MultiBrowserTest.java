@@ -57,6 +57,13 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
                 Browser.PHANTOMJS);
     }
 
+    protected List<DesiredCapabilities> getBrowsersExcludingFirefox() {
+        // this is sometimes needed as the Firefox driver causes extra mouseOut
+        // events that make tooltips disappear etc.
+        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
+                Browser.IE11, Browser.CHROME, Browser.PHANTOMJS);
+    }
+
     protected List<DesiredCapabilities> getBrowsersExcludingIE8() {
         return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
                 Browser.FIREFOX, Browser.CHROME, Browser.PHANTOMJS);
@@ -77,6 +84,17 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // and selenium.
         return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
                 Browser.FIREFOX, Browser.CHROME);
+    }
+
+    protected List<DesiredCapabilities> getBrowsersSupportingTooltip() {
+        // With IEDriver, the cursor seems to jump to default position after the
+        // mouse move, so we are not able to test the tooltip behaviour properly
+        // unless using requireWindowFocusForIE() { return true; } .
+        // See #13854.
+        // On Firefox, the driver causes additional mouseOut events causing the
+        // tooltip to disappear immediately. Tooltips may work in some
+        // particular cases, but not in general.
+        return getBrowserCapabilities(Browser.CHROME, Browser.PHANTOMJS);
     }
 
     @Override
