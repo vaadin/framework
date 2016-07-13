@@ -35,4 +35,7 @@ public interface UIServerRpc extends ClickRpc, ServerRpc {
      * should always be called to ensure the message is flushed right away.
      */
     public void poll();
+
+    @NoLoadingIndicator
+    public void acknowledge();
 }

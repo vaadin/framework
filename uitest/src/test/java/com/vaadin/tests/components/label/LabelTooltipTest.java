@@ -16,10 +16,12 @@
 package com.vaadin.tests.components.label;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -69,4 +71,11 @@ public class LabelTooltipTest extends MultiBrowserTest {
         /* Visual comparison */
         compareScreen("tooltipVisible");
     }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // this test also works on IEs, but Firefox has problems with tooltips
+        return getBrowsersExcludingFirefox();
+    }
+
 }

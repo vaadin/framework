@@ -269,7 +269,7 @@
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.err\.println" />
         </module>
-
+        
     </module>
 
 </module>

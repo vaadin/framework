@@ -43,12 +43,12 @@ linkend="advanced.windows.caveats"/&gt;.
 ////
 
 [[advanced.windows.popup]]
-== Opening Popup Windows
+== Opening Pop-up Windows
 
 ((("popup windows")))
 ((("windows", "popup")))
-Popup windows are native browser windows or tabs opened by user interaction with
-an existing window. Due to browser security reasons, it is made incovenient for
+Pop-up windows are native browser windows or tabs opened by user interaction with
+an existing window. Due to browser security reasons, it is made inconvenient for
 a web page to open popup windows using JavaScript commands. At the least, the
 browser will ask for a permission to open the popup, if it is possible at all.
 This limitation can be circumvented by letting the browser open the new window
@@ -57,7 +57,7 @@ Vaadin with the [classname]#BrowserWindowOpener# component extension, which
 causes the browser to open a window or tab when the component is clicked.
 
 [[advanced.windows.popup.ui]]
-=== The Popup Window UI
+=== The Pop-up Window UI
 
 A popup Window displays an [classname]#UI#. The UI of a popup window is defined
 just like a main UI in a Vaadin application, and it can have a theme, title, and

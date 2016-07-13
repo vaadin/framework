@@ -19,7 +19,7 @@ follows:
 
 ----
 @include font(MyFontFamily,
-              '../../mytheme/fonts/myfontfamily');
+              '../../../../mytheme/fonts/myfontfamily');
 ----
 
 The statement must be given in the [filename]#styles.scss# file __outside__ the

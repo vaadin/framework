@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * An enabled/disabled event, fired by the Grid when it is disabled or enabled.
  *
- * @since
+ * @since 7.7
  * @author Vaadin Ltd
  */
 public class GridEnabledEvent extends GwtEvent<GridEnabledHandler> {

@@ -507,7 +507,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             // Repaint is needed even when the client thinks that it knows the
             // new state if validity of the component may change
             if (repaintIsNotNeeded
-                    && (isRequired() || getValidators() != null || getConverter() != null)) {
+                    && (isRequired() || hasValidators() || getConverter() != null)) {
                 repaintIsNotNeeded = false;
             }
 
@@ -883,6 +883,10 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         } else {
             return Collections.unmodifiableCollection(validators);
         }
+    }
+
+    private boolean hasValidators() {
+        return validators != null && !validators.isEmpty();
     }
 
     /**

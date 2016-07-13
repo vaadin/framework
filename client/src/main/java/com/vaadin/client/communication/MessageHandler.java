@@ -493,8 +493,12 @@ public class MessageHandler {
                             json.getValueMap("dd"));
                 }
 
-                unregisterRemovedConnectors(connectorHierarchyUpdateResult.detachedConnectorIds);
-
+                int removed = unregisterRemovedConnectors(connectorHierarchyUpdateResult.detachedConnectorIds);
+                if (removed > 0 && !isResponse(json)) {
+                    // Must acknowledge the removal using an XHR or server
+                    // memory usage will keep growing
+                    getUIConnector().sendAck();
+                }
                 getLogger()
                         .info("handleUIDLMessage: "
                                 + (Duration.currentTimeMillis() - processUidlStart)
@@ -802,12 +806,13 @@ public class MessageHandler {
                 Profiler.leave("verifyConnectorHierarchy - this is only performed in debug mode");
             }
 
-            private void unregisterRemovedConnectors(
+            private int unregisterRemovedConnectors(
                     FastStringSet detachedConnectors) {
                 Profiler.enter("unregisterRemovedConnectors");
 
                 JsArrayString detachedArray = detachedConnectors.dump();
-                for (int i = 0; i < detachedArray.length(); i++) {
+                int nrDetached = detachedArray.length();
+                for (int i = 0; i < nrDetached; i++) {
                     ServerConnector connector = getConnectorMap().getConnector(
                             detachedArray.get(i));
 
@@ -822,10 +827,10 @@ public class MessageHandler {
                     verifyConnectorHierarchy();
                 }
 
-                getLogger().info(
-                        "* Unregistered " + detachedArray.length()
-                                + " connectors");
+                getLogger()
+                        .info("* Unregistered " + nrDetached + " connectors");
                 Profiler.leave("unregisterRemovedConnectors");
+                return nrDetached;
             }
 
             private JsArrayString createConnectorsIfNeeded(ValueMap json) {

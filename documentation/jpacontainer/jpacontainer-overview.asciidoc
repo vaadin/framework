@@ -7,6 +7,12 @@ layout: page
 [[jpacontainer.overview]]
 = Overview
 
+NOTE: Using JPAContainer is no longer recommended.
+While it works for simple data models, it is not as easy to use as it should be.
+It also has architectural weaknesses and performance issues that cause problems in building more complex applications.
+Instead, we recommend using JPA directly, while hiding it from your UI logic behind a DAO or service class.
+In UI code, you should mainly handle beans and collections of beans, bound to a [classname]#BeanItemContainer#. You should also note the https://vaadin.com/directory#!addon/viritin[Viritin] add-on, which provides data binding features that help with JPA.
+
 Vaadin JPAContainer add-on makes it possible to bind user interface components
 to a database easily using the Java Persistence API (JPA). It is an
 implementation of the [interfacename]#Container# interface described in
@@ -116,8 +122,3 @@ following documentation about JPAContainer:
 * JPAContainer AddressBook Demo
 
 * JPAContainer Demo
-
-
-
-
-

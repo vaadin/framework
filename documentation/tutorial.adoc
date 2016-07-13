@@ -47,6 +47,10 @@ No extensive knowledge of Java is needed, only basic programming skills are requ
 [[framework.tutorial.overview]]
 == Overview
 
+You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
+Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
+To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
+
 In this tutorial, we build a simple customer management system.
 It is not a real application; we use an in-memory "back-end", so that you can understand how to hook it to an existing Java based back-end.
 We cover the basic Vaadin development and you can use the result as a basis for more experiments with Vaadin, such as using add-ons, your own custom look-and- feel (aka. theme), adding new views, or optimizing the result for mobile support.
@@ -55,10 +59,9 @@ We cover the basic Vaadin development and you can use the result as a basis for 
 .UI to be built in the tutorial
 image::img/finalUI.jpg[]
 
-You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
-Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
-To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
 If you do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
+
+TIP: In addition to this written tutorial, we have recorded the steps as https://www.youtube.com/playlist?list=PLcRrh9hGNalkIgvImLRO9u3D0YpmEWuqo[a series of videos]. You can just watch all the videos or watch the video of each step before you do the same step yourself.
 
 [[framework.tutorial.overview.tools]]
 === Installing the Development Tools
@@ -71,10 +74,14 @@ SE site].
 Also make sure you have the latest version of your IDE.
 Eclipse is available in various packages; be sure to download the *Eclipse IDE for Java EE Developers* from http://www.eclipse.org/downloads/[eclipse.org].
 
-Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for information regarding installing the tools.
+Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools or watch the video of the next step.
 
 [[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
+
+You can get an overview of this step with the following video, which first shows how to install Eclipse, then how to create a Vaadin application using Maven, and finally how to run it:
+
+video::jhgasF5euxg[youtube, width="640", height="400"]
 
 As the starting point for the application, we use a Maven archetype called `vaadin-archetype-application`.
 Archetypes are project stubs that have some example code and a basic Maven build script.
@@ -233,11 +240,19 @@ history/Debug history > Run in Jetty".
 
 To get back to the _Java EE Perspective_, an Eclipse mode designed for editing Java web app code, click the [guibutton]#Java EE# button in the toolbar.
 
+The following video shows how to implement a _Hello World_ application from scratch:
+
+video::9-qwPfpSHWc[youtube, width="640", height="400"]
+
 [[framework.tutorial.backend]]
 == Adding a demo "backend"
 
 Before getting more into real Vaadin development, let us introduce some domain objects and a "fake backend".
 In a real-world application, you will most likely have something similar, implemented with, for example, JPA and EJB or a Spring-based service.
+
+The following video covers steps 3 and 4 (<<framework.tutorial.grid>>) of this tutorial:
+
+video::0W0frepDKWI[youtube, width="640", height="400"]
 
 Copy the following three classes from github to your project.
 Class names point to the classes hosted in Github.
@@ -382,14 +397,18 @@ A search functionality is expected in every modern application and it is
 also a nice Vaadin development exercise. Let's add a filtering functionality to
 the Customer listing we created in the previous step.
 
-We'll start by introducing a TextField component as a field to our UI class:
+The following video shows how to do this step of the tutorial:
+
+video::fAeC_mZH_7w[youtube, width="640", height="400"]
+
+We'll start by introducing a [classname]#TextField# component as a field to our [classname]#UI# class:
 
 [source,java]
 ----
     private TextField filterText = new TextField();
 ----
 
-In the _init_ method, configure the text field to contain a helpful input prompt
+In the [methodname]#init()# method, configure the text field to contain a helpful input prompt
 and add a text change listener to the field. The exact place of these lines is
 not important, but add them, for example, after you have introduced the _layout_
 object.
@@ -690,6 +709,10 @@ where you'll build the form UI programmatically in plain Java. If you already
 completed the step using Vaadin Designer, you can proceed to
 <<Connecting the form to the application>>.
 
+The following video shows how to create a form using plain Java:
+
+video::OA6-lSxiXO0[youtube, width="640", height="400"]
+
 Start by creating a new Java class with the name CustomerForm. In Eclipse right
 click on the "my.vaadin.app" package and choose menu:New[Class]. Type in the
 name _CustomerForm_, define the superclass as _com.vaadin.ui.FormLayout_ and
@@ -862,6 +885,10 @@ TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archiv
 In this part, we'll use the CustomerForm class, which we created in the
 previous step, from the MyUI class. We will use it for both editing the existing
 customers and creating new ones.
+
+The following video shows how to do this step of the tutorial:
+
+video::HuhhsI0GJNc[youtube, width="640", height="400"]
 
 In the previous part, we already added the form to the _MyUI_ to see what it looks
 like. By default, we want it to be invisible, so let's first hide it

@@ -14,9 +14,8 @@ endif::web[]
 
 ((("[classname]#TextField#", id="term.components.textfield", range="startofrange")))
 
-[classname]#TextField# is one of the most commonly used user interface
-components. It is a [classname]#Field# component that allows entering textual
-values using keyboard.
+[classname]#TextField# is one of the most commonly used user interface components.
+It is a [classname]#Field# component that allows entering textual values with keyboard.
 
 The following example creates a simple text field:
 
@@ -24,7 +23,7 @@ The following example creates a simple text field:
 ----
 // Create a text field
 TextField tf = new TextField("A Field");
-        
+
 // Put some initial content in it
 tf.setValue("Stuff in the field");
 ----
@@ -34,7 +33,7 @@ The result is shown in <<figure.components.textfield.basic>>.
 
 [[figure.components.textfield.basic]]
 .[classname]#TextField# Example
-image::img/textfield-example.png[]
+image::img/textfield-example.png[width=40%, scaledwidth=50%]
 
 Value changes are handled with a [classname]#Property.ValueChangeListener#, as
 in most other fields. The value can be acquired with [methodname]#getValue()#
@@ -69,7 +68,7 @@ single-line text fields.
 
 [[figure.components.textfield.api]]
 .Text Field Class Relationships
-image::img/textfield-diagram-hi.png[width=50%]
+image::img/textfield-diagram-hi.png[width=40%, scaledwidth=70%]
 
 [[components.textfield.databinding]]
 == Data Binding
@@ -85,11 +84,11 @@ Between Property Type and Representation">>.
 // doesn't support assignment from String, the object is
 // reconstructed in the wrapper when the value is changed.
 Double trouble = 42.0;
-        
+
 // Wrap it in a property data source
 final ObjectProperty<Double> property =
     new ObjectProperty<Double>(trouble);
-        
+
 // Create a text field bound to it
 // (StringToDoubleConverter is used automatically)
 TextField tf = new TextField("The Answer", property);
@@ -146,8 +145,7 @@ values. In such case, you might want to show a special value that stands for the
 null value. You can set the null representation with the
 [methodname]#setNullRepresentation()# method. Most typically, you use an empty
 string for the null representation, unless you want to differentiate from a
-string that is explicitly empty. The default null representation is "
-[literal]#++null++#", which essentially warns that you may have forgotten to
+string that is explicitly empty. The default null representation is "[literal]#null#", which essentially warns that you may have forgotten to
 initialize your data objects properly.
 
 ((("[methodname]#setNullSettingAllowed()#")))
@@ -180,7 +178,7 @@ interface is shown in <<figure.components.textfield.nullvalues>>.
 
 [[figure.components.textfield.nullvalues]]
 .Null Value Representation
-image::img/textfield-nullrepresentation.png[]
+image::img/textfield-nullrepresentation.png[width=35%, scaledwidth=50%]
 
 (((range="endofrange", startref="term.components.textfield.nullvalues")))
 
@@ -231,7 +229,7 @@ The result is shown in <<figure.components.textfield.textchangeevents>>.
 
 [[figure.components.textfield.textchangeevents]]
 .Text Change Events
-image::img/textfield-textchangeevents.png[]
+image::img/textfield-textchangeevents.png[width=35%, scaledwidth=50%]
 
 The __text change event mode__ defines how quickly the changes are transmitted
 to the server and cause a server-side event. Lazier change events allow sending

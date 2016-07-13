@@ -21,7 +21,6 @@ You can give the label text most conviniently in the constructor, as is done in
 the following. Label has 100% default width, so the containing layout must also
 have defined width.
 
-
 [source, java]
 ----
 // A container that is 100% wide by default
@@ -36,13 +35,12 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.basic[
 accessing the text value, so you can get and set the text with
 [methodname]#getValue()# and [methodname]#setValue()#.
 
-
 [source, java]
 ----
 // Get the label's text to initialize a field
 TextField editor = new TextField(null, // No caption
                                  label.getValue());
-        
+
 // Change the label's text
 editor.addValueChangeListener(event -> // Java 8
     label.setValue(editor.getValue()));
@@ -91,7 +89,7 @@ width of [classname]#Label# is the default 100%, the text in the
 
 [[figure.components.label]]
 .The Label Component
-image::img/label-example1.png[]
+image::img/label-example1.png[width=50%, scaledwidth=75%]
 
 Setting [classname]#Label# to undefined width will cause it to not wrap at the
 end of the line, as the width of the content defines the width. If placed inside
@@ -162,7 +160,7 @@ Label textLabel = new Label(
 Label preLabel = new Label(
     "Preformatted text is shown in an HTML <pre> tag.\n" +
     "Formatting such as\n" +
-    "  * newlines\n" + 
+    "  * newlines\n" +
     "  * whitespace\n" +
     "and such are preserved. HTML tags, \n"+
     "such as <b>bold</b>, are quoted.",
@@ -184,7 +182,7 @@ The rendering will look as shown in <<figure.components.label.content-mode>>.
 
 [[figure.components.label.content-mode]]
 .Label Content Modes
-image::img/label-modes.png[]
+image::img/label-modes.png[width=75%, scaledwidth=100%]
 
 
 ifdef::web[]
@@ -266,7 +264,7 @@ You can specify the data source either in the constructor or by the
 // Some property
 ObjectProperty<String> property =
     new ObjectProperty<String>("some value");
-        
+
 // Label that is bound to the property
 Label label = new Label(property);
 ----
@@ -305,7 +303,3 @@ would be delegated through the label.
 The [classname]#Label# component has a [literal]#++v-label++# overall style. In
 the [parameter]#PREFORMATTED# content mode, the text is wrapped inside a
 [literal]#++<pre>++# element.
-
-
-
-

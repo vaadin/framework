@@ -18,20 +18,16 @@ them when deploying the application.
 You can purchase add-ons or obtain a free trial key from the Vaadin website. You
 need to register in the website to obtain a key.
 
-You can get license keys from
-link:https://vaadin.com/pro/licenses[vaadin.com/pro/licenses], where you can
-navigate by selecting in the Vaadin website "My Account > Licenses" or directly
+You can get license keys from link:https://vaadin.com/pro/licenses[vaadin.com/pro/licenses].
+
+. Select in the Vaadin website "My Account > Licenses" or directly
 [menuchoice]#Licenses# if you are a Pro Tools subscriber.
++
+image::img/cval-pro-licenses-3.png[width=80%, scaledwidth=100%]
 
-[[figure.addons.cval.obtaining]]
-.Obtaining CVAL License
-image::img/cval-pro-licenses-3.png[]
-
-Click on a license key to obtain the purchased or trial key.
-
-[[figure.addons.cval.obtaining]]
-.Obtaining CVAL License Key
-image::img/cval-pro-licenses-code.png[]
+. Click on a license key to obtain the purchased or trial key.
++
+image::img/cval-pro-licenses-code.png[width=80%, scaledwidth=100%]
 
 
 [[addons.cval.installing]]
@@ -63,8 +59,11 @@ usually with a [literal]#++-D++# option. For example, on the command-line:
 
 [subs="normal"]
 ----
-[prompt]#$# [command]#java# -D[parameter]#vaadin.[replaceable]+++#+++&lt;product&gt;+++#+++.developer.license#=[replaceable]#L1cen5e-c0de# ...
+[prompt]#$# [command]#java# -Dvaadin.[replaceable]##<product>##.developer.license=[replaceable]#L1cen5e-c0de# ...
 ----
+
+where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, `designer`, or `testbench`.
+
 ifdef::web[]
 See link:https://vaadin.com/directory/help/installing-cval-license[the CVAL
 license key installation instructions] for more details.
@@ -82,10 +81,7 @@ navigate to the "Java > Installed JREs" section. Select the JRE version that you
 use for the application and click [guibutton]#Edit#. In the [guilabel]#Default
 VM arguments#, give the [parameter]#-D# expression as shown above.
 
-Apache Ant:: If compiling the project with Apache Ant, you could set the key in the Ant
-script as follows:
-
-
+Apache Ant:: If compiling the project with Apache Ant, you could set the key in the Ant script as follows:
 +
 [subs="normal"]
 ----
@@ -97,8 +93,6 @@ However, you should never store license keys in a source repository, so if the
 Ant script is stored in a source repository, you should pass the license key to
 Ant as a property that you then use in the script for the value argument of the
 [literal]#++<sysproperty>++# as follows:
-
-
 +
 [subs="normal"]
 ----
@@ -109,23 +103,16 @@ Ant as a property that you then use in the script for the value argument of the
 When invoking Ant from the command-line, you can pass the property with a
 [parameter]#-D# parameter to Ant.
 
-Apache Maven:: If building the project with Apache Maven, you can pass the license key with a
-[literal]#++-D++# parameter to Maven:
-
-
+Apache Maven:: If building the project with Apache Maven, you can pass the license key with a [literal]#++-D++# parameter to Maven:
 +
 [subs="normal"]
 ----
-[prompt]#$# [command]#mvn# -D[parameter]#vaadin.[replaceable]+++#+++&lt;product&gt;+++#+++.developer.license#=[replaceable]#L1cen5e-c0de# package
+[prompt]#$# [command]#mvn# -Dvaadin.[replaceable]##&lt;product&gt;##.developer.license=[replaceable]##L1cen5e-c0de## package
 ----
++
+where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, `designer`, or `testbench`.
+
 Continuous Integration Systems:: In CIS systems, you can pass the license key to build runners as a system
 property in the build configuration. However, this only passes it to a runner.
 As described above, Ant does not pass it to sub-processes implicitly, so you
 need to forward it explicitly as described earlier.
-
-
-
-
-
-
-

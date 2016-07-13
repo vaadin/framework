@@ -193,7 +193,8 @@ public class DesignFormatterTest {
         Date result = formatter.parse(formatted, Date.class);
 
         // writing will always give full date string
-        assertEquals("2012-02-17 00:00:00+0200", formatted);
+        String timeZone = new SimpleDateFormat("Z").format(date);
+        assertEquals("2012-02-17 00:00:00" + timeZone, formatted);
         assertEquals(date, result);
 
         // try short date as well

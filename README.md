@@ -1,18 +1,19 @@
-Vaadin
-======
-*[Vaadin](https://vaadin.com) is a Java framework for building modern web applications that look great, perform well and make you and your users happy.*
+# Vaadin Framework
 
-For instructions about _using_ Vaadin to develop applications, please refer to
-https://vaadin.com/learn
+*[Vaadin Framework](https://vaadin.com/framework) allows you to build modern web apps efficiently in plain Java, without touchking low level web technologies.*
 
-To contribute, first refer to [Contributing Code](https://vaadin.com/wiki/-/wiki/Main/Contributing+Code)
-for general instructions and requirements for contributing code to the Vaadin framework.
+For instructions about _using_ Vaadin to develop applications, please refer to [Vaadin tutorial](https://vaadin.com/docs/-/part/framework/tutorial.html) and other [documentation](https://vaadin.com/docs/).
 
-Instructions on how to set up a working environments for developing the Vaadin
-framework follow below.
+To contribute, first refer to [Contributing Code](https://vaadin.com/wiki/-/wiki/Main/Contributing+Code) for general instructions and requirements for contributing code to the Vaadin framework.
 
-Eclipse Quick Setup
-======
+Instructions on how to set up a working environments for developing the Vaadin Framework follow below.
+
+## Building a package
+
+The distribution files can be built by running the standard Maven goal `mvn install` in the project root.
+
+## Eclipse Quick Setup
+
 1. Run
 <code>git clone https://github.com/vaadin/vaadin.git</code>
 command or clone the repository your favorite Git tool.
@@ -26,16 +27,15 @@ Note that the first compilation takes a while to finish as maven downloads depen
 
 Now the project should compile without further configuration.
 
+### Compiling the Default Widget Set and Themes
 
-Compiling the Default Widget Set and Themes
---------
 * Compile the default widgetset by running <code>install</code> maven goal in `vaadin-client-compiled` module root.
 In Eclipse this is done by right clicking on vaadin-client-compiled project it and choosing *Run As* -> *Maven Build...*.
 * Compile the default themes by running <code>install</code> maven goal in `vaadin-themes` module root.
 In Eclipse this is done by right clicking on vaadin-themes project it and choosing *Run As* -> *Maven Build...*.
 
-Set up extra workspace preferences
---------
+### Set up extra workspace preferences
+
 The following preferences need to be set to keep the project consistent. You need to do this especially to be able to contribute changes to the project.
 
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
@@ -44,32 +44,24 @@ The following preferences need to be set to keep the project consistent. You nee
  1. Set *New text file line delimiter* to *Unix*
 1. Go to XML -> XML Files -> Editor
  1. Ensure the settings are follows:
-<pre><code>Line width: 72
-Format comments: true
-Join lines: true
-Insert whitespace before closing empty end-tags: true
-Indent-using spaces: true
-Indentation size: 4
-</code></pre>
+ 
+    Line width: 72
+    Format comments: true
+    Join lines: true
+    Insert whitespace before closing empty end-tags: true
+    Indent-using spaces: true
+    Indentation size: 4
 
-Running a UI test
-------
+
+### Running a UI test
+
 1. In a Project Explorer  right-click *vaadin-uitest*
 1. Open *Run As* -> *Maven build...*
 1. Type in <code>jetty:run-exploded</code> into *Goals* and click *Run*
 1. Open URL *http://localhost:8080/run/<testUI>*
 
-Building a package
-=====
-The distribution files can be built by running maven goal
-<pre><code>maven clean install</code></pre>
-in the project root directory.
+## Setting up IntelliJ IDEA to Develop Vaadin 7
 
-To use a specific version number, modify <code>&lt;version&gt;</code> tag in root pom.xml file.
-This goal runs all project tests TestBench tests, which require access to a a TestBench cluster, currently only available internally at Vaadin Ltd.
-
-Setting up IntelliJ IDEA to Develop Vaadin 7
-=========
 1. Intall and run IDEA. Ultimate Edition is better but Community Edition should also work.
 1. Ensure if Git and Maven plugins are installed, properly configured and enabled.
 1. Clone the repository, using menu VCS -> Checkout from Version Control -> Git -> Git Repository URL -> https://github.com/vaadin/vaadin.git.
@@ -78,8 +70,33 @@ Setting up IntelliJ IDEA to Develop Vaadin 7
 1. Have a coffee break while IDEA is loading dependencies and indexing the project
 1. Run Maven targets <code>clean</code> and <code>install</code> using *Maven Projects* tool window to compile the whole project
 
-Running a UI test
-------
+## Running a specific UI test
+
 1. Open *Maven Projects*
 1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
 1. Open URL *http://localhost:8080/run/<testUI>*
+
+## Running a Development Server
+
+1. Open *File* -> *New* -> *Module...*
+ 1. Choose type *Java* and click *Next*
+ 1. Type in name <code>uitest-run</code> and set *Content Root* and *Module File Location* to <code>&lt;your project location&gt;/uitest-run</code>
+ 1. Click *Finish*
+1. Open *File* -> *Project Structure...*
+ 1. Choose <code>uitest-run</code> module
+ 1. Open *Dependencies* tab
+ 1. Click *+* -> *Module Dependency* -> *vaadin-uitest* -> *OK*
+ 1. Click *+* -> *Library...* -> *New Library...* -> *From Maven*
+ 1. Type in <code>org.eclipse.jetty.aggregate:jetty-all:9.4.0.M0</code> and press *Tab*
+ 1. Wait a little while Idea is trying to download the library, then click *OK*
+ 1. Close *Project Structure* dialog by pressing *OK*
+1. Open *Run* -> *Edit Configurations...* then create a new configuration of type *Application* named <code>DevelopmentServerLauncher</code>
+ 1. Set *Main class* to <code>com.vaadin.launcher.DevelopmentServerLauncher</code>
+ 1. Set *Single instance only* checkmark
+ 1. Set *VM options* to <code>-ea</code>
+ 1. Set *Use classpath options* to <code>uitest-run</code>
+ 1. Set *Working directory* to <code>uitest</code>
+ 1. Close *Run/Debug Configurations* dialog by pressing *OK*
+
+The run configuration is ready.
+

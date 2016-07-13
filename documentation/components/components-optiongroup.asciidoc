@@ -16,12 +16,11 @@ endif::web[]
 group of radio buttons in single selection mode. In multiple selection mode, the
 items show up as check boxes. The common selection component features are
 described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection
-Components">>.
+<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
 [[figure.components.optiongroup]]
 .Option Button Group in Single and Multiple Selection Mode
-image::img/optiongroup-basic.png[]
+image::img/optiongroup-basic.png[width=45%, scaledwidth=70%]
 
 Option group is by default in single selection mode. Multiple selection is
 enabled with [methodname]#setMultiSelect()#.
@@ -50,6 +49,7 @@ maintains the individual check box objects, you can get an array of the
 currently selected items easily, and that you can easily change the appearance
 of a single component.
 
+ifdef::web[]
 [[components.optiongroup.disabling]]
 == Disabling Items
 
@@ -62,7 +62,6 @@ find out whether an item is enabled with [methodname]#isItemEnabled()#.
 
 The [methodname]#setItemEnabled()# identifies the item to be disabled by its
 item ID.
-
 
 [source, java]
 ----
@@ -79,10 +78,10 @@ in <<figure.components.optiongroup.disabling>>.
 
 [[figure.components.optiongroup.disabling]]
 .[classname]#OptionGroup# with a Disabled Item
-image::img/optiongroup-disabling.png[]
+image::img/optiongroup-disabling.png[width=25%, scaledwidth=50%]
 
 Setting an item as disabled turns on the [literal]#++v-disabled++# style for it.
-
+endif::web[]
 
 [[components.optiongroup.css]]
 == CSS Style Rules
@@ -102,6 +101,8 @@ Each check box will have the [literal]#++v-checkbox++# style, borrowed from the
 also have the [literal]#++v-select-option++# style that allows styling
 regardless of the option type. Disabled items have additionally the
 [literal]#++v-disabled++# style.
+
+ifdef::web[]
 
 [[components.optiongroup.css.horizontal]]
 === Horizontal Layout
@@ -138,9 +139,6 @@ name for the component. The result is shown in
 
 [[figure.components.optiongroup.horizontal]]
 .Horizontal [classname]#OptionGroup#
-image::img/optiongroup-horizontal.png[]
+image::img/optiongroup-horizontal.png[width=35%, scaledwidth=50%]
 
-
-
-
-
+endif::web[]

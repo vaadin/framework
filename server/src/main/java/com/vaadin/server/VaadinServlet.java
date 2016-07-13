@@ -979,7 +979,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Finds the given resource from the web content folder or using the class
      * loader.
      * 
-     * @since
+     * @since 7.7
      * @param filename
      *            The file to find, starting with a "/"
      * @return The URL to the given file, or null if the file was not found

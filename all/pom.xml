@@ -126,18 +126,11 @@
 										<expandproperties />
 										<replacetokens begintoken="@" endtoken="@">
 											<token key="version" value="${project.version}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
 											<token key="version-minor"
 												value="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
+											<token key="gwt-version" value="${vaadin.gwt.version}" />
 											<token key="builddate" value="${maven.build.timestamp}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
 											<token key="release-notes-tickets" value="${release-notes-tickets}" />
-										</replacetokens>
-										<replacetokens begintoken="@" endtoken="@">
 											<token key="release-notes-authors" value="${release-notes-authors}" />
 										</replacetokens>
 									</filterchain>

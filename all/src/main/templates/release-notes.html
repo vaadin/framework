@@ -48,6 +48,7 @@
             <li><a href="#incompatible">Incompatible or Behavior-altering Changes in
                     @version-minor@</a></li>
             <li><a href="#knownissues">Known Issues and Limitations</a></li>
+            <li><a href="#gwtdep">GWT Dependency Changes</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
             <li><a href="#package">Package Contents</a></li>
             <li><a href="#migrating">Migrating from Vaadin 6</a></li>
@@ -115,6 +116,10 @@
             <li>The return type of BootstrapHandler.getWidgetsetForUI() has changed.</li>
             <li>Vaadin shared no longer depends on a custom build of Guava. Any project that depends on Guava as a transitive dependency should use standard Guava.</li>
             <li>Valo theme field error styles now apply to NativeSelect, ListSelect and TwinColSelect as well.</li>
+            <li>The LoginForm component has been rewritten to better support auto-completion of passwords on modern browsers.
+                Its API, look and DOM structure have changed somewhat, so any application level customizations of LoginForm need changes.
+                See also <a href="http://dev.vaadin.com/ticket/8171">#8171</a></li>
+            <li>The way we handle GWT dependencies has been completely changed. See <a href="#gwtdep">this section</a> for more details</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
@@ -157,6 +162,32 @@
             <li>Grid does not support adding components to cells. Instead light-weight Renderers can be
                 used to present and edit data.</li>
         </ul>
+        
+        <h3 id="gwtdep">GWT Dependency Changes</h3>
+        
+        <p>
+            The GWT dependencies for Vaadin are now provided as actual dependencies 
+            and not bundled with Vaadin packages. This means that you can override 
+            the GWT version in your own project if you want to. Note that the GWT Elemental 
+            is still partially bundled with shared package to avoid having the gwt-user as a 
+            dependency everywhere.
+        </p>
+        
+        <ul>
+            <li>Basic Vaadin server-side only use does not need any changes to your project.</li>
+            <li>Custom widgets and Add-ons should work just like before.</li>
+            <li>Projects that use GWT RPC or other utils from the com.google package should add gwt-servlet dependency
+                <pre>
+&lt;dependency>
+    &lt;groupId>com.vaadin.external.gwt&lt;/groupId>
+    &lt;artifactId>gwt-servlet&lt;/artifactId>
+    &lt;version>@gwt-version@&lt;/version>
+&lt;/dependency>
+                </pre>
+            </li>
+            <li>OSGi currently does not work with client and client-compiler packages. Those should not be used with OSGi.</li>
+        </ul>
+        
 
         <h2 id="vaadin">Vaadin Installation</h2>
 

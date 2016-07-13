@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.server.component.datefield;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -26,9 +27,9 @@ import com.vaadin.ui.DateField;
 
 /**
  * Tests the declarative support for implementations of {@link DateField}.
- * 
- * @since 7.4
+ *
  * @author Vaadin Ltd
+ * @since 7.4
  */
 public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
 
@@ -44,7 +45,8 @@ public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
     }
 
     private String getTimezoneDesign() {
-        return "<vaadin-date-field range-start=\"2014-05-05 00:00:00+0300\" range-end=\"2014-06-05 00:00:00+0300\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient show-iso-week-numbers parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00+0300\"/>";
+        String timeZone = new SimpleDateFormat("Z").format(new Date());
+        return String.format("<vaadin-date-field range-start=\"2014-05-05 00:00:00%1$s\" range-end=\"2014-06-05 00:00:00%1$s\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient show-iso-week-numbers parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00%1$s\"/>" ,timeZone);
     }
 
     private DateField getTimezoneExpected() {
@@ -82,18 +84,21 @@ public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
     @Test
     public void writeYearResolution() {
         // Writing is always done in full resolution..
+        String timeZone = new SimpleDateFormat("Z").format(new Date(2020 - 1900, 1 - 1, 1));
         testWrite(
-                getYearResolutionDesign().replace("2020",
-                        "2020-01-01 00:00:00+0200"),
-                getYearResolutionExpected());
+            getYearResolutionDesign().replace("2020",
+                "2020-01-01 00:00:00" + timeZone),
+            getYearResolutionExpected());
     }
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-date-field readonly resolution='year' value='2020-01-01 00:00:00+0200'/>";
+        Date date = new Date(2020 - 1900, 1 - 1, 1);
+        String timeZone = new SimpleDateFormat("Z").format(date);
+        String design = "<vaadin-date-field readonly resolution='year' value='2020-01-01 00:00:00" + timeZone + "'/>";
         DateField df = new DateField();
         df.setResolution(Resolution.YEAR);
-        df.setValue(new Date(2020 - 1900, 1 - 1, 1));
+        df.setValue(date);
         df.setReadOnly(true);
 
         testRead(design, df);

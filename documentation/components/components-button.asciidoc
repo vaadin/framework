@@ -30,23 +30,27 @@ button.addClickListener(new Button.ClickListener() {
         Notification.show("Do not press this button again");
     }
 });
+
+// Java 8
+button.addClickListener(click ->
+    Notification.show("Do not press this button again"));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.button.basic[on-line example, window="_blank"].
 
-The result is shown in <<figure.component.button.basic>>. The listener can also
-be given in the constructor, which is often perhaps simpler.
+The listener can also be given in the constructor, which is often perhaps simpler.
+
+The button component can be styled in many ways, as illustrated in <<figure.component.button.basic>>.
 
 [[figure.component.button.basic]]
 .Button in Different Styles of Valo Theme
-image::img/button-example1.png[]
+image::img/button-example1.png[width=70%, scaledwidth=100%]
 
 If you handle several buttons in the same listener, you can differentiate
 between them either by comparing the [classname]#Button# object reference
 returned by the [methodname]#getButton()# method of
 [classname]#Button.ClickEvent# to a kept reference. For a detailed description
 of these patterns together with some examples, please see
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
-and Listeners">>.
+<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events and Listeners">>.
 
 == CSS Style Rules
 
@@ -65,7 +69,3 @@ element, which may help in styling in some cases.
 Some built-in themes contain a small style, which you can enable by adding
 [parameter]#Reindeer.BUTTON_SMALL#, etc. The [classname]#BaseTheme# also has a
 [parameter]#BUTTON_LINK# style, which makes the button look like a hyperlink.
-
-
-
-

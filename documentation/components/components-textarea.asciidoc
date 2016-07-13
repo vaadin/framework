@@ -23,7 +23,7 @@ The following example creates a simple text area:
 ----
 // Create the area
 TextArea area = new TextArea("Big Area");
-        
+
 // Put some content in it
 area.setValue("A row\n"+
               "Another row\n"+
@@ -35,7 +35,7 @@ The result is shown in <<figure.components.textarea>>.
 
 [[figure.components.textarea]]
 .[classname]#TextArea# Example
-image::img/textarea-basic.png[]
+image::img/textarea-basic.png[width=40%, scaledwidth=50%]
 
 You can set the number of visible rows with [methodname]#setRows()# or use the
 regular [methodname]#setHeight()# to define the height in other units. If the
@@ -76,7 +76,7 @@ The result is shown in <<figure.components.textarea.wordwrap>>.
 
 [[figure.components.textarea.wordwrap]]
 .Word Wrap in [classname]#TextArea#
-image::img/textarea-wordwrap.png[]
+image::img/textarea-wordwrap.png[width=60%, scaledwidth=100%]
 
 
 [[components.textarea.css]]
@@ -90,7 +90,3 @@ image::img/textarea-wordwrap.png[]
 
 The HTML structure of [classname]#TextArea# is extremely simple, consisting only
 of an element with [literal]#++v-textarea++# style.
-
-CSS Styling
-
-

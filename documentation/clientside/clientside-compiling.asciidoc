@@ -7,72 +7,172 @@ layout: page
 [[clientside.compiling]]
 = Compiling a Client-Side Module
 
-A client-side module, either a widget set or a pure client-side module, needs to
-be compiled to JavaScript using the Vaadin Client Compiler. During development,
-the Development Mode makes the compilation automatically when you reload the
-page, provided that the module has been initially compiled once with the
-compiler.
+A client-side module, either a Vaadin widget set or a pure client-side module, needs to be compiled to JavaScript using the Vaadin Client Compiler.
 
-As most Vaadin add-ons include widgets, widget set compilation is usually needed
-when using add-ons. In that case, the widget sets from different add-ons are
-compiled into a __project widget set__, as described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">>.
+Widget set compilation is most often needed when using add-ons.
+In that case, the widget sets from different add-ons are compiled into an _application widget set_, as described in <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview, "Using Vaadin Add-ons">>.
 
-////
-TODO Provide a link to a proper add-on compilation section when one is
-available.
-////
+When doing client-side development, you need to compile the widget set every time you modify the client-side code.
 
 [[clientside.compiling.overview]]
 == Vaadin Compiler Overview
 
-The Vaadin Client Compiler compiles Java to JavaScript. It is provided as the
-[filename]#vaadin-client-compiler# JAR, which you can execute with the
-[literal]#++-jar++# parameter for the Java runtime. It requires the
-[filename]#vaadin-client# JAR, which contains the Vaadin client-side framework.
+The Vaadin Client Compiler compiles Java to JavaScript.
+It is provided as the executable [filename]#vaadin-client-compiler# JAR.
+// You can run it with the [literal]#++-jar++# parameter for the Java runtime.
+It requires the [filename]#vaadin-client# JAR, which contains the [classname]#DefaultWidgetSet#, Vaadin client-side framework.
 
-The compiler compiles a __client module__, which can be either a pure
-client-side module or a Vaadin widget set, that is, the Vaadin Client-Side
-Engine that includes the widgets used in the application. The client module is
-defined with a module descriptor, which was described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
-Module Descriptor">>.
+The compiler compiles a _client module_, which can either be a pure client-side module or a Vaadin widget set, that is, the Vaadin Client-Side Engine that includes the widgets used in the application.
+The client module is defined with a module descriptor, which was described in <<clientside-module#clientside.module, "Client-Side Module Descriptor">>.
+The module descriptor for application widget sets is automatically generated.
 
-The compiler writes the compilation result to a target folder that will include
-the compiled JavaScript with any static resources included in the module.
+While you can compile client modules individually, in Vaadin applications you normally combine them in one application widget set.
+The application widget set includes any add-on and custom widgets.
+The compiler scans the class path for any widget sets to include in the application widget set.
 
+=== Compilation Result
 
-[[clientside.compiling.eclipse]]
-== Compiling in Eclipse
-
-When the Vaadin Plugin is installed in Eclipse, you can simply click the
-[guibutton]#Compile Vaadin widgets# button in the toolbar. It will compile the
-widget set it finds from the project. If the project has multiple widget sets,
-such as one for custom widgets and another one for the project, you need to
-select the module descriptor of the widget set to compile before clicking the
-button.
-
-The compilation with Vaadin Plugin for Eclipse currently requires that the
-module descriptor has suffix [filename]#Widgetset.gwt.xml#, although you can use
-it to compile also other client-side modules than widget sets. The result is
-written under [filename]#WebContent/VAADIN/widgetsets# folder.
-
-
-[[clientside.compiling.ant]]
-== Compiling with Ant
-
-You can find a script template for compiling widget sets with Ant and Ivy at the
-link:http://vaadin.com/download/[Vaadin download page]. You can copy the build
-script to your project and, once configured, run it with Ant.
-
+The compiler writes the compilation result to a target folder that will include the compiled JavaScript with any static resources included in the module.
 
 [[clientside.compiling.maven]]
-== Compiling with Maven
+== Compiling in Maven Projects
 
-You can compile the widget set with the [literal]#++vaadin:compile++# goal as
-follows:
+The Vaadin Maven Plugin, which is enabled in all Vaadin archetypes, makes Maven to automatically compile the widget set when necessary.
+
+ifdef::web[]
+=== Plugin Configuration
+
+[source,xml]
+----
+<plugin>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-maven-plugin</artifactId>
+  <version>${vaadin.plugin.version}</version>
+
+  <configuration>
+    <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+    <webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
+    <draftCompile>false</draftCompile>
+    <compileReport>false</compileReport>
+    <style>OBF</style>
+    <strict>true</strict>
+  </configuration>
+
+  <executions>
+    <execution>
+      <goals>
+        <goal>update-theme</goal>
+        <goal>update-widgetset</goal>
+        <goal>compile</goal>
+        <goal>compile-theme</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+endif::web[]
+
+[[clientside.compiling.maven.modes]]
+=== Compilation Modes
+
+The Vaadin Maven Plugin can compile widget sets either locally or online by using a cloud service.
+The online compilation requires that all the widget sets are available in certain public Maven repositories.
+As this is not the case when developing custom widgets, you must use the `local` mode.
+
+Local compilation is the default mode, so you only need to enable it if you have changed the mode to use the online service.
+
+See <<DUMMY/../../addons/addons-maven#addons.maven.modes, "Widget Set Modes">> for more information.
+
+[[clientside.compiling.maven.compiling]]
+=== Compiling
+
+You can explicitly compile the widget set with the [literal]#vaadin:compile# goal.
+
+On command-line:
 
 [subs="normal"]
 ----
 [prompt]#$# [command]#mvn# [parameter]#vaadin:compile#
 ----
+
+If there is no widget set defined, but you have add-on dependencies that need a
+custom widget set, the Vaadin Maven plugin will automatically generate a widget set definition for you.
+
+[[clientside.compiling.eclipse]]
+== Compiling in Eclipse
+
+When you have the Vaadin Plugin installed in Eclipse, you can simply click the *Compile Vaadin Widgetset* button in the toolbar.
+
+.Widget set compilation button in Eclipse
+image::img/widgetset-compiling-toolbar.png[width=50%, scaledwidth=60%]
+
+It will compile the widget set it finds from the project.
+If the project has multiple widget sets, such as one for custom widgets and another one for the project, you need to select the module descriptor of the widget set to compile before clicking the button.
+
+Compiling with the Vaadin Plugin for Eclipse currently requires that the module descriptor has suffix [filename]#Widgetset.gwt.xml#, although you can use it to compile also other client-side modules than widget sets.
+
+The result is written under [filename]#WebContent/VAADIN/widgetsets# folder.
+
+ifdef::web[]
+[[clientside.compiling.ant]]
+== Compiling with Ant
+
+Consider the following configuration:
+
+[source, xml, subs="normal"]
+----
+<target name="configure">
+    <!-- Where project source files are located -->
+    <property name="sources" value="[replaceable]#src#" />
+
+    <!-- Path to root of web application folder -->
+    <property name="webroot" value="[replaceable]#WebContent#" />
+
+    <!-- Compilation work directory -->
+    <property name="workdir" value="[replaceable]#build/work#"/>
+</target>
+----
+
+The script assumes the Eclipse project layout with [filename]#WebContent# folder.
+
+The `compile-widgetset` target invokes the Vaadin Compiler to compile the widget set.
+The class path includes source folder in case there are custom widgets, compiled server-side classes, and the dependencies resolved with Ivy.
+
+[source, xml]
+----
+<target name="compile-widgetset" depends="init,resolve">
+    <java classname="com.google.gwt.dev.Compiler"
+          failonerror="yes" fork="yes">
+        <arg value="-war" />
+        <arg value="${webroot}/VAADIN/widgetsets" />
+        <arg value="${widgetset}" />
+        <arg value="-logLevel"/>
+        <arg value="INFO"/>
+        <!-- <arg value="-strict"/> -->
+        <jvmarg value="-Xmx1024M"/>
+        <jvmarg value="-Xss512M"/>
+        <jvmarg value="-Djava.awt.headless=true"/>
+
+        <classpath>
+            <!-- Location of source code -->
+            <pathelement path="${sources}" />
+
+            <!-- Compiled server-side classes -->
+            <pathelement path="${workdir}/WEB-INF/classes" />
+
+            <!-- Dependencies retrieved with Ivy -->
+            <path refid="ivy.deps.widgetset"/>
+        </classpath>
+        <sysproperty key="vFailIfNotSerializable" value="${failifnotserializable}" />
+    </java>
+
+    <!-- Cleanup -->
+    <delete dir="${webroot}/VAADIN/gwt-unitCache"/>
+    <delete dir="${webroot}/VAADIN/widgetsets/WEB-INF"/>
+</target>
+----
+
+You can find the complete example build script for compiling widget sets with Ant and Ivy in the https://github.com/vaadin/book-examples/blob/master/build/build.xml[build.xml for the Book Examples].
+You can copy the build script to your project and, once configured, run it with Ant.
+You may need to do some configuration in the build targets, such as to exclude or include source or target paths.
+endif::web[]

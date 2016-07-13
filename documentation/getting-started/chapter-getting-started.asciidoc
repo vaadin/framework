@@ -5,7 +5,6 @@ This chapter gives practical instructions for creating a Vaadin application proj
 
 The instructions are given separately for the Eclipse IDE, NetBeans, and IntelliJ IDEA.
 
-
 include::getting-started-overview.adoc[leveloffset=+2]
 
 include::getting-started-libraries.asciidoc[leveloffset=+2]
@@ -14,11 +13,11 @@ include::getting-started-archetypes.asciidoc[leveloffset=+2]
 
 include::getting-started-first-project.asciidoc[leveloffset=+2]
 
-include::getting-started-maven.asciidoc[leveloffset=+2]
-
 include::getting-started-netbeans.asciidoc[leveloffset=+2]
 
 include::getting-started-idea.asciidoc[leveloffset=+2]
+
+include::getting-started-maven.asciidoc[leveloffset=+2]
 
 include::getting-started-package.asciidoc[leveloffset=+2]
 

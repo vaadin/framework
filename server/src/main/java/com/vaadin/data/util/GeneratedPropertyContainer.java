@@ -122,9 +122,11 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     }
 
     /**
-     * Item implementation for generated properties.
+     * Item implementation for generated properties, used to wrap the Item that
+     * belongs to the wrapped container. To reach that Item use
+     * {@link #getWrappedItem()}
      */
-    protected class GeneratedPropertyItem implements Item {
+    public class GeneratedPropertyItem implements Item {
 
         private Item wrappedItem;
         private Object itemId;
@@ -197,6 +199,16 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
 
         private GeneratedPropertyContainer getContainer() {
             return GeneratedPropertyContainer.this;
+        }
+
+        /**
+         * Returns the wrapped Item that belongs to the wrapped container
+         * 
+         * @return wrapped item.
+         * @since 7.6.8
+         */
+        public Item getWrappedItem() {
+            return wrappedItem;
         }
     };
 

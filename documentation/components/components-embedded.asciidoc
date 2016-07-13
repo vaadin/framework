@@ -10,14 +10,11 @@ layout: page
 You can embed images in Vaadin UIs with the [classname]#Image# component, Adobe
 Flash graphics with [classname]#Flash#, and other web content with
 [classname]#BrowserFrame#. There is also a generic [classname]#Embedded#
-component for embedding other object types. The embedded content is referenced
-as __resources__, as described in
-<<dummy/../../../framework/application/application-resources#application.resources,"Images
-and Other Resources">>.
+component for embedding other object types.
+The embedded content is referenced as _resources_, as described in <<dummy/../../../framework/application/application-resources#application.resources,"Images and Other Resources">>.
 
 The following example displays an image as a class resource loaded with the
 class loader:
-
 
 [source, java]
 ----
@@ -30,7 +27,7 @@ The caption can be given as null to disable it. An empty string displays an
 empty caption which takes a bit space. The caption is managed by the containing
 layout.
 
-You can set an altenative text for an embedded resource with
+You can set an alternative text for an embedded resource with
 [methodname]#setAlternateText()#, which can be shown if images are disabled in
 the browser for some reason. The text can be used for accessibility purposes,
 such as for text-to-speech generation.
@@ -77,8 +74,8 @@ resource is not enough. Because of how caching is handled in some browsers, you
 can cause a reload easiest by renaming the filename of the resource with a
 unique name, such as one including a timestamp. You should set cache time to
 zero with [methodname]#setCacheTime()# for the resource object when you create
-it.//BUG
-#2470.
+it.
+// BUG #2470.
 
 
 [source, java]
@@ -137,7 +134,7 @@ for the Flash object element in HTML.
 == [classname]#BrowserFrame#
 
 The [classname]#BrowserFrame# allows embedding web content inside an HTML
-&lt;iframe&gt; element. You can refer to an external URL with
+`&lt;iframe&gt;` element. You can refer to an external URL with
 [classname]#ExternalResource#.
 
 As the [classname]#BrowserFrame# has undefined size by default, it is critical
@@ -199,7 +196,3 @@ example above (where it was actually unnecessary).
 Some embeddable object types may require special support in the browser. You
 should make sure that there is a proper fallback mechanism if the browser does
 not support the embedded type.
-
-
-
-

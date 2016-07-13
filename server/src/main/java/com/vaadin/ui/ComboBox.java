@@ -121,6 +121,8 @@ public class ComboBox extends AbstractSelect implements
      */
     private boolean scrollToSelectedItem = true;
 
+    private String suggestionPopupWidth = null;
+
     /**
      * If text input is not allowed, the ComboBox behaves like a pretty
      * NativeSelect - the user can not enter any text and clicking the text
@@ -170,7 +172,7 @@ public class ComboBox extends AbstractSelect implements
     /**
      * Sets the input prompt - a textual prompt that is displayed when the
      * select would otherwise be empty, to prompt the user for input.
-     * 
+     *
      * @param inputPrompt
      *            the desired input prompt, or null to disable
      */
@@ -229,6 +231,11 @@ public class ComboBox extends AbstractSelect implements
                     && getNullSelectionItemId() == null ? 0 : 1)];
 
             target.addAttribute("pagelength", pageLength);
+
+            if (suggestionPopupWidth != null) {
+                target.addAttribute("suggestionPopupWidth",
+                        suggestionPopupWidth);
+            }
 
             target.addAttribute("filteringmode", getFilteringMode().toString());
 
@@ -875,6 +882,16 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
+     * Returns the suggestion pop-up's width as a CSS string.
+     *
+     * @see #setPopupWidth
+     * @since 7.7
+     */
+    public String getPopupWidth() {
+        return suggestionPopupWidth;
+    }
+
+    /**
      * Sets the page length for the suggestion popup. Setting the page length to
      * 0 will disable suggestion popup paging (all items visible).
      * 
@@ -883,6 +900,20 @@ public class ComboBox extends AbstractSelect implements
      */
     public void setPageLength(int pageLength) {
         this.pageLength = pageLength;
+        markAsDirty();
+    }
+
+    /**
+     * Sets the suggestion pop-up's width as a CSS string. By using relative
+     * units (e.g. "50%") it's possible to set the popup's width relative to the
+     * ComboBox itself.
+     * 
+     * @see #getPopupWidth()
+     * @since 7.7
+     * @param width the width
+     */
+    public void setPopupWidth(String width) {
+        suggestionPopupWidth = width;
         markAsDirty();
     }
 

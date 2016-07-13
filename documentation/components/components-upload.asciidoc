@@ -21,15 +21,14 @@ user sends the file by clicking the upload submit button.
 Uploading requires a receiver that implements [interfacename]#Upload.Receiver#
 to provide an output stream to which the upload is written by the server.
 
-
 [source, java]
 ----
 Upload upload = new Upload("Upload it here", receiver);
 ----
 
 [[figure.ui.upload]]
-.Upload Component
-image::img/upload.png[]
+.The [classname]#Upload# component
+image::img/upload.png[width=60%, scaledwidth=80%]
 
 You can set the text of the upload button with [methodname]#setButtonCaption()#.
 Note that it is difficult to change the caption or look of the
@@ -37,7 +36,6 @@ Note that it is difficult to change the caption or look of the
 language of the [guibutton]#Browse# button is determined by the browser, so if
 you wish to have the language of the [classname]#Upload# component consistent,
 you will have to use the same language in your application.
-
 
 [source, java]
 ----
@@ -88,7 +86,6 @@ The following example uploads images to [filename]#/tmp/uploads# directory in
 (UNIX) filesystem (the directory must exist or the upload fails). The component
 displays the uploaded image in an [classname]#Image# component.
 
-
 [source, java]
 ----
 // Show uploaded file in this placeholder
@@ -99,7 +96,7 @@ image.setVisible(false);
 // listener for successful upload
 class ImageUploader implements Receiver, SucceededListener {
     public File file;
-    
+
     public OutputStream receiveUpload(String filename,
                                       String mimeType) {
         // Create upload stream
@@ -124,13 +121,13 @@ class ImageUploader implements Receiver, SucceededListener {
         image.setSource(new FileResource(file));
     }
 };
-ImageUploader receiver = new ImageUploader(); 
+ImageUploader receiver = new ImageUploader();
 
 // Create the upload with a caption and set receiver later
 Upload upload = new Upload("Upload Image Here", receiver);
 upload.setButtonCaption("Start Upload");
 upload.addSucceededListener(receiver);
-        
+
 // Put the components in a panel
 Panel panel = new Panel("Cool Image Storage");
 Layout panelContent = new VerticalLayout();
@@ -147,8 +144,7 @@ shown in <<figure.ui.upload.example>>.
 
 [[figure.ui.upload.example]]
 .Image Upload Example
-image::img/upload-example.png[]
-
+image::img/upload-example.png[width=60%, scaledwidth=80%]
 
 [[components.upload.css]]
 == CSS Style Rules
@@ -166,7 +162,3 @@ image::img/upload-example.png[]
 The [classname]#Upload# component has an overall [literal]#++v-upload++# style.
 The upload button has the same structure and style as a regular
 [classname]#Button# component.
-
-
-
-

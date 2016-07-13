@@ -62,7 +62,9 @@ Your own theme files (OPTIONAL)::
 If your application uses a special theme (look and feel), you must include it in [filename]#VAADIN/themes/themename# directory.
 
 Widget sets (OPTIONAL)::
-If your application uses a project-specific widget set, it must be compiled in the [filename]#VAADIN/widgetset/# directory.
+If your application uses add-ons or custom widgets, they must be compiled to the [filename]#VAADIN/widgetset/# directory.
+When using add-ons, this is done automatically in Maven projects.
+See <<dummy/../../../framework/addons/addons-maven#addons.maven, "Using Add-ons in a Maven Project">> for more information.
 
 [[application.environment.webservlet]]
 == Web Servlet Class
@@ -137,7 +139,7 @@ The servlet is then mapped to a URL path in a standard way for Java Servlets.
     &lt;!-- If not using the default widget set--&gt;
     &lt;init-param&gt;
       &lt;param-name&gt;widgetset&lt;/param-name&gt;
-      &lt;param-value&gt;[replaceable]##com.ex.myprj.MyWidgetSet##&lt;/param-value&gt;
+      &lt;param-value&gt;[replaceable]##com.ex.myprj.AppWidgetSet##&lt;/param-value&gt;
     &lt;/init-param&gt;
   &lt;/servlet&gt;
 
@@ -173,24 +175,36 @@ Servlet 3.0 support is useful for at least server push.
 [[application.environment.web-xml.widgetset]]
 === Widget Set
 
-If the UI uses add-on components or custom widgets, it needs a custom widget
-set, which can be specified with the [parameter]#widgetset# parameter for the
-servlet. Alternatively, you can defined it with the [classname]#@WidgetSet#
-annotation for the UI class. The parameter is a class name with the same path
-but without the [filename]#.gwt.xml# extension as the widget set definition
-file. If the parameter is not given, the
-[classname]#com.vaadin.DefaultWidgetSet# is used, which contains all the widgets
-for the built-in Vaadin components.
+The widget set is normally defined and compiled automatically in Maven projects.
+It may be necessary to define it manually in some cases, such as when developing custom widgets or if you need to include special rules in the widget set definition file ([filename]#.gwt.xml# module descriptor).
 
-Unless using the default widget set (which is included in the
-[filename]#vaadin-client-compiled# JAR), the widget set must be compiled, as
-described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
-Vaadin Add-ons">> or
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
-a Client-Side Module">>, and properly deployed with the application.
+The widget set of a UI can be defined with the [classname]#@WidgetSet# annotation for the UI class.
 
+[source, Java, subs="normal"]
+----
+@WidgetSet("[replaceable]#com.example.myproject.MyWidgetSet#")
+class MyUI extends UI {
+    ...
+----
 
+You can also define it in the [filename]#web.xml# descriptor for the servlet:
+
+[source, xml, subs="normal"]
+----
+<init-param>
+  <param-name>widgetset</param-name>
+  <param-value>com.example.myproject.MyWidgetSet</param-value>
+</init-param>
+----
+
+The name of a widget set is technically a Java class name with the same path as the widget set definition file, but without the [filename]#.gwt.xml# extension.
+
+If a widget set is not specified, the default is used.
+In a project that does not use add-ons or custom widgets, the [classname]#com.vaadin.DefaultWidgetSet# is used.
+It contains all the widgets for the built-in Vaadin components.
+When using add-ons, the Vaadin Maven Plugin automatically defines an  [classname]#AppWidgetSet# that includes all the add-on widget sets.
+
+The widget set must be compiled, as described in <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">> (for add-ons) or <<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">> (for custom widgets and client-side modules), and properly deployed with the application.
 
 [[application.environment.servlet-mapping]]
 == Servlet Mapping with URL Patterns

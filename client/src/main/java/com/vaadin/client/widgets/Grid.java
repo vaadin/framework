@@ -3011,7 +3011,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Sets whether the selection column is enabled.
          *
-         * @since
+         * @since 7.7
          * @param enabled <code>true</code> to enable the column,
          *                <code>false</code> to disable it.
          */
@@ -3600,6 +3600,9 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             escalator.getBody().setSpacer(rowIndex, spacerHeight);
+            if (getHeightMode() == HeightMode.UNDEFINED) {
+                setHeightByRows(getEscalator().getBody().getRowCount());
+            }
         }
 
         @Override
@@ -3628,6 +3631,11 @@ public class Grid<T> extends ResizeComposite implements
 
                 setParent(detailsWidget, null);
                 spacerElement.removeAllChildren();
+                if (getHeightMode() == HeightMode.UNDEFINED) {
+                    // update spacer height
+                    escalator.getBody().setSpacer(spacer.getRow(), 0);
+                    setHeightByRows(getEscalator().getBody().getRowCount());
+                }
             }
         }
 
@@ -5702,7 +5710,7 @@ public class Grid<T> extends ResizeComposite implements
                                     minCellWidth = escalator
                                             .getMinCellWidth(getColumns()
                                                     .indexOf(col));
-                                    for (Column<?, T> c : getColumns()) {
+                                    for (Column<?, T> c : getVisibleColumns()) {
                                         if (selectionColumn == c) {
                                             // Don't modify selection column.
                                             continue;

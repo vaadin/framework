@@ -31,6 +31,7 @@ import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.sort.SortOrder;
+import com.vaadin.data.util.GeneratedPropertyContainer.GeneratedPropertyItem;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
@@ -283,6 +284,15 @@ public class GeneratedPropertyContainerTest {
         container.addContainerProperty("foo", null, null);
         assertTrue("Container did not contain returned property", container
                 .getContainerPropertyIds().contains("foo"));
+    }
+
+    @Test
+    public void testGetWrappedItem() {
+        Object itemId = wrappedContainer.getItemIds().iterator().next();
+        Item wrappedItem = wrappedContainer.getItem(itemId);
+        GeneratedPropertyItem generatedPropertyItem = (GeneratedPropertyItem) container
+                .getItem(itemId);
+        assertEquals(wrappedItem, generatedPropertyItem.getWrappedItem());
     }
 
     private Indexed createContainer() {

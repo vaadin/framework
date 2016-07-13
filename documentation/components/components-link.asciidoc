@@ -55,7 +55,10 @@ caption below it.
 
 [[figure.components.link.basic]]
 .[classname]#Link# Example
-image::img/link.png[]
+image::img/link.png[width=30%, scaledwidth=70%]
+
+[[components.link.new-window]]
+== Opening a New Window
 
 With the simple constructor used in the above example, the resource is opened in
 the current window. Using the constructor that takes the target window as a
@@ -66,7 +69,6 @@ browser, the target can be any window, including windows not managed by the
 application itself. You can use the special underscored target names, such as
 [literal]#++_blank++# to open the link to a new browser window or tab.
 
-
 [source, java]
 ----
 // Hyperlink to a given URL
@@ -75,35 +77,15 @@ Link link = new Link("Take me a away to a faraway land",
 
 // Open the URL in a new window/tab
 link.setTargetName("_blank");
-        
+
 // Indicate visually that it opens in a new window/tab
 link.setIcon(new ThemeResource("icons/external-link.png"));
 link.addStyleName("icon-after-caption");
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
 
-Normally, the link icon is before the caption. You can have it right of the
-caption by reversing the text direction in the containing element.
-
-
-[source, css]
-----
-/* Position icon right of the link caption. */
-.icon-after-caption {
-    direction: rtl;
-}
-/* Add some padding around the icon. */
-.icon-after-caption .v-icon {
-    padding: 0 3px;
-}
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
-
-The resulting link is shown in <<figure.components.link.new-window>>.
-
-[[figure.components.link.new-window]]
-.Link That Opens a New Window
-image::img/link-new.png[]
+[[components.link.pop-up]]
+== Opening as a Pop-Up Window
 
 With the [literal]#++_blank++# target, a normal new browser window is opened. If
 you wish to open it in a popup window (or tab), you need to give a size for the
@@ -112,7 +94,6 @@ You can control the window border style with [methodname]#setTargetBorder()#,
 which takes any of the defined border styles [parameter]#TARGET_BORDER_DEFAULT#,
 [parameter]#TARGET_BORDER_MINIMAL#, and [parameter]#TARGET_BORDER_NONE#. The
 exact result depends on the browser.
-
 
 [source, java]
 ----
@@ -124,15 +105,16 @@ link.setTargetWidth(400);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
 
-In addition to the [classname]#Link# component, Vaadin allows alternative ways
-to make hyperlinks. The [classname]#Button# component has a
-[parameter]#Reindeer.BUTTON_LINK# style name that makes it look like a
-hyperlink, while handling clicks in a server-side click listener instead of in
-the browser. Also, you can make hyperlinks (or any other HTML) in a
-[classname]#Label# in HTML content mode.
+== Alternatives
+
+In addition to the [classname]#Link# component, Vaadin allows alternative ways to make hyperlinks.
+Also, you can make hyperlinks (or any other HTML) in a [classname]#Label# in HTML content mode.
+
+The [classname]#Button# component has a [parameter]#Reindeer.BUTTON_LINK# style name that makes it look like a hyperlink, while handling clicks in a server-side click listener instead of in the browser.
+However, browsers do not generally allow opening new windows from with browser code, so for such tasks you need to use the [classname]#BrowserWindowOpener# extension described in <<dummy/../../../framework/advanced/advanced-windows#advanced.windows.popup, "Opening Pop-up Windows">>
+
 
 == CSS Style Rules
-
 
 [source, css]
 ----
@@ -156,6 +138,30 @@ please notice that [literal]#++a:hover++# must come after an
 [literal]#++a:link++# and [literal]#++a:visited++#, and [literal]#++a:active++#
 after the [literal]#++a:hover++#.
 
+ifdef::web[]
+=== Icon Position
 
+Normally, the link icon is before the caption.
+You can have it right of the caption by reversing the text direction in the containing element.
 
+[source, css]
+----
+/* Position icon right of the link caption. */
+.icon-after-caption {
+    direction: rtl;
+}
 
+/* Add some padding around the icon. */
+.icon-after-caption .v-icon {
+    padding: 0 3px;
+}
+----
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
+
+The resulting link is shown in <<figure.components.link.new-window>>.
+
+[[figure.components.link.new-window]]
+.Link That Opens a New Window
+image::img/link-new.png[width=25%, scaledwidth=50%]
+
+endif::web[]

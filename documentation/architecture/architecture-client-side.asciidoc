@@ -17,7 +17,7 @@ The client-side engine is illustrated in <<figure.architecture.client-side>>.
 
 [[figure.architecture.client-side]]
 .Vaadin Client-Side Engine
-image::img/clientside-arch-hi.png[]
+image::img/clientside-arch-hi.png[width=60%, scaledwidth=90%]
 
 The client-side framework includes two kinds of built-in widgets: GWT widgets
 and Vaadin-specific widgets. The two widget collections have significant
@@ -38,6 +38,3 @@ between the two sides. Integration of widgets with their server-side counterpart
 components is described in
 <<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">>.
-
-
-

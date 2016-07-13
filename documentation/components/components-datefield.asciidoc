@@ -28,7 +28,7 @@ of the date field to current time by using the default constructor of the
 ----
 // Create a DateField with the default style
 DateField date = new DateField();
-	
+
 // Set the date and time to present
 date.setValue(new Date());
 ----
@@ -37,7 +37,7 @@ The result is shown in <<figure.components.datefield.basic>>.
 
 [[figure.components.datefield.basic]]
 .[classname]#DateField# ([classname]#PopupDateField#) for Selecting Date and Time
-image::img/datefield-example1.png[]
+image::img/datefield-example1.png[width=35%, scaledwidth=60%]
 
 [[components.datefield.popupdatefield]]
 == [classname]#PopupDateField#
@@ -75,7 +75,7 @@ The result is shown in <<figure.components.datefield.popupdatefield.format>>.
 
 [[figure.components.datefield.popupdatefield.format]]
 .Custom Date Format for [classname]#PopupDateField#
-image::img/datefield-formatting.png[]
+image::img/datefield-formatting.png[width=35%, scaledwidth=60%]
 
 The same format specification is also used for parsing user-input date and time,
 as described later.
@@ -143,13 +143,13 @@ PopupDateField date = new PopupDateField("My Date") {
                     ConversionException("Not a number");
             }
         }
-        
+
         // Bad date
         throw new Property.
             ConversionException("Your date needs two slashes");
     }
 };
-        
+
 // Display only year, month, and day in slash-delimited format
 date.setDateFormat("yyyy/MM/dd");
 
@@ -185,7 +185,7 @@ PopupDateField date = new PopupDateField("My Date") {
         Notification.show(
                 "Your date needs two slashes",
                 Notification.TYPE_WARNING_MESSAGE);
-        
+
         // A failure must always also throw an exception
         throw new Property.ConversionException("Bad date");
     }
@@ -212,7 +212,7 @@ PopupDateField date = new PopupDateField();
 
 // Set the prompt
 date.setInputPrompt("Select a date");
-        
+
 // Set width explicitly to accommodate the prompt
 date.setWidth("10em");
 ----
@@ -264,19 +264,16 @@ The top-level element of the floating popup calendar has
 [literal]#++.v-datefield-popup++# style. Observe that the popup frame is outside
 the HTML structure of the component, hence it is not enclosed in the
 [literal]#++v-datefield++# element and does not include any custom styles.
-//NOTE: May be changed in
-#5752.
+// NOTE: May be changed in #5752.
 The content in the [literal]#++v-datefield-calendarpanel++# is the same as in
 [classname]#InlineDateField#, as described in <<components.datefield.calendar>>.
-
-
 
 [[components.datefield.calendar]]
 == [classname]#InlineDateField#
 
 The [classname]#InlineDateField# provides a date picker component with a month
 view. The user can navigate months and years by clicking the appropriate arrows.
-Unlike with the popup variant, the month view is always visible in the inline
+Unlike with the pop-up variant, the month view is always visible in the inline
 field.
 
 
@@ -284,7 +281,7 @@ field.
 ----
 // Create a DateField with the default style
 InlineDateField date = new InlineDateField();
-    
+
 // Set the date and time to present
 date.setValue(new java.util.Date());
 ----
@@ -293,7 +290,7 @@ The result is shown in <<figure.components.datefield.inlinedatefield>>.
 
 [[figure.components.datefield.inlinedatefield]]
 .Example of the [classname]#InlineDateField#
-image::img/datefield-inlinedatefield.png[]
+image::img/datefield-inlinedatefield.png[width=35%, scaledwidth=60%]
 
 The user can also navigate the calendar using the cursor keys.
 
@@ -338,8 +335,6 @@ header and the latter the actual week numbers.
 The other style names should be self-explanatory. For weekdays, the
 [literal]#++v-first++# and [literal]#++v-last++# styles allow making rounded
 endings for the weekday bar.
-
-
 
 [[components.datefield.resolution]]
 == Date and Time Resolution
@@ -386,6 +381,3 @@ Sunday, nor in some North African and Middle-Eastern countries, where the week
 begins on Saturday. In such locales, the week numbers are not displayed.
 
 endif::web[]
-
-
-

@@ -158,7 +158,7 @@ public class JsonPaintTarget implements PaintTarget {
      * 
      * @param tag
      *            the name of the end tag.
-     * @throws Paintexception
+     * @throws PaintException
      *             if the paint operation failed.
      */
 

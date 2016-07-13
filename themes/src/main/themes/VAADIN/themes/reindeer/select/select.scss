@@ -81,7 +81,7 @@ $select-button-negative-width : -25px;
 }
 .#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;
-	height: 16px;
+	min-height: 18px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
