@@ -18,40 +18,42 @@ package com.vaadin.tokka.data;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.vaadin.tokka.server.communication.data.SelectionModel;
-import com.vaadin.tokka.server.communication.data.SelectionModel.Multi;
-import com.vaadin.tokka.server.communication.data.SelectionModel.Single;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.tokka.ui.components.Listing;
 
 // TODO: Should this class listen to changes in DataSource?
 public class Binder<T> implements Serializable {
 
-    private Set<FieldBinding<T, ?>> bindings = new LinkedHashSet<>();
-    private T bean;
-
     /**
-     * Internal class for tracking field bindings with getters and setters.
+     * Represents the binding between a single field and a property.
      *
      * @param <T>
-     *            bean type
+     *            the item type
      * @param <V>
-     *            value type
+     *            the field value type
      */
-    private static class FieldBinding<T, V> implements Serializable {
+    public interface Binding<T, V> extends Serializable {
+        public void bind(Function<T, V> getter, BiConsumer<T, V> setter);
+    }
+
+    /**
+     * Internal implementation of {@code Binding}.
+     */
+    private class BindingImpl<V> implements Binding<T, V> {
         private HasValue<V> field;
         private Function<T, V> getter;
         private BiConsumer<T, V> setter;
 
-        public FieldBinding(HasValue<V> field, Function<T, V> getter,
-                BiConsumer<T, V> setter) {
+        public BindingImpl(HasValue<V> field) {
+            Objects.requireNonNull(field, "field cannot be null");
             this.field = field;
-            this.getter = getter;
-            this.setter = setter;
         }
 
         void setFieldValue(T bean) {
@@ -63,15 +65,34 @@ public class Binder<T> implements Serializable {
                 setter.accept(bean, field.getValue());
             }
         }
+
+        @Override
+        public void bind(Function<T, V> getter, BiConsumer<T, V> setter) {
+            Objects.requireNonNull(getter, "getter cannot be null");
+            this.getter = getter;
+            this.setter = setter;
+            bindings.add(this);
+            if (bean != null) {
+                setFieldValue(bean);
+            }
+        }
     }
 
+    private Set<BindingImpl<?>> bindings = new LinkedHashSet<>();
+    private T bean;
+
     /**
-     * Gets the bean that has been bound with {@link #bind}.
+     * Returns an {@code Optional} of the bean that has been bound with
+     * {@link #bind}, or an empty optional if a bean is not currently bound.
      * 
-     * @return the currently bound bean.
+     * @return the currently bound bean if any
      */
-    public T getBean() {
-        return bean;
+    public Optional<T> getBean() {
+        return Optional.ofNullable(bean);
+    }
+
+    public <V> Binding<T, V> addField(HasValue<V> field) {
+        return new BindingImpl<>(field);
     }
 
     /**
@@ -87,26 +108,17 @@ public class Binder<T> implements Serializable {
      * problems.
      * 
      * @param field
-     *            editor field
+     *            editor field, not null
      * @param getter
-     *            getter method to fetch data from the bean
+     *            getter method to fetch data from the bean, not null
      * @param setter
-     *            setter method to store data back to the bean
+     *            setter method to store data back to the bean or null if the
+     *            field should be read-only
      */
     public <V> void addField(HasValue<V> field, Function<T, V> getter,
             BiConsumer<T, V> setter) {
-        if (getter == null || field == null) {
-            throw new IllegalArgumentException();
-        }
-
-        FieldBinding<T, V> binding = new FieldBinding<>(field, getter, setter);
-        bindings.add(binding);
-
-        if (bean != null) {
-            binding.setFieldValue(bean);
-        }
-
-        field.addValueChangeListener(e -> handleChangeEvent(field));
+        BindingImpl<V> binding = new BindingImpl<>(field);
+        binding.bind(getter, setter);
     }
 
     /**
@@ -123,7 +135,7 @@ public class Binder<T> implements Serializable {
             return;
         }
 
-        for (FieldBinding<T, ?> binding : bindings) {
+        for (BindingImpl<?> binding : bindings) {
             binding.setFieldValue(bean);
         }
     }
@@ -164,7 +176,7 @@ public class Binder<T> implements Serializable {
             return;
         }
 
-        for (FieldBinding<T, ?> binding : bindings) {
+        for (BindingImpl<?> binding : bindings) {
             binding.storeFieldValue(bean);
         }
 
@@ -179,8 +191,6 @@ public class Binder<T> implements Serializable {
         // Re-bind to refresh all fields
         bind(bean);
     }
-
-    /* PROTECTED SCOPE */
 
     // Exists for the sake of making something before / after field update is
     // processed
