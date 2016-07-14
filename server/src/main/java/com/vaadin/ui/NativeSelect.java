@@ -25,8 +25,6 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
 
 /**
  * This is a simple drop-down select without, for instance, support for
@@ -37,9 +35,6 @@ import com.vaadin.server.PaintTarget;
 @SuppressWarnings("serial")
 public class NativeSelect extends AbstractSelect implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
-
-    // width in characters, mimics TextField
-    private int columns = 0;
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
 
@@ -67,56 +62,6 @@ public class NativeSelect extends AbstractSelect implements
     public NativeSelect(String caption) {
         super(caption);
         registerRpc(focusBlurRpc);
-    }
-
-    /**
-     * Sets the width of the component so that it can display approximately the
-     * given number of letters.
-     * <p>
-     * Calling {@code setColumns(10);} is equivalent to calling
-     * {@code setWidth("10em");}
-     * </p>
-     * 
-     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
-     *             characters that will be displayed. It is better to use
-     *             setWidth together with "em" to control the width of the
-     *             field.
-     * @param columns
-     *            the number of columns to set.
-     */
-    @Deprecated
-    public void setColumns(int columns) {
-        if (columns < 0) {
-            columns = 0;
-        }
-        if (this.columns != columns) {
-            this.columns = columns;
-            markAsDirty();
-        }
-    }
-
-    /**
-     * Gets the number of columns for the component.
-     * 
-     * @see #setColumns(int)
-     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
-     *             characters that will be displayed. It is better to use
-     *             setWidth together with "em" to control the width of the
-     *             field.
-     */
-    @Deprecated
-    public int getColumns() {
-        return columns;
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        // Adds the number of columns
-        if (columns != 0) {
-            target.addAttribute("cols", columns);
-        }
-
-        super.paintContent(target);
     }
 
     @Override

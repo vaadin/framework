@@ -51,21 +51,11 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().nullSelectionItemAvailable = uidl
                 .getBooleanAttribute("nullselectitem");
 
-        if (uidl.hasAttribute("cols")) {
-            getWidget().cols = uidl.getIntAttribute("cols");
-        }
         if (uidl.hasAttribute("rows")) {
             getWidget().rows = uidl.getIntAttribute("rows");
         }
 
         final UIDL ops = uidl.getChildUIDL(0);
-
-        if (getWidget().getColumns() > 0) {
-            getWidget().container.setWidth(getWidget().getColumns() + "em");
-            if (getWidget().container != getWidget().optionsContainer) {
-                getWidget().optionsContainer.setWidth("100%");
-            }
-        }
 
         getWidget().buildOptions(ops);
 
