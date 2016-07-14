@@ -15,13 +15,18 @@
  */
 package com.vaadin.tokka.ui.components.grid;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.tokka.ui.components.grid.ColumnState;
+import com.vaadin.tokka.server.communication.data.SortOrder;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 
 import elemental.json.Json;
@@ -31,6 +36,7 @@ public class Column<T, V> extends AbstractExtension implements
         TypedDataGenerator<T> {
 
     private Function<T, V> getter;
+    private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
 
     Column(String caption, Function<T, V> getter) {
         this.getter = getter;
@@ -108,5 +114,21 @@ public class Column<T, V> extends AbstractExtension implements
             }
         };
         return sortDirection == SortDirection.ASCENDING ? c : c.reversed();
+    }
+
+    public Column<T, V> setSortProperty(String... properties) {
+        sortOrderProvider = dir -> Arrays.asList(properties).stream()
+                .map(s -> new SortOrder<>(s, dir));
+        return this;
+    }
+
+    public Column<T, V> setSortBuilder(
+            Function<SortDirection, Stream<SortOrder<String>>> provider) {
+        sortOrderProvider = provider;
+        return this;
+    }
+
+    public List<SortOrder<String>> getSortOrder(SortDirection direction) {
+        return sortOrderProvider.apply(direction).collect(Collectors.toList());
     }
 }

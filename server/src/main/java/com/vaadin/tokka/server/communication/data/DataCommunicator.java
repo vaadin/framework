@@ -16,6 +16,7 @@
 package com.vaadin.tokka.server.communication.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -178,7 +179,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<T>();
     private Range pushRows = Range.withLength(0, 40);
+
     private Comparator<T> inMemorySorting;
+    private List<SortOrder<String>> backEndSorting = new ArrayList<>();
 
     public DataCommunicator() {
         addDataGenerator(handler);
@@ -200,13 +203,12 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         // FIXME: Sorting and Filtering with Backend
-        List<Object> sortOrders = Collections.emptyList();
         Set<Object> filters = Collections.emptySet();
 
         if (initial || reset) {
             // FIXME: Rethink the size question.
             int dataSourceSize = (int) getDataSource().apply(
-                    new Query(0, Integer.MAX_VALUE, sortOrders, filters))
+                    new Query(0, Integer.MAX_VALUE, backEndSorting, filters))
                     .count();
             rpc.reset(dataSourceSize);
         }
@@ -226,10 +228,9 @@ public class DataCommunicator<T> extends AbstractExtension {
                 }
                 rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
-                Query query = new Query(offset, limit, sortOrders, filters);
+                Query query = new Query(offset, limit, backEndSorting, filters);
                 rowsToPush = getDataSource().apply(query);
             }
-
             pushData(offset, rowsToPush);
         }
 
@@ -389,6 +390,12 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     public void setInMemorySorting(Comparator<T> comparator) {
         inMemorySorting = comparator;
+        reset();
+    }
+
+    public void setBackEndSorting(List<SortOrder<String>> sortOrder) {
+        backEndSorting.clear();
+        backEndSorting.addAll(sortOrder);
         reset();
     }
 
