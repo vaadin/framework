@@ -27,4 +27,11 @@ public class AbstractSelectState extends AbstractFieldState {
     {
         primaryStyleName = "v-select";
     }
+
+    /**
+     * Is the select in multiselect mode?
+     * 
+     * TODO Table and Tree still use the old communication mechanism for multi-mode support
+     */
+    public boolean multiSelect;
 }

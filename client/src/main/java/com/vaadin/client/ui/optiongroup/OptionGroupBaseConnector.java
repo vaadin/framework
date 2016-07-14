@@ -43,8 +43,7 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().setReadonly(isReadOnly());
-        getWidget().multiselect = "multi".equals(uidl
-                .getStringAttribute("selectmode"));
+        getWidget().multiselect = getState().multiSelect;
         getWidget().immediate = getState().immediate;
         getWidget().nullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
