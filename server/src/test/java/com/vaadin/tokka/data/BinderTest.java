@@ -17,6 +17,15 @@ public class BinderTest {
 
     Person p = new Person();
 
+    Validator<String> notEmpty = Validator.from(val -> !val.isEmpty(),
+            "Value cannot be empty");
+
+    Converter<String, Integer> stringToInteger = Converter.from(
+            Integer::valueOf, String::valueOf, e -> "Value must be a number");
+
+    Validator<Integer> notNegative = Validator.from(x -> x >= 0,
+            "Value must be positive");
+
     @Before
     public void setUp() {
         binder = new Binder<>();
@@ -113,27 +122,72 @@ public class BinderTest {
         assertEquals("Ilia", p.getFirstName());
     }
 
+    @Test
+    public void testConversionToPresentation() {
+        bindAge();
+        assertEquals("32", ageField.getValue());
+    }
+
+    @Test
+    public void testConversionToModelInvalidAgeFails() {
+        bindAge();
+
+        ageField.setValue("foo");
+        binder.save();
+        assertEquals(32, p.getAge());
+    }
+
+    @Test
+    public void testConversionToModelValidAgePasses() {
+        bindAge();
+
+        ageField.setValue("33");
+        binder.save();
+        assertEquals(33, p.getAge());
+    }
+
+    @Test
+    public void testConversionToModelNegativeAgeFails() {
+        bindAge();
+
+        ageField.setValue("-5");
+        binder.save();
+        assertEquals(32, p.getAge());
+    }
+
+    @Test
+    public void testPreValidationEmptyAgeFails() {
+        bindAge();
+
+        ageField.setValue("");
+        binder.save();
+        assertEquals(32, p.getAge());
+    }
+
     private void bindName() {
         binder.addField(nameField, Person::getFirstName, Person::setFirstName);
         binder.bind(p);
     }
 
     private void bindNameNonEmpty() {
-        binder.addField(nameField)
-                .addValidator(Validator.from(val -> !val.isEmpty(),
-                        "Name cannot be empty"))
+        binder.addField(nameField).addValidator(notEmpty)
                 .bind(Person::getFirstName, Person::setFirstName);
         binder.bind(p);
     }
 
     private void bindNameTwoValidators() {
         binder.addField(nameField)
-                .addValidator(Validator.from(val -> !val.isEmpty(),
-                        "Name cannot be empty"))
+                .addValidator(notEmpty)
                 .addValidator(Validator.from(val -> val.length() < 20,
-                        "Name must be shorter than 20 letters"))
-
+                        "Value must be shorter than 20 letters"))
                 .bind(Person::getFirstName, Person::setFirstName);
+        binder.bind(p);
+    }
+
+    private void bindAge() {
+        binder.addField(ageField).addValidator(notEmpty)
+                .setConverter(stringToInteger).addValidator(notNegative)
+                .bind(Person::getAge, Person::setAge);
         binder.bind(p);
     }
 }

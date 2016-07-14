@@ -16,18 +16,16 @@
 package com.vaadin.tokka.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import com.vaadin.tokka.data.Validator.Result;
 import com.vaadin.tokka.data.selection.SelectionModel;
+import com.vaadin.tokka.data.util.Result;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.tokka.ui.components.Listing;
 
@@ -55,6 +53,7 @@ import com.vaadin.tokka.ui.components.Listing;
  * @see Binding
  * @see HasValue
  * @see Validator
+ * @see Converter
  */
 public class Binder<T> implements Serializable {
 
@@ -82,7 +81,22 @@ public class Binder<T> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public Binding<T, V> addValidator(Validator<? super V> validator);
+        public Binding<T, V> addValidator(Validator<V> validator);
+
+        /**
+         * Allows the binding to map to another model type via the given
+         * converter. For instance, with an appropriate converter, a
+         * {@code TextField} can be bound to an integer-typed property.
+         * 
+         * @param <U>
+         *            the model type of the converter
+         * @param converter
+         *            the converter to use, not null
+         * @return a new binding with the appropriate type
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public <U> Binding<T, U> setConverter(Converter<V, U> converter);
 
         /**
          * Completes this binding using the given getter and setter functions
@@ -102,18 +116,21 @@ public class Binder<T> implements Serializable {
 
     /**
      * An internal implementation of {@code Binding}.
+     * 
+     * @param U
+     *            the field value type
+     * @param V
+     *            the property value type
      */
-    private class BindingImpl<V> implements Binding<T, V> {
+    // TODO make protected, allow customization
+    private class BindingImpl<U, V> implements Binding<T, V> {
 
-        private HasValue<V> field;
+        private HasValue<U> field;
+
         private Function<T, V> getter;
         private BiConsumer<T, V> setter;
-        private List<Validator<? super V>> validators = new ArrayList<>();
 
-        private BindingImpl(HasValue<V> field) {
-            Objects.requireNonNull(field, "field cannot be null");
-            this.field = field;
-        }
+        private Converter<U, V> converter;
 
         @Override
         public void bind(Function<T, V> getter, BiConsumer<T, V> setter) {
@@ -129,11 +146,23 @@ public class Binder<T> implements Serializable {
         }
 
         @Override
-        public Binding<T, V> addValidator(Validator<? super V> validator) {
+        public Binding<T, V> addValidator(Validator<V> validator) {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
-            validators.add(validator);
+
+            converter = converter.chain(Converter.from(validator, v -> v));
             return this;
+        }
+
+        @Override
+        public <W> Binding<T, W> setConverter(Converter<V, W> converter) {
+            checkUnbound();
+            Objects.requireNonNull(converter, "converter cannot be null");
+
+            BindingImpl<U, W> b = new BindingImpl<>();
+            b.field = field;
+            b.converter = this.converter.chain(converter);
+            return b;
         }
 
         /**
@@ -144,7 +173,7 @@ public class Binder<T> implements Serializable {
          *            the bean to fetch the property value from
          */
         private void setFieldValue(T bean) {
-            field.setValue(getter.apply(bean));
+            field.setValue(converter.toPresentation(getter.apply(bean)));
         }
 
         /**
@@ -158,12 +187,13 @@ public class Binder<T> implements Serializable {
             if (setter == null) {
                 return;
             }
-            V value = field.getValue();
-            if (validators.stream().map(v -> v.apply(value))
-                    .allMatch(Result::isOk)) {
-                setter.accept(bean, value);
+            Result<V> result = converter.toModel(field.getValue());
+            result.handle(value -> setter.accept(bean, value), error -> {
                 // TODO Validation error handling
-            }
+                System.err.println(
+                        "Field " + field + " validation failed: '"
+                                + field.getValue() + "': " + error);
+            });
         }
 
         private void checkUnbound() {
@@ -176,7 +206,7 @@ public class Binder<T> implements Serializable {
 
     private T bean;
 
-    private Set<BindingImpl<?>> bindings = new LinkedHashSet<>();
+    private Set<BindingImpl<?, ?>> bindings = new LinkedHashSet<>();
 
     /**
      * Returns an {@code Optional} of the bean that has been bound with
@@ -202,7 +232,7 @@ public class Binder<T> implements Serializable {
      * @return the new binding
      */
     public <V> Binding<T, V> addField(HasValue<V> field) {
-        return new BindingImpl<>(field);
+        return createBinding(field);
     }
 
     /**
@@ -225,9 +255,9 @@ public class Binder<T> implements Serializable {
      * @param field
      *            editor field, not null
      * @param getter
-     *            getter method to fetch data from the bean, not null
+     *            a function to fetch data from the bean, not null
      * @param setter
-     *            setter method to store data back to the bean or null if the
+     *            a function to store data back to the bean, or null if the
      *            field should be read-only
      */
     public <V> void addField(HasValue<V> field, Function<T, V> getter,
@@ -255,7 +285,7 @@ public class Binder<T> implements Serializable {
             return;
         }
 
-        for (BindingImpl<?> binding : bindings) {
+        for (BindingImpl<?, ?> binding : bindings) {
             binding.setFieldValue(bean);
         }
     }
@@ -298,7 +328,7 @@ public class Binder<T> implements Serializable {
             return;
         }
 
-        for (BindingImpl<?> binding : bindings) {
+        for (BindingImpl<?, ?> binding : bindings) {
             binding.storeFieldValue(bean);
         }
 
@@ -334,4 +364,12 @@ public class Binder<T> implements Serializable {
      * 
      * // TODO: Document protected abstract void doJSRValidation();
      */
+
+    private <V> BindingImpl<V, V> createBinding(HasValue<V> field) {
+        Objects.requireNonNull(field, "field cannot be null");
+        BindingImpl<V, V> b = new BindingImpl<>();
+        b.field = field;
+        b.converter = Converter.identity();
+        return b;
+    }
 }

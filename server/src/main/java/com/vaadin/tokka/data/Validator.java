@@ -17,143 +17,109 @@
 package com.vaadin.tokka.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.vaadin.tokka.data.Validator.Result;
+import com.vaadin.tokka.data.util.Result;
 
 /**
- * A functional interface for validating user input. When a validator instance
- * is applied to a value of the corresponding type, it returns a <i>result</i>
- * signifying that the value either passed or failed the validation.
+ * A functional interface for validating user input or other potentially invalid
+ * data. When a validator instance is applied to a value of the corresponding
+ * type, it returns a <i>result</i> signifying that the value either passed or
+ * failed the validation.
+ * <p>
+ * For instance, the following validator checks if a number is positive:
+ * 
+ * <pre>
+ * Validator&lt;Integer&gt; v = num -> {
+ *     if (num >= 0)
+ *         return Result.ok(num);
+ *     else
+ *         return Result.error("number must be positive");
+ * };
+ * </pre>
  * 
  * @author Vaadin Ltd.
  *
  * @param <T>
  *            the type of the value to validate
+ * 
+ * @see Result
  */
 @FunctionalInterface
-public interface Validator<T>
-        extends Function<T, Validator.Result>, Serializable {
-
-    /**
-     * The result of applying a validator to a value.
-     *
-     */
-    public interface Result extends Serializable {
-        /**
-         * Creates a result signaling that the value passed the validation.
-         * 
-         * @return a "passed" result
-         */
-        public static Result ok() {
-            return new OK();
-        }
-
-        /**
-         * Returns a result signaling that the value failed to validate, with
-         * the given error message. The error message should be aimed at the end
-         * user, not the developer, and contain immediately useful info on how
-         * the user should amend their input.
-         * 
-         * @param message
-         *            the error message
-         * @return a "failed" result
-         */
-        public static Result error(String message) {
-            return new Error(message);
-        }
-
-        /**
-         * Returns whether this result signals a passing validation.
-         * 
-         * @return whether this result is "ok" or not
-         */
-        public boolean isOk();
-
-        /**
-         * Returns a possibly empty list of validation messages.
-         * 
-         * @return a list of validation messages
-         */
-        public List<String> getMessages();
-    }
+public interface Validator<T> extends Function<T, Result<T>>, Serializable {
 
     /**
      * Returns a validator that passes any value.
      * 
+     * @param <T>
+     *            the value type
      * @return an always-passing validator
      */
     public static <T> Validator<T> alwaysPass() {
-        return v -> Result.ok();
+        return v -> Result.ok(v);
     }
 
     /**
-     * Builds a validator out of a predicate function and an error message. If
-     * the predicate returns true, the validator returns {@code Result.ok()}; if
+     * Returns a validator that chains this validator with the given function.
+     * The function may be another validator. The resulting validator first
+     * applies this validator, and if the value passes, then the given
+     * validator.
+     * <p>
+     * For instance, the following chained validator checks if a number is
+     * between 0 and 10, inclusive:
+     * 
+     * <pre>
+     * Validator&lt;Integer&gt; v = Validator
+     *         .from(num -> num >= 0, "number must be >= 0")
+     *         .chain(Validator.from(num -> num <= 10, "number must be <= 10"));
+     * </pre>
+     * 
+     * @param next
+     *            the filter to apply next
+     * @return a chained filter
+     * 
+     * @see #from(Predicate, String)
+     */
+    public default Validator<T> chain(Function<T, Result<T>> next) {
+        return val -> apply(val).flatMap(next);
+    }
+
+    /**
+     * Builds a validator out of a conditional function and an error message. If
+     * the function returns true, the validator returns {@code Result.ok()}; if
      * it returns false or throws an exception, {@code Result.error()} is
      * returned with the given message.
+     * <p>
+     * For instance, the following validator checks if a number is between 0 and
+     * 10, inclusive:
      * 
+     * <pre>
+     * Validator&lt;Integer&gt; v = Validator.from(
+     *         num -> num >= 0 && num <= 10,
+     *         "number must be between 0 and 10");
+     * </pre>
+     * 
+     * @param <T>
+     *            the value type
      * @param guard
-     *            the predicate used to validate
+     *            the function used to validate
      * @param errorMessage
      *            the message returned if validation fails
-     * @return the new validator using the predicate
+     * @return the new validator using the function
      */
     public static <T> Validator<T> from(Predicate<T> guard,
             String errorMessage) {
         return value -> {
             try {
                 if (guard.test(value)) {
-                    return Result.ok();
+                    return Result.ok(value);
                 } else {
                     return Result.error(errorMessage);
                 }
             } catch (Exception e) {
-                return Result
-                        .error(errorMessage + ": " + e.getLocalizedMessage());
+                return Result.error(errorMessage + ": " + e);
             }
         };
-    }
-}
-
-/**
- * Represents a successful validation result.
- */
-class OK implements Result {
-
-    @Override
-    public List<String> getMessages() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isOk() {
-        return true;
-    }
-};
-
-/**
- * Represents a failed validation result.
- */
-class Error implements Validator.Result {
-
-    private List<String> messages = new ArrayList<>();
-
-    Error(String message) {
-        messages.add(message);
-    }
-
-    @Override
-    public List<String> getMessages() {
-        return messages;
-    }
-
-    @Override
-    public boolean isOk() {
-        return false;
     }
 }
