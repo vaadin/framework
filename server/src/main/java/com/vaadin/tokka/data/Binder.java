@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tokka.server.communication.data;
+package com.vaadin.tokka.data;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -22,6 +22,9 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.vaadin.tokka.server.communication.data.SelectionModel;
+import com.vaadin.tokka.server.communication.data.SelectionModel.Multi;
+import com.vaadin.tokka.server.communication.data.SelectionModel.Single;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.tokka.ui.components.Listing;
 

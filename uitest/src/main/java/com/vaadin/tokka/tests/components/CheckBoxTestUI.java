@@ -2,8 +2,8 @@ package com.vaadin.tokka.tests.components;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tokka.data.Binder;
 import com.vaadin.tokka.event.Registration;
-import com.vaadin.tokka.server.communication.data.Binder;
 import com.vaadin.tokka.ui.components.fields.CheckBox;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
