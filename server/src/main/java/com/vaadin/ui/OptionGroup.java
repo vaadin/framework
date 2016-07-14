@@ -64,7 +64,6 @@ public class OptionGroup extends AbstractSelect implements
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("type", "optiongroup");
         if (isHtmlContentAllowed()) {
             target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED, true);
         }

@@ -111,7 +111,6 @@ public class NativeSelect extends AbstractSelect implements
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("type", "native");
         // Adds the number of columns
         if (columns != 0) {
             target.addAttribute("cols", columns);

@@ -141,7 +141,6 @@ public class TwinColSelect extends AbstractSelect {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("type", "twincol");
         // Adds the number of columns
         if (columns != 0) {
             target.addAttribute("cols", columns);
