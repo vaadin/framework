@@ -217,11 +217,6 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
     }
 
     /**
-     * Is the select in multiselect mode?
-     */
-    private boolean multiSelect = false;
-
-    /**
      * Select options.
      */
     protected Container items;
@@ -355,9 +350,6 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Paints select attributes
-        if (isMultiSelect()) {
-            target.addAttribute("selectmode", "multi");
-        }
         if (isNewItemsAllowed()) {
             target.addAttribute("allownewitem", true);
         }
@@ -1102,7 +1094,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
      * @return the Value of property multiSelect.
      */
     public boolean isMultiSelect() {
-        return multiSelect;
+        return getState(false).multiSelect;
     }
 
     /**
@@ -1121,12 +1113,12 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
             throw new IllegalStateException(
                     "Multiselect and NullSelectionItemId can not be set at the same time.");
         }
-        if (multiSelect != this.multiSelect) {
+        if (multiSelect != getState(false).multiSelect) {
 
             // Selection before mode change
             final Object oldValue = getValue();
 
-            this.multiSelect = multiSelect;
+            getState().multiSelect = multiSelect;
 
             // Convert the value type
             if (multiSelect) {
@@ -1793,7 +1785,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
      */
     @Override
     public boolean isEmpty() {
-        if (!multiSelect) {
+        if (!isMultiSelect()) {
             return super.isEmpty();
         } else {
             Object value = getValue();
@@ -2341,5 +2333,10 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
     @Override
     protected AbstractSelectState getState() {
         return (AbstractSelectState) super.getState();
+    }
+
+    @Override
+    protected AbstractSelectState getState(boolean markAsDirty) {
+        return (AbstractSelectState) super.getState(markAsDirty);
     }
 }
