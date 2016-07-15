@@ -17,7 +17,9 @@
 package com.vaadin.tokka.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.vaadin.tokka.data.util.Result;
 
@@ -28,6 +30,9 @@ import com.vaadin.tokka.data.util.Result;
  * corresponding type used on the data model layer. In general, some values of
  * the presentation type might not be convertible to the model type, so the
  * {@code Converter} interface is not quite symmetrical.
+ * <p>
+ * Unless otherwise specified, {@code Converter} method arguments cannot be
+ * null.
  * 
  * @author Vaadin Ltd.
  *
@@ -53,18 +58,27 @@ public interface Converter<P, M> extends Serializable {
      * Constructs a converter from two functions. Any {@code Exception}
      * instances thrown from the {@code toModel} function are converted into
      * error-bearing {@code Result} objects using the given {@code onError}
-     * function.
+     * function. The {@code toPresentation} function should always succeed.
+     * <p>
+     * For example, the following converter converts between strings and
+     * integers:
+     * 
+     * <pre>
+     * Converter&lt;String, Integer&gt; c = Converter.from(
+     *         String::valueOf, Integer::valueOf,
+     *         e -> "value is not a valid number");
+     * </pre>
      * 
      * @param <P>
      *            the presentation type
      * @param <M>
      *            the model type
      * @param toModel
-     *            the function to convert to model
+     *            the function to convert to model, not null
      * @param toPresentation
-     *            the function to convert to presentation
+     *            the function to convert to presentation, not null
      * @param onError
-     *            the function to provide error messages
+     *            the function to provide error messages, not null
      * @return the new converter
      * 
      * @see Result
@@ -74,28 +88,54 @@ public interface Converter<P, M> extends Serializable {
             Function<M, P> toPresentation,
             Function<Exception, String> onError) {
 
+        Objects.requireNonNull(toModel, "toModel cannot be null");
+        Objects.requireNonNull(toPresentation, "toPresentation cannot be null");
+        Objects.requireNonNull(onError, "onError cannot be null");
+
         return from(val -> Result.of(() -> toModel.apply(val), onError),
                 toPresentation);
     }
 
     /**
-     * Constructs a converter from a filter and a function.
+     * Constructs a converter from two functions. The {@code toModel} function
+     * returns a {@code Result} object to represent the success or failure of
+     * the conversion. The {@code toPresentation} function should always
+     * succeed.
+     * <p>
+     * For example, the following converter converts between strings and
+     * integers:
+     * 
+     * <pre>
+     * Converter<String, Integer> stringToInt = Converter.from(
+     *         str -> {
+     *             try {
+     *                 return Result.ok(Integer.valueOf(str));
+     *             } catch (NumberFormatException e) {
+     *                 return Result.error("not a valid number: " + str);
+     *             }
+     *         },
+     *         String::valueOf);
+     * </pre>
      * 
      * @param <P>
      *            the presentation type
      * @param <M>
      *            the model type
      * @param toModel
-     *            the function to convert to model
+     *            the function to convert to model, not null
      * @param toPresentation
-     *            the function to convert to presentation
+     *            the function to convert to presentation, not null
      * @return the new converter
      * 
-     * @see Filter
+     * @see Result
      * @see Function
+     * @see Result#of(Supplier, Function)
      */
     public static <P, M> Converter<P, M> from(Function<P, Result<M>> toModel,
             Function<M, P> toPresentation) {
+        Objects.requireNonNull(toModel, "toModel cannot be null");
+        Objects.requireNonNull(toPresentation, "toPresentation cannot be null");
+
         return new Converter<P, M>() {
 
             @Override
@@ -117,9 +157,12 @@ public interface Converter<P, M> extends Serializable {
      * <p>
      * This method should never throw exceptions in case of invalid input, only
      * in actual exceptional conditions.
+     * <p>
+     * The behavior in case of a null value is implementation-defined and should
+     * be documented.
      * 
      * @param value
-     *            the value to convert
+     *            the value to convert, null handling is implementation-defined
      * @return the result of the conversion
      * 
      * @see #toPresentation(M)
@@ -133,9 +176,12 @@ public interface Converter<P, M> extends Serializable {
      * {@link #toModel(Object) toModel}, the conversion is expected not to fail;
      * a failure should imply either a bug in the application logic or invalid
      * data in the model.
+     * <p>
+     * The behavior in case of a null value is implementation-defined and should
+     * be documented.
      * 
      * @param value
-     *            the value to convert
+     *            the value to convert, null handling is implementation-defined
      * @return the converted value
      * 
      * @see #toModel(P)
@@ -151,7 +197,7 @@ public interface Converter<P, M> extends Serializable {
      * @param <T>
      *            the model type of the resulting converter
      * @param other
-     *            the converter to chain
+     *            the converter to chain, not null
      * @return a chained converter
      */
     public default <T> Converter<P, T> chain(Converter<M, T> other) {

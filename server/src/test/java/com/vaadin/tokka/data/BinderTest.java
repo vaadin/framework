@@ -69,14 +69,18 @@ public class BinderTest {
         assertEquals("Johannes", nameField.getValue());
     }
 
-    @Test
-    public void testNoValueChangesAfterUnbind() {
+    @Test(expected = IllegalStateException.class)
+    public void testSaveBeforeBindThrows() {
+        binder.save();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSaveAfterUnbindThrows() {
         bindName();
 
-        binder.bind(null);
+        binder.unbind();
         nameField.setValue("Teemu");
         binder.save();
-        assertEquals("Johannes", p.getFirstName());
     }
 
     @Test

@@ -17,6 +17,7 @@
 package com.vaadin.tokka.data.util;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,6 +30,8 @@ import java.util.function.Supplier;
  * <p>
  * Result instances are created using the factory methods {@link #ok(R)} and
  * {@link #error(String)}, denoting success and failure respectively.
+ * <p>
+ * Unless otherwise specified, {@code Result} method arguments cannot be null.
  *
  * @param <R>
  *            the result value type
@@ -41,7 +44,7 @@ public interface Result<R> extends Serializable {
      * @param <R>
      *            the result value type
      * @param value
-     *            the result value
+     *            the result value, can be null
      * @return a successful result
      */
     public static <R> Result<R> ok(R value) {
@@ -58,6 +61,7 @@ public interface Result<R> extends Serializable {
      * @return a failure result
      */
     public static <R> Result<R> error(String message) {
+        Objects.requireNonNull(message, "message cannot be null");
         return new ResultImpl<R>(null, message);
     }
 
@@ -77,6 +81,9 @@ public interface Result<R> extends Serializable {
      */
     public static <R> Result<R> of(Supplier<R> supplier,
             Function<Exception, String> onError) {
+        Objects.requireNonNull(supplier, "supplier cannot be null");
+        Objects.requireNonNull(onError, "onError cannot be null");
+
         try {
             return ok(supplier.get());
         } catch (Exception e) {
@@ -119,9 +126,9 @@ public interface Result<R> extends Serializable {
      * this Result denotes a success or a failure, respectively.
      * 
      * @param ifOk
-     *            the function to call if success, not null
+     *            the function to call if success
      * @param ifError
-     *            the function to call if failure, not null
+     *            the function to call if failure
      */
     public void handle(Consumer<R> ifOk, Consumer<String> ifError);
 
@@ -152,6 +159,8 @@ class ResultImpl<R> implements Result<R> {
     @Override
     @SuppressWarnings("unchecked")
     public <S> Result<S> flatMap(Function<R, Result<S>> mapper) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         if (value != null) {
             return mapper.apply(value);
         } else {
@@ -162,6 +171,8 @@ class ResultImpl<R> implements Result<R> {
 
     @Override
     public void handle(Consumer<R> ifOk, Consumer<String> ifError) {
+        Objects.requireNonNull(ifOk, "ifOk cannot be null");
+        Objects.requireNonNull(ifError, "ifError cannot be null");
         if (message == null) {
             ifOk.accept(value);
         } else {
@@ -173,5 +184,4 @@ class ResultImpl<R> implements Result<R> {
     public Optional<String> getMessage() {
         return Optional.ofNullable(message);
     }
-
 }

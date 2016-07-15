@@ -44,8 +44,10 @@ import com.vaadin.tokka.ui.components.Listing;
  * A binder instance can be bound to a single bean instance at a time, but can
  * be rebound as needed. This allows usage patterns like a <i>master-details</i>
  * view, where a select component is used to pick the bean to edit.
+ * <p>
+ * Unless otherwise specified, {@code Binder} method arguments cannot be null.
  * 
- * @author Vaadin Ltd
+ * @author Vaadin Ltd.
  *
  * @param <T>
  *            the bean type
@@ -74,9 +76,12 @@ public class Binder<T> implements Serializable {
          * registration order, when the field value is saved to the backing
          * property. If any validator returns a failure, the property value is
          * not updated.
+         * <p>
+         * Unless otherwise specified, {@code Binding} method arguments cannot
+         * be null.
          * 
          * @param validator
-         *            the validator to add, not null
+         *            the validator to add
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
@@ -102,12 +107,15 @@ public class Binder<T> implements Serializable {
          * Completes this binding using the given getter and setter functions
          * representing a backing bean property. The functions are used to
          * update the field value from the property and to store the field value
-         * to the property, respectively.
+         * to the property, respectively. The setter may be null; in that case
+         * the bound field will be read-only.
          * 
          * @param getter
-         *            the function to get the value of the property to the field
+         *            the function to get the value of the property to the
+         *            field, not null
          * @param setter
-         *            the function to save the field value to the property
+         *            the function to save the field value to the property or
+         *            null if read-only
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
@@ -117,9 +125,9 @@ public class Binder<T> implements Serializable {
     /**
      * An internal implementation of {@code Binding}.
      * 
-     * @param U
+     * @param <U>
      *            the field value type
-     * @param V
+     * @param <V>
      *            the property value type
      */
     // TODO make protected, allow customization
@@ -173,6 +181,7 @@ public class Binder<T> implements Serializable {
          *            the bean to fetch the property value from
          */
         private void setFieldValue(T bean) {
+            assert bean != null;
             field.setValue(converter.toPresentation(getter.apply(bean)));
         }
 
@@ -184,6 +193,7 @@ public class Binder<T> implements Serializable {
          *            the bean to set the property value to
          */
         private void storeFieldValue(T bean) {
+            assert bean != null;
             if (setter == null) {
                 return;
             }
@@ -228,7 +238,7 @@ public class Binder<T> implements Serializable {
      * @param <V>
      *            the value type of the field
      * @param field
-     *            the field to be bound
+     *            the field to be bound, not null
      * @return the new binding
      */
     public <V> Binding<T, V> addField(HasValue<V> field) {
@@ -240,7 +250,7 @@ public class Binder<T> implements Serializable {
      * pair. If the Binder is already bound to some item, the new field will be
      * also bound to it.
      * <p>
-     * Not providing a setter implicitly sets the field to be read only.
+     * The setter may be null; in that case the field will be read-only.
      * <p>
      * Getters and setters can be used to make conversions happen. They are also
      * a good place to update the state of the field. You should avoid making
@@ -253,7 +263,7 @@ public class Binder<T> implements Serializable {
      * @param <V>
      *            the value type of the field
      * @param field
-     *            editor field, not null
+     *            the editor field to bind, not null
      * @param getter
      *            a function to fetch data from the bean, not null
      * @param setter
@@ -266,8 +276,8 @@ public class Binder<T> implements Serializable {
     }
 
     /**
-     * Binds the given bean to all the fields added to this Binder. If the bean
-     * is null, removes any existing binding.
+     * Binds the given bean to all the fields added to this Binder. To remove
+     * the binding, call {@link #unbind()}.
      * <p>
      * When a bean is bound, the field values are updated by invoking their
      * corresponding getter functions. Field values are saved into the bean
@@ -275,21 +285,25 @@ public class Binder<T> implements Serializable {
      * {@link #save()} method is called.
      * 
      * @param bean
-     *            edited bean or null to bind nothing
+     *            the bean to edit, not null
      */
     public void bind(T bean) {
+        Objects.requireNonNull(bean, "bean cannot be null");
         this.bean = bean;
-
-        if (bean == null) {
-            // TODO: clean up?
-            return;
-        }
-
         for (BindingImpl<?, ?> binding : bindings) {
             binding.setFieldValue(bean);
         }
     }
 
+    /**
+     * Unbinds the currently bound bean if any. If there is no bound bean, does
+     * nothing.
+     */
+    public void unbind() {
+        this.bean = null;
+    }
+
+    // FIXME Javadoc
     public <V> void addSelect(Listing<V> listing, Function<T, V> getter,
             BiConsumer<T, V> setter) {
         if (listing.getSelectionModel() instanceof SelectionModel.Single) {
@@ -301,6 +315,7 @@ public class Binder<T> implements Serializable {
         }
     }
 
+    // FIXME Javadoc
     public <V> void addMultiSelect(Listing<V> listing,
             Function<T, Collection<V>> getter,
             BiConsumer<T, Collection<V>> setter) {
@@ -313,60 +328,25 @@ public class Binder<T> implements Serializable {
         }
     }
 
-    // TODO: Is this correct return value? How should we manage the error
-    // messages from custom validation? Documentation?
-    // public abstract void addValidator(ValueProvider<T, String> validator);
-    // TODO: Needs remove method as well?
-
     /**
      * Saves any changes from the bound fields to the edited bean. Values that
-     * do not pass validation are not saved. If there is no currently bound
-     * bean, does nothing.
+     * do not pass validation are not saved.
+     * 
+     * @throws IllegalStateException
+     *             if there is no bound bean
      */
     public void save() {
         if (bean == null) {
-            return;
+            throw new IllegalStateException("Cannot save: no bean bound");
         }
-
         for (BindingImpl<?, ?> binding : bindings) {
             binding.storeFieldValue(bean);
         }
-
-        // TODO: Postvalidation
     }
-
-    /**
-     * Resets any changes in the fields to match values from the edited bean.
-     */
-    // TODO: Do we need this?
-    public void reset() {
-        // Re-bind to refresh all fields
-        bind(bean);
-    }
-
-    // Exists for the sake of making something before / after field update is
-    // processed
-    /**
-     * This method does prevalidation for every changed field. By overriding
-     * this method you can react to changes that need to happen when certain
-     * fields are edited. e.g. re-apply conversions.
-     * 
-     * @param field
-     *            changed field
-     */
-    protected <V> void handleChangeEvent(HasValue<V> field) {
-        // TODO: pre-validation ?
-    }
-
-    /*
-     * FIXME: Validation needs an idea. // TODO: Document protected abstract
-     * void validate();
-     * 
-     * // TODO: Document protected abstract void doJSRValidation();
-     */
 
     private <V> BindingImpl<V, V> createBinding(HasValue<V> field) {
         Objects.requireNonNull(field, "field cannot be null");
+
         BindingImpl<V, V> b = new BindingImpl<>();
         b.field = field;
         b.converter = Converter.identity();

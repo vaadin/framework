@@ -17,6 +17,7 @@
 package com.vaadin.tokka.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -62,9 +63,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
 
     /**
      * Returns a validator that chains this validator with the given function.
-     * The function may be another validator. The resulting validator first
-     * applies this validator, and if the value passes, then the given
-     * validator.
+     * Specifically, the function may be another validator. The resulting
+     * validator first applies this validator, and if the value passes, then the
+     * given validator.
      * <p>
      * For instance, the following chained validator checks if a number is
      * between 0 and 10, inclusive:
@@ -76,12 +77,13 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * </pre>
      * 
      * @param next
-     *            the filter to apply next
-     * @return a chained filter
+     *            the validator to apply next, not null
+     * @return a chained validator
      * 
      * @see #from(Predicate, String)
      */
     public default Validator<T> chain(Function<T, Result<T>> next) {
+        Objects.requireNonNull(next, "next cannot be null");
         return val -> apply(val).flatMap(next);
     }
 
@@ -103,13 +105,15 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * @param <T>
      *            the value type
      * @param guard
-     *            the function used to validate
+     *            the function used to validate, not null
      * @param errorMessage
-     *            the message returned if validation fails
+     *            the message returned if validation fails, not null
      * @return the new validator using the function
      */
     public static <T> Validator<T> from(Predicate<T> guard,
             String errorMessage) {
+        Objects.requireNonNull(guard, "guard cannot be null");
+        Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
         return value -> {
             try {
                 if (guard.test(value)) {
