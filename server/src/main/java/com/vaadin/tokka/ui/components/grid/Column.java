@@ -32,16 +32,41 @@ import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 import elemental.json.Json;
 import elemental.json.JsonObject;
 
+/**
+ * This extension manages the configuration and data communication for a Column
+ * inside of a Grid component.
+ *
+ * @param <T>
+ *            grid bean type
+ * @param <V>
+ *            column value type
+ */
 public class Column<T, V> extends AbstractExtension implements
         TypedDataGenerator<T> {
 
     private Function<T, V> getter;
     private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
+    private Comparator<T> comparator;
 
+    /**
+     * Constructs a new Column configuration with given header caption and value
+     * provider.
+     * 
+     * @param caption
+     *            header caption
+     * @param getter
+     *            function to get values from data objects
+     */
     Column(String caption, Function<T, V> getter) {
         this.getter = getter;
         getState().caption = caption;
         getState().sortable = true;
+
+        comparator = (a, b) -> {
+            // FIXME: We should check if the value is acutally comparable.
+            Comparable<V> comp = (Comparable<V>) getter.apply(a);
+            return comp.compareTo(getter.apply(b));
+        };
     }
 
     @Override
@@ -53,7 +78,7 @@ public class Column<T, V> extends AbstractExtension implements
             jsonObject.put(DataProviderConstants.DATA, Json.createObject());
         }
         JsonObject obj = jsonObject.getObject(DataProviderConstants.DATA);
-        // TODO: Renderers
+        // FIXME: Renderers
         obj.put(getState(false).communicationId, getter.apply(data).toString());
     }
 
@@ -61,18 +86,32 @@ public class Column<T, V> extends AbstractExtension implements
     public void destroyData(T data) {
     }
 
-    public ColumnState getState() {
+    @Override
+    protected ColumnState getState() {
         return getState(true);
     }
 
-    public ColumnState getState(boolean markAsDirty) {
+    @Override
+    protected ColumnState getState(boolean markAsDirty) {
         return (ColumnState) super.getState(markAsDirty);
     }
 
+    /**
+     * This method extends the given Grid with this Column.
+     * 
+     * @param grid
+     *            grid to extend
+     */
     void extend(Grid<T> grid) {
         super.extend(grid);
     }
 
+    /**
+     * Sets the identifier to use with this Column in communication.
+     * 
+     * @param key
+     *            identifier string
+     */
     void setCommunicationId(String key) {
         getState().communicationId = key;
     }
@@ -99,35 +138,78 @@ public class Column<T, V> extends AbstractExtension implements
         return getState(false).sortable;
     }
 
+    /**
+     * Gets the header caption for this column.
+     * 
+     * @return caption
+     */
     public String getCaption() {
         return getState(false).caption;
     }
 
-    Comparator<T> getComparator(SortDirection sortDirection) {
-        Comparator<T> c = new Comparator<T>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public int compare(T o1, T o2) {
-                Comparable<V> comp = (Comparable<V>) getter.apply(o1);
-                return comp.compareTo(getter.apply(o2));
-            }
-        };
-        return sortDirection == SortDirection.ASCENDING ? c : c.reversed();
+    /**
+     * Sets a comparator to use with in-memory sorting with this column.
+     * 
+     * @param comparator
+     *            comparator to sort data by this column
+     * @return column
+     */
+    public Column<T, V> setComparator(Comparator<T> comparator) {
+        this.comparator = comparator;
+        return this;
     }
 
+    /**
+     * Gets a comparator that defines how this column is sorted depending on the
+     * sort direction.
+     * 
+     * @param sortDirection
+     *            direction this column is sorted to
+     * @return comparator
+     */
+    public Comparator<T> getComparator(SortDirection sortDirection) {
+        boolean reverse = sortDirection != SortDirection.ASCENDING;
+        return reverse ? comparator.reversed() : comparator;
+    }
+
+    /**
+     * Sets strings describing back end properties to be used when sorting this
+     * column. This method is a short hand for {@link #setSortBuilder(Function)}
+     * that takes an array of strings and uses the same sorting direction for
+     * all of them.
+     * 
+     * @param properties
+     *            array of strings describing backend properties
+     * @return column
+     */
     public Column<T, V> setSortProperty(String... properties) {
         sortOrderProvider = dir -> Arrays.asList(properties).stream()
                 .map(s -> new SortOrder<>(s, dir));
         return this;
     }
 
+    /**
+     * Sets the sort orders when sorting this column. Sort order builder is a
+     * function that provider {@link SortOrder} objects to describe how to sort
+     * by this column.
+     * 
+     * @param provider
+     *            function to generate sort orders with given direction
+     * @return column
+     */
     public Column<T, V> setSortBuilder(
             Function<SortDirection, Stream<SortOrder<String>>> provider) {
         sortOrderProvider = provider;
         return this;
     }
 
+    /**
+     * Gets the sort orders for this column when sorting to given direction.
+     * 
+     * @param direction
+     *            sorting direction
+     * @return list of sort orders
+     */
     public List<SortOrder<String>> getSortOrder(SortDirection direction) {
         return sortOrderProvider.apply(direction).collect(Collectors.toList());
     }
