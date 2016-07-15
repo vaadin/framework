@@ -211,6 +211,11 @@ public class PushRequestHandler implements RequestHandler,
         atmosphere.addInitParameter(
                 ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
                 "false");
+        // This prevents Atmosphere from recreating a broadcaster after it has
+        // already been destroyed when the servlet is being undeployed
+        // (see #20026)
+        atmosphere.addInitParameter(ApplicationConfig.RECOVER_DEAD_BROADCASTER,
+                "false");
         // Disable Atmosphere's message about commercial support
         atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
                 "false");
