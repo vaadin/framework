@@ -91,6 +91,8 @@ import elemental.json.JsonValue;
  * <li><code>onStateChange</code> - If the JavaScript code assigns a function to
  * the field, that function is called whenever the contents of the shared state
  * is changed.</li>
+ * <li><code>onUnregister</code> - If the JavaScript code assigns a function to
+ * the field, that function is called when the connector has been unregistered.</li>
  * <li>Any field name corresponding to a call to
  * {@link #addFunction(String, JavaScriptFunction)} on the server will
  * automatically be present as a function that triggers the registered function
