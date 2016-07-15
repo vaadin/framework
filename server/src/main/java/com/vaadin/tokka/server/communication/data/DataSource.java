@@ -24,12 +24,15 @@ import java.util.stream.Stream;
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
- * <p>
- * FIXME: Missing Query class
  * 
  * @since
  * @param <T>
  *            data type
+ * @param <SORT>
+ *            sorting information data type
+ * 
+ * @see InMemoryDataSource
+ * @see BackEndDataSource
  */
 public interface DataSource<T, SORT> extends Function<Query, Stream<T>>,
         Serializable {
