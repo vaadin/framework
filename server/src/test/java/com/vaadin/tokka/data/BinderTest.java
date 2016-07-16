@@ -1,11 +1,14 @@
 package com.vaadin.tokka.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.UserError;
 import com.vaadin.tests.data.bean.Person;
+import com.vaadin.tokka.ui.components.fields.AbstractField;
 import com.vaadin.tokka.ui.components.fields.TextField;
 
 public class BinderTest {
@@ -90,6 +93,7 @@ public class BinderTest {
         nameField.setValue("");
         binder.save();
         assertEquals("Johannes", p.getFirstName());
+        assertEquals("Value cannot be empty", getError(nameField));
     }
 
     @Test
@@ -99,6 +103,7 @@ public class BinderTest {
         nameField.setValue("Leif");
         binder.save();
         assertEquals("Leif", p.getFirstName());
+        assertNull(nameField.getComponentError());
     }
 
     @Test
@@ -139,6 +144,7 @@ public class BinderTest {
         ageField.setValue("foo");
         binder.save();
         assertEquals(32, p.getAge());
+        assertEquals("Value must be a number", getError(ageField));
     }
 
     @Test
@@ -148,6 +154,7 @@ public class BinderTest {
         ageField.setValue("33");
         binder.save();
         assertEquals(33, p.getAge());
+        assertNull(ageField.getComponentError());
     }
 
     @Test
@@ -157,14 +164,28 @@ public class BinderTest {
         ageField.setValue("-5");
         binder.save();
         assertEquals(32, p.getAge());
+        assertEquals("Value must be positive", getError(ageField));
     }
 
     @Test
-    public void testPreValidationEmptyAgeFails() {
+    public void testBeforeConversionEmptyAgeFails() {
         bindAge();
 
         ageField.setValue("");
         binder.save();
+        assertEquals(32, p.getAge());
+        assertEquals("Value cannot be empty", getError(ageField));
+    }
+
+    @Test
+    public void testNoFieldsSavedOnInvalidValue() {
+        bindName();
+        bindAge();
+
+        nameField.setValue("Henri");
+        ageField.setValue("invalid");
+        binder.save();
+        assertEquals("Johannes", p.getFirstName());
         assertEquals(32, p.getAge());
     }
 
@@ -193,5 +214,9 @@ public class BinderTest {
                 .setConverter(stringToInteger).addValidator(notNegative)
                 .bind(Person::getAge, Person::setAge);
         binder.bind(p);
+    }
+
+    private String getError(AbstractField<?> field) {
+        return ((UserError) field.getComponentError()).getMessage();
     }
 }

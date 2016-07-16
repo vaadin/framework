@@ -132,6 +132,16 @@ public interface Result<R> extends Serializable {
      */
     public void handle(Consumer<R> ifOk, Consumer<String> ifError);
 
+    public default void ifOk(Consumer<R> consumer) {
+        handle(consumer, error -> {
+        });
+    }
+
+    public default void ifError(Consumer<String> consumer) {
+        handle(value -> {
+        }, consumer);
+    }
+
     /**
      * Returns an Optional of the result message, or an empty Optional if none.
      * 
@@ -161,10 +171,10 @@ class ResultImpl<R> implements Result<R> {
     public <S> Result<S> flatMap(Function<R, Result<S>> mapper) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
-        if (value != null) {
+        if (isOk()) {
             return mapper.apply(value);
         } else {
-            // Safe cast; value is null
+            // Safe cast; valueless
             return (Result<S>) this;
         }
     }
@@ -173,7 +183,7 @@ class ResultImpl<R> implements Result<R> {
     public void handle(Consumer<R> ifOk, Consumer<String> ifError) {
         Objects.requireNonNull(ifOk, "ifOk cannot be null");
         Objects.requireNonNull(ifError, "ifError cannot be null");
-        if (message == null) {
+        if (isOk()) {
             ifOk.accept(value);
         } else {
             ifError.accept(message);
@@ -183,5 +193,18 @@ class ResultImpl<R> implements Result<R> {
     @Override
     public Optional<String> getMessage() {
         return Optional.ofNullable(message);
+    }
+
+    public boolean isOk() {
+        return message == null;
+    }
+
+    @Override
+    public String toString() {
+        if (isOk()) {
+            return "ok(" + value + ")";
+        } else {
+            return "error(" + message + ")";
+        }
     }
 }

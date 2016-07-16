@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.tokka.data.util.Result;
 
@@ -88,6 +90,17 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
     }
 
     /**
+     * Validates the given value. Returns a {@code Result} instance representing
+     * the outcome of the validation.
+     * 
+     * @param value
+     *            the input value to validate
+     * @return the validation result
+     */
+    @Override
+    public Result<T> apply(T value);
+
+    /**
      * Builds a validator out of a conditional function and an error message. If
      * the function returns true, the validator returns {@code Result.ok()}; if
      * it returns false or throws an exception, {@code Result.error()} is
@@ -122,7 +135,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
                     return Result.error(errorMessage);
                 }
             } catch (Exception e) {
-                return Result.error(errorMessage + ": " + e);
+                Logger.getLogger(Validator.class.getName()).log(Level.FINE,
+                        errorMessage, e);
+                return Result.error(errorMessage);
             }
         };
     }

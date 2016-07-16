@@ -24,10 +24,12 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.vaadin.server.UserError;
 import com.vaadin.tokka.data.selection.SelectionModel;
 import com.vaadin.tokka.data.util.Result;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.tokka.ui.components.Listing;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * Connects one or more {@code Field} or {@code Select} components to properties
@@ -151,6 +153,7 @@ public class Binder<T> implements Serializable {
             if (bean != null) {
                 setFieldValue(bean);
             }
+            field.addValueChangeListener(e -> validate());
         }
 
         @Override
@@ -185,6 +188,10 @@ public class Binder<T> implements Serializable {
             field.setValue(converter.toPresentation(getter.apply(bean)));
         }
 
+        private Result<V> validate() {
+            return converter.toModel(field.getValue());
+        }
+
         /**
          * Saves the field value by invoking the setter function on the given
          * bean, if the value passes all registered validators.
@@ -194,16 +201,9 @@ public class Binder<T> implements Serializable {
          */
         private void storeFieldValue(T bean) {
             assert bean != null;
-            if (setter == null) {
-                return;
+            if (setter != null) {
+                validate().ifOk(value -> setter.accept(bean, value));
             }
-            Result<V> result = converter.toModel(field.getValue());
-            result.handle(value -> setter.accept(bean, value), error -> {
-                // TODO Validation error handling
-                System.err.println(
-                        "Field " + field + " validation failed: '"
-                                + field.getValue() + "': " + error);
-            });
         }
 
         private void checkUnbound() {
@@ -329,19 +329,75 @@ public class Binder<T> implements Serializable {
     }
 
     /**
-     * Saves any changes from the bound fields to the edited bean. Values that
-     * do not pass validation are not saved.
+     * Validates the values of all bound fields and returns the result of the
+     * validation.
      * 
+     * @return the validation result.
+     */
+    public Result<?> validate() {
+        Result<?> result = Result.ok(null);
+        for (BindingImpl<?, ?> b : bindings) {
+            clearError(b.field);
+            Result<?> r = b.validate();
+            r.ifError(msg -> handleError(b.field, msg));
+            result = result.flatMap(v -> r);
+        }
+        return result;
+    }
+
+    /**
+     * Saves changes from the bound fields to the edited bean. If any value
+     * fails validation, no values are saved.
+     *
+     * @return a result that contains the bean if the save succeeded, an error
+     *         otherwise
      * @throws IllegalStateException
      *             if there is no bound bean
      */
-    public void save() {
+    public Result<T> save() {
         if (bean == null) {
             throw new IllegalStateException("Cannot save: no bean bound");
         }
-        for (BindingImpl<?, ?> binding : bindings) {
-            binding.storeFieldValue(bean);
+        Result<?> result = validate();
+        result.ifOk(v -> doSave());
+        return result.map(v -> bean);
+    }
+
+    /**
+     * Handles a validation error emitted when trying to save the value of the
+     * given field. The default implementation sets the
+     * {@link AbstractComponent#setComponentError(ErrorMessage) component error}
+     * of the field if it is a Component, otherwise does nothing.
+     * 
+     * @param field
+     *            the field with the invalid value
+     * @param error
+     *            the error message returned
+     */
+    protected void handleError(HasValue<?> field, String error) {
+        if (field instanceof AbstractComponent) {
+            ((AbstractComponent) field).setComponentError(new UserError(error));
         }
+    }
+
+    /**
+     * Clears the error condition of the given field, if any. The default
+     * implementation clears the
+     * {@link AbstractComponent#setComponentError(ErrorMessage) component error}
+     * of the field if it is a Component, otherwise does nothing.
+     * 
+     * @param field
+     *            the field with an invalid value
+     */
+    protected void clearError(HasValue<?> field) {
+        if (field instanceof AbstractComponent) {
+            ((AbstractComponent) field).setComponentError(null);
+        }
+    }
+
+    private void doSave() {
+        assert bean != null;
+        bindings.forEach(b -> b.storeFieldValue(bean));
     }
 
     private <V> BindingImpl<V, V> createBinding(HasValue<V> field) {
