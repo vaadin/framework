@@ -1,23 +1,68 @@
 ---
-title: Fields
+title: Editing Values in Fields
 order: 2
 layout: page
 ---
 
 [[datamodel.fields]]
-= Fields
+= Editing Values in Fields
 
-////
-TODO:
+The [interfacename]#Field# interface is in a very central role for handling data in an application since different types of fields are the main user interface controls used for entering data into the application.
 
-* Setting & getting value
-** Code example: Hello world
-* Reacting to changes
-** Regular event
-*** User originated
-**** Code example: Text field, log value changes with origin, button for programmatically changing the value
-*** onChange shorthand for relaying the value
-**** Code example: Manually binding to a bean property
-*** What user action triggers the event?
-**** Varies by field implementation, sometimes configurable
-////
+While each field implementation has its own functionality, all fields also have some common core functionality.
+By using these common building blocks, the data binding part of the framework can help simplify the code we need to write for many common data entry cases.
+
+At the very core, each field has a value that the user can see and edit through the user interface.
+The value can also be read and set through code.
+
+[source,java]
+----
+TextField nameField = new TextField("Enter your name");
+
+Button sayHelloButton = new Button("Say hello", clickEvent -> {
+  String name = nameField.getValue();
+  Notification.show("Hello " + name);
+});
+----
+
+Each field implementation has its own specific value type – the type of a [classname]#TextField# is [classname]#String#, the type of a [classname]#Slider# is [classname]#Double#, the type of a [classname]#PopupDateField# is [classname]#LocalDate#, and so on.
+
+== Reacting to Value Changes
+
+When the value of a field changes, it fires a value change event.
+By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the [methodname]#setValue# method.
+
+[source,java]
+----
+TextField nameField = new TextField("Enter your name");
+nameField.addValueChangeListener(clickEvent -> {
+  String origin = event.isUserOriginated()
+    ? "by the user"
+    : "from code";
+  String message = "Name is " + event.getValue()
+      + " as set " + origin;
+  Notification.show(message);
+});
+
+Button button = new Button("Set name", event -> {
+  // Will show "Name is Zaphod as set from code"
+  nameField.setValue("Zaphod");
+});
+----
+
+If we only need to get the new value whenever it changes, we can use the [methodname]#onChange# method.
+This kind of listener directly receives the new value, which makes it convenient if we want to directly pass on the value to some other part of the application.
+It is often practical to use a method reference for defining where the new value should be delivered.
+
+[source,java]
+----
+Person person = new Person("Douglas Adams", 49);
+
+TextField nameField = new TextField("Name");
+nameField.setValue(person.getName());
+nameField.onChange(person::setName);
+
+Button button = new Button("Show name", event -> {
+  Notification.show("Person name: " + person.getName());
+})
+----
