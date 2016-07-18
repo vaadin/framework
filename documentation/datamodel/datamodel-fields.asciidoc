@@ -1,0 +1,23 @@
+---
+title: Fields
+order: 2
+layout: page
+---
+
+[[datamodel.fields]]
+= Fields
+
+////
+TODO:
+
+* Setting & getting value
+** Code example: Hello world
+* Reacting to changes
+** Regular event
+*** User originated
+**** Code example: Text field, log value changes with origin, button for programmatically changing the value
+*** onChange shorthand for relaying the value
+**** Code example: Manually binding to a bean property
+*** What user action triggers the event?
+**** Varies by field implementation, sometimes configurable
+////

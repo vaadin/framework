@@ -1,0 +1,48 @@
+---
+title: Showing many items in a Listing
+order: 4
+layout: page
+---
+
+[[datamodel.datasources]]
+= Showing many items in a Listing
+
+////
+TODO
+
+* A Listing displays items from a data source
+* Each Listing has some API for defining what values to show from each item
+** Code example: Adding columns to a Grid using a callback and defining caption generator for a ComboBox
+* A collection of item instances can be used to define the items shown by the Listing.
+** Code example: Set values for the components in the previous example – a list of beans for the Grid and all values of an enum type for the ComboBox
+** User-controlled sorting or filtering works automatically based on the provided callback. Configurable by providing a custom Comparator or Predicate
+*** Code example: Case-insensitive comparator for a Grid column
+** Instead of directly assigning a list, can also create an explicit list data source that can be shared with different sorting or filtering settings used in different components. Note that this creates a new data source instance using the same data.
+*** Code example: ComboBox showing persons ordered by name and a Grid showing the same persons ordered by age
+** Components cannot automatically know when the list or items in it are changed – you must tell the component (or the explicit list data source?) that it should refresh all or some of its data
+*** Code example: yes, what?
+** Instead of loading all the data into memory, it's also possible to lazy load only the items that are currently shown
+*** Code example: Suitable built-in backend data source, e.g. SqlDataSource used with a Grid
+*** The backend cannot know how to sort using a comparator, instead a sort property name or a sort order builder is used
+**** Code example: Previous Grid with a sort property name for one col and a builder for another col
+*** Similarly with filtering – all built-in data sources support a set of built-in filters based on property names.
+**** Code example: Filtering with a ComboBox
+*** Backend data sources can also be chained with additional sorting  or filtering, similar to the in-memory case but using Sort and Filter objects instead of Comparator and Predicate.
+**** Code example: Same as in-memory example, but using a backend data source instead
+** In addition to using the built-in data source implementations, you can also create your own to easily lazy-load data from your own backend API.
+*** Code example: Present the example backend used in the following examples.
+*** The simplest possible way of using a backend only requires you to produce a stream of items based on the offsets defined in a provided query object.
+**** Code example: Fetch items from the backend using a one-liner lambda
+*** Better UX if you also let the user know how many items are available (with the current filtering options)
+**** Code example: Fetch lambda + count lambda
+**** Code example: Implementing query and count methods in the BackendDataSource interface.
+*** Data source implementation can use the sorting and filtering options provided by the user to actually fetch data based with the requested sorting or filtering. Methods are defined in BackendDataSource but have default implementations saying that nothing is supported.
+**** Code example: Implementation with full sorting and partial filtering support.
+*** Some backend implementations fetch based on a page index and a page size instead of arbitrary offset and limit. Your implementation can let the Listing know that it should always request data aligned with the page size.
+**** Code example: Implementation with page-aligned indexing and page size range limit.
+***** Range limit can also be used without aligned indexing
+*** Some backend implementations are more efficient when fetching continuing from a previous fetch result instead of by an offset. Boundary items are automatically provided when available and opaque cursor object are also available if provided.
+**** Code example: Fetch based on cursor if available.
+*** If the backend can trigger events when its data is stored, then the backend data source can be implemented to forward the information to a using Listing instance so that new data can be pushed to the user right away.
+**** Code example: Some kind of invented example.
+////

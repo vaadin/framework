@@ -1,0 +1,64 @@
+---
+title: Binding data to forms
+order: 3
+layout: page
+---
+
+[[datamodel.forms]]
+= Binding data to forms
+
+////
+TODO:
+
+* A form is made from several fields that are connected to the same item, Binder helps with keeping track of everything
+* Must tell how to read the value from the item and write it back through a binding
+** Code example: Simplest possible bindings, one using method references and one with a simple lambda conversion (number in text field)
+* Validators
+** Binder helps verifying that the user's value is correct
+*** Code example: Built-in validator, Predicate + String, Predicate + Function, required
+** Validation errors are by default shown as tooltips, but can be configured
+*** Code example: set validation message Label for a binding
+*** Code example: binder-level message handler
+**** Also mention binding-level handler
+** Also possible to show hints and reinforcement to the user
+*** Default info message that is shown if there's nothing else to show
+*** Code example: Set default message and a custom reinforcement message.
+** Validation automatically triggered when the field value changes, but can also be triggered manually
+*** Code example: Password confirm validation
+*** Note that validation is not run when reading values from a bean -> showing default info message instead of e.g. required error until user types in something or you explicitly validate
+** Binder fires event when any field has been changed and when there's no validation error and all required fields are filled in
+*** Code example: Enable save and reset buttons when there's something to save or reset
+**** This would be shown before buffering is introduced, but it wouldn't make sense to explain these states in the buffering section and doesn't make sense to introduce buffering before validation
+* Converters
+** Binder can use a converter if field type doesn't match value type in the item
+*** Code example: Built-in, converter factory and Function + Function
+** Can validate before or after a converter
+*** Code example: TF -> validate only digits -> convert to int -> validate range -> bind
+** Exceptions are by default shown as a validation error, but can also create a validating converter that explicitly emits a status and/or a converted value
+*** Code example: return string.matches("[0-9]+") ? ok(Integer.valueOf(string)) : error("Only digits allowed");
+* Buffering
+** When the user taps the submit button, you want to make sure everything validates and then update the item based on the field values
+*** Code example: Explicitly validate (and show number of errors if invalid) and then save.
+** Disable buffering to make the bean update automatically
+*** Configurable whether other bindings are flushed if there are bindings with validation errors
+*** Code example: Unbuffered binder with binding value change listener that displays the value from the bean
+* Binder works nicely with Designer companion files
+** Code example: Login form design + companion + simple binder
+* BeanBinder
+** Convenience that only supports items that are beans
+** Bindings are defined based on the property name (or path) instead of callbacks
+*** Code example: Bind a regular property, one property with a converter and one sub property
+** Uses JSR 303 annotations are used if present
+*** Possible to configure to not use annotations if you are only using the annotations for backend validation
+*** Code example: Bean with annotations, used with BeanBinder
+*** To support bean-level validation, the bean must be updated before final validation can be done.
+**** Configurable how this is done (i.e. copy / rollback / leave invalid values / custom user-provided validation instance)
+*** Configurable whether bean-level validation is done for every binding change or only programmatically / when saving
+*** Code example: Apply some non-default configurations and add a message handler that also deals with messages not associated with any field.
+** Open question: Does bindMemberFields make sense?
+*** There's no logical place for configuring converters / validators for a binding since it's not done on the field instance.
+** Open question: Does createAndBind make sense?
+*** Same problem as for bindMemberFields for doing this globally for all properties in a bean
+*** Might make sense for an individual property, but is it worthwhile to implement a FieldFactory only for this case?
+
+////
