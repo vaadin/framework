@@ -556,9 +556,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             newSelected.recalculateCaptionWidth();
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
 
-            // Scroll the tab into view if it is not already
-            getTabsheet().scrollIntoView(getTab(tabsheet.activeTabIndex));
-
+            // Scroll the tab into view if it is not already, after layout
+            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    getTabsheet()
+                            .scrollIntoView(getTab(tabsheet.activeTabIndex));
+                }
+            });
         }
 
         public Tab navigateTab(int fromIndex, int toIndex) {
