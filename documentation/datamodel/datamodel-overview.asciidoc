@@ -7,66 +7,25 @@ layout: page
 [[datamodel.overview]]
 = Overview
 
-The Vaadin Data Model is one of the core concepts of the library. To allow the
-view (user interface components) to access the data model of an application
-directly, we have introduced a standard data interface.
+////
+TODO
 
-The model allows binding user interface components directly to the data that
-they display and possibly allow to edit. There are three nested levels of
-hierarchy in the data model: __property__, __item__, and __container__. Using a
-spreadsheet application as an analogy, these would correspond to a cell, a row,
-and a table, respectively.
+ * Item: typically a Java Bean, but can also be any other Java type
+ * Individual values in an item: callback or bean property name
+ * Collections of items: In-memory list or explicitly fetched on demand from a backend
+////
 
-.Vaadin Data Model
-image::img/datamodel-whitebg.png[]
+The Vaadin Data Model is one of the core concepts of the library.
+To allow the view (user interface components) to access the data model of an application directly, we have introduced a standard data interface.
 
-The Data Model is realized as a set of interfaces in the
-[classname]#com.vaadin.data# package. The package contains the
-[classname]#Property#, [classname]#Item#, and [classname]#Container# interfaces,
-along with a number of more specialized interfaces and classes.
+The model allows binding user interface components directly to data that can be viewed and possibly also edited.
 
-Notice that the Data Model does not define data representation, but only
-interfaces. This leaves the representation fully to the implementation of the
-containers. The representation can be almost anything, such as a plain old Java
-object (POJO) structure, a filesystem, or a database query.
+Notice that the Data Model does not define data representation, but only how components access the data.
+This leaves the representation fully to the implementation of the containers.
+The representation can be almost anything, such as a plain old Java object (POJO) structure, a filesystem, or a database query.
 
-The Data Model is used heavily in the core user interface components of Vaadin,
-especially the field components, that is, components that implement the
-[classname]#Field# interface or more typically extend
-[classname]#AbstractField#, which defines many common features. A key feature of
-all the built-in field components is that they can either maintain their data by
-themselves or be bound to an external data source. The value of a field is
-always available through the [classname]#Property# interface. As more than one
-component can be bound to the same data source, it is easy to implement various
-viewer-editor patterns.
-
-The relationships of the various interfaces are shown in
-<<figure.datamodel.overview.relationships>>; the value change event and listener
-interfaces are shown only for the [classname]#Property# interface, while the
-notifier interfaces are omitted altogether.
-
-[[figure.datamodel.overview.relationships]]
-.Interface Relationships in Vaadin Data Model
-image::img/datamodel-interfaces-hi.png[]
-
-The Data Model has many important and useful features, such as support for
-change notification. Especially containers have many helper interfaces,
-including ones that allow indexing, ordering, sorting, and filtering the data.
-Also [classname]#Field# components provide a number of features involving the
-data model, such as buffering, validation, and lazy loading.
-
-Vaadin provides a number of built-in implementations of the data model
-interfaces. The built-in implementations are used as the default data models in
-many field components.
-
-In addition to the built-in implementations, many data model implementations,
-such as containers, are available as add-ons, either from the Vaadin Directory
-or from independent sources. Both commercial and free implementations exist. The
-JPAContainer, described in
-<<dummy/../../../framework/jpacontainer/jpacontainer-overview.asciidoc#jpacontainer.overview,"Vaadin
-JPAContainer">>, is the most often used conmmercial container add-on. The
-installation of add-ons is described in
+Many data model implementations, such as data sources, are available as add-ons, either from the Vaadin Directory or from independent sources.
+Installation of add-ons is described in
 <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
-Vaadin Add-ons">>. Notice that unlike with most regular add-on components, you
-do not need to compile a widget set for add-ons that include just data model
-implementations.
+Vaadin Add-ons">>.
+Notice that unlike with most regular add-on components, you do not need to compile a widget set for add-ons that include just data model implementations.

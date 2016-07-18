@@ -1,0 +1,533 @@
+---
+title: Showing Many Items in a Listing
+order: 4
+layout: page
+---
+
+[[datamodel.datasources]]
+= Showing Many Items in a Listing
+
+A common pattern in applications is that the user is first presented with a list of items, from which she selects one or several items to continue working with.
+These items could be inventory records to survey, messages to respond to or blog drafts to edit or publish.
+
+A [interfacename]#Listing# is a component that displays one or several properties from a list of item, allowing the user to inspect the data, mark items as selected and in some cases even edit the item directly through the component.
+While each listing component has it's own API for configuring exactly how the data is represented and how it can be manipulated, they all share the same mechanisms for receiving data to show.
+
+The items are generally either loaded directly from memory or lazy loaded from some kind of backend.
+Regardless of how the items are loaded, the component is configured with one or several callbacks or JavaBean property names that define how the item should be displayed.
+
+In the following example, a [classname]#ComboBox# that lists status items is configured to use the [classname]#Status#.[methodname]#getCaption()# method to represent each status.
+There is also a [classname]#Grid#, which is configured with one column from the person's name and another column that converts the year of birth to a string for displaying.
+
+[source, java]
+----
+ComboBox<Status> comboBox = new ComboBox<>();
+comboBox.setItemCaptionProvider(Status::getCaption);
+
+Grid<Person> grid = new Grid<>();
+grid.addColumn("Name", Person::getName);
+grid.addColumn("Year of birth",
+  person -> Integer.toString(person.getYearOfBirth()));
+----
+
+[NOTE]
+In this example, it would not even be necessary to define any item caption provider for the combo box if [classname]#Status#.[methodname]#toString()# would be implemented to return a suitable text. [classname]#ComboBox# is by default configured to use [methodname]#toString()# for finding a caption to show.
+
+[NOTE]
+The `Year of birth` column will use [classname]#Grid#'s default [classname]#TextRenderer# which requires the column value to be a [classname]#String#. We could for instance use a [classname]#NumberRenderer# instead, and then the renderer would take care of converting the the number according to its configuration.
+
+After we have told the component how the data should be shown, we only need to give it some data to actually show. The easiest way of doing that is as a [interfacename]#java.util.Collection# of item instances.
+
+[source, java]
+----
+comboBox.setItems(EnumSet.allOf(Status.class));
+
+List<Person> persons = Arrays.asList(
+  new Person("George Washington", 1732),
+  new Person("John Adams", 1735),
+  new Person("Thomas Jefferson", 1743),
+  new Person("James Madison", 1751));
+
+grid.setItems(persons);
+----
+
+Listing components that allow the user to control in which order the items are displayed is automatically able to sort data by any property as long as the property type implements [classname]#Comparable#.
+
+We can also define a custom [classname]#Comparator# if we want to customize the way a specific column is sorted. The comparator can either be based on the item instances or on the values of the property that is being shown.
+
+[source, java]
+----
+grid.addColumn("Name", Person::getName)
+  // Override default natural sorting
+  .setValueComparator(
+    Comparator.comparing(String::toLowerCase));
+
+grid.addColumn("Year of birth",
+    person -> Integer.toString(person.getYearOfBirth()))
+  // Sort numerically instead of alphabetically by the string
+  .setItemComparator(
+    Comparator.comparing(Person::getYearOfBirth));
+----
+
+With listing components that let the user filter items, we can in the same way define our own [interfacename]#BiPredicate# that is used to decide whether a specific item should be shown when the user has entered a specific text into the text field.
+
+[source, java]
+----
+comboBox.setFilter((filterText, item) ->
+  item.getCaption().equalsIgnoreCase(filterText));
+----
+
+Instead of directly assigning the item collection as the items that a component should be using, we can instead create a [classname]#ListDataSource# that contains the items.
+The list data source can be shared between different components in the same [classname]#VaadinSession# since it is stateless.
+We can also apply different sorting options for each component, without affecting how data is shown in the other components.
+
+[source, java]
+----
+ListDataSource<Person> dataSource =
+  new ListDataSource<>(persons);
+
+ComboBox<Person> comboBox = new ComboBox<>();
+// The combo box shows the person sorted by name
+comboBox.setDataSource(
+  dataSource.sortedBy(Person::getName));
+
+Grid<Person> grid = new Grid<>();
+// The grid shows the same persons sorted by year of birth
+grid.setDataSource(
+  dataSource.sortedBy(Person::getYearOfBirth));
+----
+
+The [classname]#Listing# component cannot automatically know about changes to the list of items or to any individual item.
+We must notify the data source when items are changed, added or removed so that components using the data will show the new values.
+
+[source, java]
+----
+ListDataSource<Person> dataSource =
+  new ListDataSource<>(persons);
+
+Button addPersonButton = new Button("Add person",
+  clickEvent -> {
+    // Keep track of the index where the person will be added
+    int addIndex = persons.size();
+
+    persons.add(new Person("James Monroe", 1758));
+
+    dataSource.notifyAdd(addIndex);
+});
+
+Button modifyPersonButton = new Button("Modify person",
+  clickEvent -> {
+    Person personToChange = persons.get(0);
+
+    personToChange.setName("Changed person");
+
+    dataSource.refresh(0);
+});
+----
+
+[TIP]
+There might be situations where we cannot tell exactly how the data has changed, but only that some parts might have been modified. We can then use the [methodname]#refreshAll()# method, which will make the components reload all the data.
+
+== Lazy Loading Data to a Listing
+
+All the previous examples have shown cases with a limited amount of data that can be loaded as item instances in memory.
+There are also situations where it is more efficient to only load the items that will currently be displayed.
+This includes situations where all available data would use lots of memory or when it would take a long time to load all the items.
+
+[NOTE]
+Regardless of how we make the items available to the listing component on the server, components like [classname]#Grid# will always take care of only sending the currently needed items to the browser.
+
+For example, if we have the following existing backend service that fetches items from a database or a REST service .
+
+[source, java]
+----
+public interface PersonService {
+  List<Person> fetchPersons(int offset, int limit);
+  int getPersonCount();
+}
+----
+
+To use this service with a listing component, we need to define one callback for loading specific items and one callback for finding how many items are currently available.
+Information about which items to fetch as well as some additional details are made available in a [interfacename]#Query# object that is passed to both callbacks.
+
+[source, java]
+----
+DataSource<Person> dataSource = new DataSource<>(
+  // First callback fetches items based on a query
+  query -> {
+    // The index of the first item to load
+    int offset = query.getOffset();
+
+    // The number of items to load
+    int limit = query.getLimit();
+
+    List<Person> persons = getPersonService().fetchPersons(offset, limit);
+
+    return persons.stream();
+  },
+  // Second callback fetches the number of items for a query
+  query -> getPersonService().getPersonCount()
+);
+
+Grid<Person> grid = new Grid<>();
+grid.setDataSource(dataSource);
+
+// Columns are configured in the same way as before
+...
+----
+
+[NOTE]
+The results of the first and second callback must be symmetric so that fetching all available items using the first callback returns the number of items indicated by the second callback. Thus if you impose any restrictions on e.g. a database query in the first callback, you must also add the same restrictions for the second callback.
+
+=== Sorting
+
+It is not practical to order items based on a [interfacename]#Comparator# when the items are loaded on demand, since it would require all items to be loaded and inspected.
+
+Each backend has its own way of defining how the fetched items should be ordered, but they are in general based on a list of property names and information on whether ordering should be ascending or descending.
+
+As an example, there could be a service interface which looks like the following.
+
+[source, java]
+----
+public interface PersonService {
+  List<Person> fetchPersons(
+    int offset,
+    int limit,
+    List<PersonSort> sortOrders);
+
+  int getPersonCount();
+
+  static PersonSort createSort(
+    String propertyName,
+    boolean descending);
+}
+----
+
+With the above service interface, our data source can be enhanced to convert the provided sorting options into a format expected by the service.
+The sorting options set through the component will be available through [interfacename]#Query#.[methodname]#getSortOrders()#.
+
+[source, java]
+----
+DataSource<Person> dataSource = new DataSource<>(
+  query -> {
+    List<PersonSort> sortOrders = new ArrayList<>();
+    for(SortOrder<String> queryOrder : query.getSortOrders()) {
+      PersonSort sort = PersonService.createSort(
+        // The name of the sorted property
+        queryOrder.getSorted(),
+        // The sort direction for this property
+        queryOrder.getDirection() == SortDirection.DESCENDING);
+      sortOrders.add(sort);
+    }
+
+    return service.fetchPersons(
+        query.getOffset(),
+        query.getLimit(),
+        sortOrders
+      ).stream();
+  },
+  // The number of persons is the same regardless of ordering
+  query -> persons.getPersonCount()
+);
+----
+
+We also need to configure our grid so that it can know what property name should be included in the query when the user wants to sort by a specific column.
+When a data source that does lazy loading is used, [classname]#Grid# and other similar components will only let the user sort by columns for which a sort property name is provided.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>();
+
+grid.setDataSource(dataSource);
+
+// Will be sortable by the user
+// When sorting by this column, the query will have a SortOrder
+// where getSorted() returns "name"
+grid.addColumn("Name", Person::getName)
+  .setSortProperty("name");
+
+// Will not be sortable since no sorting info is given
+grid.addColumn("Year of birth",
+  person -> Integer.toString(person.getYearOfBirth()));
+----
+
+There might also be cases where a single property name is not enough for sorting.
+This might be the case if the backend needs to sort by multiple properties for one column in the user interface or if the backend sort order should be inverted compared to the sort order defined by the user.
+In such cases, we can define a callback that generates suitable [classname]#SortOrder# values for the given column.
+
+[source, java]
+----
+grid.addColumn("Name",
+    person -> person.getFirstName() + " " + person.getLastName())
+  .setSortBuilder(
+    // Sort according to last name, then first name
+    direction -> Stream.of(
+      new SortOrder("lastName", direction),
+      new SortOrder("firstName", direction)
+    ));
+----
+
+=== Filtering
+
+A similar approach is also needed with filtering in cases such as [classname]#ComboBox# where the user can control how items are filtered.
+
+The filtering of a data source query is represented as a [interfacename]#BackendFilter# instance. There are existing implementations for some common filtering cases, such as requiring a named property to not be null or a SQL `LIKE` comparison.
+
+[source, java]
+----
+ComboBox<Person> comboBox = new ComboBox<>();
+
+comboBox.setItemCaptionProvider(Person::getName);
+
+comboBox.setFilter(
+  // corresponds to this SQL: WHERE name LIKE [filterText]
+  filterText -> new Like("name", filterText));
+----
+
+If we have a service interface that only supports some specific filtering option, the implementation might become simpler if we define our own [interfacename]#BackendFilter# instead of implementing our backend to use the generic built-in filter types.
+
+As an example, our service interface with support for filtering could look like this. Ordering support has been omitted in these examples to keep focus on filtering.
+
+[source, java]
+----
+public interface PersonService {
+  List<Person> fetchPersons(
+    int offset,
+    int limit,
+    String namePrefix);
+  int getPersonCount(String namePrefix);
+}
+----
+
+For the filtering needs of this service, we could define a [classname]#NamePrefixFilter# that corresponds to the only filtering option available.
+
+[source, java]
+----
+public class NamePrefixFilter implements BackendFilter {
+  private final String prefix;
+
+  public NamePrefixFilter(String prefix) {
+    this.prefix = prefix;
+  }
+
+  public String getPrefix() {
+    return prefix;
+  }
+}
+----
+
+In the case of [classname]#ComboBox#, we have to define what kind of [interfacename]#BackendFilter# to use when the user has entered some text that should be used for filtering the displayed items.
+
+[source, java]
+----
+comboBox.setFilter(
+  filterText -> new NamePrefixFilter(filterText));
+----
+
+We can then implement our data source to look for this special filter implementation and pass the name prefix to the service.
+We can create a helper method for handling the filter since the same logic is needed both for fetching and counting items.
+
+[source, java]
+----
+DataSource<Person> dataSource = new DataSource<>(
+  query -> {
+
+    BackendFilter filter = query.getFilter();
+
+    String namePrefix = filterToNamePrefix(filter);
+
+    return service.fetchPersons(
+        query.getOffset(),
+        query.getLimit(),
+        namePrefix
+      ).stream();
+  },
+  query -> persons.getPersonCount(
+    filterToNamePrefix(query.getFilter))
+);
+
+public static String filterToNamePrefix(BackendFilter filter) {
+  if (filter == null) {
+    return null;
+  }
+
+  if (filter instanceof NamePrefixFilter)) {
+    return ((NamePrefixFilter) filter).getPrefix();
+  } else {
+    throw new UnsupportedOperationException(
+      "This data source only supports NamePrefixFilter");
+  }
+}
+----
+
+[TIP]
+If the amount of data in the backend is small enough, it might be better to load all the items into a list and use a [classname]#ListDataSource# instead of implementing filtering or sorting support in a custom [classname]#DataSource# class and configuring the components accordingly.
+
+We can also create a base data source and then use different variations for different components, similarly to the previous examples with [classname]#ListDataSource#.
+
+[source, java]
+----
+DataSource<Person> dataSource = ...
+
+grid.setDataSource(dataSource
+  .filteredBy(new Like("name", "Ge%"))
+  .sortedBy(new SortOrder(
+    "yearOfBirth", SortDirection.ASCENDING)));
+
+comboBox.setDataSource(dataSource
+  .sortedBy(new SortOrder(
+    "name", SortOrder.DESCENDING)));
+
+----
+
+=== Special Fetching Cases
+
+In some cases it might be necessary directly extend [classname]#BackendDataSource# instead of constructing an instance based the two simple callback methods shown above.
+
+One such case is if the backend loads items based on a page index and a page size so that the start index in the query always needs to be a multiple of the page size. As an example, our service interface made for paging could look like this.
+
+[source, java]
+----
+public interface PersonService {
+  List<Person> fetchPersons(
+    int pageIndex,
+    int pageSize);
+  int getPersonCount();
+}
+----
+
+We can use this kind of backend service as long as we also make the data source declare that queries should always be done for whole pages.
+Components using this data source will take the information into account when querying for data.
+
+[source, java]
+----
+public class PersonDataSource
+        extends BackendDataSource<Person> {
+
+  @Override
+  public boolean alignQueries() {
+    // Informs the part that fetches items that the query offset
+    // must be a multiple of the query limit, i.e. that only full
+    // pages should be requested
+    return true;
+  }
+
+  @Override
+  public void fetch(Query<Person> query,
+          FetchResult<Person> result) {
+    int pageSize = query.getLimit();
+
+    // Caller guarantees that query.getOffset() % pageSize == 0
+    int pageIndex = query.getOffset() / pageSize;
+
+    result.setItems(getPersonService().fetchPersons(pageIndex, pageSize));
+  }
+
+  @Override
+  public int getCount(Query<Person> query) {
+    return getPersonService().getPersonCount();
+  }
+}
+----
+
+Some backends may also have limitations on how many (or few) items can be fetched at once.
+While our data source implementation could deal with that limitation internally by sending multiple requests to the backend and then assembling the results together before returning the result, we can also make the data source indicate that the responsibility for splitting up the query is on the caller instead.
+
+[source, java]
+----
+public class PersonDataSource
+        extends BackendDataSource<Person> {
+
+  @Override
+  public int getMaxLimit() {
+    // Informs the part that fetches items that the maximum
+    // supported query limit size is 30
+    return 30;
+  }
+
+  @Override
+  public void fetch(Query<Person> query,
+          FetchResult<Person> result) {
+    List<Person> persons = getPersonService().fetchPersons(
+      query.getOffset(),
+      query.getLimit());
+    result.setItems(persons);
+  }
+
+  @Override
+  public int getCount(Query<Person> query) {
+    return getPersonService().getPersonCount();
+  }
+}
+----
+
+[TIP]
+You can set the max limit and the min limit to the same value if you are using a backend that has a hardcoded page size. You can also combine this with aligned queries.
+
+Yet another case that benefits from custom querying options is backends that perform better if items are fetched relative to a previously executed query instead of by skipping items based on an absolute offset.
+
+To help with this, the provided query object will automatically contain a reference to the item immediately before the start of the first new item to fetch if available.
+The item immediately after the end of the range to fetch might also be available in some cases if the user is scrolling through the data backwards. There are, however, no guarantees that either item will be available in all queries, so the implementation should always also support fetching by offset.
+
+Some backends may also use a "cursor" object that encapsulates exactly where the next page of data would continue if continuing from where the previous query ended.
+The data provider implementation can pass such instances to the [interfacename]#FetchResult# object so that the framework can include the appropriate cursor in a query that continues from where the previous query ended.
+
+As an example, a backend with such functionality could look like this:
+
+[source, java]
+----
+public interface PersonService {
+  PersonFetchResult fetchPersons(
+    int pageIndex,
+    int pageSize);
+
+  PersonFetchResult fetchPersons(
+    PersonFetchCursor cursor,
+    int pageSize);
+
+  int getPersonCount();
+}
+
+public interface PersonFetchResult {
+  List<Person> getPersons();
+  PersonFetchCursor getCursor();
+}
+----
+
+A data source utilizing the cursor could look like this:
+[source, java]
+----
+public class PersonDataSource
+        extends BackendDataSource<Person> {
+
+  @Override
+  public void fetch(Query<Person> query,
+          FetchResult<Person> result) {
+    PersonFetchResult personResult;
+
+    Optional<?> maybeCursor = query.getNextCursor();
+    if (maybeCursor.isPresent()) {
+      PersonFetchCursor cursor =
+       (PersonFetchCursor) maybeCursor.get();
+      personResult = getPersonService().fetchPersons(
+        cursor, query.getLimit());
+    } else {
+      personResult = getPersonService().fetchPersons(
+        query.getOffset(), query.getLimit());
+    }
+
+    result.setNextCursor(personResult.getCursor());
+    result.setItems(personResult.getPersons());
+  }
+
+  @Override
+  public int getCount(Query<Person> query) {
+    return getPersonService().getPersonCount();
+  }
+}
+----
+
+The framework will automatically take care of the cursor instance stored in its [interfacename]#FetchResult# and make it available through the next query if it continues from the end offset of the query for which the cursor was stored.
+
+[NOTE]
+This simple example only uses a cursor for continuing from a previous result if going forward. A real service would also  support cursors for continuing backwards. There are corresponding methods for defining a cursor in that direction;  [interfacename]#FetchResult#.[methodname]#setPreviousCursor# and [interfacename]#Query#.[methodname]#getPreviousCoursor#.

@@ -10,11 +10,11 @@ bind components directly to data sources, such as database queries.
 
 include::datamodel-overview.asciidoc[leveloffset=+2]
 
-include::datamodel-properties.asciidoc[leveloffset=+2]
+include::datamodel-fields.asciidoc[leveloffset=+2]
 
-include::datamodel-items.asciidoc[leveloffset=+2]
+include::datamodel-forms.asciidoc[leveloffset=+2]
 
-include::datamodel-itembinding.asciidoc[leveloffset=+2]
+include::datamodel-datasources.asciidoc[leveloffset=+2]
 
-include::datamodel-container.asciidoc[leveloffset=+2]
+include::datamodel-selection.asciidoc[leveloffset=+2]
 (((range="endofrange", startref="term.datamodel")))
