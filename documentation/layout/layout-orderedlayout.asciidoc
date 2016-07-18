@@ -20,7 +20,6 @@ vertically. [classname]#HorizontalLayout# has undefined size in both dimensions.
 
 Typical use of the layouts goes as follows:
 
-
 [source, java]
 ----
 VerticalLayout vertical = new VerticalLayout ();
@@ -39,10 +38,14 @@ image::img/orderedlayout_vertical.png[width=30%, scaledwidth=65%]
 
 image::img/orderedlayout_horizontal.png[width=80%, scaledwidth=100%]
 
-[[layout.orderedlayout.properties]]
-== Properties or Attributes
+|===============
+|Component|Element Name
+|[classname]#VerticalLayout#|[elementname]#v-verticallayout#
+|[classname]#HorizontalLayout#|[elementname]#v-horizontallayout#
+|[classname]#FormLayout#|[elementname]#v-formlayout#
+|===============
 
-Ordered layouts have the following properties:
+The have the following declarative attributes:
 
 [[layout.orderedlayout.properties.table]]
 .Properties and Declarative Attributes

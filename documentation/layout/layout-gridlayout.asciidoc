@@ -12,22 +12,18 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/layout/grid-layout"]
 endif::web[]
 
-[classname]#GridLayout# container lays components out on a grid, defined by the
-number of columns and rows. The columns and rows of the grid serve as
-coordinates that are used for laying out components on the grid. Each component
-can use multiple cells from the grid, defined as an area (x1,y1,x2,y2), although
-they typically take up only a single grid cell.
+[classname]#GridLayout# container lays components out on a grid consisting of rows and columns.
+The columns and rows of the grid serve as coordinates that are used for laying out components on the grid.
+Each component can use multiple cells from the grid, defined as an area (x1,y1,x2,y2), although they typically take up only a single grid cell.
 
-The grid layout maintains a cursor for adding components in left-to-right,
-top-to-bottom order. If the cursor goes past the bottom-right corner, it will
-automatically extend the grid downwards by adding a new row.
+The grid layout maintains a cursor for adding components in left-to-right, top-to-bottom order.
+If the cursor goes past the bottom-right corner, it will automatically extend the grid downwards by adding a new row.
 
-The following example demonstrates the use of [classname]#GridLayout#. The
-[methodname]#addComponent# takes a component and optional coordinates. The
-coordinates can be given for a single cell or for an area in x,y (column,row)
-order. The coordinate values have a base value of 0. If coordinates are not
-given, the cursor will be used.
-
+The following example demonstrates the use of [classname]#GridLayout#.
+The [methodname]#addComponent()# method takes the component to be added and optional coordinates.
+The coordinates can be given for a single cell or for an area in x,y (column,row) order.
+The coordinate values have a base value of 0.
+If the coordinates are not given, the cursor will be used.
 
 [source, java]
 ----
@@ -64,31 +60,21 @@ image::img/gridlayout.png[width=50%, scaledwidth=75%]
 A component to be placed on the grid must not overlap with existing components.
 A conflict causes throwing a [classname]#GridLayout.OverlapsException#.
 
+[[layout.gridlayout.sizing]]
 == Sizing Grid Cells
 
-You can define the size of both a grid layout and its components in either fixed
-or percentual units, or leave the size undefined altogether, as described in
-<<dummy/../../../framework/components/components-features#components.features.sizeable,"Sizing
-Components">>.
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
-Size">> gives an introduction to sizing of layouts.
+You can define the size of both a grid layout and its components in either fixed or percentual units, or leave the size undefined altogether, as described in <<dummy/../../../framework/components/components-features#components.features.sizeable,"Sizing Components">>.
+<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> gives an introduction to sizing of layouts.
 
-The size of the [classname]#GridLayout# component is undefined by default, so it
-will shrink to fit the size of the components placed inside it. In most cases,
-especially if you set a defined size for the layout but do not set the contained
-components to full size, there will be some unused space. The position of the
-non-full components within the grid cells will be determined by their
-__alignment__. See
-<<dummy/../../../framework/layout/layout-settings#layout.settings.alignment,"Layout
-Cell Alignment">> for details on how to align the components inside the cells.
+The size of the [classname]#GridLayout# component is undefined by default, so it will shrink to fit the size of the components placed inside it.
+In most cases, especially if you set a defined size for the layout but do not set the contained components to full size, there will be some unused space.
+The position of the non-full components within the grid cells will be determined by their __alignment__.
+See <<dummy/../../../framework/layout/layout-settings#layout.settings.alignment,"Layout Cell Alignment">> for details on how to align the components inside the cells.
 
 The components contained within a [classname]#GridLayout# layout can be laid out
 in a number of different ways depending on how you specify their height or
-width. The layout options are similar to [classname]#HorizontalLayout# and
-[classname]#VerticalLayout#, as described in
-<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout,"VerticalLayout
-and HorizontalLayout">>.
-
+width.
+The layout options are similar to [classname]#HorizontalLayout# and [classname]#VerticalLayout#, as described in <<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
 
 [WARNING]
 .A layout that contains components with percentual size must have a defined size!
@@ -100,7 +86,6 @@ requirement holds for height and width separately. The debug mode allows
 detecting such invalid cases; see
 <<dummy/../../../framework/advanced/advanced-debug#advanced.debug.mode,"Enabling
 the Debug Mode">>.
-
 ====
 
 Often, you want to have one or more rows or columns that take all the available
@@ -117,7 +102,7 @@ expanding rows/columns.
 [source, java]
 ----
 GridLayout grid = new GridLayout(3,2);
-
+ifdef::web[]
 // Layout containing relatively sized components must have
 // a defined size, here is fixed size.
 grid.setWidth("600px");
@@ -137,7 +122,7 @@ for (int i=0; i<labels.length; i++) {
     label.setWidth(null); // Set width as undefined
     grid.addComponent(label);
 }
-
+endif::web[]
 // Set different expansion ratios for the two columns
 grid.setColumnExpandRatio(1, 1);
 grid.setColumnExpandRatio(2, 5);
@@ -145,6 +130,7 @@ grid.setColumnExpandRatio(2, 5);
 // Set the bottom row to expand
 grid.setRowExpandRatio(1, 1);
 
+ifdef::web[]
 // Align and size the labels.
 for (int col=0; col<grid.getColumns(); col++) {
     for (int row=0; row<grid.getRows(); row++) {
@@ -157,6 +143,7 @@ for (int col=0; col<grid.getColumns(); col++) {
             c.setHeight("100%");
     }
 }
+endif::web[]
 ----
 
 [[figure.ui.gridlayout.sizing.expanding]]
@@ -180,7 +167,7 @@ and 80 pixels, regardless of the minimum size of their contained components.
 [source, css]
 ----
 .v-gridlayout {}
-.v-gridlayout-margin {}
+  .v-gridlayout-margin {}
 ----
 
 The `v-gridlayout` is the root element of the [classname]#GridLayout# component.

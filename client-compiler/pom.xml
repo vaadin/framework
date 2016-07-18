@@ -229,8 +229,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}"</Export-Package>
+						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
 						<!--TODO decide gwt packages version number<Export-Package>com.vaadin.*;version="${project.version}",com.google.gwt.*;version="${vaadin.gwt.version}"</Export-Package> -->
 						<Import-Package></Import-Package> <!--todo find out what should be in Import-Package -->
 					</instructions>

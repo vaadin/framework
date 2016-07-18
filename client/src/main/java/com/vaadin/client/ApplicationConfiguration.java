@@ -191,10 +191,9 @@ public class ApplicationConfiguration implements EntryPoint {
          */
         private native String getAtmosphereJSVersion()
         /*-{
-            if ($wnd.jQueryVaadin != undefined){
-                return $wnd.jQueryVaadin.atmosphere.version;
-            }
-            else {
+            if ($wnd.vaadinPush && $wnd.vaadinPush.atmosphere) {
+                return $wnd.vaadinPush.atmosphere.version;
+            } else {
                 return null;
             }
         }-*/;

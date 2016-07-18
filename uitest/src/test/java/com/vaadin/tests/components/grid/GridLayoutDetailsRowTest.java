@@ -18,16 +18,12 @@ package com.vaadin.tests.components.grid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -39,15 +35,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridLayoutDetailsRowTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-        // for some reason PhantomJS doesn't find the label even if it detects
-        // the presence
-        browsersToTest.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsersToTest;
-    }
-
     @Test
     public void testLabelHeights() {
         openTestURL();
@@ -55,7 +42,7 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        grid.getRow(2).click();
+        grid.getRow(2).click(5, 5);
         waitForElementPresent(By.id("lbl2"));
 
         GridLayoutElement gridLayout = $(GridLayoutElement.class).first();
