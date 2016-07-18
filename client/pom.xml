@@ -96,7 +96,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}"</Export-Package>
+						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
 						<Import-Package></Import-Package>
 					</instructions>
 				</configuration>

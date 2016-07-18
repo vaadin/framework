@@ -18,12 +18,12 @@
 	to ^[A-Z_]*$ . Others (protected, package and private) still have ^[a-z][a-zA-Z0-9]*$
 	- Modified the severity of the following Checks from error to info:
 	• JavadocPackage (checks for package-info.java)
-	• JavadocType (class and interface declarations, scope private)
-	• JavadocMethod (method declarations, scope private)
-	• JavadocVariable (variable declarations, scope private)
+	- Modified the severity of the following Checks from error to warning and the scope from private to protected:
+	• JavadocType (class and interface declarations)
+	• JavadocMethod (method declarations)
+	• JavadocVariable (variable declarations)
 	• JavadocStyle (Javadocs are "well formed")
-	- Modified the severity of the following Checks from error to warning because
-	not so critical:
+	- Modified the severity of the following Checks from error to warning because not so critical:
 	• LineLenght (the default value is 80 which is also used in formatter, but
 	i.e. member declarations are not wrapped onto next line)
 	• RedundantModifier (i.e. using public in interface method declarations)
@@ -104,16 +104,20 @@
         <!-- Checks for Javadoc comments. -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
-            <property name="severity" value="info" />
+            <property name="severity" value="warning" />
+            <property name="scope" value="protected" />
         </module>
         <module name="JavadocType">
-            <property name="severity" value="info" />
-        </module>
+            <property name="severity" value="warning" />
+            <property name="scope" value="protected" />
+                    </module>
         <module name="JavadocVariable">
-            <property name="severity" value="info" />
+            <property name="severity" value="warning" />
+            <property name="scope" value="protected" />
         </module>
         <module name="JavadocStyle">
-            <property name="severity" value="info" />
+            <property name="severity" value="warning" />
+            <property name="scope" value="protected" />
         </module>
 
         <!-- Checks for Naming Conventions. -->

@@ -18,8 +18,7 @@ shown for each field. The field captions can have an icon in addition to the
 text. [classname]#FormLayout# is an ordered layout and much like
 [classname]#VerticalLayout#. For description of margins, spacing, and other
 features in ordered layouts, see
-<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout,"VerticalLayout
-and HorizontalLayout">>.
+<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
 
 The following example shows typical use of [classname]#FormLayout# in a form:
 
@@ -32,11 +31,11 @@ tf1.setIcon(FontAwesome.USER);
 tf1.setRequired(true);
 tf1.addValidator(new NullValidator("Must be given", false));
 form.addComponent(tf1);
-        
+
 TextField tf2 = new TextField("Street address");
 tf2.setIcon(FontAwesome.ROAD);
 form.addComponent(tf2);
-        
+
 TextField tf3 = new TextField("Postal code");
 tf3.setIcon(FontAwesome.ENVELOPE);
 tf3.addValidator(new IntegerRangeValidator("Doh!", 1, 99999));
@@ -91,9 +90,4 @@ shown as a part of the caption column.
 For information on setting margins and spacing, see also
 <<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout.spacing,"Spacing
 in Ordered Layouts">> and
-<<dummy/../../../framework/layout/layout-settings#layout.settings.margins,"Layout
-Margins">>.
-
-
-
-
+<<dummy/../../../framework/layout/layout-settings#layout.settings.margins, "Layout Margins">>.

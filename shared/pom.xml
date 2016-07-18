@@ -117,7 +117,8 @@
 				<configuration>
 					<instructions>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Export-Package>com.vaadin.*;version="${project.version}",elemental.*;version="${project.version}"</Export-Package>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
+						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",elemental.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
 						<Import-Package>com.google.gwt.thirdparty.streamhtmlparser;version="${streamhtmlparser.version}",
 							com.google.gwt.thirdparty.streamhtmlparser.impl;version="${streamhtmlparser.version}",
 							com.google.gwt.thirdparty.streamhtmlparser.util;version="${streamhtmlparser.version}",
