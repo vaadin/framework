@@ -15,8 +15,8 @@ endif::web[]
 
 The [classname]#Button# component is normally used for initiating some action,
 such as finalizing input in forms. When the user clicks a button, a
-[classname]#Button.ClickEvent# is fired, which can be handled with a
-[interfacename]#Button.ClickListener# in the [methodname]#buttonClick()# method.
+[classname]#Button.ClickEvent# is fired, which can be handled by adding a __click listener__
+using either the [methodname]#onClick()# or the [methodname]#addClickListener()# method.
 
 You can handle button clicks with an anonymous class as follows:
 
@@ -25,14 +25,7 @@ You can handle button clicks with an anonymous class as follows:
 ----
 Button button = new Button("Do not press this button");
 
-button.addClickListener(new Button.ClickListener() {
-    public void buttonClick(ClickEvent event) {
-        Notification.show("Do not press this button again");
-    }
-});
-
-// Java 8
-button.addClickListener(click ->
+button.addClickListener(clickEvent ->
     Notification.show("Do not press this button again"));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.button.basic[on-line example, window="_blank"].
@@ -45,11 +38,10 @@ The button component can be styled in many ways, as illustrated in <<figure.comp
 .Button in Different Styles of Valo Theme
 image::img/button-example1.png[width=70%, scaledwidth=100%]
 
-If you handle several buttons in the same listener, you can differentiate
-between them either by comparing the [classname]#Button# object reference
-returned by the [methodname]#getButton()# method of
-[classname]#Button.ClickEvent# to a kept reference. For a detailed description
-of these patterns together with some examples, please see
+If you handle several buttons in the same listener, you can differentiate between
+them by comparing the [classname]#Button# object reference returned by the [methodname]#getButton()#
+method of [classname]#Button.ClickEvent# to a kept reference. For a detailed description 
+of these patterns together with some examples, please see 
 <<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events and Listeners">>.
 
 == CSS Style Rules
