@@ -28,7 +28,7 @@ and the _orientation_ of the slider.
 ----
 // Create a vertical slider
 Slider vertslider = new Slider(1, 100);
-vertslider.setOrientation(SliderOrientation.VERTICAL);
+vertslider.setOrientation(Orientation.VERTICAL);
 ----
 
 __min__:: Minimum value of the slider range. The default is 0.0.
@@ -37,7 +37,7 @@ __max__:: Maximum value of the slider range. The default is 100.0.
 
 __resolution__:: The number of digits after the decimal point. The default is 0.
 
-__orientation__:: The orientation can be either horizontal ([parameter]#SliderOrientation.HORIZONTAL#) or vertical ([parameter]#SliderOrientation.VERTICAL#). The default is horizontal.
+__orientation__:: The orientation can be either horizontal ([parameter]#Orientation.HORIZONTAL#) or vertical ([parameter]#Orientation.VERTICAL#). The default is horizontal.
 
 As the [classname]#Slider# is a field component, you can handle value changes
 with a [classname]#ValueChangeListener#. The value of the [classname]#Slider#
@@ -50,25 +50,16 @@ final Label vertvalue = new Label();
 vertvalue.setSizeUndefined();
 
 // Handle changes in slider value.
-vertslider.addValueChangeListener(
-    new Property.ValueChangeListener() {
-    public void valueChange(ValueChangeEvent event) {
-        double value = (Double) vertslider.getValue();
-
-        // Use the value
-        box.setHeight((float) value, Sizeable.UNITS_PERCENTAGE);
-        vertvalue.setValue(String.valueOf(value));
-    }
+vertslider.addValueChangeListener(event -> {
+    float value = event.getValue().floatValue();
+    box.setHeight(value, Unit.PERCENTAGE);
+    vertvalue.setValue(String.valueOf(value));
 });
-
-// The slider has to be immediate to send the changes
-// immediately after the user drags the handle.
-vertslider.setImmediate(true);
 ----
 
 You can set the value with the [methodname]#setValue()# method defined in
-[classname]#Slider# that takes the value as a native double value. The setter
-can throw a [classname]#ValueOutOfBoundsException#, which you must handle.
+[classname]#Slider# that takes the value as a [classname]#Double#. If the value
+is outside the configured bounds, the setter throws a [classname]#ValueOutOfBoundsException#.
 
 [source, java]
 ----
@@ -80,9 +71,6 @@ try {
 } catch (ValueOutOfBoundsException e) {
 }
 ----
-
-Alternatively, you can use the regular [methodname]#setValue(Object)#, which
-does not do bounds checking.
 
 <<figure.components.slider.example1>> shows both vertical (from the code
 examples) and horizontal sliders that control the size of a box. The slider
