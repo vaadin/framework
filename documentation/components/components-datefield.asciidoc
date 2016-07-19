@@ -1,11 +1,11 @@
 ---
-title: Date and Time Input with DateField
+title: Date Input with DateField
 order: 13
 layout: page
 ---
 
 [[components.datefield]]
-= Date and Time Input with [classname]#DateField#
+= Date Input with [classname]#DateField#
 
 ifdef::web[]
 [.sampler]
@@ -13,15 +13,15 @@ image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#u
 endif::web[]
 
 The [classname]#DateField# component provides the means to display and input
-date and time. The field comes in two variations: [classname]#PopupDateField#,
+dates. The field comes in two variations: [classname]#PopupDateField#,
 with a numeric input box and a popup calendar view, and
 [classname]#InlineDateField#, with the calendar view always visible. The
 [classname]#DateField# base class defaults to the popup variation.
 
-The example below illustrates the use of the [classname]#DateField# baseclass,
-which is equivalent to the [classname]#PopupDateField#. We set the initial time
-of the date field to current time by using the default constructor of the
-[classname]#java.util.Date# class.
+The example below illustrates the use of the [classname]#DateField# base class,
+which is equivalent to the [classname]#PopupDateField#. We set the initial date
+of the date field to current date by using the factory method [methodname]#now#
+of the [classname]#java.time.LocalDate# class.
 
 
 [source, java]
@@ -29,39 +29,36 @@ of the date field to current time by using the default constructor of the
 // Create a DateField with the default style
 DateField date = new DateField();
 
-// Set the date and time to present
-date.setValue(new Date());
+// Set the date to present
+date.setValue(LocalDate.now());
 ----
 
 The result is shown in <<figure.components.datefield.basic>>.
 
 [[figure.components.datefield.basic]]
-.[classname]#DateField# ([classname]#PopupDateField#) for Selecting Date and Time
+.[classname]#DateField# ([classname]#PopupDateField#) for Selecting a Date
 image::img/datefield-example1.png[width=35%, scaledwidth=60%]
 
 [[components.datefield.popupdatefield]]
 == [classname]#PopupDateField#
 
-The [classname]#PopupDateField# provides date input using a text box for the
-date and time. As the [classname]#DateField# defaults to this component, the use
-is exactly the same as described earlier. Clicking the handle right of the date
-opens a popup view for selecting the year, month, and day, as well as time. Also
-the Down key opens the popup. Once opened, the user can navigate the calendar
-using the cursor keys.
+The [classname]#PopupDateField# provides date input using a text box. As the
+[classname]#DateField# defaults to this component, the use is exactly the same
+as described earlier. Clicking the handle right of the date opens a popup view
+for selecting the year, month, and day. The Down key also opens the popup.
+Once opened, the user can navigate the calendar using the cursor keys.
 
-The date and time selected from the popup are displayed in the text box
-according to the default date and time format of the current locale, or as
-specified with [methodname]#setDateFormat()#. The same format definitions are
-used for parsing user input.
+The date selected from the popup is displayed in the text box according to the
+default date and format of the current locale, or as specified with [methodname]#setDateFormat()#.
+The same format definitions are used for parsing user input.
 
 [[components.datefield.popupdatefield.format]]
-=== Date and Time Format
+=== Date Format
 
-The date and time are normally displayed according to the default format for the
-current locale (see
+The date is normally displayed according to the default format for the current locale (see
 <<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>).
 You can specify a custom format with [methodname]#setDateFormat()#. It takes a
-format string that follows the format of the [classname]#SimpleDateFormat# in
+format string that follows the format of the [classname]#java.time.format.DateTimeFormatter# in
 Java.
 
 
@@ -77,7 +74,7 @@ The result is shown in <<figure.components.datefield.popupdatefield.format>>.
 .Custom Date Format for [classname]#PopupDateField#
 image::img/datefield-formatting.png[width=35%, scaledwidth=60%]
 
-The same format specification is also used for parsing user-input date and time,
+The same format specification is also used for parsing user-input date,
 as described later.
 
 
@@ -85,7 +82,7 @@ ifdef::web[]
 [[components.datefield.popupdatefield.malformed]]
 === Handling Malformed User Input
 
-A user can easily input a malformed or otherwise invalid date or time.
+A user can easily input a malformed or otherwise invalid date.
 [classname]#DateField# has two validation layers: first on the client-side and
 then on the server-side.
 
@@ -282,8 +279,8 @@ field.
 // Create a DateField with the default style
 InlineDateField date = new InlineDateField();
 
-// Set the date and time to present
-date.setValue(new java.util.Date());
+// Set the date to present
+date.setValue(LocalDate.now());
 ----
 
 The result is shown in <<figure.components.datefield.inlinedatefield>>.
@@ -340,19 +337,16 @@ endings for the weekday bar.
 == Date and Time Resolution
 
 In addition to display a calendar with dates, [classname]#DateField# can also
-display the time in hours and minutes, or just the month or year. The visibility
-of the input components is controlled by __time resolution__, which you can set
-with [methodname]#setResolution()#. The method takes as its parameters the
-lowest visible component, [parameter]#DateField.Resolution.DAY# for just dates
-and [parameter]#DateField.Resolution.MIN# for dates with time in hours and
-minutes. Please see the API Reference for the complete list of resolution
-parameters.
+display just the month or year. The visibility of the input components is
+controlled by __date resolution__, which you can set with [methodname]#setResolution()#.
+The method takes as its parameter the highest resolution date element that should
+be visible. Please see the API Reference for the complete list of resolution parameters.
 
 
 [[components.datefield.locale]]
 == DateField Locale
 
-The date and time are displayed according to the locale of the user, as reported
+The date is displayed according to the locale of the user, as reported
 by the browser. You can set a custom locale with the [methodname]#setLocale()#
 method of [classname]#AbstractComponent#, as described in
 <<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>.
