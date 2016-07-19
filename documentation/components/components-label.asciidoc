@@ -31,9 +31,8 @@ layout.addComponent(label);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.basic[on-line example, window="_blank"].
 
-[classname]#Label# implements the [interfacename]#Property# interface to allow
-accessing the text value, so you can get and set the text with
-[methodname]#getValue()# and [methodname]#setValue()#.
+You can get and set the text of a [classname]#Label# with the
+[methodname]#getValue()# and [methodname]#setValue()# methods.
 
 [source, java]
 ----
@@ -42,17 +41,10 @@ TextField editor = new TextField(null, // No caption
                                  label.getValue());
 
 // Change the label's text
-editor.addValueChangeListener(event -> // Java 8
-    label.setValue(editor.getValue()));
-editor.setImmediate(true); // Send on Enter
+editor.onChange(label::setValue);
+// or onChange(value -> label.setValue(value));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.basic[on-line example, window="_blank"].
-
-Label also supports data binding to a property data source, as described later
-in <<components.label.databinding>>. However, in that case the value can not be
-set through the label, as [classname]#Label# is not a
-[interfacename]#Property.Editor# and is not allowed to write to a bound
-property.
 
 Even though [classname]#Label# is text and is often used as a caption, it is a
 normal component and therefore also has a caption that you can set with
@@ -247,48 +239,6 @@ horizontal.addComponent(button2);
 ----
 
 endif::web[]
-
-[[components.label.databinding]]
-== Data Binding
-
-While [classname]#Label# is not a field component, it is a
-[interfacename]#Property.Viewer# and can be bound to a property data source,
-described in
-<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties,"Properties">>.
-You can specify the data source either in the constructor or by the
-[methodname]#setPropertyDataSource()# method.
-
-
-[source, java]
-----
-// Some property
-ObjectProperty<String> property =
-    new ObjectProperty<String>("some value");
-
-// Label that is bound to the property
-Label label = new Label(property);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.binding[on-line example, window="_blank"].
-
-Further, as [classname]#Label# is a [interfacename]#Property#, you can edit its
-value with a property editor, such as a field:
-
-
-[source, java]
-----
-Label label = new Label("some value");
-TextField editor = new TextField();
-editor.setPropertyDataSource(label);
-editor.setImmediate(true);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.delegation[on-line example, window="_blank"].
-
-However, [classname]#Label# is __not__ a [interfacename]#Property.Editor#, so it
-is read-only when bound to a data source. Therefore, you can not use
-[methodname]#setValue()# to set the value of a connected data source through a
-[classname]#Label# nor bind the label to an editor field, in which case writes
-would be delegated through the label.
-
 
 [[components.label.css]]
 == CSS Style Rules
