@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin.external.atmosphere.client</groupId>
-			<artifactId>jquery</artifactId>
+			<artifactId>javascript</artifactId>
 			<version>${atmosphere.js.version}</version>
 			<type>war</type>
 			<scope>provided</scope>
@@ -48,7 +48,7 @@
 						<!-- <inherited>false</inherited> -->
 						<configuration>
 							<target>
-								<property name="jquery.unpack" location="${project.build.directory}/temp" />
+								<property name="javascript.unpack" location="${project.build.directory}/temp" />
 								<property name="vaadinPush.js"
 									location="${project.build.outputDirectory}/VAADIN/vaadinPush.debug.js" />
 								<property name="templates.dir"
@@ -56,24 +56,21 @@
 
 								<!-- Unzip to temp dir -->
 								<unzip
-									src="${maven.dependency.com.vaadin.external.atmosphere.client.jquery.war.path}"
-									dest="${jquery.unpack}">
+									src="${maven.dependency.com.vaadin.external.atmosphere.client.javascript.war.path}"
+									dest="${javascript.unpack}">
 									<patternset>
-										<include name="**/jquery.atmosphere.js" />
+										<include name="**/atmosphere.js" />
 									</patternset>
 									<mapper type="flatten" />
 								</unzip>
-								<loadfile srcfile="${templates.dir}/jquery-1.11.0.js"
-									property="jquery.js.contents" />
-								<loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js"
-									property="jquery.atmosphere.js.contents" />
+								<loadfile srcfile="${javascript.unpack}/atmosphere.js"
+									property="atmosphere.js.contents" />
 
 								<loadfile srcfile="${templates.dir}/vaadinPush.js.tpl"
 									property="vaadinPush.js.contents">
 									<filterchain>
 										<replacetokens begintoken="@" endtoken="@">
-											<token key="jquery.js" value="${jquery.js.contents}" />
-											<token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
+											<token key="atmosphere.js" value="${atmosphere.js.contents}" />
 										</replacetokens>
 									</filterchain>
 								</loadfile>
@@ -138,6 +135,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>VAADIN</Export-Package>
 						<Require-Bundle>com.vaadin.external.atmosphere.runtime;bundle-version="${atmosphere.runtime.version}";visibility:=reexport</Require-Bundle>

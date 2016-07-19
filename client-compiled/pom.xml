@@ -67,7 +67,7 @@
 							<classpathScope>compile</classpathScope>
 							<executable>${java.home}/bin/java</executable>
 							<arguments>
-								<argument>-Dvaadin.version=${project.version}</argument>
+								<argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
 								<argument>-DincludeNumberPackages=1</argument>
 
 								<argument>-classpath</argument>
@@ -110,6 +110,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<!-- Export package is handled in exec plugin -->
 						<Export-Package></Export-Package>

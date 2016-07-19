@@ -556,7 +556,7 @@ public class AtmospherePushConnection implements PushConnection {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
 
-        return $wnd.jQueryVaadin.atmosphere.subscribe(config);
+        return $wnd.vaadinPush.atmosphere.subscribe(config);
     }-*/;
 
     private native void doPush(JavaScriptObject socket, String message)
@@ -566,12 +566,12 @@ public class AtmospherePushConnection implements PushConnection {
 
     private static native void doDisconnect(String url)
     /*-{
-       $wnd.jQueryVaadin.atmosphere.unsubscribeUrl(url);
+       $wnd.vaadinPush.atmosphere.unsubscribeUrl(url);
     }-*/;
 
     private static native boolean isAtmosphereLoaded()
     /*-{
-        return $wnd.jQueryVaadin != undefined;
+        return $wnd.vaadinPush && $wnd.vaadinPush.atmosphere;
     }-*/;
 
     private void runWhenAtmosphereLoaded(final Command command) {

@@ -409,21 +409,26 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 }
             }
 
-            int fileCount = event.getFileCount();
-            if (fileCount > 0) {
-                transferable.setData("filecount", fileCount);
-                for (int i = 0; i < fileCount; i++) {
+            final int eventFileCount = event.getFileCount();
+            int fileIndex = 0;
+            for (int i = 0; i < eventFileCount; i++) {
+                // Transfer only files and not folders
+                if (event.isFile(i)) {
                     final int fileId = filecounter++;
                     final VHtml5File file = event.getFile(i);
                     VConsole.log("Preparing to upload file " + file.getName()
-                            + " with id " + fileId);
-                    transferable.setData("fi" + i, "" + fileId);
-                    transferable.setData("fn" + i, file.getName());
-                    transferable.setData("ft" + i, file.getType());
-                    transferable.setData("fs" + i, file.getSize());
+                            + " with id " + fileId + ", size="
+                            + file.getSize());
+                    transferable.setData("fi" + fileIndex, "" + fileId);
+                    transferable.setData("fn" + fileIndex, file.getName());
+                    transferable.setData("ft" + fileIndex, file.getType());
+                    transferable.setData("fs" + fileIndex, file.getSize());
                     queueFilePost(fileId, file);
+                    fileIndex++;
                 }
-
+            }
+            if (fileIndex > 0) {
+                transferable.setData("filecount", fileIndex);
             }
 
             VDragAndDropManager.get().endDrag();
