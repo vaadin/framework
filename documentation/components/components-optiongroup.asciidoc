@@ -29,13 +29,13 @@ enabled with [methodname]#setMultiSelect()#.
 [source, java]
 ----
 // A single-select radio button group
-OptionGroup single = new OptionGroup("Single Selection");
-single.addItems("Single", "Sola", "Yksi");
+OptionGroup<String> single = new OptionGroup<>("Single Selection");
+single.setItems("Single", "Sola", "Yksi");
 
 // A multi-select check box group
-OptionGroup multi = new OptionGroup("Multiple Selection");
+OptionGroup<String> multi = new OptionGroup<>("Multiple Selection");
 multi.setMultiSelect(true);
-multi.addItems("Many", "Muchos", "Monta");
+multi.setItems("Many", "Muchos", "Monta");
 ----
 
 <<figure.components.optiongroup>> shows the [classname]#OptionGroup# in both
@@ -60,21 +60,15 @@ selection from a disabled to an enabled item. The selections can be changed
 programmatically regardless of whether an item is enabled or disabled. You can
 find out whether an item is enabled with [methodname]#isItemEnabled()#.
 
-The [methodname]#setItemEnabled()# identifies the item to be disabled by its
-item ID.
-
 [source, java]
 ----
 // Have an option group with some items
-OptionGroup group = new OptionGroup("My Disabled Group");
-group.addItems("One", "Two", "Three");
+OptionGroup<String> group = new OptionGroup<>("My Disabled Group");
+group.setItems("One", "Two", "Three");
 
-// Disable one item by its item ID
+// Disable one item
 group.setItemEnabled("Two", false);
 ----
-
-The item IDs are also used for the captions in this example. The result is shown
-in <<figure.components.optiongroup.disabling>>.
 
 [[figure.components.optiongroup.disabling]]
 .[classname]#OptionGroup# with a Disabled Item

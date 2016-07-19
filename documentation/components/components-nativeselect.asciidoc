@@ -20,10 +20,10 @@ the native selection input of web browsers, using the HTML
 [source, java]
 ----
 // Create the selection component
-NativeSelect select = new NativeSelect("Native Selection");
+NativeSelect<String> select = new NativeSelect<>("Native Selection");
 
 // Add some items
-select.addItems("Mercury", "Venus", ...);
+select.setItems("Mercury", "Venus", ...);
 ----
 
 The [methodname]#setColumns()# allows setting the width of the list as
