@@ -20,12 +20,10 @@ and check box groups with the [classname]#OptionGroup# component in multiple
 selection mode, as described in
 <<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>.
 
-Clicking on a check box will change its state. The state is a
-[classname]#Boolean# property that you can set with the [methodname]#setValue()#
-method and obtain with the [methodname]#getValue()# method of the
-[classname]#Property# interface. Changing the value of a check box will cause a
-[classname]#ValueChangeEvent#, which can be handled by a
-[classname]#ValueChangeListener#.
+Clicking on a check box will change its state. The state is a [classname]#Boolean#
+property that you can set with the [methodname]#setValue()# method and obtain with
+the [methodname]#getValue()# method. Changing the value of a check box will cause
+a [classname]#ValueChangeEvent#, which can be handled by a [classname]#ValueChangeListener#.
 
 
 [source, java]
@@ -35,10 +33,10 @@ CheckBox checkbox2 = new CheckBox("Box with a Check");
 
 checkbox2.setValue(true);
 
-checkbox1.addValueChangeListener(event -> // Java 8
+checkbox1.addValueChangeListener(event ->
     checkbox2.setValue(! checkbox1.getValue()));
 
-checkbox2.addValueChangeListener(event -> // Java 8
+checkbox2.addValueChangeListener(event ->
     checkbox1.setValue(! checkbox2.getValue()));
 ----
 
