@@ -35,31 +35,24 @@ The result is shown in <<figure.components.textfield.basic>>.
 .[classname]#TextField# Example
 image::img/textfield-example.png[width=40%, scaledwidth=50%]
 
-Value changes are handled with a [classname]#Property.ValueChangeListener#, as
-in most other fields. The value can be acquired with [methodname]#getValue()#
-directly from the text field, as is done in the example below, or from the
-property reference of the event.
+Value changes are handled by adding a listener using either the [methodname]#onChange()#
+or [methodname]#addValueChangeListener()# method, as in most other fields. The value can be
+acquired with [methodname]#getValue()# directly from the text field or from the parameter
+passed to the event listener. 
 
 [source, java]
 ----
 // Handle changes in the value
-tf.addValueChangeListener(new Property.ValueChangeListener() {
-    public void valueChange(ValueChangeEvent event) {
-        // Assuming that the value type is a String
-        String value = (String) event.getProperty().getValue();
-
+tf.addValueChangeListener(event ->
         // Do something with the value
-        Notification.show("Value is: " + value);
-    }
-});
-
-// Fire value changes immediately when the field loses focus
-tf.setImmediate(true);
+        Notification.show("Value is: " + event.getValue()));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.inputhandling[on-line example, window="_blank"].
 
-As with other event listeners, you can use lambda expression with one parameter
-to handle the events in Java 8.
+[classname]#TextField# edits [classname]#String# values, but you can use [classname]#Binder#
+to bind it to any property type that has a proper converter, as described in
+<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
+Between Property Type and Representation">>.
 
 Much of the API of [classname]#TextField# is defined in
 [classname]#AbstractTextField#, which allows different kinds of text input
@@ -69,52 +62,6 @@ single-line text fields.
 [[figure.components.textfield.api]]
 .Text Field Class Relationships
 image::img/textfield-diagram-hi.png[width=40%, scaledwidth=70%]
-
-[[components.textfield.databinding]]
-== Data Binding
-
-[classname]#TextField# edits [classname]#String# values, but you can bind it to
-any property type that has a proper converter, as described in
-<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
-Between Property Type and Representation">>.
-
-[source, java]
-----
-// Have an initial data model. As Double is unmodificable and
-// doesn't support assignment from String, the object is
-// reconstructed in the wrapper when the value is changed.
-Double trouble = 42.0;
-
-// Wrap it in a property data source
-final ObjectProperty<Double> property =
-    new ObjectProperty<Double>(trouble);
-
-// Create a text field bound to it
-// (StringToDoubleConverter is used automatically)
-TextField tf = new TextField("The Answer", property);
-tf.setImmediate(true);
-
-// Show that the value is really written back to the
-// data source when edited by user.
-Label feedback = new Label(property);
-feedback.setCaption("The Value");
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.databinding[on-line example, window="_blank"].
-
-When you put a [classname]#Table# in editable mode or create fields with a
-[classname]#FieldGroup#, the [classname]#DefaultFieldFactory# creates a
-[classname]#TextField# for almost every property type by default. You often need
-to make a custom factory to customize the creation and to set the field tooltip,
-validation, formatting, and so on.
-
-See
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
-Components to Data">> for more details on data binding, field factories for
-[classname]#Table# in
-<<dummy/../../../framework/components/components-table#components.table.editing,"Editing
-the Values in a Table">>, and
-<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding,"Creating
-Forms by Binding Fields to Items">> regarding forms.
 
 [[components.textfield.length]]
 == String Length
@@ -132,106 +79,16 @@ relation to the size of the used font, but the __em__ width is not exactly the
 width of a letter and varies by browser and operating system. There is no standard
 way in HTML for setting the width exactly to a number of letters (in a monospaced font).
 
-[[components.textfield.nullvalues]]
-== Handling Null Values
-
-((("Null representation", id="term.components.textfield.nullvalues", range="startofrange")))
-
-((("[methodname]#setNullRepresentation()#")))
-As with any field, the value of a [classname]#TextField# can be set as
-[parameter]#null#. This occurs most commonly when you create a new field without
-setting a value for it or bind the field value to a data source that allows null
-values. In such case, you might want to show a special value that stands for the
-null value. You can set the null representation with the
-[methodname]#setNullRepresentation()# method. Most typically, you use an empty
-string for the null representation, unless you want to differentiate from a
-string that is explicitly empty. The default null representation is "[literal]#null#", which essentially warns that you may have forgotten to
-initialize your data objects properly.
-
-((("[methodname]#setNullSettingAllowed()#")))
-The [methodname]#setNullSettingAllowed()# controls whether the user can actually
-input a null value by using the null value representation. If the setting is
-[literal]#++false++#, which is the default, inputting the null value
-representation string sets the value as the literal value of the string, not
-null. This default assumption is a safeguard for data sources that may not allow
-null values.
-
-[source, java]
-----
-// Have a property with null value
-ObjectProperty<Double> dataModel =
-    new ObjectProperty<Double>(new Double(0.0));
-dataModel.setValue(null); // Have to set it null here
-
-// Create a text field bound to the null data
-TextField tf = new TextField("Field Energy (J)", dataModel);
-tf.setNullRepresentation("-- null-point --");
-
-// Allow user to input the null value by its representation
-tf.setNullSettingAllowed(true);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.nullvaluerepresentation[on-line example, window="_blank"].
-
-The [classname]#Label#, which is bound to the value of the
-[classname]#TextField#, displays a null value as empty. The resulting user
-interface is shown in <<figure.components.textfield.nullvalues>>.
-
-[[figure.components.textfield.nullvalues]]
-.Null Value Representation
-image::img/textfield-nullrepresentation.png[width=35%, scaledwidth=50%]
-
-(((range="endofrange", startref="term.components.textfield.nullvalues")))
-
 [[components.textfield.textchangeevents]]
-== Text Change Events
+== Configuring the Granularity of Value Change Events
 
 ((("[classname]#Text change events#", id="term.components.textfield.textchangeevents", range="startofrange")))
 
-Often you want to receive a change event immediately when the text field value
-changes. The __immediate__ mode is not literally immediate, as the changes are
-transmitted only after the field loses focus. In the other extreme, using
-keyboard events for every keypress would make typing unbearably slow and also
-processing the keypresses is too complicated for most purposes. __Text change
-events__ are transmitted asynchronously soon after typing and do not block
-typing while an event is being processed.
+Often you want to control how frequently [classname]#TextField# value changes are transmitted to the server.
+Sometimes the changes should be sent only after the field loses focus.
+In the other extreme, it can sometimes be useful to receive events every time the user presses a key.
 
-((([classname]#TextChangeListener#)))
-Text change events are received with a [classname]#TextChangeListener#, as is
-done in the following example that demonstrates how to create a text length
-counter:
-
-[source, java]
-----
-// Text field with maximum length
-final TextField tf = new TextField("My Eventful Field");
-tf.setValue("Initial content");
-tf.setMaxLength(20);
-
-// Counter for input length
-final Label counter = new Label();
-counter.setValue(tf.getValue().length() +
-                 " of " + tf.getMaxLength());
-
-// Display the current length interactively in the counter
-tf.addTextChangeListener(new TextChangeListener() {
-    public void textChange(TextChangeEvent event) {
-        int len = event.getText().length();
-        counter.setValue(len + " of " + tf.getMaxLength());
-    }
-});
-
-// The lazy mode is actually the default
-tf.setTextChangeEventMode(TextChangeEventMode.LAZY);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.textchangeevents.counter[on-line example, window="_blank"].
-
-The result is shown in <<figure.components.textfield.textchangeevents>>.
-
-[[figure.components.textfield.textchangeevents]]
-.Text Change Events
-image::img/textfield-textchangeevents.png[width=35%, scaledwidth=50%]
-
-The __text change event mode__ defines how quickly the changes are transmitted
+The __value change event mode__ defines how quickly the changes are transmitted
 to the server and cause a server-side event. Lazier change events allow sending
 larger changes in one event if the user is typing fast, thereby reducing server
 requests.
@@ -266,6 +123,37 @@ typically caused by a key press. The requests are separate and are processed
 sequentially one after another. Change events are nevertheless communicated
 asynchronously to the server, so further input can be typed while event requests
 are being processed.
+
+[source, java]
+----
+// Text field with maximum length
+TextField tf = new TextField("My Eventful Field");
+tf.setValue("Initial content");
+tf.setMaxLength(20);
+
+// Counter for input length
+Label counter = new Label();
+counter.setValue(tf.getValue().length() +
+                 " of " + tf.getMaxLength());
+
+// Display the current length interactively in the counter
+tf.onChange(value -> {
+    int len = value.length();
+    counter.setValue(len + " of " + tf.getMaxLength());
+});
+
+tf.setValueChangeMode(ValueChangeMode.onKeyPress());
+----
+
+
+See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.textchangeevents.counter[on-line example, window="_blank"].
+
+The result is shown in <<figure.components.textfield.textchangeevents>>.
+
+[[figure.components.textfield.textchangeevents]]
+.Text Change Events
+image::img/textfield-textchangeevents.png[width=35%, scaledwidth=50%]
+
 
 (((range="endofrange", startref="term.components.textfield.textchangeevents")))
 
