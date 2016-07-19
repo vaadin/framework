@@ -165,7 +165,7 @@ dynamic content. This is illustrated in
 
 [[figure.architecture.technology.servlet]]
 .Java Web Applications and Servlets
-image::img/java-servlet-hi.png[width=40%, scaledwidth=70%]
+image::img/java-servlet-hi.png[width=80%, scaledwidth=100%]
 
 Web applications are usually packaged and deployed to a server as __WAR__ (
 __Web application ARchive__) files, which are Java JAR packages, which in turn

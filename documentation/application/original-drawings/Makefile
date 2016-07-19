@@ -1,5 +1,5 @@
 SVG =
-RASTERIMAGES = application-architecture
+RASTERIMAGES = application-architecture view-navigation ui-schematic
 
 RASTERSRCIMAGES := $(foreach file, $(RASTERIMAGES), $(file).svg)
 RASTERIMAGES_HI := $(foreach file, $(RASTERIMAGES), ../img/$(file)-hi.png)

@@ -17,7 +17,7 @@ events. The main features of the calendar include:
 
 * Monthly, weekly, and daily views
 * Two types of events: all-day events and events with a time range
-* Add events directly, from a [classname]#Container#, or with an event provider
+* Add events directly or with an event provider
 * Control the range of the visible dates
 * Selecting and editing date or time range by dragging
 * Drag and drop events to calendar
@@ -33,8 +33,7 @@ ifdef::web[handlers, as described in <<components.calendar.customizing>>.]
 ifndef::web[handlers.]
 
 The data source of a calendar can be practically anything, as its events are
-queried dynamically by the component. You can bind the calendar to a Vaadin
-container, or to any other data source by implementing an __event provider__.
+queried dynamically by the component. You can bind the calendar to any data source by implementing an __event provider__.
 
 The [classname]#Calendar# has undefined size by default and you usually want to
 give it a fixed or relative size, for example as follows.
@@ -103,7 +102,6 @@ All occurrences in a calendar are represented as __events__. You have three ways
 to manage the calendar events:
 
 * Add events directly to the [classname]#Calendar# object using the [methodname]#addEvent()#
-* Use a [interfacename]#Container# as a data source
 * Use the __event provider__ mechanism
 
 You can add events with [methodname]#addEvent()# and remove them with the
@@ -125,12 +123,13 @@ are queried by the [classname]#Calendar# from the provider that just has to
 implement the [interfacename]#CalendarEventProvider# interface. It is up to the
 event provider that [classname]#Calendar# gets the correct events.
 
+ifdef::vaadin7[]
 You can bind any Vaadin [classname]#Container# to a calendar, in which case a
 [classname]#ContainerEventProvider# is used transparently. The container must be
 ordered by start date and time of the events. See
 <<dummy/../../../framework/datamodel/datamodel-container#datamodel.container,"Collecting
 Items in Containers">> for basic information about containers.
-
+endif::vaadin7[]
 
 [[components.calendar.events.details]]
 === Event Types
@@ -184,8 +183,7 @@ BasicEvent implement some optional event interfaces provided by the calendar
 package, there is no need to refresh the calendar. Just create events, set their
 properties and add them to the Event Provider.
 
-
-
+ifdef::vaadin7[]
 [[components.calendar.container]]
 == Getting Events from a Container
 
@@ -311,8 +309,8 @@ BasicEvent event = new BasicEvent("The Event", "Single Event",
     new GregorianCalendar(2012,1,15,14,00).getTime());
 calendar.addEvent(event);
 ----
-
 endif::web[]
+endif::vaadin7[]
 
 
 ifdef::web[]

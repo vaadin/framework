@@ -1,5 +1,5 @@
 SVG =
-RASTERIMAGES = architecture-detailed
+RASTERIMAGES = architecture-detailed java-servlet clientside-arch
 
 RASTERSRCIMAGES := $(foreach file, $(RASTERIMAGES), $(file).svg)
 RASTERIMAGES_HI := $(foreach file, $(RASTERIMAGES), ../img/$(file)-hi.png)

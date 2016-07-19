@@ -24,12 +24,18 @@ addition to the component features inherited from
 [classname]#AbstractComponent#, it implements the features defined in the
 [classname]#HasValue# and [classname]#Component.Focusable# interfaces.
 
-The description of the field interfaces and base classes is broken down in the
-following sections.
-
 [[figure.components.fields.hasvalue]]
 .Field components having values
 image::img/field-interface-v8-hi.png[width=60%, scaledwidth=100%]
+
+/////////////////////////////////////////////////////////////////////////////
+// Disabled because everything has changed in Vaadin 8.
+// Revise
+/////////////////////////////////////////////////////////////////////////////
+ifdef::disabled[]
+
+The description of the field interfaces and base classes is broken down in the
+following sections.
 
 [[components.fields.field]]
 == The [classname]#Field# Interface
@@ -336,5 +342,7 @@ If the field is bound to a [classname]#FieldGroup#, described in
 Forms by Binding Fields to Items">>, calling [methodname]#commit()# for the
 group runs the validation for all the fields in the group, and if successful,
 writes the input values to the data source.
+
+endif::disabled[]
 
 (((range="endofrange", startref="term.components.fields")))
