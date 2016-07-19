@@ -48,29 +48,21 @@ public class MyHierarchicalUI extends UI {
 }
 ----
 
-The component hierarchy could be illustrated with a tree as follows:
+The component hierarchy is illustrated in <<figure.application.architecture.schematic>>.
 
+[[figure.application.architecture.schematic]]
+.Schematic diagram of the UI
+image::img/ui-schematic-hi.png[width=80%, scaledwidth=100%]
 
-----
-UI
- `-- VerticalLayout
-   |-- Label
-   `-- HorizontalLayout
-     |-- Tree
-     `-- Table
-----
-
-The result is shown in <<figure.application.architecture.example>>.
+The actual UI is shown in <<figure.application.architecture.example>>.
 
 [[figure.application.architecture.example]]
 .Simple hierarchical UI
 image::img/ui-architecture-hierarchical.png[width=70%, scaledwidth=90%]
 
-Instead of building the layout in Java, you can also use a declarative design,
-as described later in
-<<dummy/../../../framework/application/application-declarative#application.declarative,"Designing
-UIs Declaratively">>. The examples given for the declarative layouts give
-exactly the same UI layout as built from the components above.
+Instead of building the layout in Java, you can also use a declarative design, as described later in <<dummy/../../../framework/application/application-declarative#application.declarative,"Designing UIs Declaratively">>.
+The examples given for the declarative layouts give exactly the same UI layout as built from the components above.
+The easiest way to create declarative designs is to use Vaadin Designer.
 
 The built-in components are described in
 <<dummy/../../../framework/components/components-overview.asciidoc#components.overview,"User
@@ -195,19 +187,13 @@ sub-views.
 
 [[figure.application.architecture.navigation]]
 .Navigation Between Views
-image::img/view-navigation-hi.png[]
+image::img/view-navigation-hi.png[width=80%, scaledwidth=100%]
 
-The [classname]#Navigator# described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
-in an Application">> is a view manager that provides a flexible way to navigate
-between views and sub-views, while managing the URI fragment in the page URL to
-allow bookmarking, linking, and going back in browser history.
+The [classname]#Navigator# described in <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating in an Application">> is a view manager that provides a flexible way to navigate between views and sub-views, while managing the URI fragment in the page URL to allow bookmarking, linking, and going back in the browser history.
 
-Often Vaadin application views are part of something bigger. In such cases, you
-may need to integrate the Vaadin applications with the other website. You can
-use the embedding techniques described in
-<<dummy/../../../framework/advanced/advanced-embedding#advanced.embedding,"Embedding
-UIs in Web Pages">>.
+Often Vaadin application views are part of something bigger.
+In such cases, you may need to integrate the Vaadin applications with the other website.
+You can use the embedding techniques described in <<dummy/../../../framework/advanced/advanced-embedding#advanced.embedding,"Embedding UIs in Web Pages">>.
 
 
 [[application.architecture.accessing]]
@@ -245,9 +231,6 @@ You can get the page and the session also from a [classname]#UI# with
 [classname]#VaadinSession# with [methodname]#getService()#.
 
 The static methods use the built-in ThreadLocal support in the classes.
-
 ifdef::web[]
- The pattern is described in
-<<dummy/../../../framework/advanced/advanced-global#advanced.global.threadlocal,"ThreadLocal
-Pattern">>.
+The pattern is described in <<dummy/../../../framework/advanced/advanced-global#advanced.global.threadlocal,"ThreadLocal Pattern">>.
 endif::web[]
