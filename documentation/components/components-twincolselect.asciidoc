@@ -23,7 +23,7 @@ clicking on the "&lt;&lt;" button.
 .Twin Column Selection
 image::img/twincolselect-basic.png[width=50%, scaledwidth=80%]
 
-[classname]#TwinColSelect# is always in multi-select mode, so its property value
+[classname]#TwinColSelect# is always in multi-select mode, so its selection
 is always a collection of the item IDs of the selected items, that is, the items
 in the right column.
 
@@ -35,23 +35,21 @@ column captions with [methodname]#setLeftColumnCaption()# and
 
 [source, java]
 ----
-TwinColSelect select = new TwinColSelect("Select Targets");
+TwinColSelect<String> select = new TwinColSelect<>("Select Targets");
 
 // Put some items in the select
-select.addItems("Mercury", "Venus", "Earth", "Mars",
+select.setItems("Mercury", "Venus", "Earth", "Mars",
         "Jupiter", "Saturn", "Uranus", "Neptune");
 
 // Few items, so we can set rows to match item count
 select.setRows(select.size());
 
-// Preselect a few items by creating a set
-select.setValue(new HashSet<String>(
-    Arrays.asList("Venus", "Earth", "Mars")));
+// Preselect a few items
+select.setSelection("Venus", "Earth", "Mars");
 
 // Handle value changes
-select.addValueChangeListener(event -> // Java 8
-    layout.addComponent(new Label("Selected: " +
-            event.getProperty().getValue())));
+select.onSelect(selectedItems ->
+    layout.addComponent(new Label("Selected: " + selectedItems)));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.twincolselect.captions[on-line example, window="_blank"].
 
