@@ -26,7 +26,6 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.VOptionGroup;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.ui.OptionGroup;
 
@@ -35,9 +34,6 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().htmlContentAllowed = uidl
-                .hasAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED);
-
         super.updateFromUIDL(uidl, client);
 
         getWidget().sendFocusEvents = client.hasEventListeners(this,

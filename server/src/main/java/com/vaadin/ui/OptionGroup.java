@@ -44,7 +44,6 @@ public class OptionGroup extends AbstractSelect implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     private Set<Object> disabledItemIds = new HashSet<Object>();
-    private boolean htmlContentAllowed = false;
 
     public OptionGroup() {
         super();
@@ -60,15 +59,6 @@ public class OptionGroup extends AbstractSelect implements
 
     public OptionGroup(String caption) {
         super(caption);
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("type", "optiongroup");
-        if (isHtmlContentAllowed()) {
-            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED, true);
-        }
-        super.paintContent(target);
     }
 
     @Override
@@ -243,8 +233,7 @@ public class OptionGroup extends AbstractSelect implements
      *            text
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        this.htmlContentAllowed = htmlContentAllowed;
-        markAsDirty();
+        getState().htmlContentAllowed = htmlContentAllowed;
     }
 
     /**
@@ -255,7 +244,7 @@ public class OptionGroup extends AbstractSelect implements
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
-        return htmlContentAllowed;
+        return getState(false).htmlContentAllowed;
     }
 
     @Override
@@ -293,5 +282,10 @@ public class OptionGroup extends AbstractSelect implements
     @Override
     protected OptionGroupState getState() {
         return (OptionGroupState) super.getState();
+    }
+
+    @Override
+    protected OptionGroupState getState(boolean markAsDirty) {
+        return (OptionGroupState) super.getState(markAsDirty);
     }
 }

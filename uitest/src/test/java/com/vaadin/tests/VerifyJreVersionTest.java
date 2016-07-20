@@ -32,7 +32,7 @@ public class VerifyJreVersionTest extends SingleBrowserTest {
         WebElement jreVersionLabel = vaadinElementById("jreVersionLabel");
 
         assertThat(jreVersionLabel.getText(),
-                is("Using Java 1.6.0_45 by Sun Microsystems Inc."));
+                is("Using Java 1.8.0_60 by Oracle Corporation"));
     }
 
 }

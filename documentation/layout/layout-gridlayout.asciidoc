@@ -88,9 +88,6 @@ detecting such invalid cases; see
 the Debug Mode">>.
 ====
 
-[[layout.gridlayout.sizing.expanding]]
-=== Expanding Rows and Columns
-
 Often, you want to have one or more rows or columns that take all the available
 space left over from non-expanding rows or columns. You need to set the rows or
 columns as __expanding__ with [methodname]#setRowExpandRatio()# and
@@ -151,7 +148,7 @@ endif::web[]
 
 [[figure.ui.gridlayout.sizing.expanding]]
 .Expanding rows and columns in [classname]#GridLayout#
-image::img/gridlayout_sizing_expanding.png[width=100%, scaledwidth=100%]
+image::img/gridlayout_sizing_expanding.png[width=75%, scaledwidth=100%]
 
 If the size of the contained components is undefined or fixed, the expansion
 ratio is of the __excess__ space, as in
@@ -173,7 +170,7 @@ and 80 pixels, regardless of the minimum size of their contained components.
   .v-gridlayout-margin {}
 ----
 
-The root element of the [classname]#GridLayout# component has `v-gridlayout` style.
+The `v-gridlayout` is the root element of the [classname]#GridLayout# component.
 The `v-gridlayout-margin` is a simple element inside it that allows setting a padding between the outer element and the cells.
 
 For styling the individual grid cells, you should style the components inserted in the cells.

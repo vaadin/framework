@@ -11,15 +11,15 @@
 	<artifactId>vaadin-root</artifactId>
 	<name>vaadin-root</name>
 	<packaging>pom</packaging>
-	<version>7.7.0-SNAPSHOT</version>
+	<version>8.0-SNAPSHOT</version>
 
 	<prerequisites>
 		<maven>3.0.5</maven>
 	</prerequisites>
 
 	<properties>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Used version numbers for dependencies -->
@@ -257,7 +257,7 @@
 						<configuration>
 							<signature>
 								<groupId>org.codehaus.mojo.signature</groupId>
-								<artifactId>java16</artifactId>
+								<artifactId>java18</artifactId>
 								<version>1.0</version>
 							</signature>
 							<ignores>

@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.optiongroup;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.select.AbstractSelectState;
 
 /**
@@ -26,4 +27,7 @@ public class OptionGroupState extends AbstractSelectState {
     {
         primaryStyleName = "v-select-optiongroup";
     }
+
+    @DelegateToWidget
+    public boolean htmlContentAllowed = false;
 }

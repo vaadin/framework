@@ -85,8 +85,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
      */
     private boolean blurOccured = false;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean htmlContentAllowed = false;
+    private boolean htmlContentAllowed = false;
 
     private boolean wasHtmlContentAllowed = false;
     private boolean wasMultiselect = false;
@@ -136,7 +135,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             final UIDL opUidl = (UIDL) it.next();
 
             String itemHtml = opUidl.getStringAttribute("caption");
-            if (!htmlContentAllowed) {
+            if (!isHtmlContentAllowed()) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
 
@@ -151,7 +150,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             // Need to recreate object if isMultiselect is changed (#10451)
             // OR if htmlContentAllowed changed due to Safari 5 issue
-            if ((op == null) || (htmlContentAllowed != wasHtmlContentAllowed)
+            if ((op == null) || (isHtmlContentAllowed() != wasHtmlContentAllowed)
                     || (isMultiselect() != wasMultiselect)) {
                 // Create a new element
                 if (isMultiselect()) {
@@ -193,7 +192,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             }
         }
 
-        wasHtmlContentAllowed = htmlContentAllowed;
+        wasHtmlContentAllowed = isHtmlContentAllowed();
         wasMultiselect = isMultiselect();
     }
 
@@ -307,5 +306,13 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                 }
             });
         }
+    }
+
+    public boolean isHtmlContentAllowed() {
+        return htmlContentAllowed;
+    }
+
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        this.htmlContentAllowed = htmlContentAllowed;
     }
 }

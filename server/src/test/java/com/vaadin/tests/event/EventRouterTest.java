@@ -36,7 +36,7 @@ public class EventRouterTest {
 
     private static final Method COMPONENT_EVENT_METHOD = ReflectTools
             .findMethod(Component.Listener.class, "componentEvent",
-                    Component.Event.class);
+                    Component.LegacyEvent.class);
 
     private EventRouter router;
     private Component component;
@@ -49,28 +49,28 @@ public class EventRouterTest {
         component = EasyMock.createNiceMock(Component.class);
         errorHandler = EasyMock.createMock(ErrorHandler.class);
         listener = EasyMock.createMock(Component.Listener.class);
-        router.addListener(Component.Event.class, listener,
+        router.addListener(Component.LegacyEvent.class, listener,
                 COMPONENT_EVENT_METHOD);
     }
 
     @Test
     public void fireEvent_noException_eventReceived() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.<Component.LegacyEvent> anyObject());
 
         EasyMock.replay(component, listener, errorHandler);
-        router.fireEvent(new Component.Event(component), errorHandler);
+        router.fireEvent(new Component.LegacyEvent(component), errorHandler);
         EasyMock.verify(listener, errorHandler);
     }
 
     @Test
     public void fireEvent_exceptionFromListenerAndNoHandler_exceptionPropagated() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.<Component.LegacyEvent> anyObject());
         EasyMock.expectLastCall().andThrow(
                 new RuntimeException("listener failed"));
 
         EasyMock.replay(component, listener);
         try {
-            router.fireEvent(new Component.Event(component));
+            router.fireEvent(new Component.LegacyEvent(component));
             Assert.fail("Did not receive expected exception from listener");
         } catch (RuntimeException e) {
             // e is a ListenerMethod@MethodException
@@ -81,31 +81,31 @@ public class EventRouterTest {
 
     @Test
     public void fireEvent_exceptionFromListener_errorHandlerCalled() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.<Component.LegacyEvent> anyObject());
         EasyMock.expectLastCall().andThrow(
                 new RuntimeException("listener failed"));
         errorHandler.error(EasyMock.<ErrorEvent> anyObject());
 
         EasyMock.replay(component, listener, errorHandler);
-        router.fireEvent(new Component.Event(component), errorHandler);
+        router.fireEvent(new Component.LegacyEvent(component), errorHandler);
         EasyMock.verify(listener, errorHandler);
     }
 
     @Test
     public void fireEvent_multipleListenersAndException_errorHandlerCalled() {
         Listener listener2 = EasyMock.createMock(Component.Listener.class);
-        router.addListener(Component.Event.class, listener2,
+        router.addListener(Component.LegacyEvent.class, listener2,
                 COMPONENT_EVENT_METHOD);
 
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.<Component.LegacyEvent> anyObject());
         EasyMock.expectLastCall().andThrow(
                 new RuntimeException("listener failed"));
         errorHandler.error(EasyMock.<ErrorEvent> anyObject());
         // second listener should be called despite an error in the first
-        listener2.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener2.componentEvent(EasyMock.<Component.LegacyEvent> anyObject());
 
         EasyMock.replay(component, listener, listener2, errorHandler);
-        router.fireEvent(new Component.Event(component), errorHandler);
+        router.fireEvent(new Component.LegacyEvent(component), errorHandler);
         EasyMock.verify(listener, listener2, errorHandler);
     }
 }

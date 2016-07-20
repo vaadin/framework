@@ -124,6 +124,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             File comVaadinTests = new File(path).getParentFile()
                     .getParentFile();
             addDirectories(comVaadinTests, defaultPackages, "com.vaadin.tests");
+            // FIXME: Remove this once temporary packages are cleaned.
+            addDirectories(comVaadinTests, defaultPackages, "com.vaadin.tokka.tests");
 
         }
     }

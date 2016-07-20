@@ -44,7 +44,7 @@ public interface MouseEvents {
      * @see ClickListener
      * @since 6.2
      */
-    public static class ClickEvent extends Component.Event {
+    public static class ClickEvent extends Component.LegacyEvent {
         /**
          * @deprecated As of 7.0, use {@link Button#LEFT} instead.
          */
@@ -214,7 +214,7 @@ public interface MouseEvents {
      * @author Vaadin Ltd.
      * @since 6.2
      */
-    public static class DoubleClickEvent extends Component.Event {
+    public static class DoubleClickEvent extends Component.LegacyEvent {
 
         public DoubleClickEvent(Component source) {
             super(source);

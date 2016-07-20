@@ -1201,7 +1201,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class ReadOnlyStatusChangeEvent extends Component.Event
+    public static class ReadOnlyStatusChangeEvent extends Component.LegacyEvent
             implements Property.ReadOnlyStatusChangeEvent, Serializable {
 
         /**

@@ -252,7 +252,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class FinishedEvent extends Component.Event {
+    public static class FinishedEvent extends Component.LegacyEvent {
 
         /**
          * Length of the received file.
@@ -441,7 +441,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 5.0
      */
-    public static class StartedEvent extends Component.Event {
+    public static class StartedEvent extends Component.LegacyEvent {
 
         private final String filename;
         private final String type;
@@ -507,7 +507,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      *
      * @since 7.2
      */
-    public static class ChangeEvent extends Component.Event {
+    public static class ChangeEvent extends Component.LegacyEvent {
 
         private final String filename;
 

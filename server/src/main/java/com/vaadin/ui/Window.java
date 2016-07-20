@@ -346,7 +346,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
     }
 
-    public static class CloseEvent extends Component.Event {
+    public static class CloseEvent extends Component.LegacyEvent {
 
         /**
          * 
@@ -456,7 +456,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 7.1
      * 
      */
-    public static class WindowModeChangeEvent extends Component.Event {
+    public static class WindowModeChangeEvent extends Component.LegacyEvent {
 
         private final WindowMode windowMode;
 
@@ -564,7 +564,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * (e.g. the browser window is resized). The frequency may vary across
      * browsers.
      */
-    public static class ResizeEvent extends Component.Event {
+    public static class ResizeEvent extends Component.LegacyEvent {
 
         /**
          * 

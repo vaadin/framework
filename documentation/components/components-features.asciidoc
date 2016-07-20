@@ -377,45 +377,37 @@ final Locale[] locales = Locale.getAvailableLocales();
 // language of the application can not be done before
 // this (and the selection) component are attached to
 // the application.
-final ComboBox select = new ComboBox("Select a language") {
+ComboBox<Locale> select = new ComboBox<>("Select a language") {
     @Override
     public void attach() {
         super.attach();
         setValue(getLocale());
     }
 };
-for (int i=0; i<locales.length; i++) {
-    select.addItem(locales[i]);
-    select.setItemCaption(locales[i],
-                          locales[i].getDisplayName(displayLocale));
 
-    // Automatically select the current locale
-    if (locales[i].equals(getLocale()))
-        select.setValue(locales[i]);
-}
+select.setItems(Arrays.asList(locales));
+select.setCaptionGenerator(locale -> locale.getDisplayName(displayLocale));
+select.setValue(getLocale());
+
 layout.addComponent(select);
 
 // Locale code of the selected locale
-final Label localeCode = new Label("");
+Label localeCode = new Label("");
 layout.addComponent(localeCode);
 
 // A date field which language the selection will change
-final InlineDateField date =
+InlineDateField date =
     new InlineDateField("Calendar in the selected language");
 date.setResolution(Resolution.DAY);
 layout.addComponent(date);
 
 // Handle language selection
-select.addValueChangeListener(new Property.ValueChangeListener() {
-    public void valueChange(ValueChangeEvent event) {
-        Locale locale = (Locale) select.getValue();
-        date.setLocale(locale);
-        localeCode.setValue("Locale code: " +
-                            locale.getLanguage() + "_" +
-                            locale.getCountry());
-    }
+select.onValueChange(locale -> {
+    date.setLocale(locale);
+    localeCode.setValue("Locale code: " +
+                        locale.getLanguage() + "_" +
+                        locale.getCountry());  
 });
-select.setImmediate(true);
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.selection[on-line example, window="_blank"].
 
@@ -472,18 +464,14 @@ Client-side state modifications will not be communicated to the server-side and,
 more importantly, server-side field components will not accept changes to the
 value of a read-only [classname]#Field# component. The latter is an important
 security feature, because a malicious user can not fabricate state changes in a
-read-only field. This is handled at the level of [classname]#AbstractField# in
-[methodname]#setValue()#, so you can not change the value programmatically
-either. Calling [methodname]#setValue()# on a read-only field results in
-[classname]#Property.ReadOnlyException#.
+read-only field.
 
-Also notice that while the read-only status applies automatically to the
-property value of a field, it does not apply to other component variables. A
-read-only component can accept some other variable changes from the client-side
+Also notice that while the read-only status applies automatically to the value
+of a field, it does not apply to other component variables. A
+read-only component can accept some other state changes from the client-side
 and some of such changes could be acceptable, such as change in the scroll bar
-position of a [classname]#Table#. Custom widgets should check the read-only
-state for variables bound to business
-data.
+position of a [classname]#Table#. Custom components should check the read-only
+state for variables bound to business data.
 
 ////
 TODO: Note this also in the Advanced: Security section.
@@ -632,8 +620,8 @@ above methods. The available units are listed in
 
 [source, java]
 ----
-mycomponent.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-mycomponent.setWidth(400, Sizeable.UNITS_PIXELS);
+mycomponent.setWidth(100, Unit.PERCENTAGE);
+mycomponent.setWidth(400, Unit.PIXELS);
 ----
 
 Alternatively, you can speficy the size as a string. The format of such a string
@@ -648,16 +636,15 @@ mycomponent.setHeight("400px");
 
 The "[literal]#++100%++#" percentage value makes the component take all
 available size in the particular direction (see the description of
-[parameter]#Sizeable.UNITS_PERCENTAGE# in the table below). You can also use the
+[parameter]#Unit.PERCENTAGE# in the table below). You can also use the
 shorthand method [methodname]#setSizeFull()# to set the size to 100% in both
 directions.
 
 The size can be __undefined__ in either or both dimensions, which means that the
 component will take the minimum necessary space. Most components have undefined
 size by default, but some layouts have full size in horizontal direction. You
-can set the height or width as undefined with
-[parameter]#Sizeable.SIZE_UNDEFINED# parameter for [methodname]#setWidth()# and
-[methodname]#setHeight()#.
+can set the height, width, or both as undefined with the methods [methodname]#setWidthUndefined()#,
+[methodname]#setHeightUndefined()#, and [methodname]#setHeightUndefined()#, respectively.
 
 Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
@@ -691,7 +678,8 @@ component allows inputting text, the focus and insertion point are indicated by
 a cursor. Pressing the Tab key moves the focus to the component next in the
 __focus order__.
 
-Focusing is supported by all [classname]#Field# components and also by the [classname]#Upload# component.
+Focusing is supported by all [classname]#Field# and [classname]#Select# components and also by
+components such as [classname]#Button#, [classname]#Upload#, and [classname]#TabSheet#.
 
 The focus order or __tab index__ of a component is defined as a positive integer
 value, which you can set with [methodname]#setTabIndex()# and get with

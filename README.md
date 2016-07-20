@@ -1,4 +1,4 @@
-# Vaadin Framework
+# Faadin Framework
 
 *[Vaadin Framework](https://vaadin.com/framework) allows you to build modern web apps efficiently in plain Java, without touchking low level web technologies.*
 

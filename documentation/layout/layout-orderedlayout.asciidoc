@@ -38,12 +38,6 @@ image::img/orderedlayout_vertical.png[width=30%, scaledwidth=65%]
 
 image::img/orderedlayout_horizontal.png[width=80%, scaledwidth=100%]
 
-ifdef::web[]
-[[layout.orderedlayout.declarative]]
-== Declarative Format
-
-Ordered layouts have the following declarative elements:
-
 |===============
 |Component|Element Name
 |[classname]#VerticalLayout#|[elementname]#v-verticallayout#
@@ -63,36 +57,8 @@ The have the following declarative attributes:
 |[parameter]#spacing#|[parameter]##spacing##++[=++[replaceable]##&lt;boolean&gt;##++]++
 |[parameter]#margin#|[parameter]##margin##++[=++[replaceable]##&lt;boolean&gt;##++]++
 |[parameter]#expandRatio#|Expand ratio of a child component is specified in the child with: [parameter]#:expand#++[=++[replaceable]##&lt;integer&gt;##++]++ or [parameter]#:expand# (implies ratio 1)
+
 |===============
-
-They can also have any attributes applicable to super classes.
-
-For example:
-
-[source, html]
-----
-<!-- Use margin and spacing -->
-<v-vertical-layout size-full margin spacing>
-  <v-label><b>Hello!</b> - How are you?</v-label>
-
-  <!-- Use expand ratio -->
-  <v-horizontal-layout size-full :expand>
-    ...
-
-    <!-- Use expand ratio -->
-    <v-table _id="mytable" caption="My Table"
-             size-full :expand/>
-  </v-horizontal-layout>
-
-  <v-horizontal-layout width-full>
-    ...
-
-    <!-- Use alignment -->
-    <v-button :right><b>OK</b></v-button>
-  </v-horizontal-layout>
-</v-vertical-layout>
-----
-endif::web[]
 
 [[layout.orderedlayout.spacing]]
 == Spacing in Ordered Layouts

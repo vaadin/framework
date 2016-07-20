@@ -681,7 +681,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             this) {
 
         @Override
-        protected void fireEvent(Event event) {
+        protected void fireEvent(LegacyEvent event) {
             TabSheet.this.fireEvent(event);
         }
     };
@@ -794,7 +794,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class SelectedTabChangeEvent extends Component.Event {
+    public static class SelectedTabChangeEvent extends Component.LegacyEvent {
 
         /**
          * New instance of selected tab change event

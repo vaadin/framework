@@ -90,7 +90,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * @since 3.0
      */
     @SuppressWarnings("serial")
-    public static class ValueChangeEvent extends Component.Event implements
+    public static class ValueChangeEvent extends Component.LegacyEvent implements
             Property.ValueChangeEvent {
 
         /**

@@ -18,7 +18,6 @@ package com.vaadin.shared.ui.optiongroup;
 import java.io.Serializable;
 
 public class OptionGroupConstants implements Serializable {
-    public static final String HTML_CONTENT_ALLOWED = "usehtml";
     public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
 
 }

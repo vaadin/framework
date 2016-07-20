@@ -110,7 +110,7 @@ public class TestForUpload extends CustomComponent implements
             private static final long serialVersionUID = -8319074730512324303L;
 
             @Override
-            public void componentEvent(Event event) {
+            public void componentEvent(LegacyEvent event) {
                 // print out all events fired by upload for debug purposes
                 System.out.println("Upload fired event | " + event);
             }

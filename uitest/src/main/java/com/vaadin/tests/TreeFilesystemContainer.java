@@ -22,7 +22,7 @@ import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
-import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
@@ -101,7 +101,7 @@ public class TreeFilesystemContainer extends
      * listener for component fsTree.
      */
     @Override
-    public void componentEvent(Event event) {
+    public void componentEvent(LegacyEvent event) {
         // Check if event occured at fsTree component
         if (event.getSource() == filesystem) {
             // Check if event is about changing value

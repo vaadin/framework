@@ -550,7 +550,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @since 7.5.0
      */
-    public static class SplitPositionChangeEvent extends Component.Event {
+    public static class SplitPositionChangeEvent extends Component.LegacyEvent {
 
         private final float position;
         private final Unit unit;

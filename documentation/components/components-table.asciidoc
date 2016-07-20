@@ -14,12 +14,22 @@ endif::web[]
 
 ((("[classname]#Table#", id="term.components.table", range="startofrange")))
 
+[NOTE]
+====
+[classname]#Table# is largely obsolete and has been replaced by the newer [classname]#Grid# component.
+Nevertheless, it still has some features, such as drag and drop, which have no counterpart in Grid.
+Table also still uses the old data API.
+Hence, only a short introduction is given below; see the online Vaadin Docs for more details.
+====
 
 The [classname]#Table# component is intended for presenting tabular data
 organized in rows and columns. The [classname]#Table# is one of the most
 versatile components in Vaadin. Table cells can include text or arbitrary UI
 components. You can easily implement editing of the table data, for example
 clicking on a cell could change it to a text field for editing.
+
+.Basic Table Example
+image::img/table-example1.png[width=35%, scaledwidth=50%]
 
 The data contained in a [classname]#Table# is managed using the Vaadin data model (see <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>), through the [classname]#Container# interface of the [classname]#Table#.
 This makes it possible to bind a table directly to a data source, such as a database query.
@@ -72,8 +82,7 @@ rows are given simply as object arrays, in the same order in which the
 properties were added. The objects must be of the correct class, as defined in
 the [methodname]#addContainerProperty()# calls.
 
-.Basic Table Example
-image::img/table-example1.png[width=35%, scaledwidth=50%]
+ifdef::vaadin7[]
 
 Scalability of the [classname]#Table# is largely dictated by the container. The
 default [classname]#IndexedContainer# is relatively heavy and can cause
@@ -1152,5 +1161,6 @@ image::img/table-cellstylegenerator1.png[width=50%, scaledwidth=80%]
 
 endif::web[]
 
+endif::vaadin7[]
 
 (((range="endofrange", startref="term.components.table")))

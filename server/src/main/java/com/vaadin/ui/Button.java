@@ -127,7 +127,7 @@ public class Button extends AbstractFocusable implements
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class ClickEvent extends Component.Event {
+    public static class ClickEvent extends Component.LegacyEvent {
 
         private final MouseEventDetails details;
 

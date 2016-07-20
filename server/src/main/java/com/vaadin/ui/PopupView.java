@@ -385,7 +385,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * event with {@link #getPopupView()}.
      * 
      */
-    public static class PopupVisibilityEvent extends Event {
+    public static class PopupVisibilityEvent extends LegacyEvent {
 
         public PopupVisibilityEvent(PopupView source) {
             super(source);

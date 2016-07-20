@@ -26,7 +26,7 @@ import com.vaadin.ui.Component;
  * 
  */
 @SuppressWarnings("serial")
-public class CalendarComponentEvent extends Component.Event {
+public class CalendarComponentEvent extends Component.LegacyEvent {
 
     /**
      * Set the source of the event

@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.LegacyEvent;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
@@ -151,7 +151,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
      * clicked.
      */
     @Override
-    public void componentEvent(Event event) {
+    public void componentEvent(LegacyEvent event) {
         // Check if event occured at fsTree component
         if (event.getSource() == menu) {
             // Check if event is about changing value

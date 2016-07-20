@@ -167,7 +167,7 @@ public class TestForPreconfiguredComponents extends CustomComponent {
 
         t.addListener(new Listener() {
             @Override
-            public void componentEvent(Event event) {
+            public void componentEvent(LegacyEvent event) {
                 statusLayout
                         .addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()

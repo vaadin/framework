@@ -116,7 +116,7 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Component attach event sent when a component is attached to container.
      */
     @SuppressWarnings("serial")
-    public static class ComponentAttachEvent extends Component.Event {
+    public static class ComponentAttachEvent extends Component.LegacyEvent {
 
         private final Component component;
 
@@ -159,7 +159,7 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Component detach event sent when a component is detached from container.
      */
     @SuppressWarnings("serial")
-    public static class ComponentDetachEvent extends Component.Event {
+    public static class ComponentDetachEvent extends Component.LegacyEvent {
 
         private final Component component;
 

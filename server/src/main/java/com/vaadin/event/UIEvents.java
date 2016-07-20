@@ -58,7 +58,7 @@ public interface UIEvents {
      * @since 7.2
      * @author Vaadin Ltd
      */
-    public static class PollEvent extends Component.Event {
+    public static class PollEvent extends Component.LegacyEvent {
         public PollEvent(UI ui) {
             super(ui);
         }

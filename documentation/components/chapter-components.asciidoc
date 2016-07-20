@@ -44,13 +44,13 @@ include::components-optiongroup.asciidoc[leveloffset=+2]
 
 include::components-twincolselect.asciidoc[leveloffset=+2]
 
+include::components-grid.asciidoc[leveloffset=+2]
+
 include::components-table.asciidoc[leveloffset=+2]
 
 include::components-tree.asciidoc[leveloffset=+2]
 
 include::components-treetable.asciidoc[leveloffset=+2]
-
-include::components-grid.asciidoc[leveloffset=+2]
 
 include::components-menubar.asciidoc[leveloffset=+2]
 

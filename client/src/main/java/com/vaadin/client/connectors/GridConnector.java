@@ -99,7 +99,7 @@ import elemental.json.JsonValue;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
- * {@link com.vaadin.ui.components.grid.Grid} component.
+ * {@link com.vaadin.ui.Grid} component.
  * <p>
  * The Grid is typed to JSONObject. The structure of the JSONObject is described
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
