@@ -12,13 +12,6 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/grid"]
 endif::web[]
 
-((("[classname]#Grid#")))
-[classname]#Grid# is many things, and perhaps the most versatile and powerful
-component in Vaadin. Like [classname]#Table#, it allows presenting and editing
-tabular data, but escapes many of [classname]#Table#'s limitations. Efficient
-lazy loading of data while scrolling greatly improves performance. Grid is
-scalable, mobile friendly, and extensible.
-
 [[components.grid.overview]]
 == Overview
 
@@ -40,8 +33,7 @@ smart lazy loading functionality gives excellent user experience even with low
 bandwidth, such as mobile devices.
 
 The grid data can be edited with a row-based editor after double-clicking a row.
-The fields are generated with a field factory, or set explicitly, and bound to
-data with a field group.
+The fields are set explicitly, and bound to data.
 
 Grid is fully themeable with CSS and style names can be set for all grid
 elements. For data rows and cells, the styles can be generated with a row or
@@ -50,28 +42,6 @@ cell style generator.
 Finally, [classname]#Grid# is designed to be extensible and used just as well
 for client-side development - its GWT API is nearly identical to the server-side
 API, including data binding.
-
-[[components.grid.overview.table]]
-=== Differences to Table
-
-In addition to core features listed above, [classname]#Grid# has the following
-API-level and functional differences to Table:
-
-* Grid is not a [interfacename]#Container# itself, even though it can be bound to a container data source. Consequently, columns are defined differently, and so forth.
-* Rows can be added with [methodname]#addRow()# shorthand (during initialization) instead of [methodname]#addItem()#.
-* Use [methodname]#setHeightByRows()# and [methodname]#setHeightMode()# instead of [methodname]#setPageLength()# to set the height in number of rows.
-* Grid does not extend [classname]#AbstractSelect# and is not a field, but has its own selection API. [methodname]#addSelectionListener()# is called to define a [interfacename]#SelectionListener#. The listener also receives a collection of deselected items.
-* Grid does not support having all cells in editable mode, it only supports row-based editing, with a row mini-editor that allows saving or discarding the changes.
-* Grid has no generated columns. Instead, the container data source can be wrapped around a [classname]#GeneratedPropertyContainer#.
-* No column icons; you can implement them in a column with an [classname]#ImageRenderer#.
-* Components can not be shown in Grid cells; instead the much more efficient renderers can be used for the most common cases, and row editor for editing values.
-* Limited support for drag and drop: the user can drag columns to reorder them.
-
-In addition, Grid has the following visual changes:
-
-* Multiple selection is indicated with check boxes in addition to highlighting.
-* Grid does not show the row loading indicator like Table does.
-
 
 
 [[components.grid.data]]
