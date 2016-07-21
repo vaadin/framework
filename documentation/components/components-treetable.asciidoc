@@ -12,6 +12,11 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree-table"]
 endif::web[]
 
+[NOTE]
+====
+[classname]#TreeTable# still uses the old data API from Vaadin 7.
+====
+
 [classname]#TreeTable# is an extension of the [classname]#Table# component with
 support for a tree-like hierarchy in the first column. As with
 [classname]#Tree#, the hierarchy is determined by the parent-children

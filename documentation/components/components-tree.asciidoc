@@ -12,6 +12,11 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree"]
 endif::web[]
 
+[NOTE]
+====
+[classname]#Tree# still uses the old data API from Vaadin 7.
+====
+
 The [classname]#Tree# component allows a natural way to represent data that has hierarchical relationships.
 The user can drill down in the hierarchy by expanding items by clicking on the expand arrow, and likewise collapse items.
 [classname]#Tree# is a selection component that allows selecting items.
