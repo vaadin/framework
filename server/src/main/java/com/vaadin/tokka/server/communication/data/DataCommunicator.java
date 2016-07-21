@@ -32,6 +32,9 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.tokka.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.Query;
+import com.vaadin.tokka.data.SortOrder;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;

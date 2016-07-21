@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tokka.server.communication.data;
+package com.vaadin.tokka.data;
 
 import java.io.Serializable;
 

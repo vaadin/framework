@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.Connect;
 
 import elemental.json.JsonObject;
 
-@Connect(com.vaadin.tokka.server.communication.data.SingleSelection.class)
+@Connect(com.vaadin.tokka.data.selection.SingleSelection.class)
 public class SingleSelectionConnector extends AbstractSelectionConnector {
 
     public static class SingleSelection implements SelectionModel, Single {

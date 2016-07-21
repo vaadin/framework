@@ -10,10 +10,10 @@ import java.util.Optional;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tokka.server.communication.data.BackEndDataSource;
-import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.server.communication.data.InMemoryDataSource;
-import com.vaadin.tokka.server.communication.data.SortOrder;
+import com.vaadin.tokka.data.BackEndDataSource;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.InMemoryDataSource;
+import com.vaadin.tokka.data.SortOrder;
 import com.vaadin.tokka.ui.components.grid.Grid;
 import com.vaadin.ui.Button;
 

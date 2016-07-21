@@ -25,10 +25,10 @@ import java.util.function.Function;
 
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.tokka.ui.components.grid.GridServerRpc;
-import com.vaadin.tokka.server.communication.data.DataSource;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.SortOrder;
+import com.vaadin.tokka.data.selection.SingleSelection;
 import com.vaadin.tokka.server.communication.data.KeyMapper;
-import com.vaadin.tokka.server.communication.data.SingleSelection;
-import com.vaadin.tokka.server.communication.data.SortOrder;
 import com.vaadin.tokka.ui.components.AbstractListing;
 
 public class Grid<T> extends AbstractListing<T> {

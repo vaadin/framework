@@ -17,6 +17,8 @@ package com.vaadin.tokka.server.communication.data;
 
 import java.io.Serializable;
 
+import com.vaadin.tokka.data.DataSource;
+
 /**
  * Interface for a {@link DataSource} to inform of various changes in the back
  * end.

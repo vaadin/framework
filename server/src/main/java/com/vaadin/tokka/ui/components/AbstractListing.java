@@ -16,10 +16,10 @@
 package com.vaadin.tokka.ui.components;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.selection.SelectionModel;
 import com.vaadin.tokka.server.ListingExtension;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
-import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.server.communication.data.SelectionModel;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractComponent;
 

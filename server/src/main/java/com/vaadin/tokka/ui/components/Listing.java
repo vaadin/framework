@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 
-import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.server.communication.data.SelectionModel;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.selection.SelectionModel;
 
 /**
  * Generic interface for Components that show a list of data.

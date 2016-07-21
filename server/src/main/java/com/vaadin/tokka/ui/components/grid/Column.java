@@ -26,7 +26,7 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.tokka.data.DataProviderConstants;
 import com.vaadin.shared.tokka.ui.components.grid.ColumnState;
-import com.vaadin.tokka.server.communication.data.SortOrder;
+import com.vaadin.tokka.data.SortOrder;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 
 import elemental.json.Json;

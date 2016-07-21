@@ -18,8 +18,8 @@ package com.vaadin.tokka.ui.components.nativeselect;
 import java.util.function.Function;
 
 import com.vaadin.shared.tokka.data.DataProviderConstants;
-import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.server.communication.data.SingleSelection;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.selection.SingleSelection;
 import com.vaadin.tokka.server.communication.data.TypedDataGenerator;
 import com.vaadin.tokka.ui.components.AbstractListing;
 

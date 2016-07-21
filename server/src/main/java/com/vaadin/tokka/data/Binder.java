@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.vaadin.tokka.data.Validator.Result;
-import com.vaadin.tokka.server.communication.data.SelectionModel;
+import com.vaadin.tokka.data.selection.SelectionModel;
 import com.vaadin.tokka.ui.components.HasValue;
 import com.vaadin.tokka.ui.components.Listing;
 

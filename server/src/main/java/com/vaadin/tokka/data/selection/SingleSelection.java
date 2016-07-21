@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tokka.server.communication.data;
+package com.vaadin.tokka.data.selection;
 
 import java.util.Collection;
 import java.util.Collections;
 
 import com.vaadin.shared.tokka.data.selection.SelectionServerRpc;
+import com.vaadin.tokka.data.selection.SelectionModel.Single;
 import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
-import com.vaadin.tokka.server.communication.data.SelectionModel.Single;
 
 /**
  * {@link SelectionModel} for selecting a single value.

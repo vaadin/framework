@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.tokka.data.DataSource;
 import com.vaadin.tokka.server.communication.data.DataCommunicator;
-import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.ui.components.AbstractListing.AbstractListingExtension;
 
 import elemental.json.JsonObject;

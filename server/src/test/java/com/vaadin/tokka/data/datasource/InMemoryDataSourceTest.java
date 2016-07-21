@@ -10,9 +10,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.tokka.server.communication.data.DataSource;
-import com.vaadin.tokka.server.communication.data.InMemoryDataSource;
-import com.vaadin.tokka.server.communication.data.Query;
+import com.vaadin.tokka.data.DataSource;
+import com.vaadin.tokka.data.InMemoryDataSource;
+import com.vaadin.tokka.data.Query;
 
 public class InMemoryDataSourceTest {
 
