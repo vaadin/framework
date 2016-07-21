@@ -49,81 +49,34 @@ API, including data binding.
 
 [classname]#Grid# is normally used by binding it to a container data source,
 described in
-<<dummy/../../../framework/datamodel/datamodel-container#datamodel.container,"Collecting
-Items in Containers">>. The container must implement
-[interfacename]#Container.Indexed# interface. By default, it is bound to an
-[classname]#IndexedContainer#; Grid offers some shorthand methods to operate on
-the default container, as described later.
+<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
+By default, it is bound to List of items. You can set the items in the constructor or with
+[methodname]#setItems()# method.
 
-You can set the container in the constructor or with
-[methodname]#setContainerDataSource()#.
-
-For example, if you have a collection of beans, you could wrap them in a Vaadin
-[classname]#BeanContainer# or [classname]#BeanItemContainer#, and bind to a [classname]#Grid# as follows
+For example, if you have a list of beans, you could add to a [classname]#Grid# as follows
 
 
 [source, java]
 ----
 // Have some data
-Collection<Person> people = Lists.newArrayList(
+List<Person> people = Lists.newArrayList(
     new Person("Nicolaus Copernicus", 1543),
     new Person("Galileo Galilei", 1564),
     new Person("Johannes Kepler", 1571));
 
-// Have a container of some type to contain the data
-BeanItemContainer<Person> container =
-    new BeanItemContainer<Person>(Person.class, people);
-
-// Create a grid bound to the container
-Grid grid = new Grid(container);
-grid.setColumnOrder("name", "born");
+// Create a grid bound to the list
+Grid<Person> grid = new Grid<>(people);
+grid.addColumn("Name", Person::getName);
+grid.addColumn("Year of birth", Person::getBirthYear);
 layout.addComponent(grid);
 ----
 
-Note that you need to override [methodname]#equals()# and [methodname]#hashcode()# for
-the bean ([classname]#Person#) class to make the [classname]#BeanItemContainer# work properly.
-
-[[components.grid.basic.manual]]
-=== Default Data Source and Shorthands
-
-Sometimes, when you have just a few fixed items that you want to display, you
-can define the grid columns and add data rows manually. [classname]#Grid# is by
-default bound to a [classname]#IndexedContainer#. You can define new columns
-(container properties) with [methodname]#addColumn()# and then add rows (items)
-with [methodname]#addRow()#. The types in the row data must match the defined
-column types.
-
-For example:
-
+In addition to list you can pass items individually:
 
 [source, java]
 ----
-// Create a grid
-Grid grid = new Grid();
-
-// Define some columns
-grid.addColumn("name", String.class);
-grid.addColumn("born", Integer.class);
-
-// Add some data rows
-grid.addRow("Nicolaus Copernicus", 1543);
-grid.addRow("Galileo Galilei", 1564);
-grid.addRow("Johannes Kepler", 1571);
-
-layout.addComponent(grid);
-----
-
-Or, if you have the data in an array:
-
-
-[source, java]
-----
-// Have some data
-Object[][] people = { {"Nicolaus Copernicus", 1543},
-                      {"Galileo Galilei", 1564},
-                      {"Johannes Kepler", 1571}};
-for (Object[] person: people)
-    grid.addRow(person);
+grid.setItems(new Person("Nicolaus Copernicus", 1543),
+              new Person("Galileo Galilei", 1564));
 ----
 
 Note that you can not use [methodname]#addRow()# to add items if the container
@@ -136,15 +89,15 @@ is read-only or has read-only columns, such as generated columns.
 
 Selection in [classname]#Grid# is handled a bit differently from other selection
 components, as it is not an [classname]#AbstractSelect#. Grid supports both
-single and multiple selection, defined by the __selection mode__. Selection
+single and multiple selection, defined by the __selection model__. Selection
 events can be handled with a [interfacename]#SelectionListener#.
 
 [[components.grid.selection.mode]]
-=== Selection Mode
+=== Selection Models
 
 A [classname]#Grid# can be set to be in [literal]#++SINGLE++# (default),
 [literal]#++MULTI++#, or [literal]#++NONE++# selection mode, defined in the
-[classname]#Grid.SelectionMode# enum.
+[interfacename]#SelectionMode# enum.
 
 
 [source, java]
@@ -156,19 +109,11 @@ grid.setSelectionMode(SelectionMode.SINGLE);
 Empty (null) selection is allowed by default, but can be disabled
 with [methodname]#setDeselectAllowed()# in single-selection mode.
 
-The selection is handled with a different selection model object in each
-respective selection mode: [classname]#SingleSelectionModel#,
-[classname]#MultiSelectionModel#, and [classname]#NoSelectionModel# (in which
-selection is always empty).
-
-
 [source, java]
 ----
-// Pre-select an item
-SingleSelectionModel selection =
-    (SingleSelectionModel) grid.getSelectionModel();
-selection.select( // Select 3rd item
-    grid.getContainerDataSource().getIdByIndex(2));
+// Pre-select 3rd item from the person list
+grid.select(personList.get(2));
+
 ----
 
 
@@ -179,50 +124,39 @@ Changes in the selection can be handled with a
 [interfacename]#SelectionListener#. You need to implement the
 [methodname]#select()# method, which gets a [classname]#SelectionEvent# as
 parameter. In addition to selection, you can handle clicks on rows or cells with
-a [interfacename]#ItemClickListener#.
+a [interfacename]#CellClickListener#.
 
 You can get the new selection from the selection event with
-[methodname]#getSelected()#, which returns a set of item IDs, or more simply
-from the grid or the selection model with [methodname]#getSelectedRow()#, which
-returns the single selected item ID.
+[methodname]#getSelected()#, which returns a set of items, or more simply
+from the grid.
 
 For example:
 
 
 [source, java]
 ----
-grid.addSelectionListener(selectionEvent -> { // Java 8
+grid.addSelectionListener(selectionEvent -> {
     // Get selection from the selection model
-    Object selected = ((SingleSelectionModel)
-        grid.getSelectionModel()).getSelectedRow();
-
-    if (selected != null)
-        Notification.show("Selected " +
-            grid.getContainerDataSource().getItem(selected)
-                .getItemProperty("name"));
+    Collection<Person> selectedPersons =
+        selectionEvent.getSelected();
+    if (!selectedPersons.isEmpty())
+        Notification.show("Selected " + selectedPersons);
     else
         Notification.show("Nothing selected");
 });
 ----
 
 The current selection can be obtained from the [classname]#Grid# object by
-[methodname]#getSelectedRow()# or [methodname]#getSelectedRows()#, which return
+[methodname]#getSelectedItem()# or [methodname]#getSelectedItems()#, which return
 one (in single-selection mode) or all (in multi-selection mode) selected items.
 
 
 [WARNING]
 ====
-Note that changes to the item set of the container data source are not
-automatically reflected in the selection model and may cause the selection model
-to refer to stale item IDs. This always occurs, for example, when you delete the
-selected item or items. So, if you modify the item set of the container, you
-should synchronize or reset the selection with the container, such as by calling
-[methodname]#reset()# on the selection model.
-
+If you change the data source for a grid, it will clear the selection. To keep
+the previous selection you must reset the selection afterwards using the
+[methodname]#select()# method.
 ====
-
-
-
 
 [[components.grid.selection.multi]]
 === Multiple Selection
@@ -235,28 +169,22 @@ Space bar is the default key for toggling the selection, but it can be customize
 .Multiple Selection in  [classname]#Grid#
 image::img/grid-selection-multi.png[width=50%, scaledwidth=75%]
 
-The selection is managed through the [classname]#MultiSelectionMode# class. The
-currently selected rows can be set with [methodname]#setSelected()# by a
-collection of item IDs, or you can use [methodname]#select()# to add items to
-the selection.
+You can use [methodname]#select()# to add items to the selection.
 
 
 [source, java]
 ----
 // Grid in multi-selection mode
-Grid grid = new Grid(exampleDataSource());
+Grid<Person> grid = Grid<>(personList)
 grid.setSelectionMode(SelectionMode.MULTI);
 
-// Pre-select some items
-MultiSelectionModel selection =
-    (MultiSelectionModel) grid.getSelectionModel();
-selection.setSelected( // Items 2-4
-    grid.getContainerDataSource().getItemIds(2, 3));
+// Items 2-4
+personList.subList(2,3).forEach(grid::select);
 
 ----
 
-The current selection can be read with [methodname]#getSelectedRows()#; either
-in the [classname]#MultiSelectionMode# object or in the [classname]#Grid#.
+The current selection can be read with [methodname]#getSelected()#
+in the [classname]#Grid#.
 
 
 [source, java]
@@ -264,16 +192,16 @@ in the [classname]#MultiSelectionMode# object or in the [classname]#Grid#.
 // Allow deleting the selected items
 Button delSelected = new Button("Delete Selected", e -> {
     // Delete all selected data items
-    for (Object itemId: selection.getSelectedRows())
-        grid.getContainerDataSource().removeItem(itemId);
-
-    // Otherwise out of sync with container
-    grid.getSelectionModel().reset();
+    for (Person person: selection.getSelected())
+        personList.remove(person);
 
     // Disable after deleting
     e.getButton().setEnabled(false);
+
+    // Reset grid content from the list
+    grid.setItems(personList);
 });
-delSelected.setEnabled(grid.getSelectedRows().size() > 0);
+delSelected.setEnabled(!grid.getSelected().isEmpty());
 ----
 
 Changes in the selection can be handled with a
@@ -320,10 +248,8 @@ and column.
 
 [source, java]
 ----
-grid.addItemClickListener(event -> // Java 8
-    Notification.show("Value: " +
-        container.getContainerProperty(event.getItemId(),
-            event.getPropertyId()).getValue().toString()));
+grid.addCellClickListener(event ->
+    Notification.show("Value: " + event.getItem());
 ----
 
 The clicked grid cell is also automatically focused.
@@ -338,18 +264,17 @@ well as disable cell focus, in a custom theme. See <<components.grid.css>>.
 == Configuring Columns
 
 Columns are normally defined in the container data source. The
-[methodname]#addColumn()# method can be used to add columns to a container that
-supports it, such as the default [classname]#IndexedContainer#.
+[methodname]#addColumn()# method can be used to add columns to [classname]#Grid#.
 
 Column configuration is defined in [classname]#Grid.Column# objects, which can
-be obtained from the grid with [methodname]#getColumn()# by the column
-(property) ID.
+be obtained from the grid with [methodname]#getColumns()#.
 
 
 [source, java]
 ----
-Grid.Column bornColumn = grid.getColumn("born");
-bornColumn.setHeaderCaption("Born");
+Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
+bornColumn.setHeaderCaption("Born date");
+
 ----
 
 In the following, we describe the basic column configuration.
@@ -364,44 +289,37 @@ columns in their natural order.
 
 [source, java]
 ----
-grid.setColumnOrder("firstname", "lastname", "born",
-                    "birthplace", "died");
+grid.setColumnOrder(firstnameColumn, lastnameColumn, bornColumn,
+                    birthplaceColumn, diedColumn);
 ----
 
 Note that the method can not be used to hide columns. You can hide columns with
-the [methodname]#removeColumn()#, as described later, or by hiding them in a
-[classname]#GeneratedPropertyContainer#.
+the [methodname]#removeColumn()#, as described later.
 
 
 [[components.grid.columns.removing]]
-=== Hiding Columns
+=== Hiding and Removing Columns
 
-Columns can be hidden by removing them with [methodname]#removeColumn()#. You
-can remove all columns with [methodname]#removeAllColumns()#. The removed columns
-are only removed from the grid, not from the container data source.
+Columns can be hidden by calling [methodname]#setHidden()# in [classname]#Column#.
+Furthermore, you can set the columns user hideable using method
+[methodname]#setHideable()#.
 
-To restore a previously removed column, you can call [methodname]#addColumn()#
-with the property ID. Instead of actually adding another column to the data
-source, it merely restores the previously removed one. However, column settings
-such as header or editor are not restored, but must be redone.
-
-You can also hide columns at container-level. At least
-[classname]#GeneratedpropertyContainer# allows doing so, as described in
-<<dummy/../../../framework/datamodel/datamodel-container#datamodel.container.gpc,"GeneratedPropertyContainer">>.
-
+Columns can be removed with [methodname]#removeColumn()# and
+[methodname]#removeAllColumns()#. To restore a previously removed column,
+you can call [methodname]#addColumn()#.
 
 [[components.grid.columns.captions]]
 === Column Captions
 
-Column captions are displayed in the grid header. The default captions are
-generated automatically from the property ID. You can set the header caption
+Column captions are displayed in the grid header. You can set the header caption
 explicitly through the column object with [methodname]#setHeaderCaption()#.
 
 
 [source, java]
 ----
-Grid.Column bornColumn = grid.getColumn("born");
-bornColumn.setHeaderCaption("Born");
+Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
+bornColumn.setHeaderCaption("Born date");
+
 ----
 
 This is equivalent to setting it with [methodname]#setText()# for the header
@@ -450,23 +368,19 @@ Setting the count to [parameter]#0# disables frozen data columns; setting it to
 [[components.grid.generatedcolumns]]
 == Generating Columns
 
-Columns with values computed from other columns or in some other way can be
-generated with a container or data model that generates the property values. The
-[classname]#GeneratedPropertyContainer# can be used for this purpose. It wraps
-around any indexed container to extend its properties with read-only generated
-properties. The generated properties can have same IDs as the original ones,
-thereby replacing them with formatted or converted values. See
-<<dummy/../../../framework/datamodel/datamodel-container#datamodel.container.gpc,"GeneratedPropertyContainer">>
-for a detailed description of using it.
+Columns with values computed from other columns can be simply added by using
+lambdas:
 
-Generated columns are read-only, so you can not add grid rows with
-[methodname]#addRow()#. In editable mode, editor fields are not generated for
-generated columns.
+[source, java]
+----
+// Add generated full name column
+Column<String> fullNameColumn grid.addColumn(person -> {
+    return person.getFirstName() + " " + person.getLastName();
+});
+fullNameColumn.setHeaderCaption("Full name");
 
-Note that, while [classname]#GeneratedPropertyContainer# implements
-[interfacename]#Container.Sortable#, the wrapped container might not, and also
-sorting on the generated properties requires special handling. In such cases,
-generated properties or the entire container might not actually be sortable.
+----
+
 
 [[components.grid.renderer]]
 == Column Renderers
@@ -483,7 +397,9 @@ You set the column renderer in the [classname]#Grid.Column# object as follows:
 
 [source, java]
 ----
-grid.addColumn("born", Integer.class);
+
+Column<Integer> bornColumn = grid.addColumn(Person:getBirthYear);
+
 ...
 Grid.Column bornColumn = grid.getColumn("born");
 bornColumn.setRenderer(new NumberRenderer("born in %d AD"));
@@ -510,39 +426,21 @@ usually all identical.
 +
 [source, java]
 ----
-BeanItemContainer<Person> people =
-    new BeanItemContainer<>(Person.class);
+List<Person> people = new ArrayList<>();
 
-people.addBean(new Person("Nicolaus Copernicus", 1473));
-people.addBean(new Person("Galileo Galilei", 1564));
-people.addBean(new Person("Johannes Kepler", 1571));
-
-// Generate button caption column
-GeneratedPropertyContainer gpc =
-    new GeneratedPropertyContainer(people);
-gpc.addGeneratedProperty("delete",
-    new PropertyValueGenerator<String>() {
-
-    @Override
-    public String getValue(Item item, Object itemId,
-                           Object propertyId) {
-        return "Delete"; // The caption
-    }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-});
+people.add(new Person("Nicolaus Copernicus", 1473));
+people.add(new Person("Galileo Galilei", 1564));
+people.add(new Person("Johannes Kepler", 1571));
 
 // Create a grid
-Grid grid = new Grid(gpc);
+Grid<Person> grid = new Grid(people);
 
 // Render a button that deletes the data row (item)
-grid.getColumn("delete")
-    .setRenderer(new ButtonRenderer(e -> // Java 8
-    grid.getContainerDataSource()
-        .removeItem(e.getItemId())));
+grid.addColumn(person -> "Delete" )
+    .setRenderer(new ButtonRenderer(clickEvent -> {
+        people.remove(clickEvent.getValue());
+        grid.setItems(people);
+    });
 ----
 endif::web[]
 
@@ -556,60 +454,9 @@ ifdef::web[]
 +
 [source, java]
 ----
-grid.addColumn("picture", Resource.class)
-    .setRenderer(new ImageRenderer());
-...
-// Add some data rows
-grid.addRow(new ThemeResource("img/copernicus-128px.jpg"),
-            "Nicolaus Copernicus", 1543);
-grid.addRow(new ThemeResource("img/galileo-128px.jpg"),
-            "Galileo Galilei", 1564);
-----
-
-+
-Instead of creating the resource objects explicitly, as was done above, you
-could generate them dynamically from file name strings using a
-[interfacename]#Converter# for the column.
-
-+
-[source, java]
-----
-// Define some columns
-grid.addColumn("picture", String.class); // Filename
-grid.addColumn("name", String.class);
-
-// Set the image renderer
-grid.getColumn("picture").setRenderer(new ImageRenderer(),
-    new Converter<Resource, String>() {
-        @Override
-        public String convertToModel(Resource value,
-            Class<? extends String> targetType, Locale l)
-            throws Converter.ConversionException {
-            return "not needed";
-        }
-
-        @Override
-        public Resource convertToPresentation(String value,
-            Class<? extends Resource> targetType, Locale l)
-            throws Converter.ConversionException {
-            return new ThemeResource("img/" + value);
-        }
-
-        @Override
-        public Class<String> getModelType() {
-            return String.class;
-        }
-
-        @Override
-        public Class<Resource> getPresentationType() {
-            return Resource.class;
-        }
-});
-
-// Add some data rows
-grid.addRow("copernicus-128px.jpg", "Nicolaus Copernicus");
-grid.addRow("galileo-128px.jpg", "Galileo Galilei");
-grid.addRow("kepler-128px.jpg", "Johannes Kepler");
+Column<ThemeResource> imageColumn = grid.addColumn("picture",
+    p -> new ThemeResource("img/"+p.getLastname()+".jpg"));
+imageColumn.setRenderer(new ImageRenderer());
 ----
 +
 You also need to define the row heights so that the images fit there. You can
@@ -623,9 +470,7 @@ For the latter way, first define a CSS style name for grid and the column:
 [source, java]
 ----
 grid.setStyleName("gridwithpics128px");
-grid.setCellStyleGenerator(cell ->
-    "picture".equals(cell.getPropertyId())?
-        "imagecol" : null);
+imageColumn.setCellStyleGenerator(cell -> "imagecol");
 ----
 ifdef::web[]
 +
@@ -653,7 +498,7 @@ ifdef::web[]
 +
 [source, java]
 ----
-Grid.Column bornColumn = grid.getColumn("born");
+Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate);
 bornColumn.setRenderer(
     new DateRenderer("%1$tB %1$te, %1$tY",
                      Locale.ENGLISH));
@@ -670,30 +515,15 @@ HTML features such as hyperlinks.
 
 ifdef::web[]
 +
-First, set the renderer in the [classname]#Grid.Column# object:
+Set the renderer in the [classname]#Grid.Column# object:
 +
 [source, java]
 ----
-grid.addColumn("link", String.class)
-    .setRenderer(new HtmlRenderer());
+Column<String> htmlColumn grid.addColumn(person ->
+      "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>");
+htmlColumn.setRenderer(new HtmlRenderer());
 ----
 ifdef::web[]
-+
-Then, in the grid data, give the cell content:
-endif::web[]
-
-+
-[source, java]
-----
-grid.addRow("Nicolaus Copernicus", 1543,
-            "<a href='http://en.wikipedia.org/wiki/" +
-            "Nicolaus_Copernicus' target='_top'>info</a>");
-----
-+
-You could also use a [interfacename]#PropertyFormatter# or a generated column to
-generate the HTML for the links.
-endif::web[]
-
 [classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
 [classname]#Integer#, [classname]#Double#, etc. The format can be specified
 either by the subclasses of [classname]#java.text.NumberFormat#, namely
@@ -707,27 +537,28 @@ For example:
 [source, java]
 ----
 // Define some columns
-grid.addColumn("name", String.class);
-grid.addColumn("born", Integer.class);
-grid.addColumn("sletters", Integer.class);
-grid.addColumn("rating", Double.class);
+Column<String> nameCol = grid.addColumn(person::getName);
+Column<Integer> bornCol = grid.addColumn(person:getBirthYear);
+Column<Integer> slettersCol = grid.addColumn("sletters");
+Column<Double> ratingCol = grid.addColumn("rating");
 
 // Use decimal format
-grid.getColumn("born").setRenderer(new NumberRenderer(
+bornCol.setRenderer(new NumberRenderer(
     new DecimalFormat("in #### AD")));
 
 // Use textual formatting on numeric ranges
-grid.getColumn("sletters").setRenderer(new NumberRenderer(
+slettersCol.setRenderer(new NumberRenderer(
     new ChoiceFormat("0#none|1#one|2#multiple")));
 
 // Use String.format() formatting
-grid.getColumn("rating").setRenderer(new NumberRenderer(
+ratingCol.setRenderer(new NumberRenderer(
     "%02.4f", Locale.ENGLISH));
 
 // Add some data rows
-grid.addRow("Nicolaus Copernicus", 1473, 2, 0.4);
-grid.addRow("Galileo Galilei",     1564, 0, 4.2);
-grid.addRow("Johannes Kepler",     1571, 1, 2.3);
+grid.addItems(new Person("Nicolaus Copernicus", 1473, 2, 0.4),
+              new Person("Galileo Galilei",     1564, 0, 4.2),
+              new Person("Johannes Kepler",     1571, 1, 2.3));
+
 ----
 endif::web[]
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
@@ -740,14 +571,14 @@ For example:
 [source, java]
 ----
 // Define some columns
-grid.addColumn("name", String.class);
-grid.addColumn("rating", Double.class)
-    .setRenderer(new ProgressBarRenderer());
+Column<String> nameCol = grid.addColumn(person::getName);
+Column<Double> ratingCol = grid.addColumn("rating");
+ratingCol.setRenderer(new ProgressBarRenderer());
 
 // Add some data rows
-grid.addRow("Nicolaus Copernicus", 0.1);
-grid.addRow("Galileo Galilei",     0.42);
-grid.addRow("Johannes Kepler",     1.0);
+grid.addItems(new Person("Nicolaus Copernicus", 0.4),
+              new Person("Galileo Galilei",     4.2),
+              new Person("Johannes Kepler",     2.3));
 ----
 endif::web[]
 [classname]#TextRenderer#:: Displays plain text as is. Any HTML markup is quoted.
@@ -760,79 +591,6 @@ endif::web[]
 Renderers are component extensions that require a client-side counterpart. See
 <<dummy/../../../framework/clientsidewidgets/clientsidewidgets-grid#clientsidewidgets.grid.renderers,"Renderers">>
 for information on implementing custom renderers.
-
-
-[[components.grid.renderer.converter]]
-=== Converting for Rendering
-
-Optionally, you can give a [interfacename]#Converter# in the
-[methodname]#setRenderer()#, or define it for the column, to convert the data
-value to an intermediary representation that is rendered by the renderer. For
-example, when using an [classname]#ImageRenderer#, you could store the image file name
-in the data column, which the converter would convert to a resource, which would
-then be rendered by the renderer.
-
-In the following example, we use a converter and [classname]#HTMLRenderer# to display boolean
-values as [classname]#FontAwesome# icons
-[source, java]
-----
-// Have a column for hyperlink paths to Wikipedia
-grid.addColumn("truth", Boolean.class);
-Grid.Column truth = grid.getColumn("truth");
-truth.setRenderer(new HtmlRenderer(),
-    new StringToBooleanConverter(
-        FontAwesome.CHECK_CIRCLE_O.getHtml(),
-        FontAwesome.CIRCLE_O.getHtml()));
-...
-----
-
-In this example, we use a converter to format URL paths to complete
-HTML hyperlinks with [classname]#HTMLRenderer#:
-
-
-[source, java]
-----
-// Have a column for hyperlink paths to Wikipedia
-grid.addColumn("link", String.class);
-
-Grid.Column linkColumn = grid.getColumn("link");
-linkColumn.setRenderer(new HtmlRenderer(),
-                       new Converter<String,String>(){
-    @Override
-    public String convertToModel(String value,
-        Class<? extends String> targetType, Locale locale)
-        throws Converter.ConversionException {
-        return "not implemented";
-    }
-
-    @Override
-    public String convertToPresentation(String value,
-        Class<? extends String> targetType, Locale locale)
-        throws Converter.ConversionException {
-        return "<a href='http://en.wikipedia.org/wiki/" +
-                value + "' target='_blank'>more info</a>";
-    }
-
-    @Override
-    public Class<String> getModelType() {
-        return String.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
-    }
-});
-
-// Data with a hyperlink path in the third column
-grid.addRow("Nicolaus Copernicus", 1473,
-            "Nicolaus_Copernicus");
-...
-----
-
-A [classname]#GeneratedPropertyContainer# could be used for much the same
-purpose.
-
 
 
 [[components.grid.headerfooter]]
@@ -944,11 +702,11 @@ as follows:
 
 [source, java]
 ----
-// Have a filterable container
-IndexedContainer container = exampleDataSource();
+// Have a list of persons
+List<Person> persons = exampleDataSource();
 
 // Create a grid bound to it
-Grid grid = new Grid(container);
+Grid<Person> grid = new Grid(persons);
 grid.setSelectionMode(SelectionMode.NONE);
 grid.setWidth("500px");
 grid.setHeight("300px");
@@ -957,27 +715,30 @@ grid.setHeight("300px");
 HeaderRow filterRow = grid.appendHeaderRow();
 
 // Set up a filter for all columns
-for (Object pid: grid.getContainerDataSource()
-                     .getContainerPropertyIds()) {
-    HeaderCell cell = filterRow.getCell(pid);
+for (Column<?> col: grid.getColumns()) {
+    HeaderCell cell = filterRow.getCell(col);
 
     // Have an input field to use for filter
     TextField filterField = new TextField();
-    filterField.setColumns(8);
 
     // Update filter When the filter input is changed
-    filterField.addTextChangeListener(change -> {
-        // Can't modify filters so need to replace
-        container.removeContainerFilters(pid);
+    filterField.addValueChangeListener(event -> {
 
-        // (Re)create the filter if necessary
-        if (! change.getText().isEmpty())
-            container.addContainerFilter(
-                new SimpleStringFilter(pid,
-                    change.getText(), true, false));
+      // Filter the list of items
+      List<String> filteredList =
+        Lists.newArrayList(personList.filter(
+            persons,
+            Predicates.containsPattern(event.getValue())));
+
+        // Apply filtered data
+        grid.setItems(filteredList);
+
     });
     cell.setComponent(filterField);
+
 }
+
+
 ----
 
 
@@ -995,14 +756,14 @@ image::img/grid-sorting.png[width=50%, scaledwidth=75%]
 
 Defining sort criteria programmatically can be done with the various
 alternatives of the [methodname]#sort()# method. You can sort on a specific
-column with [methodname]#sort(Object propertyId)#, which defaults to ascending
-sorting order, or [methodname]#sort(Object propertyId, SortDirection
+column with [methodname]#sort(Column column)#, which defaults to ascending
+sorting order, or [methodname]#sort(Column column, SortDirection
 direction)#, which allows specifying the sort direction.
 
 
 [source, java]
 ----
-grid.sort("name", SortDirection.DESCENDING);
+grid.sort(nameColumn, SortDirection.DESCENDING);
 ----
 
 To sort on multiple columns, you need to use the fluid sort API with
@@ -1016,18 +777,9 @@ direction can be given with an optional parameter.
 [source, java]
 ----
 // Sort first by city and then by name
-grid.sort(Sort.by("city", SortDirection.ASCENDING)
-              .then("name", SortDirection.DESCENDING));
+grid.sort(Sort.by(cityColumn, SortDirection.ASCENDING)
+              .then(nameColumn, SortDirection.DESCENDING));
 ----
-
-The container data source must support sorting. At least, it must implement
-[interfacename]#Container.Sortable#. Note that when using
-[classname]#GeneratedPropertyContainer#, as described in
-<<components.grid.generatedcolumns>>, even though the container implements the
-interface, the wrapped container must also support it. Also, the generated
-properties are not normally sortable, but require special handling to enable
-sorting.
-
 
 [[components.grid.editing]]
 == Editing
@@ -1043,7 +795,7 @@ grid.
 
 [source, java]
 ----
-Grid grid = new Grid(GridExample.exampleDataSource());
+Grid<Person> grid = new Grid(persons);
 grid.setEditorEnabled(true);
 ----
 
@@ -1073,44 +825,31 @@ a row editor for the clicked row is opened.
 [[components.grid.editing.fields]]
 === Editor Fields
 
-The editor fields are by default generated with a [interfacename]#FieldFactory#
-and bound to the container data source with a [classname]#FieldGroup#, which
+The editor fields are configured in [classname]#Column#and bound to
+the bean data source with a [classname]#Binder#, which
 also handles tasks such as validation, as explained later.
 
 To disable editing in a particular column, you can call
-[methodname]#setEditable()# in the [classname]#Column# object with
-[parameter]#false# parameter.
-
-[[components.grid.editing.editorfields]]
-=== Customizing Editor Fields
-
-The editor fields are normally created by the field factory of the editor's field
-group, which creates the fields according to the data types of their respective
-columns. To customize the editor fields of specific properties, such as to style
-them or to set up validation, you can provide them with
-[methodname]#setEditorField()# in the respective columns.
+[methodname]#setEditorField()# in the [classname]#Column# object with
+[parameter]#null# parameter.
 
 In the following example, we configure a field with validation and styling:
 
 
 [source, java]
 ----
+// Create an editor for name
 TextField nameEditor = new TextField();
 
 // Custom CSS style
 nameEditor.addStyleName("nameeditor");
 
-// Custom validation
-nameEditor.addValidator(new RegexpValidator(
-    "^\\p{Alpha}+ \\p{Alpha}+$",
-    "Need first and last name"));
-
-grid.getColumn("name").setEditorField(nameEditor);
+// Add editor to name column
+nameColumn.setEditorField(nameEditor);
 ----
 
 Setting an editor field to [parameter]#null# deletes the currently existing
-editor field, whether it was automatically generated or set explicitly with the
-setter. It will be regenerated with the factory the next time it is needed.
+editor field and makes the column non-editable.
 
 
 ifdef::web[]
@@ -1141,13 +880,12 @@ grid.setEditorCancelCaption(
 endif::web[]
 
 [[components.grid.editing.fieldgroup]]
-=== Binding to Data with a Field Group
+=== Binding to Data with a Binder
 
 Data binding to the item under editing is handled with a
-[classname]#FieldGroup#, which you need to set with
+[classname]#Binder#, which you need to set with
 [methodname]#setEditorFieldGroup#. This is mostly useful when using
-special-purpose field groups, such as [classname]#BeanFieldGroup# to enable bean
-validation.
+special-purpose, such as to enable bean validation.
 
 For example, assuming that we want to enable bean validation for a bean such as
 the following:
@@ -1166,26 +904,31 @@ public class Person implements Serializable {
     ...]
 ----
 
-We can now use a [classname]#BeanFieldGroup# in the [classname]#Grid# as
+We can now use a [classname]#BeanBinder# in the [classname]#Grid# as
 follows:
 
 
 [source, java]
 ----
-Grid grid = new Grid(exampleBeanDataSource());
-grid.setColumnOrder("name", "age");
+Grid<Person> grid = new Grid(examplePersonList());
+Column<String> nameCol = grid.addColumn(Person::getName);
+Column<Integer> ageCol = grid.addColumn(Person::getAge);
 grid.setEditorEnabled(true);
 
+TextField nameEditor = new TextField();
+nameCol.setEditorField(nameEditor);
+
 // Enable bean validation for the data
-grid.setEditorFieldGroup(
-    new BeanFieldGroup<Person>(Person.class));
+BeanBinder<Person> binder = new BeanBinder<>(Person.class);
 
 // Have some extra validation in a field
-TextField nameEditor = new TextField();
-nameEditor.addValidator(new RegexpValidator(
-    "^\\p{Alpha}+ \\p{Alpha}+$",
-    "Need first and last name"));
-grid.setEditorField("name", nameEditor);
+binder.addField(nameEditor, "name")
+    .addValidator(new RegexpValidator(
+        "^\\p{Alpha}+ \\p{Alpha}+$",
+        "Need first and last name"));
+
+grid.setEditorBinder(binder);
+
 ----
 
 To use bean validation as in the example above, you need to include an
@@ -1212,12 +955,6 @@ You can modify the error handling by implementing a custom
 
 endif::web[]
 
-[[components.grid.editing.fieldfactory]]
-=== Editor Field Factory
-
-The fields are generated by the [classname]#FieldFactory# of the field group;
-you can also set it with [methodname]#setEditorFieldFactory()#. Alternatively,
-you can create the editor fields explicitly with [methodname]#setEditorField()#.
 
 [[components.grid.scrolling]]
 == Programmatic Scrolling
@@ -1229,31 +966,26 @@ You can scroll to first item with [methodname]#scrollToStart()#, to end with
 [[components.grid.stylegeneration]]
 == Generating Row or Cell Styles
 
-You can style entire rows with a [interfacename]#RowStyleGenerator# or
-individual cells with a [interfacename]#CellStyleGenerator#.
+You can style entire rows or individual cells with a
+[interfacename]#StyleGenerator#, typically used through Java lambdas.
 
 [[components.grid.stylegeneration.row]]
 === Generating Row Styles
 
-You set a [interfacename]#RowStyleGenerator# to a grid with
-[methodname]#setRowStyleGenerator()#. The [methodname]#getStyle()# method gets a
-[classname]#RowReference#, which contains various information about the row and
-a reference to the grid, and should return a style name or [parameter]#null# if
+You set a [interfacename]#StyleGenerator# to a grid with
+[methodname]#setStyleGenerator()#. The [methodname]#getStyle()# method gets a
+date item, and should return a style name or [parameter]#null# if
 no style is generated.
 
-For example, to add a style names to rows having certain values in one column,
-you can style them as follows:
+For example, to add a style names to rows having certain values in one
+property of an item, you can style them as follows:
 
 
 [source, java]
 ----
-grid.setRowStyleGenerator(rowRef -> {// Java 8
-    if (! ((Boolean) rowRef.getItem()
-                           .getItemProperty("alive")
-                           .getValue()).booleanValue())
-        return "grayed";
-    else
-        return null;
+grid.setStyleGenerator(person -> {
+    // Style based on alive status
+    person.isAlive() ? null : "dead";
 });
 ----
 
@@ -1262,7 +994,7 @@ You could then style the rows with CSS as follows:
 
 [source, css]
 ----
-.v-grid-row.grayed {
+.v-grid-row.dead {
     color: gray;
 }
 ----
@@ -1271,21 +1003,20 @@ You could then style the rows with CSS as follows:
 [[components.grid.stylegeneration.cell]]
 === Generating Cell Styles
 
-You set a [interfacename]#CellStyleGenerator# to a grid with
-[methodname]#setCellStyleGenerator()#. The [methodname]#getStyle()# method gets
+You set a [interfacename]#StyleGenerator# to a grid with
+[methodname]#setStyleGenerator()#. The [methodname]#getStyle()# method gets
 a [classname]#CellReference#, which contains various information about the cell
 and a reference to the grid, and should return a style name or [parameter]#null#
 if no style is generated.
 
-For example, to add a style name to a specific column, you can match on the
-property ID of the column as follows:
+For example, to add a style name to a specific column, you can match on
+the column as follows:
 
 
 [source, java]
 ----
-grid.setCellStyleGenerator(cellRef -> // Java 8
-    "born".equals(cellRef.getPropertyId())?
-        "rightalign" : null);
+// Static style based on column
+bornColumn.setStyleGenerator(person -> "rightalign");
 ----
 
 You could then style the cells with a CSS rule as follows:
