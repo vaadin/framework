@@ -46,7 +46,7 @@ The resource classes in Vaadin are grouped under two interfaces: a generic
 
 [[figure.resource.classdiagram]]
 .Resource Interface and Class Diagram
-image::img/resource_classdiagram-hi.png[width=70%, scaledwidth=90%]
+image::img/resource_classdiagram-hi.png[width=80%, scaledwidth=100%]
 
 [[application.resources.file]]
 == File Resources
@@ -162,41 +162,46 @@ the [classname]#StreamResource.StreamSource# interface and its
 The following example demonstrates the creation of a simple image in PNG image
 format.
 
-
 [source, java]
 ----
 import java.awt.image.*;
 
-public class MyImageSource
-             implements StreamResource.StreamSource {
+public class MyImageSource implements StreamSource {
     ByteArrayOutputStream imagebuffer = null;
     int reloads = 0;
 
-    /* We need to implement this method that returns
-     * the resource as a stream. */
+    // This method generates the stream contents
     public InputStream getStream () {
-        /* Create an image and draw something on it. */
-        BufferedImage image = new BufferedImage (200, 200,
-                               BufferedImage.TYPE_INT_RGB);
-        Graphics drawable = image.getGraphics();
-        drawable.setColor(Color.lightGray);
-        drawable.fillRect(0,0,200,200);
-        drawable.setColor(Color.yellow);
-        drawable.fillOval(25,25,150,150);
-        drawable.setColor(Color.blue);
-        drawable.drawRect(0,0,199,199);
-        drawable.setColor(Color.black);
-        drawable.drawString("Reloads="+reloads, 75, 100);
+        // Create an image
+        BufferedImage image = new BufferedImage (400, 400,
+                                  BufferedImage.TYPE_INT_RGB);
+        Graphics2D drawable = image.createGraphics();
+
+        // Draw something static
+        drawable.setStroke(new BasicStroke(5));
+        drawable.setColor(Color.WHITE);
+        drawable.fillRect(0, 0, 400, 400);
+        drawable.setColor(Color.BLACK);
+        drawable.drawOval(50, 50, 300, 300);
+
+        // Draw something dynamic
+        drawable.setFont(new Font("Montserrat",
+                                  Font.PLAIN, 48));
+        drawable.drawString("Reloads=" + reloads, 75, 216);
         reloads++;
+        drawable.setColor(new Color(0, 165, 235));
+        int x= (int) (200-10 + 150*Math.sin(reloads * 0.3));
+        int y= (int) (200-10 + 150*Math.cos(reloads * 0.3));
+        drawable.fillOval(x, y, 20, 20);
 
         try {
-            /* Write the image to a buffer. */
+            // Write the image to a buffer
             imagebuffer = new ByteArrayOutputStream();
             ImageIO.write(image, "png", imagebuffer);
 
-            /* Return a stream from the buffer. */
+            // Return a stream from the buffer
             return new ByteArrayInputStream(
-                         imagebuffer.toByteArray());
+                imagebuffer.toByteArray());
         } catch (IOException e) {
             return null;
         }
@@ -215,11 +220,11 @@ Below we display the image with the [classname]#Image# component.
 [source, java]
 ----
 // Create an instance of our stream source.
-StreamResource.StreamSource imagesource = new MyImageSource ();
+StreamSource imagesource = new MyImageSource();
 
-// Create a resource that uses the stream source and give it a name.
-// The constructor will automatically register the resource in
-// the application.
+// Create a resource that uses the stream source and give it
+// a name. The constructor will automatically register the
+// resource in the application.
 StreamResource resource =
         new StreamResource(imagesource, "myimage.png");
 
@@ -231,8 +236,8 @@ layout.addComponent(new Image("Image title", resource));
 The resulting image is shown in <<figure.application.resource.stream>>.
 
 [[figure.application.resource.stream]]
-.A Stream Resource
-image::img/application_streamresource.png[]
+.A stream resource
+image::img/application_streamresource.png[width=25%, scaledwidth=35%]
 
 Another way to create dynamic content is a request handler, described in
 <<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request

@@ -192,6 +192,7 @@ image::img/orderedlayout-sizing-undefined.png[width=50%, scaledwidth=75%]
 
 endif::web[]
 
+[[layout.orderedlayout.defined-size]]
 === Layout with Defined Size
 
 If you set a [classname]#HorizontalLayout# to a defined size horizontally or a
@@ -211,7 +212,7 @@ the question, "Percentage of what?" There is no sensible default answer for this
 question in the current implementation of the layouts, so in practice, you may
 not define "100%" size alone.
 
-
+[[layout.orderedlayout.expanding]]
 === Expanding Components
 
 Often, you want to have one component that takes all the available space left
@@ -253,7 +254,7 @@ Notice that you can not call [methodname]#setExpandRatio()# before you have
 added the component to the layout, because it can not operate on an component
 that it doesn't yet have.
 
-
+[[layout.orderedlayout.expandratio]]
 === Expand Ratios
 
 If you specify an expand ratio for multiple components, they will all try to use
@@ -318,15 +319,14 @@ It is not meaningful to combine expanding components with percentually defined
 size and components with fixed or undefined size. Such combination can lead to a
 very unexpected size for the percentually sized components.
 
+[[layout.orderedlayout.percentual]]
+=== Percentual Sizing
 
-=== Percentage of Cells
-
-A percentual size of a component defines the size of the component __within its
-cell__. Usually, you use "100%", but a smaller percentage or a fixed size
+A percentual size of a component defines the size of the component _within its cell_.
+Usually, you use "100%", but a smaller percentage or a fixed size
 (smaller than the cell size) will leave an empty space in the cell and align the
 component within the cell according to its alignment setting, top left by
 default.
-
 
 [source, java]
 ----
