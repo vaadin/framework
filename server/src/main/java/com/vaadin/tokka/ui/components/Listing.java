@@ -17,6 +17,7 @@ package com.vaadin.tokka.ui.components;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Optional;
 
 import com.vaadin.tokka.server.communication.data.DataSource;
 import com.vaadin.tokka.server.communication.data.SelectionModel;
@@ -41,7 +42,7 @@ public interface Listing<T> extends Serializable {
      * Sets the options available for this Listing.
      * 
      * @param data
-     *          collection of data
+     *            collection of data
      */
     default void setItems(Collection<T> data) {
         setDataSource(DataSource.create(data));
@@ -51,7 +52,7 @@ public interface Listing<T> extends Serializable {
      * Sets the options available for this Listing.
      * 
      * @param data
-     *          array of data
+     *            array of data
      */
     default void setItems(T... data) {
         setDataSource(DataSource.create(data));
@@ -78,4 +79,51 @@ public interface Listing<T> extends Serializable {
      *            selection model
      */
     void setSelectionModel(SelectionModel<T> model);
+
+    /* SelectionModel helper methods */
+
+    /**
+     * Gets the current selection from the {@link SelectionModel} of this
+     * Listing.
+     * 
+     * @return collection of currently selected values
+     * 
+     * @see SelectionModel#getSelected
+     */
+    default Collection<T> getSelected() {
+        return getSelectionModel().getSelected();
+    }
+
+    /**
+     * Gets the first value from the current selection.
+     * 
+     * @return optional first selected value
+     */
+    default Optional<T> getFirstSelected() {
+        return getSelected().stream().findFirst();
+    }
+
+    /**
+     * Selects the given value.
+     * 
+     * @param bean
+     *            value to select
+     * 
+     * @see SelectionModel#select
+     */
+    default void select(T bean) {
+        getSelectionModel().select(bean);
+    }
+
+    /**
+     * Deselects the given value.
+     * 
+     * @param bean
+     *            value to deselect
+     * 
+     * @see SelectionModel#deselect
+     */
+    default void deselect(T bean) {
+        getSelectionModel().deselect(bean);
+    }
 }
