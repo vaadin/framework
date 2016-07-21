@@ -68,9 +68,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="140.18358"
-     inkscape:cy="87.607372"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="184.27652"
+     inkscape:cy="277.48621"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      gridtolerance="10000"
@@ -101,24 +101,24 @@
      inkscape:groupmode="layer"
      id="layer1"
      style="opacity:1"
-     transform="translate(-67.505424,-64.081154)">
+     transform="translate(-4.8759656,-811.59399)">
     <rect
        style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
        id="rect3344"
        width="249"
        height="236"
-       x="67.505424"
-       y="64.081154" />
+       x="4.8759656"
+       y="811.59399" />
     <image
        sodipodi:absref="/home/magi/itmill/vaadin/documentation/components/original-drawings/../img/slider-orig.png"
        xlink:href="../img/slider-orig.png"
        width="249"
        height="236"
        id="image2463"
-       x="67.505424"
-       y="64.081154" />
+       x="4.8759656"
+       y="811.59399" />
     <g
-       transform="matrix(0.04895833,0,0,0.04895833,85.307423,133.89853)"
+       transform="matrix(0.04895833,0,0,0.04895833,22.677965,881.41142)"
        id="g1317">
       <path
          id="path6080"

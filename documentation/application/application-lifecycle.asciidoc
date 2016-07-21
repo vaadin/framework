@@ -427,7 +427,7 @@ public class MyUI extends UI {
         setContent(new Button("Logout", event -> {// Java 8
             // Redirect this page immediately
             getPage().setLocation("/myapp/logout.html");
-            
+
             // Close the session
             getSession().close();
         }));
@@ -442,27 +442,20 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#application.lifecycle.
 This is not enough. When a session is closed from one UI, any other UIs attached
 to it are left hanging. When the client-side engine notices that a UI and the
 session are gone on the server-side, it displays a "Session Expired" message
-and, by default, reloads the UI when the message is clicked. ((("session",
-"expiration")))
+and, by default, reloads the UI when the message is clicked.
+((("session", "expiration")))
 ((("redirection")))
-((("system
-messages")))
-You can customize the message and the redirect URL in the system messages
+((("system messages")))
+You can customize the message and the redirect URL in the system messages.
 
 ifdef::web[]
-, as described in
-<<dummy/../../../framework/application/application-errors#application.errors.systemmessages,"Customizing
-System
-Messages">>
+It is described in <<dummy/../../../framework/application/application-errors#application.errors.systemmessages,"Customizing System Messages">>.
 endif::web[]
-.
 
 ((("heartbeat")))
-((("UI",
-"heartbeat")))
+((("UI", "heartbeat")))
 ((("push")))
-((("server
-push")))
+((("server push")))
 The client-side engine notices the expiration when user interaction causes a
 server request to be made or when the keep-alive heartbeat occurs. To make the
 UIs detect the situation faster, you need to make the heart beat faster, as was
@@ -470,7 +463,6 @@ done in the example above. You can also use server push to close the other UIs
 immediately, as is done in the following example. Access to the UIs must be
 synchronized as described in
 <<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>.
-
 
 [source, java]
 ----
@@ -496,7 +488,3 @@ In the above example, we assume that all UIs in the session have push enabled
 and that they should be redirected; popups you might want to close instead of
 redirecting. It is not necessary to call [methodname]#close()# for them
 individually, as we close the entire session afterwards.
-
-
-
-

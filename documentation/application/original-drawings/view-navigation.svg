@@ -1081,10 +1081,10 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.8159691"
-     inkscape:cx="89.180593"
-     inkscape:cy="156.67691"
+     inkscape:cx="136.79995"
+     inkscape:cy="147.93516"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g5458"
      gridtolerance="10000"
      inkscape:window-width="1920"
      inkscape:window-height="1060"
@@ -1144,7 +1144,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1242,7 +1242,7 @@
            id="tspan7066-3-4-3-7"
            y="1016.0297"
            x="20.546753"
-           sodipodi:role="line">Email</tspan></text>
+           sodipodi:role="line">Password</tspan></text>
       <rect
          y="1020.4725"
          x="60.236221"
@@ -1260,7 +1260,7 @@
            id="tspan7066-3-4-3-5"
            y="1026.6595"
            x="20.546753"
-           sodipodi:role="line">Planet</tspan></text>
+           sodipodi:role="line">Email</tspan></text>
       <g
          id="g8337"
          transform="translate(17.716535,-1.4546875e-5)">
@@ -1320,7 +1320,7 @@
          height="53.149601"
          width="99.212601"
          id="rect4408-7-5-2-9-3"
-         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffc13f;fill-opacity:1;fill-rule:nonzero;stroke:#33383a;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#33383a;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
       <text
          sodipodi:linespacing="100%"
          id="text4227-9-0-0-4-2-9-90-9"
