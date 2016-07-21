@@ -43,7 +43,7 @@ public interface Listing<T> extends Serializable {
      * @param data
      *          collection of data
      */
-    default void setOptions(Collection<T> data) {
+    default void setItems(Collection<T> data) {
         setDataSource(DataSource.create(data));
     }
 
@@ -53,7 +53,7 @@ public interface Listing<T> extends Serializable {
      * @param data
      *          array of data
      */
-    default void setOptions(T... data) {
+    default void setItems(T... data) {
         setDataSource(DataSource.create(data));
     }
 

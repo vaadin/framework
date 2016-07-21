@@ -48,7 +48,7 @@ public class ListingTestUI extends AbstractTestUI {
         TextField textField = new TextField();
         hLayout.addComponent(textField);
         hLayout.addComponent(new Button("Reset options",
-                e -> select.setOptions(createOptions(Integer.parseInt(textField
+                e -> select.setItems(createOptions(Integer.parseInt(textField
                         .getValue())))));
 
         layout.addComponent(hLayout);
