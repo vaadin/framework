@@ -255,7 +255,7 @@ grid.addCellClickListener(event ->
 The clicked grid cell is also automatically focused.
 
 The focus indication is themed so that the focused cell has a visible focus
-indicator style by default, while the row doesn't. You can enable row focus, as
+indicator style by default, while the row does not. You can enable row focus, as
 well as disable cell focus, in a custom theme. See <<components.grid.css>>.
 
 
@@ -507,11 +507,10 @@ bornColumn.setRenderer(
 +
 Optionally, a locale can be given. Otherwise, the default locale (in the
 component tree) is used.
-
 endif::web[]
 
-[classname]#HTMLRenderer#:: Renders the cell as HTML. This allows formatting cell content, as well as using
-HTML features such as hyperlinks.
+[classname]#HTMLRenderer#:: Renders the cell as HTML.
+This allows formatting the cell content, as well as using HTML features such as hyperlinks.
 
 ifdef::web[]
 +
@@ -523,7 +522,8 @@ Column<String> htmlColumn grid.addColumn(person ->
       "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>");
 htmlColumn.setRenderer(new HtmlRenderer());
 ----
-ifdef::web[]
+endif::web[]
+
 [classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
 [classname]#Integer#, [classname]#Double#, etc. The format can be specified
 either by the subclasses of [classname]#java.text.NumberFormat#, namely
