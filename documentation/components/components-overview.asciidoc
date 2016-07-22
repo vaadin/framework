@@ -15,7 +15,7 @@ version of the diagram is featured in the __Vaadin Cheat Sheet__.
 
 [[figure.uicomponents]]
 .User Interface Component Class Hierarchy
-image::img/component-diagram-hi.png[]
+image::img/component-diagram-hi.png[width=100%, scaledwidth=100%]
 
 ((("[classname]#Component#")))
 At the top of the interface hierarchy, we have the [classname]#Component#
@@ -74,8 +74,3 @@ The diagram is also included in the six-page DZone Refcard, which you can find
 at https://vaadin.com/refcard.
 
 ====
-
-
-
-
-
