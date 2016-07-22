@@ -16,8 +16,8 @@ Using anonymous class for listeners is recommended in most cases.
 [[application.events.anonymous]]
 == Using Anonymous Classes
 
-By far the easiest and the most common way to handle events in Java 6 and 7 is
-to use anonymous local classes. It encapsulates the handling of events to where
+By far the easiest and the most common way to handle events in Java 8 lambdas.
+It encapsulates the handling of events to where
 the component is defined and does not require cumbering the managing class with
 interface implementations. The following example defines an anonymous class that
 inherits the [classname]#Button.ClickListener# interface.
@@ -27,7 +27,7 @@ inherits the [classname]#Button.ClickListener# interface.
 ----
 // Have a component that fires click events
 final Button button = new Button("Click Me!");
-        
+
 // Handle the events with an anonymous class
 button.addClickListener(new Button.ClickListener() {
     public void buttonClick(ClickEvent event) {
@@ -92,11 +92,11 @@ Directing events to handler methods is easy with method references:
 ----
 public class Java8Buttons extends CustomComponent {
     public Java8Buttons() {
-        setCompositionRoot(new HorizontalLayout( 
+        setCompositionRoot(new HorizontalLayout(
             new Button("OK", this::ok),
             new Button("Cancel", this::cancel)));
     }
-    
+
     public void ok(ClickEvent event) {
         event.getButton().setCaption ("OK!");
     }
@@ -126,15 +126,15 @@ public class MyComposite extends CustomComponent
 
     public MyComposite() {
         Layout layout = new HorizontalLayout();
-        
+
         // Just a single component in this composition
         button = new Button("Do not push this");
         button.addClickListener(this);
         layout.addComponent(button);
-        
+
         setCompositionRoot(layout);
     }
-    
+
     // The listener method implementation
     public void buttonClick(ClickEvent event) {
         button.setCaption("Do not push this again");
@@ -166,12 +166,12 @@ public class TheButtons extends CustomComponent
         toobutton = new Button("A Button Too", this);
 
         // Put them in some layout
-        Layout root = new HorizontalLayout(); 
+        Layout root = new HorizontalLayout();
         root.addComponent(onebutton);
         root.addComponent(toobutton);
         setCompositionRoot(root);
     }
-    
+
     @Override
     public void buttonClick(ClickEvent event) {
         // Differentiate targets by event source
@@ -189,7 +189,3 @@ object properties, names, or captions to separate between them. Using captions
 or any other visible text is generally discouraged, as it may create problems
 for internationalization. Using other symbolic strings can also be dangerous,
 because the syntax of such strings is checked only at runtime.
-
-
-
-

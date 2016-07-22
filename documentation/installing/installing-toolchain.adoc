@@ -13,7 +13,7 @@ Vaadin supports a wide variety of tools, so you can use any IDE for writing the 
 In this example, we use the following toolchain:
 
 * Windows, Linux, or Mac OS X
-* link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle Java SE 8] (Java 6 or newer is required)
+* link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle Java SE 8]
 * link:http://www.eclipse.org/downloads/[Eclipse IDE for Java EE Developers]
 * link:http://tomcat.apache.org/[Apache Tomcat 8.0 (Core)]
 * link:http://www.getfirefox.com/[Mozilla Firefox] browser

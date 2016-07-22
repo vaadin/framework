@@ -99,16 +99,17 @@ is needed in the class. For example:
 public class MyClass {
   private final static Logger logger =
           Logger.getLogger(MyClass.class.getName());
-  
+
   public void myMethod() {
     try {
       // do something that might fail
     } catch (Exception e) {
       logger.log(Level.SEVERE, "FAILED CATASTROPHICALLY!", e);
-    } 
+    }
   }
 }
 ----
+ifdef::vaadin7[]
 
 ((("static")))
 ((("memory
@@ -125,13 +126,11 @@ classloader would prevent garbage-collecting the classes after redeploying,
 hence leaking memory. As the size of the PermGen memory where class object are
 stored is fixed, the leakage will lead to a server crash after many
 redeployments. The issue depends on the way how the server manages classloaders,
-on the hardness of the back-references, and may also be different between Java 6
-and 7. So, if you experience PermGen issues, or want to play it on the safe
-side, you should consider using non-static [classname]#Logger# instances.//As
-discussed in Forum thread 1175841
-(24.2.2012).
+on the hardness of the back-references.
+So, if you experience PermGen issues, or want to play it on the safe
+side, you should consider using non-static [classname]#Logger# instances.
+//As discussed in Forum thread 1175841 (24.2.2012).
+endif::vaadin7[]
 
 
 (((range="endofrange", startref="term.advanced.logging")))
-
-

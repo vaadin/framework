@@ -32,7 +32,7 @@ instructed in <<dummy/../../../framework/getting-started/getting-started-package
 
 . Enter a [guilabel]#Project name# and [guilabel]#Project location#, and select
 the [guilabel]#Java SDK# to be used for the project.
-Vaadin requires at least Java 6.
+Vaadin requires at least Java 8.
 If you have not configured a Java SDK previously, you can configure it here.
 +
 image::img/idea-newproject-1.png[scaledwidth=100%]
@@ -90,7 +90,7 @@ server using a run/debug configuration.
 //&lt;?dbfo-need height="8cm" ?&gt;
 
 . Enter a project name, location, and the Java SDK to be used for the project.
-Vaadin requires at least Java 6.
+Vaadin requires at least Java 8.
 +
 image::img/idea-maven-newproject-1.png[scaledwidth=100%]
 +
