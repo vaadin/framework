@@ -56,12 +56,11 @@ Between Property Type and Representation">>.
 
 Much of the API of [classname]#TextField# is defined in
 [classname]#AbstractTextField#, which allows different kinds of text input
-fields, such as rich text editors, which do not share all the features of the
-single-line text fields.
+fields, which do not share all the features of the single-line text fields.
 
 [[figure.components.textfield.api]]
-.Text Field Class Relationships
-image::img/textfield-diagram-hi.png[width=40%, scaledwidth=70%]
+.Text field class relationships
+image::img/textfield-diagram-hi.png[width=80%, scaledwidth=100%]
 
 [[components.textfield.length]]
 == String Length
