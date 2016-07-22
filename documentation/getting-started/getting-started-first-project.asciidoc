@@ -485,7 +485,7 @@ version.
 +
 [subs="normal"]
 ----
-&lt;!ENTITY vaadin.version "**7.x.x**"&gt;
+&lt;!ENTITY vaadin.version "**8.x.x**"&gt;
 ----
 +
 You can specify either a fixed version number, as shown in the above example, or

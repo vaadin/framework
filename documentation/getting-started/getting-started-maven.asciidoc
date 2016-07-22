@@ -34,7 +34,7 @@ line):
 [prompt]#$# [command]#mvn# archetype:generate \
    -DarchetypeGroupId=com.vaadin \
    -DarchetypeArtifactId=[replaceable]#vaadin-archetype-application# \
-   -DarchetypeVersion=[replaceable]#7.x.x# \
+   -DarchetypeVersion=[replaceable]#8.x.x# \
    -DgroupId=[replaceable]#com.pany# \
    -DartifactId=[replaceable]#project-name# \
    -Dversion=[replaceable]#0.1# \

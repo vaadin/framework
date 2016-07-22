@@ -235,15 +235,15 @@ projects).
 ----
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-server-7.x.x.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-server-8.x.x.jar 'VAADIN/*'
 ----
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-themes-7.x.x.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-themes-8.x.x.jar 'VAADIN/*'
 ----
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-client-compiled-7.x.x.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-client-compiled-8.x.x.jar 'VAADIN/*'
 ----
 You can also serve static content from a front-end caching server, which reduces
 the load of the application server. In portals, you install the themes globally
