@@ -10,8 +10,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="82mm"
-   height="92mm"
-   viewBox="0 0 290.55118 325.98424"
+   height="93mm"
+   viewBox="0 0 290.55118 329.52755"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r"
@@ -420,9 +420,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="203.60419"
-     inkscape:cy="90.589152"
+     inkscape:zoom="1.979899"
+     inkscape:cx="236.92633"
+     inkscape:cy="183.4914"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -458,7 +458,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -466,7 +466,7 @@
      inkscape:label="Taso 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-726.37791)">
+     transform="translate(0,-722.8346)">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#e61e6d;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 102.75591,942.51962 -21.259847,0"
@@ -474,12 +474,12 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <rect
-       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#33383a;fill-opacity:1;fill-rule:nonzero;stroke:#33383a;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#33383a;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="rect4408-7"
        width="283.46457"
-       height="77.952759"
-       x="3.5433059"
-       y="729.9212" />
+       height="81.496002"
+       x="3.5433071"
+       y="726.37787" />
     <rect
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="rect4408-7-5-2"
@@ -606,14 +606,14 @@
        sodipodi:nodetypes="cc" />
     <g
        id="g5042"
-       transform="translate(-70.866144,712.20466)">
+       transform="translate(-70.866145,708.66138)">
       <rect
          y="729.9212"
          x="77.952759"
          height="56.692795"
          width="194.8819"
          id="rect4408-7-5-2-3-4-2"
-         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
          transform="translate(0,-694.48815)" />
       <g
          transform="translate(-29.978127,-603.49838)"
@@ -627,7 +627,7 @@
            y="663.73456" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            x="141.73228"
            y="676.77155"
            id="text4227-4-2-7-8-3-2-8-5"
@@ -653,7 +653,7 @@
            y="761.81097" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            x="171.99037"
            y="774.84796"
            id="text4227-4-2-7-8-3-2-8-1-3"
@@ -672,7 +672,7 @@
          id="text4227-2"
          y="46.062992"
          x="81.496063"
-         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
            y="46.062992"
            x="81.496063"
@@ -690,7 +690,7 @@
            y="761.81097" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            x="171.99037"
            y="774.84796"
            id="text4227-4-2-7-8-3-2-8-1-3-0"
@@ -709,9 +709,9 @@
          id="text4227-9-0-3"
          y="53.95319"
          x="81.496063"
-         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
-           style="text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+           style="text-align:start;text-anchor:start;fill:#000000;fill-opacity:1"
            y="53.95319"
            x="81.496063"
            id="tspan4229-4-4-0"
@@ -720,11 +720,11 @@
     <text
        sodipodi:linespacing="100%"
        id="text4227-2-7"
-       y="740.55115"
+       y="736.65063"
        x="7.0866127"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         y="740.55115"
+         y="736.65063"
          x="7.0866127"
          id="tspan4229-3-1"
          sodipodi:role="line">WEB BROWSER</tspan></text>
@@ -774,7 +774,7 @@
          y="949.60626">CUSTOM SERVLET</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#ff3a49;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5127-8-91-40)"
-       d="m 265.74803,800.78733 0,138.189"
+       d="m 265.74803,797.24404 0,141.73229"
        id="path4591-1-5-0-7-1-3-9"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -852,7 +852,7 @@
        sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#ff3a49;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5127-8-91)"
-       d="m 138.18898,871.65349 0,-67.32285"
+       d="m 138.18898,871.65349 0,-70.86614"
        id="path4591-1-5-0-7-1-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -959,7 +959,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Otsikot"
-     transform="translate(0,-31.889764)">
+     transform="translate(0,-28.346457)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:8.75px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1087,7 +1087,7 @@
          x="184.25197"
          y="148.81886">THEMES</tspan></text>
     <g
-       transform="translate(63.779525,-683.85821)"
+       transform="translate(63.779526,-687.40154)"
        id="g5007-5-8">
       <rect
          style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ff3a49;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
@@ -1098,7 +1098,7 @@
          y="761.81097" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          x="180.77013"
          y="774.85547"
          id="text4227-4-2-7-8-3-2-8-1-3-0-7"

@@ -59,7 +59,7 @@ in this case the [classname]#Button#.
 
 [[figure.eventlistenerdiagram]]
 .Class Diagram of a Button Click Listener
-image::img/events-classdiagram-hi.png[width=50%, scaledwidth=75%]
+image::img/events-classdiagram-hi.png[width=80%, scaledwidth=100%]
 
 In Java 8, you can implement such functional interfaces with a lambda expression:
 
