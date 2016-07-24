@@ -237,7 +237,7 @@ The resulting image is shown in <<figure.application.resource.stream>>.
 
 [[figure.application.resource.stream]]
 .A stream resource
-image::img/application_streamresource.png[width=25%, scaledwidth=35%]
+image::img/application_streamresource.png[width=25%, scaledwidth=25%]
 
 Another way to create dynamic content is a request handler, described in
 <<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request

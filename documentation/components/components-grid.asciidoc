@@ -132,7 +132,6 @@ from the grid.
 
 For example:
 
-
 [source, java]
 ----
 grid.addSelectionListener(selectionEvent -> {
@@ -289,8 +288,9 @@ columns in their natural order.
 
 [source, java]
 ----
-grid.setColumnOrder(firstnameColumn, lastnameColumn, bornColumn,
-                    birthplaceColumn, diedColumn);
+grid.setColumnOrder(firstnameColumn, lastnameColumn,
+                    bornColumn, birthplaceColumn,
+                    diedColumn);
 ----
 
 Note that the method can not be used to hide columns. You can hide columns with
@@ -374,13 +374,10 @@ lambdas:
 [source, java]
 ----
 // Add generated full name column
-Column<String> fullNameColumn grid.addColumn(person -> {
-    return person.getFirstName() + " " + person.getLastName();
-});
+Column<String> fullNameColumn = grid.addColumn(person ->
+    person.getFirstName() + " " + person.getLastName());
 fullNameColumn.setHeaderCaption("Full name");
-
 ----
-
 
 [[components.grid.renderer]]
 == Column Renderers
@@ -682,8 +679,6 @@ You can set a component in a header or footer cell with
 described in <<components.grid.filtering>>, which also gives an example of the
 use.
 
-
-
 [[components.grid.filtering]]
 == Filtering
 
@@ -698,7 +693,6 @@ image::img/grid-filtering.png[width=50%, scaledwidth=80%]
 
 The filtering illustrated in <<figure.components.grid.filtering>> can be created
 as follows:
-
 
 [source, java]
 ----
@@ -726,8 +720,7 @@ for (Column<?> col: grid.getColumns()) {
 
       // Filter the list of items
       List<String> filteredList =
-        Lists.newArrayList(personList.filter(
-            persons,
+        Lists.newArrayList(personList.filter(persons,
             Predicates.containsPattern(event.getValue())));
 
         // Apply filtered data
@@ -737,10 +730,7 @@ for (Column<?> col: grid.getColumns()) {
     cell.setComponent(filterField);
 
 }
-
-
 ----
-
 
 [[components.grid.sorting]]
 == Sorting
@@ -906,7 +896,6 @@ public class Person implements Serializable {
 
 We can now use a [classname]#BeanBinder# in the [classname]#Grid# as
 follows:
-
 
 [source, java]
 ----

@@ -406,7 +406,7 @@ select.onValueChange(locale -> {
     date.setLocale(locale);
     localeCode.setValue("Locale code: " +
                         locale.getLanguage() + "_" +
-                        locale.getCountry());  
+                        locale.getCountry());
 });
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.selection[on-line example, window="_blank"].
@@ -497,8 +497,6 @@ components appear in italic.
 }
 ----
 
-
-
 [[components.features.stylename]]
 == Style Name
 
@@ -511,7 +509,6 @@ styles with the given style name or a space-separated list of style names. You
 can also add and remove individual style names with [methodname]#addStylename()#
 and [methodname]#removeStyleName()#. A style name must be a valid CSS style
 name.
-
 
 [source, java]
 ----
@@ -614,9 +611,10 @@ component in absolute or relative units, or for leaving the size undefined.
 The size of a component can be set with [methodname]#setWidth()# and
 [methodname]#setHeight()# methods. The methods take the size as a floating-point
 value. You need to give the unit of the measure as the second parameter for the
-above methods. The available units are listed in
-<<components.features.sizeable.units.table>> below.
-
+above methods.
+ifdef::web[]
+The available units are listed in <<components.features.sizeable.units.table>>.
+endif::web[]
 
 [source, java]
 ----
@@ -649,6 +647,7 @@ can set the height, width, or both as undefined with the methods [methodname]#se
 Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
 
+ifdef::web[]
 The <<components.features.sizeable.units.table>> table lists the available units and their codes defined in the [interfacename]#Sizeable# interface.
 
 [[components.features.sizeable.units.table]]
@@ -666,6 +665,7 @@ The <<components.features.sizeable.units.table>> table lists the available units
 |[parameter]#Unit.INCH#|in|A physical length unit, _inches_ on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
 |[parameter]#Unit.PERCENTAGE#|%|A relative percentage of the available size. For example, for the top-level layout [parameter]#100%# would be the full width or height of the browser window. The percentage value must be between 0 and 100.
 |===============
+endif::web[]
 
 If a component inside [classname]#HorizontalLayout# or [classname]#VerticalLayout# has full size in the namesake direction of the layout, the component will expand to take all available space not needed by the other components.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.

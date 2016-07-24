@@ -77,7 +77,7 @@ still have to add them to the correct position in your layout.
 ----
 // Have some layout
 FormLayout form = new FormLayout();
-        
+
 // Now create a binder that can also create the fields
 // using the default field factory
 FieldGroup binder = new FieldGroup(item);
@@ -112,24 +112,24 @@ item.addItemProperty("age", new ObjectProperty<Integer>(42));
 class MyForm extends FormLayout {
     // Member that will bind to the "name" property
     TextField name = new TextField("Name");
-    
-    // Member that will bind to the "age" property 
+
+    // Member that will bind to the "age" property
     @PropertyId("age")
     TextField ageField = new TextField("Age");
-    
+
     public MyForm() {
         // Customize the layout a bit
         setSpacing(true);
-        
+
         // Add the fields
         addComponent(name);
         addComponent(ageField);
     }
 }
-        
+
 // Create one
 MyForm form = new MyForm();
-        
+
 // Now create a binder that can also creates the fields
 // using the default field factory
 FieldGroup binder = new FieldGroup(item);
@@ -156,16 +156,16 @@ earlier:
 class MyForm extends CustomComponent {
     // Member that will bind to the "name" property
     TextField name = new TextField("Name");
-    
-    // Member that will bind to the "age" property 
+
+    // Member that will bind to the "age" property
     @PropertyId("age")
     TextField ageField = new TextField("Age");
-    
+
     public MyForm(Item item) {
         FormLayout layout = new FormLayout();
         layout.addComponent(name);
         layout.addComponent(ageField);
-        
+
         // Now use a binder to bind the members
         FieldGroup binder = new FieldGroup(item);
         binder.bindMemberFields(this);
@@ -173,7 +173,7 @@ class MyForm extends CustomComponent {
         setCompositionRoot(layout);
     }
 }
-        
+
 // And the form can be used as a component
 layout.addComponent(new MyForm(item));
 ----
@@ -184,6 +184,7 @@ See the http://demo.vaadin.com/book-examples-vaadin7/book#datamodel.itembinding.
 [[datamodel.itembinding.buffering]]
 == Buffering Forms
 
+ifdef::vaadin7[]
 Just like for individual fields, as described in
 <<dummy/../../../framework/components/components-fields#components.fields.buffering,"Field
 Buffering">>, a [classname]#FieldGroup# can handle buffering the form content so
@@ -194,7 +195,7 @@ Edits can be discarded, so that the field values are reloaded from the data
 source, by calling [methodname]#discard()#. Buffering is enabled by default, but
 can be disabled by calling [methodname]#setBuffered(false)# for the
 [classname]#FieldGroup#.
-
+endif::vaadin7[]
 
 ----
 // Have an item of some sort
@@ -213,7 +214,7 @@ form.addComponent(binder.buildAndBind("Age",  "age"));
 
 // Enable buffering (actually enabled by default)
 binder.setBuffered(true);
-        
+
 // A button to commit the buffer
 form.addComponent(new Button("OK", new ClickListener() {
     @Override
@@ -260,11 +261,13 @@ every field if a bean validation implementation is included in the classpath.
 == Bean Validation
 
 Vaadin allows using the Java Bean Validation API 1.0 (JSR-303) for validating
+ifdef::vaadin7[]
 input from fields bound to bean properties before the values are committed to
 the bean. The validation is done based on annotations on the bean properties,
 which are used for creating the actual validators automatically. See
 <<dummy/../../../framework/components/components-fields#components.fields.validation,"Field
 Validation">> for general information about validation.
+endif::vaadin7[]
 
 Using bean validation requires an implementation of the Bean Validation API,
 such as Hibernate Validator ( [filename]#hibernate-validator-4.2.0.Final.jar# or
@@ -290,11 +293,11 @@ public class Person implements Serializable {
     @NotNull
     @javax.validation.constraints.Size(min=2, max=10)
     String name;
-    
+
     @Min(1)
     @Max(130)
     int age;
-    
+
     // ... setters and getters ...
 }
 ----
@@ -317,14 +320,14 @@ In the following example, we validate a single unbuffered field:
 ----
 Person bean = new Person("Mung bean", 100);
 BeanItem<Person> item = new BeanItem<Person> (bean);
-    
+
 // Create an editor bound to a bean field
 TextField firstName = new TextField("First Name",
         item.getItemProperty("name"));
-    
+
 // Add the bean validator
 firstName.addValidator(new BeanValidator(Person.class, "name"));
-    
+
 firstName.setImmediate(true);
 layout.addComponent(firstName);
 ----
@@ -339,7 +342,7 @@ Bean validators are automatically created when using a
 ----
 // Have a bean
 Person bean = new Person("Mung bean", 100);
-        
+
 // Form for editing the bean
 final BeanFieldGroup<Person> binder =
         new BeanFieldGroup<Person>(Person.class);
@@ -370,8 +373,3 @@ language specified with the locale setting for the form. The default language is
 English, but for example Hibernate Validator contains translations of the
 messages for a number of languages. If other languages are needed, you need to
 provide a translation of the properties file.
-
-
-
-
-

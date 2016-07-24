@@ -67,7 +67,7 @@ CustomLayout content = new CustomLayout("layoutname");
 content.setSizeUndefined();
 loginPanel.setContent(content);
 loginPanel.setSizeUndefined();
-        
+
 // No captions for fields is they are provided in the template
 content.addComponent(new TextField(), "username");
 content.addComponent(new TextField(), "password");
@@ -78,7 +78,7 @@ The resulting layout is shown below in <<figure.layout.customlayout>>.
 
 [[figure.layout.customlayout]]
 .Example of a Custom Layout Component
-image::img/customlayout-example1.png[]
+image::img/customlayout-example1.png[width=40%, scaledwidth=70%]
 
 You can use [methodname]#addComponent()# also to replace an existing component
 in the location given in the second parameter.
@@ -100,6 +100,3 @@ or
 ----
 new CustomLayout(new FileInputStream(file));
 ----
-
-
-

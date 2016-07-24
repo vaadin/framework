@@ -20,7 +20,8 @@ the native selection input of web browsers, using the HTML
 [source, java]
 ----
 // Create the selection component
-NativeSelect<String> select = new NativeSelect<>("Native Selection");
+NativeSelect<String> select =
+    new NativeSelect<>("Native Selection");
 
 // Add some items
 select.setItems("Mercury", "Venus", ...);
@@ -31,7 +32,7 @@ The [methodname]#setColumns()# allows setting the width of the list as
 
 [[figure.components.nativeselect.basic]]
 .The [classname]#NativeSelect# Component
-image::img/nativeselect-basic.png[width=20%, scaledwidth=40%]
+image::img/nativeselect-basic.png[width=20%, scaledwidth=35%]
 
 Common selection component features are described in
 <<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.

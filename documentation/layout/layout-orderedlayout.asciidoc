@@ -238,7 +238,8 @@ Button expandButton = new Button("Expanding component");
 // Use 100% of the expansion cell's width.
 expandButton.setWidth("100%");
 
-// The component must be added to layout before setting the ratio.
+// The component must be added to layout
+// before setting the ratio
 layout.addComponent(expandButton);
 
 // Set the component's cell to expand.

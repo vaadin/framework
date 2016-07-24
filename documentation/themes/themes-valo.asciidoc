@@ -245,11 +245,10 @@ $v-error-indicator-color(default:[literal]#++#ed473b++#):: Color of the componen
 <<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
 Indicator and Message">>.
 
-$v-required-field-indicator-color(default:[literal]#++$v-error-indicator-color++#):: Color of the required indicator in field components, as described in
-<<dummy/../../../framework/components/components-fields#components.fields.field,"Field
-Interface">>.
-
-
+$v-required-field-indicator-color(default:[literal]#++$v-error-indicator-color++#):: Color of the required indicator in field components.
+ifdef::vaadin7[]
+Field components are described in <<dummy/../../../framework/components/components-fields#components.fields.field,"Field Interface">>.
+endif::vaadin7[]
 
 Color specifications for $v-border, $v-bevel, and $v-shadow may use, in addition
 to CSS colors, the following keywords:
@@ -434,7 +433,3 @@ $v-included-components: remove($v-included-components, calendar);
 Note that in this case, you need to give the statement __after__ the
 [literal]#++@import++# statement for the Valo theme, because it overrides a
 variable by using its value that is defined in the theme.
-
-
-
-

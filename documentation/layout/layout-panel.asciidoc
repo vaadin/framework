@@ -31,7 +31,7 @@ Panel panel = new Panel("Astronomer Panel");
 panel.addStyleName("mypanelexample");
 panel.setSizeUndefined(); // Shrink to fit content
 layout.addComponent(panel);
-        
+
 // Create the content
 FormLayout content = new FormLayout();
 content.addStyleName("mypanelcontent");
@@ -46,7 +46,7 @@ The resulting layout is shown in <<figure.layout.panel>>.
 
 [[figure.layout.panel]]
 .A [classname]#Panel#
-image::img/panel.png[]
+image::img/panel.png[width=50%, scaledwidth=70%]
 
 [[layout.panel.scrolling]]
 == Scrolling the Panel Content
@@ -71,7 +71,7 @@ In the following example, we have a 300 pixels wide and very high
 // Display an image stored in theme
 Image image = new Image(null,
     new ThemeResource("img/Ripley_Scroll-300px.jpg"));
-        
+
 // To enable scrollbars, the size of the panel content
 // must not be relative to the panel size
 image.setSizeUndefined(); // Actually the default
@@ -92,7 +92,7 @@ border and vertical scrollbar.
 
 [[figure.layout.panel.scrolling]]
 .Panel with Scroll Bars
-image::img/panel-scrolling.png[]
+image::img/panel-scrolling.png[width=50%, scaledwidth=70%]
 
 ((("[interfacename]#Scrollable#", id="term.layout.panel.scrolling.scrollable", range="startofrange")))
 
@@ -137,6 +137,3 @@ add the style to a panel. Other themes may also provide the light and other
 styles for [classname]#Panel# as well.
 
 endif::web[]
-
-
-

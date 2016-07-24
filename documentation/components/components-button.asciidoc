@@ -58,9 +58,9 @@ A button has an overall [literal]#++v-button++# style. The caption has
 [literal]#++v-button-caption++# style. There is also an intermediate wrap
 element, which may help in styling in some cases.
 
-The button component has many style variants in the Valo theme, as illustrated in <<figure.component.button.basic>>.
+The button component has many style variants in the Valo theme, as illustrated in <<figure.component.button.valostyles>>.
 The styles are defined in the [classname]#ValoTheme# class.
 
-[[figure.component.button.basic]]
+[[figure.component.button.valostyles]]
 .Button in different styles of the Valo theme
 image::img/button-valo-styles.png[width=70%, scaledwidth=100%]

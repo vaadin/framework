@@ -69,7 +69,6 @@ caption, but can be any object type. We could as well have given Planet instance
 for the items and use captions generated based on them
 [methodname]#setItemCaptionProvider()# method.
 
-
 [source, java]
 ----
 // List of Planet objects
@@ -101,7 +100,6 @@ retrieved with [methodname]#toString()# method from the item. This is useful
 for simple objects like String or Integers, but also for objects that have
 human readable output for [methodname]#toString()# .
 
-+
 [source, java]
 ----
 ComboBox<Planet> select = new ComboBox<>("Inner Planets");
@@ -193,7 +191,8 @@ planets.add(new Planet(3, "Earth"));
 planets.add(new Planet(4, "Mars"));
 
 // Create a selection component
-ComboBox<Planet> select = new ComboBox<>("Planets");
+ComboBox<Planet> select =
+    new ComboBox<>("Planets");
 
 // Set the caption provider to read the
 // caption directly from the 'name'

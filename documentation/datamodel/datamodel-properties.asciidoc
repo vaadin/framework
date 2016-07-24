@@ -23,10 +23,10 @@ interface to allow accessing the field value.
 [source, java]
 ----
 final TextField tf = new TextField("Name");
-        
+
 // Set the value
 tf.setValue("The text field value");
-        
+
 // When the field value is edited by the user
 tf.addValueChangeListener(
     new Property.ValueChangeListener() {
@@ -88,10 +88,10 @@ interface with [methodname]#setPropertyDataSource()#.
 // Have a data model
 ObjectProperty property =
     new ObjectProperty("Hello", String.class);
-        
+
 // Have a component that implements Viewer
 Label viewer = new Label();
-        
+
 // Bind it to the data
 viewer.setPropertyDataSource(property);
 ----
@@ -104,10 +104,10 @@ component that allows editing a particular property type to a property.
 // Have a data model
 ObjectProperty property =
     new ObjectProperty("Hello", String.class);
-        
+
 // Have a component that implements Viewer
 TextField editor = new TextField("Edit Greeting");
-        
+
 // Bind it to the data
 editor.setPropertyDataSource(property);
 ----
@@ -129,12 +129,13 @@ viewer.setPropertyDataSource(editor);
 editor.setImmediate(true);
 ----
 
+ifdef::vaadin7[]
 If a field has validators, as described in
 <<dummy/../../../framework/components/components-fields#components.fields.validation,"Field
 Validation">>, the validators are executed before writing the value to the
 property data source, or by calling the [methodname]#validate()# or
 [methodname]#commit()# for the field.
-
+endif::vaadin7[]
 
 [[datamodel.properties.objectproperty]]
 == [classname]#ObjectProperty# Implementation
@@ -146,14 +147,14 @@ The [classname]#ObjectProperty# class is a simple implementation of the
 ----
 // Have a component that implements Viewer interface
 final TextField tf = new TextField("Name");
-        
+
 // Have a data model with some data
 String myObject = "Hello";
-        
+
 // Wrap it in an ObjectProperty
 ObjectProperty property =
     new ObjectProperty(myObject, String.class);
-        
+
 // Bind the property to the component
 tf.setPropertyDataSource(property);
 ----
@@ -181,8 +182,8 @@ converter for a field. The method is defined in [classname]#AbstractField#.
 ----
 // Have an integer property
 final ObjectProperty<Integer> property =
-        new ObjectProperty<Integer>(42); 
-        
+        new ObjectProperty<Integer>(42);
+
 // Create a TextField, which edits Strings
 final TextField tf = new TextField("Name");
 
@@ -321,7 +322,7 @@ interface:
 class MyProperty implements Property {
     Integer data     = 0;
     boolean readOnly = false;
-    
+
     // Return the data type of the model
     public Class<?> getType() {
         return Integer.class;
@@ -330,7 +331,7 @@ class MyProperty implements Property {
     public Object getValue() {
         return data;
     }
-    
+
     // Override the default implementation in Object
     @Override
     public String toString() {
@@ -349,11 +350,11 @@ class MyProperty implements Property {
             throws ReadOnlyException, ConversionException {
         if (readOnly)
             throw new ReadOnlyException();
-            
+
         // Already the same type as the internal representation
         if (newValue instanceof Integer)
             data = (Integer) newValue;
-        
+
         // Conversion from a string is required
         else if (newValue instanceof String)
             try {
@@ -368,11 +369,11 @@ class MyProperty implements Property {
         // Reverse decode the hexadecimal value
     }
 }
-        
+
 // Instantiate the property and set its data
 MyProperty property = new MyProperty();
 property.setValue(42);
-        
+
 // Bind it to a component
 final TextField tf = new TextField("Name", property);
 ----

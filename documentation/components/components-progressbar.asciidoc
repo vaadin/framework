@@ -35,17 +35,13 @@ described in
 
 [source, java]
 ----
-final ProgressBar bar = new ProgressBar(0.0f);
+ProgressBar bar = new ProgressBar(0.0f);
 layout.addComponent(bar);
 
-layout.addComponent(new Button("Increase",
-    new ClickListener() {
-    @Override
-    public void buttonClick(ClickEvent event) {
-        float current = bar.getValue();
-        if (current < 1.0f)
-            bar.setValue(current + 0.10f);
-    }
+layout.addComponent(new Button("Increase", click -> {
+    float current = bar.getValue();
+    if (current < 1.0f)
+        bar.setValue(current + 0.10f);
 }));
 ----
 
@@ -55,7 +51,6 @@ layout.addComponent(new Button("Increase",
 In the indeterminate mode, a non-progressive indicator is displayed
 continuously. The indeterminate indicator is a circular wheel in the built-in
 themes. The progress value has no meaning in the indeterminate mode.
-
 
 [source, java]
 ----
