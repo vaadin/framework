@@ -32,7 +32,7 @@ text field 50 pixels from both the left and the top edge:
 AbsoluteLayout layout = new AbsoluteLayout();
 layout.setWidth("400px");
 layout.setHeight("250px");
-        
+
 // A component with coordinates for its top-left corner
 TextField text = new TextField("Somewhere someplace");
 layout.addComponent(text, "left: 50px; top: 50px;");
@@ -71,7 +71,7 @@ The result of the above code examples is shown in
 
 [[figure.layout.absolutelayout.bottomright]]
 .Components Positioned Relative to Various Edges
-image::img/absolutelayout-bottomright.png[]
+image::img/absolutelayout-bottomright.png[width=60%, scaledwidth=80%]
 
 Drag and drop is very useful for moving the components contained in an
 [classname]#AbsoluteLayout#. Check out the example in
@@ -101,7 +101,7 @@ The result is shown in <<figure.layout.absolutelayout.area>>
 
 [[figure.layout.absolutelayout.area]]
 .Component Filling an Area Specified by Coordinates
-image::img/absolutelayout-area.png[]
+image::img/absolutelayout-area.png[width=50%, scaledwidth=80%]
 
 
 [[layout.absolutelayout.proportional]]
@@ -125,7 +125,7 @@ The result is shown in <<figure.layout.absolutelayout.proportional>>
 
 [[figure.layout.absolutelayout.proportional]]
 .Specifying an Area by Proportional Coordinates
-image::img/absolutelayout-proportional.png[]
+image::img/absolutelayout-proportional.png[width=50%, scaledwidth=70%]
 
 
 [[layout.absolutelayout.css]]
@@ -143,7 +143,3 @@ root style. Each component in the layout is contained within an element that has
 the [literal]#++v-absolutelayout-wrapper++#. The component captions are outside
 the wrapper elements, in a separate element with the usual
 [literal]#++v-caption++# style.
-
-
-
-

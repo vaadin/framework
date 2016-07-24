@@ -47,7 +47,7 @@ when you hover the mouse pointer over the error indicator.
 
 [[figure.layout.formlayout]]
 .A [classname]#FormLayout# Layout for Forms
-image::img/formlayout-example1.png[]
+image::img/formlayout-example1.png[width=50%, scaledwidth=70%]
 
 [[layout.formlayout.css]]
 == CSS Style Rules

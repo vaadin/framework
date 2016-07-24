@@ -5,28 +5,31 @@ layout: page
 ---
 
 [[intro.eclipse]]
-= Support for the Eclipse IDE
+= Support for IDEs
 
 While Vaadin is not bound to any specific IDE, and you can in fact easily use it
-without any IDE altogether, we provide special support for the Eclipse IDE,
-which has become the most used environment for Java development.
+without any IDE altogether, we provide special support for the Eclipse IDE, IntelliJ IDEA, and the NetBeans IDE, which have become the most used environment for Java development.
 
-*_Vaadin Plug-in for Eclipse_* helps you in:
+An official Vaadin plug-in is available for the Eclipse and NetBeans IDEs.
+It helps in:
 
 * creating new Vaadin projects,
 
 * creating custom themes,
 
-* creating custom client-side widgets, and
+* creating custom client-side widgets,
+
+* downloading add-ons from the Vaadin directory, and
 
 * easily upgrading to a newer version of the Vaadin library.
 
-Using the Vaadin plug-in for Eclipse is the recommended way of installing Vaadin for development.
-Downloading the installation package that contains the JARs or defining Vaadin as a Maven dependency is also possible.
+Availability of the features depends on the IDE.
+The ultimate edition of IntelliJ IDEA comes with built-in support for Vaadin.
 
-*_Vaadin Designer_* is a commercial Eclipse plug-in that enables visual editing of Vaadin UIs and composites.
-See <<dummy/../../../designer/designer-overview#designer.overview, "Vaadin Designer">> for its complete reference.
+*_Vaadin Designer_* is a commercial plug-in available for the Eclipse IDE and IntelliJ IDEA.
+It enables visual editing of declarative designs that you can use in your applications.
+See <<dummy/../../../designer/designer-overview#designer.overview, "Vaadin Designer">> for more information.
 
-Installation of the Eclipse IDE and the plug-in is covered in <<dummy/../../../framework/installing/installing-eclipse#installing.eclipse,"Installing the Eclipse IDE">>.
-The creation of a new Vaadin project using the plug-in is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.creation,"Creating a Project in the Eclipse IDE">>.
-See <<dummy/../../../framework/themes/themes-eclipse#themes.eclipse,"Creating a Theme in Eclipse">> and <<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse,"Starting It Simple With Eclipse">> for instructions on using the different features of the plug-in.
+Using the Vaadin plug-in is the recommended way of installing Vaadin for development.
+Installing the IDEs and the plug-ins is covered in <<dummy/../../../framework/installing/installing-overview#installing, "Installing Development Tools">>.
+The creation of a new Vaadin project with each IDE is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.overview, "Creating a Vaadin Project">>.

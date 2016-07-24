@@ -31,12 +31,7 @@ public class HelloWorld extends UI {
 
         // Have a clickable button
         content.addComponent(new Button("Push Me!",
-            new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent e) {
-                    Notification.show("Pushed!");
-                }
-            }));
+            click -> Notification.show("Pushed!")));
     }
 }
 ----
@@ -59,18 +54,8 @@ user interface component, which displays simple text, and sets the text to
 
 The example also shows how to create a button and handle button click events.
 Event handling is described in
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
-and Listeners">> and on the practical side in
-<<dummy/../../../framework/application/application-events#application.events,"Handling
-Events with Listeners">>. In addition to listeners, in Java 8 you can handle
-events with lambda expressions, which simplifies the handler code significantly.
-
-
-[source, java]
-----
-content.addComponent(new Button("Push Me!",
-    event -> Notification.show("Pushed!")));
-----
+<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events and Listeners">> and on the practical side in <<dummy/../../../framework/application/application-events#application.events,"Handling Events with Listeners">>.
+In Java 8, you can implement listeners with lambda expressions, which simplifies the handler code significantly.
 
 The result of the Hello World application, when opened in a browser, is shown in
 <<figure.intro.walkthrough>>.

@@ -89,7 +89,7 @@ You can install the plug-in from the NetBeans Plugin Portal Update Center as fol
 . Select "Tools > Plugins" from the NetBeans main menu.
 
 . Select the [guilabel]#Available Plugins# tab.
-.. Type "Vaadin" in the [guilabel]#Search# box and press kbd:Enter[].
+.. Type "Vaadin" in the [guilabel]#Search# box and press kbd:[Enter].
 .. Select the [guilabel]#Install# check box for the [guilabel]#Vaadin Plugin for NetBeans#.
 ifdef::web[]
 +
@@ -105,7 +105,7 @@ Click [guibutton]#Install#.
 . The Vaadin Plugin is not signed, so you need to verify the certificate.
 Click [guibutton]#Continue#.
 
-. In the final step, select [guilabel]#Restart IDE now" and click [guibutton]#Finish#.
+. In the final step, select [guilabel]#Restart IDE now# and click [guibutton]#Finish#.
 
 You can now proceed to create a Vaadin project, as described in <<DUMMY/../../../framework/getting-started/getting-started-netbeans#getting-started.netbeans, "Creating a Project with the NetBeans IDE">>.
 

@@ -35,7 +35,8 @@ column captions with [methodname]#setLeftColumnCaption()# and
 
 [source, java]
 ----
-TwinColSelect<String> select = new TwinColSelect<>("Select Targets");
+TwinColSelect<String> select =
+    new TwinColSelect<>("Select Targets");
 
 // Put some items in the select
 select.setItems("Mercury", "Venus", "Earth", "Mars",
@@ -49,7 +50,8 @@ select.setSelection("Venus", "Earth", "Mars");
 
 // Handle value changes
 select.onSelect(selectedItems ->
-    layout.addComponent(new Label("Selected: " + selectedItems)));
+    layout.addComponent(
+        new Label("Selected: " + selectedItems)));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.twincolselect.captions[on-line example, window="_blank"].
 

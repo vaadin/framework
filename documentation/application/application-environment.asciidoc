@@ -190,11 +190,11 @@ class MyUI extends UI {
 
 You can also define it in the [filename]#web.xml# descriptor for the servlet:
 
-[source, xml, subs="normal"]
+[subs="normal"]
 ----
 <init-param>
   <param-name>widgetset</param-name>
-  <param-value>com.example.myproject.MyWidgetSet</param-value>
+  <param-value>[replaceable]##com.example.myproject.MyWidgetSet##</param-value>
 </init-param>
 ----
 

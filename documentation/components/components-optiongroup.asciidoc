@@ -29,11 +29,13 @@ enabled with [methodname]#setMultiSelect()#.
 [source, java]
 ----
 // A single-select radio button group
-OptionGroup<String> single = new OptionGroup<>("Single Selection");
+OptionGroup<String> single =
+    new OptionGroup<>("Single Selection");
 single.setItems("Single", "Sola", "Yksi");
 
 // A multi-select check box group
-OptionGroup<String> multi = new OptionGroup<>("Multiple Selection");
+OptionGroup<String> multi =
+    new OptionGroup<>("Multiple Selection");
 multi.setMultiSelect(true);
 multi.setItems("Many", "Muchos", "Monta");
 ----

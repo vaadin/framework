@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8"
-     inkscape:cx="153.1089"
-     inkscape:cy="76.118195"
+     inkscape:zoom="3.959798"
+     inkscape:cx="116.03523"
+     inkscape:cy="96.122162"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:window-width="1920"
@@ -65,7 +65,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -143,42 +143,12 @@
            id="flowPara4249">Edition</flowPara><flowPara
            id="flowPara4245" /><flowPara
            id="flowPara4247" /></flowRoot>    </g>
-    <g
-       id="g4392-4"
-       transform="translate(60.236234,180.70866)">
-      <rect
-         y="818.50391"
-         x="56.692913"
-         height="21.259813"
-         width="49.606297"
-         id="rect4347-8"
-         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
-      <flowRoot
-         transform="translate(2.6821639,0.70806943)"
-         id="flowRoot4367-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.25px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><flowRegion
-           id="flowRegion4369-1"><use
-             height="100%"
-             width="100%"
-             id="use4371-0"
-             xlink:href="#rect4347-8"
-             y="0"
-             x="0" /></flowRegion><flowPara
-           id="flowPara4373-7">Install the</flowPara><flowPara
-           id="flowPara4375-8">Vaadin Plugin</flowPara></flowRoot>    </g>
     <flowRoot
        transform="translate(-80.859256,144.73179)"
        id="flowRoot4367-1-7"
        style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-size:7.5px;line-height:100%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Ultra-Light';text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#5b686b;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><flowRegion
-         id="flowRegion4369-1-5"><use
-           height="100%"
-           width="100%"
-           id="use4371-0-1"
-           xlink:href="#rect4347-8"
-           y="0"
-           x="0" /></flowRegion><flowPara
+         id="flowRegion4369-1-5" /><flowPara
          id="flowPara4375-8-3">START</flowPara><flowPara
          id="flowPara4462">HERE</flowPara></flowRoot>    <circle
        r="10.629871"
@@ -204,15 +174,9 @@
        id="path3003-6-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 141.73228,985.03934 0,14.17323"
-       id="path3003-6-5-3"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
     <g
        id="g4392-4-9"
-       transform="translate(60.236217,209.05512)">
+       transform="translate(60.236221,180.70867)">
       <rect
          y="818.50391"
          x="56.692913"
@@ -235,7 +199,7 @@
            id="flowPara4375-8-0">Install Vaadin Designer</flowPara></flowRoot>    </g>
     <path
        style="fill:none;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.70866144, 0.70866144;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 141.7323,1020.4724 -2e-5,7.0866"
+       d="m 141.73228,985.03935 0,14.1732"
        id="path3003-6-5-3-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -285,30 +249,6 @@
            id="flowPara4245-2" /><flowPara
            id="flowPara4247-9" /></flowRoot>    </g>
     <g
-       id="g4392-4-0"
-       transform="translate(60.236219,102.75591)">
-      <rect
-         y="818.50391"
-         x="56.692913"
-         height="21.259813"
-         width="49.606297"
-         id="rect4347-8-6"
-         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
-      <flowRoot
-         transform="translate(2.6821639,0.70806943)"
-         id="flowRoot4367-1-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.25px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><flowRegion
-           id="flowRegion4369-1-4"><use
-             height="100%"
-             width="100%"
-             id="use4371-0-9"
-             xlink:href="#rect4347-8-6"
-             y="0"
-             x="0" /></flowRegion><flowPara
-           id="flowPara4373-7-8">Install the</flowPara><flowPara
-           id="flowPara4375-8-34">Vaadin Plugin</flowPara></flowRoot>    </g>
-    <g
        id="g4392-4-4-5"
        transform="translate(116.92913,102.75592)">
       <rect
@@ -339,19 +279,13 @@
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 141.73228,942.51965 0,14.17323"
-       id="path3003-6-5-3-55"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 191.33858,942.51965 0,14.17323"
        id="path3003-6-5-7-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <g
        id="g4392-4-9-3"
-       transform="translate(60.236217,74.409445)">
+       transform="translate(60.236221,102.75593)">
       <rect
          y="818.50391"
          x="56.692913"
@@ -374,7 +308,7 @@
            id="flowPara4375-8-0-4">Install Vaadin Designer</flowPara></flowRoot>    </g>
     <path
        style="fill:none;stroke:#00b4f0;stroke-width:0.70866144;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.70866144, 0.70866144;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 141.73228,914.17319 0,7.08662"
+       d="m 141.73228,942.51968 0,14.17321"
        id="path3003-6-5-3-5-1"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
