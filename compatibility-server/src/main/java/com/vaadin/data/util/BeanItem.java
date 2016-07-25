@@ -188,7 +188,7 @@ public class BeanItem<BT> extends PropertysetItem {
         // Try to introspect, if it fails, we just have an empty Item
         try {
             List<PropertyDescriptor> propertyDescriptors = BeanUtil
-                    .getBeanPropertyDescriptor(beanClass);
+                    .getBeanPropertyDescriptors(beanClass);
 
             // Add all the bean properties as MethodProperties to this Item
             // later entries on the list overwrite earlier ones

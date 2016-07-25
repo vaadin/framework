@@ -42,6 +42,10 @@ public class BeanToValidate {
     @Valid
     private Address address;
 
+    private String readOnlyProperty = "READONLY DATA";
+
+    private String writeOnlyProperty;
+
     public String getFirstname() {
         return firstname;
     }
@@ -104,5 +108,13 @@ public class BeanToValidate {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getReadOnlyProperty() {
+        return readOnlyProperty;
+    }
+
+    public void setWriteOnlyProperty(String writeOnlyProperty) {
+        this.writeOnlyProperty = writeOnlyProperty;
     }
 }

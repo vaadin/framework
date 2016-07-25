@@ -154,8 +154,10 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidator(
-                Predicate<? super TARGET> predicate, String message);
+        public default Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+                Predicate<? super TARGET> predicate, String message) {
+            return withValidator(Validator.from(predicate, message));
+        }
 
         /**
          * Maps the binding to another data type using the given
@@ -210,7 +212,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        default public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
                 Function<TARGET, NEWTARGET> toModel,
                 Function<NEWTARGET, TARGET> toPresentation) {
             return withConverter(Converter.from(toModel, toPresentation,
@@ -381,35 +383,17 @@ public class Binder<BEAN> implements Serializable {
         private Converter<FIELDVALUE, TARGET> converterValidatorChain;
 
         /**
-         * Creates a new binding associated with the given field.
+         * Creates a new binding associated with the given field. Initializes
+         * the binding with the given converter chain and status change handler.
          *
          * @param binder
-         *            the binder this instance is connected to
+         *            the binder this instance is connected to, not null
          * @param field
-         *            the field to bind
-         * @param statusChangeHandler
-         *            handler to track validation status
-         */
-        @SuppressWarnings("unchecked")
-        protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field,
-                StatusChangeHandler statusChangeHandler) {
-            this(binder, field,
-                    (Converter<FIELDVALUE, TARGET>) Converter.identity(),
-                    statusChangeHandler);
-        }
-
-        /**
-         * Creates a new binding associated with the given field using the given
-         * converter chain.
-         *
-         * @param binder
-         *            the binder this instance is connected to
-         * @param field
-         *            the field to bind
+         *            the field to bind, not null
          * @param converterValidatorChain
-         *            the converter/validator chain to use
+         *            the converter/validator chain to use, not null
          * @param statusChangeHandler
-         *            handler to track validation status
+         *            the handler to track validation status, not null
          */
         protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field,
                 Converter<FIELDVALUE, TARGET> converterValidatorChain,
@@ -428,8 +412,8 @@ public class Binder<BEAN> implements Serializable {
 
             this.getter = getter;
             this.setter = setter;
-            binder.bindings.add(this);
-            binder.getBean().ifPresent(this::bind);
+            getBinder().bindings.add(this);
+            getBinder().getBean().ifPresent(this::bind);
         }
 
         @Override
@@ -438,17 +422,9 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
 
-            Converter<TARGET, TARGET> validatorAsConverter = new ValidatorAsConverter<>(
-                    validator);
             converterValidatorChain = converterValidatorChain
-                    .chain(validatorAsConverter);
+                    .chain(new ValidatorAsConverter<>(validator));
             return this;
-        }
-
-        @Override
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidator(
-                Predicate<? super TARGET> predicate, String message) {
-            return withValidator(Validator.from(predicate, message));
         }
 
         @Override
@@ -457,27 +433,57 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
-            return createNewBinding(converter);
+            return getBinder().createBinding(getField(), converterValidatorChain
+                    .chain(converter), statusChangeHandler);
         }
 
         @Override
         public Binding<BEAN, FIELDVALUE, TARGET> withStatusChangeHandler(
                 StatusChangeHandler handler) {
-            Objects.requireNonNull(handler, "Handler may not be null");
+            checkUnbound();
+            Objects.requireNonNull(handler, "handler cannot be null");
             if (isStatusHandlerChanged) {
                 throw new IllegalStateException(
                         "A StatusChangeHandler has already been set");
             }
             isStatusHandlerChanged = true;
-            checkUnbound();
             statusChangeHandler = handler;
             return this;
         }
 
+        @Override
+        public HasValue<FIELDVALUE> getField() {
+            return field;
+        }
+
+        /**
+         * Returns the {@code Binder} connected to this {@code Binding}
+         * instance.
+         * 
+         * @return the binder
+         */
+        protected Binder<BEAN> getBinder() {
+            return binder;
+        }
+
+        /**
+         * Throws if this binding is already completed and cannot be modified
+         * anymore.
+         * 
+         * @throws IllegalStateException
+         *             if this binding is already bound
+         */
+        protected void checkUnbound() {
+            if (getter != null) {
+                throw new IllegalStateException(
+                        "cannot modify binding: already bound to a property");
+            }
+        }
+
         private void bind(BEAN bean) {
             setFieldValue(bean);
-            onValueChange = field
-                    .addValueChangeListener(e -> storeFieldValue(bean));
+            onValueChange = getField().addValueChangeListener(
+                    e -> storeFieldValue(bean));
         }
 
         @Override
@@ -512,13 +518,13 @@ public class Binder<BEAN> implements Serializable {
          */
         private void setFieldValue(BEAN bean) {
             assert bean != null;
-            field.setValue(convertDataToFieldType(bean));
+            getField().setValue(convertDataToFieldType(bean));
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
             return converterValidatorChain.convertToPresentation(
-                    getter.apply(bean),
-                    ((AbstractComponent) field).getLocale());
+                    getter.apply(bean), ((AbstractComponent) getField())
+                            .getLocale());
         }
 
         /**
@@ -533,26 +539,6 @@ public class Binder<BEAN> implements Serializable {
             if (setter != null) {
                 getTargetValue().ifPresent(value -> setter.accept(bean, value));
             }
-        }
-
-        private void checkUnbound() {
-            if (getter != null) {
-                throw new IllegalStateException(
-                        "cannot modify binding: already bound to a property");
-            }
-        }
-
-        @Override
-        public HasValue<FIELDVALUE> getField() {
-            return field;
-        }
-
-        private <NEWTARGET> BindingImpl<BEAN, FIELDVALUE, NEWTARGET> createNewBinding(
-                Converter<TARGET, NEWTARGET> converter) {
-            BindingImpl<BEAN, FIELDVALUE, NEWTARGET> newBinding = new BindingImpl<>(
-                    binder, field, converterValidatorChain.chain(converter),
-                    statusChangeHandler);
-            return newBinding;
         }
 
         private void fireStatusChangeEvent(Result<TARGET> result) {
@@ -634,7 +620,9 @@ public class Binder<BEAN> implements Serializable {
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
-        return createBinding(field);
+        Objects.requireNonNull(field, "field cannot be null");
+        return createBinding(field, Converter.identity(),
+                this::handleValidationStatusChange);
     }
 
     /**
@@ -714,11 +702,12 @@ public class Binder<BEAN> implements Serializable {
      * @return the validation result.
      */
     public List<ValidationError<?>> validate() {
+
         List<ValidationError<?>> resultErrors = new ArrayList<>();
-        for (BindingImpl<BEAN, ?, ?> binding : bindings) {
-            Result<?> result = binding.validate();
-            result.ifError(errorMessage -> resultErrors
-                    .add(new ValidationError<>(binding.field, errorMessage)));
+        for (BindingImpl<?, ?, ?> binding : bindings) {
+            binding.validate().ifError(errorMessage -> resultErrors
+                    .add(new ValidationError<>(binding.getField(),
+                            errorMessage)));
         }
         return resultErrors;
     }
@@ -768,16 +757,22 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param <FIELDVALUE>
      *            the value type of the field
+     * @param <TARGET>
+     *            the target data type
      * @param field
-     *            the field to bind
+     *            the field to bind, not null
+     * @param converter
+     *            the converter for converting between FIELDVALUE and TARGET
+     *            types, not null
+     * @param handler
+     *            the handler to notify of status changes, not null
      * @return the new incomplete binding
      */
-    protected <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> createBinding(
-            HasValue<FIELDVALUE> field) {
-        Objects.requireNonNull(field, "field cannot be null");
-        BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> b = new BindingImpl<BEAN, FIELDVALUE, FIELDVALUE>(
-                this, field, this::handleValidationStatusChange);
-        return b;
+    protected <FIELDVALUE, TARGET> BindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
+            HasValue<FIELDVALUE> field,
+            Converter<FIELDVALUE, TARGET> converter,
+            StatusChangeHandler handler) {
+        return new BindingImpl<>(this, field, converter, handler);
     }
 
     /**
@@ -819,7 +814,7 @@ public class Binder<BEAN> implements Serializable {
      * @param event
      *            the validation event
      */
-    private void handleValidationStatusChange(
+    protected void handleValidationStatusChange(
             ValidationStatusChangeEvent event) {
         HasValue<?> source = event.getSource();
         clearError(source);

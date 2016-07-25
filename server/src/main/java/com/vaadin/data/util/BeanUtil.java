@@ -44,70 +44,102 @@ public final class BeanUtil implements Serializable {
      * both the setter and the getter for a property must be in the same
      * interface and should not be overridden in subinterfaces for the discovery
      * to work correctly.
-     *
+     * <p>
      * NOTE : This utility method relies on introspection (and returns
      * PropertyDescriptor) which is a part of java.beans package. The latter
      * package could require bigger JDK in the future (with Java 9+). So it may
      * be changed in the future.
-     *
+     * <p>
      * For interfaces, the iteration is depth first and the properties of
      * superinterfaces are returned before those of their subinterfaces.
-     *
-     * @param beanClass
-     * @return
+     * 
+     * @param beanType
+     *            the type whose properties to query
+     * @return a list of property descriptors of the given type
      * @throws IntrospectionException
+     *             if the introspection fails
      */
-    public static List<PropertyDescriptor> getBeanPropertyDescriptor(
-            final Class<?> beanClass) throws IntrospectionException {
+    public static List<PropertyDescriptor> getBeanPropertyDescriptors(
+            final Class<?> beanType) throws IntrospectionException {
         // Oracle bug 4275879: Introspector does not consider superinterfaces of
         // an interface
-        if (beanClass.isInterface()) {
-            List<PropertyDescriptor> propertyDescriptors = new ArrayList<PropertyDescriptor>();
+        if (beanType.isInterface()) {
+            List<PropertyDescriptor> propertyDescriptors = new ArrayList<>();
 
-            for (Class<?> cls : beanClass.getInterfaces()) {
-                propertyDescriptors.addAll(getBeanPropertyDescriptor(cls));
+            for (Class<?> cls : beanType.getInterfaces()) {
+                propertyDescriptors.addAll(getBeanPropertyDescriptors(cls));
             }
 
-            BeanInfo info = Introspector.getBeanInfo(beanClass);
+            BeanInfo info = Introspector.getBeanInfo(beanType);
             propertyDescriptors.addAll(getPropertyDescriptors(info));
 
             return propertyDescriptors;
         } else {
-            BeanInfo info = Introspector.getBeanInfo(beanClass);
+            BeanInfo info = Introspector.getBeanInfo(beanType);
             return getPropertyDescriptors(info);
         }
     }
 
     /**
-     * Returns {@code propertyId} class for property declared in {@code clazz}.
-     * Property could be of form "property.subProperty[.subProperty2]" i.e.
-     * refer to some nested property.
-     *
-     * @param clazz
-     *            class where property is declared
-     * @param propertyId
-     *            property of form "property" or
-     *            "property.subProperty[.subProperty2]"
-     * @return class of the property
+     * Returns the type of the property with the given name and declaring class.
+     * The property name may refer to a nested property, eg.
+     * "property.subProperty" or "property.subProperty1.subProperty2". The
+     * property must have a public read method (or a chain of read methods in
+     * case of a nested property).
+     * 
+     * @param beanType
+     *            the type declaring the property
+     * @param propertyName
+     *            the name of the property
+     * @return the property type
      * @throws IntrospectionException
+     *             if the introspection fails
      */
-    public static Class<?> getPropertyType(Class<?> clazz, String propertyId)
+    public static Class<?> getPropertyType(Class<?> beanType,
+            String propertyName)
             throws IntrospectionException {
-        if (propertyId.contains(".")) {
-            String[] parts = propertyId.split("\\.", 2);
-            // Get the type of the field in the "cls" class
-            Class<?> propertyBean = getPropertyType(clazz, parts[0]);
-            // Find the rest from the sub type
-            return getPropertyType(propertyBean, parts[1]);
+        PropertyDescriptor descriptor = getPropertyDescriptor(beanType,
+                propertyName);
+        if (descriptor != null) {
+            return descriptor.getPropertyType();
         } else {
-            List<PropertyDescriptor> descriptors = getBeanPropertyDescriptor(
-                    clazz);
+            return null;
+        }
+    }
+
+    /**
+     * Returns the property descriptor for the property of the given name and
+     * declaring class. The property name may refer to a nested property, eg.
+     * "property.subProperty" or "property.subProperty1.subProperty2". The
+     * property must have a public read method (or a chain of read methods in
+     * case of a nested property).
+     * 
+     * @param beanType
+     *            the type declaring the property
+     * @param propertyName
+     *            the name of the property
+     * @return the corresponding descriptor
+     * @throws IntrospectionException
+     *             if the introspection fails
+     */
+    public static PropertyDescriptor getPropertyDescriptor(Class<?> beanType,
+            String propertyName) throws IntrospectionException {
+        if (propertyName.contains(".")) {
+            String[] parts = propertyName.split("\\.", 2);
+            // Get the type of the field in the bean class
+            Class<?> propertyBean = getPropertyType(beanType, parts[0]);
+            // Find the rest from the sub type
+            return getPropertyDescriptor(propertyBean, parts[1]);
+        } else {
+            List<PropertyDescriptor> descriptors = getBeanPropertyDescriptors(
+                    beanType);
 
             for (PropertyDescriptor descriptor : descriptors) {
                 final Method getMethod = descriptor.getReadMethod();
-                if (descriptor.getName().equals(propertyId) && getMethod != null
+                if (descriptor.getName().equals(propertyName)
+                        && getMethod != null
                         && getMethod.getDeclaringClass() != Object.class) {
-                    return descriptor.getPropertyType();
+                    return descriptor;
                 }
             }
             return null;
@@ -118,8 +150,7 @@ public final class BeanUtil implements Serializable {
     private static List<PropertyDescriptor> getPropertyDescriptors(
             BeanInfo beanInfo) {
         PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
-        List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>(
-                descriptors.length);
+        List<PropertyDescriptor> result = new ArrayList<>(descriptors.length);
         for (PropertyDescriptor descriptor : descriptors) {
             try {
                 Method readMethod = getMethodFromBridge(

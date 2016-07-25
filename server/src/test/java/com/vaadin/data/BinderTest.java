@@ -377,7 +377,7 @@ public class BinderTest {
         TextField field = new TextField();
         StatusBean bean = new StatusBean();
         bean.setStatus("1");
-        Binder<StatusBean> binder = new Binder<StatusBean>();
+        Binder<StatusBean> binder = new Binder<>();
 
         Binding<StatusBean, String, String> binding = binder.forField(field)
                 .withConverter(presentation -> {
