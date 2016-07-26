@@ -292,9 +292,15 @@ public abstract class Compare implements Filter {
             return null == value1 ? 0 : -1;
         } else if (null == value1) {
             return 1;
-        } else if (getValue() instanceof Comparable
-                && value1.getClass().isAssignableFrom(getValue().getClass())) {
-            return -((Comparable) getValue()).compareTo(value1);
+        } else if (getValue() instanceof Comparable) {
+            if (value1.getClass().isInstance(getValue())) {
+                return -((Comparable) getValue()).compareTo(value1);
+            } else if (getValue().getClass().isInstance(value1)) {
+                // isInstance returns true if value1 is a sub-type of
+                // getValue(), i.e. value1 must here be Comparable
+                return ((Comparable) value1).compareTo(getValue());
+            }
+
         }
         throw new IllegalArgumentException("Could not compare the arguments: "
                 + value1 + ", " + getValue());
