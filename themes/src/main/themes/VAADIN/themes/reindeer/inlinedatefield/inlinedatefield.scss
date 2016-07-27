@@ -1,8 +1,0 @@
-@mixin reindeer-inlinedatefield ($primaryStyleName : v-inline-datefield) {
-    
-    @include reindeer-datefield(v-inline-datefield);
-    
-    .#{$primaryStyleName} {
-        line-height:14px; /* Override popup datefields line-height:0 to get correct line heights */
-    }        
-}

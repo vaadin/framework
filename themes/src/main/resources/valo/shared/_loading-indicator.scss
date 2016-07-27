@@ -1,0 +1,163 @@
+@-webkit-keyframes v-rotate-360 {
+   to {-webkit-transform: rotate(360deg);}
+}
+@-moz-keyframes v-rotate-360 {
+   to {-moz-transform: rotate(360deg);}
+}
+@-o-keyframes v-rotate-360 {
+   to {-o-transform: rotate(360deg);}
+}
+@keyframes v-rotate-360 {
+   to {transform: rotate(360deg);}
+}
+
+/**
+ * Creates a spinner to be used as a loading indicator. On browsers which do not
+ * support CSS animations, an animated GIF image is used as a fallback.
+ *
+ * @param {size} $size (24px) - the diameter of the spinner, in pixels. Should be divisible by 2, increased by 1px if not
+ * @param {size} $thickness (2px) - the thickness or width of the border of the spinner
+ * @param {color} $color ($v-focus-color) - the color of the border of the spinner
+ * @param {time} $speed (500ms) - the speed of the spinning animation
+ */
+@mixin valo-spinner ($size: 24px, $thickness: 2px, $color: $v-focus-color, $speed: 500ms) {
+  // Make size divisible by 2, so that the rotation won't jiggle
+  $size: round($size) + round($size) % 2;
+  height: $size !important;
+  width: $size !important;
+  box-sizing: border-box;
+  border: $thickness solid transparentize($color, .8);
+  border-top-color: $color;
+  border-right-color: $color;
+  border-radius: 100%;
+  @include animation(v-rotate-360 $speed infinite linear);
+  pointer-events: none;
+
+  // No CSS animation in IE8 and IE9
+  .v-ie8 &,
+  .v-ie9 & {
+    border: none;
+    border-radius: $v-border-radius;
+    background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50% 50%;
+    background-size: 80%;
+  }
+
+  // No background-size for IE8
+  .v-ie8 & {
+    min-width: 30px;
+    min-height: 30px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * The color of the main loading indicator bar.
+ * @type color
+ */
+$v-loading-indicator-color: $v-focus-color !default;
+
+/**
+ * The height of the main loading indicator bar.
+ *
+ * @type size
+ */
+$v-loading-indicator-bar-height: ceil($v-unit-size/10) !default;
+
+/**
+ * The height of the main loading indicator bar when the request to the server
+ * is taking longer than usual and the user is notified that they should wait.
+ *
+ * @type size
+ */
+$v-loading-indicator-bar-height--wait: ceil($v-unit-size/6) !default;
+
+
+
+@include keyframes(v-progress-start) {
+  0% { width: 0%; }
+  100% { width: 50%; }
+}
+
+@include keyframes(v-progress-delay) {
+  0% { width: 50%; }
+  100% { width: 90%; }
+}
+
+@include keyframes(v-progress-wait) {
+  0% { width: 90%; height: $v-loading-indicator-bar-height; }
+  3% { width: 91%; height: $v-loading-indicator-bar-height--wait; }
+  100% { width: 96%; height: $v-loading-indicator-bar-height--wait; }
+}
+
+@include keyframes(v-progress-wait-pulse) {
+  0% { opacity: 1; }
+  50% { opacity: .1; }
+  100% { opacity: 1; }
+}
+
+
+/*
+ * Outputs the necessary styles to create the main loading indicator bar.
+ *
+ * @access private
+ */
+@mixin valo-loading-bar {
+
+  .v-loading-indicator {
+    position: fixed !important;
+    z-index: 99999;
+    left: 0;
+    right: auto;
+    top: 0;
+    width: 50%;
+    opacity: 1;
+    height: $v-loading-indicator-bar-height;
+    background-color: $v-loading-indicator-color;
+    //@include linear-gradient(to right, rgba($v-loading-indicator-color,0) 0%, $v-loading-indicator-color 100%);
+    pointer-events: none;
+
+    @include transition(none);
+    @include animation(v-progress-start 1000ms 200ms both);
+    //@include animation-fill-mode(forwards);
+
+    &[style*="none"] {
+      // Chrome skips the transitions because it thinks the element is display: none;
+      display: block !important;
+      width: 100% !important;
+      opacity: 0;
+      @include animation(none);
+      @include transition(opacity 500ms 300ms, width 300ms);
+    }
+  }
+
+  .v-loading-indicator-delay {
+    width: 90%;
+    .v-ff & {
+      width: 50%;
+    }
+    @include animation(v-progress-delay 3.8s forwards);
+  }
+
+  .v-loading-indicator-wait {
+    width: 96%;
+    .v-ff & {
+      width: 90%;
+    }
+    @include animation(v-progress-wait 5s forwards, v-progress-wait-pulse 1s 4s infinite backwards);
+  }
+
+}

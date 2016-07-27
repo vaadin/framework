@@ -15,10 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -33,11 +29,11 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.ClassResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -56,6 +52,10 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
 @Theme("tests-valo")
 @Title("Valo Theme Test")
 @PreserveOnRefresh
@@ -66,13 +66,8 @@ public class ValoThemeUI extends UI {
     private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
     static {
         themeVariants.put("tests-valo", "Default");
-        themeVariants.put("tests-valo-blueprint", "Blueprint");
         themeVariants.put("tests-valo-dark", "Dark");
-        themeVariants.put("tests-valo-facebook", "Facebook");
-        themeVariants.put("tests-valo-flatdark", "Flat dark");
         themeVariants.put("tests-valo-flat", "Flat");
-        themeVariants.put("tests-valo-light", "Light");
-        themeVariants.put("tests-valo-metro", "Metro");
     }
     private TestIcon testIcon = new TestIcon(100);
 
@@ -111,6 +106,7 @@ public class ValoThemeUI extends UI {
         root.setWidth("100%");
 
         root.addMenu(buildMenu());
+        addStyleName(ValoTheme.UI_WITH_MENU);
 
         navigator = new Navigator(this, viewDisplay);
 
@@ -141,6 +137,8 @@ public class ValoThemeUI extends UI {
             navigator.navigateTo("common");
         }
 
+        navigator.setErrorView(CommonParts.class);
+
         navigator.addViewChangeListener(new ViewChangeListener() {
 
             @Override
@@ -161,7 +159,7 @@ public class ValoThemeUI extends UI {
                             Component c = it.next();
                             if (c.getCaption() != null
                                     && c.getCaption().startsWith(
-                                            item.getValue())) {
+                                    item.getValue())) {
                                 c.addStyleName("selected");
                                 break;
                             }
@@ -185,7 +183,7 @@ public class ValoThemeUI extends UI {
         return getPage().getWebBrowser().getBrowserApplication()
                 .contains("PhantomJS")
                 || (getPage().getWebBrowser().isIE() && getPage()
-                        .getWebBrowser().getBrowserMajorVersion() <= 9);
+                .getWebBrowser().getBrowserMajorVersion() <= 9);
     }
 
     static boolean isTestMode() {
@@ -237,14 +235,14 @@ public class ValoThemeUI extends UI {
         menuItems.put("colorpickers", "Color Pickers");
         menuItems.put("menubars", "Menu Bars");
         menuItems.put("trees", "Trees");
-        menuItems.put("tables", "Tables");
+        menuItems.put("tables", "Tables & Grids");
         menuItems.put("dragging", "Drag and Drop");
         menuItems.put("panels", "Panels");
         menuItems.put("splitpanels", "Split Panels");
         menuItems.put("tabs", "Tabs");
         menuItems.put("accordions", "Accordions");
         menuItems.put("popupviews", "Popup Views");
-        menuItems.put("calendar", "Calendar");
+            menuItems.put("calendar", "Calendar");
         menuItems.put("forms", "Forms");
 
         HorizontalLayout top = new HorizontalLayout();
@@ -279,10 +277,10 @@ public class ValoThemeUI extends UI {
         MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         StringGenerator sg = new StringGenerator();
-        MenuItem settingsItem = settings.addItem(
-                sg.nextString(true) + " " + sg.nextString(true)
-                        + sg.nextString(false), new ThemeResource(
-                        "../tests-valo/img/profile-pic-300px.jpg"), null);
+        MenuItem settingsItem = settings.addItem(sg.nextString(true)
+                        + " " + sg.nextString(true) + sg.nextString(false),
+                new ClassResource("profile-pic-300px.jpg"),
+                null);
         settingsItem.addItem("Edit Profile", null);
         settingsItem.addItem("Preferences", null);
         settingsItem.addSeparator();
@@ -395,8 +393,8 @@ public class ValoThemeUI extends UI {
     static final String INDEX_PROPERTY = "index";
 
     @SuppressWarnings("unchecked")
-    static Container generateContainer(final int size,
-            final boolean hierarchical) {
+    static IndexedContainer generateContainer(final int size,
+                                              final boolean hierarchical) {
         TestIcon testIcon = new TestIcon(90);
         IndexedContainer container = hierarchical ? new HierarchicalContainer()
                 : new IndexedContainer();

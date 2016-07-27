@@ -235,18 +235,206 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/themes</directory>
-				<excludes>
-					<exclude>**/*.scss</exclude>
-				</excludes>
-			</resource>
-			<resource>
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 
-
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.vaadin</groupId>
+									<artifactId>vaadin-themes</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>false</overWrite>
+									<outputDirectory>
+										${project.build.directory}/scss/
+									</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-fonts</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>
+										${project.build.directory}/scss/fonts/
+									</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+							<outputDirectory>
+								${project.build.outputDirectory}/VAADIN/themes/fonts/
+							</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-img</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>
+										${project.build.directory}/scss/img/
+									</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+							<outputDirectory>
+								${project.build.outputDirectory}/VAADIN/themes/img/
+							</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-runo</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>
+										${project.build.directory}/scss/runo/
+									</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+							<outputDirectory>
+								${project.build.outputDirectory}/VAADIN/themes/runo/
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>nl.geodienstencentrum.maven</groupId>
+				<artifactId>sass-maven-plugin</artifactId>
+				<version>2.20</version>
+				<executions>
+					<execution>
+						<id>test-valo-css</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>update-stylesheets</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<buildDirectory>
+						${project.build.directory}/scss/
+					</buildDirectory>
+					<destination>
+						${project.build.outputDirectory}/VAADIN/themes/
+					</destination>
+					<sassOptions>
+						<debug_info>true</debug_info>
+						<sourcemap>:file</sourcemap>
+					</sassOptions>
+					<useBourbon>true</useBourbon>
+					<resources>
+						<resource>
+							<source>
+								<directory>
+									${project.build.directory}/scss/valo
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/valo
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo-contrast
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo-contrast
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo-dark
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo-dark
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo-disabled-animations
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo-disabled-animations
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo-flat
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo-flat
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
+									${basedir}/src/main/scss/tests-valo-textfield-bevel
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/tests-valo-textfield-bevel
+							</destination>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
@@ -259,7 +447,6 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
-							<goal>compile-theme</goal>
 						</goals>
 					</execution>
 				</executions>

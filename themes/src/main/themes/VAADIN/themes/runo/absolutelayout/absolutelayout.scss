@@ -1,8 +1,0 @@
-@mixin runo-absolutelayout($primaryStyleName : v-absolutelayout) {
-
-.#{$primaryStyleName}-wrapper {
-	position: absolute;
-	overflow:hidden;
-}
-
-}

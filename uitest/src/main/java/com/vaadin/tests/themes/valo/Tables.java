@@ -18,16 +18,21 @@ package com.vaadin.tests.themes.valo;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -46,7 +51,10 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class Tables extends VerticalLayout implements View {
 
-    final Container normalContainer = ValoThemeUI.generateContainer(200, false);
+    final IndexedContainer normalContainer = ValoThemeUI.generateContainer(200,
+            false);
+    final IndexedContainer gridContainer = ValoThemeUI.generateContainer(200,
+            false);
     final Container hierarchicalContainer = ValoThemeUI.generateContainer(200,
             true);
 
@@ -67,14 +75,22 @@ public class Tables extends VerticalLayout implements View {
     CheckBox componentsInCells = new CheckBox("Components in Cells", false);
 
     Table table;
+    Grid grid;
 
     public Tables() {
         setMargin(true);
         setSpacing(true);
 
-        Label h1 = new Label("Tables");
+        Label h1 = new Label("Tables & Grids");
         h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
+
+        Label disclaimer = new Label(
+                "<p>Note that most of the toggles only affect the Table component. The Grid component supports footers, expand ratios, row indexes/captions/icons and cell renderers, but those have not been implemented here.</p>",
+                ContentMode.HTML);
+        disclaimer.setCaption("Toggle features/styles");
+        addComponent(disclaimer);
+        disclaimer.addStyleName(ValoTheme.LABEL_SMALL);
 
         HorizontalLayout wrap = new HorizontalLayout();
         wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
@@ -89,24 +105,31 @@ public class Tables extends VerticalLayout implements View {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (table == null) {
-                    table = new Table();
+                    table = new Table("Table component");
                     table.setContainerDataSource(normalContainer);
                     addComponent(table);
+                }
+                if (grid == null) {
+                    grid = new Grid("Grid component");
+                    grid.setContainerDataSource(gridContainer);
+                    addComponent(grid);
                 }
                 if (hierarchical.getValue() && table instanceof Table) {
                     removeComponent(table);
                     table = new TreeTable();
                     table.setContainerDataSource(hierarchicalContainer);
                     addComponent(table);
+                    removeComponent(grid);
                 } else if (!hierarchical.getValue()
                         && table instanceof TreeTable) {
                     removeComponent(table);
                     table = new Table();
                     table.setContainerDataSource(normalContainer);
                     addComponent(table);
+                    addComponent(grid);
                 }
 
-                configure(table, footer.getValue(), sized.getValue(),
+                configure(table, grid, footer.getValue(), sized.getValue(),
                         expandRatios.getValue(), stripes.getValue(),
                         verticalLines.getValue(), horizontalLines.getValue(),
                         borderless.getValue(), headers.getValue(),
@@ -136,17 +159,30 @@ public class Tables extends VerticalLayout implements View {
 
     }
 
-    static void configure(Table table, boolean footer, boolean sized,
-            boolean expandRatios, boolean stripes, boolean verticalLines,
-            boolean horizontalLines, boolean borderless, boolean headers,
-            boolean compact, boolean small, boolean rowIndex,
-            boolean rowCaption, boolean rowIcon, boolean componentsInRows) {
+    static void configure(Table table, Grid grid, boolean footer,
+                          boolean sized, boolean expandRatios, boolean stripes,
+                          boolean verticalLines, boolean horizontalLines, boolean borderless,
+                          boolean headers, boolean compact, boolean small, boolean rowIndex,
+                          boolean rowCaption, boolean rowIcon, boolean componentsInRows) {
         table.setSelectable(true);
         table.setMultiSelect(true);
+        grid.setSelectionMode(SelectionMode.MULTI);
+
         table.setSortEnabled(true);
+        for (Column c : grid.getColumns()) {
+            if (!c.getPropertyId().equals("icon")) {
+                c.setSortable(true);
+            }
+            c.setHidable(true);
+        }
+
         table.setColumnCollapsingAllowed(true);
         table.setColumnReorderingAllowed(true);
+        grid.setColumnReorderingAllowed(true);
+
         table.setPageLength(6);
+        grid.setHeightByRows(6);
+
         table.addActionHandler(ValoThemeUI.getActionHandler());
         table.setDragMode(TableDragMode.MULTIROW);
         table.setDropHandler(new DropHandler() {
@@ -187,7 +223,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("textfield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     TextField tf = new TextField();
                     tf.setInputPrompt("Type here…");
                     // tf.addStyleName(ValoTheme.TABLE_COMPACT);
@@ -202,7 +238,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("datefield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     DateField tf = new DateField();
                     tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
@@ -216,7 +252,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("combobox", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     ComboBox tf = new ComboBox();
                     tf.setInputPrompt("Select");
                     tf.addStyleName(ValoTheme.TABLE_COMPACT);
@@ -231,7 +267,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("button", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     Button b = new Button("Button");
                     b.addStyleName(ValoTheme.BUTTON_SMALL);
                     return b;
@@ -242,7 +278,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("label", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     Label label = new Label("Label component");
                     label.setSizeUndefined();
                     label.addStyleName(ValoTheme.LABEL_BOLD);
@@ -254,7 +290,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("checkbox", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     CheckBox cb = new CheckBox(null, true);
                     return cb;
                 }
@@ -264,7 +300,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("optiongroup", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     OptionGroup op = new OptionGroup();
                     op.addItem("Male");
                     op.addItem("Female");
@@ -277,7 +313,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("slider", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     Slider s = new Slider();
                     s.setValue(30.0);
                     return s;
@@ -288,7 +324,7 @@ public class Tables extends VerticalLayout implements View {
             table.addGeneratedColumn("progress", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
-                        Object columnId) {
+                                           Object columnId) {
                     ProgressBar bar = new ProgressBar();
                     bar.setValue(0.7f);
                     return bar;
@@ -306,9 +342,18 @@ public class Tables extends VerticalLayout implements View {
 
         if (sized) {
             table.setWidth("400px");
+            grid.setWidth("400px");
             table.setHeight("300px");
+            grid.setHeight("300px");
         } else {
             table.setSizeUndefined();
+            grid.setSizeUndefined();
+        }
+
+        if (componentsInRows) {
+            table.setWidth("100%");
+        } else {
+            table.setWidth(null);
         }
 
         if (expandRatios) {

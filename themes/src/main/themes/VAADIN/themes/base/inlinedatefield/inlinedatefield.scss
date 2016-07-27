@@ -1,5 +1,0 @@
-@mixin base-inline-datefield($primaryStyleName : v-inline-datefield){
-        
-    /* FIXME $primaryStyleName should be passed to the the mixing instead of the default. Fix when SASS compiler works. #9821 */
-    @include base-datefield(v-inline-datefield);
-}

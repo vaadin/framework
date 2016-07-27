@@ -1,0 +1,591 @@
+$v-grid-border-size: 1px !default;
+$v-grid-border: $v-grid-border-size solid #ddd !default;
+$v-grid-cell-vertical-border: $v-grid-border !default;
+$v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
+$v-grid-cell-focused-border: 1px solid !default;
+$v-grid-header-border: $v-grid-border !default;
+$v-grid-footer-border: $v-grid-header-border !default;
+
+$v-grid-row-height: round($v-font-size * 1.5) !default;
+$v-grid-row-background-color: #fff !default;
+$v-grid-row-stripe-background-color: darken($v-grid-row-background-color, 5%) !default;
+$v-grid-row-selected-background-color: darken($v-grid-row-background-color, 25%) !default;
+$v-grid-row-focused-background-color: null !default;
+
+$v-grid-header-row-height: null !default;
+$v-grid-header-font-size: $v-font-size !default;
+$v-grid-header-background-color: $v-grid-row-background-color !default;
+$v-grid-header-drag-marked-color: $v-grid-row-selected-background-color !default;
+
+$v-grid-footer-row-height: $v-grid-header-row-height !default;
+$v-grid-footer-font-size: $v-grid-header-font-size !default;
+$v-grid-footer-background-color: $v-grid-header-background-color !default;
+
+$v-grid-cell-padding-horizontal: 10px !default;
+
+$v-grid-editor-background-color: $v-grid-row-background-color !default;
+
+$v-grid-details-marker-width: 2px !default;
+$v-grid-details-marker-color: $v-grid-row-selected-background-color !default;
+$v-grid-details-border-top: $v-grid-cell-horizontal-border !default;
+$v-grid-details-border-top-stripe: $v-grid-cell-horizontal-border !default;
+$v-grid-details-border-bottom: 1px solid darken($v-grid-row-stripe-background-color, 10%) !default;
+$v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-color, 10%) !default;
+
+@import "../escalator/escalator";
+
+
+@mixin base-grid($primaryStyleName: v-grid) {
+
+  @include base-escalator($primaryStyleName: $primaryStyleName, $background-color: $v-grid-row-background-color);
+
+  .#{$primaryStyleName} {
+    outline: none;
+  }
+
+  .#{$primaryStyleName}-scroller-vertical,
+  .#{$primaryStyleName}-scroller-horizontal {
+    border: $v-grid-border;
+  }
+
+  .#{$primaryStyleName}-scroller-vertical {
+    border-left: none;
+  }
+
+  .#{$primaryStyleName}-scroller-horizontal {
+    border-top: none;
+  }
+
+  .#{$primaryStyleName}-tablewrapper {
+    border: $v-grid-border;
+  }
+
+  // Column drag and drop elements
+
+  .#{$primaryStyleName} .header-drag-table {
+    border-spacing: 0;
+    position: relative;
+    table-layout: fixed;
+    width: inherit; // a decent default fallback
+
+    .#{$primaryStyleName}-header {
+      position: absolute;
+      > .#{$primaryStyleName}-cell {
+        border: $v-grid-border;
+        margin-top: -10px;
+        opacity: 0.9;
+        filter: alpha(opacity=90); // IE8
+        z-index: 30000;
+      }
+
+      > .#{$primaryStyleName}-drop-marker {
+        background-color: $v-grid-header-drag-marked-color;
+        position: absolute;
+        width: 3px;
+      }
+    }
+  }
+
+  // Sidebar
+
+  .#{$primaryStyleName}-sidebar.v-contextmenu {
+    @include box-shadow(none);
+    border-radius: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background-color: $v-grid-header-background-color;
+    border: $v-grid-header-border;
+    padding: 0;
+    z-index: 5;
+
+    &.#{$primaryStyleName}-sidebar-popup {
+      right: auto;
+    }
+
+    .#{$primaryStyleName}-sidebar-button {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      outline: none;
+      padding: 0 4px;
+      text-align: right;
+      line-height: 1;
+
+      &[disabled] {
+        cursor: default;
+      }
+
+      &::-moz-focus-inner {
+        border: 0;
+      }
+
+      &:after {
+        content: "\f0c9";
+        display: block;
+        font-family: ThemeIcons, sans-serif;
+        font-size: $v-grid-header-font-size;
+      }
+    }
+
+    &.closed {
+      border-radius: 0;
+    }
+
+    &.open {
+      .#{$primaryStyleName}-sidebar-button {
+        width: 100%;
+
+        &:after {
+          content: "\f0c9";
+          font-size: $v-grid-header-font-size;
+          line-height: 1;
+        }
+      }
+    }
+
+    .v-ie &.open .#{$primaryStyleName}-sidebar-button {
+      vertical-align: middle;
+    }
+
+    .v-ie8 &.open .#{$primaryStyleName}-sidebar-button:after {
+      vertical-align: middle;
+      text-align: center;
+      display: inline;
+    }
+
+    .#{$primaryStyleName}-sidebar-content {
+      padding: 4px 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      .gwt-MenuBar {
+        .gwt-MenuItem .column-hiding-toggle {
+          text-shadow: none;
+        }
+      }
+    }
+  }
+
+  // Common cell styles
+
+  .#{$primaryStyleName}-cell {
+    background-color: $v-grid-row-background-color;
+    padding: 0 $v-grid-cell-padding-horizontal;
+    line-height: $v-grid-row-height;
+    text-overflow: ellipsis;
+
+    > * {
+      line-height: $v-line-height;
+      vertical-align: middle;
+    }
+
+    // Force div elements to inline-blocks by default to enable vertical centering
+    > div {
+      display: inline-block;
+    }
+
+    &.frozen {
+      @include box-shadow(1px 0 2px rgba(0,0,0,.1));
+      border-right: $v-grid-cell-vertical-border;
+
+      @if $v-grid-cell-vertical-border and $v-grid-cell-vertical-border != none {
+        + th,
+        + td {
+          border-left: none;
+        }
+      }
+    }
+  }
+
+  // Rows
+
+  .#{$primaryStyleName}-row > td,
+  .#{$primaryStyleName}-editor-cells > div {
+    border-left: $v-grid-cell-vertical-border;
+    border-bottom: $v-grid-cell-horizontal-border;
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-cells.frozen > div {
+    @include box-shadow(1px 0 2px rgba(0,0,0,.1));
+    border-right: $v-grid-cell-vertical-border;
+    border-left: none;
+  }
+
+  .#{$primaryStyleName}-row-stripe > td {
+    background-color: $v-grid-row-stripe-background-color;
+  }
+
+  .#{$primaryStyleName}-row-selected > td {
+    background: $v-grid-row-selected-background-color;
+  }
+
+  .#{$primaryStyleName}-row-focused > td {
+    background-color: $v-grid-row-focused-background-color;
+  }
+
+  // Header
+
+  .#{$primaryStyleName}-header {
+    th {
+      position: relative;
+      background-color: $v-grid-header-background-color;
+      font-size: $v-grid-header-font-size;
+      font-weight: inherit;
+      border-left: $v-grid-header-border;
+      border-bottom: $v-grid-header-border;
+      line-height: $v-grid-header-row-height;
+      text-align: left;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    .sort-asc,
+    .sort-desc {
+      padding-right: round($v-grid-header-font-size * 1.2) + $v-grid-cell-padding-horizontal;
+
+      &:after {
+        font-family: ThemeIcons, sans-serif;
+        content: "\f0de" " " attr(sort-order);
+        position: absolute;
+        right: $v-grid-cell-padding-horizontal;
+        font-size: round($v-grid-header-font-size * 0.85);
+      }
+    }
+
+    .sort-desc:after {
+      content: "\f0dd" " " attr(sort-order);
+    }
+  }
+
+  .#{$primaryStyleName}-column-resize-handle {
+    position: absolute;
+    width: 2 * $v-grid-cell-padding-horizontal;
+    right: -$v-grid-cell-padding-horizontal;
+    top: 0px;
+    bottom: 0px;
+    cursor: col-resize;
+    z-index: 10;
+
+    // TODO should refactor into a mixin
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  // Footer
+
+  .#{$primaryStyleName}-footer {
+    td {
+      background-color: $v-grid-footer-background-color;
+      font-size: $v-grid-footer-font-size;
+      font-weight: inherit;
+      border-left: $v-grid-footer-border;
+      border-top: $v-grid-footer-border;
+      border-bottom: none;
+      line-height: $v-grid-footer-row-height;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  // Header and footer
+
+  .#{$primaryStyleName}-header,
+  .#{$primaryStyleName}-footer {
+    .#{$primaryStyleName}-cell {
+      overflow: visible;
+    }
+  }
+
+  .#{$primaryStyleName}-column-header-content,
+  .#{$primaryStyleName}-column-footer-content {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // Hackish, needed to override the "v-grid-cell > *" rule above
+    line-height: $v-grid-row-height;
+    vertical-align: baseline;
+  }
+
+  // Decorative elements
+
+  .#{$primaryStyleName}-header-deco {
+    border-top: $v-grid-header-border;
+    border-right: $v-grid-header-border;
+    background-color: $v-grid-header-background-color;
+  }
+
+  .#{$primaryStyleName}-footer-deco {
+    border-bottom: $v-grid-footer-border;
+    border-right: $v-grid-footer-border;
+    background-color: $v-grid-footer-background-color;
+  }
+
+  .#{$primaryStyleName}-horizontal-scrollbar-deco {
+    background-color: $v-grid-footer-background-color;
+    border: $v-grid-footer-border;
+    border-top: none;
+  }
+
+  // Focused cell style (common for all cells)
+
+  .#{$primaryStyleName}-cell-focused {
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $v-grid-cell-focused-border;
+      display: none;
+      pointer-events: none;
+    }
+
+    // IE 8-10 apply "pointer-events" only to SVG elements.
+    // Using an empty SVG instead of an empty text node makes IE
+    // obey the "pointer-events: none" and forwards click events
+    // to the underlying element. The data decodes to:
+    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
+    .ie8 &:before,
+    .ie9 &:before,
+    .ie10 &:before {
+      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+    }
+  }
+
+  .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-focused:before {
+    display: block;
+  }
+
+  .#{$primaryStyleName}.v-disabled:focus .#{$primaryStyleName}-cell-focused:before {
+    // Disabled Grid should not show cell focus outline
+    display: none;
+  }
+
+  // Editor
+
+  .#{$primaryStyleName}-editor {
+    position: absolute;
+    z-index: 20;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    border: $v-grid-border;
+    box-sizing: border-box;
+    margin-top: nth($v-grid-border, 1) * -1;
+    @include box-shadow(0 0 9px rgba(0,0,0,.2));
+
+    // Unbuffered footer needs to be 100% width to display correctly
+    &.unbuffered {
+      .#{$primaryStyleName}-editor-footer {
+        width: 100%;
+      }
+    }
+  }
+
+  .#{$primaryStyleName}-editor-cells {
+    position: relative;
+    white-space: nowrap;
+
+    &.frozen {
+      z-index: 2;
+    }
+
+    > div {
+      display: inline-block;
+      box-sizing: border-box;
+      vertical-align: middle;
+      background: $v-grid-editor-background-color;
+
+      &:first-child {
+        border-left: none;
+      }
+
+      > * {
+        vertical-align: middle;
+        display: inline-block;
+      }
+
+      .v-filterselect {
+      	padding-left: 0;
+      }
+
+      input[type="text"],
+      input[type="text"].v-filterselect-input,
+      input[type="password"] {
+      	padding-left: $v-grid-cell-padding-horizontal;
+      }
+
+      input[type="text"]:not(.v-filterselect-input),
+      input[type="password"] {
+      	padding-right: $v-grid-cell-padding-horizontal / 2;
+      }
+
+      input[type="checkbox"] {
+      	margin-left: $v-grid-cell-padding-horizontal;
+      }
+
+      .v-textfield,
+      .v-datefield,
+      .v-filterselect {
+        min-width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+        max-height: 100%;
+      }
+
+      .v-datefield-button {
+        .v-ie8 & {
+          margin-left: -37px;
+        }
+      }
+
+      .v-filterselect-button {
+        .v-ie8 & {
+          margin-left: -25px;
+        }
+      }
+
+      .v-select,
+      .v-select-select {
+        min-width: 100%;
+        max-width: 100%;
+      }
+
+      &.not-editable.#{$primaryStyleName}-cell {
+        float: none;
+      }
+    }
+
+    .error::before {
+      position: absolute;
+      display: block;
+      height: 0;
+      width: 0;
+      content: "";
+      border-top: 5px solid red;
+      border-right: 5px solid transparent;
+    }
+
+    .error,
+    .error > input {
+      background-color: #fee;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-footer {
+    display: table;
+    height: $v-grid-row-height;
+    border-top: $v-grid-cell-horizontal-border;
+    margin-top: nth($v-grid-cell-horizontal-border, 1) * -1;
+    background: $v-grid-row-background-color;
+    padding: 0 5px;
+
+    + .#{$primaryStyleName}-editor-cells > div {
+      border-bottom: none;
+      border-top: $v-grid-cell-horizontal-border;
+    }
+
+    &:first-child {
+      border-top: none;
+      margin-top: 0;
+      border-bottom: $v-grid-cell-horizontal-border;
+      margin-bottom: nth($v-grid-cell-horizontal-border, 1) * -1;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-message,
+  .#{$primaryStyleName}-editor-buttons {
+    display: table-cell;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .#{$primaryStyleName}-editor-message {
+    width: 100%;
+    position: relative;
+
+    > div {
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: $v-grid-row-height;
+      top: 0;
+    }
+  }
+
+  .#{$primaryStyleName}-editor-save {
+    margin-right: 4px;
+  }
+
+  .#{$primaryStyleName}-spacer {
+    // using padding since left is used with some position functions in escalator
+    padding-left: $v-grid-details-marker-width - $v-grid-border-size;
+  }
+
+  .#{$primaryStyleName}-spacer > td {
+    display: block;
+    padding: 0;
+
+    background-color: $v-grid-row-background-color;
+    border-top: $v-grid-details-border-top;
+    border-bottom: $v-grid-details-border-bottom;
+  }
+
+  .#{$primaryStyleName}-spacer.stripe > td {
+    background-color: $v-grid-row-stripe-background-color;
+    border-top: $v-grid-details-border-top-stripe;
+    border-bottom: $v-grid-details-border-bottom-stripe;
+  }
+
+  .#{$primaryStyleName}-spacer-deco-container {
+    border-top: $v-grid-border-size solid transparent; // same size as table wrapper border
+    position: relative;
+    top: 0; // escalator will override top for scrolling and margin-top for header offset.
+    z-index: 5;
+  }
+
+  .#{$primaryStyleName}-spacer-deco {
+    top: 0; // this will be overridden by code, but it's a good default.
+    left: 0;
+    width: $v-grid-details-marker-width;
+    background-color: $v-grid-details-marker-color;
+    position: absolute;
+    height: 100%; // this will be overridden by code, but it's a good default.
+    pointer-events: none;
+
+    // IE 8-10 apply "pointer-events" only to SVG elements.
+    // Using an empty SVG instead of an empty text node makes IE
+    // obey the "pointer-events: none" and forwards click events
+    // to the underlying element. The data decodes to:
+    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
+    .ie8 &:before,
+    .ie9 &:before,
+    .ie10 &:before {
+      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+    }
+  }
+
+  // Renderers
+
+  .#{$primaryStyleName}-cell > .v-progressbar {
+    width: 100%;
+  }
+}

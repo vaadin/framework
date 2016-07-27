@@ -16,6 +16,7 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.calendar.CalendarTestEvent;
@@ -177,7 +178,7 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     private Date resolveFirstDateOfWeek(Date today,
-            java.util.Calendar currentCalendar) {
+                                        java.util.Calendar currentCalendar) {
         int firstDayOfWeek = currentCalendar.getFirstDayOfWeek();
         currentCalendar.setTime(today);
         while (firstDayOfWeek != currentCalendar
@@ -188,7 +189,7 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     private Date resolveLastDateOfWeek(Date today,
-            java.util.Calendar currentCalendar) {
+                                       java.util.Calendar currentCalendar) {
         currentCalendar.setTime(today);
         currentCalendar.add(java.util.Calendar.DATE, 1);
         int firstDayOfWeek = currentCalendar.getFirstDayOfWeek();
@@ -304,6 +305,7 @@ public class CalendarTest extends GridLayout implements View {
         HorizontalLayout controlPanel = new HorizontalLayout();
         controlPanel.setSpacing(true);
         controlPanel.setWidth("100%");
+        controlPanel.setMargin(new MarginInfo(false, false, true, false));
         controlPanel.addComponent(localeSelect);
         controlPanel.addComponent(timeZoneSelect);
         controlPanel.addComponent(formatSelect);
@@ -311,21 +313,23 @@ public class CalendarTest extends GridLayout implements View {
         controlPanel.addComponent(readOnlyButton);
         controlPanel.addComponent(disabledButton);
         controlPanel.addComponent(addNewEvent);
+        controlPanel.setExpandRatio(addNewEvent, 1.0f);
 
         controlPanel.setComponentAlignment(timeZoneSelect,
                 Alignment.MIDDLE_LEFT);
         controlPanel.setComponentAlignment(formatSelect, Alignment.MIDDLE_LEFT);
         controlPanel.setComponentAlignment(localeSelect, Alignment.MIDDLE_LEFT);
         controlPanel.setComponentAlignment(hideWeekendsButton,
-                Alignment.MIDDLE_LEFT);
+                Alignment.BOTTOM_LEFT);
         controlPanel.setComponentAlignment(readOnlyButton,
-                Alignment.MIDDLE_LEFT);
+                Alignment.BOTTOM_LEFT);
         controlPanel.setComponentAlignment(disabledButton,
-                Alignment.MIDDLE_LEFT);
-        controlPanel.setComponentAlignment(addNewEvent, Alignment.MIDDLE_LEFT);
+                Alignment.BOTTOM_LEFT);
+        controlPanel.setComponentAlignment(addNewEvent, Alignment.BOTTOM_RIGHT);
 
         Label viewCaption = new Label("Calendar");
-        viewCaption.setStyleName(ValoTheme.LABEL_H1);
+        viewCaption.addStyleName(ValoTheme.LABEL_H1);
+        viewCaption.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         addComponent(viewCaption);
         addComponent(controlPanel);
         addComponent(hl);
@@ -394,6 +398,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private void initHideWeekEndButton() {
         hideWeekendsButton = new CheckBox("Hide weekends");
+        hideWeekendsButton.addStyleName(ValoTheme.CHECKBOX_SMALL);
         hideWeekendsButton.setImmediate(true);
         hideWeekendsButton
                 .addValueChangeListener(new Property.ValueChangeListener() {
@@ -422,6 +427,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private void initReadOnlyButton() {
         readOnlyButton = new CheckBox("Read-only mode");
+        readOnlyButton.addStyleName(ValoTheme.CHECKBOX_SMALL);
         readOnlyButton.setImmediate(true);
         readOnlyButton
                 .addValueChangeListener(new Property.ValueChangeListener() {
@@ -437,6 +443,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private void initDisabledButton() {
         disabledButton = new CheckBox("Disabled");
+        disabledButton.addStyleName(ValoTheme.CHECKBOX_SMALL);
         disabledButton.setImmediate(true);
         disabledButton
                 .addValueChangeListener(new Property.ValueChangeListener() {
@@ -452,6 +459,8 @@ public class CalendarTest extends GridLayout implements View {
 
     public void initAddNewEventButton() {
         addNewEvent = new Button("Add new event");
+        addNewEvent.addStyleName("primary");
+        addNewEvent.addStyleName(ValoTheme.BUTTON_SMALL);
         addNewEvent.addClickListener(new Button.ClickListener() {
 
             private static final long serialVersionUID = -8307244759142541067L;
@@ -471,7 +480,7 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     private void initFormFields(Layout formLayout,
-            Class<? extends CalendarEvent> eventClass) {
+                                Class<? extends CalendarEvent> eventClass) {
 
         startDateField = createDateField("Start date");
         endDateField = createDateField("End date");
@@ -690,6 +699,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private ComboBox createTimeZoneSelect() {
         ComboBox s = new ComboBox("Timezone");
+        s.addStyleName("tiny");
+        s.setWidth("10em");
         s.addContainerProperty("caption", String.class, "");
         s.setItemCaptionPropertyId("caption");
         s.setFilteringMode(FilteringMode.CONTAINS);
@@ -726,6 +737,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private ComboBox createCalendarFormatSelect() {
         ComboBox s = new ComboBox("Calendar format");
+        s.addStyleName("tiny");
+        s.setWidth("10em");
         s.addContainerProperty("caption", String.class, "");
         s.setItemCaptionPropertyId("caption");
 
@@ -753,6 +766,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private ComboBox createLocaleSelect() {
         ComboBox s = new ComboBox("Locale");
+        s.addStyleName("tiny");
+        s.setWidth("10em");
         s.addContainerProperty("caption", String.class, "");
         s.setItemCaptionPropertyId("caption");
         s.setFilteringMode(FilteringMode.CONTAINS);
@@ -854,29 +869,29 @@ public class CalendarTest extends GridLayout implements View {
 
     private void handleNextButtonClick() {
         switch (viewMode) {
-        case MONTH:
-            nextMonth();
-            break;
-        case WEEK:
-            nextWeek();
-            break;
-        case DAY:
-            nextDay();
-            break;
+            case MONTH:
+                nextMonth();
+                break;
+            case WEEK:
+                nextWeek();
+                break;
+            case DAY:
+                nextDay();
+                break;
         }
     }
 
     private void handlePreviousButtonClick() {
         switch (viewMode) {
-        case MONTH:
-            previousMonth();
-            break;
-        case WEEK:
-            previousWeek();
-            break;
-        case DAY:
-            previousDay();
-            break;
+            case MONTH:
+                previousMonth();
+                break;
+            case WEEK:
+                previousWeek();
+                break;
+            case DAY:
+                previousDay();
+                break;
         }
     }
 

@@ -1,0 +1,222 @@
+/**
+ *
+ *
+ *
+ * @group orderedlayout
+ */
+@mixin valo-orderedlayout-global {
+
+  div.v-layout.v-horizontal.v-widget {
+    white-space: nowrap;
+  }
+
+  .v-layout.v-vertical > .v-expand,
+  .v-layout.v-horizontal > .v-expand {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+  }
+
+  .v-slot,
+  .v-spacing {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+
+  // Clear any floats inside the slot, to prevent unwanted collapsing
+  .v-vertical > .v-slot:after {
+    display: inline-block;
+    clear: both;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .v-vertical > .v-slot,
+  .v-vertical > .v-expand > .v-slot {
+    display: block;
+    clear: both;
+  }
+
+  .v-horizontal > .v-slot,
+  .v-horizontal > .v-expand > .v-slot {
+    height: 100%;
+  }
+
+  /* Workaround for IE8+IE9 bug where clicking inside an input area which is inside a div with negative margin causes cursor position to jump to wrong position. See #11152 */
+  .v-horizontal > .v-expand > .v-slot {
+     position: relative;
+  }
+
+  .v-vertical > .v-spacing,
+  .v-vertical > .v-expand > .v-spacing {
+    width: 0 !important;
+    display: block;
+    clear: both;
+  }
+
+  .v-horizontal > .v-spacing,
+  .v-horizontal > .v-expand > .v-spacing {
+    height: 0 !important;
+  }
+
+  .v-align-middle:before,
+  .v-align-bottom:before,
+  .v-expand > .v-align-middle:before,
+  .v-expand > .v-align-bottom:before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    width: 0;
+  }
+
+  .v-align-middle,
+  .v-align-bottom {
+    white-space: nowrap;
+  }
+
+  .v-align-middle > .v-widget,
+  .v-align-bottom > .v-widget {
+    display: inline-block;
+  }
+
+  .v-align-middle,
+  .v-align-middle > .v-widget {
+    vertical-align: middle;
+  }
+
+  .v-align-bottom,
+  .v-align-bottom > .v-widget {
+    vertical-align: bottom;
+  }
+
+  .v-align-center {
+    text-align: center;
+  }
+
+  .v-align-center > .v-widget {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .v-align-right {
+    text-align: right;
+  }
+
+  .v-align-right > .v-widget {
+    margin-left: auto;
+  }
+
+  .v-has-caption,
+  .v-has-caption > .v-caption {
+    // Force natural width to zero
+    display: inline-block;
+  }
+
+  .v-caption-on-left,
+  .v-caption-on-right {
+    white-space: nowrap;
+  }
+
+  .v-caption-on-top > .v-caption,
+  .v-caption-on-bottom > .v-caption {
+    display: block;
+  }
+
+  .v-caption-on-left > .v-caption {
+    padding-right: .5em;
+  }
+
+  .v-caption-on-right > .v-caption {
+    //vertical-align: top;
+  }
+
+  .v-caption-on-left > .v-widget,
+  .v-caption-on-right > .v-widget {
+    display: inline-block;
+    //vertical-align: middle;
+  }
+
+  .v-has-caption.v-has-width > .v-widget {
+    width: 100% !important;
+  }
+
+  .v-has-caption.v-has-height > .v-widget {
+    height: 100% !important;
+  }
+
+}
+
+
+
+/**
+ *
+ *
+ * @param {bool} $include-additional-styles -
+ *
+ * @group orderedlayout
+ */
+@mixin valo-orderedlayout ($include-additional-styles: contains($v-included-additional-styles, orderedlayout) or contains($v-included-additional-styles, verticallayout) or contains($v-included-additional-styles, horizontallayout)) {
+
+  .v-margin-top {
+    padding-top: $v-layout-margin-top;
+  }
+
+  .v-margin-right {
+    padding-right: $v-layout-margin-right;
+  }
+
+  .v-margin-bottom {
+    padding-bottom: $v-layout-margin-bottom;
+  }
+
+  .v-margin-left {
+    padding-left: $v-layout-margin-left;
+  }
+
+  .v-spacing {
+    width: $v-layout-spacing-horizontal;
+    height: $v-layout-spacing-vertical;
+  }
+
+  @if $include-additional-styles {
+    .v-verticallayout-well,
+    .v-horizontallayout-well {
+      @include valo-panel-well-style;
+      @include valo-panel-adjust-content-margins;
+    }
+
+    .v-verticallayout-card,
+    .v-horizontallayout-card {
+      @include valo-panel-style;
+      @include valo-panel-adjust-content-margins;
+    }
+
+    .v-horizontallayout-wrapping {
+      @include valo-horizontallayout-wrapping-style;
+    }
+  }
+
+}
+
+
+/**
+ *
+ *
+ *
+ * @group orderedlayout
+ */
+@mixin valo-horizontallayout-wrapping-style {
+    white-space: normal !important;
+
+    & > .v-spacing + .v-slot,
+    & > .v-slot:first-child {
+      margin-bottom: $v-layout-spacing-vertical;
+    }
+
+    & > .v-slot:first-child:last-child {
+      margin-bottom: 0;
+    }
+}

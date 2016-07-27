@@ -1,0 +1,149 @@
+/**
+ * Outputs the selectors and properties for the Accordion component.
+ *
+ * @param {string} $primary-stylename (v-accordion) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @group accordion
+ */
+@mixin valo-accordion ($primary-stylename: v-accordion, $include-additional-styles: contains($v-included-additional-styles, accordion)) {
+  .#{$primary-stylename} {
+    @include valo-accordion-style;
+  }
+
+  .#{$primary-stylename}-item {
+    @include valo-accordion-item-style;
+  }
+
+  .#{$primary-stylename}-item-caption {
+    @include valo-accordion-item-caption-style;
+  }
+
+  .#{$primary-stylename}-item-content {
+    @include valo-accordion-item-content-style;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      border: none;
+      border-radius: 0;
+      @include box-shadow(none);
+
+      > .#{$primary-stylename}-item,
+      > .#{$primary-stylename}-item > div > .v-caption,
+      > .#{$primary-stylename}-item > .#{$primary-stylename}-item-content {
+        border-radius: 0;
+      }
+    }
+
+  }
+}
+
+
+/**
+ * Outputs the styles for the Accordion component root element.
+ * @group accordion
+ */
+@mixin valo-accordion-style {
+  @include valo-panel-style;
+  $grad-style: valo-gradient-style($v-gradient);
+  $grad-opacity: valo-gradient-opacity($v-gradient);
+  @include valo-gradient($color: $v-background-color, $gradient: ($grad-style $grad-opacity/2));
+  overflow: hidden;
+}
+
+
+/**
+ * Outputs the styles for an individual Accordion item root element.
+ * @group accordion
+ */
+@mixin valo-accordion-item-style {
+  $_br: $v-border-radius - first-number($v-border);
+  position: relative;
+
+  @if $v-border-radius > 0 {
+    &:first-child {
+      border-top-left-radius: $_br;
+      border-top-right-radius: $_br;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $_br;
+      border-bottom-right-radius: $_br;
+
+      [class*="item-content"] {
+        border-radius: inherit;
+      }
+    }
+  }
+
+  &[class*="item-open"]:last-child > div > .v-caption {
+    border-radius: 0;
+  }
+
+  &:not([class*="item-open"]):last-child > div > .v-caption {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  &[class*="item-open"] + [class*="item"] {
+    border-top: valo-border($border: $v-panel-border, $color: $v-panel-background-color, $strength: 0.7);
+  }
+}
+
+
+/**
+ * Outputs the styles for an individual Accordion item's caption element.
+ *
+ * @param {color} $background-color (null) - the background color of the caption. Other styles (such as font and border colors, gradients and bevels) adapt to the background color automatically.
+ * @group accordion
+ */
+@mixin valo-accordion-item-caption-style ($background-color: null) {
+  border-radius: inherit;
+
+  > .v-caption {
+    @include valo-panel-caption-style($background-color: $background-color or $v-background-color);
+    display: block;
+    @if $background-color == null {
+      background: transparent;
+    }
+    border-bottom-color: first-color(valo-border($color: $v-panel-background-color));
+    border-radius: inherit;
+    cursor: pointer;
+    position: relative;
+
+    &:hover:before,
+    &:active:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: inherit;
+    }
+
+    @if $v-hover-styles-enabled {
+      &:hover:before {
+        @include valo-button-hover-style;
+        border: none;
+      }
+    }
+
+    &:active:before {
+      @include valo-button-active-style;
+    }
+  }
+}
+
+
+/**
+ * Outputs the styles for an individual Accordion item's content element.
+ * @group accordion
+ */
+@mixin valo-accordion-item-content-style {
+  @include box-shadow(valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2));
+  background-color: $v-panel-background-color;
+  box-sizing: border-box;
+  @include valo-panel-adjust-content-margins;
+}

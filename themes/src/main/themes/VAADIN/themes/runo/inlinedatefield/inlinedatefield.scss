@@ -1,8 +1,0 @@
-@mixin runo-inline-datefield($primaryStyleName : v-inline-datefield){
-    
-    @include runo-datefield(v-inline-datefield);
-    
-    .#{$primaryStyleName} {
-        line-height: 18px; /* Override inherited line-height: 0 needed for popup datefield */
-    }    
-} 

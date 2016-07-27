@@ -1,0 +1,66 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-treetable) -
+ *
+ * @group treetable
+ */
+@mixin valo-treetable ($primary-stylename: v-treetable) {
+  .#{$primary-stylename} {
+    [class*="caption-container"],
+    [class*="footer-container"],
+    [class*="cell-wrapper"] {
+      box-sizing: content-box;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    [class*="caption-container"],
+    [class*="footer-container"] {
+      $vertical-padding: round(($v-table-row-height - $v-table-header-font-size)/2);
+      min-height: $v-table-row-height - $vertical-padding - ($vertical-padding - $v-table-border-width);
+    }
+
+    [class*="cell-wrapper"] {
+      min-height: $v-font-size;
+    }
+
+    [class*="caption-container"] {
+      padding-left: $v-table-cell-padding-horizontal;
+    }
+
+    [class*="caption-container-align-right"] {
+      padding-left: $v-table-cell-padding-horizontal + $v-table-resizer-width;
+    }
+
+    [class*="footer-container"] {
+      padding-right: $v-table-cell-padding-horizontal;
+    }
+
+    [class*="cell-content"] {
+      padding-left: $v-table-cell-padding-horizontal;
+      padding-right: $v-table-cell-padding-horizontal;
+
+      &:first-child {
+        padding-left: $v-table-cell-padding-horizontal + $v-table-border-width;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-treespacer {
+    display: inline-block;
+    position: absolute;
+    width: round($v-unit-size/2) !important;
+    margin-left: round($v-unit-size/-2) - round($v-table-cell-padding-horizontal/2);
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .#{$primary-stylename}-node-closed:before {
+    @include valo-tree-collapsed-icon-style;
+  }
+
+  .#{$primary-stylename}-node-open:before {
+    @include valo-tree-expanded-icon-style($force: true);
+  }
+}
