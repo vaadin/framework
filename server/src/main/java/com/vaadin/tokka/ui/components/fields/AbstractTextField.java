@@ -27,6 +27,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
+import com.vaadin.shared.tokka.ui.components.fields.ValueChangeMode;
 import com.vaadin.tokka.event.EventListener;
 import com.vaadin.tokka.event.Registration;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -59,7 +60,8 @@ public abstract class AbstractTextField extends AbstractField<String> {
             }
 
             @Override
-            public void setText(String text) {
+            public void setText(String text, int cursorPosition) {
+                // FIXME save last known cursor position?
                 setValue(text, true);
             }
         });
@@ -110,7 +112,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     @Override
     public String getValue() {
         return getState(false).text;
-    } 
+    }
 
     @Override
     public Registration addValueChangeListener(
@@ -155,13 +157,15 @@ public abstract class AbstractTextField extends AbstractField<String> {
     public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
     public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
-        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
     /**
@@ -188,6 +192,47 @@ public abstract class AbstractTextField extends AbstractField<String> {
             columns = 0;
         }
         getState().columns = columns;
+    }
+
+    /**
+     * Sets the mode how the TextField triggers {@link TextChange}s.
+     *
+     * @param mode
+     *            the new mode
+     *
+     * @see ValueChangeMode
+     */
+    public void setValueChangeMode(ValueChangeMode mode) {
+        getState().valueChangeMode = mode;
+    }
+
+    /**
+     * @return the mode used to trigger {@link TextChange}s.
+     */
+    public ValueChangeMode getValueChangeMode() {
+        return getState(false).valueChangeMode;
+    }
+
+    /**
+     * Sets how often {@link TextChange}s are triggered when the
+     * {@link ValueChangeMode} is set to either {@link ValueChangeMode#LAZY} or
+     * {@link ValueChangeMode#TIMEOUT}.
+     *
+     * @param timeout
+     *            timeout in milliseconds
+     *
+     * @see ValueChangeMode
+     */
+    public void setValueChangeTimeout(int timeout) {
+        getState().valueChangeTimeout = timeout;
+    }
+
+    /**
+     * @return the timeout in milliseconds of how often {@link TextChange}s are
+     *         triggered.
+     */
+    public int getValueChangeTimeout() {
+        return getState(false).valueChangeTimeout;
     }
 
     @Override

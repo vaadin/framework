@@ -23,7 +23,10 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.tokka.ui.VTextField;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -42,8 +45,8 @@ public class TextFieldConnector extends AbstractComponentConnector {
 
             @Override
             public void onChange(ChangeEvent event) {
-                getRpcProxy(TextFieldServerRpc.class)
-                .setText(getWidget().getValue());
+                getRpcProxy(TextFieldServerRpc.class).setText(
+                        getWidget().getValue(), getWidget().getCursorPos());
             }
 
         });
@@ -51,8 +54,7 @@ public class TextFieldConnector extends AbstractComponentConnector {
 
             @Override
             public void onBlur(BlurEvent event) {
-                getRpcProxy(TextFieldServerRpc.class)
-                .blur();
+                getRpcProxy(TextFieldServerRpc.class).blur();
             }
 
         });
@@ -60,11 +62,62 @@ public class TextFieldConnector extends AbstractComponentConnector {
 
             @Override
             public void onFocus(FocusEvent event) {
-                getRpcProxy(TextFieldServerRpc.class)
-                .focus();
+                getRpcProxy(TextFieldServerRpc.class).focus();
             }
 
         });
+        getWidget().addKeyDownHandler(new KeyDownHandler() {
+
+            @Override
+            public void onKeyDown(KeyDownEvent event) {
+                textChanged(); // FIXME don't fire this for all events?
+                               // FIXME ensure this is also called from
+                               // everything else that changes the
+                               // text content/cursor pos (cut, paste, ...)
+            }
+
+        });
+    }
+
+    private Timer valueChangeTrigger = new Timer() {
+        @Override
+        public void run() {
+            Scheduler.get().scheduleFinally(new Command() {
+                @Override
+                public void execute() {
+                    getRpcProxy(TextFieldServerRpc.class).setText(
+                            getWidget().getValue(), getWidget().getCursorPos());
+                }
+            });
+        }
+    };
+
+    private void textChanged() {
+        switch (getState().valueChangeMode) {
+        case LAZY:
+            lazyTextChange();
+            break;
+        case TIMEOUT:
+            timeoutTextChange();
+            break;
+        case EAGER:
+            eagerTextChange();
+            break;
+        }
+    }
+
+    private void lazyTextChange() {
+        valueChangeTrigger.schedule(getState().valueChangeTimeout);
+    }
+
+    private void timeoutTextChange() {
+        if (valueChangeTrigger.isRunning())
+            return;
+        valueChangeTrigger.schedule(getState().valueChangeTimeout);
+    }
+
+    private void eagerTextChange() {
+        valueChangeTrigger.run();
     }
 
     @Override
@@ -87,15 +140,13 @@ public class TextFieldConnector extends AbstractComponentConnector {
         getWidget().setReadOnly(getState().readOnly);
     }
 
-    @OnStateChange({"selectionStart", "selectionLength"})
+    @OnStateChange({ "selectionStart", "selectionLength" })
     private void updateSelection() {
         if (getState().selectionStart != -1) {
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    getWidget()
-                    .setSelectionRange(
-                            getState().selectionStart,
+                    getWidget().setSelectionRange(getState().selectionStart,
                             getState().selectionLength);
                 }
             });
@@ -107,8 +158,7 @@ public class TextFieldConnector extends AbstractComponentConnector {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                getWidget()
-                .setCursorPos(getState().cursorPosition);
+                getWidget().setCursorPos(getState().cursorPosition);
             }
         });
     }

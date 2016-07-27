@@ -57,4 +57,10 @@ public class TextFieldState extends AbstractFieldState {
 
     @NoLayout
     public int cursorPosition = 0;
+
+    @NoLayout
+    public ValueChangeMode valueChangeMode = ValueChangeMode.LAZY;
+
+    @NoLayout
+    public int valueChangeTimeout = 400;
 }
