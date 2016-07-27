@@ -110,7 +110,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     @Override
     public String getValue() {
         return getState(false).text;
-    }
+    } 
 
     @Override
     public Registration addValueChangeListener(
@@ -120,10 +120,8 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Selects all text in the field.
-     * 
      */
     public void selectAll() {
-        // TODO Do we need this API? Or provide as extension?
         setSelection(0, getValue().length());
     }
 
@@ -138,7 +136,6 @@ public abstract class AbstractTextField extends AbstractField<String> {
      *            the number of characters to be selected
      */
     public void setSelection(int start, int length) {
-        // TODO Do we need this API? Or provide as extension?
         getState().selectionStart = start;
         getState().selectionLength = length;
         focus();
@@ -152,25 +149,45 @@ public abstract class AbstractTextField extends AbstractField<String> {
      *            the position for the cursor
      */
     public void setCursorPosition(int pos) {
-        setSelection(pos, 0);
+        getState().cursorPosition = pos;
     }
 
-    public void addFocusListener(FocusListener listener) {
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
-    public void removeFocusListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    public void addBlurListener(BlurListener listener) {
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
-    public void removeBlurListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    /**
+     * Gets the number of columns in the editor. If the number of columns is set
+     * 0, the actual number of displayed columns is determined implicitly by the
+     * adapter.
+     * 
+     * @return the number of columns in the editor.
+     */
+    public int getColumns() {
+        return getState(false).columns;
+    }
+
+    /**
+     * Sets the number of columns in the editor. If the number of columns is set
+     * 0, the actual number of displayed columns is determined implicitly by the
+     * adapter.
+     * 
+     * @param columns
+     *            the number of columns to set.
+     */
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        getState().columns = columns;
     }
 
     @Override
@@ -181,26 +198,6 @@ public abstract class AbstractTextField extends AbstractField<String> {
             setMaxLength(DesignAttributeHandler.readAttribute("maxlength", attr,
                     Integer.class));
         }
-    }
-
-    @Override
-    public void writeDesign(Element design, DesignContext designContext) {
-        super.writeDesign(design, designContext);
-        AbstractTextField def = (AbstractTextField) designContext
-                .getDefaultInstance(this);
-        Attributes attr = design.attributes();
-        DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
-                def.getMaxLength(), Integer.class);
-    }
-
-    @Override
-    protected Collection<String> getCustomAttributes() {
-        Collection<String> customAttributes = super.getCustomAttributes();
-        customAttributes.add("maxlength");
-        customAttributes.add("max-length"); // to prevent this appearing in
-                                            // output
-        customAttributes.add("cursor-position");
-        return customAttributes;
     }
 
     @Override
@@ -221,5 +218,32 @@ public abstract class AbstractTextField extends AbstractField<String> {
     @Override
     protected TextChange createValueChange(boolean userOriginated) {
         return new TextChange(userOriginated);
+    }
+
+    /**
+     * Clears the value of this Field.
+     */
+    public void clear() {
+        setValue("");
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbstractTextField def = (AbstractTextField) designContext
+                .getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
+                def.getMaxLength(), Integer.class);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("maxlength");
+        customAttributes.add("max-length"); // to prevent this appearing in
+                                            // output
+        customAttributes.add("cursor-position");
+        return customAttributes;
     }
 }

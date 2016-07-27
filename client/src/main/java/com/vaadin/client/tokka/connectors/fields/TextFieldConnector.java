@@ -17,18 +17,23 @@
 package com.vaadin.client.tokka.connectors.fields;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.TextBox;
-import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.tokka.ui.VTextField;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldServerRpc;
 import com.vaadin.shared.tokka.ui.components.fields.TextFieldState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.tokka.ui.components.fields.TextField;
 
-@Connect(value = com.vaadin.tokka.ui.components.fields.TextField.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractComponentConnector {
 
     @Override
@@ -38,8 +43,27 @@ public class TextFieldConnector extends AbstractComponentConnector {
             @Override
             public void onChange(ChangeEvent event) {
                 getRpcProxy(TextFieldServerRpc.class)
-                        .setText(getWidget().getValue());
+                .setText(getWidget().getValue());
             }
+
+        });
+        getWidget().addBlurHandler(new BlurHandler() {
+
+            @Override
+            public void onBlur(BlurEvent event) {
+                getRpcProxy(TextFieldServerRpc.class)
+                .blur();
+            }
+
+        });
+        getWidget().addFocusHandler(new FocusHandler() {
+
+            @Override
+            public void onFocus(FocusEvent event) {
+                getRpcProxy(TextFieldServerRpc.class)
+                .focus();
+            }
+
         });
     }
 
@@ -49,44 +73,43 @@ public class TextFieldConnector extends AbstractComponentConnector {
     }
 
     @Override
-    public TextBox getWidget() {
-        return (TextBox) super.getWidget();
+    public VTextField getWidget() {
+        return (VTextField) super.getWidget();
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        // TODO Split into separate @OnStateChanged methods
-        super.onStateChanged(stateChangeEvent);
+    @OnStateChange("text")
+    private void updateText() {
+        getWidget().setValue(getState().text);
+    }
 
-        final TextBox w = getWidget();
-        final TextFieldState state = getState();
+    @OnStateChange("readOnly")
+    private void updateReadOnly() {
+        getWidget().setReadOnly(getState().readOnly);
+    }
 
-        w.setReadOnly(state.readOnly);
-
-        if (state.placeholder != null) {
-            w.getElement().setAttribute("placeholder", state.placeholder);
-        } else {
-            w.getElement().removeAttribute("placeholder");
-        }
-        if (state.maxLength >= 0) {
-            w.setMaxLength(state.maxLength);
-        } else {
-            w.getElement().removeAttribute("maxlength");
-        }
-
-        w.setValue(state.text);
-
-        if (state.selectionStart != -1) {
-            /*
-             * Gecko defers setting the text so we need to defer the selection.
-             */
+    @OnStateChange({"selectionStart", "selectionLength"})
+    private void updateSelection() {
+        if (getState().selectionStart != -1) {
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    w.setSelectionRange(state.selectionStart,
-                            state.selectionLength);
+                    getWidget()
+                    .setSelectionRange(
+                            getState().selectionStart,
+                            getState().selectionLength);
                 }
             });
         }
+    }
+
+    @OnStateChange("cursorPosition")
+    private void updateCursorPosition() {
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                getWidget()
+                .setCursorPos(getState().cursorPosition);
+            }
+        });
     }
 }

@@ -20,65 +20,68 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * A component for editing textual data that fits on a single line. For a
- * multi-line textarea, see the {@link TextArea} component.
- * 
- * @author Vaadin Ltd.
+ * A field that is used to enter secret text information like passwords. The
+ * entered text is not displayed on the screen.
  */
-@SuppressWarnings("serial")
-public class TextField extends AbstractTextField {
+public class PasswordField extends AbstractTextField {
 
     /**
-     * Constructs an empty <code>TextField</code> with no caption.
+     * Constructs an empty PasswordField.
      */
-    public TextField() {
-        clear();
+    public PasswordField() {
+        setValue("");
     }
 
     /**
-     * Constructs an empty <code>TextField</code> with given caption.
+     * Constructs a PasswordField with given value and caption.
      * 
      * @param caption
-     *            the caption <code>String</code> for the editor.
-     */
-    public TextField(String caption) {
-        this();
-        setCaption(caption);
-    }
-
-    /**
-     * Constructs a new <code>TextField</code> with the given caption and
-     * initial text contents. The editor constructed this way will not be bound
-     * to a Property unless
-     * {@link com.vaadin.data.Property.Viewer#setPropertyDataSource(Property)}
-     * is called to bind it.
-     * 
-     * @param caption
-     *            the caption <code>String</code> for the editor.
+     *            the caption for the field
      * @param value
-     *            the initial text content of the editor.
+     *            the value for the field
      */
-    public TextField(String caption, String value) {
+    public PasswordField(String caption, String value) {
         setValue(value);
         setCaption(caption);
     }
 
+    /**
+     * Constructs a PasswordField with given caption.
+     * 
+     * @param caption
+     *            the caption for the field
+     */
+    public PasswordField(String caption) {
+        this();
+        setCaption(caption);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
         if (attr.hasKey("value")) {
-            String text = DesignAttributeHandler.readAttribute("value", attr,
-                    String.class);
-            doSetValue(text);
+            doSetValue(DesignAttributeHandler
+                       .readAttribute("value", attr, String.class));
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractTextField#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);

@@ -15,46 +15,24 @@
  */
 package com.vaadin.shared.tokka.ui.components.fields;
 
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
 
-public class TextFieldState extends AbstractFieldState {
+public class TextAreaState extends TextFieldState {
     {
-        primaryStyleName = "v-textfield";
+        primaryStyleName = "v-textarea";
     }
 
     /**
-     * Maximum character count in text field.
+     * Number of visible rows in the text area. The default is 5.
+     */
+    @DelegateToWidget
+    public int rows = 5;
+
+    /**
+     * Tells if word-wrapping should be used in the text area.
      */
     @DelegateToWidget
     @NoLayout
-    public int maxLength = -1;
-
-    /**
-     * Number of visible columns in the TextField.
-     */
-    public int columns = 0;
-
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public String placeholder = null;
-
-    /**
-     * The text in the field
-     */
-    @NoLayout
-    public String text = "";
-
-    @NoLayout
-    public int selectionStart = -1;
-
-    @NoLayout
-    public int selectionLength = 0;
-
-    @NoLayout
-    public int cursorPosition = 0;
+    public boolean wordWrap = true;
 }
