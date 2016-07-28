@@ -48,6 +48,8 @@ import com.vaadin.tokka.data.util.Result;
  *            the type of the value to validate
  * 
  * @see Result
+ * 
+ * @since
  */
 @FunctionalInterface
 public interface Validator<T> extends Function<T, Result<T>>, Serializable {

@@ -2,12 +2,25 @@ package com.vaadin.tests.data.bean;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 @SuppressWarnings("serial")
 public class Address implements Serializable {
 
+    @NotNull
     private String streetAddress = "";
+
+    @NotNull
+    @Min(0)
+    @Max(99999)
     private Integer postalCode = null;
+
+    @NotNull
     private String city = "";
+
+    @NotNull
     private Country country = null;
 
     public Address() {

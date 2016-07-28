@@ -65,6 +65,8 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            // the JSR-303 constraint interpolation context
+            "com\\.vaadin\\.tokka\\.data\\.validators\\.BeanValidator\\$1", //
             "com\\.vaadin\\.sass.*", //
             "com\\.vaadin\\.testbench.*", //
             "com\\.vaadin\\.util\\.CurrentInstance\\$1", //
@@ -92,12 +94,12 @@ public class ClassesSerializableTest {
     public void testClassesSerializable() throws Exception {
         List<String> rawClasspathEntries = getRawClasspathEntries();
 
-        List<String> classes = new ArrayList<String>();
+        List<String> classes = new ArrayList<>();
         for (String location : rawClasspathEntries) {
             classes.addAll(findServerClasses(location));
         }
 
-        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<Class<?>>();
+        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
             // skip annotations and synthetic classes
@@ -149,8 +151,9 @@ public class ClassesSerializableTest {
                     nonSerializableString += ")";
                 }
             }
-            Assert.fail("Serializable not implemented by the following classes and interfaces: "
-                    + nonSerializableString);
+            Assert.fail(
+                    "Serializable not implemented by the following classes and interfaces: "
+                            + nonSerializableString);
         }
     }
 
@@ -181,7 +184,7 @@ public class ClassesSerializableTest {
     //
     private final static List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
-        List<String> locations = new ArrayList<String>();
+        List<String> locations = new ArrayList<>();
 
         String pathSep = System.getProperty("path.separator");
         String classpath = System.getProperty("java.class.path");
@@ -215,7 +218,7 @@ public class ClassesSerializableTest {
      */
     private List<String> findServerClasses(String classpathEntry)
             throws IOException {
-        Collection<String> classes = new ArrayList<String>();
+        Collection<String> classes = new ArrayList<>();
 
         File file = new File(classpathEntry);
         if (file.isDirectory()) {
@@ -227,7 +230,7 @@ public class ClassesSerializableTest {
             return Collections.emptyList();
         }
 
-        List<String> filteredClasses = new ArrayList<String>();
+        List<String> filteredClasses = new ArrayList<>();
         for (String className : classes) {
             boolean ok = false;
             for (String basePackage : BASE_PACKAGES) {
@@ -265,7 +268,7 @@ public class ClassesSerializableTest {
      * @throws IOException
      */
     private Collection<String> findClassesInJar(File file) throws IOException {
-        Collection<String> classes = new ArrayList<String>();
+        Collection<String> classes = new ArrayList<>();
 
         JarFile jar = new JarFile(file);
         Enumeration<JarEntry> e = jar.entries();
@@ -305,7 +308,7 @@ public class ClassesSerializableTest {
             parentPackage += ".";
         }
 
-        Collection<String> classNames = new ArrayList<String>();
+        Collection<String> classNames = new ArrayList<>();
 
         // add all directories recursively
         File[] files = parent.listFiles();

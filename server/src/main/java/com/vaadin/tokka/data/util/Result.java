@@ -92,6 +92,15 @@ public interface Result<R> extends Serializable {
     }
 
     /**
+     * 
+     * @param next
+     * @return
+     */
+    public default <S> Result<S> append(Result<S> next) {
+        return flatMap(x -> next);
+    }
+
+    /**
      * If this Result has a value, returns a Result of applying the given
      * function to the value. Otherwise, returns a Result bearing the same error
      * as this one. Note that any exceptions thrown by the mapping function are
