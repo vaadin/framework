@@ -151,6 +151,8 @@ public interface Result<R> extends Serializable {
         }, consumer);
     }
 
+    public boolean isOk();
+
     /**
      * Returns an Optional of the result message, or an empty Optional if none.
      * 
@@ -204,6 +206,7 @@ class ResultImpl<R> implements Result<R> {
         return Optional.ofNullable(message);
     }
 
+    @Override
     public boolean isOk() {
         return message == null;
     }
