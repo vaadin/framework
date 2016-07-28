@@ -1,13 +1,10 @@
 package com.vaadin.tokka.data.validators;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.time.LocalDate;
 
 import org.junit.Test;
 
-public class RangeValidatorTest {
+public class RangeValidatorTest extends ValidatorTestBase {
 
     @Test
     public void testIntegerRangeValidIntPasses() {
@@ -103,17 +100,5 @@ public class RangeValidatorTest {
         assertFails(LocalDate.ofEpochDay(0), v);
         assertPasses(LocalDate.of(2016, 7, 31), v);
         assertFails(LocalDate.ofEpochDay(1_000_000_000), v);
-    }
-
-    private <T> void assertPasses(T value, RangeValidator<T> v) {
-        v.apply(value).handle(
-                val -> assertEquals(value, val),
-                err -> fail(value + " should pass " + v + " but got " + err));
-    }
-
-    private <T> void assertFails(T value, RangeValidator<T> v) {
-        v.apply(value).handle(
-                val -> fail(value + " should fail " + v),
-                err -> assertEquals(v.getMessage(value), err));
     }
 }

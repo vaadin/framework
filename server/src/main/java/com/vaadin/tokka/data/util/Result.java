@@ -62,7 +62,7 @@ public interface Result<R> extends Serializable {
      */
     public static <R> Result<R> error(String message) {
         Objects.requireNonNull(message, "message cannot be null");
-        return new ResultImpl<R>(null, message);
+        return new ResultImpl<>(null, message);
     }
 
     /**
@@ -141,16 +141,38 @@ public interface Result<R> extends Serializable {
      */
     public void handle(Consumer<R> ifOk, Consumer<String> ifError);
 
+    /**
+     * If this result denotes a success, invokes the given consumer with the
+     * carried value, otherwise does nothing.
+     * 
+     * @param consumer
+     *            the function to call if success
+     */
     public default void ifOk(Consumer<R> consumer) {
         handle(consumer, error -> {
         });
     }
 
+    /**
+     * If this result denotes a failure, invokes the given consumer with the
+     * carried error message, otherwise does nothing.
+     * 
+     * @param consumer
+     *            the function to call if failure
+     */
     public default void ifError(Consumer<String> consumer) {
         handle(value -> {
         }, consumer);
     }
 
+    /**
+     * Returns whether this result represents a successful outcome.
+     * 
+     * @return true if this result is successful, false otherwise
+     * 
+     * @see #ok(Object)
+     * @see #ifOk(Consumer)
+     */
     public boolean isOk();
 
     /**

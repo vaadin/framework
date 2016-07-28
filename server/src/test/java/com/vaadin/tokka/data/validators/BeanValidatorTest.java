@@ -1,8 +1,5 @@
 package com.vaadin.tokka.data.validators;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -11,7 +8,7 @@ import org.junit.Test;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.BeanToValidate;
 
-public class BeanValidatorTest {
+public class BeanValidatorTest extends ValidatorTestBase {
 
     @Test
     public void testFirstNameNullFails() {
@@ -73,17 +70,5 @@ public class BeanValidatorTest {
 
     private BeanValidator validator(String propertyName) {
         return new BeanValidator(BeanToValidate.class, propertyName);
-    }
-
-    private <T> void assertPasses(T value, BeanValidator v) {
-        v.apply(value).handle(
-                val -> assertEquals(value, val),
-                err -> fail(value + " should pass " + v + " but got " + err));
-    }
-
-    private <T> void assertFails(T value, String error, BeanValidator v) {
-        v.apply(value).handle(
-                val -> fail(value + " should fail " + v),
-                err -> assertEquals(error, err));
     }
 }

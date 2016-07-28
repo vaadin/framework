@@ -93,7 +93,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
 
     /**
      * Validates the given value. Returns a {@code Result} instance representing
-     * the outcome of the validation.
+     * the outcome of the validation: either {@link Result#ok(Object) Result.ok}
+     * if the value passed validation or {@link Result#error(String)
+     * Result.error} otherwise.
      * 
      * @param value
      *            the input value to validate
