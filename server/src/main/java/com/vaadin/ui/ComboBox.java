@@ -162,8 +162,6 @@ public class ComboBox extends AbstractSelect implements
      */
     private boolean scrollToSelectedItem = true;
 
-    private String suggestionPopupWidth = null;
-
     /**
      * If text input is not allowed, the ComboBox behaves like a pretty
      * NativeSelect - the user can not enter any text and clicking the text
@@ -278,11 +276,6 @@ public class ComboBox extends AbstractSelect implements
             // Constructs selected keys array
             String[] selectedKeys = new String[(getValue() == null
                     && getNullSelectionItemId() == null ? 0 : 1)];
-
-            if (suggestionPopupWidth != null) {
-                target.addAttribute("suggestionPopupWidth",
-                        suggestionPopupWidth);
-            }
 
             // Paints the options and create array of selected id keys
             int keyIndex = 0;
@@ -887,7 +880,7 @@ public class ComboBox extends AbstractSelect implements
      * @since 7.7
      */
     public String getPopupWidth() {
-        return suggestionPopupWidth;
+        return getState(false).suggestionPopupWidth;
     }
 
     /**
@@ -912,8 +905,7 @@ public class ComboBox extends AbstractSelect implements
      *            the width
      */
     public void setPopupWidth(String width) {
-        suggestionPopupWidth = width;
-        markAsDirty();
+        getState().suggestionPopupWidth = width;
     }
 
     /**

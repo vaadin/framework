@@ -74,6 +74,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().filteringmode = getState().filteringMode;
 
+        getWidget().suggestionPopupWidth = getState().suggestionPopupWidth;
+
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
     }
 
@@ -98,13 +100,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 && uidl.getBooleanAttribute("nullselectitem");
 
         getWidget().currentPage = uidl.getIntVariable("page");
-
-        if (uidl.hasAttribute("suggestionPopupWidth")) {
-            getWidget().suggestionPopupWidth = uidl
-                    .getStringAttribute("suggestionPopupWidth");
-        } else {
-            getWidget().suggestionPopupWidth = null;
-        }
 
         getWidget().suggestionPopup.updateStyleNames(getState());
 
