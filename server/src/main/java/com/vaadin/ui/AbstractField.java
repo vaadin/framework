@@ -1087,8 +1087,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         return new CompositeErrorMessage(
                 new ErrorMessage[] {
                         superError,
-                        AbstractErrorMessage
-                                .getErrorMessageForException(validationError),
+                AbstractErrorMessage
+                        .getErrorMessageForException(validationError),
                         AbstractErrorMessage
                                 .getErrorMessageForException(getCurrentBufferedSourceException()) });
 
@@ -1191,7 +1191,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
-        getState().propertyReadOnly = event.getProperty().isReadOnly();
+        boolean readOnly = event.getProperty().isReadOnly();
+
+        boolean shouldFireChange = isReadOnly() != readOnly
+                || getState().propertyReadOnly != readOnly;
+
+        getState().propertyReadOnly = readOnly;
+
+        if (shouldFireChange) {
+            fireReadOnlyStatusChange();
+        }
     }
 
     /**
