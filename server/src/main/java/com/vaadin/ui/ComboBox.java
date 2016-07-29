@@ -162,13 +162,6 @@ public class ComboBox extends AbstractSelect implements
      */
     private boolean scrollToSelectedItem = true;
 
-    /**
-     * If text input is not allowed, the ComboBox behaves like a pretty
-     * NativeSelect - the user can not enter any text and clicking the text
-     * field opens the drop down with options
-     */
-    private boolean textInputAllowed = true;
-
     private ItemStyleGenerator itemStyleGenerator = null;
 
     public ComboBox() {
