@@ -262,12 +262,6 @@ public class ComboBox extends AbstractSelect implements
             // clear caption change listeners
             getCaptionChangeListener().clear();
 
-            // If the field is modified, but not committed, set modified
-            // attribute
-            if (isModified()) {
-                target.addAttribute("modified", true);
-            }
-
             if (isNewItemsAllowed()) {
                 target.addAttribute("allownewitem", true);
             }
