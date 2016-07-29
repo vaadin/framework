@@ -55,4 +55,11 @@ public class ComboBoxState extends AbstractSelectState {
      */
     public FilteringMode filteringMode = FilteringMode.STARTSWITH;
 
+    /**
+     * Suggestion pop-up's width as a CSS string. By using relative units (e.g.
+     * "50%") it's possible to set the popup's width relative to the ComboBox
+     * itself.
+     */
+    public String suggestionPopupWidth = null;
+
 }
