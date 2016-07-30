@@ -21,6 +21,10 @@ You can use the pre-built [filename]#vaadin-client-compiled# for server-side dev
 A shared library for server-side and client-side development.
 It is always needed.
 
+[filename]#vaadin-push-7.x.x.jar#::
+A shared library for server push support.
+This is needed for web applications which implement server push (e.g. using the @Push annotation in a Servlet class).
+
 [filename]#vaadin-client-7.x.x.jar#::
 The client-side Vaadin framework, including the basic GWT API and Vaadin-specific widgets and other additions.
 It is required when using the [filename]#vaadin-client-compiler# to compile client-side modules.
