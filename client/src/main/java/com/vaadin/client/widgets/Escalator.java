@@ -2190,14 +2190,14 @@ public class Escalator extends Widget implements RequiresResize,
 
         @Override
         protected void refreshCells(Range logicalRowRange, Range colRange) {
-            Profiler.enter("Escalator.AbstractStaticRowContainer.refreshRows");
-
             assertArgumentsAreValidAndWithinRange(logicalRowRange.getStart(),
                     logicalRowRange.length());
 
             if (!isAttached()) {
                 return;
             }
+
+            Profiler.enter("Escalator.AbstractStaticRowContainer.refreshCells");
 
             if (hasColumnAndRowData()) {
                 for (int row = logicalRowRange.getStart(); row < logicalRowRange
@@ -2207,7 +2207,7 @@ public class Escalator extends Widget implements RequiresResize,
                 }
             }
 
-            Profiler.leave("Escalator.AbstractStaticRowContainer.refreshRows");
+            Profiler.leave("Escalator.AbstractStaticRowContainer.refreshCells");
         }
 
         @Override
