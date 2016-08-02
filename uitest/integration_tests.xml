@@ -180,12 +180,6 @@
             <param name="target-port" value="80" />
         </antcall>
     </target>
-    <target name="integration-test-glassfish3">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="10" />
-            <param name="target-server" value="glassfish3" />
-        </antcall>
-    </target>
     <target name="integration-test-glassfish4">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -225,28 +219,6 @@
         </antcall>
     </target>
 
-    <target name="integration-test-websphere8">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
-            <param name="target-port" value="9080" />
-            <param name="target-server" value="websphere8" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-websphereportal8">
-      <concat>##teamcity[testStarted name='websphereportal8' flowId='websphereportal8']</concat>
-      <antcall target="run-tb3-test" inheritall="true">
-            <param name="junit.test.suite" value="com.vaadin.tests.integration.WebSpherePortalIntegrationTest" />
-            <param name="server-name" value="websphereportal8" />
-
-            <!-- Fill out dummy values for params required by run-tb3-test target -->
-            <param name="test.integration.server" value="" />
-            <param name="test.integration.user" value="" />
-            <param name="test.integration.antfile" value="" />
-        </antcall>
-        <concat>##teamcity[testFinished name='websphereportal8' flowId='websphereportal8']"</concat>
-    </target>
-
     <target name="integration-test-weblogic12">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -269,7 +241,6 @@
             <antcall target="integration-test-liferay6" />
             <antcall target="integration-test-liferay6-theme" />
             <antcall target="integration-test-weblogic12" />
-            <antcall target="integration-test-glassfish3" />
             <antcall target="integration-test-glassfish4" />
             <antcall target="integration-test-payara" />
             <antcall target="integration-test-jboss-eap6" />
@@ -282,7 +253,6 @@
             <antcall target="integration-test-tomcat8" />
             <antcall target="integration-test-osgi" />
             <antcall target="integration-test-tomcat7apacheproxy" />
-            <antcall target="integration-test-websphere8" />
         </parallel>
 
     </target>
