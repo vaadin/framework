@@ -7,7 +7,7 @@ layout: page
 [[themes.valo]]
 = Valo Theme
 
-Valo is the word for light in Finnish. The Valo theme incorporates the use of
+Valo was introduced as the primary theme in Vaadin 7.3 and can be generally recommended for the developement of new web applications. Valo is the word for light in Finnish. It incorporates the use of
 light in its logic, in how it handles shades and highlights. It creates lines,
 borders, highlights, and shadows adaptively according to a background color,
 always with contrasts pleasant to human visual perception. Auxiliary colors are
@@ -15,10 +15,7 @@ computed using an algorithmic color theory to blend gently with the background.
 The static art is complemented with responsive animations.
 
 The true power of Valo lies in its configurability with parameters, functions,
-and Sass mixins. You can use the built-in definitions in your own themes or
-override the defaults. Detailed documentation of the available mixins,
-functions, and variables can be found in the Valo API documentation available at
-http://vaadin.com/valo.
+and Sass mixins. Thereby, the theme can easily be completely customized (modified or extended), e.g. you can adapt the basic color scheme by changing one variable - the background color - which saves a lot of styling work. This means, you can use the default built-in definitions in your own themes or override the defaults. To get a sense of what is possible with Valo, a Valo Demo is available at http://vaadin.com/valo. In the Vaadin Wiki you can view some code examples of the Valo Themes presented in the Valo Demo (Blueprint, Facebook, Flat, Light, Dark...): https://vaadin.com/wiki/-/wiki/Main/Valo+Examples. The Valo API with detailed documentation of the available mixins, functions, and variables can be found at http://vaadin.com/api/valo.
 
 [[themes.valo.use]]
 == Basic Use
