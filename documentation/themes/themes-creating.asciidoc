@@ -166,9 +166,9 @@ for all text input boxes in components, in addition to [classname]#TextField#.
 
 Vaadin currently includes the following built-in themes:
 
-* [literal]#++valo++#, the primary theme since Vaadin 7.3
-* [literal]#++reindeer++#, the primary theme in Vaadin 6 and 7
-* [literal]#++chameleon++#, an easily customizable theme
+* [literal]#++valo++#, the primary theme since Vaadin 7.3, http://demo.vaadin.com/valo-theme/
+* [literal]#++reindeer++#, the primary theme in Vaadin 6 and 7, http://demo.vaadin.com/ReindeerTheme
+* [literal]#++chameleon++#, primary theme in Vaadin 6 (realizing an easier theme customization than before), http://demo.vaadin.com/chameleon-editor/
 * [literal]#++runo++#, the default theme in IT Mill Toolkit 5
 * [literal]#++liferay++#, for Liferay portlets
 
