@@ -7316,31 +7316,34 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         eventCell.set(cell, getSectionFromContainer(container));
 
         // Editor can steal focus from Grid and is still handled
-        if (isEditorEnabled() && handleEditorEvent(event, container)) {
+        if (handleEditorEvent(event, container)) {
             return;
         }
 
         // Fire GridKeyEvents and GridClickEvents. Pass the event to escalator.
-        super.onBrowserEvent(event);
+        if (handleSuperEvent(event, container)) {
+            return;
+        }
 
-        if (!isElementInChildWidget(e)) {
+        if (handleChildWidgetEvent(event, container)) {
+            return;
+        }
 
-            if (handleHeaderCellDragStartEvent(event, container)) {
-                return;
-            }
+        if (handleHeaderCellDragStartEvent(event, container)) {
+            return;
+        }
 
-            // Sorting through header Click / KeyUp
-            if (handleHeaderDefaultRowEvent(event, container)) {
-                return;
-            }
+        // Sorting through header Click / KeyUp
+        if (handleHeaderDefaultRowEvent(event, container)) {
+            return;
+        }
 
-            if (handleRendererEvent(event, container)) {
-                return;
-            }
+        if (handleRendererEvent(event, container)) {
+            return;
+        }
 
-            if (handleCellFocusEvent(event, container)) {
-                return;
-            }
+        if (handleCellFocusEvent(event, container)) {
+            return;
         }
     }
 
@@ -7394,6 +7397,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     private boolean handleEditorEvent(Event event, RowContainer container) {
+        if (!isEditorEnabled()) {
+            return false;
+        }
+
         Widget w;
         if (editor.focusedColumnIndex < 0) {
             w = null;
@@ -7405,6 +7412,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 getEventCell(), w);
 
         return getEditor().getEventHandler().handleEvent(editorEvent);
+    }
+
+    private boolean handleSuperEvent(Event event, RowContainer container) {
+        super.onBrowserEvent(event);
+        return false;
+    }
+
+    private boolean handleChildWidgetEvent(Event event,
+            RowContainer container) {
+        return isElementInChildWidget(Element.as(event.getEventTarget()));
     }
 
     private boolean handleRendererEvent(Event event, RowContainer container) {
