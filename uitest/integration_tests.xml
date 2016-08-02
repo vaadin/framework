@@ -137,14 +137,14 @@
 
     <target name="integration-test-jetty8">
         <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="300" />
+            <param name="startDelay" value="180" />
             <param name="target-server" value="jetty8" />
         </antcall>
     </target>
 
     <target name="integration-test-jetty9">
         <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="300" />
+            <param name="startDelay" value="180" />
             <param name="target-server" value="jetty9" />
         </antcall>
     </target>
@@ -199,7 +199,7 @@
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
         <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
+            <param name="startDelay" value="300" />
             <param name="test_browsers" value="winxp-firefox17-esr" />
             <param name="target-server" value="liferay6" />
         </antcall>
@@ -213,7 +213,7 @@
         <pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
         <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
+            <param name="startDelay" value="300" />
             <param name="test_browsers" value="winxp-firefox17-esr" />
             <param name="target-server" value="liferay6" />
         </antcall>
@@ -221,7 +221,7 @@
 
     <target name="integration-test-weblogic12">
         <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
+            <param name="startDelay" value="360" />
             <param name="target-port" value="7001" />
             <param name="target-server" value="weblogic12" />
         </antcall>
