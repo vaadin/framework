@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.vaadin.tokka.data.util.Result;
 
@@ -32,7 +30,8 @@ import com.vaadin.tokka.data.util.Result;
  * failed the validation.
  * <p>
  * For instance, the following validator checks if a number is positive:
- * 
+ * </p>
+ *
  * <pre>
  * Validator&lt;Integer&gt; v = num -> {
  *     if (num >= 0)
@@ -41,14 +40,14 @@ import com.vaadin.tokka.data.util.Result;
  *         return Result.error("number must be positive");
  * };
  * </pre>
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @param <T>
- *            the type of the value to validate
- * 
+ *         the type of the value to validate
+ *
  * @see Result
- * 
+ *
  * @since
  */
 @FunctionalInterface
@@ -56,9 +55,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
 
     /**
      * Returns a validator that passes any value.
-     * 
+     *
      * @param <T>
-     *            the value type
+     *         the value type
      * @return an always-passing validator
      */
     public static <T> Validator<T> alwaysPass() {
@@ -73,17 +72,17 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * <p>
      * For instance, the following chained validator checks if a number is
      * between 0 and 10, inclusive:
-     * 
+     * </p>
      * <pre>
      * Validator&lt;Integer&gt; v = Validator
      *         .from(num -> num >= 0, "number must be >= 0")
      *         .chain(Validator.from(num -> num <= 10, "number must be <= 10"));
      * </pre>
-     * 
+     *
      * @param next
-     *            the validator to apply next, not null
+     *         the validator to apply next, not null
      * @return a chained validator
-     * 
+     *
      * @see #from(Predicate, String)
      */
     public default Validator<T> chain(Function<T, Result<T>> next) {
@@ -96,9 +95,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * the outcome of the validation: either {@link Result#ok(Object) Result.ok}
      * if the value passed validation or {@link Result#error(String)
      * Result.error} otherwise.
-     * 
+     *
      * @param value
-     *            the input value to validate
+     *         the input value to validate
      * @return the validation result
      */
     @Override
@@ -112,19 +111,19 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * <p>
      * For instance, the following validator checks if a number is between 0 and
      * 10, inclusive:
-     * 
+     * </p>
      * <pre>
      * Validator&lt;Integer&gt; v = Validator.from(
      *         num -> num >= 0 && num <= 10,
      *         "number must be between 0 and 10");
      * </pre>
-     * 
+     *
      * @param <T>
-     *            the value type
+     *         the value type
      * @param guard
-     *            the function used to validate, not null
+     *         the function used to validate, not null
      * @param errorMessage
-     *            the message returned if validation fails, not null
+     *         the message returned if validation fails, not null
      * @return the new validator using the function
      */
     public static <T> Validator<T> from(Predicate<T> guard,
@@ -132,15 +131,9 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
         return value -> {
-            try {
-                if (guard.test(value)) {
-                    return Result.ok(value);
-                } else {
-                    return Result.error(errorMessage);
-                }
-            } catch (Exception e) {
-                Logger.getLogger(Validator.class.getName()).log(Level.FINE,
-                        errorMessage, e);
+            if (guard.test(value)) {
+                return Result.ok(value);
+            } else {
                 return Result.error(errorMessage);
             }
         };
