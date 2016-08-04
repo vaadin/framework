@@ -27,13 +27,14 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class CheckBox extends AbstractField<Boolean> {
+public class CheckBox extends LegacyAbstractField<Boolean> {
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
 
@@ -129,8 +130,8 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     /*
-     * Overridden to keep the shared state in sync with the AbstractField
-     * internal value. Should be removed once AbstractField is refactored to use
+     * Overridden to keep the shared state in sync with the LegacyAbstractField
+     * internal value. Should be removed once LegacyAbstractField is refactored to use
      * shared state.
      * 
      * See tickets #10921 and #11064.

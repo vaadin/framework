@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Alignment;
@@ -11,7 +12,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout.MarginHandler;
@@ -74,16 +74,16 @@ public class NestedPersonForm extends Form {
     }
 
     /**
-     * Field factory for person form
+     * LegacyField factory for person form
      */
     private class PersonFieldFactory extends DefaultFieldFactory {
         // reuse the address field - required by EmbeddedForm
         private AddressField addressField;
 
         @Override
-        public Field createField(Item item, Object propertyId,
+        public LegacyField createField(Item item, Object propertyId,
                 Component uiContext) {
-            Field f = super.createField(item, propertyId, uiContext);
+            LegacyField f = super.createField(item, propertyId, uiContext);
             if ("address".equals(propertyId)) {
                 // create a custom field for the Address object
                 if (addressField == null) {

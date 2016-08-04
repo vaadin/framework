@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.SystemError;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -96,7 +96,7 @@ public class Ticket1804 extends com.vaadin.server.LegacyApplication {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    AbstractField<?> af = i.next();
+                    LegacyAbstractField<?> af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                     if (af.isValid()) {

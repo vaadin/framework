@@ -7,11 +7,11 @@ import java.util.Locale;
 
 import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
 
@@ -77,7 +77,7 @@ public class EditableModeChange extends AbstractTestUI {
 
     private class ItemFieldFactory extends DefaultFieldFactory {
         @Override
-        public Field<?> createField(Container container, Object itemId,
+        public LegacyField<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (selectionEvent != null) {
                 if ((selectionEvent.getItemId().equals(itemId))

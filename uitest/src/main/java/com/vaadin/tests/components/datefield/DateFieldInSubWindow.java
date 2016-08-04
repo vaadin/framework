@@ -4,13 +4,13 @@ import java.util.Date;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
@@ -60,9 +60,9 @@ public class DateFieldInSubWindow extends AbstractTestCase {
             public static final String COMMON_FIELD_WIDTH = "12em";
 
             @Override
-            public Field<?> createField(Item item, Object propertyId,
+            public LegacyField<?> createField(Item item, Object propertyId,
                     Component uiContext) {
-                Field<?> f = super.createField(item, propertyId, uiContext);
+                LegacyField<?> f = super.createField(item, propertyId, uiContext);
 
                 if ("myDate".equals(propertyId)) {
                     ((DateField) f).setResolution(DateField.RESOLUTION_MIN);

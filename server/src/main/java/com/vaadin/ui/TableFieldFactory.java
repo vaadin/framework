@@ -18,12 +18,13 @@ package com.vaadin.ui;
 import java.io.Serializable;
 
 import com.vaadin.data.Container;
+import com.vaadin.legacy.ui.LegacyField;
 
 /**
- * Factory interface for creating new Field-instances based on Container
+ * Factory interface for creating new LegacyField-instances based on Container
  * (datasource), item id, property id and uiContext (the component responsible
  * for displaying fields). Currently this interface is used by {@link Table},
- * but might later be used by some other components for {@link Field}
+ * but might later be used by some other components for {@link LegacyField}
  * generation.
  * 
  * <p>
@@ -49,7 +50,7 @@ public interface TableFieldFactory extends Serializable {
      * @return A field suitable for editing the specified data or null if the
      *         property should not be editable.
      */
-    Field<?> createField(Container container, Object itemId, Object propertyId,
+    LegacyField<?> createField(Container container, Object itemId, Object propertyId,
             Component uiContext);
 
 }

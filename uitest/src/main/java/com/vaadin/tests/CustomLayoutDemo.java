@@ -16,13 +16,13 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
@@ -155,7 +155,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
         // Check if event occured at fsTree component
         if (event.getSource() == menu) {
             // Check if event is about changing value
-            if (event.getClass() == Field.ValueChangeEvent.class) {
+            if (event.getClass() == LegacyField.ValueChangeEvent.class) {
                 // Update body area with selected item
                 setBody(menu.getValue().toString());
             }

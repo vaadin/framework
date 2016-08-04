@@ -7,7 +7,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 
 /**
  * Base class for tests for checking that value change listeners for fields are
@@ -17,16 +17,16 @@ import com.vaadin.ui.AbstractField;
  * {@link ValueChangeNotifier}).
  * 
  * Subclasses should implement {@link #setValue()} and call
- * <code>super.setValue(AbstractField)</code>. Also, subclasses should typically
- * override {@link #setValue(AbstractField)} to set the field value via
+ * <code>super.setValue(LegacyAbstractField)</code>. Also, subclasses should typically
+ * override {@link #setValue(LegacyAbstractField)} to set the field value via
  * <code>changeVariables()</code>.
  */
 public abstract class AbstractFieldValueChangeTestBase<T> {
 
-    private AbstractField<T> field;
+    private LegacyAbstractField<T> field;
     private ValueChangeListener listener;
 
-    protected void setUp(AbstractField<T> field) {
+    protected void setUp(LegacyAbstractField<T> field) {
         this.field = field;
         listener = EasyMock.createStrictMock(ValueChangeListener.class);
 
@@ -72,7 +72,7 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
      * be seen in some cases also when there is no notification of value change
      * from the property.
      * 
-     * Field value change notifications closely mirror value changes of the data
+     * LegacyField value change notifications closely mirror value changes of the data
      * source behind the field.
      */
     @Test
@@ -87,7 +87,7 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
      * Fully buffered use where the data source is neither read nor modified
      * during editing, and is updated at commit().
      * 
-     * Field value change notifications reflect the buffered value in the field,
+     * LegacyField value change notifications reflect the buffered value in the field,
      * not the original data source value changes.
      */
     public void testBuffered() {
@@ -116,14 +116,14 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
         EasyMock.verify(listener);
     }
 
-    protected AbstractField<T> getField() {
+    protected LegacyAbstractField<T> getField() {
         return field;
     }
 
     /**
      * Override in subclasses to set value with changeVariables().
      */
-    protected void setValue(AbstractField<T> field) {
+    protected void setValue(LegacyAbstractField<T> field) {
         field.setValue((T) "newValue");
     }
 

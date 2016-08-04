@@ -19,15 +19,15 @@ import java.util.Collection;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 
 public class GridWithLabelEditor extends AbstractTestUI {
 
-    public class LabelEditor extends Label implements Field<String> {
+    public class LabelEditor extends Label implements LegacyField<String> {
 
         @Override
         public void focus() {

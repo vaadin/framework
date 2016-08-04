@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
@@ -15,7 +16,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
@@ -187,7 +187,7 @@ public class Ticket1878 extends LegacyApplication {
         form.setItemDataSource(item);
         for (Iterator<?> i = item.getItemPropertyIds().iterator(); i.hasNext();) {
             Object property = i.next();
-            Field<?> f = form.getField(property);
+            LegacyField<?> f = form.getField(property);
 
             f.setRequired(r.nextBoolean());
             if (r.nextBoolean()) {

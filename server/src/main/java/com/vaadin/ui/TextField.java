@@ -31,10 +31,10 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  * 
  * <p>
- * Since <code>TextField</code> extends <code>AbstractField</code> it implements
+ * Since <code>TextField</code> extends <code>LegacyAbstractField</code> it implements
  * the {@link com.vaadin.data.Buffered} interface. A <code>TextField</code> is
  * in write-through mode by default, so
- * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)} must be called
+ * {@link com.vaadin.legacy.ui.LegacyAbstractField#setWriteThrough(boolean)} must be called
  * to enable buffering.
  * </p>
  * 

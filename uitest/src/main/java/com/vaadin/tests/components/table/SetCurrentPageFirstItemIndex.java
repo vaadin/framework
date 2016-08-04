@@ -104,7 +104,8 @@ public class SetCurrentPageFirstItemIndex extends AbstractTestUI {
     public class ImageGenerator implements ColumnGenerator {
 
         @Override
-        public Object generateCell(Table source, Object itemId, Object columnId) {
+        public Object generateCell(Table source, Object itemId,
+                Object columnId) {
             return "" + itemId;
         }
     }

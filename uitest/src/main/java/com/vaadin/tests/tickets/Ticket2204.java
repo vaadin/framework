@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.AbstractSplitPanel;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
@@ -130,7 +130,7 @@ public class Ticket2204 extends LegacyApplication {
             f.setFormFieldFactory(new FormFieldFactory() {
 
                 @Override
-                public Field<?> createField(Item item, Object propertyId,
+                public LegacyField<?> createField(Item item, Object propertyId,
                         Component uiContext) {
                     formTextArea = new RichTextArea();
                     formTextArea.setVisible(false);

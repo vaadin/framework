@@ -5,13 +5,13 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -137,7 +137,7 @@ class MyFieldFactory extends DefaultFieldFactory {
     }
 
     @Override
-    public Field<?> createField(Container container, Object itemId,
+    public LegacyField<?> createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         if (propertyId.equals("text")) {
             // replace text fields with comboboxes

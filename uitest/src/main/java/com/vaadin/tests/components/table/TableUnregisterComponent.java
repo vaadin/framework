@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
@@ -49,10 +49,10 @@ public class TableUnregisterComponent extends TestBase {
         table.setColumnCollapsingAllowed(true);
         table.setTableFieldFactory(new DefaultFieldFactory() {
             @Override
-            public Field<?> createField(Container container, Object itemId,
+            public LegacyField<?> createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
                 if (COL_B.equals(propertyId)) {
-                    Field<String> field = new TextField() {
+                    LegacyField<String> field = new TextField() {
                         @Override
                         public void setPropertyDataSource(Property newDataSource) {
                             super.setPropertyDataSource(newDataSource);

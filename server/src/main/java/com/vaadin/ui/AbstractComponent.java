@@ -39,6 +39,8 @@ import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyField.ValueChangeEvent;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
@@ -59,7 +61,6 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
@@ -1345,7 +1346,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the {@link ActionManager} used to manage the
-     * {@link ShortcutListener}s added to this {@link Field}.
+     * {@link ShortcutListener}s added to this {@link LegacyField}.
      * 
      * @return the ActionManager in use
      */

@@ -10,7 +10,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.Field;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 
@@ -87,12 +87,12 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
                 .bindFieldsUnbuffered(myBean, viewStub);
 
-        Field<String> field = (Field<String>) bindFields.getField("basicField");
+        LegacyField<String> field = (LegacyField<String>) bindFields.getField("basicField");
         Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
         field.setValue("Foo");
         Assert.assertEquals("Foo", myBean.basicField);
 
-        field = (Field<String>) bindFields.getField("anotherField");
+        field = (LegacyField<String>) bindFields.getField("anotherField");
         field.setValue("Foo");
         Assert.assertEquals("Foo", myBean.anotherField);
     }
@@ -106,12 +106,12 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bindFields = BeanFieldGroup.bindFieldsBuffered(
                 myBean, viewStub);
 
-        Field<String> basicField = (Field<String>) bindFields
+        LegacyField<String> basicField = (LegacyField<String>) bindFields
                 .getField("basicField");
         basicField.setValue("Foo");
         Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
 
-        Field<String> anotherField = (Field<String>) bindFields
+        LegacyField<String> anotherField = (LegacyField<String>) bindFields
                 .getField("anotherField");
         anotherField.setValue("Foo");
         Assert.assertNull(myBean.anotherField);
@@ -131,7 +131,7 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bfg = new BeanFieldGroup<MyBean>(MyBean.class);
         bfg.setItemDataSource(bean);
 
-        com.vaadin.ui.Field<?> helloField = bfg.buildAndBind("Hello string",
+        com.vaadin.legacy.ui.LegacyField<?> helloField = bfg.buildAndBind("Hello string",
                 "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
     }

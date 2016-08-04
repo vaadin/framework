@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -52,7 +52,7 @@ public class Ticket1819 extends com.vaadin.server.LegacyApplication {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    AbstractField<?> af = i.next();
+                    LegacyAbstractField<?> af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                 }

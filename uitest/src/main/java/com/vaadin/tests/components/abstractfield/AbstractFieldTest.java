@@ -13,12 +13,12 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.tests.components.AbstractComponentTest;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public abstract class AbstractFieldTest<T extends AbstractField> extends
+public abstract class AbstractFieldTest<T extends LegacyAbstractField> extends
         AbstractComponentTest<T> implements ValueChangeListener,
         ReadOnlyStatusChangeListener {
 
@@ -53,9 +53,9 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
     protected void populateSettingsMenu(MenuItem settingsMenu) {
         super.populateSettingsMenu(settingsMenu);
 
-        if (AbstractField.class.isAssignableFrom(getTestClass())) {
+        if (LegacyAbstractField.class.isAssignableFrom(getTestClass())) {
             MenuItem abstractField = settingsMenu
-                    .addItem("AbstractField", null);
+                    .addItem("LegacyAbstractField", null);
             abstractField.addItem("Show value", new MenuBar.Command() {
 
                 @Override

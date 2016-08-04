@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -83,9 +83,9 @@ public class Ticket2151 extends LegacyApplication {
 
     }
 
-    private void checkDataBinding(Class<? extends AbstractField> class1) {
+    private void checkDataBinding(Class<? extends LegacyAbstractField> class1) {
         boolean ok = false;
-        AbstractField b;
+        LegacyAbstractField b;
         try {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());

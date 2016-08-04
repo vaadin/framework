@@ -43,6 +43,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -52,7 +53,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellDescriptionGenerator;
 import com.vaadin.ui.Grid.CellReference;
@@ -746,7 +746,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid c, Boolean value, Object data) {
-                        Field<?> targetField = grid.getEditorFieldGroup()
+                        LegacyField<?> targetField = grid.getEditorFieldGroup()
                                 .getField("Column 0");
                         if (targetField != null) {
                             if (!value) {

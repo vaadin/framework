@@ -31,6 +31,7 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
@@ -38,7 +39,7 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
-public abstract class AbstractTextField extends AbstractField<String> implements
+public abstract class AbstractTextField extends LegacyAbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
 
     /**
@@ -457,7 +458,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * Make sure w reset lastKnownTextContent field on value change. The
          * clearing must happen here as well because TextChangeListener can
          * revert the original value. Client must respect the value in this
-         * case. AbstractField optimizes value change if the existing value is
+         * case. LegacyAbstractField optimizes value change if the existing value is
          * reset. Also we need to force repaint if the flag is on.
          */
         if (lastKnownTextContent != null) {

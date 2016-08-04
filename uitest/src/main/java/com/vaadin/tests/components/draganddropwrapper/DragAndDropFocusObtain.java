@@ -23,9 +23,9 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
@@ -54,7 +54,7 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
 
         @Override
         public void valueChange(ValueChangeEvent event) {
-            AbstractField f = (AbstractField) event.getProperty();
+            LegacyAbstractField f = (LegacyAbstractField) event.getProperty();
             log("Value of " + f.getCaption() + " changed to " + f.getValue());
         }
     };

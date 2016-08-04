@@ -3,13 +3,13 @@ package com.vaadin.tests.validation;
 import java.util.Date;
 
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
@@ -75,11 +75,12 @@ public class EmptyFieldErrorIndicators extends TestBase {
         return panel;
     }
 
-    private Form createForm(final boolean required, final boolean failValidator) {
+    private Form createForm(final boolean required,
+            final boolean failValidator) {
         // hand-crafted form, not using form field factory
         final Form form = new Form() {
             @Override
-            public void addField(Object propertyId, Field<?> field) {
+            public void addField(Object propertyId, LegacyField<?> field) {
                 super.addField(propertyId, field);
                 field.setRequired(required);
                 field.setRequiredError("Missing required value!");

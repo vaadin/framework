@@ -17,12 +17,12 @@ import java.util.jar.JarEntry;
 
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PopupView;
@@ -63,9 +63,9 @@ public class VaadinClasses {
         }
     }
 
-    public static List<Class<? extends Field>> getFields() {
+    public static List<Class<? extends LegacyField>> getFields() {
         try {
-            return findClasses(Field.class, "com.vaadin.ui");
+            return findClasses(LegacyField.class, "com.vaadin.ui");
         } catch (IOException e) {
             e.printStackTrace();
             return null;

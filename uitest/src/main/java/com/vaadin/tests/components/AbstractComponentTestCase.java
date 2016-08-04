@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Layout.SpacingHandler;
 
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
@@ -132,8 +132,8 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
         @Override
         public void execute(T c, Boolean enabled, Object data) {
-            if (c instanceof Field) {
-                ((Field<?>) c).setRequired(enabled);
+            if (c instanceof LegacyField) {
+                ((LegacyField<?>) c).setRequired(enabled);
             } else {
                 throw new IllegalArgumentException(c.getClass().getName()
                         + " is not a field and cannot be set to required");
@@ -144,7 +144,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
         @Override
         public void execute(T c, String value, Object data) {
-            ((Field<?>) c).setRequiredError(value);
+            ((LegacyField<?>) c).setRequiredError(value);
         }
 
     };

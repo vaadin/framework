@@ -20,13 +20,13 @@ import java.util.EnumSet;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
@@ -64,7 +64,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     }
 
     @Override
-    public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
+    public <T extends LegacyField> T createField(Class<?> type, Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);
         } else if (Date.class.isAssignableFrom(type)) {
@@ -89,7 +89,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return rta;
     }
 
-    private <T extends Field> T createEnumField(Class<?> type,
+    private <T extends LegacyField> T createEnumField(Class<?> type,
             Class<T> fieldType) {
         // Determine first if we should (or can) create a select for the enum
         Class<AbstractSelect> selectClass = null;
@@ -110,9 +110,9 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return null;
     }
 
-    private <T extends Field> T createDateField(Class<?> type,
+    private <T extends LegacyField> T createDateField(Class<?> type,
             Class<T> fieldType) {
-        AbstractField field;
+        LegacyAbstractField field;
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
             field = new InlineDateField();
@@ -157,10 +157,10 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @since 7.4
      * @param fieldType
      *            the type of the field
-     * @return true if any AbstractField can be assigned to the field
+     * @return true if any LegacyAbstractField can be assigned to the field
      */
     protected boolean anyField(Class<?> fieldType) {
-        return fieldType == Field.class || fieldType == AbstractField.class;
+        return fieldType == LegacyField.class || fieldType == LegacyAbstractField.class;
     }
 
     /**
@@ -169,11 +169,11 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      *            the type of the field
      * @return true if any AbstractSelect can be assigned to the field
      */
-    protected boolean anySelect(Class<? extends Field> fieldType) {
+    protected boolean anySelect(Class<? extends LegacyField> fieldType) {
         return anyField(fieldType) || fieldType == AbstractSelect.class;
     }
 
-    protected <T extends Field> T createBooleanField(Class<T> fieldType) {
+    protected <T extends LegacyField> T createBooleanField(Class<T> fieldType) {
         if (fieldType.isAssignableFrom(CheckBox.class)) {
             CheckBox cb = new CheckBox(null);
             cb.setImmediate(true);
@@ -213,7 +213,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @return A field capable of editing the data or null if no field could be
      *         created
      */
-    protected <T extends Field> T createDefaultField(Class<?> type,
+    protected <T extends LegacyField> T createDefaultField(Class<?> type,
             Class<T> fieldType) {
         if (fieldType.isAssignableFrom(TextField.class)) {
             return fieldType.cast(createAbstractTextField(TextField.class));

@@ -28,7 +28,7 @@ public class ReflectToolsGetFieldValueByTypeTest {
         try {
             memberField = myInstance.getClass().getField("field");
             // Should get a String value. Without the third parameter (calling
-            // ReflectTools.getJavaFieldValue(Object object, Field field)) would
+            // ReflectTools.getJavaFieldValue(Object object, LegacyField field)) would
             // get an Integer value
             fieldValue = ReflectTools.getJavaFieldValue(myInstance,
                     memberField, String.class);

@@ -6,10 +6,10 @@ import java.util.List;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -41,7 +41,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<AbstractField<?>> components = new ArrayList<AbstractField<?>>();
+    private List<LegacyAbstractField<?>> components = new ArrayList<LegacyAbstractField<?>>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
@@ -78,7 +78,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void prependCaptions(String prepend) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             c.setCaption(prepend + c.getCaption());
         }
 
@@ -161,20 +161,20 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
                     "Der eingegebene Wert ist nicht zulässig!");
         }
 
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             c.setComponentError(userError);
         }
     }
 
     protected void setRequired(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             c.setRequired(value);
         }
 
     }
 
     protected void setIcon(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             if (!value) {
                 c.setIcon(null);
             } else {
@@ -185,13 +185,13 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void setReadOnly(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             c.setReadOnly(value);
         }
     }
 
     protected void setEnabled(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             c.setEnabled(value);
         }
     }
@@ -211,7 +211,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void setError(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (LegacyAbstractField<?> c : components) {
             if (value) {
                 c.setComponentError(new UserError("error"));
             } else {

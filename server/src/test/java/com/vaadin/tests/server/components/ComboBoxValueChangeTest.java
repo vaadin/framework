@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.junit.Before;
 
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.ui.ComboBox;
 
 /**
@@ -25,7 +25,7 @@ public class ComboBoxValueChangeTest extends
     }
 
     @Override
-    protected void setValue(AbstractField<Object> field) {
+    protected void setValue(LegacyAbstractField<Object> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("selected", new String[] { "myvalue" });
         ((ComboBox) field).changeVariables(field, variables);

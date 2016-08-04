@@ -18,7 +18,8 @@ public class Ticket2107 extends LegacyApplication {
 
         final TextField tf = new TextField(
                 "Required field that validated the input");
-        tf.setDescription("Enter someting and click outside the field to activate");
+        tf.setDescription(
+                "Enter someting and click outside the field to activate");
         tf.setRequired(true);
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {

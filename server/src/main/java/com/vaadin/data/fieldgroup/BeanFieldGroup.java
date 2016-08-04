@@ -24,18 +24,18 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.ui.Field;
+import com.vaadin.legacy.ui.LegacyField;
 
 public class BeanFieldGroup<T> extends FieldGroup {
 
     private final Class<T> beanType;
 
     private static Boolean beanValidationImplementationAvailable = null;
-    private final Map<Field<?>, BeanValidator> defaultValidators;
+    private final Map<LegacyField<?>, BeanValidator> defaultValidators;
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
-        this.defaultValidators = new HashMap<Field<?>, BeanValidator>();
+        this.defaultValidators = new HashMap<LegacyField<?>, BeanValidator>();
     }
 
     @Override
@@ -149,20 +149,20 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     @Override
-    public void bind(Field field, Object propertyId) {
+    public void bind(LegacyField field, Object propertyId) {
         ensureNestedPropertyAdded(propertyId);
         super.bind(field, propertyId);
     }
 
     @Override
-    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+    public <T extends LegacyField> T buildAndBind(String caption, Object propertyId,
             Class<T> fieldType) throws BindException {
         ensureNestedPropertyAdded(propertyId);
         return super.buildAndBind(caption, propertyId, fieldType);
     }
 
     @Override
-    public void unbind(Field<?> field) throws BindException {
+    public void unbind(LegacyField<?> field) throws BindException {
         super.unbind(field);
 
         BeanValidator removed = defaultValidators.remove(field);
@@ -172,7 +172,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     @Override
-    protected void configureField(Field<?> field) {
+    protected void configureField(LegacyField<?> field) {
         super.configureField(field);
         // Add Bean validators if there are annotations
         if (isBeanValidationImplementationAvailable()
@@ -226,7 +226,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link Field}s for bean properties
+     *            the class that contains {@link LegacyField}s for bean properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsUnbuffered(T bean,
@@ -247,7 +247,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link Field}s for bean properties
+     *            the class that contains {@link LegacyField}s for bean properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsBuffered(T bean,

@@ -36,6 +36,8 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
@@ -48,7 +50,7 @@ import com.vaadin.shared.ui.form.FormState;
  * Form component provides easy way of creating and managing sets fields.
  * 
  * <p>
- * <code>Form</code> is a container for fields implementing {@link Field}
+ * <code>Form</code> is a container for fields implementing {@link LegacyField}
  * interface. It provides support for any layouts and provides buffering
  * interface for easy connection of commit and discard buttons. All the form
  * fields can be customized by adding validators, setting captions and icons,
@@ -76,7 +78,7 @@ import com.vaadin.shared.ui.form.FormState;
  *             more flexibility.
  */
 @Deprecated
-public class Form extends AbstractField<Object> implements Item.Editor,
+public class Form extends LegacyAbstractField<Object> implements Item.Editor,
         Buffered, Item, Validatable, Action.Notifier, HasComponents,
         LegacyComponent {
 
@@ -90,7 +92,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     /**
      * Ordered list of property ids in this editor.
      */
-    private final LinkedList<Object> propertyIds = new LinkedList<Object>();
+    private final LinkedList<Object> propertyIds = new LinkedList<>();
 
     /**
      * Current buffered source exception.
@@ -105,12 +107,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
+    private final HashMap<Object, LegacyField<?>> fields = new HashMap<>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
+    private final HashMap<Object, Property<?>> ownProperties = new HashMap<>();
 
     /**
      * Field factory for this form.
@@ -131,7 +133,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         @Override
-        public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+        public void valueChange(
+                com.vaadin.data.Property.ValueChangeEvent event) {
             markAsDirty();
         }
     };
@@ -147,9 +150,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
     /**
      * Keeps track of the Actions added to this component, and manages the
-     * painting and handling as well. Note that the extended AbstractField is a
-     * {@link ShortcutNotifier} and has a actionManager that delegates actions
-     * to the containing window. This one does not delegate.
+     * painting and handling as well. Note that the extended LegacyAbstractField
+     * is a {@link ShortcutNotifier} and has a actionManager that delegates
+     * actions to the containing window. This one does not delegate.
      */
     private ActionManager ownActionManager = new ActionManager(this);
 
@@ -236,7 +239,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // getErrorMessage() recursively instead of validate().
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
-            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+            for (final Iterator<Object> i = propertyIds.iterator(); i
+                    .hasNext();) {
                 Object f = fields.get(i.next());
                 if (f instanceof AbstractComponent) {
                     AbstractComponent field = (AbstractComponent) f;
@@ -248,7 +252,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                             validationError = new UserError(field.getCaption());
                         }
                         break;
-                    } else if (f instanceof Field && !((Field<?>) f).isValid()) {
+                    } else if (f instanceof LegacyField && !((LegacyField<?>) f)
+                            .isValid()) {
                         // Something is wrong with the field, but no proper
                         // error is given. Generate one.
                         validationError = new UserError(field.getCaption());
@@ -270,7 +275,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                         getComponentError(),
                         validationError,
                         AbstractErrorMessage
-                                .getErrorMessageForException(currentBufferedSourceException) });
+                                .getErrorMessageForException(
+                                        currentBufferedSourceException) });
     }
 
     /**
@@ -308,7 +314,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * use the default one from the interface.
      */
     @Override
-    public void commit() throws Buffered.SourceException, InvalidValueException {
+    public void commit() throws Buffered.SourceException,
+            InvalidValueException {
 
         LinkedList<SourceException> problems = null;
 
@@ -329,14 +336,14 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // Try to commit all
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                final Field<?> f = (fields.get(i.next()));
+                final LegacyField<?> f = (fields.get(i.next()));
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
                 }
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<SourceException>();
+                    problems = new LinkedList<>();
                 }
                 problems.add(e);
             }
@@ -380,7 +387,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                 (fields.get(i.next())).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<SourceException>();
+                    problems = new LinkedList<>();
                 }
                 problems.add(e);
             }
@@ -416,7 +423,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public boolean isModified() {
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            final Field<?> f = fields.get(i.next());
+            final LegacyField<?> f = fields.get(i.next());
             if (f != null && f.isModified()) {
                 return true;
             }
@@ -433,7 +440,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public void setBuffered(boolean buffered) {
         if (buffered != this.buffered) {
             this.buffered = buffered;
-            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+            for (final Iterator<Object> i = propertyIds.iterator(); i
+                    .hasNext();) {
                 (fields.get(i.next())).setBuffered(buffered);
             }
         }
@@ -461,7 +469,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         ownProperties.put(id, property);
 
         // Gets suitable field
-        final Field<?> field = fieldFactory.createField(this, id, this);
+        final LegacyField<?> field = fieldFactory.createField(this, id, this);
         if (field == null) {
             return false;
         }
@@ -484,7 +492,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * <p>
      * This field is added to the layout using the
-     * {@link #attachField(Object, Field)} method.
+     * {@link #attachField(Object, LegacyField)} method.
      * </p>
      * 
      * @param propertyId
@@ -492,7 +500,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param field
      *            the field which should be added to the form.
      */
-    public void addField(Object propertyId, Field<?> field) {
+    public void addField(Object propertyId, LegacyField<?> field) {
         registerField(propertyId, field);
         attachField(propertyId, field);
         markAsDirty();
@@ -510,9 +518,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param propertyId
      *            the Property id of the field.
      * @param field
-     *            the Field that should be registered
+     *            the LegacyField that should be registered
      */
-    private void registerField(Object propertyId, Field<?> field) {
+    private void registerField(Object propertyId, LegacyField<?> field) {
         if (propertyId == null || field == null) {
             return;
         }
@@ -550,7 +558,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param propertyId
      * @param field
      */
-    protected void attachField(Object propertyId, Field field) {
+    protected void attachField(Object propertyId, LegacyField field) {
         if (propertyId == null || field == null) {
             return;
         }
@@ -577,7 +585,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     @Override
     public Property getItemProperty(Object id) {
-        final Field<?> field = fields.get(id);
+        final LegacyField<?> field = fields.get(id);
         if (field == null) {
             // field does not exist or it is not (yet) created for this property
             return ownProperties.get(id);
@@ -597,7 +605,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param propertyId
      *            the id of the property.
      */
-    public Field getField(Object propertyId) {
+    public LegacyField getField(Object propertyId) {
         return fields.get(propertyId);
     }
 
@@ -616,7 +624,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public boolean removeItemProperty(Object id) {
         ownProperties.remove(id);
 
-        final Field<?> field = fields.get(id);
+        final LegacyField<?> field = fields.get(id);
 
         if (field != null) {
             propertyIds.remove(id);
@@ -640,7 +648,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param field
      *            the field to be detached from the forms layout.
      */
-    protected void detachField(final Field field) {
+    protected void detachField(final LegacyField field) {
         Component p = field.getParent();
         if (p instanceof ComponentContainer) {
             ((ComponentContainer) p).removeComponent(field);
@@ -701,7 +709,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
-    public void setItemDataSource(Item newDataSource, Collection<?> propertyIds) {
+    public void setItemDataSource(Item newDataSource,
+            Collection<?> propertyIds) {
 
         if (getLayout() instanceof GridLayout) {
             GridLayout gl = (GridLayout) getLayout();
@@ -733,7 +742,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             final Object id = i.next();
             final Property<?> property = itemDatasource.getItemProperty(id);
             if (id != null && property != null) {
-                final Field<?> f = fieldFactory.createField(itemDatasource, id,
+                final LegacyField<?> f = fieldFactory.createField(
+                        itemDatasource, id,
                         this);
                 if (f != null) {
                     bindPropertyToField(id, property, f);
@@ -745,7 +755,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
     /**
      * Binds an item property to a field. The default behavior is to bind
-     * property straight to Field. If Property.Viewer type property (e.g.
+     * property straight to LegacyField. If Property.Viewer type property (e.g.
      * PropertyFormatter) is already set for field, the property is bound to
      * that Property.Viewer.
      * 
@@ -755,7 +765,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @since 6.7.3
      */
     protected void bindPropertyToField(final Object propertyId,
-            final Property property, final Field field) {
+            final Property property, final LegacyField field) {
         // check if field has a property that is Viewer set. In that case we
         // expect developer has e.g. PropertyFormatter that he wishes to use and
         // assign the property to the Viewer instead.
@@ -808,7 +818,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (getLayout() != null) {
             final Object[] properties = propertyIds.toArray();
             for (int i = 0; i < properties.length; i++) {
-                Field<?> f = getField(properties[i]);
+                LegacyField<?> f = getField(properties[i]);
                 detachField(f);
                 if (layout instanceof CustomLayout) {
                     ((CustomLayout) layout).addComponent(f,
@@ -857,10 +867,11 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Gets the old field
-        final Field<?> oldField = fields.get(propertyId);
+        final LegacyField<?> oldField = fields.get(propertyId);
         if (oldField == null) {
-            throw new IllegalArgumentException("Field with given propertyid '"
-                    + propertyId.toString() + "' can not be found.");
+            throw new IllegalArgumentException(
+                    "Field with given propertyid '"
+                            + propertyId.toString() + "' can not be found.");
         }
         final Object value = oldField.getPropertyDataSource() == null ? oldField
                 .getValue() : oldField.getPropertyDataSource().getValue();
@@ -877,8 +888,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
         if (value != null && !found) {
             if (value instanceof Collection) {
-                for (final Iterator<?> it = ((Collection<?>) value).iterator(); it
-                        .hasNext();) {
+                for (final Iterator<?> it = ((Collection<?>) value)
+                        .iterator(); it
+                                .hasNext();) {
                     final Object val = it.next();
                     found = false;
                     for (int i = 0; i < values.length && !found; i++) {
@@ -1000,7 +1012,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @param fieldFactory
      *            the new factory used to create the fields.
-     * @see Field
+     * @see LegacyField
      * @see FormFieldFactory
      */
     public void setFormFieldFactory(FormFieldFactory fieldFactory) {
@@ -1019,7 +1031,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     /**
      * Gets the field type.
      * 
-     * @see com.vaadin.ui.AbstractField#getType()
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#getType()
      */
     @Override
     public Class<?> getType() {
@@ -1032,9 +1044,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     /**
      * Sets the internal value.
      * 
-     * This is relevant when the Form is used as Field.
+     * This is relevant when the Form is used as LegacyField.
      * 
-     * @see com.vaadin.ui.AbstractField#setInternalValue(java.lang.Object)
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#setInternalValue(java.lang.Object)
      */
     @Override
     protected void setInternalValue(Object newValue) {
@@ -1056,14 +1068,14 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * non-read-only fields, the first one of them is returned. Otherwise, the
      * field for the first property (or null if none) is returned.
      * 
-     * @return the Field.
+     * @return the LegacyField.
      */
-    private Field<?> getFirstFocusableField() {
+    private LegacyField<?> getFirstFocusableField() {
         Collection<?> itemPropertyIds = getItemPropertyIds();
         if (itemPropertyIds != null && itemPropertyIds.size() > 0) {
             for (Object id : itemPropertyIds) {
                 if (id != null) {
-                    Field<?> field = getField(id);
+                    LegacyField<?> field = getField(id);
                     if (field.isConnectorEnabled() && !field.isReadOnly()) {
                         return field;
                     }
@@ -1094,7 +1106,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (data instanceof Item) {
             item = (Item) data;
         } else if (data != null) {
-            item = new BeanItem<Object>(data);
+            item = new BeanItem<>(data);
         }
 
         // Sets the datasource to form
@@ -1138,7 +1150,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      *            the visibleProperties to set.
      */
     public void setVisibleItemProperties(Object... visibleProperties) {
-        LinkedList<Object> v = new LinkedList<Object>();
+        LinkedList<Object> v = new LinkedList<>();
         for (int i = 0; i < visibleProperties.length; i++) {
             v.add(visibleProperties[i]);
         }
@@ -1152,7 +1164,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     @Override
     public void focus() {
-        final Field<?> f = getFirstFocusableField();
+        final LegacyField<?> f = getFirstFocusableField();
         if (f != null) {
             f.focus();
         }
@@ -1166,7 +1178,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public void setTabIndex(int tabIndex) {
         super.setTabIndex(tabIndex);
-        for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = getItemPropertyIds().iterator(); i
+                .hasNext();) {
             (getField(i.next())).setTabIndex(tabIndex);
         }
     }
@@ -1178,8 +1191,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Iterator<LegacyField<?>> i = fields.values().iterator(); i
+                .hasNext();) {
+            LegacyField<?> f = i.next();
             if (f instanceof AbstractComponent) {
                 ((AbstractComponent) f).setImmediate(immediate);
             }
@@ -1195,10 +1209,11 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public boolean isEmpty() {
 
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
-            if (f instanceof AbstractField) {
-                if (!((AbstractField<?>) f).isEmpty()) {
+        for (Iterator<LegacyField<?>> i = fields.values().iterator(); i
+                .hasNext();) {
+            LegacyField<?> f = i.next();
+            if (f instanceof LegacyAbstractField) {
+                if (!((LegacyAbstractField<?>) f).isEmpty()) {
                     return false;
                 }
             }
@@ -1214,10 +1229,11 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     @Override
     public void clear() {
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
-            if (f instanceof AbstractField) {
-                ((AbstractField<?>) f).clear();
+        for (Iterator<LegacyField<?>> i = fields.values().iterator(); i
+                .hasNext();) {
+            LegacyField<?> f = i.next();
+            if (f instanceof LegacyAbstractField) {
+                ((LegacyAbstractField<?>) f).clear();
             }
         }
     }
@@ -1279,9 +1295,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * Gets the {@link ActionManager} responsible for handling {@link Action}s
      * added to this Form.<br/>
      * Note that Form has another ActionManager inherited from
-     * {@link AbstractField}. The ownActionManager handles Actions attached to
-     * this Form specifically, while the ActionManager in AbstractField
-     * delegates to the containing Window (i.e global Actions).
+     * {@link LegacyAbstractField}. The ownActionManager handles Actions
+     * attached to this Form specifically, while the ActionManager in
+     * LegacyAbstractField delegates to the containing Window (i.e global
+     * Actions).
      * 
      * @return
      */

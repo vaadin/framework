@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -49,21 +50,21 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
     }
 
     @Override
-    public Field<?> createField(Item item, Object propertyId,
+    public LegacyField<?> createField(Item item, Object propertyId,
             Component uiContext) {
         Class<?> type = item.getItemProperty(propertyId).getType();
-        Field<?> field = createFieldByPropertyType(type);
+        LegacyField<?> field = createFieldByPropertyType(type);
         field.setCaption(createCaptionByPropertyId(propertyId));
         return field;
     }
 
     @Override
-    public Field createField(Container container, Object itemId,
+    public LegacyField createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         Property containerProperty = container.getContainerProperty(itemId,
                 propertyId);
         Class<?> type = containerProperty.getType();
-        Field<?> field = createFieldByPropertyType(type);
+        LegacyField<?> field = createFieldByPropertyType(type);
         field.setCaption(createCaptionByPropertyId(propertyId));
         return field;
     }
@@ -93,9 +94,9 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      * 
      * @param type
      *            the type of the property
-     * @return the most suitable generic {@link Field} for given type
+     * @return the most suitable generic {@link LegacyField} for given type
      */
-    public static Field<?> createFieldByPropertyType(Class<?> type) {
+    public static LegacyField<?> createFieldByPropertyType(Class<?> type) {
         // Null typed properties can not be edited
         if (type == null) {
             return null;

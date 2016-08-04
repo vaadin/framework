@@ -20,11 +20,11 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
@@ -105,7 +105,7 @@ public class TreeFilesystemContainer extends
         // Check if event occured at fsTree component
         if (event.getSource() == filesystem) {
             // Check if event is about changing value
-            if (event.getClass() == Field.ValueChangeEvent.class) {
+            if (event.getClass() == LegacyField.ValueChangeEvent.class) {
                 // Update property panel contents
                 final FileItem fileItem = (FileItem) filesystem
                         .getItem(filesystem.getValue());

@@ -2,13 +2,13 @@ package com.vaadin.tests.components.customfield;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
@@ -48,7 +48,7 @@ public class BooleanFieldExample extends TestBase {
         form.setFooter(null);
         form.setFormFieldFactory(new DefaultFieldFactory() {
             @Override
-            public Field createField(Item item, Object propertyId,
+            public LegacyField createField(Item item, Object propertyId,
                     Component uiContext) {
                 if ("custom".equals(propertyId)) {
                     return new BooleanField();

@@ -18,10 +18,10 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -31,7 +31,7 @@ public class TextChangeListenerLosesFocus extends TestBase {
         public void textChange(TextChangeEvent event) {
             final String value = event.getText();
             if (value.length() > 2) {
-                ((Field) event.getComponent())
+                ((LegacyField) event.getComponent())
                         .setValue("Updated by TextChangeListener");
             }
         }

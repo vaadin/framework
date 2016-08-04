@@ -9,11 +9,11 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.vaadin.data.Validator;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 
 public class AbsFieldValidatorsTest {
 
-    AbstractField<Object> field = new AbstractField<Object>() {
+    LegacyAbstractField<Object> field = new LegacyAbstractField<Object>() {
         @Override
         public Class getType() {
             return Object.class;

@@ -21,6 +21,7 @@ import java.util.Map;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.textarea.RichTextAreaState;
@@ -33,7 +34,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-public class RichTextArea extends AbstractField<String> implements
+public class RichTextArea extends LegacyAbstractField<String> implements
         LegacyComponent {
 
     /**

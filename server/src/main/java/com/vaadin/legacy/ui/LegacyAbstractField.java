@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -47,6 +47,8 @@ import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -55,13 +57,13 @@ import com.vaadin.ui.declarative.DesignContext;
  * Abstract field component for implementing buffered property editors. The
  * field may hold an internal value, or it may be connected to any data source
  * that implements the {@link com.vaadin.data.Property}interface.
- * <code>AbstractField</code> implements that interface itself, too, so
+ * <code>LegacyAbstractField</code> implements that interface itself, too, so
  * accessing the Property value represented by it is straightforward.
  * </p>
  * 
  * <p>
- * AbstractField also provides the {@link com.vaadin.data.Buffered} interface
- * for buffering the data source value. By default the Field is in write
+ * LegacyAbstractField also provides the {@link com.vaadin.data.Buffered} interface
+ * for buffering the data source value. By default the LegacyField is in write
  * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
  * buffering.
  * </p>
@@ -75,8 +77,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractField<T> extends AbstractComponent implements
-        Field<T>, Property.ReadOnlyStatusChangeListener,
+public abstract class LegacyAbstractField<T> extends AbstractComponent implements
+        LegacyField<T>, Property.ReadOnlyStatusChangeListener,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
@@ -185,13 +187,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Returns the type of the Field. The methods <code>getValue</code> and
+     * Returns the type of the LegacyField. The methods <code>getValue</code> and
      * <code>setValue</code> must be compatible with this type: one must be able
      * to safely cast the value returned from <code>getValue</code> to the given
      * type and pass any variable assignable to this type as an argument to
      * <code>setValue</code>.
      * 
-     * @return the type of the Field
+     * @return the type of the LegacyField
      */
     @Override
     public abstract Class<? extends T> getType();
@@ -242,7 +244,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * here, we use the default documentation from the implemented interface.
      */
     @Override
-    public void commit() throws Buffered.SourceException, InvalidValueException {
+    public void commit() throws Buffered.SourceException,
+            InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
             if ((isInvalidCommitted() || isValid())) {
                 try {
@@ -339,7 +342,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Sets the buffered mode of this Field.
+     * Sets the buffered mode of this LegacyField.
      * <p>
      * When the field is in buffered mode, changes will not be committed to the
      * property data source until {@link #commit()} is called.
@@ -367,7 +370,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Checks the buffered mode of this Field.
+     * Checks the buffered mode of this LegacyField.
      * 
      * @return true if buffered mode is on, false otherwise
      */
@@ -382,7 +385,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * or disabled.
      * <p>
      * If legacy Property toString mode is enabled, returns the value of this
-     * <code>Field</code> converted to a String.
+     * <code>LegacyField</code> converted to a String.
      * </p>
      * <p>
      * If legacy Property toString mode is disabled, the string representation
@@ -493,7 +496,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 throw new Property.ReadOnlyException();
             }
             try {
-                T doubleConvertedFieldValue = convertFromModel(convertToModel(newFieldValue));
+                T doubleConvertedFieldValue = convertFromModel(convertToModel(
+                        newFieldValue));
                 if (!SharedUtil
                         .equals(newFieldValue, doubleConvertedFieldValue)) {
                     newFieldValue = doubleConvertedFieldValue;
@@ -507,7 +511,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             // Repaint is needed even when the client thinks that it knows the
             // new state if validity of the component may change
             if (repaintIsNotNeeded
-                    && (isRequired() || hasValidators() || getConverter() != null)) {
+                    && (isRequired() || hasValidators()
+                            || getConverter() != null)) {
                 repaintIsNotNeeded = false;
             }
 
@@ -612,8 +617,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * registers itself as a listener and updates itself according to the events
      * it receives. To avoid memory leaks caused by references to a field no
      * longer in use, the listener registrations are removed on
-     * {@link AbstractField#detach() detach} and re-added on
-     * {@link AbstractField#attach() attach}.
+     * {@link LegacyAbstractField#detach() detach} and re-added on
+     * {@link LegacyAbstractField#attach() attach}.
      * </p>
      * 
      * <p>
@@ -686,7 +691,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Fires value change if the value has changed
         T value = getInternalValue();
         if ((value != oldValue)
-                && ((value != null && !value.equals(oldValue)) || value == null)) {
+                && ((value != null && !value.equals(oldValue))
+                        || value == null)) {
             fireValueChange(false);
         }
     }
@@ -828,7 +834,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Returns the current value (as returned by {@link #getValue()}) converted
      * to the data source type.
      * <p>
-     * This returns the same as {@link AbstractField#getValue()} if no converter
+     * This returns the same as {@link LegacyAbstractField#getValue()} if no converter
      * has been set. The value is not necessarily the same as the data source
      * value e.g. if the field is in buffered mode and has been modified.
      * </p>
@@ -938,7 +944,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Checks the validity of the Field.
+     * Checks the validity of the LegacyField.
      * 
      * A field is invalid if it is set as required (using
      * {@link #setRequired(boolean)} and is empty, if one or several of the
@@ -1010,7 +1016,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
 
         InvalidValueException[] exceptionArray = validationExceptions
-                .toArray(new InvalidValueException[validationExceptions.size()]);
+                .toArray(new InvalidValueException[validationExceptions
+                        .size()]);
 
         // Create a composite validator and include all exceptions
         throw new Validator.InvalidValueException(null, exceptionArray);
@@ -1087,10 +1094,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         return new CompositeErrorMessage(
                 new ErrorMessage[] {
                         superError,
-                AbstractErrorMessage
-                        .getErrorMessageForException(validationError),
                         AbstractErrorMessage
-                                .getErrorMessageForException(getCurrentBufferedSourceException()) });
+                                .getErrorMessageForException(validationError),
+                        AbstractErrorMessage
+                                .getErrorMessageForException(
+                                        getCurrentBufferedSourceException()) });
 
     }
 
@@ -1106,7 +1114,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
-                    "Internal error finding methods in AbstractField");
+                    "Internal error finding methods in LegacyAbstractField");
         }
     }
 
@@ -1116,7 +1124,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
-        addListener(AbstractField.ValueChangeEvent.class, listener,
+        addListener(LegacyAbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
         // ensure "automatic immediate handling" works
         markAsDirty();
@@ -1138,8 +1146,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * interface.
      */
     @Override
-    public void removeValueChangeListener(Property.ValueChangeListener listener) {
-        removeListener(AbstractField.ValueChangeEvent.class, listener,
+    public void removeValueChangeListener(
+            Property.ValueChangeListener listener) {
+        removeListener(LegacyAbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
         // ensure "automatic immediate handling" works
         markAsDirty();
@@ -1160,7 +1169,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * validated before the event is created.
      */
     protected void fireValueChange(boolean repaintIsNotNeeded) {
-        fireEvent(new AbstractField.ValueChangeEvent(this));
+        fireEvent(new LegacyAbstractField.ValueChangeEvent(this));
         if (!repaintIsNotNeeded) {
             markAsDirty();
         }
@@ -1175,11 +1184,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             READ_ONLY_STATUS_CHANGE_METHOD = Property.ReadOnlyStatusChangeListener.class
                     .getDeclaredMethod(
                             "readOnlyStatusChange",
-                            new Class[] { Property.ReadOnlyStatusChangeEvent.class });
+                            new Class[] {
+                                    Property.ReadOnlyStatusChangeEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
-                    "Internal error finding methods in AbstractField");
+                    "Internal error finding methods in LegacyAbstractField");
         }
     }
 
@@ -1219,7 +1229,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
          * @param source
          *            the Source of the event.
          */
-        public ReadOnlyStatusChangeEvent(AbstractField source) {
+        public ReadOnlyStatusChangeEvent(LegacyAbstractField source) {
             super(source);
         }
 
@@ -1283,7 +1293,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * is validated before the event is created.
      */
     protected void fireReadOnlyStatusChange() {
-        fireEvent(new AbstractField.ReadOnlyStatusChangeEvent(this));
+        fireEvent(new LegacyAbstractField.ReadOnlyStatusChangeEvent(this));
     }
 
     /**
@@ -1374,8 +1384,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Sets the internal field value. This is purely used by AbstractField to
-     * change the internal Field value. It does not trigger valuechange events.
+     * Sets the internal field value. This is purely used by LegacyAbstractField to
+     * change the internal LegacyField value. It does not trigger valuechange events.
      * It can be overridden by the inheriting classes to update all dependent
      * variables.
      * 
@@ -1609,7 +1619,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     /**
      * A ready-made {@link ShortcutListener} that focuses the given
-     * {@link Focusable} (usually a {@link Field}) when the keyboard shortcut is
+     * {@link Focusable} (usually a {@link LegacyField}) when the keyboard shortcut is
      * invoked.
      * 
      */
@@ -1640,7 +1650,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
          * @param modifiers
          *            modifiers required to invoke the shortcut
          */
-        public FocusShortcut(Focusable focusable, int keyCode, int... modifiers) {
+        public FocusShortcut(Focusable focusable, int keyCode,
+                int... modifiers) {
             super(null, keyCode, modifiers);
             this.focusable = focusable;
         }
@@ -1838,7 +1849,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = (AbstractField) designContext
+        LegacyAbstractField def = (LegacyAbstractField) designContext
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
@@ -1847,6 +1858,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractField.class.getName());
+        return Logger.getLogger(LegacyAbstractField.class.getName());
     }
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
@@ -18,7 +19,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 
@@ -60,10 +60,10 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<Object, HashMap<Object, Field<?>>>();
+        private final HashMap<Object, HashMap<Object, LegacyField<?>>> cache = new HashMap<Object, HashMap<Object, LegacyField<?>>>();
 
         @Override
-        public Field<?> createField(Container container, Object itemId,
+        public LegacyField<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (cache.containsKey(itemId)) {
                 if (cache.get(itemId) != null
@@ -71,10 +71,10 @@ public class EditableTableLeak extends TestBase {
                     return cache.get(itemId).get(propertyId);
                 }
             }
-            Field<?> f = super.createField(container, itemId, propertyId,
+            LegacyField<?> f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (!cache.containsKey(itemId)) {
-                cache.put(itemId, new HashMap<Object, Field<?>>());
+                cache.put(itemId, new HashMap<Object, LegacyField<?>>());
             }
             cache.get(itemId).put(propertyId, f);
             return f;

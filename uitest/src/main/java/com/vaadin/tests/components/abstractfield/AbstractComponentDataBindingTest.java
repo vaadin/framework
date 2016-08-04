@@ -8,10 +8,10 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 
@@ -70,15 +70,15 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
     @Override
     protected void addComponent(Component c) {
         super.addComponent(c);
-        if (c instanceof AbstractField) {
-            configureField((AbstractField<?>) c);
+        if (c instanceof LegacyAbstractField) {
+            configureField((LegacyAbstractField<?>) c);
             if (c != localeSelect) {
                 fields.add(c);
             }
         }
     }
 
-    protected void configureField(AbstractField<?> field) {
+    protected void configureField(LegacyAbstractField<?> field) {
         field.setImmediate(true);
         field.addListener(this);
     }
@@ -95,7 +95,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
 
     @Override
     public void valueChange(ValueChangeEvent event) {
-        AbstractField field = (AbstractField) event.getProperty();
+        LegacyAbstractField field = (LegacyAbstractField) event.getProperty();
         // if (field == localeSelect) {
         // return;
         // }

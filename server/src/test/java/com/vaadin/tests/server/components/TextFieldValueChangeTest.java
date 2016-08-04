@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.ui.TextField;
 
 /**
@@ -39,7 +39,7 @@ public class TextFieldValueChangeTest extends
     }
 
     @Override
-    protected void setValue(AbstractField<String> field) {
+    protected void setValue(LegacyAbstractField<String> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("text", "newValue");
         ((TextField) field).changeVariables(field, variables);

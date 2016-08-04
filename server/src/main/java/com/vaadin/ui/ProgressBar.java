@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -34,7 +35,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class ProgressBar extends AbstractField<Float> implements
+public class ProgressBar extends LegacyAbstractField<Float> implements
         Property.Viewer, Property.ValueChangeListener {
 
     private static final float DEFAULT_VALUE = 0f;
@@ -140,8 +141,8 @@ public class ProgressBar extends AbstractField<Float> implements
     }
 
     /*
-     * Overridden to keep the shared state in sync with the AbstractField
-     * internal value. Should be removed once AbstractField is refactored to use
+     * Overridden to keep the shared state in sync with the LegacyAbstractField
+     * internal value. Should be removed once LegacyAbstractField is refactored to use
      * shared state.
      * 
      * See tickets #10921 and #11064.

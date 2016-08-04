@@ -20,9 +20,11 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 
 /**
- * A {@link Field} whose UI content can be constructed by the user, enabling the
+ * A {@link LegacyField} whose UI content can be constructed by the user, enabling the
  * creation of e.g. form fields by composing Vaadin components. Customization of
  * both the visual presentation and the logic of the field is possible.
  * 
@@ -43,7 +45,7 @@ import com.vaadin.data.Property;
  * 
  * @since 7.0
  */
-public abstract class CustomField<T> extends AbstractField<T> implements
+public abstract class CustomField<T> extends LegacyAbstractField<T> implements
         HasComponents {
 
     /**

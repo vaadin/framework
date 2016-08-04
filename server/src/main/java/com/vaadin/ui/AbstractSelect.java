@@ -47,6 +47,7 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -78,7 +79,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
  */
 @SuppressWarnings("serial")
 // TODO currently cannot specify type more precisely in case of multi-select
-public abstract class AbstractSelect extends AbstractField<Object> implements
+public abstract class AbstractSelect extends LegacyAbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
         Container.ItemSetChangeListener, LegacyComponent {
@@ -646,7 +647,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Gets the selected item id or in multiselect mode a set of selected ids.
      * 
-     * @see com.vaadin.ui.AbstractField#getValue()
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#getValue()
      */
     @Override
     public Object getValue() {
@@ -686,7 +687,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @param newValue
      *            the New selected item or collection of selected items.
-     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object)
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#setValue(java.lang.Object)
      */
     @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException {
@@ -713,7 +714,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
      *            True if read-only check should be omitted.
-     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object,
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#setValue(java.lang.Object,
      *      java.lang.Boolean)
      */
     @Override
@@ -1788,7 +1789,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * For multi-selectable fields, also an empty collection of values is
      * considered to be an empty field.
      * 
-     * @see AbstractField#isEmpty().
+     * @see LegacyAbstractField#isEmpty().
      */
     @Override
     public boolean isEmpty() {
@@ -1875,7 +1876,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Notifies the component that it is connected to an application.
      * 
-     * @see com.vaadin.ui.AbstractField#attach()
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#attach()
      */
     @Override
     public void attach() {

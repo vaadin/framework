@@ -31,7 +31,7 @@ import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.ui.Field;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.TextField;
 
 /**
@@ -81,16 +81,16 @@ public class FieldGroupTest {
         field2.setRequired(true);
         fieldGroup.bind(field2, "prop2");
 
-        Set<TextField> set = new HashSet<TextField>(Arrays.asList(field1,
+        Set<TextField> set = new HashSet<>(Arrays.asList(field1,
                 field2));
 
         try {
             fieldGroup.commit();
             Assert.fail("No commit exception is thrown");
         } catch (CommitException exception) {
-            Map<Field<?>, ? extends InvalidValueException> invalidFields = exception
+            Map<LegacyField<?>, ? extends InvalidValueException> invalidFields = exception
                     .getInvalidFields();
-            for (Entry<Field<?>, ? extends InvalidValueException> entry : invalidFields
+            for (Entry<LegacyField<?>, ? extends InvalidValueException> entry : invalidFields
                     .entrySet()) {
                 set.remove(entry.getKey());
             }
@@ -137,7 +137,8 @@ public class FieldGroupTest {
         }
 
         @Override
-        public void setValue(String newValue) throws Property.ReadOnlyException {
+        public void setValue(String newValue)
+                throws Property.ReadOnlyException {
         }
 
         @Override

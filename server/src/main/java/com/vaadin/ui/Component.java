@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
@@ -378,7 +379,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * Tests whether the component is in the read-only mode. The user can not
-     * change the value of a read-only component. As only {@link Field}
+     * change the value of a read-only component. As only {@link LegacyField}
      * components normally have a value that can be input or changed by the
      * user, this is mostly relevant only to field components, though not
      * restricted to them.
@@ -405,7 +406,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * can not change the value of a read-only component.
      * 
      * <p>
-     * As only {@link Field} components normally have a value that can be input
+     * As only {@link LegacyField} components normally have a value that can be input
      * or changed by the user, this is mostly relevant only to field components,
      * though not restricted to them.
      * </p>
@@ -1021,13 +1022,13 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * A sub-interface implemented by components that can obtain input focus.
-     * This includes all {@link Field} components as well as some other
+     * This includes all {@link LegacyField} components as well as some other
      * components, such as {@link Upload}.
      * 
      * <p>
      * Focus can be set with {@link #focus()}. This interface does not provide
      * an accessor that would allow finding out the currently focused component;
-     * focus information can be acquired for some (but not all) {@link Field}
+     * focus information can be acquired for some (but not all) {@link LegacyField}
      * components through the {@link com.vaadin.event.FieldEvents.FocusListener}
      * and {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
      * </p>
@@ -1061,7 +1062,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * <p>
          * Notice that this interface does not provide an accessor that would
          * allow finding out the currently focused component. Focus information
-         * can be acquired for some (but not all) {@link Field} components
+         * can be acquired for some (but not all) {@link LegacyField} components
          * through the {@link com.vaadin.event.FieldEvents.FocusListener} and
          * {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
          * </p>

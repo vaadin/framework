@@ -29,9 +29,9 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -215,7 +215,7 @@ public class TestForUpload extends CustomComponent implements
         uploadBufferSelector.setValue("memory");
         uploadBufferSelector.addItem("tempfile");
         uploadBufferSelector
-                .addListener(new AbstractField.ValueChangeListener() {
+                .addListener(new LegacyAbstractField.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         setBuffer();

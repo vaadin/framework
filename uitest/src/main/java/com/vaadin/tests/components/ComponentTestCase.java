@@ -8,13 +8,13 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 
@@ -74,7 +74,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         actions.add(createReadonlyAction(false));
 
         actions.add(createErrorIndicatorAction(false));
-        if (Field.class.isAssignableFrom(getTestClass())) {
+        if (LegacyField.class.isAssignableFrom(getTestClass())) {
             actions.add(createRequiredAction(false));
         }
 

@@ -170,7 +170,7 @@ public class TestForPreconfiguredComponents extends CustomComponent {
             public void componentEvent(Event event) {
                 statusLayout
                         .addComponent(new Label(event.getClass().getName()));
-                // TODO should not use Field.toString()
+                // TODO should not use LegacyField.toString()
                 statusLayout.addComponent(new Label("selected: "
                         + event.getSource().toString()));
             }

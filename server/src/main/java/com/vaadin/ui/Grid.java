@@ -73,6 +73,7 @@ import com.vaadin.event.SelectionEvent.SelectionNotifier;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.EncodeResult;
@@ -157,14 +158,14 @@ import elemental.json.JsonValue;
  * <h3 id="grid-selection-modes-and-models">Selection Modes and Models</h3>
  * <p>
  * Grid supports three selection <em>{@link SelectionMode modes}</em> (single,
- * multi, none), and comes bundled with one
- * <em>{@link SelectionModel model}</em> for each of the modes. The distinction
- * between a selection mode and selection model is as follows: a <em>mode</em>
- * essentially says whether you can have one, many or no rows selected. The
- * model, however, has the behavioral details of each. A single selection model
- * may require that the user deselects one row before selecting another one. A
- * variant of a multiselect might have a configurable maximum of rows that may
- * be selected. And so on.
+ * multi, none), and comes bundled with one <em>{@link SelectionModel
+ * model}</em> for each of the modes. The distinction between a selection mode
+ * and selection model is as follows: a <em>mode</em> essentially says whether
+ * you can have one, many or no rows selected. The model, however, has the
+ * behavioral details of each. A single selection model may require that the
+ * user deselects one row before selecting another one. A variant of a
+ * multiselect might have a configurable maximum of rows that may be selected.
+ * And so on.
  * <p>
  * <code><pre>
  * Grid grid = new Grid(myContainer);
@@ -319,19 +320,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * client. Details components get destroyed once they scroll out of
          * view.
          */
-        private final Map<Object, Component> itemIdToDetailsComponent = new HashMap<Object, Component>();
+        private final Map<Object, Component> itemIdToDetailsComponent = new HashMap<>();
 
         /**
          * Set of item ids that got <code>null</code> from DetailsGenerator when
          * {@link DetailsGenerator#getDetails(RowReference)} was called.
          */
-        private final Set<Object> emptyDetails = new HashSet<Object>();
+        private final Set<Object> emptyDetails = new HashSet<>();
 
         /**
          * Set of item IDs for all open details rows. Contains even the ones
          * that are not currently visible on the client.
          */
-        private final Set<Object> openDetails = new HashSet<Object>();
+        private final Set<Object> openDetails = new HashSet<>();
 
         public DetailComponentManager(Grid grid) {
             this(grid, DetailsGenerator.NULL);
@@ -416,7 +417,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Recreates all visible details components.
          */
         public void refreshDetails() {
-            Set<Object> visibleItemIds = new HashSet<Object>(
+            Set<Object> visibleItemIds = new HashSet<>(
                     itemIdToDetailsComponent.keySet());
             for (Object itemId : visibleItemIds) {
                 destroyDetails(itemId);
@@ -540,7 +541,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        protected <T extends Field> T build(String caption, Class<?> dataType,
+        protected <T extends LegacyField> T build(String caption,
+                Class<?> dataType,
                 Class<T> fieldType) throws BindException {
             T field = super.build(caption, dataType, fieldType);
             if (field instanceof CheckBox) {
@@ -573,7 +575,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
+        public <T extends LegacyField> T createField(Class<?> type,
+                Class<T> fieldType) {
             T f = super.createField(type, fieldType);
             if (f != null) {
                 f.setWidth("100%");
@@ -691,7 +694,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private CommitException cause;
 
-        private Set<Column> errorColumns = new HashSet<Column>();
+        private Set<Column> errorColumns = new HashSet<>();
 
         private String userErrorMessage;
 
@@ -980,17 +983,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public void commitError(CommitErrorEvent event) {
-            Map<Field<?>, InvalidValueException> invalidFields = event
+            Map<LegacyField<?>, InvalidValueException> invalidFields = event
                     .getCause().getInvalidFields();
 
             if (!invalidFields.isEmpty()) {
                 Object firstErrorPropertyId = null;
-                Field<?> firstErrorField = null;
+                LegacyField<?> firstErrorField = null;
 
                 FieldGroup fieldGroup = event.getCause().getFieldGroup();
                 for (Column column : getColumns()) {
                     Object propertyId = column.getPropertyId();
-                    Field<?> field = fieldGroup.getField(propertyId);
+                    LegacyField<?> field = fieldGroup.getField(propertyId);
                     if (invalidFields.keySet().contains(field)) {
                         event.addErrorColumn(column);
 
@@ -1018,10 +1021,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         private Object getFirstPropertyId(FieldGroup fieldGroup,
-                Set<Field<?>> keySet) {
+                Set<LegacyField<?>> keySet) {
             for (Column c : getColumns()) {
                 Object propertyId = c.getPropertyId();
-                Field<?> f = fieldGroup.getField(propertyId);
+                LegacyField<?> f = fieldGroup.getField(propertyId);
                 if (keySet.contains(f)) {
                     return propertyId;
                 }
@@ -1339,7 +1342,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static abstract class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
-        protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
+        protected final LinkedHashSet<Object> selection = new LinkedHashSet<>();
 
         @Override
         public boolean isSelected(final Object itemId) {
@@ -1348,7 +1351,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public Collection<Object> getSelectedRows() {
-            return new ArrayList<Object>(selection);
+            return new ArrayList<>(selection);
         }
 
         @Override
@@ -1586,7 +1589,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void select(List<String> rowKeys) {
-                    List<Object> items = new ArrayList<Object>();
+                    List<Object> items = new ArrayList<>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
                     }
@@ -1595,7 +1598,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void deselect(List<String> rowKeys) {
-                    List<Object> items = new ArrayList<Object>();
+                    List<Object> items = new ArrayList<>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
                     }
@@ -1649,7 +1652,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             final boolean selectionWillChange = !selection.containsAll(itemIds)
                     && selection.size() < selectionLimit;
             if (selectionWillChange) {
-                final HashSet<Object> oldSelection = new HashSet<Object>(
+                final HashSet<Object> oldSelection = new HashSet<>(
                         selection);
                 if (selection.size() + itemIds.size() >= selectionLimit) {
                     // Add one at a time if there's a risk of overflow
@@ -1728,7 +1731,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             return deselect(itemIds, true);
         }
 
-        protected boolean deselect(final Collection<?> itemIds, boolean refresh) {
+        protected boolean deselect(final Collection<?> itemIds,
+                boolean refresh) {
             if (itemIds == null) {
                 throw new IllegalArgumentException("itemIds may not be null");
             }
@@ -1736,7 +1740,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             final boolean hasCommonElements = !Collections.disjoint(itemIds,
                     selection);
             if (hasCommonElements) {
-                final HashSet<Object> oldSelection = new HashSet<Object>(
+                final HashSet<Object> oldSelection = new HashSet<>(
                         selection);
                 selection.removeAll(itemIds);
                 fireSelectionEvent(oldSelection, selection);
@@ -1820,7 +1824,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             checkItemIdsExist(itemIds);
 
             boolean changed = false;
-            Set<Object> selectedRows = new HashSet<Object>(itemIds);
+            Set<Object> selectedRows = new HashSet<>(itemIds);
             final Collection<Object> oldSelection = getSelectedRows();
             Set<Object> added = getDifference(selectedRows, selection);
             if (!added.isEmpty()) {
@@ -1861,7 +1865,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         private static Set<Object> getDifference(Set<Object> set1,
                 Set<Object> set2) {
-            Set<Object> diff = new HashSet<Object>(set1);
+            Set<Object> diff = new HashSet<>(set1);
             diff.removeAll(set2);
             return diff;
         }
@@ -2162,7 +2166,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             if (cellDescriptionGenerator != null
                     && cellDescriptions.keys().length > 0) {
-                rowData.put(GridState.JSONKEY_CELLDESCRIPTION, cellDescriptions);
+                rowData.put(GridState.JSONKEY_CELLDESCRIPTION,
+                        cellDescriptions);
             }
 
             if (cellStyleGenerator != null && cellStyles.keys().length > 0) {
@@ -2229,8 +2234,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             private RowState rowState = new RowState();
             protected StaticSection<?> section;
-            private Map<Object, CELLTYPE> cells = new LinkedHashMap<Object, CELLTYPE>();
-            private Map<Set<CELLTYPE>, CELLTYPE> cellGroups = new HashMap<Set<CELLTYPE>, CELLTYPE>();
+            private Map<Object, CELLTYPE> cells = new LinkedHashMap<>();
+            private Map<Set<CELLTYPE>, CELLTYPE> cellGroups = new HashMap<>();
 
             protected StaticRow(StaticSection<?> section) {
                 this.section = section;
@@ -2238,7 +2243,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             protected void addCell(Object propertyId) {
                 CELLTYPE cell = createCell();
-                cell.setColumnId(section.grid.getColumn(propertyId).getState().id);
+                cell.setColumnId(section.grid.getColumn(propertyId)
+                        .getState().id);
                 cells.put(propertyId, cell);
                 rowState.cells.add(cell.getCellState());
             }
@@ -2314,7 +2320,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             public CELLTYPE join(Object... propertyIds) {
                 assert propertyIds.length > 1 : "You need to merge at least 2 properties";
 
-                Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
+                Set<CELLTYPE> cells = new HashSet<>();
                 for (int i = 0; i < propertyIds.length; ++i) {
                     cells.add(getCell(propertyIds[i]));
                 }
@@ -2332,7 +2338,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             public CELLTYPE join(CELLTYPE... cells) {
                 assert cells.length > 1 : "You need to merge at least 2 cells";
 
-                return join(new HashSet<CELLTYPE>(Arrays.asList(cells)));
+                return join(new HashSet<>(Arrays.asList(cells)));
             }
 
             protected CELLTYPE join(Set<CELLTYPE> cells) {
@@ -2349,7 +2355,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 // Create new cell data for the group
                 CELLTYPE newCell = createCell();
 
-                Set<String> columnGroup = new HashSet<String>();
+                Set<String> columnGroup = new HashSet<>();
                 for (CELLTYPE cell : cells) {
                     columnGroup.add(cell.getColumnId());
                 }
@@ -2398,7 +2404,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
              */
             protected void writeDesign(Element trElement,
                     DesignContext designContext) {
-                Set<CELLTYPE> visited = new HashSet<CELLTYPE>();
+                Set<CELLTYPE> visited = new HashSet<>();
                 for (Grid.Column column : section.grid.getColumns()) {
                     CELLTYPE cell = getCell(column.getPropertyId());
                     if (visited.contains(cell)) {
@@ -2450,7 +2456,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     int colspan = DesignAttributeHandler.readAttribute(
                             "colspan", element.attributes(), 1, int.class);
 
-                    Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
+                    Set<CELLTYPE> cells = new HashSet<>();
                     for (int c = 0; c < colspan; ++c) {
                         cells.add(getCell(section.grid.getColumns()
                                 .get(columnIndex + c).getPropertyId()));
@@ -2687,7 +2693,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         protected Grid grid;
-        protected List<ROWTYPE> rows = new ArrayList<ROWTYPE>();
+        protected List<ROWTYPE> rows = new ArrayList<>();
 
         /**
          * Sets the visibility of the whole section.
@@ -3106,7 +3112,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        protected void readDesign(Element trElement, DesignContext designContext) {
+        protected void readDesign(Element trElement,
+                DesignContext designContext) {
             super.readDesign(trElement, designContext);
 
             boolean defaultRow = DesignAttributeHandler.readAttribute(
@@ -3656,7 +3663,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                                     + toString()
                                     + " sortable. The Container of Grid does not implement Sortable");
                 } else if (!((Sortable) grid.datasource)
-                        .getSortableContainerPropertyIds().contains(propertyId)) {
+                        .getSortableContainerPropertyIds().contains(
+                                propertyId)) {
                     throw new IllegalStateException(
                             "Can't set column "
                                     + toString()
@@ -3786,8 +3794,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets the maximum width for this column.
          * <p>
-         * This defines the maximum allowed pixel width of the column
-         * <em>when it is set to expand</em>.
+         * This defines the maximum allowed pixel width of the column <em>when
+         * it is set to expand</em>.
          * 
          * @param pixels
          *            the maximum width
@@ -3882,7 +3890,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            the editor field
          * @return this column
          */
-        public Column setEditorField(Field<?> editor) {
+        public Column setEditorField(LegacyField<?> editor) {
             grid.setEditorField(getPropertyId(), editor);
             return this;
         }
@@ -3910,7 +3918,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *             if no field has been configured and there is a problem
          *             building or binding
          */
-        public Field<?> getEditorField() {
+        public LegacyField<?> getEditorField() {
             return grid.getEditorField(getPropertyId());
         }
 
@@ -4020,7 +4028,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param designContext
          *            the design context
          */
-        protected void writeDesign(Element design, DesignContext designContext) {
+        protected void writeDesign(Element design,
+                DesignContext designContext) {
             Attributes attributes = design.attributes();
             GridColumnState def = new GridColumnState();
 
@@ -4222,7 +4231,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @return an encoded value ready to be sent to the client
          */
         public static <T> JsonValue encodeValue(Object modelValue,
-                Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
+                Renderer<T> renderer, Converter<?, ?> converter,
+                Locale locale) {
             Class<T> presentationType = renderer.getPresentationType();
             T presentationValue;
 
@@ -4417,17 +4427,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Property id to column instance mapping
      */
-    private final Map<Object, Column> columns = new HashMap<Object, Column>();
+    private final Map<Object, Column> columns = new HashMap<>();
 
     /**
      * Key generator for column server-to-client communication
      */
-    private final KeyMapper<Object> columnKeys = new KeyMapper<Object>();
+    private final KeyMapper<Object> columnKeys = new KeyMapper<>();
 
     /**
      * The current sort order
      */
-    private final List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+    private final List<SortOrder> sortOrder = new ArrayList<>();
 
     /**
      * Property listener for listening to changes in data source properties.
@@ -4440,7 +4450,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     .getContainerPropertyIds());
 
             // Find columns that need to be removed.
-            List<Column> removedColumns = new LinkedList<Column>();
+            List<Column> removedColumns = new LinkedList<>();
             for (Object propertyId : columns.keySet()) {
                 if (!properties.contains(propertyId)) {
                     removedColumns.add(getColumn(propertyId));
@@ -4456,7 +4466,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             datasourceExtension.columnsRemoved(removedColumns);
 
             // Add new columns
-            List<Column> addedColumns = new LinkedList<Column>();
+            List<Column> addedColumns = new LinkedList<>();
             for (Object propertyId : properties) {
                 if (!columns.containsKey(propertyId)) {
                     addedColumns.add(appendColumn(propertyId));
@@ -4474,7 +4484,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         .getSortableContainerPropertyIds();
                 for (Object propertyId : columns.keySet()) {
                     Column column = columns.get(propertyId);
-                    if (!sortables.contains(propertyId) && column.isSortable()) {
+                    if (!sortables.contains(propertyId) && column
+                            .isSortable()) {
                         column.setSortable(false);
                     }
                 }
@@ -4531,10 +4542,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     private DetailComponentManager detailComponentManager = null;
 
-    private Set<Component> extensionComponents = new HashSet<Component>();
+    private Set<Component> extensionComponents = new HashSet<>();
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SelectionListener.class, "select", SelectionEvent.class);
+            .findMethod(SelectionListener.class, "select",
+                    SelectionEvent.class);
 
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
             .findMethod(SortListener.class, "sort", SortEvent.class);
@@ -4613,7 +4625,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     boolean userOriginated) {
                 assert columnIds.length == directions.length;
 
-                List<SortOrder> order = new ArrayList<SortOrder>(
+                List<SortOrder> order = new ArrayList<>(
                         columnIds.length);
                 for (int i = 0; i < columnIds.length; i++) {
                     Object propertyId = getPropertyIdByColumnId(columnIds[i]);
@@ -4660,7 +4672,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     getState(false).columnOrder = newColumnOrder;
                     // write changes to diffState so that possible reverting the
                     // column order is sent to client
-                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    assert diffState.hasKey(
+                            diffStateKey) : "Field name has changed";
                     Type type = null;
                     try {
                         type = (getState(false).getClass().getDeclaredField(
@@ -4699,7 +4712,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     JsonObject diffState = connectorTracker
                             .getDiffState(Grid.this);
 
-                    assert diffState.hasKey(diffStateKey) : "Field name has changed";
+                    assert diffState.hasKey(
+                            diffStateKey) : "Field name has changed";
                     Type type = null;
                     try {
                         type = (getState(false).getClass().getDeclaredField(
@@ -4722,7 +4736,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             @Override
             public void contextClick(int rowIndex, String rowKey,
-                    String columnId, Section section, MouseEventDetails details) {
+                    String columnId, Section section,
+                    MouseEventDetails details) {
                 Object itemId = null;
                 if (rowKey != null) {
                     itemId = getKeyMapper().get(rowKey);
@@ -4806,7 +4821,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                         errorMessage = event.getUserErrorMessage();
 
-                        errorColumnIds = new ArrayList<String>();
+                        errorColumnIds = new ArrayList<>();
                         for (Column column : event.getErrorColumns()) {
                             errorColumnIds.add(column.state.id);
                         }
@@ -5032,7 +5047,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @return unmodifiable copy of current columns in visual order
      */
     public List<Column> getColumns() {
-        List<Column> columns = new ArrayList<Grid.Column>();
+        List<Column> columns = new ArrayList<>();
         for (String columnId : getState(false).columnOrder) {
             columns.add(getColumnByColumnId(columnId));
         }
@@ -5075,7 +5090,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         // Inform the data provider of this new column.
         Column column = getColumn(propertyId);
-        List<Column> addedColumns = new ArrayList<Column>();
+        List<Column> addedColumns = new ArrayList<>();
         addedColumns.add(column);
         datasourceExtension.columnsAdded(addedColumns);
 
@@ -5141,8 +5156,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Removes all columns from this Grid.
      */
     public void removeAllColumns() {
-        List<Column> removed = new ArrayList<Column>(columns.values());
-        Set<Object> properties = new HashSet<Object>(columns.keySet());
+        List<Column> removed = new ArrayList<>(columns.values());
+        Set<Object> properties = new HashSet<>(columns.keySet());
         for (Object propertyId : properties) {
             removeColumn(propertyId);
         }
@@ -5237,7 +5252,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         footer.addColumn(datasourcePropertyId);
 
         String humanFriendlyPropertyId = SharedUtil
-                .propertyIdToHumanFriendly(String.valueOf(datasourcePropertyId));
+                .propertyIdToHumanFriendly(String.valueOf(
+                        datasourcePropertyId));
         column.setHeaderCaption(humanFriendlyPropertyId);
 
         if (datasource instanceof Sortable
@@ -5258,13 +5274,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @throws IllegalArgumentException
      *             if there is no column for given property id in this grid
      */
-    public void removeColumn(Object propertyId) throws IllegalArgumentException {
+    public void removeColumn(Object propertyId)
+            throws IllegalArgumentException {
         if (!columns.keySet().contains(propertyId)) {
             throw new IllegalArgumentException(
                     "There is no column for given property id " + propertyId);
         }
 
-        List<Column> removed = new ArrayList<Column>();
+        List<Column> removed = new ArrayList<>();
         removed.add(getColumn(propertyId));
         internalRemoveColumn(propertyId);
         datasourceExtension.columnsRemoved(removed);
@@ -5292,12 +5309,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the desired column order
      */
     public void setColumns(Object... propertyIds) {
-        Set<?> removePids = new HashSet<Object>(columns.keySet());
+        Set<?> removePids = new HashSet<>(columns.keySet());
         removePids.removeAll(Arrays.asList(propertyIds));
         for (Object removePid : removePids) {
             removeColumn(removePid);
         }
-        Set<?> addPids = new HashSet<Object>(Arrays.asList(propertyIds));
+        Set<?> addPids = new HashSet<>(Arrays.asList(propertyIds));
         addPids.removeAll(columns.keySet());
         for (Object propertyId : addPids) {
             addColumn(propertyId);
@@ -5314,7 +5331,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the order columns should be
      */
     public void setColumnOrder(Object... propertyIds) {
-        List<String> columnOrder = new ArrayList<String>();
+        List<String> columnOrder = new ArrayList<>();
         for (Object propertyId : propertyIds) {
             if (columns.containsKey(propertyId)) {
                 columnOrder.add(columnKeys.key(propertyId));
@@ -5602,7 +5619,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     public SelectionModel setSelectionMode(final SelectionMode selectionMode)
             throws IllegalArgumentException {
         if (selectionMode == null) {
-            throw new IllegalArgumentException("selection mode may not be null");
+            throw new IllegalArgumentException(
+                    "selection mode may not be null");
         }
         final SelectionModel newSelectionModel = selectionMode.createModel();
         setSelectionModel(newSelectionModel);
@@ -6075,7 +6093,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 getState().sortColumns = new String[] {};
                 getState(false).sortDirs = new SortDirection[] {};
             }
-            fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
+            fireEvent(new SortEvent(this, new ArrayList<>(sortOrder),
                     userOriginated));
         } else {
             throw new IllegalStateException(
@@ -6414,7 +6432,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     public Iterator<Component> iterator() {
         // This is a hash set to avoid adding header/footer components inside
         // merged cells multiple times
-        LinkedHashSet<Component> componentList = new LinkedHashSet<Component>();
+        LinkedHashSet<Component> componentList = new LinkedHashSet<>();
 
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
@@ -6476,9 +6494,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @since 7.6
      */
-    public void setCellDescriptionGenerator(CellDescriptionGenerator generator) {
+    public void setCellDescriptionGenerator(
+            CellDescriptionGenerator generator) {
         cellDescriptionGenerator = generator;
-        getState().hasDescriptions = (generator != null || rowDescriptionGenerator != null);
+        getState().hasDescriptions = (generator != null
+                || rowDescriptionGenerator != null);
         datasourceExtension.refreshCache();
     }
 
@@ -6512,7 +6532,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
         rowDescriptionGenerator = generator;
-        getState().hasDescriptions = (generator != null || cellDescriptionGenerator != null);
+        getState().hasDescriptions = (generator != null
+                || cellDescriptionGenerator != null);
         datasourceExtension.refreshCache();
     }
 
@@ -6738,14 +6759,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
     }
 
-    private Field<?> getEditorField(Object propertyId) {
+    private LegacyField<?> getEditorField(Object propertyId) {
         checkColumnExists(propertyId);
 
         if (!getColumn(propertyId).isEditable()) {
             return null;
         }
 
-        Field<?> editor = editorFieldGroup.getField(propertyId);
+        LegacyField<?> editor = editorFieldGroup.getField(propertyId);
 
         try {
             if (editor == null) {
@@ -6809,7 +6830,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorActive = true;
         // Must ensure that all fields, recursively, are sent to the client
         // This is needed because the fields are hidden using isRendered
-        for (Field<?> f : getEditorFields()) {
+        for (LegacyField<?> f : getEditorFields()) {
             f.markAsDirtyRecursive();
         }
 
@@ -6819,10 +6840,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
     }
 
-    private void setEditorField(Object propertyId, Field<?> field) {
+    private void setEditorField(Object propertyId, LegacyField<?> field) {
         checkColumnExists(propertyId);
 
-        Field<?> oldField = editorFieldGroup.getField(propertyId);
+        LegacyField<?> oldField = editorFieldGroup.getField(propertyId);
         if (oldField != null) {
             editorFieldGroup.unbind(oldField);
             oldField.setParent(null);
@@ -6884,7 +6905,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
              */
             cancelEditor();
         }
-        for (Field<?> editor : getEditorFields()) {
+        for (LegacyField<?> editor : getEditorFields()) {
             editor.setParent(null);
         }
 
@@ -6901,8 +6922,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * 
      * @return a collection of all the fields bound to the item editor
      */
-    Collection<Field<?>> getEditorFields() {
-        Collection<Field<?>> fields = editorFieldGroup.getFields();
+    Collection<LegacyField<?>> getEditorFields() {
+        Collection<LegacyField<?>> fields = editorFieldGroup.getFields();
         assert allAttached(fields);
         return fields;
     }
@@ -7273,7 +7294,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         if (selectionModel.getClass().equals(SingleSelectionModel.class)) {
             selectionMode = SelectionMode.SINGLE;
-        } else if (selectionModel.getClass().equals(MultiSelectionModel.class)) {
+        } else if (selectionModel.getClass().equals(
+                MultiSelectionModel.class)) {
             selectionMode = SelectionMode.MULTI;
         } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
             selectionMode = SelectionMode.NONE;

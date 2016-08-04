@@ -14,20 +14,22 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import com.vaadin.data.BufferedValidatable;
 import com.vaadin.data.Property;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Focusable;
 
 /**
- * Field interface is implemented by all classes (field components) that have a
+ * LegacyField interface is implemented by all classes (field components) that have a
  * value that the user can change through the user interface.
  *
- * Field components are built upon the framework defined in the Field interface
- * and the {@link com.vaadin.AbstractField} base class.
+ * LegacyField components are built upon the framework defined in the LegacyField interface
+ * and the {@link com.vaadin.LegacyAbstractField} base class.
  *
- * The Field interface inherits the {@link com.vaadin.ui.Component}
+ * The LegacyField interface inherits the {@link com.vaadin.ui.Component}
  * superinterface and also the {@link com.vaadin.ui.Property} interface to have
  * a value for the field.
  *
@@ -40,7 +42,7 @@ import com.vaadin.ui.Component.Focusable;
  *
  * @author IT Mill Ltd.
  */
-public interface Field<T> extends Component, BufferedValidatable, Property<T>,
+public interface LegacyField<T> extends Component, BufferedValidatable, Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.Editor, Focusable {
 
@@ -83,7 +85,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
     public String getRequiredError();
 
     /**
-     * An <code>Event</code> object specifying the Field whose value has been
+     * An <code>Event</code> object specifying the LegacyField whose value has been
      * changed.
      *
      * @author Vaadin Ltd.
@@ -99,7 +101,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
          * @param source
          *            the field that caused the event.
          */
-        public ValueChangeEvent(Field source) {
+        public ValueChangeEvent(LegacyField source) {
             super(source);
         }
 

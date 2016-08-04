@@ -38,6 +38,8 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
@@ -52,20 +54,20 @@ import com.vaadin.ui.declarative.DesignContext;
  * compatible with <code>java.util.Date</code>.
  * </p>
  * <p>
- * Since <code>DateField</code> extends <code>AbstractField</code> it implements
- * the {@link com.vaadin.data.Buffered}interface.
+ * Since <code>DateField</code> extends <code>LegacyAbstractField</code> it
+ * implements the {@link com.vaadin.data.Buffered}interface.
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
- * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)}must be called to
- * enable buffering.
+ * {@link com.vaadin.legacy.ui.LegacyAbstractField#setWriteThrough(boolean)}must
+ * be called to enable buffering.
  * </p>
  * 
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class DateField extends AbstractField<Date> implements
+public class DateField extends LegacyAbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, LegacyComponent {
 
     /**
@@ -152,7 +154,7 @@ public class DateField extends AbstractField<Date> implements
 
     private TimeZone timeZone = null;
 
-    private static Map<Resolution, String> variableNameForResolution = new HashMap<Resolution, String>();
+    private static Map<Resolution, String> variableNameForResolution = new HashMap<>();
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
@@ -485,7 +487,7 @@ public class DateField extends AbstractField<Date> implements
                         || variables.containsKey("min")
                         || variables.containsKey("sec")
                         || variables.containsKey("msec") || variables
-                            .containsKey("dateString"))) {
+                                .containsKey("dateString"))) {
 
             // Old and new dates
             final Date oldDate = getValue();
@@ -497,7 +499,7 @@ public class DateField extends AbstractField<Date> implements
 
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> calendarFieldChanges = new HashMap<Resolution, Integer>();
+            Map<Resolution, Integer> calendarFieldChanges = new HashMap<>();
 
             for (Resolution r : Resolution
                     .getResolutionsHigherOrEqualTo(resolution)) {
@@ -543,7 +545,8 @@ public class DateField extends AbstractField<Date> implements
                 newDate = cal.getTime();
             }
 
-            if (newDate == null && dateString != null && !"".equals(dateString)) {
+            if (newDate == null && dateString != null && !"".equals(
+                    dateString)) {
                 try {
                     Date parsedDate = handleUnparsableDateString(dateString);
                     setValue(parsedDate, true);
@@ -731,7 +734,7 @@ public class DateField extends AbstractField<Date> implements
                 Form f = (Form) parenOfDateField;
                 Collection<?> visibleItemProperties = f.getItemPropertyIds();
                 for (Object fieldId : visibleItemProperties) {
-                    Field<?> field = f.getField(fieldId);
+                    LegacyField<?> field = f.getField(fieldId);
                     if (equals(field)) {
                         /*
                          * this datefield is logically in a form. Do the same
@@ -813,7 +816,8 @@ public class DateField extends AbstractField<Date> implements
             // Start by a zeroed calendar to avoid having values for lower
             // resolution variables e.g. time when resolution is day
             int min, field;
-            for (Resolution r : Resolution.getResolutionsLowerThan(resolution)) {
+            for (Resolution r : Resolution.getResolutionsLowerThan(
+                    resolution)) {
                 field = r.getCalendarField();
                 min = calendar.getActualMinimum(field);
                 calendar.set(field, min);
@@ -981,7 +985,7 @@ public class DateField extends AbstractField<Date> implements
      * invalid if it contains text typed in by the user that couldn't be parsed
      * into a Date value.
      * 
-     * @see com.vaadin.ui.AbstractField#validate()
+     * @see com.vaadin.legacy.ui.LegacyAbstractField#validate()
      */
     @Override
     public void validate() throws InvalidValueException {

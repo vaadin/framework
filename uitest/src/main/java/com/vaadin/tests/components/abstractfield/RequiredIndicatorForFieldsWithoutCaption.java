@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
@@ -12,7 +13,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -20,7 +20,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
-    private Set<Field> fields = new HashSet<Field>();
+    private Set<LegacyField> fields = new HashSet<LegacyField>();
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -32,7 +32,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean required = (Boolean) event.getProperty().getValue();
-                for (Field f : fields) {
+                for (LegacyField f : fields) {
                     f.setRequired(required);
                 }
             }

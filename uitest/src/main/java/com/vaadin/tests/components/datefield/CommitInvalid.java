@@ -21,7 +21,7 @@ public class CommitInvalid extends TestBase {
         return "DateField with parsing error is committed regardless "
                 + "of the invalidity. Parsing error should be handled"
                 + " as a builtin validator, similar to isRequired()"
-                + " in AbstractField.";
+                + " in LegacyAbstractField.";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CommitInvalid extends TestBase {
                                  // immediate)
 
         /*
-         * Create and configure Date Field, the actual component to be tested.
+         * Create and configure Date LegacyField, the actual component to be tested.
          */
         dateProperty = new ObjectProperty<Date>(new Date(2009 - 1900, 4 - 1, 1));
 
@@ -62,7 +62,7 @@ public class CommitInvalid extends TestBase {
          * reference component.
          */
         integerProperty = new ObjectProperty<Integer>(42);
-        integerField = new TextField("Another Field", integerProperty);
+        integerField = new TextField("Another LegacyField", integerProperty);
         integerField.setId("_IF");
         form.addField("text", integerField);
 
@@ -132,9 +132,9 @@ public class CommitInvalid extends TestBase {
     }
 
     private void printState() {
-        log.log("Date. Field: " + f(dateField.getValue()) + " Property: "
+        log.log("Date. LegacyField: " + f(dateField.getValue()) + " Property: "
                 + f(dateProperty.getValue()));
-        log.log("Integer: Field: " + integerField.getValue() + " Property: "
+        log.log("Integer: LegacyField: " + integerField.getValue() + " Property: "
                 + integerProperty.getValue());
     }
 }

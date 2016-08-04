@@ -29,9 +29,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.util.ReflectTools;
 
@@ -62,8 +62,8 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
-    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
+    private HashMap<Object, LegacyField<?>> propertyIdToField = new HashMap<Object, LegacyField<?>>();
+    private LinkedHashMap<LegacyField<?>, Object> fieldToPropertyId = new LinkedHashMap<LegacyField<?>, Object>();
     private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
     /**
@@ -101,7 +101,7 @@ public class FieldGroup implements Serializable {
     public void setItemDataSource(Item itemDataSource) {
         this.itemDataSource = itemDataSource;
 
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             bind(f, fieldToPropertyId.get(f));
         }
     }
@@ -126,7 +126,7 @@ public class FieldGroup implements Serializable {
      * 
      * @see #setBuffered(boolean) for more details on buffered mode
      * 
-     * @see Field#isBuffered()
+     * @see LegacyField#isBuffered()
      * @return true if buffered mode is on, false otherwise
      * 
      */
@@ -145,7 +145,7 @@ public class FieldGroup implements Serializable {
      * The default is to use buffered mode.
      * </p>
      * 
-     * @see Field#setBuffered(boolean)
+     * @see LegacyField#setBuffered(boolean)
      * @param buffered
      *            true to turn on buffered mode, false otherwise
      */
@@ -155,7 +155,7 @@ public class FieldGroup implements Serializable {
         }
 
         this.buffered = buffered;
-        for (Field<?> field : getFields()) {
+        for (LegacyField<?> field : getFields()) {
             field.setBuffered(buffered);
         }
     }
@@ -181,7 +181,7 @@ public class FieldGroup implements Serializable {
      */
     public void setEnabled(boolean fieldsEnabled) {
         enabled = fieldsEnabled;
-        for (Field<?> field : getFields()) {
+        for (LegacyField<?> field : getFields()) {
             field.setEnabled(fieldsEnabled);
         }
     }
@@ -211,7 +211,7 @@ public class FieldGroup implements Serializable {
      */
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
-        for (Field<?> field : getFields()) {
+        for (LegacyField<?> field : getFields()) {
             if (field.getPropertyDataSource() == null
                     || !field.getPropertyDataSource().isReadOnly()) {
                 field.setReadOnly(fieldsReadOnly);
@@ -229,7 +229,7 @@ public class FieldGroup implements Serializable {
      * 
      * @return A collection with all bound Fields
      */
-    public Collection<Field<?>> getFields() {
+    public Collection<LegacyField<?>> getFields() {
         return fieldToPropertyId.keySet();
     }
 
@@ -249,7 +249,7 @@ public class FieldGroup implements Serializable {
      *             If the field is null or the property id is already bound to
      *             another field by this field binder
      */
-    public void bind(Field<?> field, Object propertyId) throws BindException {
+    public void bind(LegacyField<?> field, Object propertyId) throws BindException {
         throwIfFieldIsNull(field, propertyId);
         throwIfPropertyIdAlreadyBound(field, propertyId);
 
@@ -287,7 +287,7 @@ public class FieldGroup implements Serializable {
         return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
-    private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
+    private void throwIfFieldIsNull(LegacyField<?> field, Object propertyId) {
         if (field == null) {
             throw new BindException(
                     String.format(
@@ -296,7 +296,7 @@ public class FieldGroup implements Serializable {
         }
     }
 
-    private void throwIfPropertyIdAlreadyBound(Field<?> field, Object propertyId) {
+    private void throwIfPropertyIdAlreadyBound(LegacyField<?> field, Object propertyId) {
         if (propertyIdToField.containsKey(propertyId)
                 && propertyIdToField.get(propertyId) != field) {
             throw new BindException("Property id " + propertyId
@@ -342,7 +342,7 @@ public class FieldGroup implements Serializable {
      *             If the field is not bound by this field binder or not bound
      *             to the correct property id
      */
-    public void unbind(Field<?> field) throws BindException {
+    public void unbind(LegacyField<?> field) throws BindException {
         Object propertyId = fieldToPropertyId.get(field);
         if (propertyId == null) {
             throw new BindException(
@@ -378,7 +378,7 @@ public class FieldGroup implements Serializable {
      * @param field
      *            The field to update
      */
-    protected void configureField(Field<?> field) {
+    protected void configureField(LegacyField<?> field) {
         field.setBuffered(isBuffered());
 
         field.setEnabled(isEnabled());
@@ -478,7 +478,7 @@ public class FieldGroup implements Serializable {
         try {
             firePreCommitEvent();
 
-            Map<Field<?>, InvalidValueException> invalidValueExceptions = commitFields();
+            Map<LegacyField<?>, InvalidValueException> invalidValueExceptions = commitFields();
 
             if (invalidValueExceptions.isEmpty()) {
                 firePostCommitEvent();
@@ -501,10 +501,10 @@ public class FieldGroup implements Serializable {
      * @return a propertyId to validation exception map which is empty if all
      *         commits succeeded
      */
-    private Map<Field<?>, InvalidValueException> commitFields() {
-        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
+    private Map<LegacyField<?>, InvalidValueException> commitFields() {
+        Map<LegacyField<?>, InvalidValueException> invalidValueExceptions = new HashMap<LegacyField<?>, InvalidValueException>();
 
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             try {
                 f.commit();
             } catch (InvalidValueException e) {
@@ -523,7 +523,7 @@ public class FieldGroup implements Serializable {
      */
     public static class FieldGroupInvalidValueException extends
             InvalidValueException {
-        private Map<Field<?>, InvalidValueException> invalidValueExceptions;
+        private Map<LegacyField<?>, InvalidValueException> invalidValueExceptions;
 
         /**
          * Constructs a new exception with the specified validation exceptions.
@@ -532,7 +532,7 @@ public class FieldGroup implements Serializable {
          *            a property id to exception map
          */
         public FieldGroupInvalidValueException(
-                Map<Field<?>, InvalidValueException> invalidValueExceptions) {
+                Map<LegacyField<?>, InvalidValueException> invalidValueExceptions) {
             super(null, invalidValueExceptions.values().toArray(
                     new InvalidValueException[invalidValueExceptions.size()]));
             this.invalidValueExceptions = invalidValueExceptions;
@@ -544,13 +544,13 @@ public class FieldGroup implements Serializable {
          *
          * @return a map with all the invalid value exceptions
          */
-        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+        public Map<LegacyField<?>, InvalidValueException> getInvalidFields() {
             return invalidValueExceptions;
         }
     }
 
     private void startTransactions() throws CommitException {
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             Property.Transactional<?> property = (Property.Transactional<?>) f
                     .getPropertyDataSource();
             if (property == null) {
@@ -563,13 +563,13 @@ public class FieldGroup implements Serializable {
     }
 
     private void commitTransactions() {
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             ((Property.Transactional<?>) f.getPropertyDataSource()).commit();
         }
     }
 
     private void rollbackTransactions() {
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             try {
                 ((Property.Transactional<?>) f.getPropertyDataSource())
                         .rollback();
@@ -616,7 +616,7 @@ public class FieldGroup implements Serializable {
      * 
      */
     public void discard() {
-        for (Field<?> f : fieldToPropertyId.keySet()) {
+        for (LegacyField<?> f : fieldToPropertyId.keySet()) {
             try {
                 f.discard();
             } catch (Exception e) {
@@ -635,7 +635,7 @@ public class FieldGroup implements Serializable {
      * @return The field that is bound to the property id or null if no field is
      *         bound to that property id
      */
-    public Field<?> getField(Object propertyId) {
+    public LegacyField<?> getField(Object propertyId) {
         return propertyIdToField.get(propertyId);
     }
 
@@ -647,7 +647,7 @@ public class FieldGroup implements Serializable {
      * @return The property id that is bound to the field or null if the field
      *         is not bound to any property id by this FieldBinder
      */
-    public Object getPropertyId(Field<?> field) {
+    public Object getPropertyId(LegacyField<?> field) {
         return fieldToPropertyId.get(field);
     }
 
@@ -751,14 +751,14 @@ public class FieldGroup implements Serializable {
     /**
      * Checks the validity of the bound fields.
      * <p>
-     * Call the {@link Field#validate()} for the fields to get the individual
+     * Call the {@link LegacyField#validate()} for the fields to get the individual
      * error messages.
      * 
      * @return true if all bound fields are valid, false otherwise.
      */
     public boolean isValid() {
         try {
-            for (Field<?> field : getFields()) {
+            for (LegacyField<?> field : getFields()) {
                 field.validate();
             }
             return true;
@@ -773,7 +773,7 @@ public class FieldGroup implements Serializable {
      * @return true if at least one field has been modified, false otherwise
      */
     public boolean isModified() {
-        for (Field<?> field : getFields()) {
+        for (LegacyField<?> field : getFields()) {
             if (field.isModified()) {
                 return true;
             }
@@ -807,7 +807,7 @@ public class FieldGroup implements Serializable {
      * Binds member fields found in the given object.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property id
+     * {@link LegacyField} and that can be mapped to a property id. Property id
      * mapping is done based on the field name or on a @{@link PropertyId}
      * annotation on the field. All non-null fields for which a property id can
      * be determined are bound to the property id.
@@ -847,7 +847,7 @@ public class FieldGroup implements Serializable {
      * that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids are
+     * {@link LegacyField} and that can be mapped to a property id. Property ids are
      * searched in the following order: @{@link PropertyId} annotations, exact
      * field name matches and the case-insensitive matching that ignores
      * underscores. Fields that are not initialized (null) are built using the
@@ -892,7 +892,7 @@ public class FieldGroup implements Serializable {
      * member fields that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids are
+     * {@link LegacyField} and that can be mapped to a property id. Property ids are
      * searched in the following order: @{@link PropertyId} annotations, exact
      * field name matches and the case-insensitive matching that ignores
      * underscores. Fields that are not initialized (null) are built using the
@@ -912,7 +912,7 @@ public class FieldGroup implements Serializable {
 
         for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(objectClass)) {
 
-            if (!Field.class.isAssignableFrom(memberField.getType())) {
+            if (!LegacyField.class.isAssignableFrom(memberField.getType())) {
                 // Process next field
                 continue;
             }
@@ -920,7 +920,7 @@ public class FieldGroup implements Serializable {
             PropertyId propertyIdAnnotation = memberField
                     .getAnnotation(PropertyId.class);
 
-            Class<? extends Field> fieldType = (Class<? extends Field>) memberField
+            Class<? extends LegacyField> fieldType = (Class<? extends LegacyField>) memberField
                     .getType();
 
             Object propertyId = null;
@@ -950,11 +950,11 @@ public class FieldGroup implements Serializable {
                 continue;
             }
 
-            Field<?> field;
+            LegacyField<?> field;
             try {
                 // Get the field from the object
-                field = (Field<?>) ReflectTools.getJavaFieldValue(
-                        objectWithMemberFields, memberField, Field.class);
+                field = (LegacyField<?>) ReflectTools.getJavaFieldValue(
+                        objectWithMemberFields, memberField, LegacyField.class);
             } catch (Exception e) {
                 // If we cannot determine the value, just skip the field and try
                 // the next one
@@ -972,7 +972,7 @@ public class FieldGroup implements Serializable {
                             .createCaptionByPropertyId(propertyId);
                 }
 
-                // Create the component (Field)
+                // Create the component (LegacyField)
                 field = build(caption, propertyType, fieldType);
 
                 // Store it in the field
@@ -1089,12 +1089,12 @@ public class FieldGroup implements Serializable {
          * @return a map with all the invalid value exceptions. Can be empty but
          *         not null
          */
-        public Map<Field<?>, InvalidValueException> getInvalidFields() {
+        public Map<LegacyField<?>, InvalidValueException> getInvalidFields() {
             if (getCause() instanceof FieldGroupInvalidValueException) {
                 return ((FieldGroupInvalidValueException) getCause())
                         .getInvalidFields();
             }
-            return new HashMap<Field<?>, InvalidValueException>();
+            return new HashMap<LegacyField<?>, InvalidValueException>();
         }
 
         /**
@@ -1144,7 +1144,7 @@ public class FieldGroup implements Serializable {
      *             If there is a problem while building or binding
      * @return The created and bound field
      */
-    public Field<?> buildAndBind(Object propertyId) throws BindException {
+    public LegacyField<?> buildAndBind(Object propertyId) throws BindException {
         String caption = DefaultFieldFactory
                 .createCaptionByPropertyId(propertyId);
         return buildAndBind(caption, propertyId);
@@ -1161,11 +1161,11 @@ public class FieldGroup implements Serializable {
      *            finder.
      * @throws BindException
      *             If there is a problem while building or binding
-     * @return The created and bound field. Can be any type of {@link Field}.
+     * @return The created and bound field. Can be any type of {@link LegacyField}.
      */
-    public Field<?> buildAndBind(String caption, Object propertyId)
+    public LegacyField<?> buildAndBind(String caption, Object propertyId)
             throws BindException {
-        return buildAndBind(caption, propertyId, Field.class);
+        return buildAndBind(caption, propertyId, LegacyField.class);
     }
 
     /**
@@ -1179,10 +1179,10 @@ public class FieldGroup implements Serializable {
      *            finder.
      * @throws BindException
      *             If the field could not be created
-     * @return The created and bound field. Can be any type of {@link Field}.
+     * @return The created and bound field. Can be any type of {@link LegacyField}.
      */
 
-    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+    public <T extends LegacyField> T buildAndBind(String caption, Object propertyId,
             Class<T> fieldType) throws BindException {
         Class<?> type = getPropertyType(propertyId);
 
@@ -1196,8 +1196,8 @@ public class FieldGroup implements Serializable {
      * Creates a field based on the given data type.
      * <p>
      * The data type is the type that we want to edit using the field. The field
-     * type is the type of field we want to create, can be {@link Field} if any
-     * Field is good.
+     * type is the type of field we want to create, can be {@link LegacyField} if any
+     * LegacyField is good.
      * </p>
      * 
      * @param caption
@@ -1206,11 +1206,11 @@ public class FieldGroup implements Serializable {
      *            The data model type that we want to edit using the field
      * @param fieldType
      *            The type of field that we want to create
-     * @return A Field capable of editing the given type
+     * @return A LegacyField capable of editing the given type
      * @throws BindException
      *             If the field could not be created
      */
-    protected <T extends Field> T build(String caption, Class<?> dataType,
+    protected <T extends LegacyField> T build(String caption, Class<?> dataType,
             Class<T> fieldType) throws BindException {
         T field = getFieldFactory().createField(dataType, fieldType);
         if (field == null) {
@@ -1224,7 +1224,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns an array containing Field objects reflecting all the fields of
+     * Returns an array containing LegacyField objects reflecting all the fields of
      * the class or interface represented by this Class object. The elements in
      * the array returned are sorted in declare order from sub class to super
      * class.
@@ -1252,9 +1252,9 @@ public class FieldGroup implements Serializable {
      * @since 7.4
      */
     public void clear() {
-        for (Field<?> f : getFields()) {
-            if (f instanceof AbstractField) {
-                ((AbstractField) f).clear();
+        for (LegacyField<?> f : getFields()) {
+            if (f instanceof LegacyAbstractField) {
+                ((LegacyAbstractField) f).clear();
             }
         }
 

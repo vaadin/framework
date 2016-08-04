@@ -3,8 +3,8 @@ package com.vaadin.tests.components.customfield;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Layout;
 
@@ -21,7 +21,7 @@ import com.vaadin.ui.Layout;
  */
 public class EmbeddedForm extends Form {
     private Form parentForm;
-    private Map<Object, Field> fields = new HashMap<Object, Field>();
+    private Map<Object, LegacyField> fields = new HashMap<Object, LegacyField>();
 
     /**
      * Create a form that places its fields in another {@link Form}.
@@ -35,14 +35,14 @@ public class EmbeddedForm extends Form {
     }
 
     @Override
-    protected void attachField(Object propertyId, Field field) {
+    protected void attachField(Object propertyId, LegacyField field) {
         if (propertyId == null || field == null) {
             return;
         }
 
         Layout layout = parentForm.getLayout();
 
-        Field oldField = fields.get(propertyId);
+        LegacyField oldField = fields.get(propertyId);
         if (oldField != null) {
             layout.removeComponent(oldField);
         }

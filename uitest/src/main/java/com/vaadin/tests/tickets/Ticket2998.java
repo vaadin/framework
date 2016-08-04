@@ -11,12 +11,12 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.MarginHandler;
@@ -148,7 +148,7 @@ public class Ticket2998 extends LegacyApplication {
         }
 
         @Override
-        public Field<?> createField(Container container, Object itemId,
+        public LegacyField<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
 
             /*
@@ -165,7 +165,7 @@ public class Ticket2998 extends LegacyApplication {
                 return getSecondaryTypesList(itemId);
             }
 
-            final Field f = super.createField(container, itemId, propertyId,
+            final LegacyField f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (f != null) {
                 if (f instanceof TextField) {
@@ -200,7 +200,7 @@ public class Ticket2998 extends LegacyApplication {
 
         private Map<Object, ListSelect> workoutIdToList = new HashMap<Object, ListSelect>();
 
-        private Field<?> getSecondaryTypesList(Object itemId) {
+        private LegacyField<?> getSecondaryTypesList(Object itemId) {
             ListSelect list = workoutIdToList.get(itemId);
             if (list == null) {
                 list = new ListSelect();
@@ -219,7 +219,7 @@ public class Ticket2998 extends LegacyApplication {
 
         private Map<Object, ComboBox> workoutIdToCombobox = new HashMap<Object, ComboBox>();
 
-        private Field<?> getTrainingTypeComboboxFor(Object itemId) {
+        private LegacyField<?> getTrainingTypeComboboxFor(Object itemId) {
             ComboBox cb = workoutIdToCombobox.get(itemId);
             if (cb == null) {
                 final ComboBox cb2 = new ComboBox();

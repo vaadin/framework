@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -155,7 +155,7 @@ public class ButtonWithShortcutNotRendered extends AbstractTestUI {
 
         @Override
         @SuppressWarnings("rawtypes")
-        protected void attachField(Object propertyId, Field field) {
+        protected void attachField(Object propertyId, LegacyField field) {
             if (propertyId.equals("t1")) {
                 layout.addComponent(field, 0, 0);
             } else if (propertyId.equals("t2")) {

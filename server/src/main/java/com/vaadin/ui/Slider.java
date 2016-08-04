@@ -21,6 +21,7 @@ import java.util.Collection;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
@@ -32,7 +33,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd.
  */
-public class Slider extends AbstractField<Double> {
+public class Slider extends LegacyAbstractField<Double> {
 
     private SliderServerRpc rpc = new SliderServerRpc() {
 
@@ -299,8 +300,8 @@ public class Slider extends AbstractField<Double> {
     }
 
     /*
-     * Overridden to keep the shared state in sync with the AbstractField
-     * internal value. Should be removed once AbstractField is refactored to use
+     * Overridden to keep the shared state in sync with the LegacyAbstractField
+     * internal value. Should be removed once LegacyAbstractField is refactored to use
      * shared state.
      * 
      * See tickets #10921 and #11064.

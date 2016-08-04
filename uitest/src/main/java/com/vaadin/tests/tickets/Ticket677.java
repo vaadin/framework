@@ -4,6 +4,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -11,7 +12,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -127,9 +127,9 @@ public class Ticket677 extends LegacyApplication {
         form.setFormFieldFactory(new DefaultFieldFactory() {
 
             @Override
-            public Field<?> createField(Item item, Object propertyId,
+            public LegacyField<?> createField(Item item, Object propertyId,
                     Component uiContext) {
-                Field<?> f = super.createField(item, propertyId, uiContext);
+                LegacyField<?> f = super.createField(item, propertyId, uiContext);
                 f.setEnabled(!"disabled".equals(propertyId));
                 return f;
             }
@@ -150,9 +150,9 @@ public class Ticket677 extends LegacyApplication {
         table.setTableFieldFactory(new DefaultFieldFactory() {
 
             @Override
-            public Field<?> createField(Container container, Object itemId,
+            public LegacyField<?> createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
-                Field<?> f = super.createField(container, itemId, propertyId,
+                LegacyField<?> f = super.createField(container, itemId, propertyId,
                         uiContext);
                 Item item = container.getItem(itemId);
                 Property<?> p = item.getItemProperty(propertyId);

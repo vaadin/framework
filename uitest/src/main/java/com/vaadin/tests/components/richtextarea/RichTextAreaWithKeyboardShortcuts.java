@@ -2,10 +2,10 @@ package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -27,7 +27,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             msg += " From : " + sender.getClass().getSimpleName() + " '"
                     + ((Component) sender).getCaption() + "'";
 
-            AbstractField<String> f = (AbstractField<String>) target;
+            LegacyAbstractField<String> f = (LegacyAbstractField<String>) target;
             msg += " Target:" + target.getClass().getSimpleName() + " '"
                     + f.getCaption() + "'";
 

@@ -6,8 +6,8 @@ import org.junit.Test;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.data.bean.BeanToValidate;
-import com.vaadin.ui.Field;
 
 public class BeanValidationTest {
     @Test(expected = InvalidValueException.class)
@@ -95,7 +95,7 @@ public class BeanValidationTest {
         beanToValidate.setFirstname("a");
         fieldGroup.setItemDataSource(beanToValidate);
 
-        Field<?> nameField = fieldGroup.buildAndBind("firstname");
+        LegacyField<?> nameField = fieldGroup.buildAndBind("firstname");
         Assert.assertEquals(1, nameField.getValidators().size());
 
         try {

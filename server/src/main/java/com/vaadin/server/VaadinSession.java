@@ -51,8 +51,8 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -615,7 +615,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * </p>
      * <p>
      * The {@link Converter} for an individual field can be overridden using
-     * {@link AbstractField#setConverter(Converter)} and for individual property
+     * {@link LegacyAbstractField#setConverter(Converter)} and for individual property
      * ids in a {@link Table} using
      * {@link Table#setConverter(Object, Converter)}.
      * </p>

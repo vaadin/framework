@@ -3,6 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -10,7 +11,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
@@ -30,31 +30,31 @@ public class GridLayoutCaptions extends TestBase {
         private FormFieldFactory fff = new FormFieldFactory() {
 
             @Override
-            public Field<?> createField(Item item, Object propertyId,
+            public LegacyField<?> createField(Item item, Object propertyId,
                     Component uiContext) {
 
                 if (propertyId.equals(DataPOJO.Fields.name.name())) {
-                    Field<?> f = DefaultFieldFactory.get().createField(item,
+                    LegacyField<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the name field");
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.hp.name())) {
-                    Field<?> f = DefaultFieldFactory.get().createField(item,
+                    LegacyField<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the HP field, but it has a VL as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.place.name())) {
-                    Field<?> f = DefaultFieldFactory.get().createField(item,
+                    LegacyField<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the Place field, but it has a CSSLo as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.price.name())) {
-                    Field<?> f = DefaultFieldFactory.get().createField(item,
+                    LegacyField<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("With size undefined the caption behaves like this...");
                     f.setSizeFull();
@@ -114,7 +114,7 @@ public class GridLayoutCaptions extends TestBase {
         }
 
         @Override
-        protected void attachField(Object propertyId, Field field) {
+        protected void attachField(Object propertyId, LegacyField field) {
 
             if (propertyId.equals(DataPOJO.Fields.name.name())) {
                 layout.addComponent(field, 0, 0);

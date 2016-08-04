@@ -13,18 +13,18 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.Transactional;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
-import com.vaadin.ui.Field;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.TextField;
 
 public class FieldGroupTest {
 
     private FieldGroup sut;
-    private Field field;
+    private LegacyField field;
 
     @Before
     public void setup() {
         sut = new FieldGroup();
-        field = mock(Field.class);
+        field = mock(LegacyField.class);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class FieldGroupTest {
     @Test(expected = FieldGroup.BindException.class)
     public void cannotBindToAlreadyBoundProperty() {
         sut.bind(field, "foobar");
-        sut.bind(mock(Field.class), "foobar");
+        sut.bind(mock(LegacyField.class), "foobar");
     }
 
     @Test(expected = FieldGroup.BindException.class)

@@ -9,13 +9,13 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -376,8 +376,8 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentRequired.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if (target != null && target instanceof AbstractField) {
-                    ((AbstractField<?>) target).setRequired(componentRequired
+                if (target != null && target instanceof LegacyAbstractField) {
+                    ((LegacyAbstractField<?>) target).setRequired(componentRequired
                             .getValue());
                 }
             }
@@ -424,7 +424,7 @@ public class BoxLayoutTest extends AbstractTestUI {
                 componentDescription.setEnabled(target != null);
                 componentError.setEnabled(target != null);
                 componentRequired.setEnabled(target != null
-                        && target instanceof AbstractField);
+                        && target instanceof LegacyAbstractField);
                 align.setEnabled(target != null);
                 expand.setEnabled(target != null);
                 if (target != null) {
@@ -455,8 +455,8 @@ public class BoxLayoutTest extends AbstractTestUI {
                     }
                     componentDescription.setValue(target.getDescription());
                     componentError.setValue(target.getComponentError() != null);
-                    if (target instanceof AbstractField) {
-                        componentRequired.setValue(((AbstractField<?>) target)
+                    if (target instanceof LegacyAbstractField) {
+                        componentRequired.setValue(((LegacyAbstractField<?>) target)
                                 .isRequired());
                     }
                 }

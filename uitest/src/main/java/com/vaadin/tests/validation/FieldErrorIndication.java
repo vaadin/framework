@@ -19,13 +19,13 @@ import java.util.Set;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
@@ -84,12 +84,12 @@ public class FieldErrorIndication extends AbstractTestUI {
 
         vl.addComponents(comboBox, listSelect, nativeSelect, twinColSelect);
 
-        Class<? extends AbstractField>[] textFields = new Class[] {
+        Class<? extends LegacyAbstractField>[] textFields = new Class[] {
                 TextField.class, TextArea.class, RichTextArea.class,
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends Field> fieldClass : textFields) {
+        for (Class<? extends LegacyField> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
@@ -100,10 +100,10 @@ public class FieldErrorIndication extends AbstractTestUI {
      * @param fieldClass
      * @return
      */
-    private Component getField(Class<? extends Field> fieldClass) {
-        AbstractField f;
+    private Component getField(Class<? extends LegacyField> fieldClass) {
+        LegacyAbstractField f;
         try {
-            f = (AbstractField) fieldClass.newInstance();
+            f = (LegacyAbstractField) fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

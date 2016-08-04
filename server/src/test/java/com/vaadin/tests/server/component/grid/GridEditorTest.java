@@ -35,10 +35,10 @@ import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 
@@ -235,7 +235,7 @@ public class GridEditorTest {
     public void testFieldIsNotReadonly() {
         startEdit();
 
-        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
+        LegacyField<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
         assertFalse(field.isReadOnly());
     }
 
@@ -244,13 +244,13 @@ public class GridEditorTest {
         startEdit();
 
         grid.getEditorFieldGroup().setReadOnly(true);
-        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
+        LegacyField<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
         assertTrue(field.isReadOnly());
     }
 
     @Test
     public void testColumnRemoved() {
-        Field<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
+        LegacyField<?> field = grid.getColumn(PROPERTY_NAME).getEditorField();
 
         assertSame("field should be attached to ", grid, field.getParent());
 

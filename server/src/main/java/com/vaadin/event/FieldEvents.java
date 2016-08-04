@@ -19,17 +19,17 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyField.ValueChangeEvent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.TextField;
 import com.vaadin.util.ReflectTools;
 
 /**
- * Interface that serves as a wrapper for {@link Field} related events.
+ * Interface that serves as a wrapper for {@link LegacyField} related events.
  */
 public interface FieldEvents {
 
@@ -53,7 +53,7 @@ public interface FieldEvents {
     public interface FocusNotifier extends Serializable {
         /**
          * Adds a <code>FocusListener</code> to the Component which gets fired
-         * when a <code>Field</code> receives keyboard focus.
+         * when a <code>LegacyField</code> receives keyboard focus.
          * 
          * @param listener
          * @see FocusListener
@@ -105,7 +105,7 @@ public interface FieldEvents {
     public interface BlurNotifier extends Serializable {
         /**
          * Adds a <code>BlurListener</code> to the Component which gets fired
-         * when a <code>Field</code> loses keyboard focus.
+         * when a <code>LegacyField</code> loses keyboard focus.
          * 
          * @param listener
          * @see BlurListener
@@ -139,7 +139,7 @@ public interface FieldEvents {
 
     /**
      * <code>FocusEvent</code> class for holding additional event information.
-     * Fired when a <code>Field</code> receives keyboard focus.
+     * Fired when a <code>LegacyField</code> receives keyboard focus.
      * 
      * @since 6.2
      */
@@ -158,7 +158,7 @@ public interface FieldEvents {
 
     /**
      * <code>FocusListener</code> interface for listening for
-     * <code>FocusEvent</code> fired by a <code>Field</code>.
+     * <code>FocusEvent</code> fired by a <code>LegacyField</code>.
      * 
      * @see FocusEvent
      * @since 6.2
@@ -179,7 +179,7 @@ public interface FieldEvents {
 
     /**
      * <code>BlurEvent</code> class for holding additional event information.
-     * Fired when a <code>Field</code> loses keyboard focus.
+     * Fired when a <code>LegacyField</code> loses keyboard focus.
      * 
      * @since 6.2
      */
@@ -198,7 +198,7 @@ public interface FieldEvents {
 
     /**
      * <code>BlurListener</code> interface for listening for
-     * <code>BlurEvent</code> fired by a <code>Field</code>.
+     * <code>BlurEvent</code> fired by a <code>LegacyField</code>.
      * 
      * @see BlurEvent
      * @since 6.2
@@ -281,7 +281,7 @@ public interface FieldEvents {
     }
 
     /**
-     * An interface implemented by a {@link Field} supporting
+     * An interface implemented by a {@link LegacyField} supporting
      * {@link TextChangeEvent}s. An example a {@link TextField} supports
      * {@link TextChangeListener}s.
      */

@@ -18,25 +18,25 @@ package com.vaadin.tests.server.component.abstractfield;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.TextField;
 
 /**
- * Tests declarative support for implementations of {@link AbstractField}.
+ * Tests declarative support for implementations of {@link LegacyAbstractField}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
 public class AbstractFieldDeclarativeTest extends
-        DeclarativeTestBase<AbstractField<?>> {
+        DeclarativeTestBase<LegacyAbstractField<?>> {
 
     @Test
     public void testPlainText() {
         String design = "<vaadin-text-field buffered validation-visible='false' invalid-committed"
                 + " invalid-allowed='false' required required-error='This is a required field'"
                 + " conversion-error='Input {0} cannot be parsed' tabindex=3 readonly/>";
-        AbstractField tf = new TextField();
+        LegacyAbstractField tf = new TextField();
         tf.setBuffered(true);
         tf.setBuffered(true);
         tf.setValidationVisible(false);
@@ -62,7 +62,7 @@ public class AbstractFieldDeclarativeTest extends
         // Test that read only value coming from property data source is not
         // written to design.
         String design = "<vaadin-text-field value=test></vaadin-text-field>";
-        AbstractField component = new TextField();
+        LegacyAbstractField component = new TextField();
         ObjectProperty<String> property = new ObjectProperty<String>("test");
         property.setReadOnly(true);
         component.setPropertyDataSource(property);
