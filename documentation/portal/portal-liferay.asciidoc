@@ -136,7 +136,7 @@ The other parameters are the following:
 
 vaadinVersion:: Vaadin release version for the Maven dependency.
 uiClassName:: Class name of the UI class stub to be created.
-theme:: Theme to use. You can use either a project theme, which must be compiled before deployment, or use the [literal]#++liferay++# theme.
+theme:: Theme to use. You can use either a project theme, which must be compiled before deployment, or use one of the default themes.
 portletTitle:: Title shown in the portlet title bar.
 portletShortTitle:: Title shown in contexts where a shorter title is preferred.
 portletKeywords:: Keywords for finding the portlet in Liferay.
@@ -195,7 +195,7 @@ If you are installing Vaadin in a Liferay version that comes bundled with an
 older version of Vaadin, you first need to remove the resources as described in
 <<portal.liferay.remove>>.
 
-In the following, we assume that you use only the built-in "liferay" theme in
+In the following, we assume that you use only the built-in "reindeer" theme in
 Vaadin and the default widget set.
 
 . Get the Vaadin installation package from the Vaadin download page
@@ -249,7 +249,8 @@ Below is an example of a [filename]#portal-ext.properties# file:
 vaadin.widgetset=com.vaadin.server.DefaultWidgetSet
 
 # Theme to use
-vaadin.theme=liferay
+# This is the default theme if nothing is specified
+vaadin.theme=reindeer
 ----
 
 The allowed parameters are:
@@ -263,7 +264,7 @@ application server; in Liferay with Tomcat it would be located at
 notation. If the parameter is not given, the default widget set is used.
 
 [parameter]#vaadin.theme#:: Name of the theme to use. If the parameter is not given, the default theme is
-used, which is [literal]#++reindeer++# in Vaadin 6.
+used, which is [literal]#++reindeer++#.
 
 
 

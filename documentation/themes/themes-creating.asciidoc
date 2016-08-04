@@ -170,7 +170,6 @@ Vaadin currently includes the following built-in themes:
 * [literal]#++reindeer++#, the primary theme in Vaadin 6 and 7
 * [literal]#++chameleon++#, an easily customizable theme
 * [literal]#++runo++#, the default theme in IT Mill Toolkit 5
-* [literal]#++liferay++#, for Liferay portlets
 
 In addition, there is the [literal]#++base++# theme, which should not be used
 directly, but is extended by the other built-in themes, except valo.

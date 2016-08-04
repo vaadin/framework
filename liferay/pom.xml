@@ -76,7 +76,6 @@
 									<includes>
 										VAADIN/themes/base/**,
 										VAADIN/themes/chameleon/**,
-										VAADIN/themes/liferay/**,
 										VAADIN/themes/runo/**,
 										VAADIN/themes/reindeer/**
 									</includes>

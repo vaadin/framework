@@ -25,7 +25,6 @@ public class ColumnHeaderAlignments extends TestBase {
         theme.addItem("reindeer");
         theme.addItem("runo");
         theme.addItem("base");
-        theme.addItem("liferay");
         theme.setValue("reindeer");
         theme.setNullSelectionAllowed(false);
         theme.setImmediate(true);

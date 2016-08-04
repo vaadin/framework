@@ -19,11 +19,6 @@ public class FaviconTest extends SingleBrowserTest {
     }
 
     @Test
-    public void liferayHasFavicon() {
-        assertThatThemeHasFavicon("liferay");
-    }
-
-    @Test
     public void runoHasFavicon() {
         assertThatThemeHasFavicon("runo");
     }

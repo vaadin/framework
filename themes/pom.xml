@@ -151,25 +151,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>compile-legacy-liferay</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
-
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
 						<id>compile-legacy-reindeer</id>
 						<phase>process-resources</phase>
 						<goals>
