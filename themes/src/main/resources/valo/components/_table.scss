@@ -603,7 +603,7 @@ $v-table-background-color: null !default;
  */
 @mixin valo-table-sort-asc-icon-style {
   content: '\f0de';
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
 }
 
 /**
@@ -614,7 +614,7 @@ $v-table-background-color: null !default;
  */
 @mixin valo-table-sort-desc-icon-style {
   content: '\f0dd';
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
 }
 
 /**
@@ -624,7 +624,7 @@ $v-table-background-color: null !default;
  * @group table
  */
 @mixin valo-table-column-selector-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f013";
 }
 
@@ -636,7 +636,7 @@ $v-table-background-color: null !default;
  */
 @mixin valo-table-column-visible-icon-style {
   content: "\f00c";
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
 }
 
 

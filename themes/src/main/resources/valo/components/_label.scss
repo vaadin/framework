@@ -1,97 +1,97 @@
 /**
  * The font weight for headers.
- * 
+ *
  * @group label
  */
 $v-font-weight--header: $v-font-weight - 100 !default;
 
 /**
  * The line height for headers.
- * 
+ *
  * @group label
  */
 $v-line-height--header: 1.1 !default;
 
 /**
  * The font family for headers.
- * 
+ *
  * @group label
  */
 $v-font-family--header: null !default;
 
 /**
  * The font color for colored style labels.
- * 
+ *
  * @group label
  */
 $v-font-color--colored: $v-selection-color !default;
 
 /**
  * The font size for 1st level headers.
- * 
+ *
  * @group label
  */
 $v-font-size--h1: 2.4em !default;
 
 /**
  * The font size for 2nd level headers.
- * 
+ *
  * @group label
  */
 $v-font-size--h2: 1.6em !default;
 
 /**
  * The font size for 3rd level headers.
- * 
+ *
  * @group label
  */
 $v-font-size--h3: 1.2em !default;
 
 /**
  * The font family for 1st level headers.
- * 
+ *
  * @group label
  */
 $v-font-family--h1: $v-font-family--header !default;
 
 /**
  * The font family for 2nd level headers.
- * 
+ *
  * @group label
  */
 $v-font-family--h2: $v-font-family--header !default;
 
 /**
  * The font family for 3rd level headers.
- * 
+ *
  * @group label
  */
 $v-font-family--h3: $v-font-family--header !default;
 
 /**
  * The letter spacing for 1st level headers.
- * 
+ *
  * @group label
  */
 $v-letter-spacing--h1: -0.03em !default;
 
 /**
  * The letter spacing for 2nd level headers.
- * 
+ *
  * @group label
  */
 $v-letter-spacing--h2: -0.02em !default;
 
 /**
  * The letter spacing for 3rd level headers.
- * 
+ *
  * @group label
  */
 $v-letter-spacing--h3: 0 !default;
 
 /**
  * The letter spacing for 4th level headers.
- * 
+ *
  * @group label
  */
 $v-letter-spacing--h4: 0 !default;
@@ -99,7 +99,7 @@ $v-letter-spacing--h4: 0 !default;
 
 /**
  * Outputs the selectors and styles for the Label component.
- * 
+ *
  * @param {string} $primary-stylename (v-label) - the primary style name for the selectors
  * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
@@ -263,7 +263,7 @@ $v-letter-spacing--h4: 0 !default;
       font-size: round($v-font-size * 0.95);
 
       &:before {
-        font-family: ThemeIcons;
+        font-family: FontAwesome;
         content: "\f00c";
         margin-right: .5em;
         margin-left: round($v-unit-size/-2);

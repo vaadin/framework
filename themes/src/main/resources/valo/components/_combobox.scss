@@ -334,7 +334,7 @@
  * @group combobox
  */
 @mixin valo-combobox-button-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f078";
 }
 
@@ -424,7 +424,7 @@
     height: ceil($v-unit-size/1.5);
     line-height: ceil($v-unit-size/1.5);
     text-align: center;
-    font-family: ThemeIcons;
+    font-family: FontAwesome;
     @include transform( scale(.8) );
 
     color: valo-font-color($v-background-color);

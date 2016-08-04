@@ -8,8 +8,8 @@ $v-notification-title-color: $v-focus-color !default;
 /**
  *
  *
- * @param {string} $primary-stylename (v-Notification) - 
- * @param {bool} $include-additional-styles - 
+ * @param {string} $primary-stylename (v-Notification) -
+ * @param {bool} $include-additional-styles -
  *
  * @group notification
  */
@@ -110,7 +110,7 @@ $v-notification-title-color: $v-focus-color !default;
   .v-icon + .#{$primary-stylename}-caption {
     margin-left: round($v-font-size);
   }
-  
+
   .#{$primary-stylename}-system {
     @include valo-notification-bar-style($primary-stylename);
     @include valo-notification-system-style($primary-stylename);
@@ -185,7 +185,7 @@ $v-notification-title-color: $v-focus-color !default;
         font-weight: $v-font-weight + 100;
 
         &:before {
-          font-family: ThemeIcons;
+          font-family: FontAwesome;
           content: "\f00c";
           margin-right: .5em;
         }

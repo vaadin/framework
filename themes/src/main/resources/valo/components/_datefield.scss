@@ -266,7 +266,7 @@
  * @group datefield
  */
 @mixin valo-datefield-button-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f073";
 }
 
@@ -570,7 +570,7 @@
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-nextmonth-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f105";
 }
 
@@ -581,7 +581,7 @@
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-prevmonth-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f104";
 }
 
@@ -592,7 +592,7 @@
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-nextyear-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f101";
 }
 
@@ -603,7 +603,7 @@
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-prevyear-icon-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f100";
 }
 

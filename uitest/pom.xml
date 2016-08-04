@@ -364,6 +364,16 @@
 						<resource>
 							<source>
 								<directory>
+									${project.build.directory}/scss/font-awesome
+								</directory>
+							</source>
+							<destination>
+								${project.build.outputDirectory}/VAADIN/themes/font-awesome
+							</destination>
+						</resource>
+						<resource>
+							<source>
+								<directory>
 									${project.build.directory}/scss/valo
 								</directory>
 							</source>

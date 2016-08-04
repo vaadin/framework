@@ -7,7 +7,7 @@ $valo-richtextarea-use-valo-icons: true !default;
 /**
  *
  *
- * @param {string} $primary-stylename (v-richtextarea) - 
+ * @param {string} $primary-stylename (v-richtextarea) -
  *
  * @group richtextarea
  */
@@ -73,7 +73,7 @@ $valo-richtextarea-use-valo-icons: true !default;
       }
 
       div:before {
-        font-family: ThemeIcons;
+        font-family: FontAwesome;
       }
 
       @each $pair in $icons {

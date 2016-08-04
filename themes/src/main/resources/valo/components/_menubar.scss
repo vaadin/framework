@@ -54,7 +54,7 @@
     display: none;
 
     + .#{$primary-stylename}-menuitem-caption:after {
-      font-family: ThemeIcons;
+      font-family: FontAwesome;
       content: "\f078";
       font-size: 0.7em;
       vertical-align: .15em;
@@ -285,7 +285,7 @@
  * @group menubar
  */
 @mixin valo-menubar-submenu-indicator-style {
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
   content: "\f054";
   line-height: $v-selection-item-height + 2px;
 }
@@ -298,7 +298,7 @@
  */
 @mixin valo-menubar-checked-icon-style {
   content: "\f00c";
-  font-family: ThemeIcons;
+  font-family: FontAwesome;
 }
 
 

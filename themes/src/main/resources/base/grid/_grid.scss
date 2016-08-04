@@ -125,7 +125,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       &:after {
         content: "\f0c9";
         display: block;
-        font-family: ThemeIcons, sans-serif;
+        font-family: FontAwesome, sans-serif;
         font-size: $v-grid-header-font-size;
       }
     }
@@ -253,7 +253,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       padding-right: round($v-grid-header-font-size * 1.2) + $v-grid-cell-padding-horizontal;
 
       &:after {
-        font-family: ThemeIcons, sans-serif;
+        font-family: FontAwesome, sans-serif;
         content: "\f0de" " " attr(sort-order);
         position: absolute;
         right: $v-grid-cell-padding-horizontal;

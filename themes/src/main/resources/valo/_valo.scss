@@ -4,6 +4,7 @@
 
 // Import all utility mixins and functions
 @import "bourbon";
+@import "font-awesome";
 @import "util/lists";
 @import "util/css3";
 @import "util/color";
@@ -15,6 +16,10 @@
 
 // Import custom font mixins
 @import "fonts/fonts";
+
+.FontAwesome {
+  @extend .fa;
+}
 
 
 // Include custom font faces if they are used by the theme
