@@ -62,10 +62,10 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  * 
  * <p>
- * LegacyAbstractField also provides the {@link com.vaadin.data.Buffered} interface
- * for buffering the data source value. By default the LegacyField is in write
- * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
- * buffering.
+ * LegacyAbstractField also provides the {@link com.vaadin.data.Buffered}
+ * interface for buffering the data source value. By default the LegacyField is
+ * in write through-mode and {@link #setWriteThrough(boolean)}should be called
+ * to enable buffering.
  * </p>
  * 
  * <p>
@@ -75,10 +75,17 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
+ * 
+ * @deprecated This class is, apart from the rename, identical to the Vaadin 7
+ *             {@code com.vaadin.ui.AbstractField}. It is provided for
+ *             compatibility and migration purposes. As of 8.0, new field
+ *             implementations should extend the new
+ *             {@link com.vaadin.ui.AbstractField} instead.
  */
 @SuppressWarnings("serial")
-public abstract class LegacyAbstractField<T> extends AbstractComponent implements
-        LegacyField<T>, Property.ReadOnlyStatusChangeListener,
+@Deprecated
+public abstract class LegacyAbstractField<T> extends AbstractComponent
+        implements LegacyField<T>, Property.ReadOnlyStatusChangeListener,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
@@ -187,11 +194,11 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
     }
 
     /**
-     * Returns the type of the LegacyField. The methods <code>getValue</code> and
-     * <code>setValue</code> must be compatible with this type: one must be able
-     * to safely cast the value returned from <code>getValue</code> to the given
-     * type and pass any variable assignable to this type as an argument to
-     * <code>setValue</code>.
+     * Returns the type of the LegacyField. The methods <code>getValue</code>
+     * and <code>setValue</code> must be compatible with this type: one must be
+     * able to safely cast the value returned from <code>getValue</code> to the
+     * given type and pass any variable assignable to this type as an argument
+     * to <code>setValue</code>.
      * 
      * @return the type of the LegacyField
      */
@@ -834,9 +841,9 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
      * Returns the current value (as returned by {@link #getValue()}) converted
      * to the data source type.
      * <p>
-     * This returns the same as {@link LegacyAbstractField#getValue()} if no converter
-     * has been set. The value is not necessarily the same as the data source
-     * value e.g. if the field is in buffered mode and has been modified.
+     * This returns the same as {@link LegacyAbstractField#getValue()} if no
+     * converter has been set. The value is not necessarily the same as the data
+     * source value e.g. if the field is in buffered mode and has been modified.
      * </p>
      * 
      * @return The converted value that is compatible with the data source type
@@ -870,7 +877,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
     @Override
     public void addValidator(Validator validator) {
         if (validators == null) {
-            validators = new LinkedList<Validator>();
+            validators = new LinkedList<>();
         }
         validators.add(validator);
         markAsDirty();
@@ -993,7 +1000,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
             }
         }
 
-        List<InvalidValueException> validationExceptions = new ArrayList<InvalidValueException>();
+        List<InvalidValueException> validationExceptions = new ArrayList<>();
         if (validators != null) {
             // Gets all the validation errors
             for (Validator v : validators) {
@@ -1384,10 +1391,10 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
     }
 
     /**
-     * Sets the internal field value. This is purely used by LegacyAbstractField to
-     * change the internal LegacyField value. It does not trigger valuechange events.
-     * It can be overridden by the inheriting classes to update all dependent
-     * variables.
+     * Sets the internal field value. This is purely used by LegacyAbstractField
+     * to change the internal LegacyField value. It does not trigger valuechange
+     * events. It can be overridden by the inheriting classes to update all
+     * dependent variables.
      * 
      * Subclasses can also override {@link #getInternalValue()} if necessary.
      * 
@@ -1619,8 +1626,8 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent implement
 
     /**
      * A ready-made {@link ShortcutListener} that focuses the given
-     * {@link Focusable} (usually a {@link LegacyField}) when the keyboard shortcut is
-     * invoked.
+     * {@link Focusable} (usually a {@link LegacyField}) when the keyboard
+     * shortcut is invoked.
      * 
      */
     public static class FocusShortcut extends ShortcutListener {

@@ -13,37 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.event;
 
-import java.util.EventObject;
-
-import com.vaadin.server.ClientConnector;
+import java.io.Serializable;
 
 /**
- * A base class for user interface events fired by connectors.
+ * A registration object for removing an event listener added to a source.
  * 
  * @author Vaadin Ltd.
- * @since 7.0
+ * @since
  */
-public abstract class ConnectorEvent extends EventObject {
+@FunctionalInterface
+public interface Registration extends Serializable {
 
     /**
-     * Creates a new event fired by the given source.
-     * 
-     * @param source
-     *            the source connector
+     * Removes the associated listener from the event source.
      */
-    public ConnectorEvent(ClientConnector source) {
-        super(source);
-    }
-
-    /**
-     * Returns the connector that fired the event.
-     * 
-     * @return the source connector
-     */
-    public ClientConnector getConnector() {
-        return (ClientConnector) getSource();
-    }
+    public void remove();
 }

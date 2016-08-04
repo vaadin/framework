@@ -17,32 +17,37 @@
 package com.vaadin.legacy.ui;
 
 import com.vaadin.data.BufferedValidatable;
+import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Focusable;
 
 /**
- * LegacyField interface is implemented by all classes (field components) that have a
- * value that the user can change through the user interface.
+ * LegacyField interface is implemented by all legacy field components that have
+ * a value that the user can change through the user interface.
  *
- * LegacyField components are built upon the framework defined in the LegacyField interface
- * and the {@link com.vaadin.LegacyAbstractField} base class.
+ * LegacyField components are built upon the framework defined in the
+ * LegacyField interface and the {@link com.vaadin.LegacyAbstractField} base
+ * class.
  *
  * The LegacyField interface inherits the {@link com.vaadin.ui.Component}
  * superinterface and also the {@link com.vaadin.ui.Property} interface to have
  * a value for the field.
  *
- *
  * @author Vaadin Ltd.
  *
- * @param T
+ * @param <T>
  *            the type of values in the field, which might not be the same type
  *            as that of the data source if converters are used
  *
- * @author IT Mill Ltd.
+ * @deprecated This interface is, apart from the rename, identical to the Vaadin
+ *             7 {@code com.vaadin.ui.Field}. It is provided for compatibility
+ *             and migration purposes. As of 8.0, new field components should
+ *             extend {@link com.vaadin.ui.AbstractField} instead.
  */
-public interface LegacyField<T> extends Component, BufferedValidatable, Property<T>,
+@Deprecated
+public interface LegacyField<T> extends Component, BufferedValidatable,
+        Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.Editor, Focusable {
 
@@ -85,14 +90,18 @@ public interface LegacyField<T> extends Component, BufferedValidatable, Property
     public String getRequiredError();
 
     /**
-     * An <code>Event</code> object specifying the LegacyField whose value has been
-     * changed.
+     * An <code>Event</code> object specifying the LegacyField whose value has
+     * been changed.
      *
      * @author Vaadin Ltd.
      * @since 3.0
+     * 
+     * @deprecated As of 8.0, replaced by {@link ValueChange}.
      */
+    @Deprecated
     @SuppressWarnings("serial")
-    public static class ValueChangeEvent extends Component.Event implements
+    public static class ValueChangeEvent extends
+            Component.Event implements
             Property.ValueChangeEvent {
 
         /**
@@ -114,6 +123,7 @@ public interface LegacyField<T> extends Component, BufferedValidatable, Property
         public Property getProperty() {
             return (Property) getSource();
         }
+
     }
 
     /**

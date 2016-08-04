@@ -379,10 +379,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * Tests whether the component is in the read-only mode. The user can not
-     * change the value of a read-only component. As only {@link LegacyField}
-     * components normally have a value that can be input or changed by the
-     * user, this is mostly relevant only to field components, though not
-     * restricted to them.
+     * change the value of a read-only component. As only {@link AbstractField}
+     * or {@link LegacyField} components normally have a value that can be input
+     * or changed by the user, this is mostly relevant only to field components,
+     * though not restricted to them.
      * 
      * <p>
      * Notice that the read-only mode only affects whether the user can change
@@ -406,9 +406,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * can not change the value of a read-only component.
      * 
      * <p>
-     * As only {@link LegacyField} components normally have a value that can be input
-     * or changed by the user, this is mostly relevant only to field components,
-     * though not restricted to them.
+     * As only {@link AbstractField} or{@link LegacyField} components normally
+     * have a value that can be input or changed by the user, this is mostly
+     * relevant only to field components, though not restricted to them.
      * </p>
      * 
      * <p>
@@ -596,7 +596,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * public class AttachExample extends CustomComponent {
      *     public AttachExample() {
      *         // ERROR: We can't access the application object yet.
-     *         ClassResource r = new ClassResource(&quot;smiley.jpg&quot;, getApplication());
+     *         ClassResource r = new ClassResource(&quot;smiley.jpg&quot;,
+     *                 getApplication());
      *         Embedded image = new Embedded(&quot;Image:&quot;, r);
      *         setCompositionRoot(image);
      *     }
@@ -622,7 +623,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         super.attach(); // Must call.
      * 
      *         // Now we know who ultimately owns us.
-     *         ClassResource r = new ClassResource(&quot;smiley.jpg&quot;, getApplication());
+     *         ClassResource r = new ClassResource(&quot;smiley.jpg&quot;,
+     *                 getApplication());
      *         Embedded image = new Embedded(&quot;Image:&quot;, r);
      *         setCompositionRoot(image);
      *     }
@@ -879,7 +881,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
      *         // Display source component and event class names
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass()
+     *                 .getName()
      *                 + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
@@ -904,11 +907,13 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * <pre>
          * public void componentEvent(Event event) {
          *     // Act according to the source of the event
-         *     if (event.getSource() == ok &amp;&amp; event.getClass() == Button.ClickEvent.class)
+         *     if (event.getSource() == ok &amp;&amp; event
+         *             .getClass() == Button.ClickEvent.class)
          *         getWindow().showNotification(&quot;Click!&quot;);
          * 
          *     // Display source component and event class names
-         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass()
+         *             .getName()
          *             + &quot;: &quot; + event.getClass().getName());
          * }
          * </pre>
@@ -956,7 +961,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         if (event.getSource() == ok)
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass()
+     *                 .getName()
      *                 + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
@@ -1028,9 +1034,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Focus can be set with {@link #focus()}. This interface does not provide
      * an accessor that would allow finding out the currently focused component;
-     * focus information can be acquired for some (but not all) {@link LegacyField}
-     * components through the {@link com.vaadin.event.FieldEvents.FocusListener}
-     * and {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
+     * focus information can be acquired for some (but not all)
+     * {@link LegacyField} components through the
+     * {@link com.vaadin.event.FieldEvents.FocusListener} and
+     * {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
      * </p>
      * 
      * @see FieldEvents
