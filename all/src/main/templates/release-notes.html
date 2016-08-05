@@ -96,35 +96,24 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Vaadin Framework is now built with Maven</li>
-            <li>System properties can now override application properties, e.g. -DproductionMode=true
-                (<a href="http://dev.vaadin.com/ticket/19683">#19683</a>)</li>
-            <li>Vaadin can now automatically use default widgetset AppWidgetset optionally generated
-                by the latest Vaadin Maven plug-in (<a href="http://dev.vaadin.com/ticket/19675">#19675</a>)</li>
+            <li>New, simpler data binding API</li>
+            <li>Vaadin is now based on Java 8</li>
         </ul>
 
         <p>
-            For enhancements introduced in Vaadin 7.6, see the <a
-                href="http://vaadin.com/download/release/7.6/7.6.0/release-notes.html">Release
-                Notes for Vaadin 7.6.0</a>.
+            For enhancements introduced in Vaadin 7.7, see the <a
+                href="http://vaadin.com/download/release/7.7/7.7.0/release-notes.html">Release
+                Notes for Vaadin 7.7.0</a>.
         </p>
 
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
-            <li>Vaadin artifacts no longer bring a transitive dependency to javax.servlet:servlet-api.</li>
-            <li>System properties now override application parameters for settings such as production mode (see above).</li>
-            <li>The return type of BootstrapHandler.getWidgetsetForUI() has changed.</li>
-            <li>Vaadin shared no longer depends on a custom build of Guava. Any project that depends on Guava as a transitive dependency should use standard Guava.</li>
-            <li>Valo theme field error styles now apply to NativeSelect, ListSelect and TwinColSelect as well.</li>
-            <li>The LoginForm component has been rewritten to better support auto-completion of passwords on modern browsers.
-                Its API, look and DOM structure have changed somewhat, so any application level customizations of LoginForm need changes.
-                See also <a href="http://dev.vaadin.com/ticket/8171">#8171</a></li>
-            <li>The way we handle GWT dependencies has been completely changed. See <a href="#gwtdep">this section</a> for more details</li>
+            <li>Vaadin now requires Java 8 or later and Servlet 3.0 or later</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
             <li>OSGi support is has some issues</li>
-            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with Vaadin 7.7. Please use version 4.1.0 or above.</li>
+            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with Vaadin 7.7+. Please use version 4.1.0 or above.</li>
             <li>Context click events are not generated on iOS devices
                 (<a href="http://dev.vaadin.com/ticket/19367">#19367</a>)</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
@@ -162,32 +151,7 @@
             <li>Grid does not support adding components to cells. Instead light-weight Renderers can be
                 used to present and edit data.</li>
         </ul>
-        
-        <h3 id="gwtdep">GWT Dependency Changes</h3>
-        
-        <p>
-            The GWT dependencies for Vaadin are now provided as actual dependencies 
-            and not bundled with Vaadin packages. This means that you can override 
-            the GWT version in your own project if you want to. Note that the GWT Elemental 
-            is still partially bundled with shared package to avoid having the gwt-user as a 
-            dependency everywhere.
-        </p>
-        
-        <ul>
-            <li>Basic Vaadin server-side only use does not need any changes to your project.</li>
-            <li>Custom widgets and Add-ons should work just like before.</li>
-            <li>Projects that use GWT RPC or other utils from the com.google package should add gwt-servlet dependency
-                <pre>
-&lt;dependency>
-    &lt;groupId>com.vaadin.external.gwt&lt;/groupId>
-    &lt;artifactId>gwt-servlet&lt;/artifactId>
-    &lt;version>@gwt-version@&lt;/version>
-&lt;/dependency>
-                </pre>
-            </li>
-            <li>OSGi currently does not work with client and client-compiler packages. Those should not be used with OSGi.</li>
-        </ul>
-        
+
 
         <h2 id="vaadin">Vaadin Installation</h2>
 
@@ -282,40 +246,17 @@
             along with the other 3rd party dependencies in the ZIP package.
         </p>
 
+        <h2 id="migrating">Migrating from Vaadin 7</h2>
+
         <p>
-            For pure client-side development, you only need the
-            <tt>vaadin-client</tt>
-            and
-            <tt>vaadin-client-compiler</tt>
-            JARs, which should be put to a non-deployed project library
-            folder, such as
-            <tt>lib</tt>
-            . You also need them if you compile the widget set for any
-            reason, such as using Vaadin add-ons, or create new
-            server-side components integrated with client-side widgets.
+            Most Vaadin 7 applications need some changes when migrating
+            to Vaadin 8.
         </p>
 
-        <h2 id="migrating">Migrating from Vaadin 6</h2>
-
         <p>
-            All Vaadin 6 applications need some changes when migrating
-            to Vaadin 7. The most obvious changes are in the
-            application/window API and require extending either <b>UI</b>
-            or <b>UI.LegacyApplication</b> instead of <b>Application</b>.
-            A detailed list of migration changes are given in the <a
-                href="https://vaadin.com/wiki/-/wiki/Main/Migrating+from+Vaadin+6+to+Vaadin+7">Vaadin
-                7 Migration Guide</a>.
-        </p>
-
-        <p>Any custom client-side widgets need to be ported to use
-            the new client-server communication API, or the Vaadin 6
-            compatibility API.</p>
-
-        <p>
-            Vaadin 6 add-ons (ones that contain widgets) do not work in
-            Vaadin 7 - please check the add-ons in <a
+            Some Vaadin 7 add-ons do not work in Vaadin 8 - please check the add-ons in <a
                 href="http://vaadin.com/directory/">Vaadin Directory</a>
-            for Vaadin 7 support.
+            for Vaadin 8 support.
         </p>
 
         <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
@@ -409,8 +350,8 @@
         <h2 id="supportedversions">Supported Technologies</h2>
 
         <p>
-            Vaadin 7 is compatible with <b>Java 6</b> and newer. Vaadin
-            7 is especially supported on the following <b>operating
+            Vaadin 8 is compatible with <b>Java 8</b> and newer. Vaadin
+            8 is especially supported on the following <b>operating
                 systems</b>:
         </p>
 
@@ -421,34 +362,35 @@
         </ul>
 
         <p>
-            Vaadin 7 requires <b>Java Servlet API 2.4</b> but also
+            Vaadin 8 requires <b>Java Servlet API 3.0</b> but also
             supports later versions and should work with any Java
             application server that conforms to the standard. The
             following <b>application servers</b> are supported:
         </p>
 
         <ul>
-            <li>Apache Tomcat 5-8</li>
-            <li>Apache TomEE 1</li>
-            <li>Oracle WebLogic Server 10.3-12</li>
-            <li>IBM WebSphere Application Server 7-8</li>
-            <li>JBoss Application Server 4-7</li>
-            <li>Wildfly 8-9</li>
-            <li>Jetty 5-9</li>
-            <li>Glassfish 2-4</li>
+            <li>Apache Tomcat 7-8</li>
+            <li>Apache TomEE 1.5 and later</li>
+            <li>Oracle WebLogic Server 12cR2</li>
+            <li>IBM WebSphere Application Server 8.5.5.9 and 9</li>
+            <li>JBoss EAP 6</li>
+            <li>Wildfly 8-10</li>
+            <li>Jetty 8-9</li>
+            <li>Glassfish 3-4</li>
         </ul>
 
         <p>
-            Vaadin 7 supports the JSR-286 Portlet specification and all
-            portals that implement the specification should work. The
-            following <b>portals</b> are supported:
+            Vaadin 8 supports the JSR-286 Portlet specification and all
+            portals that implement the specification should work provided
+            they support Java 8 and Servlet 3.0. The following <b>portals</b>
+            are supported:
         </p>
 
         <ul>
-            <li>Liferay Portal 5.2-6</li>
-            <li>GateIn Portal 3</li>
-            <li>eXo Platform 3</li>
-            <li>IBM WebSphere Portal 8</li>
+            <li>Liferay Portal 6.2-7</li>
+            <li>GateIn Portal 3.5 and later</li>
+            <li>eXo Platform 4.3</li>
+            <li>IBM WebSphere Portal 8.5.5.9 and 9</li>
         </ul>
 
         <p>
@@ -460,12 +402,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-43</li>
-            <li>Mozilla Firefox 17 ESR, 24 ESR, 31 ESR, 38 ESR</li>
-            <li>Internet Explorer 8-11, Edge</li>
-            <li>Safari 6-8</li>
-            <li>Opera 16-34</li>
-            <li>Google Chrome 23-47</li>
+            <li>Mozilla Firefox (latest version, currently 48)</li>
+            <li>Mozilla Firefox ESR (latest version, currently 45 ESR)</li>
+            <li>Internet Explorer 11, Edge</li>
+            <li>Safari 8-9</li>
+            <li>Opera (latest version, currently 39)</li>
+            <li>Google Chrome (latest version, currently 52)</li>
         </ul>
 
         <p>
@@ -474,9 +416,9 @@
         </p>
 
         <ul>
-            <li>iOS 5-9</li>
-            <li>Android 2.3-5</li>
-            <li>Windows Phone 8</li>
+            <li>iOS 8-9</li>
+            <li>Android 5-6</li>
+            <li>Windows Phone 8.1</li>
         </ul>
 
         <p>Vaadin SQL Container supports the following databases:</p>
@@ -521,8 +463,8 @@
                     - Bug tracker</a></li>
 
             <li><a
-                href="http://dev.vaadin.com/wiki/Vaadin/Development/StartingVaadin7Development">How
-                    to get the source code of Vaadin</a></li>
+                href="https://vaadin.com/contribute">How to get the source
+                    code of Vaadin</a></li>
         </ul>
 
     </div>
