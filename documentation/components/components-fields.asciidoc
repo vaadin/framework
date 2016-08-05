@@ -67,7 +67,7 @@ displayed in a tooltip when the mouse pointer hovers over the error indicator.
 == Handling Field Value Changes
 
 [classname]#Field# provides two methods for listening to changes to the field value:
-[methodname]#onValueChange# and [methodname]#addValueChangeListener#. The difference
+[methodname]#onChange# and [methodname]#addValueChangeListener#. The difference
 is that the former takes a [interfacename]#Consumer# object that only receives the new value;
 the latter, on the other hand, takes an [interfacename]#EventListener# that gets
 a [classname]#ValueChange# event instance containing extra information about the event.
@@ -81,14 +81,14 @@ TextField textField = new TextField();
 Label echo = new Label();
 
 // Just echo in the label anything the user enters
-textField.onValueChange(echo::setValue);
+textField.onChange(echo::setValue);
 
 // Add a more complex listener
 textField.addValueChangeListener(event -> {
     String origin = event.isUserOriginated()
         ? "user"
         : "application";
-    String message = origin 
+    String message = origin
         + " entered the following: "
         + event.getValue();
     Notification.show(message);
@@ -118,7 +118,7 @@ Binder<Person> binder = new Binder<>();
 
 // Bind nameField to the Person.name property
 // by specifying its getter and setter
-binder.addField(nameField)
+binder.forField(nameField)
     .bind(Person::getName, Person::setName);
 
 // Bind an actual concrete Person instance.
@@ -133,13 +133,13 @@ binder.bind(p;
 User input may be syntactically or semantically invalid.
 [classname]#Binder# allows adding a chain of one or more __validators__ for
 automatically checking the validity of the input before storing it to the data
-object. You can add validators to fields by calling the [methodname]#addValidator#
-method on the [interfacename]#Binding# object returned by [methodname]#Binder.addField#.
+object. You can add validators to fields by calling the [methodname]#withValidator#
+method on the [interfacename]#Binding# object returned by [methodname]#Binder.forField#.
 
 [source, java]
 ----
-binder.addField(nameField)
-    .addValidator(new StringLengthValidator(2, 20,
+binder.forField(nameField)
+    .withValidator(new StringLengthValidator(2, 20,
         "Name must be between 2 and 20 characters long"))
     .bind(Person::getName, Person::setName);
 ----
@@ -196,13 +196,13 @@ Because [methodname]#Result.ok# takes the valid value as an argument, a validato
 can also do some sanitization on valid inputs, such as removing leading and
 trailing whitespace from a string. Since [interfacename]#Validator# is a functional
 interface, you can often simply write a lambda expression instead of a full class
-declaration. There is also an [methodname]#addValidator# overload that creates a
+declaration. There is also an [methodname]#withValidator# overload that creates a
 validator from a boolean function and an error message.
 
 [source, java]
 ----
-binder.addField(nameField)
-    .addValidator(name -> name.length() < 20,
+binder.forField(nameField)
+    .withValidator(name -> name.length() < 20,
         "Name must be less than 20 characters long")
      .bind(Person::getName, Person::setName);
 

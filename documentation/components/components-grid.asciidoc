@@ -912,7 +912,7 @@ BeanBinder<Person> binder = new BeanBinder<>(Person.class);
 
 // Have some extra validation in a field
 binder.addField(nameEditor, "name")
-    .addValidator(new RegexpValidator(
+    .withValidator(new RegexpValidator(
         "^\\p{Alpha}+ \\p{Alpha}+$",
         "Need first and last name"));
 
