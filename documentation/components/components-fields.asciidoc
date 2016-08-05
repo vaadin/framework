@@ -28,12 +28,6 @@ addition to the component features inherited from
 .Field components having values
 image::img/field-interface-v8-hi.png[width=60%, scaledwidth=100%]
 
-/////////////////////////////////////////////////////////////////////////////
-// Disabled because everything has changed in Vaadin 8.
-// Revise
-/////////////////////////////////////////////////////////////////////////////
-ifdef::disabled[]
-
 The description of the field interfaces and base classes is broken down in the
 following sections.
 
@@ -224,7 +218,5 @@ between the presentation and the model. Their usage is described in
 <<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
 Between Model and Presentation Types">>.
 
-
-endif::disabled[]
 
 (((range="endofrange", startref="term.components.fields")))
