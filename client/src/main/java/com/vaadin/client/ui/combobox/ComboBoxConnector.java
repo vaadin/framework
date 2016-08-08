@@ -368,12 +368,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     }
 
     /*
-     * Anything that should be set after the client updates the server.
+     * Called after any request to server.
      */
     private void afterSendRequestToServer() {
-        // We need this here to be consistent with the all the calls.
-        // Then set your specific selection type only after
-        // a server request method call.
         getDataReceivedHandler().anyRequestSentToServer();
     }
 
