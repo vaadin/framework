@@ -4,10 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Binder.Binding;
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;
 
@@ -187,6 +195,66 @@ public class BinderTest {
         binder.load(person);
 
         Assert.assertEquals("", nameField.getValue());
+    }
+
+    @Test
+    public void validate_notBound_noErrors() {
+        Binder<Person> binder = new Binder<>();
+
+        List<ValidationError<?>> errors = binder.validate();
+
+        Assert.assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    public void bound_validatorsAreOK_noErrors() {
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String> binding = binder.forField(nameField);
+        binding.withValidator(Validator.alwaysPass()).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        nameField.setComponentError(new UserError(""));
+        List<ValidationError<?>> errors = binder.validate();
+
+        Assert.assertTrue(errors.isEmpty());
+        Assert.assertNull(nameField.getComponentError());
+    }
+
+    @SuppressWarnings("serial")
+    @Test
+    public void bound_validatorsFail_errors() {
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String> binding = binder.forField(nameField);
+        binding.withValidator(Validator.alwaysPass());
+        String msg1 = "foo";
+        String msg2 = "bar";
+        binding.withValidator(new Validator<String>() {
+            @Override
+            public Result<String> apply(String value) {
+                return new SimpleResult<>(null, msg1);
+            }
+        });
+        binding.withValidator(value -> false, msg2);
+        binding.bind(Person::getFirstName, Person::setFirstName);
+
+        List<ValidationError<?>> errors = binder.validate();
+
+        Assert.assertEquals(2, errors.size());
+
+        Set<String> errorMessages = errors.stream()
+                .map(ValidationError::getMessage).collect(Collectors.toSet());
+        Assert.assertTrue(errorMessages.contains(msg1));
+        Assert.assertTrue(errorMessages.contains(msg2));
+
+        Set<?> fields = errors.stream().map(ValidationError::getField)
+                .collect(Collectors.toSet());
+        Assert.assertEquals(1, fields.size());
+        Assert.assertTrue(fields.contains(nameField));
+
+        ErrorMessage componentError = nameField.getComponentError();
+        Assert.assertNotNull(componentError);
+        Assert.assertEquals("foo",
+                ((AbstractErrorMessage) componentError).getMessage());
     }
 
     private void bindName() {

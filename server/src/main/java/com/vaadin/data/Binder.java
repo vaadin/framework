@@ -16,14 +16,20 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.vaadin.event.Registration;
+import com.vaadin.server.UserError;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * Connects one or more {@code Field} components to properties of a backing data
@@ -105,6 +111,42 @@ public class Binder<T> implements Serializable {
          *             if {@code bind} has already been called on this binding
          */
         public void bind(Function<T, V> getter, BiConsumer<T, V> setter);
+
+        /**
+         * Adds a validator to this binding. Validators are applied, in
+         * registration order, when the field value is saved to the backing
+         * property. If any validator returns a failure, the property value is
+         * not updated.
+         * 
+         * @param validator
+         *            the validator to add, not null
+         * @return this binding, for chaining
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public Binding<T, V> withValidator(Validator<? super V> validator);
+
+        /**
+         * A convenience method to add a validator to this binding using the
+         * {@link Validator#from(Predicate, String)} factory method.
+         * <p>
+         * Validators are applied, in registration order, when the field value
+         * is saved to the backing property. If any validator returns a failure,
+         * the property value is not updated.
+         * 
+         * @see #withValidator(Validator)
+         * @see Validator#from(Predicate, String)
+         * 
+         * @param predicate
+         *            the predicate performing validation, not null
+         * @param message
+         *            the error message to report in case validation failure
+         * @return this binding, for chaining
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public Binding<T, V> withValidator(Predicate<? super V> predicate,
+                String message);
     }
 
     /**
@@ -120,6 +162,8 @@ public class Binder<T> implements Serializable {
 
         private Function<T, V> getter;
         private BiConsumer<T, V> setter;
+
+        private List<Validator<? super V>> validators = new ArrayList<>();
 
         /**
          * Creates a new binding associated with the given field.
@@ -144,10 +188,33 @@ public class Binder<T> implements Serializable {
             }
         }
 
+        @Override
+        public Binding<T, V> withValidator(Validator<? super V> validator) {
+            checkUnbound();
+            Objects.requireNonNull(validator, "validator cannot be null");
+            validators.add(validator);
+            return this;
+        }
+
+        @Override
+        public Binding<T, V> withValidator(Predicate<? super V> predicate,
+                String message) {
+            return withValidator(Validator.from(predicate, message));
+        }
+
         private void bind(T bean) {
             setFieldValue(bean);
             onValueChange = field
                     .addValueChangeListener(e -> storeFieldValue(bean));
+        }
+
+        private List<ValidationError<V>> validate() {
+            return validators.stream()
+                    .map(validator -> validator.apply(field.getValue()))
+                    .filter(Result::isError)
+                    .map(result -> new ValidationError<>(field,
+                            result.getMessage().orElse(null)))
+                    .collect(Collectors.toList());
         }
 
         private void unbind() {
@@ -186,6 +253,7 @@ public class Binder<T> implements Serializable {
                         "cannot modify binding: already bound to a property");
             }
         }
+
     }
 
     private T bean;
@@ -287,13 +355,34 @@ public class Binder<T> implements Serializable {
     }
 
     /**
+     * Validates the values of all bound fields and returns the result of the
+     * validation as a set of validation errors.
+     * <p>
+     * Validation is successful if the resulting set is empty.
+     * 
+     * @return the validation result.
+     */
+    public List<ValidationError<?>> validate() {
+        List<ValidationError<?>> resultErrors = new ArrayList<>();
+        for (BindingImpl<?> binding : bindings) {
+            clearError(binding.field);
+            List<? extends ValidationError<?>> errors = binding.validate();
+            resultErrors.addAll(errors);
+            if (!errors.isEmpty()) {
+                handleError(binding.field, errors.get(0).getMessage());
+            }
+        }
+        return resultErrors;
+    }
+
+    /**
      * Unbinds the currently bound bean if any. If there is no bound bean, does
      * nothing.
      */
     public void unbind() {
         if (bean != null) {
             bean = null;
-            bindings.forEach(b -> b.unbind());
+            bindings.forEach(BindingImpl::unbind);
         }
     }
 
@@ -308,7 +397,10 @@ public class Binder<T> implements Serializable {
      */
     public void load(T bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        bindings.forEach(binding -> binding.setFieldValue(bean));
+        bindings.forEach(
+
+                binding -> binding.setFieldValue(bean));
+
     }
 
     /**
@@ -323,7 +415,10 @@ public class Binder<T> implements Serializable {
      */
     public void save(T bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        bindings.forEach(binding -> binding.storeFieldValue(bean));
+        bindings.forEach(
+
+                binding -> binding.storeFieldValue(bean));
+
     }
 
     /**
@@ -339,6 +434,38 @@ public class Binder<T> implements Serializable {
         Objects.requireNonNull(field, "field cannot be null");
         BindingImpl<V> b = new BindingImpl<>(field);
         return b;
+    }
+
+    /**
+     * Clears the error condition of the given field, if any. The default
+     * implementation clears the
+     * {@link AbstractComponent#setComponentError(ErrorMessage) component error}
+     * of the field if it is a Component, otherwise does nothing.
+     * 
+     * @param field
+     *            the field with an invalid value
+     */
+    protected void clearError(HasValue<?> field) {
+        if (field instanceof AbstractComponent) {
+            ((AbstractComponent) field).setComponentError(null);
+        }
+    }
+
+    /**
+     * Handles a validation error emitted when trying to save the value of the
+     * given field. The default implementation sets the
+     * {@link AbstractComponent#setComponentError(ErrorMessage) component error}
+     * of the field if it is a Component, otherwise does nothing.
+     * 
+     * @param field
+     *            the field with the invalid value
+     * @param error
+     *            the error message to set
+     */
+    protected void handleError(HasValue<?> field, String error) {
+        if (field instanceof AbstractComponent) {
+            ((AbstractComponent) field).setComponentError(new UserError(error));
+        }
     }
 
 }

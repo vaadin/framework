@@ -322,7 +322,7 @@ Even if the user has not edited a field, all validation error will be shown if w
 binder.load(new Person());
 
 // This will make all current validation errors visible
-Set<BinderResult> validationErrors = binder.validate();
+List<ValidationError<?>> validationErrors = binder.validate();
 
 if (!validationErrors.isEmpty()) {
   Notification.show("Validation error count: "
@@ -594,7 +594,7 @@ Button saveButton = new Button("Save", event -> {
   // Create non-shared copy to use for validation
   Person copy = new Person(person);
 
-  Set<BinderResult> errors = binder.validateWithBean(copy);
+  List<ValidationError<?>> errors = binder.validateWithBean(copy);
   if (errors.isEmpty()) {
     // Write new values to the actual bean
 
