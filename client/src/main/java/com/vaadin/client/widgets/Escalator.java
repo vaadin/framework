@@ -85,6 +85,7 @@ import com.vaadin.client.widget.escalator.ScrollbarBundle.HorizontalScrollbarBun
 import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundle;
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
@@ -1895,12 +1896,27 @@ public class Escalator extends Widget implements RequiresResize,
             });
         }
 
+        private void fireRowHeightChangedEventFinally() {
+            if (!rowHeightChangedEventFired) {
+                rowHeightChangedEventFired = true;
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        fireEvent(new RowHeightChangedEvent());
+                        rowHeightChangedEventFired = false;
+                    }
+                });
+            }
+        }
+
         public void autodetectRowHeightNow() {
             if (!isAttached()) {
                 // Run again when attached
                 defaultRowHeightShouldBeAutodetected = true;
                 return;
             }
+
+            final double oldRowHeight = defaultRowHeight;
 
             final Element detectionTr = DOM.createTR();
             detectionTr.setClassName(getStylePrimaryName() + "-row");
@@ -1919,6 +1935,10 @@ public class Escalator extends Widget implements RequiresResize,
             if (root.hasChildNodes()) {
                 reapplyDefaultRowHeights();
                 applyHeightByRows();
+            }
+
+            if (oldRowHeight != defaultRowHeight) {
+                fireRowHeightChangedEventFinally();
             }
         }
 
@@ -5431,6 +5451,11 @@ public class Escalator extends Widget implements RequiresResize,
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
     private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem);
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
+
+    /**
+     * Flag for keeping track of {@link RowHeightChangedEvent}s
+     */
+    private boolean rowHeightChangedEventFired = false;
 
     private final Scroller scroller = new Scroller();
 
