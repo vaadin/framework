@@ -104,6 +104,8 @@ import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
+import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
 import com.vaadin.client.widget.grid.AutoScroller;
 import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
 import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
@@ -8144,6 +8146,11 @@ public class Grid<T> extends ResizeComposite implements
      */
     public HandlerRegistration addEnabledHandler(GridEnabledHandler handler) {
         return addHandler(handler, GridEnabledEvent.TYPE);
+    }
+
+    public HandlerRegistration addRowHeightChangedHandler(
+            RowHeightChangedHandler handler) {
+        return escalator.addHandler(handler, RowHeightChangedEvent.TYPE);
     }
 
     /**

@@ -52,6 +52,8 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
+import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
@@ -796,6 +798,16 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().setDetailsGenerator(customDetailsGenerator);
         getLayoutManager().registerDependency(this, getWidget().getElement());
+
+        // Handling row height changes
+        getWidget().addRowHeightChangedHandler(new RowHeightChangedHandler() {
+            @Override
+            public void onRowHeightChanged(RowHeightChangedEvent event) {
+                getLayoutManager()
+                        .setNeedsMeasureRecursively(GridConnector.this);
+                getLayoutManager().layoutNow();
+            }
+        });
 
         layout();
     }
