@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,6 +128,65 @@ public class BinderTest {
         nameField.setValue("Ilia");
         assertEquals("Ilia", p2.getFirstName());
         assertEquals("Leif", p.getFirstName());
+    }
+
+    @Test
+    public void save_unbound_noChanges() {
+        Binder<Person> binder = new Binder<>();
+        Person person = new Person();
+
+        int age = 10;
+        person.setAge(age);
+
+        binder.save(person);
+
+        Assert.assertEquals(age, person.getAge());
+    }
+
+    @Test
+    public void save_bound_beanIsUpdated() {
+        Binder<Person> binder = new Binder<>();
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+
+        String fieldValue = "bar";
+        nameField.setValue(fieldValue);
+
+        person.setFirstName("foo");
+
+        binder.save(person);
+
+        Assert.assertEquals(fieldValue, person.getFirstName());
+    }
+
+    @Test
+    public void load_bound_fieldValueIsUpdated() {
+        Binder<Person> binder = new Binder<>();
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+
+        String name = "bar";
+        person.setFirstName(name);
+        binder.load(person);
+
+        Assert.assertEquals(name, nameField.getValue());
+    }
+
+    @Test
+    public void load_unbound_noChanges() {
+        Binder<Person> binder = new Binder<>();
+
+        nameField.setValue("");
+
+        Person person = new Person();
+
+        String name = "bar";
+        person.setFirstName(name);
+        binder.load(person);
+
+        Assert.assertEquals("", nameField.getValue());
     }
 
     private void bindName() {

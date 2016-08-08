@@ -146,8 +146,8 @@ public class Binder<T> implements Serializable {
 
         private void bind(T bean) {
             setFieldValue(bean);
-            onValueChange = field.addValueChangeListener(e -> storeFieldValue(
-                    bean));
+            onValueChange = field
+                    .addValueChangeListener(e -> storeFieldValue(bean));
         }
 
         private void unbind() {
@@ -298,6 +298,35 @@ public class Binder<T> implements Serializable {
     }
 
     /**
+     * Reads the bound property values from the given bean to the corresponding
+     * fields. The bean is not otherwise associated with this binder; in
+     * particular its property values are not bound to the field value changes.
+     * To achieve that, use {@link #bind(T)}.
+     * 
+     * @param bean
+     *            the bean whose property values to read, not null
+     */
+    public void load(T bean) {
+        Objects.requireNonNull(bean, "bean cannot be null");
+        bindings.forEach(binding -> binding.setFieldValue(bean));
+    }
+
+    /**
+     * Saves changes from the bound fields to the edited bean. If any value
+     * fails validation, no values are saved and an {@code BindingException} is
+     * thrown.
+     *
+     * @param bean
+     *            the object to which to save the field values, not null
+     * @throws BindingException
+     *             if some of the bound field values fail to validate
+     */
+    public void save(T bean) {
+        Objects.requireNonNull(bean, "bean cannot be null");
+        bindings.forEach(binding -> binding.storeFieldValue(bean));
+    }
+
+    /**
      * Creates a new binding with the given field.
      * 
      * @param <V>
@@ -311,4 +340,5 @@ public class Binder<T> implements Serializable {
         BindingImpl<V> b = new BindingImpl<>(field);
         return b;
     }
+
 }
