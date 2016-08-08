@@ -8,10 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.DateField;
 
-public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
+public class DateFieldTest<T extends DateField> extends LegacyAbstractFieldTest<T> {
 
     @SuppressWarnings("unchecked")
     @Override

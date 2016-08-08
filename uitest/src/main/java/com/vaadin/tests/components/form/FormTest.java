@@ -6,7 +6,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.ui.AlignmentInfo;
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.Product;
@@ -26,7 +26,7 @@ import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class FormTest extends AbstractFieldTest<Form> {
+public class FormTest extends LegacyAbstractFieldTest<Form> {
 
     private Command<Form, String> footerWidthCommand = new Command<Form, String>() {
 

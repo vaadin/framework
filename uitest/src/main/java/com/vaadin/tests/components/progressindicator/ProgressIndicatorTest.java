@@ -17,10 +17,10 @@ package com.vaadin.tests.components.progressindicator;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.ProgressIndicator;
 
-public class ProgressIndicatorTest extends AbstractFieldTest<ProgressIndicator> {
+public class ProgressIndicatorTest extends LegacyAbstractFieldTest<ProgressIndicator> {
     ProgressIndicator progress = new ProgressIndicator();
     Command<ProgressIndicator, Float> setValueCommand = new Command<ProgressIndicator, Float>() {
 

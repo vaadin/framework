@@ -10,7 +10,7 @@ import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 
 public abstract class AbstractTextFieldTest<T extends AbstractTextField>
-        extends AbstractFieldTest<T> implements TextChangeListener {
+        extends LegacyAbstractFieldTest<T> implements TextChangeListener {
 
     private Command<T, Integer> maxlengthCommand = new Command<T, Integer>() {
 

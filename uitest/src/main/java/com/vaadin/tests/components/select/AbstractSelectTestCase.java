@@ -12,11 +12,11 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.server.Resource;
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.AbstractSelect;
 
 public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
-        AbstractFieldTest<T> implements ItemClickListener {
+        LegacyAbstractFieldTest<T> implements ItemClickListener {
 
     public static final String CATEGORY_DATA_SOURCE = "Data source";
 

@@ -2,10 +2,10 @@ package com.vaadin.tests.components.richtextarea;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.RichTextArea;
 
-public class RichTextAreaTest extends AbstractFieldTest<RichTextArea> {
+public class RichTextAreaTest extends LegacyAbstractFieldTest<RichTextArea> {
 
     @Override
     protected Class<RichTextArea> getTestClass() {

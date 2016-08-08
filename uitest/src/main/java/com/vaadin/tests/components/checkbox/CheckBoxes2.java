@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 
-public class CheckBoxes2 extends AbstractFieldTest<CheckBox> implements
+public class CheckBoxes2 extends LegacyAbstractFieldTest<CheckBox> implements
         ClickListener {
 
     @Override
