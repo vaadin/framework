@@ -1403,7 +1403,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * For internal use only. May be removed or replaced in the future.
          */
         private boolean popupOpenerClicked = false;
-        private boolean updateOnDataReceived = false;
+        private boolean performPostFilteringOnDataReceived = false;
         /** For internal use only. May be removed or replaced in the future. */
         private boolean waitingForFilteringResponse = false;
 
@@ -1421,8 +1421,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 navigateItemAfterPageChange();
             }
 
-            if (updateOnDataReceived) {
-                updateOnDataReceived = false;
+            if (performPostFilteringOnDataReceived) {
+                performPostFilteringOnDataReceived = false;
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
 
@@ -1490,7 +1490,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * Cancel a pending request to perform post-filtering actions.
          */
         private void cancelPendingPostFiltering() {
-            updateOnDataReceived = false;
+            performPostFilteringOnDataReceived = false;
         }
 
         /**
@@ -1525,9 +1525,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         private void doPostFilterWhenReady() {
             if (isWaitingForFilteringResponse()) {
-                updateOnDataReceived = true;
+                performPostFilteringOnDataReceived = true;
             } else {
-                updateOnDataReceived = false;
+                performPostFilteringOnDataReceived = false;
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
         }
