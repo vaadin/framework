@@ -3,10 +3,10 @@ package com.vaadin.tests.components.slider;
 import java.util.LinkedHashMap;
 
 import com.vaadin.shared.ui.slider.SliderOrientation;
-import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.Slider;
 
-public class SliderTest extends LegacyAbstractFieldTest<Slider> {
+public class SliderTest extends AbstractFieldTest<Slider, Double> {
 
     private Command<Slider, Double> minCommand = new Command<Slider, Double>() {
         @Override

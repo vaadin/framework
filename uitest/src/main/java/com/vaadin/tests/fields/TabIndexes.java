@@ -3,8 +3,6 @@ package com.vaadin.tests.fields;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -12,6 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
@@ -32,7 +31,7 @@ import com.vaadin.ui.TwinColSelect;
 @SuppressWarnings("rawtypes")
 public class TabIndexes extends AbstractTestUIWithLog {
 
-    private List<LegacyAbstractField> fields;
+    private List<Focusable> fields;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -44,7 +43,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
             @Override
             public void buttonClick(ClickEvent event) {
                 log("Setting tab indexes to 0");
-                for (LegacyAbstractField f : fields) {
+                for (Focusable f : fields) {
                     f.setTabIndex(0);
                 }
                 updateCaptions();
@@ -56,7 +55,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
             @Override
             public void buttonClick(ClickEvent event) {
                 log("Setting tab indexes to 1");
-                for (LegacyAbstractField f : fields) {
+                for (Focusable f : fields) {
                     f.setTabIndex(1);
                 }
                 updateCaptions();
@@ -69,7 +68,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
             public void buttonClick(ClickEvent event) {
                 int tabIndex = 1;
                 log("Setting tab indexes to 1..N");
-                for (LegacyAbstractField f : fields) {
+                for (Focusable f : fields) {
                     f.setTabIndex(tabIndex++);
                 }
                 updateCaptions();
@@ -83,13 +82,13 @@ public class TabIndexes extends AbstractTestUIWithLog {
             public void buttonClick(ClickEvent event) {
                 int tabIndex = fields.size();
                 log("Setting tab indexes to N..1");
-                for (LegacyAbstractField f : fields) {
+                for (Focusable f : fields) {
                     f.setTabIndex(tabIndex--);
                 }
                 updateCaptions();
             }
         });
-        fields = new ArrayList<LegacyAbstractField>();
+        fields = new ArrayList<Focusable>();
         Table t = new Table();
         t.setSelectable(true);
         t.addContainerProperty("foo", String.class, "bar");
@@ -129,7 +128,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
 
         int fieldId = 1;
         GridLayout gl = new GridLayout(4, 4);
-        for (LegacyField f : fields) {
+        for (Component f : fields) {
             f.setId("field-" + fieldId++);
             gl.addComponent(f);
         }
@@ -138,7 +137,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
     }
 
     protected void updateCaptions() {
-        for (LegacyField f : fields) {
+        for (Focusable f : fields) {
             f.setCaption(f.getClass().getSimpleName() + " Tab index: "
                     + f.getTabIndex());
         }

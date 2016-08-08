@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,6 @@ import java.util.Collection;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
@@ -30,10 +29,10 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A component for selecting a numerical value within a range.
- * 
+ *
  * @author Vaadin Ltd.
  */
-public class Slider extends LegacyAbstractField<Double> {
+public class Slider extends AbstractField<Double> {
 
     private SliderServerRpc rpc = new SliderServerRpc() {
 
@@ -45,11 +44,11 @@ public class Slider extends LegacyAbstractField<Double> {
              * to make sure the cached state is updated to match the client. If
              * we do not do this, a reverting setValue() call in a listener will
              * not cause the new state to be sent to the client.
-             * 
+             *
              * See #12133.
              */
-            getUI().getConnectorTracker().getDiffState(Slider.this)
-                    .put("value", value);
+            getUI().getConnectorTracker().getDiffState(Slider.this).put("value",
+                    value);
 
             try {
                 setValue(value, true);
@@ -69,9 +68,10 @@ public class Slider extends LegacyAbstractField<Double> {
     };
 
     /**
-     * Default slider constructor. Sets all values to defaults and the slide
-     * handle at minimum value.
-     * 
+     * Default slider constructor.
+     * <p>
+     * The range of the slider is set to 0-100 and only integer values are
+     * allowed.
      */
     public Slider() {
         super();
@@ -81,12 +81,12 @@ public class Slider extends LegacyAbstractField<Double> {
 
     /**
      * Create a new slider with the caption given as parameter.
-     * 
+     * <p>
      * The range of the slider is set to 0-100 and only integer values are
      * allowed.
-     * 
+     *
      * @param caption
-     *            The caption for this slider (e.g. "Volume").
+     *            the caption for this slider (e.g. "Volume")
      */
     public Slider(String caption) {
         this();
@@ -95,7 +95,7 @@ public class Slider extends LegacyAbstractField<Double> {
 
     /**
      * Create a new slider with the given range and resolution.
-     * 
+     *
      * @param min
      *            The minimum value of the slider
      * @param max
@@ -105,18 +105,20 @@ public class Slider extends LegacyAbstractField<Double> {
      */
     public Slider(double min, double max, int resolution) {
         this();
+        // Need to set resolution first in order to not round min and max
+        // to the default resolution (0)
         setResolution(resolution);
         setMax(max);
         setMin(min);
     }
 
     /**
-     * Create a new slider with the given range that only allows integer values.
-     * 
+     * Create a new slider with the given range of integers.
+     *
      * @param min
-     *            The minimum value of the slider
+     *            the minimum value of the slider
      * @param max
-     *            The maximum value of the slider
+     *            the maximum value of the slider
      */
     public Slider(int min, int max) {
         this();
@@ -126,15 +128,14 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Create a new slider with the given caption and range that only allows
-     * integer values.
-     * 
+     * Creates a new slider with the given caption and integer range.
+     *
      * @param caption
-     *            The caption for the slider
+     *            the caption for the slider
      * @param min
-     *            The minimum value of the slider
+     *            the minimum value of the slider
      * @param max
-     *            The maximum value of the slider
+     *            the maximum value of the slider
      */
     public Slider(String caption, int min, int max) {
         this(min, max);
@@ -152,8 +153,8 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Gets the maximum slider value
-     * 
+     * Gets the maximum slider value. The default value is 100.0.
+     *
      * @return the largest value the slider can have
      */
     public double getMax() {
@@ -161,9 +162,9 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Set the maximum slider value. If the current value of the slider is
+     * Sets the maximum slider value. If the current value of the slider is
      * larger than this, the value is set to the new maximum.
-     * 
+     *
      * @param max
      *            The new maximum slider value
      */
@@ -181,8 +182,8 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Gets the minimum slider value
-     * 
+     * Gets the minimum slider value. The default value is 0.0.
+     *
      * @return the smallest value the slider can have
      */
     public double getMin() {
@@ -190,9 +191,9 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Set the minimum slider value. If the current value of the slider is
+     * Sets the minimum slider value. If the current value of the slider is
      * smaller than this, the value is set to the new minimum.
-     * 
+     *
      * @param min
      *            The new minimum slider value
      */
@@ -210,8 +211,8 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Get the current orientation of the slider (horizontal or vertical).
-     * 
+     * Gets the current orientation of the slider (horizontal or vertical).
+     *
      * @return {@link SliderOrientation#HORIZONTAL} or
      *         {@link SliderOrientation#VERTICAL}
      */
@@ -220,10 +221,10 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Set the orientation of the slider.
-     * 
+     * Sets the orientation of the slider.
+     *
      * @param orientation
-     *            The new orientation, either
+     *            the new orientation, either
      *            {@link SliderOrientation#HORIZONTAL} or
      *            {@link SliderOrientation#VERTICAL}
      */
@@ -232,10 +233,11 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     /**
-     * Get the current resolution of the slider. The resolution is the number of
-     * digits after the decimal point.
-     * 
-     * @return resolution
+     * Gets the resolution of the slider. The resolution is the number of digits
+     * after the decimal point. The default resolution is 0 (only integers
+     * allowed).
+     *
+     * @return resolution the number of digits after the decimal point
      */
     public int getResolution() {
         return getState(false).resolution;
@@ -244,11 +246,12 @@ public class Slider extends LegacyAbstractField<Double> {
     /**
      * Set a new resolution for the slider. The resolution is the number of
      * digits after the decimal point.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if resolution is negative.
-     * 
+     *
      * @param resolution
+     *            the number of digits after the decimal point
      */
     public void setResolution(int resolution) {
         if (resolution < 0) {
@@ -256,29 +259,6 @@ public class Slider extends LegacyAbstractField<Double> {
                     "Cannot set a negative resolution to Slider");
         }
         getState().resolution = resolution;
-    }
-
-    /**
-     * Sets the value of the slider.
-     * 
-     * @param value
-     *            The new value of the slider.
-     * @param repaintIsNotNeeded
-     *            If true, client-side is not requested to repaint itself.
-     * @throws ValueOutOfBoundsException
-     *             If the given value is not inside the range of the slider.
-     * @see #setMin(double) {@link #setMax(double)}
-     */
-    @Override
-    protected void setValue(Double value, boolean repaintIsNotNeeded) {
-        double newValue = getRoundedValue(value);
-
-        if (getMin() > newValue || getMax() < newValue) {
-            throw new ValueOutOfBoundsException(newValue);
-        }
-
-        getState().value = newValue;
-        super.setValue(newValue, repaintIsNotNeeded);
     }
 
     private double getRoundedValue(Double value) {
@@ -294,33 +274,32 @@ public class Slider extends LegacyAbstractField<Double> {
     }
 
     @Override
-    public void setValue(Double newFieldValue) {
-        super.setValue(newFieldValue);
-        getState().value = newFieldValue;
+    protected void doSetValue(Double newValue) {
+        double trimmedValue;
+        if (newValue == null) {
+            trimmedValue = 0.0;
+        } else {
+            trimmedValue = getRoundedValue(newValue);
+        }
+
+        if (getMin() > trimmedValue || getMax() < trimmedValue) {
+            throw new ValueOutOfBoundsException(trimmedValue);
+        }
+
+        getState().value = trimmedValue;
     }
 
-    /*
-     * Overridden to keep the shared state in sync with the LegacyAbstractField
-     * internal value. Should be removed once LegacyAbstractField is refactored to use
-     * shared state.
-     * 
-     * See tickets #10921 and #11064.
-     */
     @Override
-    protected void setInternalValue(Double newValue) {
-        super.setInternalValue(newValue);
-        if (newValue == null) {
-            newValue = 0.0;
-        }
-        getState().value = newValue;
+    public Double getValue() {
+        return getState().value;
     }
 
     /**
      * Thrown when the value of the slider is about to be set to a value that is
      * outside the valid range of the slider.
-     * 
+     *
      * @author Vaadin Ltd.
-     * 
+     *
      */
     public class ValueOutOfBoundsException extends RuntimeException {
 
@@ -329,8 +308,9 @@ public class Slider extends LegacyAbstractField<Double> {
         /**
          * Constructs an <code>ValueOutOfBoundsException</code> with the
          * specified detail message.
-         * 
+         *
          * @param valueOutOfBounds
+         *            the value of the slider
          */
         public ValueOutOfBoundsException(Double valueOutOfBounds) {
             super(String.format("Value %s is out of bounds: [%s, %s]",
@@ -340,28 +320,12 @@ public class Slider extends LegacyAbstractField<Double> {
 
         /**
          * Gets the value that is outside the valid range of the slider.
-         * 
+         *
          * @return the value that is out of bounds
          */
         public Double getValue() {
             return value;
         }
-    }
-
-    @Override
-    public Class<Double> getType() {
-        return Double.class;
-    }
-
-    @Override
-    public void clear() {
-        super.setValue(Double.valueOf(getState().minValue));
-    }
-
-    @Override
-    public boolean isEmpty() {
-        // Slider is never really "empty"
-        return false;
     }
 
     @Override
@@ -372,9 +336,9 @@ public class Slider extends LegacyAbstractField<Double> {
             setOrientation(SliderOrientation.VERTICAL);
         }
         if (attr.hasKey("value")) {
-            Double newFieldValue = DesignAttributeHandler.readAttribute(
-                    "value", attr, Double.class);
-            setValue(newFieldValue, false, true);
+            Double newFieldValue = DesignAttributeHandler.readAttribute("value",
+                    attr, Double.class);
+            setValue(newFieldValue);
         }
     }
 
@@ -396,4 +360,5 @@ public class Slider extends LegacyAbstractField<Double> {
         result.add("vertical");
         return result;
     }
+
 }
