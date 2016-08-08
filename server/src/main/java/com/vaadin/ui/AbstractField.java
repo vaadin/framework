@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,6 +25,8 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.event.Registration;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
@@ -38,7 +40,7 @@ import com.vaadin.util.ReflectTools;
  * The old {@code AbstractField} is retained, under the new name
  * {@link com.vaadin.legacy.ui.LegacyAbstractField}, for compatibility and
  * migration purposes.
- * 
+ *
  * @author Vaadin Ltd.
  * @since
  *
@@ -46,11 +48,11 @@ import com.vaadin.util.ReflectTools;
  *            the input value type
  */
 public abstract class AbstractField<T> extends AbstractComponent
-        implements HasValue<T> {
+        implements HasValue<T>, Focusable {
 
     @Deprecated
-    private static final Method VALUE_CHANGE_METHOD = ReflectTools.findMethod(
-            ValueChangeListener.class, "accept", ValueChange.class);
+    private static final Method VALUE_CHANGE_METHOD = ReflectTools
+            .findMethod(ValueChangeListener.class, "accept", ValueChange.class);
 
     @Override
     public void setValue(T value) {
@@ -60,10 +62,10 @@ public abstract class AbstractField<T> extends AbstractComponent
     /**
      * Returns whether the value of this field can be changed by the user or
      * not. By default fields are not read-only.
-     * 
+     *
      * @return {@code true} if this field is in read-only mode, {@code false}
      *         otherwise.
-     * 
+     *
      * @see #setReadOnly(boolean)
      */
     @Override
@@ -86,7 +88,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * considered irrelevant or not applicable. In contrast, the user should
      * still be able to read the content and otherwise interact with a read-only
      * field even though changing the value is disallowed.
-     * 
+     *
      * @param readOnly
      *            {@code true} to set read-only mode, {@code false} otherwise.
      */
@@ -136,7 +138,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * event. If the value originates from the client and this field is
      * read-only, does nothing. Invokes {@link #doSetValue(Object) doSetValue}
      * to actually store the value.
-     * 
+     *
      * @param value
      *            the new value to set
      * @return {@code true} if this event originates from the client,
@@ -160,7 +162,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * Sets the value of this field. May do sanitization or throw
      * {@code IllegalArgumentException} if the value is invalid. Typically saves
      * the value to shared state.
-     * 
+     *
      * @param value
      *            the new value of the field
      * @throws IllegalArgumentException
@@ -170,7 +172,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * Returns a new value change event instance.
-     * 
+     *
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
@@ -179,4 +181,30 @@ public abstract class AbstractField<T> extends AbstractComponent
     protected ValueChange<T> createValueChange(boolean userOriginated) {
         return new ValueChange<>(this, userOriginated);
     }
+
+    @Override
+    protected AbstractFieldState getState() {
+        return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    protected AbstractFieldState getState(boolean markAsDirty) {
+        return (AbstractFieldState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void focus() {
+        super.focus();
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getState(false).tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        getState().tabIndex = tabIndex;
+    }
+
 }
