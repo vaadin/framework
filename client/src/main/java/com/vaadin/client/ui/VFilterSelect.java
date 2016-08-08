@@ -2123,11 +2123,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private void resetSelection(boolean useSelectedCaption) {
         // select nulled
         if (!focused) {
-            /*
-             * client.updateComponent overwrites all styles so we must ALWAYS
-             * set the prompting style at this point, even though we think it
-             * has been set already...
-             */
+            // TODO it is unclear whether this is really needed anymore -
+            // client.updateComponent used to overwrite all styles so we had to
+            // set them again
             setPromptingOff("");
             if (enabled && !readonly) {
                 setPromptingOn();
