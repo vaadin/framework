@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ public interface Result<R> extends Serializable {
 
     /**
      * Returns a successful result wrapping the given value.
-     * 
+     *
      * @param <R>
      *            the result value type
      * @param value
@@ -53,7 +53,7 @@ public interface Result<R> extends Serializable {
 
     /**
      * Returns a failure result wrapping the given error message.
-     * 
+     *
      * @param <R>
      *            the result value type
      * @param message
@@ -70,7 +70,7 @@ public interface Result<R> extends Serializable {
      * If the supplier returns a value, returns a {@code Result.ok} of the
      * value; if an exception is thrown, returns the message in a
      * {@code Result.error}.
-     * 
+     *
      * @param <R>
      *            the result value type
      * @param supplier
@@ -96,7 +96,7 @@ public interface Result<R> extends Serializable {
      * function to the value. Otherwise, returns a Result bearing the same error
      * as this one. Note that any exceptions thrown by the mapping function are
      * not wrapped but allowed to propagate.
-     * 
+     *
      * @param <S>
      *            the type of the mapped value
      * @param mapper
@@ -112,7 +112,7 @@ public interface Result<R> extends Serializable {
      * to the value. Otherwise, returns a Result bearing the same error as this
      * one. Note that any exceptions thrown by the mapping function are not
      * wrapped but allowed to propagate.
-     * 
+     *
      * @param <S>
      *            the type of the mapped value
      * @param mapper
@@ -124,7 +124,7 @@ public interface Result<R> extends Serializable {
     /**
      * Invokes either the first callback or the second one, depending on whether
      * this Result denotes a success or a failure, respectively.
-     * 
+     *
      * @param ifOk
      *            the function to call if success
      * @param ifError
@@ -134,7 +134,7 @@ public interface Result<R> extends Serializable {
 
     /**
      * Applies the {@code consumer} if result is not an error.
-     * 
+     *
      * @param consumer
      *            consumer to apply in case it's not an error
      */
@@ -145,7 +145,7 @@ public interface Result<R> extends Serializable {
 
     /**
      * Applies the {@code consumer} if result is an error.
-     * 
+     *
      * @param consumer
      *            consumer to apply in case it's an error
      */
@@ -156,15 +156,22 @@ public interface Result<R> extends Serializable {
 
     /**
      * Returns {@code true} if result is an error.
-     * 
+     *
      * @return whether the result is an error
      */
     public boolean isError();
 
     /**
      * Returns an Optional of the result message, or an empty Optional if none.
-     * 
+     *
      * @return the optional message
      */
     public Optional<String> getMessage();
+
+    /**
+     * Returns an Optional of the value, or an empty Optional if none.
+     *
+     * @return the optional value
+     */
+    public Optional<R> getValue();
 }

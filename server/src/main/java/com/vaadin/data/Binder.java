@@ -19,15 +19,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.event.Registration;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 
@@ -154,6 +157,105 @@ public class Binder<BEAN> implements Serializable {
                 Predicate<? super TARGET> predicate, String message);
 
         /**
+         * Maps the binding to another data type using the given
+         * {@link Converter}.
+         * <p>
+         * A converter is capable of converting between a presentation type,
+         * which must match the current target data type of the binding, and a
+         * model type, which can be any data type and becomes the new target
+         * type of the binding. When invoking
+         * {@link #bind(Function, BiConsumer)}, the target type of the binding
+         * must match the getter/setter types.
+         * <p>
+         * For instance, a {@code TextField} can be bound to an integer-typed
+         * property using an appropriate converter such as a
+         * {@link StringToIntegerConverter}.
+         *
+         * @param <NEWTARGET>
+         *            the type to convert to
+         * @param converter
+         *            the converter to use, not null
+         * @return a new binding with the appropriate type
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+                Converter<TARGET, NEWTARGET> converter);
+
+        /**
+         * Maps the binding to another data type using the mapping functions and
+         * a possible exception as the error message.
+         * <p>
+         * The mapping functions are used to convert between a presentation
+         * type, which must match the current target data type of the binding,
+         * and a model type, which can be any data type and becomes the new
+         * target type of the binding. When invoking
+         * {@link #bind(Function, BiConsumer)}, the target type of the binding
+         * must match the getter/setter types.
+         * <p>
+         * For instance, a {@code TextField} can be bound to an integer-typed
+         * property using appropriate functions such as:
+         * <code>withConverter(Integer::valueOf, String::valueOf);</code>
+         *
+         * @param <NEWTARGET>
+         *            the type to convert to
+         * @param toModel
+         *            the function which can convert from the old target type to
+         *            the new target type
+         * @param toPresentation
+         *            the function which can convert from the new target type to
+         *            the old target type
+         * @return a new binding with the appropriate type
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        default public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+                Function<TARGET, NEWTARGET> toModel,
+                Function<NEWTARGET, TARGET> toPresentation) {
+            return withConverter(Converter.from(toModel, toPresentation,
+                    exception -> exception.getMessage()));
+        }
+
+        /**
+         * Maps the binding to another data type using the mapping functions and
+         * the given error error message if a value cannot be converted to the
+         * new target type.
+         * <p>
+         * The mapping functions are used to convert between a presentation
+         * type, which must match the current target data type of the binding,
+         * and a model type, which can be any data type and becomes the new
+         * target type of the binding. When invoking
+         * {@link #bind(Function, BiConsumer)}, the target type of the binding
+         * must match the getter/setter types.
+         * <p>
+         * For instance, a {@code TextField} can be bound to an integer-typed
+         * property using appropriate functions such as:
+         * <code>withConverter(Integer::valueOf, String::valueOf);</code>
+         *
+         * @param <NEWTARGET>
+         *            the type to convert to
+         * @param toModel
+         *            the function which can convert from the old target type to
+         *            the new target type
+         * @param toPresentation
+         *            the function which can convert from the new target type to
+         *            the old target type
+         * @param errorMessage
+         *            the error message to use if conversion using
+         *            <code>toModel</code> fails
+         * @return a new binding with the appropriate type
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+                Function<TARGET, NEWTARGET> toModel,
+                Function<NEWTARGET, TARGET> toPresentation,
+                String errorMessage) {
+            return withConverter(Converter.from(toModel, toPresentation,
+                    exception -> errorMessage));
+        }
+
+        /**
          * Gets the field the binding uses.
          *
          * @return the field for the binding
@@ -176,15 +278,19 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements Binding<BEAN, FIELDVALUE, TARGET> {
 
-        private Binder<BEAN> binder;
+        private final Binder<BEAN> binder;
 
-        private HasValue<FIELDVALUE> field;
+        private final HasValue<FIELDVALUE> field;
         private Registration onValueChange;
 
         private Function<BEAN, TARGET> getter;
         private BiConsumer<BEAN, TARGET> setter;
 
-        private List<Validator<? super TARGET>> validators = new ArrayList<>();
+        /**
+         * Contains all converters and validators chained together in the
+         * correct order.
+         */
+        private Converter<FIELDVALUE, TARGET> converterValidatorChain;
 
         /**
          * Creates a new binding associated with the given field.
@@ -194,9 +300,28 @@ public class Binder<BEAN> implements Serializable {
          * @param field
          *            the field to bind
          */
+        @SuppressWarnings("unchecked")
         protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field) {
-            this.binder = binder;
+            this(binder, field,
+                    (Converter<FIELDVALUE, TARGET>) Converter.identity());
+        }
+
+        /**
+         * Creates a new binding associated with the given field using the given
+         * converter chain.
+         *
+         * @param binder
+         *            the binder this instance is connected to
+         * @param field
+         *            the field to bind
+         * @param converterValidatorChain
+         *            the converter/validator chain to use
+         */
+        protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field,
+                Converter<FIELDVALUE, TARGET> converterValidatorChain) {
             this.field = field;
+            this.binder = binder;
+            this.converterValidatorChain = converterValidatorChain;
         }
 
         @Override
@@ -216,7 +341,11 @@ public class Binder<BEAN> implements Serializable {
                 Validator<? super TARGET> validator) {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
-            validators.add(validator);
+
+            Converter<TARGET, TARGET> validatorAsConverter = new ValidatorAsConverter<>(
+                    validator);
+            converterValidatorChain = converterValidatorChain
+                    .chain(validatorAsConverter);
             return this;
         }
 
@@ -226,20 +355,38 @@ public class Binder<BEAN> implements Serializable {
             return withValidator(Validator.from(predicate, message));
         }
 
+        @Override
+        public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+                Converter<TARGET, NEWTARGET> converter) {
+            checkUnbound();
+            Objects.requireNonNull(converter, "converter cannot be null");
+
+            BindingImpl<BEAN, FIELDVALUE, NEWTARGET> newBinding = new BindingImpl<>(
+                    binder, field, converterValidatorChain.chain(converter));
+            return newBinding;
+        }
+
         private void bind(BEAN bean) {
             setFieldValue(bean);
             onValueChange = field
                     .addValueChangeListener(e -> storeFieldValue(bean));
         }
 
-        private List<ValidationError<FIELDVALUE>> validate() {
-            return validators.stream()
-                    .map(validator -> validator
-                            .apply((TARGET) field.getValue()))
-                    .filter(Result::isError)
-                    .map(result -> new ValidationError<>(field,
-                            result.getMessage().orElse(null)))
-                    .collect(Collectors.toList());
+        private Result<TARGET> validate() {
+            FIELDVALUE fieldValue = field.getValue();
+            Result<TARGET> dataValue = converterValidatorChain.convertToModel(
+                    fieldValue, ((AbstractComponent) field).getLocale());
+            return dataValue;
+        }
+
+        /**
+         * Returns the field value run through all converters and validators.
+         *
+         * @return an optional containing the validated and converted value or
+         *         an empty optional if a validator or converter failed
+         */
+        private Optional<TARGET> getTargetValue() {
+            return validate().getValue();
         }
 
         private void unbind() {
@@ -255,7 +402,13 @@ public class Binder<BEAN> implements Serializable {
          */
         private void setFieldValue(BEAN bean) {
             assert bean != null;
-            field.setValue((FIELDVALUE) getter.apply(bean));
+            field.setValue(convertDataToFieldType(bean));
+        }
+
+        private FIELDVALUE convertDataToFieldType(BEAN bean) {
+            return converterValidatorChain.convertToPresentation(
+                    getter.apply(bean),
+                    ((AbstractComponent) field).getLocale());
         }
 
         /**
@@ -268,12 +421,12 @@ public class Binder<BEAN> implements Serializable {
         private void storeFieldValue(BEAN bean) {
             assert bean != null;
             if (setter != null) {
-                setter.accept(bean, (TARGET) field.getValue());
+                getTargetValue().ifPresent(value -> setter.accept(bean, value));
             }
         }
 
         private void checkUnbound() {
-            if (this.getter != null) {
+            if (getter != null) {
                 throw new IllegalStateException(
                         "cannot modify binding: already bound to a property");
             }
@@ -283,6 +436,46 @@ public class Binder<BEAN> implements Serializable {
         public HasValue<FIELDVALUE> getField() {
             return field;
         }
+    }
+
+    /**
+     * Wraps a validator as a converter.
+     * <p>
+     * The type of the validator must be of the same type as this converter or a
+     * super type of it.
+     *
+     * @param <T>
+     *            the type of the converter
+     */
+    private static class ValidatorAsConverter<T> implements Converter<T, T> {
+
+        private Validator<? super T> validator;
+
+        /**
+         * Creates a new converter wrapping the given validator.
+         *
+         * @param validator
+         *            the validator to wrap
+         */
+        public ValidatorAsConverter(Validator<? super T> validator) {
+            this.validator = validator;
+        }
+
+        @Override
+        public Result<T> convertToModel(T value, Locale locale) {
+            Result<? super T> validationResult = validator.apply(value);
+            if (validationResult.isError()) {
+                return Result.error(validationResult.getMessage().get());
+            } else {
+                return Result.ok(value);
+            }
+        }
+
+        @Override
+        public T convertToPresentation(T value, Locale locale) {
+            return value;
+        }
+
     }
 
     private BEAN bean;
@@ -396,12 +589,13 @@ public class Binder<BEAN> implements Serializable {
     public List<ValidationError<?>> validate() {
         List<ValidationError<?>> resultErrors = new ArrayList<>();
         for (BindingImpl<BEAN, ?, ?> binding : bindings) {
-            clearError(binding.getField());
-            List<? extends ValidationError<?>> errors = binding.validate();
-            resultErrors.addAll(errors);
-            if (!errors.isEmpty()) {
-                handleError(binding.getField(), errors.get(0).getMessage());
-            }
+            clearError(binding.field);
+
+            binding.validate().ifError(errorMessage -> {
+                resultErrors.add(
+                        new ValidationError<>(binding.field, errorMessage));
+                handleError(binding.field, errorMessage);
+            });
         }
         return resultErrors;
     }
@@ -456,11 +650,11 @@ public class Binder<BEAN> implements Serializable {
      *            the field to bind
      * @return the new incomplete binding
      */
-    protected <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> createBinding(
+    protected <FIELDVALUE> BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> createBinding(
             HasValue<FIELDVALUE> field) {
         Objects.requireNonNull(field, "field cannot be null");
-        BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> b = new BindingImpl<>(this,
-                field);
+        BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> b = new BindingImpl<BEAN, FIELDVALUE, FIELDVALUE>(
+                this, field);
         return b;
     }
 

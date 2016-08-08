@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
@@ -36,17 +37,40 @@ public class BinderTest {
         }
     }
 
+    private static class StatusBean {
+        private String status;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+    }
+
     Binder<Person> binder;
 
     TextField nameField;
+    TextField ageField;
 
     Person p = new Person();
+
+    Validator<String> notEmpty = Validator.from(val -> !val.isEmpty(),
+            "Value cannot be empty");
+    Converter<String, Integer> stringToInteger = Converter.from(
+            Integer::valueOf, String::valueOf, e -> "Value must be a number");
+    Validator<Integer> notNegative = Validator.from(x -> x >= 0,
+            "Value must be positive");
 
     @Before
     public void setUp() {
         binder = new Binder<>();
         p.setFirstName("Johannes");
+        p.setAge(32);
         nameField = new TextField();
+        ageField = new TextField();
     }
 
     @Test(expected = NullPointerException.class)
@@ -239,12 +263,11 @@ public class BinderTest {
 
         List<ValidationError<?>> errors = binder.validate();
 
-        Assert.assertEquals(2, errors.size());
+        Assert.assertEquals(1, errors.size());
 
         Set<String> errorMessages = errors.stream()
                 .map(ValidationError::getMessage).collect(Collectors.toSet());
         Assert.assertTrue(errorMessages.contains(msg1));
-        Assert.assertTrue(errorMessages.contains(msg2));
 
         Set<?> fields = errors.stream().map(ValidationError::getField)
                 .collect(Collectors.toSet());
@@ -260,6 +283,139 @@ public class BinderTest {
     private void bindName() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
         binder.bind(p);
+    }
+
+    private void bindAgeWithValidatorConverterValidator() {
+        binder.forField(ageField).withValidator(notEmpty)
+                .withConverter(stringToInteger).withValidator(notNegative)
+                .bind(Person::getAge, Person::setAge);
+        binder.bind(p);
+    }
+
+    @Test
+    public void validatorForSuperTypeCanBeUsed() {
+        // Validates that a validator for a super type can be used, e.g.
+        // validator for Number can be used on a Double
+
+        TextField salaryField = new TextField();
+        Binder<Person> binder = new Binder<>();
+        Validator<Number> positiveNumberValidator = value -> {
+            if (value.doubleValue() >= 0) {
+                return Result.ok(value);
+            } else {
+                return Result.error("Number must be positive");
+            }
+        };
+        binder.forField(salaryField)
+                .withConverter(Double::valueOf, String::valueOf)
+                .withValidator(positiveNumberValidator)
+                .bind(Person::getSalaryDouble, Person::setSalaryDouble);
+
+        Person person = new Person();
+        binder.bind(person);
+        salaryField.setValue("10");
+        Assert.assertEquals(10, person.getSalaryDouble(), 0);
+        salaryField.setValue("-1"); // Does not pass validator
+        Assert.assertEquals(10, person.getSalaryDouble(), 0);
+    }
+
+    @Test
+    public void convertInitialValue() {
+        bindAgeWithValidatorConverterValidator();
+        assertEquals("32", ageField.getValue());
+    }
+
+    @Test
+    public void convertToModelValidAge() {
+        bindAgeWithValidatorConverterValidator();
+
+        ageField.setValue("33");
+        assertEquals(33, p.getAge());
+    }
+
+    @Test
+    public void convertToModelNegativeAgeFailsOnFirstValidator() {
+        bindAgeWithValidatorConverterValidator();
+
+        ageField.setValue("");
+        assertEquals(32, p.getAge());
+        assertValidationErrors(binder.validate(), "Value cannot be empty");
+    }
+
+    private void assertValidationErrors(
+            List<ValidationError<?>> validationErrors,
+            String... errorMessages) {
+        Assert.assertEquals(errorMessages.length, validationErrors.size());
+        for (int i = 0; i < errorMessages.length; i++) {
+            Assert.assertEquals(errorMessages[i],
+                    validationErrors.get(i).getMessage());
+        }
+    }
+
+    @Test
+    public void convertToModelConversionFails() {
+        bindAgeWithValidatorConverterValidator();
+        ageField.setValue("abc");
+        assertEquals(32, p.getAge());
+        assertValidationErrors(binder.validate(), "Value must be a number");
+    }
+
+    @Test
+    public void convertToModelNegativeAgeFailsOnIntegerValidator() {
+        bindAgeWithValidatorConverterValidator();
+
+        ageField.setValue("-5");
+        assertEquals(32, p.getAge());
+        assertValidationErrors(binder.validate(), "Value must be positive");
+    }
+
+    @Test
+    public void convertDataToField() {
+        bindAgeWithValidatorConverterValidator();
+        binder.getBean().get().setAge(12);
+        binder.load(binder.getBean().get());
+        Assert.assertEquals("12", ageField.getValue());
+    }
+
+    @Test
+    public void convertNotValidatableDataToField() {
+        bindAgeWithValidatorConverterValidator();
+        binder.getBean().get().setAge(-12);
+        binder.load(binder.getBean().get());
+        Assert.assertEquals("-12", ageField.getValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void convertInvalidDataToField() {
+        TextField field = new TextField();
+        StatusBean bean = new StatusBean();
+        bean.setStatus("1");
+        Binder<StatusBean> binder = new Binder<StatusBean>();
+
+        Binding<StatusBean, String, String> binding = binder.forField(field)
+                .withConverter(presentation -> {
+                    if (presentation.equals("OK")) {
+                        return "1";
+                    } else if (presentation.equals("NOTOK")) {
+                        return "2";
+                    }
+                    throw new IllegalArgumentException(
+                            "Value must be OK or NOTOK");
+                }, model -> {
+                    if (model.equals("1")) {
+                        return "OK";
+                    } else if (model.equals("2")) {
+                        return "NOTOK";
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Value in model must be 1 or 2");
+                    }
+                });
+        binding.bind(StatusBean::getStatus, StatusBean::setStatus);
+        binder.bind(bean);
+
+        bean.setStatus("3");
+        binder.load(bean);
     }
 
 }

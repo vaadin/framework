@@ -21,16 +21,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.Binder;
-import com.vaadin.data.ValidationError;
+import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Slider;
 
 /**
  * Book of Vaadin tests.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -51,11 +51,53 @@ public class BinderBookOfVaadinTest {
         }
     }
 
-    private Binder<Person> binder;
+    private static class BookPerson {
+        private String lastName;
+        private String email;
+        private int yearOfBirth, salaryLevel;
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public BookPerson(int yearOfBirth, int salaryLevel) {
+            this.yearOfBirth = yearOfBirth;
+            this.salaryLevel = salaryLevel;
+        }
+
+        public int getYearOfBirth() {
+            return yearOfBirth;
+        }
+
+        public void setYearOfBirth(int yearOfBirth) {
+            this.yearOfBirth = yearOfBirth;
+        }
+
+        public int getSalaryLevel() {
+            return salaryLevel;
+        }
+
+        public void setSalaryLevel(int salaryLevel) {
+            this.salaryLevel = salaryLevel;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+    }
+
+    private Binder<BookPerson> binder;
 
     private TextField field;
-
-    private Person person = new Person();
 
     @Before
     public void setUp() {
@@ -69,7 +111,7 @@ public class BinderBookOfVaadinTest {
                 // Explicit validator instance
                 .withValidator(new EmailValidator(
                         "This doesn't look like a valid email address"))
-                .bind(Person::getEmail, Person::setEmail);
+                .bind(BookPerson::getEmail, BookPerson::setEmail);
 
         field.setValue("not-email");
         List<ValidationError<?>> errors = binder.validate();
@@ -91,7 +133,7 @@ public class BinderBookOfVaadinTest {
                 // Validator defined based on a lambda and an error message
                 .withValidator(name -> name.length() >= 3,
                         "Last name must contain at least three characters")
-                .bind(Person::getLastName, Person::setLastName);
+                .bind(BookPerson::getLastName, BookPerson::setLastName);
 
         field.setValue("a");
         List<ValidationError<?>> errors = binder.validate();
@@ -115,15 +157,14 @@ public class BinderBookOfVaadinTest {
                         "This doesn't look like a valid email address"))
                 .withValidator(email -> email.endsWith("@acme.com"),
                         "Only acme.com email addresses are allowed")
-                .bind(Person::getEmail, Person::setEmail);
+                .bind(BookPerson::getEmail, BookPerson::setEmail);
 
         field.setValue("not-email");
         List<ValidationError<?>> errors = binder.validate();
-        Assert.assertEquals(2, errors.size());
+        // Only one error per field should be reported
+        Assert.assertEquals(1, errors.size());
         Assert.assertEquals("This doesn't look like a valid email address",
                 errors.get(0).getMessage());
-        Assert.assertEquals("Only acme.com email addresses are allowed",
-                errors.get(1).getMessage());
         Assert.assertEquals("This doesn't look like a valid email address",
                 ((AbstractErrorMessage) field.getErrorMessage()).getMessage());
 
@@ -140,4 +181,61 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(0, errors.size());
         Assert.assertNull(field.getErrorMessage());
     }
+
+    @Test
+    public void converterBookOfVaadinExample1() {
+        TextField yearOfBirthField = new TextField();
+        // Slider for integers between 1 and 10
+        Slider salaryLevelField = new Slider("Salary level", 1, 10);
+
+        Binding<BookPerson, String, String> b1 = binder
+                .forField(yearOfBirthField);
+        Binding<BookPerson, String, Integer> b2 = b1.withConverter(
+                new StringToIntegerConverter("Must enter a number"));
+        b2.bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+
+        Binding<BookPerson, Double, Double> salaryBinding1 = binder
+                .forField(salaryLevelField);
+        Binding<BookPerson, Double, Integer> salaryBinding2 = salaryBinding1
+                .withConverter(Double::intValue, Integer::doubleValue);
+        salaryBinding2.bind(BookPerson::getSalaryLevel,
+                BookPerson::setSalaryLevel);
+
+        // Test that the book code works
+        BookPerson bookPerson = new BookPerson(1972, 4);
+        binder.bind(bookPerson);
+        Assert.assertEquals(4.0, salaryLevelField.getValue().doubleValue(), 0);
+        Assert.assertEquals("1,972", yearOfBirthField.getValue());
+
+        bookPerson.setSalaryLevel(8);
+        binder.load(bookPerson);
+        Assert.assertEquals(8.0, salaryLevelField.getValue().doubleValue(), 0);
+        bookPerson.setYearOfBirth(123);
+        binder.load(bookPerson);
+        Assert.assertEquals("123", yearOfBirthField.getValue());
+
+        yearOfBirthField.setValue("2016");
+        salaryLevelField.setValue(1.0);
+        Assert.assertEquals(2016, bookPerson.getYearOfBirth());
+        Assert.assertEquals(1, bookPerson.getSalaryLevel());
+    }
+
+    @Test
+    public void converterBookOfVaadinExample2() {
+        TextField yearOfBirthField = new TextField();
+
+        binder.forField(yearOfBirthField)
+                .withConverter(Integer::valueOf, String::valueOf,
+                        // Text to use instead of the NumberFormatException
+                        // message
+                        "Please enter a number")
+                .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+
+        binder.bind(new BookPerson(1900, 5));
+        yearOfBirthField.setValue("abc");
+        binder.validate();
+        Assert.assertEquals("Please&#32;enter&#32;a&#32;number",
+                yearOfBirthField.getComponentError().getFormattedHtmlMessage());
+    }
+
 }

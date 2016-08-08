@@ -37,7 +37,7 @@ class SimpleResult<R> implements Result<R> {
      * <p>
      * If {@code message} is null then {@code value} is ignored and result is an
      * error.
-     * 
+     *
      * @param value
      *            the value of the result, may be {@code null}
      * @param message
@@ -81,6 +81,11 @@ class SimpleResult<R> implements Result<R> {
     }
 
     @Override
+    public Optional<R> getValue() {
+        return Optional.ofNullable(value);
+    }
+
+    @Override
     public boolean isError() {
         return message != null;
     }
@@ -93,4 +98,5 @@ class SimpleResult<R> implements Result<R> {
             return "ok(" + value + ")";
         }
     }
+
 }

@@ -236,7 +236,7 @@ binder.forField(yearOfBirthField)
 Slider salaryLevelField = new Slider("Salary level", 1, 10);
 
 binder.forField(salaryLevelField)
-  .withConverter(Integer::doubleValue, Double::intValue)
+  .withConverter(Double::intValue, Integer::doubleValue)
   .bind(Person::getSalaryLevel, Person::setSalaryLevel);
 
 ----
