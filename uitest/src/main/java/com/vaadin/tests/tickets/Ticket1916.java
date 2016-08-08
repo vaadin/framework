@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket1916 extends LegacyApplication {
 
@@ -15,7 +15,7 @@ public class Ticket1916 extends LegacyApplication {
         HorizontalLayout test = new HorizontalLayout();
         test.setSizeFull();
 
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setComponentError(new UserError("Error message"));
 
         test.addComponent(tf);

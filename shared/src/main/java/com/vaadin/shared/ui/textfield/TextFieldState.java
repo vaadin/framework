@@ -16,9 +16,10 @@
 package com.vaadin.shared.ui.textfield;
 
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
 
-public class AbstractTextFieldState extends AbstractFieldState {
+public class TextFieldState extends AbstractFieldState {
     {
         primaryStyleName = "v-textfield";
     }
@@ -26,6 +27,7 @@ public class AbstractTextFieldState extends AbstractFieldState {
     /**
      * Maximum character count in text field.
      */
+    @DelegateToWidget
     @NoLayout
     public int maxLength = -1;
 
@@ -37,12 +39,29 @@ public class AbstractTextFieldState extends AbstractFieldState {
     /**
      * The prompt to display in an empty field. Null when disabled.
      */
+    @DelegateToWidget
     @NoLayout
-    public String inputPrompt = null;
+    public String placeholder = null;
 
     /**
      * The text in the field
      */
+    @DelegateToWidget
     @NoLayout
-    public String text = null;
+    public String text = "";
+
+    @NoLayout
+    public int selectionStart = -1;
+
+    @NoLayout
+    public int selectionLength = 0;
+
+    @NoLayout
+    public int cursorPosition = 0;
+
+    @NoLayout
+    public ValueChangeMode valueChangeMode = ValueChangeMode.LAZY;
+
+    @NoLayout
+    public int valueChangeTimeout = 400;
 }

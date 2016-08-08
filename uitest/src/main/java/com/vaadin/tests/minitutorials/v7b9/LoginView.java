@@ -1,5 +1,6 @@
 package com.vaadin.tests.minitutorials.v7b9;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -9,7 +10,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -21,7 +21,7 @@ public class LoginView extends Panel implements View {
             final String fragmentAndParameters) {
         Layout layout = new VerticalLayout();
 
-        final TextField email = new TextField("Email");
+        final LegacyTextField email = new LegacyTextField("Email");
         layout.addComponent(email);
 
         final PasswordField password = new PasswordField("Password");

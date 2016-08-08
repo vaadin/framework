@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
@@ -23,7 +24,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class FormTest extends LegacyAbstractFieldTest<Form> {
@@ -159,7 +159,7 @@ public class FormTest extends LegacyAbstractFieldTest<Form> {
                 Class<?> type = item.getItemProperty(propertyId).getType();
                 LegacyField<?> c = null;
                 if (Number.class.isAssignableFrom(type)) {
-                    TextField tf = new TextField();
+                    LegacyTextField tf = new LegacyTextField();
                     tf.setCaption(DefaultFieldFactory
                             .createCaptionByPropertyId(propertyId));
                     tf.setWidth("3em");

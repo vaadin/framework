@@ -25,6 +25,7 @@ import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
@@ -46,7 +47,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getFirstNameField() {
-        return $(TextFieldElement.class).caption("First Name").first();
+        return $(LegacyTextFieldElement.class).caption("First Name").first();
     }
 
     protected TextAreaElement getLastNameArea() {
@@ -54,11 +55,11 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getEmailField() {
-        return $(TextFieldElement.class).caption("Email").first();
+        return $(LegacyTextFieldElement.class).caption("Email").first();
     }
 
     protected TextFieldElement getAgeField() {
-        return $(TextFieldElement.class).caption("Age").first();
+        return $(LegacyTextFieldElement.class).caption("Age").first();
     }
 
     protected TableElement getGenderTable() {
@@ -66,7 +67,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getDeceasedField() {
-        return $(TextFieldElement.class).caption("Deceased").first();
+        return $(LegacyTextFieldElement.class).caption("Deceased").first();
     }
 
     protected void showBeanValues() {
@@ -164,8 +165,8 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     protected void assertLogText(String expected) {
         ++logCounter;
-        Assert.assertEquals("Unexpected log contents,", logCounter + ". "
-                + expected, getLogRow(0));
+        Assert.assertEquals("Unexpected log contents,",
+                logCounter + ". " + expected, getLogRow(0));
     }
 
     protected void assertDefaults() {

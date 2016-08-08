@@ -5,17 +5,17 @@ import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.validator.LegacyRangeValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.converter.ConverterFactoryTest.ConvertTo42;
-import com.vaadin.ui.TextField;
 
 public class TextFieldWithConverterAndValidatorTest {
 
-    private TextField field;
+    private LegacyTextField field;
     private ObjectProperty<Integer> property;
 
     @Before
     public void setUp() {
-        field = new TextField();
+        field = new LegacyTextField();
         field.setInvalidAllowed(false);
     }
 

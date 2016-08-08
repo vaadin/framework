@@ -13,17 +13,20 @@ public class InputPromptAndCursorPosition extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final TextField tf = new TextField();
         tf.setColumns(40);
-        tf.setValue("Delete this text to reveal input prompt and update cursor position.");
-        tf.setInputPrompt("This is an input prompt");
+        tf.setValue(
+                "Delete this text to reveal input prompt and update cursor position.");
+        tf.setPlaceholder("This is an input prompt");
 
         final Label l = new Label("Cursor position: ?");
-        Button button = new Button("Update cursor position", new Button.ClickListener() {
+        Button button = new Button("Update cursor position",
+                new Button.ClickListener() {
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                l.setValue("Cursor position: " + tf.getCursorPosition());
-            }
-        });
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        l.setValue(
+                                "Cursor position: " + tf.getCursorPosition());
+                    }
+                });
 
         addComponent(tf);
         addComponent(l);

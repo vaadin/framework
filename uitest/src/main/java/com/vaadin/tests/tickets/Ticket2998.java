@@ -13,6 +13,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -25,7 +26,6 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
@@ -104,8 +104,8 @@ public class Ticket2998 extends LegacyApplication {
     public class WorkoutEditor extends Window {
 
         private LegacyDateField date = new LegacyDateField("Date");
-        private TextField kilomiters = new TextField("Kilometers");
-        private TextField title = new TextField("Title/note");
+        private LegacyTextField kilomiters = new LegacyTextField("Kilometers");
+        private LegacyTextField title = new LegacyTextField("Title/note");
 
         private Ticket2998 workoutLog;
 
@@ -165,11 +165,11 @@ public class Ticket2998 extends LegacyApplication {
                 return getSecondaryTypesList(itemId);
             }
 
-            final LegacyField f = super.createField(container, itemId, propertyId,
-                    uiContext);
+            final LegacyField f = super.createField(container, itemId,
+                    propertyId, uiContext);
             if (f != null) {
-                if (f instanceof TextField) {
-                    TextField tf = (TextField) f;
+                if (f instanceof LegacyTextField) {
+                    LegacyTextField tf = (LegacyTextField) f;
                     tf.setWidth("100%");
                 }
                 if (propertyId.equals("kilometers")) {
@@ -191,7 +191,8 @@ public class Ticket2998 extends LegacyApplication {
                     });
                 }
                 if (propertyId.equals("date")) {
-                    ((LegacyDateField) f).setResolution(LegacyDateField.RESOLUTION_MIN);
+                    ((LegacyDateField) f)
+                            .setResolution(LegacyDateField.RESOLUTION_MIN);
                 }
             }
             return f;

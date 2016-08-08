@@ -8,8 +8,8 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class FieldNamedDescriptionTest {
 
@@ -24,12 +24,12 @@ public class FieldNamedDescriptionTest {
         // Define a form as a class that extends some layout
         class MyForm extends FormLayout {
             // Member that will bind to the "name" property
-            TextField name = new TextField("Name");
+            LegacyTextField name = new LegacyTextField("Name");
 
             // This member will not bind to the desctiptionProperty as the name
             // description conflicts with something in the binding process
             @PropertyId("description")
-            TextField description = new TextField("Description");
+            LegacyTextField description = new LegacyTextField("Description");
 
             public MyForm() {
 

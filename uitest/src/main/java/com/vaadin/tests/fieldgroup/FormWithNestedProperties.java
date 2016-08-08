@@ -2,6 +2,7 @@ package com.vaadin.tests.fieldgroup;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -9,19 +10,18 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 
 public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
 
     private Log log = new Log(5);
 
-    private TextField firstName = new TextField("First name");
-    private TextField lastName = new TextField("Last name");
-    private TextField email = new TextField("Email");
-    private TextField age = new TextField("Age");
+    private LegacyTextField firstName = new LegacyTextField("First name");
+    private LegacyTextField lastName = new LegacyTextField("Last name");
+    private LegacyTextField email = new LegacyTextField("Email");
+    private LegacyTextField age = new LegacyTextField("Age");
 
     @PropertyId("address.streetAddress")
-    private TextField streetAddress = new TextField("Street address");
+    private LegacyTextField streetAddress = new LegacyTextField("Street address");
     private NativeSelect country;
 
     private CheckBox deceased = new CheckBox("Deceased");

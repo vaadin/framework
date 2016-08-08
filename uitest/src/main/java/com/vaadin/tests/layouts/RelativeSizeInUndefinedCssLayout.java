@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class RelativeSizeInUndefinedCssLayout extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class RelativeSizeInUndefinedCssLayout extends AbstractTestUI {
 
         cssLayout.addComponent(formLayout);
 
-        TextField tf = new TextField("Enter something");
+        LegacyTextField tf = new LegacyTextField("Enter something");
         tf.setWidth("100%");
         formLayout.addComponent(tf);
 

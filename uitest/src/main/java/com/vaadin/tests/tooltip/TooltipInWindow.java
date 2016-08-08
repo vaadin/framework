@@ -16,9 +16,9 @@
 
 package com.vaadin.tests.tooltip;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -37,8 +37,8 @@ public class TooltipInWindow extends AbstractTestUI {
         addComponent(createTextField("tf2"));
     }
 
-    private TextField createTextField(String id) {
-        TextField tf = new TextField("TextField with a tooltip");
+    private LegacyTextField createTextField(String id) {
+        LegacyTextField tf = new LegacyTextField("TextField with a tooltip");
         tf.setDescription("My tooltip");
         tf.setId(id);
         return tf;

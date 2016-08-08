@@ -28,11 +28,11 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
+import com.vaadin.client.legacy.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
-import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.client.ui.nativebutton.NativeButtonConnector;
-import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
@@ -44,8 +44,8 @@ import com.google.gwt.core.client.Scheduler;
 public class LoginFormConnector extends
         AbstractSingleComponentContainerConnector {
 
-    private VTextField passwordField;
-    private VTextField userField;
+    private VLegacyTextField passwordField;
+    private VLegacyTextField userField;
     private LoginFormRpc loginFormRpc;
 
     @Override
@@ -98,9 +98,9 @@ public class LoginFormConnector extends
                 getResourceUrl(LoginFormConstants.LOGIN_RESOURCE_NAME));
     }
 
-    private VTextField configureTextField(Connector connector, String id) {
+    private VLegacyTextField configureTextField(Connector connector, String id) {
         if (connector != null) {
-            VTextField textField = ((TextFieldConnector) connector).getWidget();
+            VLegacyTextField textField = ((LegacyTextFieldConnector) connector).getWidget();
 
             textField.addKeyDownHandler(new SubmitKeyHandler());
 

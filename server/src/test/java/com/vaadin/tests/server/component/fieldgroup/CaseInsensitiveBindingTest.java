@@ -7,8 +7,8 @@ import org.junit.Test;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class CaseInsensitiveBindingTest {
 
@@ -18,7 +18,7 @@ public class CaseInsensitiveBindingTest {
         item.addItemProperty("LastName", new ObjectProperty<String>("Sparrow"));
 
         class MyForm extends FormLayout {
-            TextField lastName = new TextField("Last name");
+            LegacyTextField lastName = new LegacyTextField("Last name");
 
             public MyForm() {
 
@@ -41,7 +41,7 @@ public class CaseInsensitiveBindingTest {
         item.addItemProperty("first_name", new ObjectProperty<String>("Jack"));
 
         class MyForm extends FormLayout {
-            TextField firstName = new TextField("First name");
+            LegacyTextField firstName = new LegacyTextField("First name");
 
             public MyForm() {
                 // Should bind to the first_name property
@@ -65,7 +65,7 @@ public class CaseInsensitiveBindingTest {
         item.addItemProperty("firstName", new ObjectProperty<String>("This"));
 
         class MyForm extends FormLayout {
-            TextField firstName = new TextField("First name");
+            LegacyTextField firstName = new LegacyTextField("First name");
 
             public MyForm() {
                 // should bind to the firstName property, not first_name

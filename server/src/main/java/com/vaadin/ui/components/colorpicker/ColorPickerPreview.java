@@ -19,10 +19,10 @@ import java.lang.reflect.Method;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 
 /**
  * A component that represents color selection preview within a color picker.
@@ -51,7 +51,7 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
     private Color color;
 
     /** The field. */
-    private final TextField field;
+    private final LegacyTextField field;
 
     /** The old value. */
     private String oldValue;
@@ -59,7 +59,7 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
         setImmediate(true);
-        field = new TextField();
+        field = new LegacyTextField();
         field.setImmediate(true);
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");

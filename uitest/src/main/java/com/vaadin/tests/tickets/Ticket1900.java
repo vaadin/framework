@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket1900 extends LegacyApplication {
 
-    TextField f[] = new TextField[5];
+    LegacyTextField f[] = new LegacyTextField[5];
     LegacyWindow main = new LegacyWindow("#1900 test");
 
     @Override
@@ -19,7 +19,7 @@ public class Ticket1900 extends LegacyApplication {
 
         for (int i = 0; i < 5; i++) {
             final int j = i;
-            f[i] = new TextField("Testcase " + i);
+            f[i] = new LegacyTextField("Testcase " + i);
             f[i].setImmediate(true);
             f[i].setRequired(true);
             main.addComponent(f[i]);

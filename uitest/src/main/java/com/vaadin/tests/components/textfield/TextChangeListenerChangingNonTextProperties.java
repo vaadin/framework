@@ -2,10 +2,10 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
-import com.vaadin.ui.TextField;
 
 public class TextChangeListenerChangingNonTextProperties extends TestBase {
 
@@ -18,7 +18,7 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
 
     @Override
     protected void setup() {
-        final TextField tf2 = new TextField("Updates width") {
+        final LegacyTextField tf2 = new LegacyTextField("Updates width") {
             @Override
             public void attach() {
                 super.attach();

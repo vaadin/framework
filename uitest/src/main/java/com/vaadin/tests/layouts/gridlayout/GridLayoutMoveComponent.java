@@ -1,5 +1,6 @@
 package com.vaadin.tests.layouts.gridlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestBase;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class GridLayoutMoveComponent extends AbstractTestUI {
 
@@ -22,7 +22,7 @@ public class GridLayoutMoveComponent extends AbstractTestUI {
         final Label l = new Label("100% label");
         final Button b = new Button("100px button");
         b.setWidth("100px");
-        final TextField tf = new TextField("Undef textfield");
+        final LegacyTextField tf = new LegacyTextField("Undef textfield");
 
         // Adding component to grid
         grid.addComponent(l, 0, 0);

@@ -4,11 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.TextField;
 
 public class CustomLayoutPrimaryStyleName extends TestBase {
 
@@ -19,7 +19,7 @@ public class CustomLayoutPrimaryStyleName extends TestBase {
         try {
             final CustomLayout cl = new CustomLayout(is);
 
-            cl.addComponent(new TextField("Hello world"), "loc1");
+            cl.addComponent(new LegacyTextField("Hello world"), "loc1");
 
             cl.setPrimaryStyleName("my-customlayout");
             addComponent(cl);

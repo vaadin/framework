@@ -16,6 +16,7 @@
 
 package com.vaadin.tests.application.calculator;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
@@ -27,7 +28,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnHeaderMode;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -65,7 +65,7 @@ public class Calc extends AbstractTestUI {
                     VerticalLayout vl = new VerticalLayout();
                     vl.setMargin(true);
 
-                    final TextField tf = new TextField();
+                    final LegacyTextField tf = new LegacyTextField();
                     tf.setSizeFull();
                     vl.addComponent(tf);
 
@@ -128,7 +128,7 @@ public class Calc extends AbstractTestUI {
     private VerticalLayout topLayout = new VerticalLayout();
 
     // User interface components
-    private final TextField display = new TextField();
+    private final LegacyTextField display = new LegacyTextField();
 
     private final Log log = new Log();
 

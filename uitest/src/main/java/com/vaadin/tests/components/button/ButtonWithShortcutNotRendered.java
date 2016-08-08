@@ -6,6 +6,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -18,7 +19,6 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 
 @PreserveOnRefresh
@@ -106,9 +106,9 @@ public class ButtonWithShortcutNotRendered extends AbstractTestUI {
             setFormFieldFactory(new DefaultFieldFactory() {
 
                 @Override
-                public TextField createField(Item item, Object propertyId,
+                public LegacyTextField createField(Item item, Object propertyId,
                         Component uiContext) {
-                    TextField t = new TextField();
+                    LegacyTextField t = new LegacyTextField();
                     t.setWidth(100, Unit.PERCENTAGE);
                     t.setHeight(null);
                     t.setCaption((String) propertyId);

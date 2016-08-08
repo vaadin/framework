@@ -17,6 +17,7 @@ package com.vaadin.tests.themes.valo;
 
 import java.util.Date;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
@@ -34,7 +35,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -64,7 +64,7 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(section);
         StringGenerator sg = new StringGenerator();
 
-        TextField name = new TextField("Name");
+        LegacyTextField name = new LegacyTextField("Name");
         name.setValue(sg.nextString(true) + " " + sg.nextString(true));
         name.setWidth("50%");
         form.addComponent(name);
@@ -73,7 +73,7 @@ public class Forms extends VerticalLayout implements View {
         birthday.setValue(new Date(80, 0, 31));
         form.addComponent(birthday);
 
-        TextField username = new TextField("Username");
+        LegacyTextField username = new LegacyTextField("Username");
         username.setValue(sg.nextString(false) + sg.nextString(false));
         username.setRequired(true);
         form.addComponent(username);
@@ -90,20 +90,20 @@ public class Forms extends VerticalLayout implements View {
         section.addStyleName(ValoTheme.LABEL_COLORED);
         form.addComponent(section);
 
-        TextField email = new TextField("Email");
+        LegacyTextField email = new LegacyTextField("Email");
         email.setValue(
                 sg.nextString(false) + "@" + sg.nextString(false) + ".com");
         email.setWidth("50%");
         email.setRequired(true);
         form.addComponent(email);
 
-        TextField location = new TextField("Location");
+        LegacyTextField location = new LegacyTextField("Location");
         location.setValue(sg.nextString(true) + ", " + sg.nextString(true));
         location.setWidth("50%");
         location.setComponentError(new UserError("This address doesn't exist"));
         form.addComponent(location);
 
-        TextField phone = new TextField("Phone");
+        LegacyTextField phone = new LegacyTextField("Phone");
         phone.setWidth("50%");
         form.addComponent(phone);
 
@@ -131,7 +131,7 @@ public class Forms extends VerticalLayout implements View {
         section.addStyleName(ValoTheme.LABEL_COLORED);
         form.addComponent(section);
 
-        TextField website = new TextField("Website");
+        LegacyTextField website = new LegacyTextField("Website");
         website.setInputPrompt("http://");
         website.setWidth("100%");
         form.addComponent(website);

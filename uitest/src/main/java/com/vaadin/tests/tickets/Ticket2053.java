@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2053 extends LegacyApplication {
 
@@ -33,7 +33,7 @@ public class Ticket2053 extends LegacyApplication {
                 addWindow(c);
                 main.open(new ExternalResource(c.getURL()), "_new");
                 main.addComponent(new Label(name + " opened"));
-                final TextField tf = new TextField("Non immediate textfield");
+                final LegacyTextField tf = new LegacyTextField("Non immediate textfield");
                 c.addComponent(tf);
                 tf.addListener(new Property.ValueChangeListener() {
                     @Override

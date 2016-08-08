@@ -25,12 +25,12 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
@@ -67,8 +67,8 @@ public class BeanItemContainerTestUI extends UI {
         // Add event table connected to same data source
         table = createTable();
         table.setContainerDataSource(events);
-        table.setVisibleColumns(new Object[] { "caption", "description",
-                "start", "end" });
+        table.setVisibleColumns(
+                new Object[] { "caption", "description", "start", "end" });
         content.addComponent(table);
 
         BasicEvent longEvent = new BasicEvent();
@@ -94,7 +94,8 @@ public class BeanItemContainerTestUI extends UI {
             private final Action REMOVE = new Action("Remove event");
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 if (action == ADD) {
                     BasicEvent event = new BasicEvent();
                     event.setStart(new Date(100, 1, 1));
@@ -134,9 +135,9 @@ public class BeanItemContainerTestUI extends UI {
         final FieldGroup fieldGroup = new FieldGroup();
 
         FormLayout formLayout = new FormLayout();
-        TextField captionField = new TextField("Caption");
+        LegacyTextField captionField = new LegacyTextField("Caption");
         captionField.setImmediate(true);
-        TextField descriptionField = new TextField("Description");
+        LegacyTextField descriptionField = new LegacyTextField("Description");
         descriptionField.setImmediate(true);
         LegacyDateField startField = new LegacyDateField("Start");
         startField.setResolution(Resolution.MINUTE);
@@ -156,8 +157,8 @@ public class BeanItemContainerTestUI extends UI {
         fieldGroup.bind(startField, ContainerEventProvider.STARTDATE_PROPERTY);
         fieldGroup.bind(endField, ContainerEventProvider.ENDDATE_PROPERTY);
 
-        fieldGroup.setItemDataSource(new BeanItem<BasicEvent>(event, Arrays
-                .asList(ContainerEventProvider.CAPTION_PROPERTY,
+        fieldGroup.setItemDataSource(new BeanItem<BasicEvent>(event,
+                Arrays.asList(ContainerEventProvider.CAPTION_PROPERTY,
                         ContainerEventProvider.DESCRIPTION_PROPERTY,
                         ContainerEventProvider.STARTDATE_PROPERTY,
                         ContainerEventProvider.ENDDATE_PROPERTY)));

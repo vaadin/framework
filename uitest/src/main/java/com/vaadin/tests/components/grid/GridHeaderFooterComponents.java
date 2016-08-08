@@ -16,8 +16,6 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -89,8 +87,8 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
     }
 
     private void addRemoveHeaderRow(final Grid grid, final HeaderRow row) {
-        row.getCell("action").setComponent(
-                new Button("Remove row", new ClickListener() {
+        row.getCell("action")
+                .setComponent(new Button("Remove row", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeHeaderRow(row);
@@ -100,8 +98,8 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
     }
 
     private void addRemoveFooterRow(final Grid grid, final FooterRow row) {
-        row.getCell("action").setComponent(
-                new Button("Remove row", new ClickListener() {
+        row.getCell("action")
+                .setComponent(new Button("Remove row", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeFooterRow(row);
@@ -127,12 +125,9 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
         TextField filterField = new TextField();
         filterField.setColumns(8);
         filterField.setValue("Filter: " + pid);
-        filterField.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log("value change for field in " + pid + " to "
-                        + event.getProperty().getValue());
-            }
+        filterField.addValueChangeListener(listener -> {
+            log("value change for field in " + pid + " to "
+                    + listener.getValue());
         });
         return filterField;
     }

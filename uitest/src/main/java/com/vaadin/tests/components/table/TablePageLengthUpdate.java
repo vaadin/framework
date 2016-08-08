@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class TablePageLengthUpdate extends TestBase {
 
@@ -54,7 +54,7 @@ public class TablePageLengthUpdate extends TestBase {
                 });
         addComponent(updateButton);
 
-        TextField tableHeight = new TextField("Table height",
+        LegacyTextField tableHeight = new LegacyTextField("Table height",
                 new MethodProperty<String>(this, "tableHeight"));
         tableHeight.setImmediate(true);
         addComponent(tableHeight);

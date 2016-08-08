@@ -24,13 +24,13 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -101,13 +101,13 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
         area.addFocusListener(focusListener);
         dndLayout.addComponent(area);
 
-        TextField field = new TextField("Text field 1");
+        LegacyTextField field = new LegacyTextField("Text field 1");
         field.setValue("text");
         field.addValueChangeListener(listener);
         field.addFocusListener(focusListener);
         dndLayout.addComponent(field);
 
-        field = new TextField("Text field 2");
+        field = new LegacyTextField("Text field 2");
         field.setValue("text");
         field.addValueChangeListener(listener);
         field.addFocusListener(focusListener);

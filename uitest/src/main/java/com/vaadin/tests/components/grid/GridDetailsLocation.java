@@ -41,8 +41,8 @@ public class GridDetailsLocation extends UI {
         @Override
         public Component getDetails(RowReference rowReference) {
             Person person = (Person) rowReference.getItemId();
-            Label label = new Label(person.getFirstName() + " "
-                    + person.getLastName());
+            Label label = new Label(
+                    person.getFirstName() + " " + person.getLastName());
             // currently the decorator row doesn't change its height when the
             // content height is different.
             label.setHeight("30px");
@@ -76,16 +76,16 @@ public class GridDetailsLocation extends UI {
         numberTextField.setImmediate(true);
         layout.addComponent(numberTextField);
 
-        layout.addComponent(new Button("Toggle and scroll",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Toggle and scroll", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle();
                         scrollTo();
                     }
                 }));
-        layout.addComponent(new Button("Scroll and toggle",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Scroll and toggle", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         scrollTo();

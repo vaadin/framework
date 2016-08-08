@@ -2,6 +2,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -9,7 +10,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class IntegerTextFieldDataSource extends AbstractTestUI {
 
@@ -32,7 +32,7 @@ public class IntegerTextFieldDataSource extends AbstractTestUI {
 
         final Property<Integer> integerProperty = beanItem
                 .getItemProperty("value");
-        final TextField textField = new TextField("Text field", integerProperty);
+        final LegacyTextField textField = new LegacyTextField("Text field", integerProperty);
 
         Button submitButton = new Button("Submit value", new ClickListener() {
             @Override

@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.form;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class FormFieldCaptionsStyles extends TestBase {
 
@@ -13,20 +13,20 @@ public class FormFieldCaptionsStyles extends TestBase {
 
         FormLayout layout = new FormLayout();
 
-        TextField field1 = new TextField("Red style");
+        LegacyTextField field1 = new LegacyTextField("Red style");
         field1.setStyleName("ticket4997-red");
         layout.addComponent(field1);
 
-        TextField field2 = new TextField("Blue style");
+        LegacyTextField field2 = new LegacyTextField("Blue style");
         field2.setStyleName("ticket4997-blue");
         layout.addComponent(field2);
 
-        TextField field3 = new TextField("Red-Blue style");
+        LegacyTextField field3 = new LegacyTextField("Red-Blue style");
         field3.addStyleName("ticket4997-red");
         field3.addStyleName("ticket4997-blue");
         layout.addComponent(field3);
 
-        TextField field4 = new TextField("Disabled");
+        LegacyTextField field4 = new LegacyTextField("Disabled");
         field4.setEnabled(false);
         field4.addStyleName("foobar"); // no visible change, but points out
         // a regression #5377

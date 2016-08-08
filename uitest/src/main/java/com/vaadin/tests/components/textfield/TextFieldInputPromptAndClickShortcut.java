@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.TextField;
 
 public class TextFieldInputPromptAndClickShortcut extends TestBase {
 
@@ -15,7 +15,7 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
     protected void setup() {
         final Log log = new Log(5);
 
-        final TextField textField = new TextField();
+        final LegacyTextField textField = new LegacyTextField();
         Button button = new Button("Show Text", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

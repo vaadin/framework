@@ -4,19 +4,19 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.ui.TextField;
 
 public class FormBuilderWithNestedProperties extends TestBase {
 
-    private TextField firstName;
-    private TextField lastName;
+    private LegacyTextField firstName;
+    private LegacyTextField lastName;
     @PropertyId("address.streetAddress")
-    private TextField streetAddress;
+    private LegacyTextField streetAddress;
 
     @Override
     protected void setup() {

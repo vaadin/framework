@@ -15,18 +15,18 @@
  */
 package com.vaadin.tests.components.button;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 
 public class ButtonTabIndex extends TestBase {
 
     @Override
     protected void setup() {
-        TextField tf1 = new TextField("Tab index 0");
+        LegacyTextField tf1 = new LegacyTextField("Tab index 0");
         tf1.setTabIndex(0);
-        TextField tf2 = new TextField("Tab index -1, focused initially");
+        LegacyTextField tf2 = new LegacyTextField("Tab index -1, focused initially");
         tf2.setTabIndex(-1);
         tf2.focus();
         addComponent(tf1);

@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -110,7 +110,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
         layout.addComponent(label);
 
         // TODO also test with captions
-        TextField field = new TextField(useCaption ? "caption" : null);
+        LegacyTextField field = new LegacyTextField(useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);
@@ -119,7 +119,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
 
     private void addLabel(VerticalLayout layout, String width,
             Alignment alignment, boolean useCaption) {
-        TextField field = new TextField(useCaption ? "caption" : null);
+        LegacyTextField field = new LegacyTextField(useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);

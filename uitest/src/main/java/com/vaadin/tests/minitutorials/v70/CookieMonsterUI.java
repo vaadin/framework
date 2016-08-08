@@ -2,12 +2,12 @@ package com.vaadin.tests.minitutorials.v70;
 
 import javax.servlet.http.Cookie;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -25,7 +25,7 @@ public class CookieMonsterUI extends UI {
         layout.setMargin(true);
         setContent(layout);
 
-        final TextField nameField = new TextField();
+        final LegacyTextField nameField = new LegacyTextField();
         layout.addComponent(nameField);
 
         // Read previously stored cookie value

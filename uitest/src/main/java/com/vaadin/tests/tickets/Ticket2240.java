@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2240 extends LegacyApplication {
 
@@ -40,7 +40,7 @@ public class Ticket2240 extends LegacyApplication {
         l.setContentMode(ContentMode.HTML);
         // l.setWidth("100%");
 
-        TextField tf = new TextField("This is a textField");
+        LegacyTextField tf = new LegacyTextField("This is a textField");
         tf.setWidth("100%");
 
         layout.addComponent(tf);

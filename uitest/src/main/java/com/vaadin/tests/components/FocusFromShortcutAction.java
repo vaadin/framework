@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.TextField;
 
 public class FocusFromShortcutAction extends TestBase {
 
@@ -15,7 +15,7 @@ public class FocusFromShortcutAction extends TestBase {
     protected void setup() {
         final Select select = new Select("Select", Arrays.asList("Option 1",
                 "Option 2"));
-        final TextField text = new TextField("Text");
+        final LegacyTextField text = new LegacyTextField("Text");
 
         addComponent(select);
         addComponent(text);

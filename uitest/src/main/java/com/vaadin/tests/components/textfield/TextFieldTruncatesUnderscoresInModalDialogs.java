@@ -27,7 +27,8 @@ import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 @Theme("chameleon")
-public class TextFieldTruncatesUnderscoresInModalDialogs extends AbstractTestUI {
+public class TextFieldTruncatesUnderscoresInModalDialogs
+        extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -36,8 +37,8 @@ public class TextFieldTruncatesUnderscoresInModalDialogs extends AbstractTestUI 
         FormLayout formLayout = new FormLayout();
         formLayout.setSpacing(true);
 
-        formLayout.addComponent(new Button("Disappear",
-                new Button.ClickListener() {
+        formLayout.addComponent(
+                new Button("Disappear", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

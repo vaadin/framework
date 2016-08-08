@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -7,7 +8,6 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -55,7 +55,7 @@ public class CaptionLeak extends AbstractTestUI {
                 try {
                     ComponentContainer target = targetClass.newInstance();
                     for (int i = 0; i < 61; i++) {
-                        target.addComponent(new TextField("Test"));
+                        target.addComponent(new LegacyTextField("Test"));
                     }
                     parent.setContent(target);
                 } catch (InstantiationException e) {

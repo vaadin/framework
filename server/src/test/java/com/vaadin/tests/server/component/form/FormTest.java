@@ -18,8 +18,8 @@ package com.vaadin.tests.server.component.form;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 
 /**
  * Test for {@link Form}.
@@ -32,7 +32,7 @@ public class FormTest {
     public void testFocus() {
         Form form = new Form();
         final boolean firstFieldIsFocused[] = new boolean[1];
-        TextField field1 = new TextField() {
+        LegacyTextField field1 = new LegacyTextField() {
             @Override
             public boolean isConnectorEnabled() {
                 return false;
@@ -45,7 +45,7 @@ public class FormTest {
         };
 
         final boolean secondFieldIsFocused[] = new boolean[1];
-        TextField field2 = new TextField() {
+        LegacyTextField field2 = new LegacyTextField() {
             @Override
             public boolean isConnectorEnabled() {
                 return true;

@@ -2,12 +2,12 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket846 extends LegacyApplication {
 
@@ -17,7 +17,7 @@ public class Ticket846 extends LegacyApplication {
         final LegacyWindow mainWin = new LegacyWindow("Test app for #846");
         setMainWindow(mainWin);
 
-        final TextField tx = new TextField("Integer");
+        final LegacyTextField tx = new LegacyTextField("Integer");
         mainWin.addComponent(tx);
         tx.setImmediate(true);
         tx.addValidator(new LegacyIntegerValidator("{0} is not a number"));
@@ -43,7 +43,7 @@ public class Ticket846 extends LegacyApplication {
                                 + (tx.isValid() ? "" : "not ") + "valid");
                     }
                 }));
-        TextField caption = new TextField("Caption",
+        LegacyTextField caption = new LegacyTextField("Caption",
                 new MethodProperty<String>(tx, "caption"));
         caption.setImmediate(true);
         mainWin.addComponent(caption);

@@ -4,13 +4,13 @@ import java.util.Locale;
 
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class StringMyTypeConverter extends AbstractTestUI {
 
@@ -18,7 +18,7 @@ public class StringMyTypeConverter extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Name name = new Name("Rudolph", "Reindeer");
 
-        final TextField textField = new TextField("Name");
+        final LegacyTextField textField = new LegacyTextField("Name");
         textField.setConverter(new StringToNameConverter());
         textField.setConvertedValue(name);
 
@@ -59,8 +59,8 @@ class StringToNameConverter implements LegacyConverter<String, Name> {
         }
         String[] parts = text.split(" ");
         if (parts.length != 2) {
-            throw new ConversionException("Can not convert text to a name: "
-                    + text);
+            throw new ConversionException(
+                    "Can not convert text to a name: " + text);
         }
         return new Name(parts[0], parts[1]);
     }

@@ -1,16 +1,16 @@
 package com.vaadin.tests.actions;
 
 import com.vaadin.event.Action;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
 public class ActionsWithoutKeyCode extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setWidth("100%");
         tf.setInputPrompt("Enter text with å,ä or ä or press windows key while textfield is focused");
         addComponent(tf);

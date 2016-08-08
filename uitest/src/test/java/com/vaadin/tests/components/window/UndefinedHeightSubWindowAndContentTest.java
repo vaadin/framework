@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 
@@ -14,7 +15,7 @@ public class UndefinedHeightSubWindowAndContentTest extends MultiBrowserTest {
     public void testUndefinedHeight() {
         openTestURL();
 
-        TextFieldElement textField = $(TextFieldElement.class).first();
+        TextFieldElement textField = $(LegacyTextFieldElement.class).first();
 
         textField.click();
         textField.sendKeys("invalid", Keys.ENTER);

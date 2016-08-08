@@ -23,6 +23,7 @@ import com.vaadin.data.Property;
 import com.vaadin.legacy.ui.LegacyCheckBox;
 import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -86,13 +87,13 @@ public class DefaultFieldFactory
     /**
      * Creates fields based on the property type.
      * <p>
-     * The default field type is {@link TextField}. Other field types generated
+     * The default field type is {@link LegacyTextField}. Other field types generated
      * by this method:
      * <p>
      * <b>Boolean</b>: {@link CheckBox}.<br/>
      * <b>Date</b>: {@link LegacyDateField}(resolution: day).<br/>
      * <b>Item</b>: {@link Form}. <br/>
-     * <b>default field type</b>: {@link TextField}.
+     * <b>default field type</b>: {@link LegacyTextField}.
      * <p>
      * 
      * @param type
@@ -122,7 +123,7 @@ public class DefaultFieldFactory
             return new LegacyCheckBox();
         }
 
-        return new TextField();
+        return new LegacyTextField();
     }
 
 }

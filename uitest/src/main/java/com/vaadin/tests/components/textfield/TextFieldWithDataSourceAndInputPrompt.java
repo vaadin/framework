@@ -16,9 +16,9 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TextField;
 
 public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
     public static class Pojo {
@@ -35,13 +35,13 @@ public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        TextField textField = new TextField("TextField with null value");
+        LegacyTextField textField = new LegacyTextField("TextField with null value");
         textField.setInputPrompt("Me is input prompt");
         textField.setNullRepresentation(null);
         textField.setValue(null);
         addComponent(textField);
 
-        TextField textField2 = new TextField(
+        LegacyTextField textField2 = new LegacyTextField(
                 "TextField with null data source value");
         textField2.setInputPrompt("Me is input prompt");
         textField2.setNullRepresentation(null);

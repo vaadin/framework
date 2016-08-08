@@ -1,7 +1,8 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -9,13 +10,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class IntegerTextFieldStandalone extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField textField = new TextField("Text field");
+        final LegacyTextField textField = new LegacyTextField("Text field");
         textField.setConverter(new LegacyStringToIntegerConverter());
 
         Button submitButton = new Button("Submit value", new ClickListener() {

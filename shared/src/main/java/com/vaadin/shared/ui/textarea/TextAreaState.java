@@ -17,9 +17,9 @@ package com.vaadin.shared.ui.textarea;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.shared.legacy.ui.textfield.LegacyAbstractTextFieldState;
 
-public class TextAreaState extends AbstractTextFieldState {
+public class TextAreaState extends LegacyAbstractTextFieldState {
     {
         primaryStyleName = "v-textarea";
     }

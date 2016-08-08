@@ -1,8 +1,8 @@
 package com.vaadin.tests.validation;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 
 public class RequiredIndicatorForReadOnly extends TestBase {
 
@@ -18,13 +18,13 @@ public class RequiredIndicatorForReadOnly extends TestBase {
 
     @Override
     protected void setup() {
-        TextField tf = new TextField("A read only field");
+        LegacyTextField tf = new LegacyTextField("A read only field");
         tf.setReadOnly(true);
         tf.setRequired(true);
         addComponent(tf);
 
         Form f = new Form();
-        TextField tf2 = new TextField("A field in a read only form");
+        LegacyTextField tf2 = new LegacyTextField("A field in a read only form");
         tf2.setRequired(true);
         f.addField("Field-1", tf2);
         f.setReadOnly(true);

@@ -4,15 +4,15 @@ import java.util.Locale;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.TextField;
 
 public class ConverterThatEnforcesAFormat extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField tf = new TextField(
+        final LegacyTextField tf = new LegacyTextField(
                 "This field should always be formatted with 3 digits");
         tf.setLocale(Locale.ENGLISH);
         // this is needed so that IE tests pass

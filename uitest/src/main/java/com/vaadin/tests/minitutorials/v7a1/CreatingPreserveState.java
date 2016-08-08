@@ -17,10 +17,10 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.annotations.PreserveOnRefresh;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -39,7 +39,7 @@ public class CreatingPreserveState extends UI {
 
     @Override
     public void init(VaadinRequest request) {
-        TextField tf = new TextField("Instance #" + (++instanceCounter));
+        LegacyTextField tf = new LegacyTextField("Instance #" + (++instanceCounter));
         tf.setImmediate(true);
 
         content.addComponent(tf);

@@ -1,5 +1,6 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
@@ -12,7 +13,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TestLayoutPerformance extends TestBase {
@@ -55,7 +55,7 @@ public class TestLayoutPerformance extends TestBase {
         ns2.setNullSelectionAllowed(false);
         ns2.setValue(Label.class);
 
-        final TextField n = new TextField("Number of components");
+        final LegacyTextField n = new LegacyTextField("Number of components");
 
         n.setValue("1000");
 

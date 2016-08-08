@@ -30,6 +30,7 @@ import java.lang.management.MemoryMXBean;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -43,7 +44,6 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.StartedEvent;
@@ -73,7 +73,7 @@ public class TestForUpload extends CustomComponent implements
 
     private final Select uploadBufferSelector;
 
-    private TextField textField;
+    private LegacyTextField textField;
 
     private Label textFieldValue;
 
@@ -99,7 +99,7 @@ public class TestForUpload extends CustomComponent implements
         main.addComponent(new Label(
                 "Clicking on button b updates information about upload components status or same with garbage collector."));
 
-        textField = new TextField("Test field");
+        textField = new LegacyTextField("Test field");
         textFieldValue = new Label();
         main.addComponent(textField);
         main.addComponent(textFieldValue);

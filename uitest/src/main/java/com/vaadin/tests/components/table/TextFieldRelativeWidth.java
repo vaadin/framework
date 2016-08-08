@@ -2,19 +2,19 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class TextFieldRelativeWidth extends AbstractTestUI {
 
     @Override
     public void setup(VaadinRequest request) {
-        TextField tf = new TextField("test", "testing");
+        LegacyTextField tf = new LegacyTextField("test", "testing");
         tf.setWidth("100%");
 
         EditTable t = new EditTable();
@@ -56,7 +56,7 @@ public class TextFieldRelativeWidth extends AbstractTestUI {
             int size = idc.size();
             Object itemId = idc.addItemAt(size - 1);
             Item newItem = idc.getItem(itemId);
-            TextField tf = new TextField();
+            LegacyTextField tf = new LegacyTextField();
             if (inputPrompt != null && inputPrompt.length() > 0) {
                 tf.setInputPrompt(inputPrompt);
             }
@@ -69,7 +69,7 @@ public class TextFieldRelativeWidth extends AbstractTestUI {
             itemId = idc.addItemAt(size);
             newItem = idc.getItem(itemId);
 
-            tf = new TextField();
+            tf = new LegacyTextField();
             if (inputPromptChild != null && inputPromptChild.length() > 0) {
                 tf.setInputPrompt(inputPromptChild);
             }

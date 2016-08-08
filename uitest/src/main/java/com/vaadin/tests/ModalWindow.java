@@ -16,12 +16,12 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -50,7 +50,7 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication implements
         main.addComponent(new Label("ModalWindow demo"));
 
         // Main window textfield
-        final TextField f = new TextField();
+        final LegacyTextField f = new LegacyTextField();
         f.setTabIndex(1);
         main.addComponent(f);
 
@@ -87,7 +87,7 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication implements
                 "You have to close this window before accessing others."));
 
         // Textfield for modal window
-        final TextField f = new TextField();
+        final LegacyTextField f = new LegacyTextField();
         f.setTabIndex(4);
         layout.addComponent(f);
         f.focus();

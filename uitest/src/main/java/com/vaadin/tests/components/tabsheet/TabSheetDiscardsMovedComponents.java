@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.tabsheet;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 
 public class TabSheetDiscardsMovedComponents extends TestBase {
 
@@ -20,7 +20,7 @@ public class TabSheetDiscardsMovedComponents extends TestBase {
         tabSheet.setSizeUndefined();
 
         grid.setColumns(2);
-        TextField textField = new TextField("Text field");
+        LegacyTextField textField = new LegacyTextField("Text field");
         textField.setValue("Text");
         addTestComponent(textField);
         addTestComponent(new Button("Button"));

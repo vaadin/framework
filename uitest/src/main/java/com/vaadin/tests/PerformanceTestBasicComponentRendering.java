@@ -19,6 +19,7 @@ package com.vaadin.tests;
 import java.util.Date;
 import java.util.Map;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -28,7 +29,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class PerformanceTestBasicComponentRendering extends CustomComponent {
@@ -80,7 +80,7 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
             }
             testContainer.addComponent(cb);
 
-            TextField tf = new TextField("TextField " + i);
+            LegacyTextField tf = new LegacyTextField("TextField " + i);
             tf.setDescription("DESC SDKJSDF");
             tf.setComponentError(new UserError("dsfjklsdf"));
             testContainer.addComponent(tf);

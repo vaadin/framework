@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.ui.LegacyAbstractField;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 /**
  * Check that the value change listener for a text field is triggered exactly
@@ -24,7 +24,7 @@ public class TextFieldValueChangeTest extends
 
     @Before
     public void setUp() {
-        super.setUp(new TextField());
+        super.setUp(new LegacyTextField());
     }
 
     /**
@@ -42,7 +42,7 @@ public class TextFieldValueChangeTest extends
     protected void setValue(LegacyAbstractField<String> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("text", "newValue");
-        ((TextField) field).changeVariables(field, variables);
+        ((LegacyTextField) field).changeVariables(field, variables);
     }
 
     /**

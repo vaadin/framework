@@ -1,5 +1,6 @@
 package com.vaadin.tests.layouts.gridlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridLayoutWidthChange extends AbstractTestUI {
@@ -20,7 +20,7 @@ public class GridLayoutWidthChange extends AbstractTestUI {
         fields1.addComponent(nb);
 
         VerticalLayout fields3 = new VerticalLayout();
-        fields3.addComponent(new TextField("field14"));
+        fields3.addComponent(new LegacyTextField("field14"));
 
         NativeButton b = new NativeButton("A big button");
         b.setWidth("200px");

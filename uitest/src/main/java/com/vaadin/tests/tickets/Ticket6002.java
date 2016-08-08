@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket6002 extends TestBase {
@@ -28,7 +28,7 @@ public class Ticket6002 extends TestBase {
                 new Double(42.0));
 
         // A text field that changes its caption
-        final TextField tf1 = new TextField(
+        final LegacyTextField tf1 = new LegacyTextField(
                 "Changing this field modifies only the textfield", property1);
         tf1.addListener(new Property.ValueChangeListener() {
 
@@ -53,7 +53,7 @@ public class Ticket6002 extends TestBase {
                 new Double(42.0));
 
         // A text field that adds new components
-        final TextField tf2 = new TextField(
+        final LegacyTextField tf2 = new LegacyTextField(
                 "Changing this field modifies the layout - do it twice",
                 property2);
         tf2.addListener(new Property.ValueChangeListener() {

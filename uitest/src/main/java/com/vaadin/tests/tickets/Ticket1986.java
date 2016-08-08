@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -9,7 +10,6 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
 public class Ticket1986 extends LegacyApplication {
@@ -22,9 +22,9 @@ public class Ticket1986 extends LegacyApplication {
         int index = 1;
 
         GridLayout layout = new GridLayout(2, 2);
-        TextField f1 = new TextField("1");
+        LegacyTextField f1 = new LegacyTextField("1");
         f1.setTabIndex(index++);
-        TextField f2 = new TextField("2");
+        LegacyTextField f2 = new LegacyTextField("2");
         f2.setTabIndex(index++);
 
         DateField f3 = new DateField("3");

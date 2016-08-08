@@ -7,12 +7,12 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -38,7 +38,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         final Window window = new Window("Focus test window", layout);
         layout.setSizeUndefined();
 
-        layout.addComponent(new TextField());
+        layout.addComponent(new LegacyTextField());
         window.addFocusListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {
@@ -63,7 +63,8 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Action!");
             }
         });
@@ -72,7 +73,8 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         main.addWindow(window);
 
-        ((ComponentContainer) main.getContent()).addComponent(new TextField());
+        ((ComponentContainer) main.getContent())
+                .addComponent(new LegacyTextField());
 
         Button button = new Button("Bring to front (should focus too)",
                 new Button.ClickListener() {

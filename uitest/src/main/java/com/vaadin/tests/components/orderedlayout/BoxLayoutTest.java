@@ -10,6 +10,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
@@ -26,7 +27,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -44,7 +44,7 @@ public class BoxLayoutTest extends AbstractTestUI {
     protected NativeSelect componentHeight;
     protected NativeSelect componentCaption;
     protected NativeSelect componentIcon;
-    protected TextField componentDescription;
+    protected LegacyTextField componentDescription;
     protected CheckBox componentError;
     protected CheckBox componentRequired;
 
@@ -328,7 +328,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         });
         component.addComponent(componentIcon);
 
-        componentDescription = new TextField("Description");
+        componentDescription = new LegacyTextField("Description");
         componentDescription.setImmediate(true);
         componentDescription.setEnabled(false);
         componentDescription.addListener(new ValueChangeListener() {

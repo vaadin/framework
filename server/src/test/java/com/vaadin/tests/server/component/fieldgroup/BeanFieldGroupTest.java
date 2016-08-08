@@ -11,8 +11,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextField;
 
 public class BeanFieldGroupTest {
 
@@ -72,10 +72,10 @@ public class BeanFieldGroupTest {
 
     public static class ViewStub {
 
-        TextField basicField = new TextField();
+        LegacyTextField basicField = new LegacyTextField();
 
         @PropertyId("anotherField")
-        TextField boundWithAnnotation = new TextField();
+        LegacyTextField boundWithAnnotation = new LegacyTextField();
     }
 
     @SuppressWarnings("unchecked")

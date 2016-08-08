@@ -1,15 +1,15 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 public class Ticket2040 extends com.vaadin.server.LegacyApplication {
 
-    TextField f = new TextField();
+    LegacyTextField f = new LegacyTextField();
 
     @Override
     public void init() {

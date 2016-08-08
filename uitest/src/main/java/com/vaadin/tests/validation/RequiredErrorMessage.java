@@ -1,9 +1,9 @@
 package com.vaadin.tests.validation;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class RequiredErrorMessage extends AbstractTestCase {
@@ -25,19 +25,19 @@ public class RequiredErrorMessage extends AbstractTestCase {
         setMainWindow(main);
 
         final Form form = new Form(new VerticalLayout());
-        final TextField requiredFieldWithError = new TextField(
+        final LegacyTextField requiredFieldWithError = new LegacyTextField(
                 "Field with requiredError");
         requiredFieldWithError.setRequired(true);
         requiredFieldWithError
                 .setRequiredError("Error message for required field");
         form.addField("field1", requiredFieldWithError);
 
-        final TextField requiredFieldNoError = new TextField(
+        final LegacyTextField requiredFieldNoError = new LegacyTextField(
                 "Field without requiredError");
         requiredFieldNoError.setRequired(true);
         form.addField("field2", requiredFieldNoError);
 
-        final TextField requiredFieldDescriptionAndError = new TextField(
+        final LegacyTextField requiredFieldDescriptionAndError = new LegacyTextField(
                 "Field with requiredError and description");
         requiredFieldDescriptionAndError.setRequired(true);
         requiredFieldDescriptionAndError

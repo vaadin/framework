@@ -17,13 +17,13 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 /**
  * To verify bug fix: Reproducing of bug Textfield value not updated when
@@ -50,7 +50,7 @@ public class InputPromptGetText extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final TextField tf = new TextField();
+        final LegacyTextField tf = new LegacyTextField();
         tf.setId(FIELD);
         tf.setInputPrompt("input text here");
         tf.setImmediate(true);

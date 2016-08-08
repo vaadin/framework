@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket1805 extends com.vaadin.server.LegacyApplication {
 
@@ -28,7 +28,7 @@ public class Ticket1805 extends com.vaadin.server.LegacyApplication {
 
         final GridLayout grid = new GridLayout(4, 1);
 
-        final TextField size = new TextField("Grid width in css unit");
+        final LegacyTextField size = new LegacyTextField("Grid width in css unit");
         size.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

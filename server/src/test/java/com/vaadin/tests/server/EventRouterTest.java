@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 public class EventRouterTest {
 
@@ -12,7 +12,7 @@ public class EventRouterTest {
 
     @Test
     public void testAddInEventListener() {
-        final TextField tf = new TextField();
+        final LegacyTextField tf = new LegacyTextField();
 
         final ValueChangeListener outer = new ValueChangeListener() {
 

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.tabsheet;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TabsheetShouldUpdateHeight extends TestBase {
@@ -43,7 +43,7 @@ public class TabsheetShouldUpdateHeight extends TestBase {
         v.setSpacing(true);
         v.setMargin(true);
         for (int i = 0; i < inAmount; i++) {
-            v.addComponent(new TextField("Text field:"));
+            v.addComponent(new LegacyTextField("Text field:"));
         }
         return v;
     }

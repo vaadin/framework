@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.legacyelements.LegacyInlineDateFieldElement;
 import com.vaadin.tests.legacyelements.LegacyPopupDateFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFormTest extends MultiBrowserTest {
@@ -28,7 +28,7 @@ public class DateFormTest extends MultiBrowserTest {
                         "v-inline-datefield-calendarpanel-day-selected"));
         Assert.assertEquals("Unexpected TextField contents,",
                 "Jan 20, 1984 4:34:49 PM",
-                $(TextFieldElement.class).first().getValue());
+                $(LegacyTextFieldElement.class).first().getValue());
     }
 
     protected String getDateFieldValue() {

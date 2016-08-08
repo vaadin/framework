@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -13,7 +14,6 @@ import com.vaadin.ui.HasChildMeasurementHint.ChildMeasurementHint;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class TableChildMeasurementHint extends AbstractTestUI {
 
@@ -143,7 +143,7 @@ public class TableChildMeasurementHint extends AbstractTestUI {
         table.addGeneratedColumn("First_Name" + 3, new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table components, Object o, Object o2) {
-                TextField b = new TextField("Textfield");
+                LegacyTextField b = new LegacyTextField("Textfield");
                 b.setWidthUndefined();
                 return b;
             }

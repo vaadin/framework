@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket1806 extends com.vaadin.server.LegacyApplication {
 
@@ -15,7 +15,7 @@ public class Ticket1806 extends com.vaadin.server.LegacyApplication {
         setMainWindow(main);
 
         final ObjectProperty<String> prop = new ObjectProperty<String>("");
-        final TextField tf1 = new TextField(
+        final LegacyTextField tf1 = new LegacyTextField(
                 "Buffered TextField bound to ObjectProperty");
         tf1.setBuffered(true);
         tf1.setPropertyDataSource(prop);

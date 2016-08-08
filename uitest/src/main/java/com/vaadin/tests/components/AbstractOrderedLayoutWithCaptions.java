@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.components;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -34,7 +34,7 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
 
-        TextField textField = new TextField("Input Text:");
+        LegacyTextField textField = new LegacyTextField("Input Text:");
         Label label1 = new Label("LABEL 1");
         Label label2 = new Label("LABEL 2");
 

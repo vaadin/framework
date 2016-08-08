@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket1772 extends com.vaadin.server.LegacyApplication {
 
@@ -28,7 +28,7 @@ public class Ticket1772 extends com.vaadin.server.LegacyApplication {
             public void buttonClick(ClickEvent event) {
 
                 gridLayout
-                        .addComponent(new TextField("Content " + (++counter)));
+                        .addComponent(new LegacyTextField("Content " + (++counter)));
 
             }
         });

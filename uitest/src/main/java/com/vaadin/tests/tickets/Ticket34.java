@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket34 extends LegacyApplication {
@@ -85,7 +85,7 @@ public class Ticket34 extends LegacyApplication {
                     + "fragment or server initiated via textfield below.");
             pl.addComponent(new Label(sb.toString()));
 
-            final TextField tf = new TextField(
+            final LegacyTextField tf = new LegacyTextField(
                     "Type view name (will change to that "
                             + "view and change the uri fragment)");
             pl.addComponent(tf);

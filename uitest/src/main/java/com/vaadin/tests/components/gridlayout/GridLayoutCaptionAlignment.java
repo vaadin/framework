@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.TextField;
 
 public class GridLayoutCaptionAlignment extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class GridLayoutCaptionAlignment extends AbstractTestUI {
     }
 
     private GridLayout createLayout(Alignment align) {
-        TextField field = new TextField("Some caption");
+        LegacyTextField field = new LegacyTextField("Some caption");
 
         GridLayout layout = new GridLayout(3, 3);
         layout.setSizeFull();

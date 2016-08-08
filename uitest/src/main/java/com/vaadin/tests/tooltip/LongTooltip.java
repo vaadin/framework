@@ -1,10 +1,10 @@
 package com.vaadin.tests.tooltip;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.TextField;
 
 public class LongTooltip extends TestBase {
     private int tooltipCount = 0;
@@ -14,10 +14,10 @@ public class LongTooltip extends TestBase {
 
         GridLayout gl = new GridLayout(2, 2);
         gl.setSizeFull();
-        TextField f1 = createField();
-        TextField f2 = createField();
-        TextField f3 = createField();
-        TextField f4 = createField();
+        LegacyTextField f1 = createField();
+        LegacyTextField f2 = createField();
+        LegacyTextField f3 = createField();
+        LegacyTextField f4 = createField();
         gl.addComponent(f1);
         gl.addComponent(f2);
         gl.addComponent(f3);
@@ -33,8 +33,8 @@ public class LongTooltip extends TestBase {
 
     }
 
-    private TextField createField() {
-        final TextField field = new TextField();
+    private LegacyTextField createField() {
+        final LegacyTextField field = new LegacyTextField();
         field.setDescription("Tooltip " + Integer.toString(tooltipCount++)
                 + ": " + LoremIpsum.get(1000));
         return field;

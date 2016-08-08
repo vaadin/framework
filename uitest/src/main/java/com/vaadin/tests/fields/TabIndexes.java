@@ -3,6 +3,7 @@ package com.vaadin.tests.fields;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -23,7 +24,6 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.TwinColSelect;
@@ -97,7 +97,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
         fields.add(new ComboBox());
         fields.add(new NativeSelect());
         fields.add(new ListSelect());
-        fields.add(new TextField());
+        fields.add(new LegacyTextField());
         fields.add(new PopupDateField());
         fields.add(new InlineDateField());
         OptionGroup og = new OptionGroup();
@@ -115,7 +115,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
         fields.add(tree);
         fields.add(new TwinColSelect());
         fields.add(new PasswordField());
-        fields.add(new TextField());
+        fields.add(new LegacyTextField());
         fields.add(new TextArea());
         fields.add(new RichTextArea());
         fields.add(new CheckBox());

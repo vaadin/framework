@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -23,7 +24,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class FormLayoutResizing extends AbstractTestUI {
@@ -56,7 +56,7 @@ public class FormLayoutResizing extends AbstractTestUI {
     private static FormLayout createForm(String caption, Component table) {
         table.setCaption(caption);
 
-        TextField tf = new TextField("Text field");
+        LegacyTextField tf = new LegacyTextField("Text field");
         tf.setWidth("100%");
 
         FormLayout form = new FormLayout();

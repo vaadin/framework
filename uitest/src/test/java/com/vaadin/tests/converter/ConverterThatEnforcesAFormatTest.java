@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ConverterThatEnforcesAFormatTest extends MultiBrowserTest {
@@ -16,7 +17,7 @@ public class ConverterThatEnforcesAFormatTest extends MultiBrowserTest {
     public void setup() throws Exception {
         super.setup();
         openTestURL();
-        field = $(TextFieldElement.class).first();
+        field = $(LegacyTextFieldElement.class).first();
     }
 
     @Test
@@ -64,9 +65,8 @@ public class ConverterThatEnforcesAFormatTest extends MultiBrowserTest {
 
             @Override
             public String toString() {
-                return String.format(
-                        "the field to have value '%s' (was: '%s')", expected,
-                        actual);
+                return String.format("the field to have value '%s' (was: '%s')",
+                        expected, actual);
             }
         });
     }

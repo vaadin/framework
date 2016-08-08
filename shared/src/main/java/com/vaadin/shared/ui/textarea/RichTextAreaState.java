@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.ui.textarea;
 
-import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.shared.legacy.ui.textfield.LegacyAbstractTextFieldState;
 
 /**
  * 
@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
  * 
  * @since 7.6
  */
-public class RichTextAreaState extends AbstractTextFieldState {
+public class RichTextAreaState extends LegacyAbstractTextFieldState {
 
     {
         primaryStyleName = "v-richtextarea";

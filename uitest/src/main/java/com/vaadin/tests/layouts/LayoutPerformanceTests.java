@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -17,7 +18,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class LayoutPerformanceTests extends TestBase {
@@ -138,7 +138,7 @@ public class LayoutPerformanceTests extends TestBase {
         TEXT_FIELD {
             @Override
             public Component createContent() {
-                return new TextField("Field label");
+                return new LegacyTextField("Field label");
             }
         },
         HORIZONTAL_LAYOUT {

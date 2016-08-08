@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -25,7 +25,7 @@ public class UndefinedHeightSubWindowAndContent extends TestBase {
         form.setValidationVisible(true);
         form.setCaption("This is a form");
         form.setDescription("How do you do?");
-        final TextField field1 = new TextField("Write here");
+        final LegacyTextField field1 = new LegacyTextField("Write here");
         field1.setImmediate(true);
         field1.addValidator(new Validator() {
 

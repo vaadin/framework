@@ -25,13 +25,14 @@ import org.junit.Test;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyReverseConverter;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.AnotherTestEnum;
 import com.vaadin.tests.data.bean.TestEnum;
-import com.vaadin.ui.TextField;
 
 public class AnyEnumToStringConverterTest {
 
-    public class AnyEnumToStringConverter implements LegacyConverter<Enum, String> {
+    public class AnyEnumToStringConverter
+            implements LegacyConverter<Enum, String> {
 
         public AnyEnumToStringConverter() {
         }
@@ -99,29 +100,30 @@ public class AnyEnumToStringConverterTest {
     public void stringToEnumConversion() {
         Assert.assertEquals(TestEnum.TWO, converter.convertToPresentation(
                 TestEnum.TWO.toString(), TestEnum.class, null));
-        Assert.assertEquals(AnotherTestEnum.TWO, converter
-                .convertToPresentation(AnotherTestEnum.TWO.toString(),
+        Assert.assertEquals(AnotherTestEnum.TWO,
+                converter.convertToPresentation(AnotherTestEnum.TWO.toString(),
                         AnotherTestEnum.class, null));
     }
 
     @Test
     public void stringToEnumWithField() {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setConverter(new LegacyReverseConverter(converter));
         tf.setPropertyDataSource(new ObjectProperty(AnotherTestEnum.TWO));
         Assert.assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
         tf.setValue(AnotherTestEnum.ONE.toString());
         Assert.assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
         Assert.assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(AnotherTestEnum.ONE, tf.getPropertyDataSource()
-                .getValue());
+        Assert.assertEquals(AnotherTestEnum.ONE,
+                tf.getPropertyDataSource().getValue());
 
         tf.setPropertyDataSource(new ObjectProperty(TestEnum.TWO));
         Assert.assertEquals(TestEnum.TWO.toString(), tf.getValue());
         tf.setValue(TestEnum.ONE.toString());
         Assert.assertEquals(TestEnum.ONE.toString(), tf.getValue());
         Assert.assertEquals(TestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(TestEnum.ONE, tf.getPropertyDataSource().getValue());
+        Assert.assertEquals(TestEnum.ONE,
+                tf.getPropertyDataSource().getValue());
 
     }
 }

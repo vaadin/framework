@@ -3,11 +3,11 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class Ticket2107 extends LegacyApplication {
 
@@ -16,7 +16,7 @@ public class Ticket2107 extends LegacyApplication {
         final LegacyWindow w = new LegacyWindow("Testing for #2107");
         setMainWindow(w);
 
-        final TextField tf = new TextField(
+        final LegacyTextField tf = new LegacyTextField(
                 "Required field that validated the input");
         tf.setDescription(
                 "Enter someting and click outside the field to activate");
@@ -26,8 +26,9 @@ public class Ticket2107 extends LegacyApplication {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
-                        + "valid, with error: " + tf.getErrorMessage(),
+                w.showNotification(
+                        "TextField is " + (tf.isValid() ? "" : "in")
+                                + "valid, with error: " + tf.getErrorMessage(),
                         Notification.TYPE_WARNING_MESSAGE);
             }
         });

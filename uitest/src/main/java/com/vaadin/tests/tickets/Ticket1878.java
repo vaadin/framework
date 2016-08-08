@@ -7,6 +7,7 @@ import java.util.Random;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
@@ -24,7 +25,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1878 extends LegacyApplication {
@@ -292,11 +292,11 @@ public class Ticket1878 extends LegacyApplication {
         Resource icons[] = new Resource[] {
                 new ThemeResource("icons/16/document-delete.png"), null };
         boolean required[] = new boolean[] { true, false };
-        TextField fields[][] = new TextField[captions.length][icons.length];
+        LegacyTextField fields[][] = new LegacyTextField[captions.length][icons.length];
         for (int caption = 0; caption < captions.length; caption++) {
             for (int icon = 0; icon < icons.length; icon++) {
                 for (int req = 0; req < required.length; req++) {
-                    TextField tf = createTextFieldWithError(captions[caption],
+                    LegacyTextField tf = createTextFieldWithError(captions[caption],
                             icons[icon], required[req]);
 
                     fields[caption][icon] = tf;
@@ -379,9 +379,9 @@ public class Ticket1878 extends LegacyApplication {
     //
     // }
 
-    private static TextField createTextFieldWithError(String caption,
+    private static LegacyTextField createTextFieldWithError(String caption,
             Resource icon, boolean required) {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setCaption(caption);
         tf.setIcon(icon);
         tf.setRequired(required);

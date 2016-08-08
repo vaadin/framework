@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.textfield;
+package com.vaadin.shared.legacy.ui.textfield;
 
 import java.io.Serializable;
 
-public class TextFieldConstants implements Serializable {
+@Deprecated
+public class LegacyTextFieldConstants implements Serializable {
     public static final String VAR_CUR_TEXT = "curText";
     public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";

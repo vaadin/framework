@@ -17,10 +17,10 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -32,11 +32,11 @@ import com.vaadin.ui.Window;
  * @author Vaadin Ltd
  */
 public class TableScrollUpOnSelect extends AbstractTestUI {
-    public TextField text = null;
+    public LegacyTextField text = null;
 
     @Override
     protected void setup(VaadinRequest request) {
-        text = new TextField();
+        text = new LegacyTextField();
         text.setImmediate(true);
 
         final Table table = new Table(null);

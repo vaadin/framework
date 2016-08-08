@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class Ticket2062 extends LegacyApplication {
     private static final Object P1 = new Object();
@@ -19,7 +19,7 @@ public class Ticket2062 extends LegacyApplication {
         p.setSizeFull();
         getMainWindow().setContent(p);
 
-        TextField tf1 = new TextField("Tab 1");
+        LegacyTextField tf1 = new LegacyTextField("Tab 1");
         tf1.setValue("Field 1");
         tf1.setSizeFull();
 

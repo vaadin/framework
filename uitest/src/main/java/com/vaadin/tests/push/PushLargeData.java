@@ -22,6 +22,7 @@ package com.vaadin.tests.push;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
@@ -29,7 +30,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
@@ -51,20 +51,20 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
     private final ExecutorService executor = Executors
             .newSingleThreadExecutor();
 
-    protected TextField dataSize;
+    protected LegacyTextField dataSize;
 
-    protected TextField interval;
+    protected LegacyTextField interval;
 
-    protected TextField duration;
+    protected LegacyTextField duration;
 
     @Override
     protected void setup(VaadinRequest request) {
         dataLabel.setSizeUndefined();
-        dataSize = new TextField("Data size");
+        dataSize = new LegacyTextField("Data size");
         dataSize.setConverter(Integer.class);
-        interval = new TextField("Interval (ms)");
+        interval = new LegacyTextField("Interval (ms)");
         interval.setConverter(Integer.class);
-        duration = new TextField("Duration (ms)");
+        duration = new LegacyTextField("Duration (ms)");
         duration.setConverter(Integer.class);
 
         dataSize.setValue(DEFAULT_SIZE_BYTES + "");

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
@@ -19,7 +20,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class OrderedLayoutBasics extends TestBase {
@@ -110,7 +110,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setWidth("");
         ol.setCaption("Fixed height (200px) and dynamic width");
 
-        TextField tf = new TextField("100px high TextField, valign: bottom");
+        LegacyTextField tf = new LegacyTextField("100px high TextField, valign: bottom");
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
@@ -151,14 +151,14 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setWidth("");
         ol.setCaption("Fixed height (50px) and dynamic width");
 
-        TextField tf = new TextField(
+        LegacyTextField tf = new LegacyTextField(
                 "100px high TextField, valign: bottom, should be partly outside");
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "100% high, 50px wide TextField, valign: bottom, should fill full height");
         tf.setHeight("100%");
         tf.setWidth("50px");
@@ -198,21 +198,21 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setHeight("");
         ol.setWidth("500px");
         ol.setCaption("Fixed width (500px) and dynamic height");
-        TextField tf;
+        LegacyTextField tf;
 
-        tf = new TextField("100px high TextField, valign: bottom");
+        tf = new LegacyTextField("100px high TextField, valign: bottom");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        tf = new TextField("100px high TextField, valign: top");
+        tf = new LegacyTextField("100px high TextField, valign: top");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField("100% high, 50px wide TextField, valign: bottom");
+        tf = new LegacyTextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
@@ -253,21 +253,21 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("500px");
         ol.setWidth("");
         ol.setCaption("Dynamic width and fixed height(300px)");
-        TextField tf;
+        LegacyTextField tf;
 
-        tf = new TextField("100px high TextField, valign: bottom");
+        tf = new LegacyTextField("100px high TextField, valign: bottom");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        tf = new TextField("100px high TextField, valign: top");
+        tf = new LegacyTextField("100px high TextField, valign: top");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField("100% high, 50px wide TextField, valign: bottom");
+        tf = new LegacyTextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
@@ -775,15 +775,15 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Caption test with dynamic width");
 
-        TextField tf;
-        tf = new TextField("Short caption");
+        LegacyTextField tf;
+        tf = new LegacyTextField("Short caption");
         ol.addComponent(tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A very long caption which is probably much longer than the field");
         ol.addComponent(tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setRequired(true);
         tf.setComponentError(new UserError("abc123"));
@@ -813,14 +813,14 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Caption test with fixed size");
 
-        TextField tf;
-        tf = new TextField("Short caption");
+        LegacyTextField tf;
+        tf = new LegacyTextField("Short caption");
         tf.setValue("Undefined width");
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A long caption which is probably much longer than the field");
         tf.setValue("Undefined width");
         tf.setRequired(true);
@@ -828,7 +828,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("Undefined width");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -862,8 +862,8 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Caption test with fixed width (700x250)");
 
-        TextField tf;
-        tf = new TextField("Short caption");
+        LegacyTextField tf;
+        tf = new LegacyTextField("Short caption");
         tf.setSizeFull();
         tf.setValue("100% wide field, ratio 1");
 
@@ -872,7 +872,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 1);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A long caption which is probably much longer than the field");
         tf.setValue("100% wide field, ratio 2");
         tf.setSizeFull();
@@ -882,7 +882,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 2);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("100% wide field, ratio 3");
         tf.setSizeFull();
@@ -918,15 +918,15 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Caption test with fixed width");
 
-        TextField tf;
-        tf = new TextField("Short caption");
+        LegacyTextField tf;
+        tf = new LegacyTextField("Short caption");
         tf.setValue("250px wide field");
         tf.setWidth("250px");
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A long caption which is probably much longer than the field");
         tf.setWidth("250px");
         tf.setValue("250px wide field");
@@ -935,7 +935,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("200px wide field");
         tf.setWidth("200px");

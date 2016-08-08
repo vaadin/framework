@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -8,13 +9,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
 
 public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI {
 
     static final String FIELD_ID = "f";
     static final String BUTTON_ID = "b";
-    private TextField tf;
+    private LegacyTextField tf;
 
     @Override
     protected Integer getTicketNumber() {
@@ -32,7 +32,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("500px");
 
-        tf = new TextField();
+        tf = new LegacyTextField();
         tf.setId(FIELD_ID);
         tf.setWidth("100%");
         hl.addComponent(tf);

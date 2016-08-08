@@ -1,7 +1,7 @@
 package com.vaadin.tests.components;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.TextField;
 
 public class MultipleDebugIds extends TestBase {
 
@@ -17,8 +17,8 @@ public class MultipleDebugIds extends TestBase {
 
     @Override
     protected void setup() {
-        TextField textField = new TextField();
-        TextField textField2 = new TextField();
+        LegacyTextField textField = new LegacyTextField();
+        LegacyTextField textField2 = new LegacyTextField();
         Button button = new Button();
         Button button2 = new Button();
         textField.setId("textfield");

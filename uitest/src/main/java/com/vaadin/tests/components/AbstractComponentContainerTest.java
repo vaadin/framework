@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -19,7 +20,6 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
@@ -68,7 +68,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addTextFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            TextField tf = new TextField();
+            LegacyTextField tf = new LegacyTextField();
             c.addComponent(tf);
             size.apply(tf);
         }

@@ -5,17 +5,17 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.TextField;
 
 @SuppressWarnings("deprecation")
 public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
 
-    private TextField tf;
+    private LegacyTextField tf;
     private CheckBox requiredInput;
-    private TextField requiredErrorInput;
+    private LegacyTextField requiredErrorInput;
 
     private Validator integerValidator = new LegacyIntegerValidator(
             "Must be an integer");
@@ -31,7 +31,7 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
         requiredInput.addValueChangeListener(
                 event -> tf.setRequired(requiredInput.getValue()));
 
-        requiredErrorInput = new TextField("Required error message");
+        requiredErrorInput = new LegacyTextField("Required error message");
         requiredErrorInput.setImmediate(true);
         requiredErrorInput.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -59,7 +59,7 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
             }
         });
 
-        tf = new TextField();
+        tf = new LegacyTextField();
         tf.setImmediate(true);
 
         requiredInput.setValue(false);

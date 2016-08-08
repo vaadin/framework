@@ -13,7 +13,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 public class TextFieldWithPropertyFormatterTest {
 
@@ -21,7 +21,7 @@ public class TextFieldWithPropertyFormatterTest {
     private static final String PARSED_VALUE = "BAR";
     private static final String FORMATTED_VALUE = "FOOBAR";
     private static final String ORIGINAL_VALUE = "Original";
-    private TextField field;
+    private LegacyTextField field;
     private PropertyFormatter<String> formatter;
     private ObjectProperty<String> property;
     private ValueChangeListener listener;
@@ -31,7 +31,7 @@ public class TextFieldWithPropertyFormatterTest {
     @Before
     public void setUp() {
 
-        field = new TextField() {
+        field = new LegacyTextField() {
             @Override
             public void markAsDirty() {
                 repainted++;

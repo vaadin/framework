@@ -21,6 +21,7 @@ import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -32,7 +33,6 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
@@ -87,7 +87,7 @@ public class FieldErrorIndication extends AbstractTestUI {
         vl.addComponents(comboBox, listSelect, nativeSelect, twinColSelect);
 
         Class<? extends LegacyAbstractField>[] textFields = new Class[] {
-                TextField.class, TextArea.class, RichTextArea.class,
+                LegacyTextField.class, TextArea.class, RichTextArea.class,
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);

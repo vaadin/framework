@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.form;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
 
 public class FormWithPaddingsAndBorders extends TestBase {
 
@@ -22,8 +22,8 @@ public class FormWithPaddingsAndBorders extends TestBase {
         f.setSizeUndefined();
         f.getLayout().setSizeUndefined();
 
-        f.addField("foo", new TextField("Foo"));
-        f.addField("bar", new TextField("A bit longer field caption"));
+        f.addField("foo", new LegacyTextField("Foo"));
+        f.addField("bar", new LegacyTextField("A bit longer field caption"));
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("100%");

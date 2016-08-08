@@ -18,24 +18,9 @@ import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.data.bean.Person;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.TextField;
 
 public class BinderTest {
-
-    class TextField extends AbstractField<String> {
-
-        String value = "";
-
-        @Override
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        protected void doSetValue(String value) {
-            this.value = value;
-        }
-    }
 
     private static class StatusBean {
         private String status;

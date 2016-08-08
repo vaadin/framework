@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.customfield;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -35,13 +35,13 @@ public class CustomFieldSize extends AbstractTestUI {
         setContent(layout);
         layout.setWidth("50px");
 
-        layout.addComponent(new TextField());
+        layout.addComponent(new LegacyTextField());
 
         layout.addComponent(new CustomField<String>() {
 
             @Override
             protected Component initContent() {
-                return new TextField();
+                return new LegacyTextField();
             }
 
             @Override

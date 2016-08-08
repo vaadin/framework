@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TextField;
 
@@ -12,12 +10,7 @@ public class TextChangeEventsEternalLoop extends TestBase {
         final TextField tf = new TextField("Debug");
         getLayout().addComponent(tf);
 
-        tf.addTextChangeListener(new TextChangeListener() {
-            @Override
-            public void textChange(TextChangeEvent event) {
-                tf.setValue(event.getText());
-            }
-        });
+        tf.addValueChangeListener(listener -> tf.setValue(listener.getValue()));
     }
 
     @Override

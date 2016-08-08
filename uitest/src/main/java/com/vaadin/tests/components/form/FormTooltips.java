@@ -18,13 +18,13 @@ package com.vaadin.tests.components.form;
 import java.util.Arrays;
 
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 
 public class FormTooltips extends AbstractTestUI {
 
@@ -33,10 +33,11 @@ public class FormTooltips extends AbstractTestUI {
         final Form form = new Form();
         form.setId("tooltipForm");
         form.setDescription("Some description");
-        form.setItemDataSource(new BeanItem<Person>(new Person("foo", "bar",
-                "baz", 12, Sex.MALE, null)), Arrays.asList(new String[] {
-                "firstName", "lastName", "age" }));
-        ((TextField) form.getField("firstName"))
+        form.setItemDataSource(
+                new BeanItem<Person>(
+                        new Person("foo", "bar", "baz", 12, Sex.MALE, null)),
+                Arrays.asList(new String[] { "firstName", "lastName", "age" }));
+        ((LegacyTextField) form.getField("firstName"))
                 .setDescription("Fields own tooltip");
 
         form.setComponentError(new UserError("Form error"));

@@ -1,24 +1,24 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 
 public class CssLayoutRemoveComponentWithCaption extends TestBase {
 
     @Override
     protected void setup() {
         final CssLayout layout = new CssLayout();
-        final TextField tf = new TextField("Caption");
+        final LegacyTextField tf = new LegacyTextField("Caption");
         Button b = new Button("Remove field and add new", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 layout.removeComponent(tf);
-                addComponent(new TextField("new field"));
+                addComponent(new LegacyTextField("new field"));
 
             }
 

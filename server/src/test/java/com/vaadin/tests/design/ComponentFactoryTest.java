@@ -19,8 +19,9 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.TextField;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;

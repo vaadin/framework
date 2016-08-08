@@ -11,13 +11,13 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class DateForm extends AbstractTestUIWithLog {
 
@@ -28,7 +28,7 @@ public class DateForm extends AbstractTestUIWithLog {
     @PropertyId("date3")
     private LegacyInlineDateField inlineDateField;
     @PropertyId("date4")
-    private TextField textField;
+    private LegacyTextField textField;
 
     public static class DateObject {
         private Date date1, date2, date3, date4;

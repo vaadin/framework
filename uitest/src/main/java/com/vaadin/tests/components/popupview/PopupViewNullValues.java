@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.popupview;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.TextField;
 
 public class PopupViewNullValues extends TestBase {
 
@@ -34,7 +34,7 @@ public class PopupViewNullValues extends TestBase {
         }
 
         try {
-            pv[1] = new PopupView(null, new TextField(
+            pv[1] = new PopupView(null, new LegacyTextField(
                     "Empty html, contains component"));
             addComponent(pv[1]);
             b[1] = new Button("Open popupview 2", new ClickListener() {
@@ -70,7 +70,7 @@ public class PopupViewNullValues extends TestBase {
                             Notification.TYPE_ERROR_MESSAGE);
         }
         try {
-            pv[3] = new PopupView("Popupview 4 - has component", new TextField(
+            pv[3] = new PopupView("Popupview 4 - has component", new LegacyTextField(
                     "This is the content of popupview 4"));
             addComponent(pv[3]);
             b[3] = new Button("Open popupview 4", new ClickListener() {

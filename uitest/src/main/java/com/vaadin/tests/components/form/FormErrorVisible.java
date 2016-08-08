@@ -16,13 +16,13 @@
 
 package com.vaadin.tests.components.form;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class FormErrorVisible extends AbstractTestUI {
 
@@ -38,7 +38,7 @@ public class FormErrorVisible extends AbstractTestUI {
     private Form buildForm(String caption, boolean withError, boolean withFooter) {
         Form form = new Form();
         form.setCaption(caption);
-        form.addField("value", new TextField("MyField"));
+        form.addField("value", new LegacyTextField("MyField"));
 
         if (withError) {
             form.setComponentError(new UserError("Has error"));

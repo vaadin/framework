@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -24,14 +24,14 @@ public class VerticalLayoutWidthCalculation extends AbstractTestCase {
 
         VerticalLayout vlTF1 = new VerticalLayout();
         vlTF1.setSizeUndefined();
-        final TextField tf1 = new TextField("Text1");
+        final LegacyTextField tf1 = new LegacyTextField("Text1");
         tf1.setSizeUndefined();
         vlTF1.addComponent(tf1);
         hl.addComponent(vlTF1);
 
         VerticalLayout vlTF2 = new VerticalLayout();
         vlTF2.setSizeUndefined();
-        final TextField tf2 = new TextField("Text2");
+        final LegacyTextField tf2 = new LegacyTextField("Text2");
         tf2.setVisible(false);
         tf2.setSizeUndefined();
         vlTF2.addComponent(tf2);

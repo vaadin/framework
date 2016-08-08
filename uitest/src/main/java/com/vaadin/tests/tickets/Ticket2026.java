@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2026 extends LegacyApplication {
 
@@ -17,16 +17,16 @@ public class Ticket2026 extends LegacyApplication {
 
         @SuppressWarnings("unused")
         int nr = 5;
-        TextField tf;
-        tf = new TextField("TextField (tabIndex 1)");
+        LegacyTextField tf;
+        tf = new LegacyTextField("TextField (tabIndex 1)");
         tf.setTabIndex(1);
         tf.focus();
         layout.addComponent(tf);
-        layout.addComponent(new TextField("TextField without tab index"));
-        layout.addComponent(new TextField("TextField without tab index"));
-        layout.addComponent(new TextField("TextField without tab index"));
-        layout.addComponent(new TextField("TextField without tab index"));
-        tf = new TextField("TextField (tabIndex 2)");
+        layout.addComponent(new LegacyTextField("TextField without tab index"));
+        layout.addComponent(new LegacyTextField("TextField without tab index"));
+        layout.addComponent(new LegacyTextField("TextField without tab index"));
+        layout.addComponent(new LegacyTextField("TextField without tab index"));
+        tf = new LegacyTextField("TextField (tabIndex 2)");
         tf.setTabIndex(2);
         layout.addComponent(tf);
 

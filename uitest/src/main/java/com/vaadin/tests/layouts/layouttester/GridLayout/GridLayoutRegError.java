@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -23,7 +24,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 
 /**
  *
@@ -43,7 +43,7 @@ public class GridLayoutRegError extends GridBaseLayoutTestUI {
         layout.addComponent(createLabelsFields(Label.class, true, ""));
         layout.addComponent(createLabelsFields(Button.class, true, ""));
         layout.addComponent(createLabelsFields(TabSheet.class, true, ""));
-        layout.addComponent(createLabelsFields(TextField.class, true, ""));
+        layout.addComponent(createLabelsFields(LegacyTextField.class, true, ""));
 
         layout.addComponent(createLabelsFields(ComboBox.class, true, ""));
         layout.addComponent(createLabelsFields(DateField.class, true, ""));

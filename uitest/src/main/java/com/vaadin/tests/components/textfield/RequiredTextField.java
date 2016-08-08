@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.textfield;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextField;
 
 /**
  * Test for required text field.
@@ -31,7 +31,7 @@ public class RequiredTextField extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField field = new TextField();
+        final LegacyTextField field = new LegacyTextField();
 
         addComponent(field);
 

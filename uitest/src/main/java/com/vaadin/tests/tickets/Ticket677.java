@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -19,7 +20,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket677 extends LegacyApplication {
@@ -88,10 +88,10 @@ public class Ticket677 extends LegacyApplication {
         root.setContent(content);
         main.addComponent(root);
 
-        TextField tf = new TextField("Enabled");
+        LegacyTextField tf = new LegacyTextField("Enabled");
         tf.setImmediate(true);
         content.addComponent(tf);
-        tf = new TextField("Disabled");
+        tf = new LegacyTextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
         content.addComponent(tf);
@@ -101,10 +101,10 @@ public class Ticket677 extends LegacyApplication {
         one.setContent(oneLayout);
 
         content.addComponent(one);
-        tf = new TextField("Enabled");
+        tf = new LegacyTextField("Enabled");
         tf.setImmediate(true);
         oneLayout.addComponent(tf);
-        tf = new TextField("Disabled");
+        tf = new LegacyTextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
         oneLayout.addComponent(tf);
@@ -114,10 +114,10 @@ public class Ticket677 extends LegacyApplication {
         two.setContent(twoLayout);
 
         content.addComponent(two);
-        tf = new TextField("Enabled");
+        tf = new LegacyTextField("Enabled");
         tf.setImmediate(true);
         twoLayout.addComponent(tf);
-        tf = new TextField("Disabled");
+        tf = new LegacyTextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
         twoLayout.addComponent(tf);
@@ -173,7 +173,7 @@ public class Ticket677 extends LegacyApplication {
         c.setEnabled(enable);
         c.setCaption((enable ? "Enabled" : "Disabled"));
         if (c instanceof ComponentContainer) {
-            TextField tf = (TextField) ((ComponentContainer) c)
+            LegacyTextField tf = (LegacyTextField) ((ComponentContainer) c)
                     .getComponentIterator().next();
             tf.focus();
         }

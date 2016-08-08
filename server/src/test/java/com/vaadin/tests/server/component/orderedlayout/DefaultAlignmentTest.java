@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class DefaultAlignmentTest {
@@ -34,7 +34,7 @@ public class DefaultAlignmentTest {
 
     public void testDefaultAlignment(AbstractOrderedLayout layout) {
         Label label = new Label("A label");
-        TextField tf = new TextField("A TextField");
+        LegacyTextField tf = new LegacyTextField("A TextField");
         layout.addComponent(label);
         layout.addComponent(tf);
         Assert.assertEquals(Alignment.TOP_LEFT,
@@ -55,7 +55,7 @@ public class DefaultAlignmentTest {
 
     public void testAlteredDefaultAlignment(AbstractOrderedLayout layout) {
         Label label = new Label("A label");
-        TextField tf = new TextField("A TextField");
+        LegacyTextField tf = new LegacyTextField("A TextField");
         layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         layout.addComponent(label);
         layout.addComponent(tf);

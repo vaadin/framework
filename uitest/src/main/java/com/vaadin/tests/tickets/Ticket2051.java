@@ -1,6 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Item;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -9,7 +10,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class Ticket2051 extends LegacyApplication {
 
@@ -33,7 +33,7 @@ public class Ticket2051 extends LegacyApplication {
         t.setColumnHeaders(new String[] { "Col1", "Col2" });
 
         Item i = t.addItem("1");
-        i.getItemProperty(P1).setValue(new TextField("abc"));
+        i.getItemProperty(P1).setValue(new LegacyTextField("abc"));
         i.getItemProperty(P2).setValue(new Label("label"));
         Item i2 = t.addItem("2");
         i2.getItemProperty(P1).setValue(new Button("def"));

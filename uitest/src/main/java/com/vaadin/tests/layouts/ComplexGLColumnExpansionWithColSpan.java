@@ -1,11 +1,11 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
@@ -35,7 +35,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         final GridLayout gl = new GridLayout(cols, 3);
         gl.setWidth("1000px");
         // textfield spreads across all cols
-        final TextField textfield = new TextField();
+        final LegacyTextField textfield = new LegacyTextField();
         textfield.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         Button b1 = new Button("new button");
         Button b2 = new Button("nothing");

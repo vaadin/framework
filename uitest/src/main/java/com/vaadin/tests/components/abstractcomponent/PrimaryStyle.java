@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class PrimaryStyle extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class PrimaryStyle extends AbstractTestUI {
         button.setStyleName("state");
         addComponent(button);
 
-        final TextField tf = new TextField("Test TextField");
+        final LegacyTextField tf = new LegacyTextField("Test TextField");
         tf.setPrimaryStyleName("initial");
         tf.setStyleName("state");
         addComponent(tf);

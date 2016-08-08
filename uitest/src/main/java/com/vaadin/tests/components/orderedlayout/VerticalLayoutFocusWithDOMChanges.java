@@ -17,18 +17,18 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class VerticalLayoutFocusWithDOMChanges extends AbstractTestUI implements
         ValueChangeListener {
 
     Button dummyButton = new Button("Just a button");
-    TextField listenedTextField = new TextField();
-    TextField changingTextField = new TextField();
+    LegacyTextField listenedTextField = new LegacyTextField();
+    LegacyTextField changingTextField = new LegacyTextField();
 
     @Override
     protected void setup(VaadinRequest request) {

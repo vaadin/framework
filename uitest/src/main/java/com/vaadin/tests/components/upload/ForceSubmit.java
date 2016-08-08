@@ -3,11 +3,11 @@ package com.vaadin.tests.components.upload;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FinishedEvent;
@@ -29,7 +29,7 @@ public class ForceSubmit extends TestBase implements Receiver {
     @Override
     protected void setup() {
 
-        final TextField textField = new TextField("Test field");
+        final LegacyTextField textField = new LegacyTextField("Test field");
         addComponent(textField);
 
         final Upload u;

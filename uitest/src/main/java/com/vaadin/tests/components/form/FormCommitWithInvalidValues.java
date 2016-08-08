@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.form;
 
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class FormCommitWithInvalidValues extends TestBase {
 
@@ -27,7 +27,8 @@ public class FormCommitWithInvalidValues extends TestBase {
     protected void setup() {
         form = new Form();
         form.setFooter(null);
-        TextField tf = new TextField("A field, must contain 1-2 chars");
+        LegacyTextField tf = new LegacyTextField(
+                "A field, must contain 1-2 chars");
         tf.addValidator(
                 new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);

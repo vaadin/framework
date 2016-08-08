@@ -3,12 +3,12 @@ package com.vaadin.tests.components.table;
 import com.vaadin.event.Action;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TableContextMenuOnField extends TestBase {
@@ -41,7 +41,7 @@ public class TableContextMenuOnField extends TestBase {
                     Object columnId) {
 
                 VerticalLayout layout = new VerticalLayout();
-                layout.addComponent(new TextField());
+                layout.addComponent(new LegacyTextField());
 
                 layout.addListener(new LayoutClickListener() {
 
@@ -60,7 +60,7 @@ public class TableContextMenuOnField extends TestBase {
             @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
-                return new TextField();
+                return new LegacyTextField();
             }
         });
 

@@ -18,6 +18,7 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -32,7 +33,6 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -149,7 +149,7 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             break;
         case 2:
             // TextField
-            result = new TextField();
+            result = new LegacyTextField();
             result.setCaption("TextField component " + caption);
             break;
         case 3:

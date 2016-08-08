@@ -5,6 +5,7 @@ import java.util.Date;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Button;
@@ -16,7 +17,6 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -35,8 +35,8 @@ public class EmptyFieldErrorIndicators extends TestBase {
         part1.setId("emptyFieldPart");
         hl.addComponent(part1);
 
-        Panel part2 = createPart(
-                "Empty required fields with failing validator", true, true);
+        Panel part2 = createPart("Empty required fields with failing validator",
+                true, true);
         part1.setId("validatedFieldPart");
         hl.addComponent(part2);
 
@@ -90,7 +90,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
             }
         };
 
-        form.addField("Field", new TextField("Text"));
+        form.addField("Field", new LegacyTextField("Text"));
         form.addField("Date", new LegacyDateField("Date"));
         // not good for automated testing with screenshots when null
         // form.addField("Inline Date", new InlineDateField("Date"));

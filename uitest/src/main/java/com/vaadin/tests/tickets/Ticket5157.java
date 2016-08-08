@@ -1,12 +1,12 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -31,7 +31,7 @@ public class Ticket5157 extends LegacyApplication {
         Label l = new Label("Panel with F8 bound");
         pl.addComponent(l);
 
-        TextField f = new TextField();
+        LegacyTextField f = new LegacyTextField();
         pl.addComponent(f);
 
         p.addAction(new ShortcutListener("F8", KeyCode.F8, null) {

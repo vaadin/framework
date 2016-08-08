@@ -6,6 +6,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.AlignmentInfo.Bits;
@@ -26,7 +27,6 @@ import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1710 extends com.vaadin.server.LegacyApplication {
@@ -155,14 +155,14 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         CheckBox fb2 = new CheckBox("Test button", true);
         fb2.setComponentError(new SystemError("Test error"));
         f.getLayout().addComponent(fb2);
-        TextField ft1 = new TextField("With caption");
+        LegacyTextField ft1 = new LegacyTextField("With caption");
         ft1.setComponentError(new SystemError("Error"));
         f.addField("ft1", ft1);
-        TextField ft2 = new TextField();
+        LegacyTextField ft2 = new LegacyTextField();
         ft2.setComponentError(new SystemError("Error"));
         ft2.setValue("Without caption");
         f.addField("ft2", ft2);
-        TextField ft3 = new TextField("With caption and required");
+        LegacyTextField ft3 = new LegacyTextField("With caption and required");
         ft3.setComponentError(new SystemError("Error"));
         ft3.setRequired(true);
         f.addField("ft3", ft3);
@@ -178,52 +178,52 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         b2.setComponentError(new SystemError("Test error"));
         lo.addComponent(b2);
 
-        TextField t1 = new TextField("With caption");
+        LegacyTextField t1 = new LegacyTextField("With caption");
         t1.setComponentError(new SystemError("Error"));
         lo.addComponent(t1);
 
-        TextField t2 = new TextField("With caption and required");
+        LegacyTextField t2 = new LegacyTextField("With caption and required");
         t2.setComponentError(new SystemError("Error"));
         t2.setRequired(true);
         lo.addComponent(t2);
 
-        TextField t3 = new TextField();
+        LegacyTextField t3 = new LegacyTextField();
         t3.setValue("Without caption");
         t3.setComponentError(new SystemError("Error"));
         lo.addComponent(t3);
 
-        lo.addComponent(new TextField("Textfield with no error in it"));
+        lo.addComponent(new LegacyTextField("Textfield with no error in it"));
 
-        TextField tt1 = new TextField(
+        LegacyTextField tt1 = new LegacyTextField(
                 "100% wide Textfield with no error in it");
         tt1.setWidth("100%");
         lo.addComponent(tt1);
 
-        TextField tt2 = new TextField();
+        LegacyTextField tt2 = new LegacyTextField();
         tt2.setWidth("100%");
         tt2.setValue("100% wide Textfield with no error in it and no caption");
         lo.addComponent(tt2);
 
-        TextField t4 = new TextField();
+        LegacyTextField t4 = new LegacyTextField();
         t4.setValue("Without caption, With required");
         t4.setComponentError(new SystemError("Error"));
         t4.setRequired(true);
         lo.addComponent(t4);
 
-        TextField t5 = new TextField();
+        LegacyTextField t5 = new LegacyTextField();
         t5.setValue("Without caption,  WIDE");
         t5.setComponentError(new SystemError("Error"));
         t5.setWidth("100%");
         lo.addComponent(t5);
 
-        TextField t6 = new TextField();
+        LegacyTextField t6 = new LegacyTextField();
         t6.setValue("Without caption, With required, WIDE");
         t6.setComponentError(new SystemError("Error"));
         t6.setRequired(true);
         t6.setWidth("100%");
         lo.addComponent(t6);
 
-        TextField t7 = new TextField();
+        LegacyTextField t7 = new LegacyTextField();
         t7.setValue("With icon and required and icon");
         t7.setComponentError(new SystemError("Error"));
         t7.setRequired(true);
@@ -278,13 +278,13 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             controls.setSpacing(true);
             controls.setMargin(false);
             controls.addComponent(new Label("width"));
-            controls.addComponent(new TextField(
+            controls.addComponent(new LegacyTextField(
                     new MethodProperty<Float>(testedLayout, "width")));
             CheckBox widthPercentsCheckBox = new CheckBox("%");
             widthPercentsCheckBox.setImmediate(true);
             controls.addComponent(widthPercentsCheckBox);
             controls.addComponent(new Label("height"));
-            controls.addComponent(new TextField(
+            controls.addComponent(new LegacyTextField(
                     new MethodProperty<Float>(testedLayout, "height")));
             CheckBox heightPercentsCheckBox = new CheckBox("%");
             heightPercentsCheckBox.setImmediate(true);

@@ -2,6 +2,7 @@ package com.vaadin.tests.minitutorials.v70;
 
 import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
 import com.vaadin.legacy.data.validator.LegacyEmailValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -10,7 +11,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -19,7 +19,7 @@ public class SimpleLoginView extends CustomComponent
 
     public static final String NAME = "login";
 
-    private final TextField user;
+    private final LegacyTextField user;
 
     private final PasswordField password;
 
@@ -29,7 +29,7 @@ public class SimpleLoginView extends CustomComponent
         setSizeFull();
 
         // Create the user input field
-        user = new TextField("User:");
+        user = new LegacyTextField("User:");
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");

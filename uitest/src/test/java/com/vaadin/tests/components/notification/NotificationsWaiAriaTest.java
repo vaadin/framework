@@ -58,8 +58,8 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         postfix.clear();
         postfix.sendKeys("- press ESC to close");
 
-        type.selectByText(LegacyStringToEnumConverter.enumToString(
-                NotificationRole.ALERT, null));
+        type.selectByText(LegacyStringToEnumConverter
+                .enumToString(NotificationRole.ALERT, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
@@ -67,23 +67,24 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         NotificationElement notification = $(NotificationElement.class).first();
 
         String text = notification.getAttribute("role");
-        Assert.assertTrue("Expected attribute 'role' to equal 'alert', found "
-                + text, text.equals("alert"));
+        Assert.assertTrue(
+                "Expected attribute 'role' to equal 'alert', found " + text,
+                text.equals("alert"));
 
-        text = getHiddenText(notification.findElements(
-                By.className("v-assistive-device-only")).get(0));
+        text = getHiddenText(notification
+                .findElements(By.className("v-assistive-device-only")).get(0));
         Assert.assertTrue("Expected 'Prefix:', found " + text,
                 text.equals("Prefix:"));
 
-        text = getHiddenText(notification.findElements(
-                By.className("v-assistive-device-only")).get(1));
+        text = getHiddenText(notification
+                .findElements(By.className("v-assistive-device-only")).get(1));
         Assert.assertTrue("Expected '- press ESC to close', found " + text,
                 text.equals("- press ESC to close"));
 
         notification.close();
 
-        type.selectByText(LegacyStringToEnumConverter.enumToString(
-                NotificationRole.STATUS, null));
+        type.selectByText(LegacyStringToEnumConverter
+                .enumToString(NotificationRole.STATUS, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
@@ -91,8 +92,9 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         notification = $(NotificationElement.class).first();
 
         text = notification.getAttribute("role");
-        Assert.assertTrue("Expected attribute 'role' to equal 'status', found "
-                + text, text.equals("status"));
+        Assert.assertTrue(
+                "Expected attribute 'role' to equal 'status', found " + text,
+                text.equals("status"));
 
         notification.close();
 
@@ -104,9 +106,8 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
 
         WebElement element;
         try {
-            element = getDriver()
-                    .findElement(
-                            By.vaadin("Root/VNotification[0]/domChild[0]/domChild[0]/domChild[1]"));
+            element = getDriver().findElement(By.vaadin(
+                    "Root/VNotification[0]/domChild[0]/domChild[0]/domChild[1]"));
         } catch (Exception e) {
             element = null;
         }
@@ -117,7 +118,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
     }
 
     private String getHiddenText(WebElement element) {
-        return (String) getTestBenchCommandExecutor().executeScript(
-                "return arguments[0].innerHTML", element);
+        return (String) getTestBenchCommandExecutor()
+                .executeScript("return arguments[0].innerHTML", element);
     }
 }

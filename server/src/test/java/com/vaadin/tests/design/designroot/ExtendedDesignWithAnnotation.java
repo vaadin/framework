@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.design.designroot;
 
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 public class ExtendedDesignWithAnnotation extends DesignWithAnnotation {
-    private TextField customField = new TextField();
+    private LegacyTextField customField = new LegacyTextField();
 
     public ExtendedDesignWithAnnotation() {
         customField.setInputPrompt("Something");

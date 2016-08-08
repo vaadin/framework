@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.Date;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,7 +13,6 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1397 extends LegacyApplication {
@@ -40,7 +40,7 @@ public class Ticket1397 extends LegacyApplication {
 
             @Override
             public Component getPopupComponent() {
-                return new TextField("Edit foo", prop);
+                return new LegacyTextField("Edit foo", prop);
             }
         };
 
@@ -95,7 +95,7 @@ public class Ticket1397 extends LegacyApplication {
         panel3Layout.setMargin(true);
         final Panel panel3 = new Panel("Editor popup for a property",
                 panel3Layout);
-        TextField tf2 = new TextField("TextField for editing a property");
+        LegacyTextField tf2 = new LegacyTextField("TextField for editing a property");
         final ObjectProperty<String> op = new ObjectProperty<String>(
                 "This is property text.");
         tf2.setPropertyDataSource(op);
@@ -141,7 +141,7 @@ public class Ticket1397 extends LegacyApplication {
             final int lineNum = i;
             PopupView pp2 = new PopupView(new PopupView.Content() {
 
-                TextField tf = new TextField("Editor for line " + lineNum,
+                LegacyTextField tf = new LegacyTextField("Editor for line " + lineNum,
 
                         "Try to edit the contents for this textfield on line "
                                 + lineNum

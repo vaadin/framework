@@ -2,11 +2,11 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 
 public class Ticket2038 extends LegacyApplication {
 
@@ -15,7 +15,7 @@ public class Ticket2038 extends LegacyApplication {
         final LegacyWindow w = new LegacyWindow("Testing for #2038");
         setMainWindow(w);
 
-        final TextField tf = new TextField(
+        final LegacyTextField tf = new LegacyTextField(
                 "Test-field, enter someting and click outside the field to activate");
         tf.setRequired(true);
         tf.setImmediate(true);

@@ -34,6 +34,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
@@ -73,8 +74,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(FocusEvent event) {
-                text.addStyleName(VTextField.CLASSNAME + "-"
-                        + VTextField.CLASSNAME_FOCUS);
+                text.addStyleName(VLegacyTextField.CLASSNAME + "-"
+                        + VLegacyTextField.CLASSNAME_FOCUS);
                 if (prompting) {
                     text.setText("");
                     setPrompting(false);
@@ -93,8 +94,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
-                text.removeStyleName(VTextField.CLASSNAME + "-"
-                        + VTextField.CLASSNAME_FOCUS);
+                text.removeStyleName(VLegacyTextField.CLASSNAME + "-"
+                        + VLegacyTextField.CLASSNAME_FOCUS);
                 String value = getText();
                 setPrompting(inputPrompt != null
                         && (value == null || "".equals(value)));
@@ -119,7 +120,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     protected void updateStyleNames() {
         if (text != null) {
-            text.setStyleName(VTextField.CLASSNAME);
+            text.setStyleName(VLegacyTextField.CLASSNAME);
             text.addStyleName(getStylePrimaryName() + "-textfield");
         }
     }
@@ -367,8 +368,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 && (text == null || "".equals(text))
                 && !this.text.getStyleName()
                         .contains(
-                                VTextField.CLASSNAME + "-"
-                                        + VTextField.CLASSNAME_FOCUS)) {
+                                VLegacyTextField.CLASSNAME + "-"
+                                        + VLegacyTextField.CLASSNAME_FOCUS)) {
             text = readonly ? "" : inputPrompt;
             setPrompting(true);
         } else {

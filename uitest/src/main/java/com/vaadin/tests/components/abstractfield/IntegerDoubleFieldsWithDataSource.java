@@ -5,9 +5,9 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.validator.LegacyDoubleValidator;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.TextField;
 
 public class IntegerDoubleFieldsWithDataSource extends TestBase {
 
@@ -17,7 +17,7 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        TextField tf = createIntegerTextField();
+        LegacyTextField tf = createIntegerTextField();
         tf.addValidator(new LegacyIntegerValidator("Must be an Integer"));
         addComponent(tf);
 
@@ -28,8 +28,8 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
         addComponent(tf);
     }
 
-    private TextField createIntegerTextField() {
-        final TextField tf = new TextField("Enter an integer");
+    private LegacyTextField createIntegerTextField() {
+        final LegacyTextField tf = new LegacyTextField("Enter an integer");
         tf.setPropertyDataSource(new ObjectProperty<Integer>(new Integer(2)));
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {

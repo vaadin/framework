@@ -19,10 +19,10 @@
  */
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TooltipOnRequiredIndicator extends AbstractTestUI {
@@ -37,7 +37,7 @@ public class TooltipOnRequiredIndicator extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
 
-        TextField inVertical = new TextField();
+        LegacyTextField inVertical = new LegacyTextField();
         inVertical.setRequired(true);
         inVertical.setRequiredError("Vertical layout tooltip");
         inVertical.setCaption("Vertical layout caption");
@@ -48,7 +48,7 @@ public class TooltipOnRequiredIndicator extends AbstractTestUI {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        TextField inHorizontal = new TextField();
+        LegacyTextField inHorizontal = new LegacyTextField();
         inHorizontal.setRequired(true);
         inHorizontal.setRequiredError("Horizontal layout tooltip");
         inHorizontal.setCaption("Horizontal layout caption");

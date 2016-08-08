@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.BeanWithReadOnlyField;
-import com.vaadin.ui.TextField;
 
 public class FieldGroupWithReadOnlyPropertiesTest {
 
-    private TextField readOnlyField = new TextField();
-    private TextField writableField = new TextField();
+    private LegacyTextField readOnlyField = new LegacyTextField();
+    private LegacyTextField writableField = new LegacyTextField();
 
     @Test
     public void bindReadOnlyPropertyToFieldGroup() {

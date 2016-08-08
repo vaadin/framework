@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ValidationOfRequiredEmptyFieldsTest extends MultiBrowserTest {
@@ -89,11 +90,11 @@ public class ValidationOfRequiredEmptyFieldsTest extends MultiBrowserTest {
     }
 
     private TextFieldElement getRequiredMessageField() {
-        return $(TextFieldElement.class).all().get(0);
+        return $(LegacyTextFieldElement.class).all().get(0);
     }
 
     private TextFieldElement getTargetTextField() {
-        return $(TextFieldElement.class).all().get(1);
+        return $(LegacyTextFieldElement.class).all().get(1);
     }
 
     private WebElement getRequiredCheckbox() {

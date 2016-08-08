@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.gridlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -36,7 +36,7 @@ public class UniformGridLayoutUI extends UI {
         grid.addComponent(label1, 0, 0, 10, 0);
         grid.setComponentAlignment(label1, Alignment.MIDDLE_LEFT);
 
-        TextField textField1 = new TextField();
+        LegacyTextField textField1 = new LegacyTextField();
         textField1.setWidth(100.0F, Unit.PERCENTAGE);
         grid.addComponent(textField1, 12, 0, 14, 0);
         grid.setComponentAlignment(textField1, Alignment.MIDDLE_LEFT);
@@ -51,7 +51,7 @@ public class UniformGridLayoutUI extends UI {
         grid.addComponent(label2, 0, 1, 10, 1);
         grid.setComponentAlignment(label2, Alignment.MIDDLE_LEFT);
 
-        TextField textField2 = new TextField();
+        LegacyTextField textField2 = new LegacyTextField();
         textField2.setWidth(100.0F, Unit.PERCENTAGE);
         grid.addComponent(textField2, 12, 1, 20, 1);
         grid.setComponentAlignment(textField2, Alignment.MIDDLE_LEFT);
@@ -66,7 +66,7 @@ public class UniformGridLayoutUI extends UI {
         grid.addComponent(label3, 0, 2, 10, 2);
         grid.setComponentAlignment(label3, Alignment.MIDDLE_LEFT);
 
-        TextField textField3 = new TextField();
+        LegacyTextField textField3 = new LegacyTextField();
         textField3.setWidth(100.0F, Unit.PERCENTAGE);
         grid.addComponent(textField3, 12, 2, 29, 2);
         grid.setComponentAlignment(textField3, Alignment.MIDDLE_LEFT);

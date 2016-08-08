@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
@@ -10,7 +11,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2221 extends LegacyApplication {
@@ -32,11 +32,11 @@ public class Ticket2221 extends LegacyApplication {
 
         Layout main = new VerticalLayout();
 
-        private TextField tf;
+        private LegacyTextField tf;
 
         private Panel outerPanel;
 
-        private TextField tf2;
+        private LegacyTextField tf2;
 
         public Invoice() {
             setSizeFull();
@@ -63,7 +63,7 @@ public class Ticket2221 extends LegacyApplication {
                     });
             main.addComponent(b);
 
-            tf = new TextField("TextField");
+            tf = new LegacyTextField("TextField");
             tf.setHeight("1000px");
             tf.setWidth("1000px");
 
@@ -82,7 +82,7 @@ public class Ticket2221 extends LegacyApplication {
             innerPanel.setSizeFull();
             outerLayout.addComponent(innerPanel);
 
-            tf2 = new TextField("A 2000x2000 textfield");
+            tf2 = new LegacyTextField("A 2000x2000 textfield");
             tf2.setWidth("2000px");
             tf2.setHeight("2000px");
 

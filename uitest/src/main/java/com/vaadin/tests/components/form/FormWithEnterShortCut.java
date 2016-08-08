@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.form;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 
 public class FormWithEnterShortCut extends TestBase {
     private Log log = new Log(2);
@@ -15,7 +15,7 @@ public class FormWithEnterShortCut extends TestBase {
     protected void setup() {
 
         final Form form = new Form();
-        final TextField tf = new TextField("Search");
+        final LegacyTextField tf = new LegacyTextField("Search");
         form.addField("searchfield", tf);
 
         Button button = new Button("Go");

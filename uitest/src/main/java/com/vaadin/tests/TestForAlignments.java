@@ -16,12 +16,12 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TestForAlignments extends CustomComponent {
@@ -34,8 +34,8 @@ public class TestForAlignments extends CustomComponent {
         final Button b2 = new Button("Left");
         final Button b3 = new Button("Bottom");
         final Button b4 = new Button("Top");
-        final TextField t1 = new TextField("Right aligned");
-        final TextField t2 = new TextField("Bottom aligned");
+        final LegacyTextField t1 = new LegacyTextField("Right aligned");
+        final LegacyTextField t2 = new LegacyTextField("Bottom aligned");
         final DateField d1 = new DateField("Center aligned");
         final DateField d2 = new DateField("Center aligned");
 

@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.textarea.RichTextAreaState;
@@ -30,7 +31,7 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * A simple RichTextArea to edit HTML format text.
  * 
- * Note, that using {@link TextField#setMaxLength(int)} method in
+ * Note, that using {@link LegacyTextField#setMaxLength(int)} method in
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
@@ -213,7 +214,7 @@ public class RichTextArea extends LegacyAbstractField<String> implements
      * </p>
      * 
      * @return the String Textual representation for null strings.
-     * @see TextField#isNullSettingAllowed()
+     * @see LegacyTextField#isNullSettingAllowed()
      */
     public String getNullRepresentation() {
         return nullRepresentation;
@@ -237,7 +238,7 @@ public class RichTextArea extends LegacyAbstractField<String> implements
      * 
      * @return boolean Should the null-string represenation be always converted
      *         to null-values.
-     * @see TextField#getNullRepresentation()
+     * @see LegacyTextField#getNullRepresentation()
      */
     public boolean isNullSettingAllowed() {
         return nullSettingAllowed;
@@ -258,7 +259,7 @@ public class RichTextArea extends LegacyAbstractField<String> implements
      * 
      * @param nullRepresentation
      *            Textual representation for null strings.
-     * @see TextField#setNullSettingAllowed(boolean)
+     * @see LegacyTextField#setNullSettingAllowed(boolean)
      */
     public void setNullRepresentation(String nullRepresentation) {
         this.nullRepresentation = nullRepresentation;
@@ -283,7 +284,7 @@ public class RichTextArea extends LegacyAbstractField<String> implements
      * @param nullSettingAllowed
      *            Should the null-string represenation be always converted to
      *            null-values.
-     * @see TextField#getNullRepresentation()
+     * @see LegacyTextField#getNullRepresentation()
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;

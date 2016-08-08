@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.layouts.layouttester;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
@@ -25,7 +26,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 /**
  *
@@ -76,7 +76,7 @@ public class BaseAddReplaceMove extends BaseLayoutTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                l2.addComponent(new TextField());
+                l2.addComponent(new LegacyTextField());
             }
         });
         btnReplace.addClickListener(new ClickListener() {

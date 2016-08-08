@@ -3,17 +3,17 @@ package com.vaadin.tests.tickets;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class Ticket3146 extends LegacyApplication {
 
     Table table;
-    TextField result;
+    LegacyTextField result;
 
     @Override
     public void init() {
@@ -67,7 +67,7 @@ public class Ticket3146 extends LegacyApplication {
                 });
         mainWindow.addComponent(printButton);
 
-        result = new TextField();
+        result = new LegacyTextField();
         result.setHeight("200px");
         result.setWidth("200px");
         mainWindow.addComponent(result);

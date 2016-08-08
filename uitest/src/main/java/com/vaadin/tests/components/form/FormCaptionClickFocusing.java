@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.form;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class FormCaptionClickFocusing extends TestBase {
 
@@ -10,7 +10,7 @@ public class FormCaptionClickFocusing extends TestBase {
     protected void setup() {
         FormLayout layout = new FormLayout();
 
-        TextField field = new TextField("Field 1");
+        LegacyTextField field = new LegacyTextField("Field 1");
         layout.addComponent(field);
 
         addComponent(layout);

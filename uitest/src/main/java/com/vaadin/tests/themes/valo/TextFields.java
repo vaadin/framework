@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -26,7 +27,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -45,87 +45,87 @@ public class TextFields extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
 
-        TextField tf = new TextField("Normal");
+        LegacyTextField tf = new LegacyTextField("Normal");
         tf.setInputPrompt("First name");
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField("Custom color");
+        tf = new LegacyTextField("Custom color");
         tf.setInputPrompt("Email");
         tf.addStyleName("color1");
         row.addComponent(tf);
 
-        tf = new TextField("User Color");
+        tf = new LegacyTextField("User Color");
         tf.setInputPrompt("Gender");
         tf.addStyleName("color2");
         row.addComponent(tf);
 
-        tf = new TextField("Themed");
+        tf = new LegacyTextField("Themed");
         tf.setInputPrompt("Age");
         tf.addStyleName("color3");
         row.addComponent(tf);
 
-        tf = new TextField("Error");
+        tf = new LegacyTextField("Error");
         tf.setValue("Something’s wrong");
         tf.setComponentError(new UserError("Fix it, now!"));
         row.addComponent(tf);
 
-        tf = new TextField("Error, borderless");
+        tf = new LegacyTextField("Error, borderless");
         tf.setValue("Something’s wrong");
         tf.setComponentError(new UserError("Fix it, now!"));
         tf.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
         row.addComponent(tf);
 
-        tf = new TextField("Read-only");
+        tf = new LegacyTextField("Read-only");
         tf.setInputPrompt("Nationality");
         tf.setValue("Finnish");
         tf.setReadOnly(true);
         row.addComponent(tf);
 
-        tf = new TextField("Small");
+        tf = new LegacyTextField("Small");
         tf.setValue("Field value");
         tf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         row.addComponent(tf);
 
-        tf = new TextField("Large");
+        tf = new LegacyTextField("Large");
         tf.setValue("Field value");
         tf.addStyleName(ValoTheme.TEXTFIELD_LARGE);
         tf.setIcon(testIcon.get(true));
         row.addComponent(tf);
 
-        tf = new TextField("Icon inside");
+        tf = new LegacyTextField("Icon inside");
         tf.setInputPrompt("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField("Large, Icon inside");
+        tf = new LegacyTextField("Large, Icon inside");
         tf.setInputPrompt("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_LARGE);
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField("Small, Icon inside");
+        tf = new LegacyTextField("Small, Icon inside");
         tf.setInputPrompt("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField("16px supported by default");
+        tf = new LegacyTextField("16px supported by default");
         tf.setInputPrompt("Image icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get(true, 16));
         row.addComponent(tf);
 
-        tf = new TextField();
+        tf = new LegacyTextField();
         tf.setValue("Font, no caption");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField();
+        tf = new LegacyTextField();
         tf.setValue("Image, no caption");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get(true, 16));
@@ -135,7 +135,7 @@ public class TextFields extends VerticalLayout implements View {
         group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
-        tf = new TextField();
+        tf = new LegacyTextField();
         tf.setInputPrompt("Grouped with a button");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
@@ -146,19 +146,19 @@ public class TextFields extends VerticalLayout implements View {
         // button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         group.addComponent(button);
 
-        tf = new TextField("Borderless");
+        tf = new LegacyTextField("Borderless");
         tf.setInputPrompt("Write here…");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
-        tf = new TextField("Right-aligned");
+        tf = new LegacyTextField("Right-aligned");
         tf.setValue("1,234");
         tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
         row.addComponent(tf);
 
-        tf = new TextField("Centered");
+        tf = new LegacyTextField("Centered");
         tf.setInputPrompt("Guess what?");
         tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         row.addComponent(tf);
@@ -183,12 +183,12 @@ public class TextFields extends VerticalLayout implements View {
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
-        tf = new TextField("Tiny");
+        tf = new LegacyTextField("Tiny");
         tf.setValue("Field value");
         tf.addStyleName(ValoTheme.TEXTFIELD_TINY);
         row.addComponent(tf);
 
-        tf = new TextField("Huge");
+        tf = new LegacyTextField("Huge");
         tf.setValue("Field value");
         tf.addStyleName(ValoTheme.TEXTFIELD_HUGE);
         row.addComponent(tf);

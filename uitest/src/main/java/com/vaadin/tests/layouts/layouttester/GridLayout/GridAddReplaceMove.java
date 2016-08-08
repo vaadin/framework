@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
@@ -24,7 +25,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 /**
  *
@@ -72,7 +72,7 @@ public class GridAddReplaceMove extends GridBaseLayoutTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                layout.addComponent(new TextField());
+                layout.addComponent(new LegacyTextField());
             }
         });
         btnReplace.addClickListener(new ClickListener() {

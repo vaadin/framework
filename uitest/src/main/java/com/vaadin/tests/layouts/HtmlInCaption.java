@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
@@ -31,7 +32,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -133,7 +133,7 @@ public class HtmlInCaption extends AbstractTestUI {
     }
 
     private Component tf(boolean htmlCaption) {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         if (htmlCaption) {
             tf.setCaptionAsHtml(htmlCaption);
             tf.setCaption(getHtmlCaption(""));

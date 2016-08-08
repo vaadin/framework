@@ -18,6 +18,7 @@ package com.vaadin.tests.application;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -30,7 +31,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -129,7 +129,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
     private Component createConfigPanel() {
         Panel p = new Panel("Reconnect dialog configuration");
         p.setSizeUndefined();
-        final TextField reconnectDialogMessage = new TextField(
+        final LegacyTextField reconnectDialogMessage = new LegacyTextField(
                 "Reconnect message");
         reconnectDialogMessage.setWidth("50em");
         reconnectDialogMessage.setValue(getReconnectDialogConfiguration()
@@ -143,7 +143,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                     }
                 });
 
-        final TextField reconnectDialogGaveUpMessage = new TextField(
+        final LegacyTextField reconnectDialogGaveUpMessage = new LegacyTextField(
                 "Reconnect gave up message");
         reconnectDialogGaveUpMessage.setWidth("50em");
 
@@ -157,7 +157,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                                 reconnectDialogGaveUpMessage.getValue());
                     }
                 });
-        final TextField reconnectDialogReconnectAttempts = new TextField(
+        final LegacyTextField reconnectDialogReconnectAttempts = new LegacyTextField(
                 "Reconnect attempts");
         reconnectDialogReconnectAttempts.setConverter(Integer.class);
         reconnectDialogReconnectAttempts
@@ -172,7 +172,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                                         .getConvertedValue());
                     }
                 });
-        final TextField reconnectDialogReconnectInterval = new TextField(
+        final LegacyTextField reconnectDialogReconnectInterval = new LegacyTextField(
                 "Reconnect interval (ms)");
         reconnectDialogReconnectInterval.setConverter(Integer.class);
         reconnectDialogReconnectInterval
@@ -188,7 +188,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                     }
                 });
 
-        final TextField reconnectDialogGracePeriod = new TextField(
+        final LegacyTextField reconnectDialogGracePeriod = new LegacyTextField(
                 "Reconnect dialog grace period (ms)");
         reconnectDialogGracePeriod.setConverter(Integer.class);
         reconnectDialogGracePeriod
@@ -230,11 +230,11 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         hl.setSpacing(true);
         hl.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         Label l1 = new Label("Respond to " + type + " requests with code");
-        final TextField responseCode = new TextField(null, "" + response.code);
+        final LegacyTextField responseCode = new LegacyTextField(null, "" + response.code);
         responseCode.setConverter(Integer.class);
         responseCode.setWidth("5em");
         Label l2 = new Label("for the following");
-        final TextField timeField = new TextField(null, "" + response.time);
+        final LegacyTextField timeField = new LegacyTextField(null, "" + response.time);
         timeField.setConverter(Integer.class);
         timeField.setWidth("5em");
         Label l3 = new Label("seconds");

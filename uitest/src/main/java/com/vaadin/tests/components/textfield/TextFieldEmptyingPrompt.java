@@ -16,8 +16,6 @@
 
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -48,13 +46,9 @@ public class TextFieldEmptyingPrompt extends AbstractTestUI {
 
         addComponent(label);
 
-        textField.setInputPrompt(RANDOM_PROMPT);
-        textField.addTextChangeListener(new FieldEvents.TextChangeListener() {
-
-            @Override
-            public void textChange(TextChangeEvent event) {
-                label.setValue("Textfield value: " + event.getText());
-            }
+        textField.setPlaceholder(RANDOM_PROMPT);
+        textField.addValueChangeListener(listener -> {
+            label.setValue("Textfield value: " + listener.getValue());
         });
         addComponent(textField);
 
@@ -64,7 +58,7 @@ public class TextFieldEmptyingPrompt extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                textField.setInputPrompt("");
+                textField.setPlaceholder("");
             }
         });
         addComponent(button);

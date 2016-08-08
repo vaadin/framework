@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -16,7 +17,6 @@ import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridLayoutCaptions extends TestBase {
@@ -98,7 +98,7 @@ public class GridLayoutCaptions extends TestBase {
                     "Ipsum lipsum laarum lop... ");
 
             for (Object propIDs : getItemDataSource().getItemPropertyIds()) {
-                ((TextField) getField(propIDs))
+                ((LegacyTextField) getField(propIDs))
                         .setComponentError(AbstractErrorMessage
                                 .getErrorMessageForException(ive));
 
@@ -108,7 +108,7 @@ public class GridLayoutCaptions extends TestBase {
 
         public void clearErrors() {
             for (Object propIDs : getItemDataSource().getItemPropertyIds()) {
-                ((TextField) getField(propIDs)).setComponentError(null);
+                ((LegacyTextField) getField(propIDs)).setComponentError(null);
 
             }
         }

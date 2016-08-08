@@ -2,6 +2,7 @@ package com.vaadin.tests.components.uitest;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
@@ -9,7 +10,6 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class BackButtonTest extends AbstractTestUI {
@@ -79,7 +79,7 @@ public class BackButtonTest extends AbstractTestUI {
     }
 
     class Page2 extends VerticalLayout {
-        private final TextField f = new TextField();
+        private final LegacyTextField f = new LegacyTextField();
 
         public Page2() {
             setSizeFull();

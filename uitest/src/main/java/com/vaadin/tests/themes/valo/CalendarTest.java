@@ -15,6 +15,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -35,7 +36,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
@@ -97,7 +97,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private CheckBox readOnlyButton;
 
-    private TextField captionField;
+    private LegacyTextField captionField;
 
     private Window scheduleEventPopup;
 
@@ -248,7 +248,8 @@ public class CalendarTest extends GridLayout implements View {
         event = getNewEvent("Appointment", start, end);
         event.setWhere("Office");
         event.setStyleName("color1");
-        event.setDescription("A longer description, which should display correctly.");
+        event.setDescription(
+                "A longer description, which should display correctly.");
         dataSource.addEvent(event);
 
         calendar.add(GregorianCalendar.DATE, 1);
@@ -354,9 +355,9 @@ public class CalendarTest extends GridLayout implements View {
                 // simulate week click
                 WeekClickHandler handler = (WeekClickHandler) calendarComponent
                         .getHandler(WeekClick.EVENT_ID);
-                handler.weekClick(new WeekClick(calendarComponent, calendar
-                        .get(GregorianCalendar.WEEK_OF_YEAR), calendar
-                        .get(GregorianCalendar.YEAR)));
+                handler.weekClick(new WeekClick(calendarComponent,
+                        calendar.get(GregorianCalendar.WEEK_OF_YEAR),
+                        calendar.get(GregorianCalendar.YEAR)));
             }
         });
 
@@ -402,8 +403,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private void setWeekendsHidden(boolean weekendsHidden) {
         if (weekendsHidden) {
-            int firstToShow = (GregorianCalendar.MONDAY - calendar
-                    .getFirstDayOfWeek()) % 7;
+            int firstToShow = (GregorianCalendar.MONDAY
+                    - calendar.getFirstDayOfWeek()) % 7;
             calendarComponent.setFirstVisibleDayOfWeek(firstToShow + 1);
             calendarComponent.setLastVisibleDayOfWeek(firstToShow + 5);
         } else {
@@ -465,7 +466,7 @@ public class CalendarTest extends GridLayout implements View {
         captionField = createTextField("Caption");
         captionField.setInputPrompt("Event name");
         captionField.setRequired(true);
-        final TextField whereField = createTextField("Where");
+        final LegacyTextField whereField = createTextField("Where");
         whereField.setInputPrompt("Address or location");
         final TextArea descriptionField = createTextArea("Description");
         descriptionField.setInputPrompt("Describe the event");
@@ -505,8 +506,8 @@ public class CalendarTest extends GridLayout implements View {
         return cb;
     }
 
-    private TextField createTextField(String caption) {
-        TextField f = new TextField(caption);
+    private LegacyTextField createTextField(String caption) {
+        LegacyTextField f = new LegacyTextField(caption);
         f.setNullRepresentation("");
         return f;
     }
@@ -663,8 +664,8 @@ public class CalendarTest extends GridLayout implements View {
         s.setFilteringMode(FilteringMode.CONTAINS);
 
         Item i = s.addItem(DEFAULT_ITEMID);
-        i.getItemProperty("caption").setValue(
-                "Default (" + TimeZone.getDefault().getID() + ")");
+        i.getItemProperty("caption")
+                .setValue("Default (" + TimeZone.getDefault().getID() + ")");
         for (String id : TimeZone.getAvailableIDs()) {
             if (!s.containsId(id)) {
                 i = s.addItem(id);
@@ -1086,12 +1087,14 @@ public class CalendarTest extends GridLayout implements View {
 
     private void updateCaptionLabel() {
         DateFormatSymbols s = new DateFormatSymbols(getLocale());
-        String month = s.getShortMonths()[calendar.get(GregorianCalendar.MONTH)];
-        captionLabel.setValue(month + " "
-                + calendar.get(GregorianCalendar.YEAR));
+        String month = s.getShortMonths()[calendar
+                .get(GregorianCalendar.MONTH)];
+        captionLabel
+                .setValue(month + " " + calendar.get(GregorianCalendar.YEAR));
     }
 
-    private CalendarTestEvent getNewEvent(String caption, Date start, Date end) {
+    private CalendarTestEvent getNewEvent(String caption, Date start,
+            Date end) {
         CalendarTestEvent event = new CalendarTestEvent();
         event.setCaption(caption);
         event.setStart(start);

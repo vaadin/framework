@@ -6,6 +6,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class FocusAndBlurListeners extends TestBase {
@@ -46,7 +46,7 @@ public class FocusAndBlurListeners extends TestBase {
     protected void setup() {
         Layout l = getLayout();
 
-        TextField tf = new TextField("TextField");
+        LegacyTextField tf = new LegacyTextField("TextField");
         l.addComponent(tf);
 
         DateField df = new DateField("DateField");

@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.PopupDateField;
@@ -36,14 +34,9 @@ public class PopupDateFieldInputPrompt extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        text.addValueChangeListener(new ValueChangeListener() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                // update PopupDateField's state
-                dateField.setRequired(!dateField.isRequired());
-            }
+        text.addValueChangeListener(listener -> {
+            // update PopupDateField's state
+            dateField.setRequired(!dateField.isRequired());
         });
 
         dateField.setInputPrompt("prompt");

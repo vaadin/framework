@@ -7,6 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
@@ -23,7 +24,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class CaptionsInLayouts extends AbstractTestUI {
@@ -133,13 +133,13 @@ public class CaptionsInLayouts extends AbstractTestUI {
     }
 
     private void createComponents() {
-        TextField tfUndefWide = new TextField(
+        LegacyTextField tfUndefWide = new LegacyTextField(
                 "Undefined wide text field with a very long caption, longer than the field and the layout. Lorem ipsum dolor sit amet.");
-        TextField tf100pxWide = new TextField(
+        LegacyTextField tf100pxWide = new LegacyTextField(
                 "100 px wide text field with a very long caption, longer than 100px.");
         tf100pxWide.setWidth("100px");
 
-        TextField tf500pxWide = new TextField(
+        LegacyTextField tf500pxWide = new LegacyTextField(
                 "500 px wide text field with a very long caption, longer than 500px. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         tf500pxWide.setWidth("500px");
 

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class KeyboardNavigationDatasourceChange extends TestBase {
 
@@ -25,7 +25,7 @@ public class KeyboardNavigationDatasourceChange extends TestBase {
         t.setSelectable(true);
         t.setSizeFull();
         t.setImmediate(true);
-        TextField f = new TextField("Name");
+        LegacyTextField f = new LegacyTextField("Name");
         final Form form = new Form();
         // Property p = new ObjectProperty<String>("", String.class);
         // t.setPropertyDataSource(p); // UNCOMMENT THIS LINE TO SEE BUG

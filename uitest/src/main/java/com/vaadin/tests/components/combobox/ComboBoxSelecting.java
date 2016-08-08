@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class ComboBoxSelecting extends AbstractTestUI {
     protected ComboBox comboBox;
@@ -42,7 +42,7 @@ public class ComboBoxSelecting extends AbstractTestUI {
         // Had to add an extra text field for our old Firefox browsers, because
         // tab will otherwise send the focus to address bar and FF 24 won't fire
         // a key event properly. Nice!
-        addComponents(comboBox, label, new TextField());
+        addComponents(comboBox, label, new LegacyTextField());
     }
 
     @Override

@@ -85,6 +85,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.HasChildMeasurementHintConnector.ChildMeasurementHint;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
@@ -6472,7 +6473,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                     if (!(widget instanceof VLabel)
                             && !(widget instanceof VEmbedded)
-                            && !(widget instanceof VTextField && ((VTextField) widget)
+                            && !(widget instanceof VLegacyTextField && ((VLegacyTextField) widget)
                                     .isReadOnly())) {
                         return null;
                     }

@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class FormLayoutCaptionStyles extends TestBase {
 
@@ -13,8 +13,8 @@ public class FormLayoutCaptionStyles extends TestBase {
         setTheme("reindeer-tests");
         FormLayout fl = new FormLayout();
 
-        TextField f1 = createTextField("Text field 1", "");
-        final TextField f2 = createTextField("Text field 2", "bold");
+        LegacyTextField f1 = createTextField("Text field 1", "");
+        final LegacyTextField f2 = createTextField("Text field 2", "bold");
 
         fl.addComponent(f1);
         fl.addComponent(new Button("Toggle Text field 2 bold style",
@@ -37,8 +37,8 @@ public class FormLayoutCaptionStyles extends TestBase {
 
     }
 
-    private TextField createTextField(String caption, String style) {
-        TextField tf = new TextField(caption);
+    private LegacyTextField createTextField(String caption, String style) {
+        LegacyTextField tf = new LegacyTextField(caption);
         tf.setStyleName(style);
         return tf;
     }

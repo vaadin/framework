@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -48,7 +49,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ColumnResizeEvent;
 import com.vaadin.ui.Grid.ColumnResizeListener;
-import com.vaadin.ui.TextField;
 
 public class GridColumnsTest {
 
@@ -283,12 +283,12 @@ public class GridColumnsTest {
     @Test
     public void testPropertyAndColumnEditorFieldsMatch() {
         Column column1 = grid.getColumn("column1");
-        column1.setEditorField(new TextField());
+        column1.setEditorField(new LegacyTextField());
         assertSame(column1.getEditorField(), grid.getColumn("column1")
                 .getEditorField());
 
         Column column2 = grid.getColumn("column2");
-        column2.setEditorField(new TextField());
+        column2.setEditorField(new LegacyTextField());
         assertSame(column2.getEditorField(), column2.getEditorField());
     }
 

@@ -7,12 +7,12 @@ import java.util.Locale;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
 
 public class CommitInvalid extends TestBase {
 
@@ -32,7 +32,7 @@ public class CommitInvalid extends TestBase {
     ObjectProperty<Date> dateProperty;
     private LegacyDateField dateField;
     private ObjectProperty<Integer> integerProperty;
-    private TextField integerField;
+    private LegacyTextField integerField;
     private Log log;
 
     @Override
@@ -46,9 +46,11 @@ public class CommitInvalid extends TestBase {
                                  // immediate)
 
         /*
-         * Create and configure Date LegacyField, the actual component to be tested.
+         * Create and configure Date LegacyField, the actual component to be
+         * tested.
          */
-        dateProperty = new ObjectProperty<Date>(new Date(2009 - 1900, 4 - 1, 1));
+        dateProperty = new ObjectProperty<Date>(
+                new Date(2009 - 1900, 4 - 1, 1));
 
         dateField = new LegacyDateField("Year", dateProperty);
         dateField.setLocale(new Locale("fi", "FI"));
@@ -62,7 +64,8 @@ public class CommitInvalid extends TestBase {
          * reference component.
          */
         integerProperty = new ObjectProperty<Integer>(42);
-        integerField = new TextField("Another LegacyField", integerProperty);
+        integerField = new LegacyTextField("Another LegacyField",
+                integerProperty);
         integerField.setId("_IF");
         form.addField("text", integerField);
 
@@ -134,7 +137,7 @@ public class CommitInvalid extends TestBase {
     private void printState() {
         log.log("Date. LegacyField: " + f(dateField.getValue()) + " Property: "
                 + f(dateProperty.getValue()));
-        log.log("Integer: LegacyField: " + integerField.getValue() + " Property: "
-                + integerProperty.getValue());
+        log.log("Integer: LegacyField: " + integerField.getValue()
+                + " Property: " + integerProperty.getValue());
     }
 }

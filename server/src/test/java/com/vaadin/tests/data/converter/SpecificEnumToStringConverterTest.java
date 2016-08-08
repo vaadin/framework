@@ -25,14 +25,14 @@ import org.junit.Test;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyReverseConverter;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.AnotherTestEnum;
 import com.vaadin.tests.data.bean.TestEnum;
-import com.vaadin.ui.TextField;
 
 public class SpecificEnumToStringConverterTest {
 
-    public class SpecificEnumToStringConverter implements
-            LegacyConverter<Enum, String> {
+    public class SpecificEnumToStringConverter
+            implements LegacyConverter<Enum, String> {
 
         private Class<? extends Enum> enumClass;
 
@@ -104,22 +104,22 @@ public class SpecificEnumToStringConverterTest {
 
     @Test
     public void stringToEnumConversion() {
-        Assert.assertEquals(TestEnum.TWO, testEnumConverter
-                .convertToPresentation(TestEnum.TWO.toString(), TestEnum.class,
-                        null));
+        Assert.assertEquals(TestEnum.TWO,
+                testEnumConverter.convertToPresentation(TestEnum.TWO.toString(),
+                        TestEnum.class, null));
     }
 
     @Test
     public void stringToEnumWithField() {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setConverter(new LegacyReverseConverter(anotherTestEnumConverter));
         tf.setPropertyDataSource(new ObjectProperty(AnotherTestEnum.TWO));
         Assert.assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
         tf.setValue(AnotherTestEnum.ONE.toString());
         Assert.assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
         Assert.assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(AnotherTestEnum.ONE, tf.getPropertyDataSource()
-                .getValue());
+        Assert.assertEquals(AnotherTestEnum.ONE,
+                tf.getPropertyDataSource().getValue());
 
     }
 }

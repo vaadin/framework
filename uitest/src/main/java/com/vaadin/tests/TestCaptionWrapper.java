@@ -16,6 +16,7 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
@@ -41,7 +42,6 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
@@ -163,7 +163,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Table table = new Table("Table " + count++);
         test(layout, table);
 
-        final TextField tf = new TextField("Textfield " + count++);
+        final LegacyTextField tf = new LegacyTextField("Textfield " + count++);
         test(layout, tf);
 
         final Tree tree = new Tree("Tree " + count++);

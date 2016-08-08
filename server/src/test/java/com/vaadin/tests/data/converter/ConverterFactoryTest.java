@@ -22,13 +22,14 @@ import org.junit.Test;
 
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.TextField;
 
 public class ConverterFactoryTest {
 
-    public static class ConvertTo42 implements LegacyConverter<String, Integer> {
+    public static class ConvertTo42
+            implements LegacyConverter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
@@ -56,7 +57,8 @@ public class ConverterFactoryTest {
 
     }
 
-    public static class ConverterFactory42 extends LegacyDefaultConverterFactory {
+    public static class ConverterFactory42
+            extends LegacyDefaultConverterFactory {
         @Override
         public <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> createConverter(
                 Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
@@ -76,7 +78,7 @@ public class ConverterFactoryTest {
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
 
-        TextField tf = new TextField("", "123") {
+        LegacyTextField tf = new LegacyTextField("", "123") {
             @Override
             public VaadinSession getSession() {
                 return appWithCustomIntegerConverter;
@@ -96,7 +98,7 @@ public class ConverterFactoryTest {
                 .setConverterFactory(new ConverterFactory42());
         VaadinSession.setCurrent(appWithCustomIntegerConverter);
 
-        TextField tf = new TextField("", "123");
+        LegacyTextField tf = new LegacyTextField("", "123");
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
@@ -111,7 +113,7 @@ public class ConverterFactoryTest {
                 .setConverterFactory(new ConverterFactory42());
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
-        TextField tf = new TextField("", "123") {
+        LegacyTextField tf = new LegacyTextField("", "123") {
             @Override
             public VaadinSession getSession() {
                 return fieldAppWithCustomIntegerConverter;

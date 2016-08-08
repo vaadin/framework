@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.TextField;
 
 public class ComboBoxTextFieldEventOrder extends TestBase {
 
     @Override
     protected void setup() {
-        TextField textField = new TextField("text field");
+        LegacyTextField textField = new LegacyTextField("text field");
         textField.setImmediate(true);
         final Select select = new Select("select", Arrays.asList("1", "2", "3",
                 "4"));

@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
@@ -32,7 +33,7 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
 /**
  * Login form with auto-completion and auto-fill for all major browsers. You can
  * derive from this class and implement the
- * {@link #createContent(com.vaadin.ui.TextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)}
+ * {@link #createContent(com.vaadin.legacy.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)}
  * method to build the layout using the text fields and login button that are
  * passed to that method. The supplied components are specially treated so that
  * they work with password managers.
@@ -40,7 +41,7 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
  * If you need to change the URL as part of the login procedure, call
  * {@link #setLoginMode(LoginMode)} with the argument {@link LoginMode#DEFERRED}
  * in your implementation of
- * {@link #createContent(com.vaadin.ui.TextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)
+ * {@link #createContent(com.vaadin.legacy.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)
  * createContent}.
  * <p>
  * To customize the fields or to replace them with your own implementations, you
@@ -140,9 +141,9 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @return the user name field
      * @since 7.7
      */
-    protected TextField createUsernameField() {
+    protected LegacyTextField createUsernameField() {
         checkInitialized();
-        TextField field = new TextField(getUsernameCaption());
+        LegacyTextField field = new LegacyTextField(getUsernameCaption());
         field.focus();
         return field;
     }
@@ -284,7 +285,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @return content component
      * @since 7.7
      */
-    protected Component createContent(TextField userNameField,
+    protected Component createContent(LegacyTextField userNameField,
             PasswordField passwordField, Button loginButton) {
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(true);
@@ -324,8 +325,8 @@ public class LoginForm extends AbstractSingleComponentContainer {
                 getLoginButton()));
     }
 
-    private TextField getUsernameField() {
-        return (TextField) getState().userNameFieldConnector;
+    private LegacyTextField getUsernameField() {
+        return (LegacyTextField) getState().userNameFieldConnector;
     }
 
     private PasswordField getPasswordField() {

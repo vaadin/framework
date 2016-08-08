@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.grid;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 
 public class GridEditorUI extends AbstractTestUI {
 
@@ -41,7 +41,7 @@ public class GridEditorUI extends AbstractTestUI {
 
         grid.getColumn("firstName").setEditorField(new PasswordField());
 
-        TextField lastNameField = (TextField) grid.getColumn("lastName")
+        LegacyTextField lastNameField = (LegacyTextField) grid.getColumn("lastName")
                 .getEditorField();
         lastNameField.setMaxLength(50);
 

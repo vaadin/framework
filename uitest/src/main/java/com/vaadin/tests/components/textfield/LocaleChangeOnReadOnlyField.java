@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.textfield;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.TextField;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -12,15 +12,15 @@ public class LocaleChangeOnReadOnlyField extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField textField = getReadOnlyTextField();
+        final LegacyTextField textField = getReadOnlyTextField();
         addComponent(textField);
 
         Button changeLocaleButton = addLocaleChangeButton(textField);
         addComponent(changeLocaleButton);
     }
 
-    private TextField getReadOnlyTextField() {
-        final TextField textField = new TextField();
+    private LegacyTextField getReadOnlyTextField() {
+        final LegacyTextField textField = new LegacyTextField();
 
         textField.setConverter(BigDecimal.class);
         textField.setLocale(Locale.US);
@@ -30,7 +30,7 @@ public class LocaleChangeOnReadOnlyField extends AbstractTestUI {
         return textField;
     }
 
-    private Button addLocaleChangeButton(final TextField textField) {
+    private Button addLocaleChangeButton(final LegacyTextField textField) {
         Button changeLocaleButton = new Button();
         changeLocaleButton.setCaption("Change Locale");
         changeLocaleButton.addClickListener(new Button.ClickListener() {

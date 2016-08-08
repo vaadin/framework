@@ -25,7 +25,7 @@ import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 
-import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ErrorIndicatorTest extends MultiBrowserTest {
@@ -35,11 +35,11 @@ public class ErrorIndicatorTest extends MultiBrowserTest {
         String tooltipText;
         openTestURL();
 
-        showTooltip($(TextFieldElement.class).first());
+        showTooltip($(LegacyTextFieldElement.class).first());
         tooltipText = driver.findElement(By.className("v-tooltip")).getText();
         assertEquals(tooltipText, "Vertical layout tooltip");
 
-        showTooltip($(TextFieldElement.class).get(1));
+        showTooltip($(LegacyTextFieldElement.class).get(1));
         tooltipText = driver.findElement(By.className("v-tooltip")).getText();
         assertEquals(tooltipText, "Horizontal layout tooltip");
     }

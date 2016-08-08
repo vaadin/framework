@@ -55,7 +55,6 @@ public class FooterClick extends AbstractTestUIWithLog {
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
         columnReorderingCheckbox.addValueChangeListener(
                 event -> table.setColumnReorderingAllowed(event.getValue()));
-
         addComponent(immediateCheckbox);
         addComponent(columnReorderingCheckbox);
         addComponent(table);

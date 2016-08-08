@@ -8,13 +8,13 @@ import java.util.Locale;
 import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.TextField;
 
 public class DefaultConverterFactoryTest {
 
@@ -87,7 +87,7 @@ public class DefaultConverterFactoryTest {
         VaadinSession sess = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(sess);
 
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Integer>(new FloatBean(12f,
                 23f), "f2"));
@@ -103,7 +103,7 @@ public class DefaultConverterFactoryTest {
         VaadinSession sess = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(sess);
 
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Integer>(new LongBean(12,
                 1982739187238L), "l2"));
@@ -118,7 +118,7 @@ public class DefaultConverterFactoryTest {
     public void testDefaultNumberConversion() {
         VaadinSession app = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(app);
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean,
                 "salary"));

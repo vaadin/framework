@@ -24,13 +24,13 @@ import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.TextField;
 
 public class DefaultFieldGroupFieldFactoryTest {
 
@@ -46,8 +46,8 @@ public class DefaultFieldGroupFieldFactoryTest {
         Class<DefaultFieldGroupFieldFactory> clazz = DefaultFieldGroupFieldFactory.class;
         Constructor<?>[] constructors = clazz.getConstructors();
         Assert.assertEquals(
-                "DefaultFieldGroupFieldFactory contains public constructors",
-                0, constructors.length);
+                "DefaultFieldGroupFieldFactory contains public constructors", 0,
+                constructors.length);
     }
 
     @Test
@@ -66,23 +66,26 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testDateGenerationForPopupDateField() {
-        LegacyField f = fieldFactory.createField(Date.class, LegacyDateField.class);
+        LegacyField f = fieldFactory.createField(Date.class,
+                LegacyDateField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(LegacyPopupDateField.class, f.getClass());
     }
 
     @Test
     public void testDateGenerationForInlineDateField() {
-        LegacyField f = fieldFactory.createField(Date.class, LegacyInlineDateField.class);
+        LegacyField f = fieldFactory.createField(Date.class,
+                LegacyInlineDateField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(LegacyInlineDateField.class, f.getClass());
     }
 
     @Test
     public void testDateGenerationForTextField() {
-        LegacyField f = fieldFactory.createField(Date.class, TextField.class);
+        LegacyField f = fieldFactory.createField(Date.class,
+                LegacyTextField.class);
         Assert.assertNotNull(f);
-        Assert.assertEquals(TextField.class, f.getClass());
+        Assert.assertEquals(LegacyTextField.class, f.getClass());
     }
 
     @Test
@@ -98,22 +101,24 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testEnumComboBox() {
-        LegacyField f = fieldFactory.createField(SomeEnum.class, ComboBox.class);
+        LegacyField f = fieldFactory.createField(SomeEnum.class,
+                ComboBox.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(ComboBox.class, f.getClass());
     }
 
     @Test
     public void testEnumAnySelect() {
-        LegacyField f = fieldFactory
-                .createField(SomeEnum.class, AbstractSelect.class);
+        LegacyField f = fieldFactory.createField(SomeEnum.class,
+                AbstractSelect.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(ListSelect.class, f.getClass());
     }
 
     @Test
     public void testEnumAnyField() {
-        LegacyField f = fieldFactory.createField(SomeEnum.class, LegacyField.class);
+        LegacyField f = fieldFactory.createField(SomeEnum.class,
+                LegacyField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(ListSelect.class, f.getClass());
     }

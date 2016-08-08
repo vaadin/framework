@@ -33,12 +33,13 @@ public class TableRowHeight extends TestBase {
         addComponent(table1);
 
         Table table2 = initTable(PAGELENGTH, true, false, false);
-        addComponent(new Label("Table with label component in generated column"));
+        addComponent(
+                new Label("Table with label component in generated column"));
         addComponent(table2);
 
         Table table3 = initTable(PAGELENGTH, false, true, false);
-        addComponent(new Label(
-                "Table with layout component in generated column"));
+        addComponent(
+                new Label("Table with layout component in generated column"));
         addComponent(table3);
 
         Table table4 = initTable(PAGELENGTH, true, true, false);

@@ -1,10 +1,10 @@
 package com.vaadin.tests.tooltip;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -36,15 +36,15 @@ public class TooltipWidthUpdating extends AbstractTestUI {
 
         VerticalLayout vl = new VerticalLayout();
 
-        TextField component1 = new TextField("TextField");
+        LegacyTextField component1 = new LegacyTextField("TextField");
         component1.setId("component1");
-        TextField component2 = new TextField("TextField");
-        TextField component3 = new TextField("TextField");
-        TextField component4 = new TextField("TextField");
-        TextField component5 = new TextField("TextField");
-        TextField component6 = new TextField("TextField");
-        TextField component7 = new TextField("TextField");
-        TextField component8 = new TextField("TextField");
+        LegacyTextField component2 = new LegacyTextField("TextField");
+        LegacyTextField component3 = new LegacyTextField("TextField");
+        LegacyTextField component4 = new LegacyTextField("TextField");
+        LegacyTextField component5 = new LegacyTextField("TextField");
+        LegacyTextField component6 = new LegacyTextField("TextField");
+        LegacyTextField component7 = new LegacyTextField("TextField");
+        LegacyTextField component8 = new LegacyTextField("TextField");
 
         // some count of any components should be added before (between) buttons
         // to make defect reproducible

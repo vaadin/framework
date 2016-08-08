@@ -22,8 +22,8 @@ import javax.validation.constraints.Size;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.data.validator.LegacyBeanValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -74,7 +74,7 @@ public class UsingBeanValidation extends UI {
         Person person = new Person("John", 26);
         BeanItem<Person> item = new BeanItem<Person>(person);
 
-        TextField firstName = new TextField("First name",
+        LegacyTextField firstName = new LegacyTextField("First name",
                 item.getItemProperty("name"));
         firstName.setImmediate(true);
         setContent(firstName);

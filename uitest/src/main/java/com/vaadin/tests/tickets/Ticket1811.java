@@ -5,17 +5,17 @@ import java.util.LinkedList;
 
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 public class Ticket1811 extends com.vaadin.server.LegacyApplication {
 
-    LinkedList<TextField> listOfAllFields = new LinkedList<TextField>();
+    LinkedList<LegacyTextField> listOfAllFields = new LinkedList<LegacyTextField>();
 
     @Override
     public void init() {
@@ -27,27 +27,29 @@ public class Ticket1811 extends com.vaadin.server.LegacyApplication {
                 "String must be at least 3 chars long and non-null", 3, -1,
                 false);
 
-        TextField tf1 = new TextField(
+        LegacyTextField tf1 = new LegacyTextField(
                 "Text field with default settings (required=false)");
         listOfAllFields.add(tf1);
 
-        TextField tf2 = new TextField("Text field with required=true");
+        LegacyTextField tf2 = new LegacyTextField(
+                "Text field with required=true");
         tf2.setRequired(true);
         listOfAllFields.add(tf2);
 
-        TextField tf3 = new TextField(
+        LegacyTextField tf3 = new LegacyTextField(
                 "Text field with required=true and strlen >= 3");
         tf3.setRequired(true);
         tf3.addValidator(strLenValidator);
         listOfAllFields.add(tf3);
 
-        TextField tf4 = new TextField(
+        LegacyTextField tf4 = new LegacyTextField(
                 "Text field with required=false (default) and strlen >= 3");
         tf4.addValidator(strLenValidator);
         listOfAllFields.add(tf4);
 
-        for (Iterator<TextField> i = listOfAllFields.iterator(); i.hasNext();) {
-            TextField tf = i.next();
+        for (Iterator<LegacyTextField> i = listOfAllFields.iterator(); i
+                .hasNext();) {
+            LegacyTextField tf = i.next();
             main.addComponent(tf);
             tf.setImmediate(true);
         }
@@ -59,9 +61,9 @@ public class Ticket1811 extends com.vaadin.server.LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
-                for (Iterator<TextField> i = listOfAllFields.iterator(); i
+                for (Iterator<LegacyTextField> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    TextField tf = i.next();
+                    LegacyTextField tf = i.next();
                     msg.append("<h1>" + tf.getCaption() + "</h1>\n");
                     if (tf.isValid()) {
                         msg.append("VALID\n<hr/>");

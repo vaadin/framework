@@ -21,12 +21,12 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -68,7 +68,7 @@ public class TableJumpUI extends AbstractTestUIWithLog {
         // After the table we have a lot of textfields so that we have to scroll
         // down to the button
         for (int i = 0; i < 40; i++) {
-            TextField tf = new TextField();
+            LegacyTextField tf = new LegacyTextField();
             tf.setValue(String.valueOf(i));
             final int j = i;
             tf.addFocusListener(new FocusListener() {

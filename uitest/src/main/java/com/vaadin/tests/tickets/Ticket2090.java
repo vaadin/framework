@@ -2,12 +2,12 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2090 extends LegacyApplication {
 
@@ -18,9 +18,9 @@ public class Ticket2090 extends LegacyApplication {
     @Override
     public void init() {
         setMainWindow(w);
-        final TextField width = new TextField("Width");
+        final LegacyTextField width = new LegacyTextField("Width");
         width.setImmediate(true);
-        final TextField height = new TextField("Height");
+        final LegacyTextField height = new LegacyTextField("Height");
         height.setImmediate(true);
         w.addComponent(width);
         w.addComponent(height);

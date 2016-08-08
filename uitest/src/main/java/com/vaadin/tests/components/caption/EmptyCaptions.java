@@ -1,43 +1,43 @@
 package com.vaadin.tests.components.caption;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.TextField;
 
 public class EmptyCaptions extends TestBase {
 
     @Override
     protected void setup() {
-        TextField tf;
+        LegacyTextField tf;
 
-        tf = new TextField(null, "Null caption");
+        tf = new LegacyTextField(null, "Null caption");
         addComponent(tf);
 
-        tf = new TextField("", "Empty caption");
+        tf = new LegacyTextField("", "Empty caption");
         addComponent(tf);
 
-        tf = new TextField(" ", "Space as caption");
+        tf = new LegacyTextField(" ", "Space as caption");
         addComponent(tf);
 
-        tf = new TextField(null, "Null caption, required");
+        tf = new LegacyTextField(null, "Null caption, required");
         tf.setRequired(true);
         addComponent(tf);
-        tf = new TextField("", "Empty caption, required");
+        tf = new LegacyTextField("", "Empty caption, required");
         tf.setRequired(true);
         addComponent(tf);
-        tf = new TextField(" ", "Space as caption, required");
+        tf = new LegacyTextField(" ", "Space as caption, required");
         tf.setRequired(true);
         addComponent(tf);
 
-        tf = new TextField(null, "Null caption, error");
+        tf = new LegacyTextField(null, "Null caption, error");
         tf.setComponentError(new UserError("error"));
         addComponent(tf);
 
-        tf = new TextField("", "Empty caption, error");
+        tf = new LegacyTextField("", "Empty caption, error");
         tf.setComponentError(new UserError("error"));
         addComponent(tf);
 
-        tf = new TextField(" ", "Space as caption, error");
+        tf = new LegacyTextField(" ", "Space as caption, error");
         tf.setComponentError(new UserError("error"));
         addComponent(tf);
 

@@ -1,11 +1,11 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
 public class CssLayoutRemoveComponent extends TestBase {
@@ -13,7 +13,7 @@ public class CssLayoutRemoveComponent extends TestBase {
     @Override
     protected void setup() {
         final CssLayout layout = new CssLayout();
-        final TextField tf = new TextField("Caption1");
+        final LegacyTextField tf = new LegacyTextField("Caption1");
         Button b = new Button("Remove field ", new ClickListener() {
 
             @Override
@@ -24,8 +24,8 @@ public class CssLayoutRemoveComponent extends TestBase {
         });
         layout.addComponent(tf);
         layout.addComponent(b);
-        layout.addComponent(new TextField("Caption2"));
-        layout.addComponent(new TextField("Caption3"));
+        layout.addComponent(new LegacyTextField("Caption2"));
+        layout.addComponent(new LegacyTextField("Caption3"));
 
         addComponent(layout);
     }

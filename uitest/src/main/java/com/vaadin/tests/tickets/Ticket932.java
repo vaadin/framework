@@ -1,12 +1,12 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 public class Ticket932 extends LegacyApplication {
 
@@ -17,7 +17,7 @@ public class Ticket932 extends LegacyApplication {
                 "Test app for max length feature");
         setMainWindow(mainWin);
 
-        final TextField tx = new TextField(
+        final LegacyTextField tx = new LegacyTextField(
                 "Textfield with maxlenght 10, single row");
         tx.setImmediate(true);
         tx.setMaxLength(10);

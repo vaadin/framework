@@ -2,12 +2,10 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.TextField;
 
 public class MultipleTextChangeEvents extends TestBase {
@@ -17,14 +15,10 @@ public class MultipleTextChangeEvents extends TestBase {
     @Override
     public void setup() {
         TextField tf = new TextField();
-        tf.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
-        tf.setTextChangeTimeout(500);
-        tf.addTextChangeListener(new TextChangeListener() {
-            @Override
-            public void textChange(TextChangeEvent event) {
-                log.log("TextChangeEvent: " + event.getText());
-            }
-        });
+        tf.setValueChangeMode(ValueChangeMode.TIMEOUT);
+        tf.setValueChangeTimeout(500);
+        tf.addValueChangeListener(
+                listener -> log.log("TextChangeEvent: " + listener.getValue()));
         getMainWindow().addActionHandler(new MyHandler());
 
         addComponent(log);

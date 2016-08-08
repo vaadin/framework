@@ -14,7 +14,7 @@ import com.vaadin.data.Property.Transactional;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 public class FieldGroupTest {
 
@@ -63,7 +63,7 @@ public class FieldGroupTest {
             }
         };
         group.setItemDataSource(new BeanItem<Bean>(bean));
-        TextField field = new TextField();
+        LegacyTextField field = new LegacyTextField();
         group.bind(field, "name");
 
         Property propertyDataSource = field.getPropertyDataSource();

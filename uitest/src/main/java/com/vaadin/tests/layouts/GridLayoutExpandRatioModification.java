@@ -1,5 +1,6 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridLayoutExpandRatioModification extends TestBase implements
@@ -36,7 +36,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
 
         // The bottom layout
         vl2 = new VerticalLayout();
-        TextField tf = new TextField("The bottom/right field");
+        LegacyTextField tf = new LegacyTextField("The bottom/right field");
         tf.setHeight("100%");
         tf.setWidth("100%");
         vl2.addComponent(tf);

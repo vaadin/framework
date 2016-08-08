@@ -8,12 +8,12 @@ import org.junit.Test;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class AbstractFieldReadOnlyTest {
 
@@ -23,7 +23,7 @@ public class AbstractFieldReadOnlyTest {
 
     @Test
     public void testReadOnlyProperty() {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
                 "firstName"));
         assertFalse(tf.isReadOnly());
@@ -34,7 +34,7 @@ public class AbstractFieldReadOnlyTest {
     @Test
     public void testReadOnlyEventFromProperty() {
         final Label valueStore = new Label("");
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.addReadOnlyStatusChangeListener(new ReadOnlyStatusChangeListener() {
             @Override
             public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {

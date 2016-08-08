@@ -8,18 +8,18 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class TextChangeEvents2 extends TestBase {
     @Override
     protected void setup() {
 
         {
-            final TextField tf = new TextField("Debug");
+            final LegacyTextField tf = new LegacyTextField("Debug");
             getLayout().addComponent(tf);
 
             tf.addTextChangeListener(new TextChangeListener() {
@@ -54,7 +54,7 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField tf = new TextField("Label");
+            final LegacyTextField tf = new LegacyTextField("Label");
             getLayout().addComponent(tf);
             final Label l = new Label();
             getLayout().addComponent(l);
@@ -75,7 +75,7 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField tf = new TextField("Slow label");
+            final LegacyTextField tf = new LegacyTextField("Slow label");
             tf.setTextChangeTimeout(2000);
             tf.setImmediate(true);
             getLayout().addComponent(tf);
@@ -99,7 +99,7 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField tf = new TextField("Uppercase");
+            final LegacyTextField tf = new LegacyTextField("Uppercase");
             tf.setTextChangeTimeout(1);
             getLayout().addComponent(tf);
             final Label l = new Label();
@@ -122,12 +122,12 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField[] tfs = new TextField[] { new TextField(),
-                    new TextField(), new TextField(), new TextField() };
+            final LegacyTextField[] tfs = new LegacyTextField[] { new LegacyTextField(),
+                    new LegacyTextField(), new LegacyTextField(), new LegacyTextField() };
             HorizontalLayout hl = new HorizontalLayout();
             hl.setCaption("Blää");
             getLayout().addComponent(hl);
-            for (TextField tf : tfs) {
+            for (LegacyTextField tf : tfs) {
                 tf.setColumns(4);
                 tf.setTextChangeEventMode(TextChangeEventMode.EAGER);
                 hl.addComponent(tf);
@@ -146,7 +146,7 @@ public class TextChangeEvents2 extends TestBase {
                             tfs[idx].setValue("");
                             tfs[idx].setValue(txt.substring(0, 4));
                             if (idx < tfs.length - 1) {
-                                TextField next = tfs[idx + 1];
+                                LegacyTextField next = tfs[idx + 1];
                                 next.focus();
                                 if (len > 4) {
                                     next.setValue(txt.substring(4,
@@ -162,7 +162,7 @@ public class TextChangeEvents2 extends TestBase {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        TextField tf = (TextField) event.getProperty();
+                        LegacyTextField tf = (LegacyTextField) event.getProperty();
                         String val = tf.getValue();
                         if (val != null && val.length() > 4) {
                             tf.setValue(val.substring(0, 4));

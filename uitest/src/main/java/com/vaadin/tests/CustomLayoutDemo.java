@@ -17,6 +17,7 @@
 package com.vaadin.tests;
 
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,7 +28,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
@@ -51,7 +51,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
 
     private final Panel bodyPanel = new Panel();
 
-    private final TextField username = new TextField("Username");
+    private final LegacyTextField username = new LegacyTextField("Username");
 
     private final PasswordField loginPwd = new PasswordField("Password");
 

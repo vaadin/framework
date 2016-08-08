@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2024 extends LegacyApplication {
@@ -23,7 +23,7 @@ public class Ticket2024 extends LegacyApplication {
 
         layout.addComponent(new Label(
                 "This should NOT get stuck when scrolling down"));
-        layout.addComponent(new TextField("This should not get stuck either..."));
+        layout.addComponent(new LegacyTextField("This should not get stuck either..."));
 
         VerticalLayout ol = new VerticalLayout();
         ol.setHeight("1000");

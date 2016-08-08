@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2002 extends LegacyApplication {
     private Long long1 = new Long(1L);
@@ -34,11 +34,11 @@ public class Ticket2002 extends LegacyApplication {
         GridLayout layout = new GridLayout(2, 2);
         layout.setSpacing(true);
 
-        TextField f1 = new TextField("Non-immediate/Long text field",
+        LegacyTextField f1 = new LegacyTextField("Non-immediate/Long text field",
                 new MethodProperty<Long>(this, "long1"));
         f1.setImmediate(false);
         f1.setNullSettingAllowed(true);
-        TextField f2 = new TextField("Immediate/Long text field",
+        LegacyTextField f2 = new LegacyTextField("Immediate/Long text field",
                 new MethodProperty<Long>(this, "long2"));
         f2.setImmediate(true);
         f2.setNullSettingAllowed(true);

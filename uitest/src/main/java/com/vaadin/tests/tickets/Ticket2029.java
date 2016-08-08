@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Alignment;
@@ -13,7 +14,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2029 extends LegacyApplication {
@@ -47,7 +47,7 @@ public class Ticket2029 extends LegacyApplication {
         layout.setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
-            TextField tf = new TextField();
+            LegacyTextField tf = new LegacyTextField();
             if (r.nextBoolean()) {
                 tf.setCaption("Caption");
             }
@@ -77,7 +77,7 @@ public class Ticket2029 extends LegacyApplication {
         layout.setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
-            TextField tf = new TextField();
+            LegacyTextField tf = new LegacyTextField();
             tf.setImmediate(true);
             tf.addListener(new ValueChangeListener() {
 

@@ -1,5 +1,6 @@
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -10,7 +11,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
 
 /**
  * Simple test helper to test Focusable.focus() method.
@@ -30,7 +30,7 @@ public class FocusingComponents extends CustomComponent {
 
         addFocusableTest(f);
         addFocusableTest(new ComboBox());
-        addFocusableTest(new TextField());
+        addFocusableTest(new LegacyTextField());
         addFocusableTest(new DateField());
         addFocusableTest(new NativeSelect());
         addFocusableTest(new ListSelect());

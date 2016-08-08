@@ -57,9 +57,8 @@ public class Footer extends AbstractTestUI {
         Button footer1Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col1",
-                        footer1Value.getValue() == null ? "" : footer1Value
-                                .getValue().toString());
+                table.setColumnFooter("col1", footer1Value.getValue() == null
+                        ? "" : footer1Value.getValue());
             }
         });
         HorizontalLayout footer1 = new HorizontalLayout();
@@ -72,9 +71,8 @@ public class Footer extends AbstractTestUI {
         Button footer2Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col2",
-                        footer2Value.getValue() == null ? "" : footer2Value
-                                .getValue().toString());
+                table.setColumnFooter("col2", footer2Value.getValue() == null
+                        ? "" : footer2Value.getValue());
             }
         });
         HorizontalLayout footer2 = new HorizontalLayout();
@@ -87,9 +85,8 @@ public class Footer extends AbstractTestUI {
         Button footer3Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col3",
-                        footer3Value.getValue() == null ? "" : footer3Value
-                                .getValue().toString());
+                table.setColumnFooter("col3", footer3Value.getValue() == null
+                        ? "" : footer3Value.getValue());
             }
         });
         HorizontalLayout footer3 = new HorizontalLayout();

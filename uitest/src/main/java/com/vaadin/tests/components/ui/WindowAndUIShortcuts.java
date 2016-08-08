@@ -23,16 +23,15 @@ public class WindowAndUIShortcuts extends UI {
 
         final VerticalLayout mainLayout = new VerticalLayout();
 
-        mainLayout.addComponent(new Button("Show page",
-                new Button.ClickListener() {
+        mainLayout.addComponent(
+                new Button("Show page", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
                         final VerticalLayout pageLayout = new VerticalLayout();
                         pageLayout.setSpacing(true);
 
                         pageLayout.addComponent(new Label("Page"));
-                        pageLayout.addComponent(new Button(
-                                "Open dialog window",
+                        pageLayout.addComponent(new Button("Open dialog window",
                                 new Button.ClickListener() {
                                     @Override
                                     public void buttonClick(
@@ -55,12 +54,12 @@ public class WindowAndUIShortcuts extends UI {
                                             Button.ClickEvent clickEvent) {
                                         mainLayout.removeComponent(pageLayout);
 
-                                        Notification
-                                                .show("OMG! Page is also closed!");
+                                        Notification.show(
+                                                "OMG! Page is also closed!");
                                     }
                                 });
-                        closeButton
-                                .setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
+                        closeButton.setClickShortcut(
+                                ShortcutAction.KeyCode.ESCAPE);
                         pageLayout.addComponent(closeButton);
 
                         mainLayout.addComponent(pageLayout);

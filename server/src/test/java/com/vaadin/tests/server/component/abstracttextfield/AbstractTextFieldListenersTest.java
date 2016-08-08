@@ -8,27 +8,27 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
-import com.vaadin.ui.TextField;
 
 public class AbstractTextFieldListenersTest extends
         AbstractListenerMethodsTestBase {
 
     @Test
     public void testTextChangeListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(TextField.class, TextChangeEvent.class,
+        testListenerAddGetRemove(LegacyTextField.class, TextChangeEvent.class,
                 TextChangeListener.class);
     }
 
     @Test
     public void testFocusListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(TextField.class, FocusEvent.class,
+        testListenerAddGetRemove(LegacyTextField.class, FocusEvent.class,
                 FocusListener.class);
     }
 
     @Test
     public void testBlurListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(TextField.class, BlurEvent.class,
+        testListenerAddGetRemove(LegacyTextField.class, BlurEvent.class,
                 BlurListener.class);
     }
 }

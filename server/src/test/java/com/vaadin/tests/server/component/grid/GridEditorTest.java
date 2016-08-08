@@ -36,11 +36,11 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.TextField;
 
 public class GridEditorTest {
 
@@ -148,7 +148,7 @@ public class GridEditorTest {
     @Test
     public void testSaveEditor() throws Exception {
         startEdit();
-        TextField field = (TextField) grid.getColumn(PROPERTY_NAME)
+        LegacyTextField field = (LegacyTextField) grid.getColumn(PROPERTY_NAME)
                 .getEditorField();
 
         field.setValue("New Name");
@@ -165,7 +165,7 @@ public class GridEditorTest {
     public void testSaveEditorCommitFail() throws Exception {
         startEdit();
 
-        ((TextField) grid.getColumn(PROPERTY_AGE).getEditorField())
+        ((LegacyTextField) grid.getColumn(PROPERTY_AGE).getEditorField())
                 .setValue("Invalid");
         try {
             // Manual fail instead of @Test(expected=...) to check it is
@@ -180,7 +180,7 @@ public class GridEditorTest {
     @Test
     public void testCancelEditor() throws Exception {
         startEdit();
-        TextField field = (TextField) grid.getColumn(PROPERTY_NAME)
+        LegacyTextField field = (LegacyTextField) grid.getColumn(PROPERTY_NAME)
                 .getEditorField();
         field.setValue("New Name");
 
@@ -217,7 +217,7 @@ public class GridEditorTest {
 
     @Test
     public void testCustomBinding() {
-        TextField textField = new TextField();
+        LegacyTextField textField = new LegacyTextField();
         grid.getColumn(PROPERTY_NAME).setEditorField(textField);
 
         startEdit();
@@ -261,10 +261,10 @@ public class GridEditorTest {
 
     @Test
     public void testSetFieldAgain() {
-        TextField field = new TextField();
+        LegacyTextField field = new LegacyTextField();
         grid.getColumn(PROPERTY_NAME).setEditorField(field);
 
-        field = new TextField();
+        field = new LegacyTextField();
         grid.getColumn(PROPERTY_NAME).setEditorField(field);
 
         assertSame("new field should be used.", field,

@@ -3,9 +3,9 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 
 @SuppressWarnings("serial")
@@ -15,7 +15,7 @@ public class TreeFocusGaining extends TestBase {
     protected void setup() {
         final Log log = new Log(5);
 
-        TextField textField = new TextField(
+        LegacyTextField textField = new LegacyTextField(
                 "My value should get to server when tree is clicked");
         addComponent(textField);
         textField.addListener(new Property.ValueChangeListener() {

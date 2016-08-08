@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
@@ -14,7 +15,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
@@ -48,7 +48,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
      * @return
      */
     private Component createWrappedTextField(ComponentContainer container) {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setRequired(true);
         tf.setWidth(200, Unit.PIXELS);
         fields.add(tf);

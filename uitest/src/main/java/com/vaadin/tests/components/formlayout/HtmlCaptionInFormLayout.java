@@ -15,20 +15,20 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 
 public class HtmlCaptionInFormLayout extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField asHtml = new TextField("Contains <b>HTML</b>");
+        final LegacyTextField asHtml = new LegacyTextField("Contains <b>HTML</b>");
         asHtml.setCaptionAsHtml(true);
 
-        final TextField asText = new TextField("Contains <b>HTML</b>");
+        final LegacyTextField asText = new LegacyTextField("Contains <b>HTML</b>");
 
         addComponent(new FormLayout(asHtml, asText));
 

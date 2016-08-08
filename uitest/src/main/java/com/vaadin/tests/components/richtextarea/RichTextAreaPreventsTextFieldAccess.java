@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.richtextarea;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -15,18 +15,17 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
 
     @Override
     protected void setup() {
-        Label label = new Label(
-                "Steps to reproduce problem with IE8. "
-                        + "<br> Step 1: Click on the 'Open RichTextArea-Dialog' button "
-                        + "<br> Step 2: Write something in the RichTextArea. "
-                        + "Do not press outside the textfield for the "
-                        + "richTextArea. <br> Step 3: Press the 'removeWindowButton' "
-                        + "<br> Now you cannot write in the TextField on this page "
-                        + "<br> Resetting the focus to textfield explicitly, works around the issue");
+        Label label = new Label("Steps to reproduce problem with IE8. "
+                + "<br> Step 1: Click on the 'Open RichTextArea-Dialog' button "
+                + "<br> Step 2: Write something in the RichTextArea. "
+                + "Do not press outside the textfield for the "
+                + "richTextArea. <br> Step 3: Press the 'removeWindowButton' "
+                + "<br> Now you cannot write in the TextField on this page "
+                + "<br> Resetting the focus to textfield explicitly, works around the issue");
         label.setContentMode(ContentMode.HTML);
         addComponent(label);
 
-        final TextField testField = new TextField("");
+        final LegacyTextField testField = new LegacyTextField("");
         testField.setId("field");
         addComponent(testField);
 
@@ -43,7 +42,7 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
         subWindow.setContent(wLayout);
 
         wLayout.addComponent(rText);
-        wLayout.addComponent(new TextField());
+        wLayout.addComponent(new LegacyTextField());
 
         Button addWindowButton = new Button("Open RichTextArea-Dialog");
         addWindowButton.addClickListener(new Button.ClickListener() {

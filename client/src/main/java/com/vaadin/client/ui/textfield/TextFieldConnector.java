@@ -17,98 +17,90 @@
 package com.vaadin.client.ui.textfield;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Event;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
-import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.google.gwt.user.client.Timer;
+import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.event.InputEvent;
+import com.vaadin.client.event.InputHandler;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
-import com.vaadin.shared.ui.textfield.TextFieldConstants;
+import com.vaadin.shared.ui.textfield.TextFieldServerRpc;
+import com.vaadin.shared.ui.textfield.TextFieldState;
+import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.TextField;
 
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
-public class TextFieldConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+public class TextFieldConnector extends AbstractComponentConnector {
 
     @Override
-    public AbstractTextFieldState getState() {
-        return (AbstractTextFieldState) super.getState();
-    }
+    protected void init() {
+        ConnectorFocusAndBlurHandler.addHandlers(this);
+        getWidget().addChangeHandler(new ChangeHandler() {
 
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
+            @Override
+            public void onChange(ChangeEvent event) {
+                sendValueChange();
+            }
+        });
+        getWidget().addDomHandler(new InputHandler() {
 
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().setReadOnly(isReadOnly());
-
-        getWidget().setInputPrompt(getState().inputPrompt);
-        getWidget().setMaxLength(getState().maxLength);
-        getWidget().setImmediate(getState().immediate);
-
-        getWidget().listenTextChangeEvents = hasEventListener("ie");
-        if (getWidget().listenTextChangeEvents) {
-            getWidget().textChangeEventMode = uidl
-                    .getStringAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
-            if (getWidget().textChangeEventMode
-                    .equals(TextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
-                getWidget().textChangeEventTimeout = 1;
-            } else {
-                getWidget().textChangeEventTimeout = uidl
-                        .getIntAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
-                if (getWidget().textChangeEventTimeout < 1) {
-                    // Sanitize and allow lazy/timeout with timeout set to 0 to
-                    // work as eager
-                    getWidget().textChangeEventTimeout = 1;
+            @Override
+            public void onInput(InputEvent event) {
+                if (getState().valueChangeMode != ValueChangeMode.BLUR) {
+                    scheduleValueChange();
                 }
             }
-            getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
-            getWidget().attachCutEventListener(getWidget().getElement());
-        }
-        getWidget().setColumns(getState().columns);
+        }, InputEvent.getType());
+    }
 
-        String text = getState().text;
-        if (text == null) {
-            text = "";
-        }
-        /*
-         * We skip the text content update if field has been repainted, but text
-         * has not been changed (#6588). Additional sanity check verifies there
-         * is no change in the queue (in which case we count more on the server
-         * side value). <input> is updated only when it looses focus, so we
-         * force updating if not focused. Lost focus issue appeared in (#15144)
-         */
-        if (!(Util.getFocusedElement() == getWidget().getElement())
-                || !uidl.getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                || getWidget().valueBeforeEdit == null
-                || !text.equals(getWidget().valueBeforeEdit)) {
-            getWidget().updateFieldContent(text);
-        }
-
-        if (uidl.hasAttribute("selpos")) {
-            final int pos = uidl.getIntAttribute("selpos");
-            final int length = uidl.getIntAttribute("sellen");
-            /*
-             * Gecko defers setting the text so we need to defer the selection.
-             */
+    private Timer valueChangeTrigger = new Timer() {
+        @Override
+        public void run() {
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    getWidget().setSelectionRange(pos, length);
+                    sendValueChange();
                 }
             });
         }
+    };
+
+    private void scheduleValueChange() {
+        switch (getState().valueChangeMode) {
+        case LAZY:
+            lazyTextChange();
+            break;
+        case TIMEOUT:
+            timeoutTextChange();
+            break;
+        case EAGER:
+            eagerTextChange();
+            break;
+        }
+    }
+
+    private void lazyTextChange() {
+        valueChangeTrigger.schedule(getState().valueChangeTimeout);
+    }
+
+    private void timeoutTextChange() {
+        if (valueChangeTrigger.isRunning())
+            return;
+        valueChangeTrigger.schedule(getState().valueChangeTimeout);
+    }
+
+    private void eagerTextChange() {
+        valueChangeTrigger.run();
+    }
+
+    @Override
+    public TextFieldState getState() {
+        return (TextFieldState) super.getState();
     }
 
     @Override
@@ -116,14 +108,46 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         return (VTextField) super.getWidget();
     }
 
-    @Override
-    public void onBeforeShortcutAction(Event e) {
-        flush();
+    @OnStateChange("readOnly")
+    private void updateReadOnly() {
+        getWidget().setReadOnly(getState().readOnly);
     }
 
-    @Override
-    public void flush() {
-        getWidget().valueChange(false);
+    @OnStateChange({ "selectionStart", "selectionLength" })
+    private void updateSelection() {
+        if (getState().selectionStart != -1) {
+            Scheduler.get().scheduleDeferred(new Command() {
+                @Override
+                public void execute() {
+                    getWidget().setSelectionRange(getState().selectionStart,
+                            getState().selectionLength);
+                }
+            });
+        }
     }
 
+    @OnStateChange("cursorPosition")
+    private void updateCursorPosition() {
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                getWidget().setCursorPos(getState().cursorPosition);
+            }
+        });
+    }
+
+    private boolean hasStateChanged() {
+        boolean textChanged = !getWidget().getValue().equals(getState().text);
+        boolean cursorPosChanged = getWidget()
+                .getCursorPos() != getState().cursorPosition;
+        return textChanged || cursorPosChanged;
+    }
+
+    private void sendValueChange() {
+        if (!hasStateChanged()) {
+            return;
+        }
+        getRpcProxy(TextFieldServerRpc.class).setText(getWidget().getValue(),
+                getWidget().getCursorPos());
+    }
 }

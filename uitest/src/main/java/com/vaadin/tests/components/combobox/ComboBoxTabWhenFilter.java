@@ -17,10 +17,10 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -44,7 +44,7 @@ public class ComboBoxTabWhenFilter extends AbstractTestUI {
         comboBox.setNewItemsAllowed(true);
         comboBox.setFilteringMode(FilteringMode.CONTAINS);
         layout.addComponent(comboBox);
-        layout.addComponent(new TextField());
+        layout.addComponent(new LegacyTextField());
     }
 
     private IndexedContainer createContainer() {

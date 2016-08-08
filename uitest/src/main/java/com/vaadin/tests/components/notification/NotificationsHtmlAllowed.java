@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.notification;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Page;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -8,17 +9,16 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 public class NotificationsHtmlAllowed extends TestBase implements ClickListener {
 
     private TextArea messageField;
     private CheckBox htmlAllowedBox;
-    private TextField captionField;
+    private LegacyTextField captionField;
 
     @Override
     protected void setup() {
-        captionField = new TextField("Caption", "Hello <u>world</u>");
+        captionField = new LegacyTextField("Caption", "Hello <u>world</u>");
         addComponent(captionField);
         captionField.focus();
 

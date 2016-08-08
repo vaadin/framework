@@ -2,19 +2,19 @@ package com.vaadin.tests.tooltip;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 
 public class TooltipConfiguration extends AbstractTestUIWithLog {
 
-    private TextField closeTimeout;
-    private TextField quickOpenTimeout;
-    private TextField maxWidth;
-    private TextField openDelay;
-    private TextField quickOpenDelay;
+    private LegacyTextField closeTimeout;
+    private LegacyTextField quickOpenTimeout;
+    private LegacyTextField maxWidth;
+    private LegacyTextField openDelay;
+    private LegacyTextField quickOpenDelay;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -97,8 +97,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
 
     }
 
-    private TextField createIntegerTextField(String caption, int initialValue) {
-        TextField tf = new TextField(caption);
+    private LegacyTextField createIntegerTextField(String caption, int initialValue) {
+        LegacyTextField tf = new LegacyTextField(caption);
         tf.setId(caption);
         tf.setConverter(Integer.class);
         tf.setImmediate(true);

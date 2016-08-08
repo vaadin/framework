@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Set;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2181 extends LegacyApplication implements
@@ -24,8 +24,8 @@ public class Ticket2181 extends LegacyApplication implements
 
     private static final String caption = "This is a caption which is very long and nice and perhaps sometimes should be clipped";
     LegacyWindow main = new LegacyWindow("#2181 test");
-    TextField tf1 = new TextField(caption, "Test field - undefined width");
-    TextField tf2 = new TextField(caption, "Test field - 150px wide");
+    LegacyTextField tf1 = new LegacyTextField(caption, "Test field - undefined width");
+    LegacyTextField tf2 = new LegacyTextField(caption, "Test field - 150px wide");
     Button setButton = new Button("Set", this);
     private Random random = new Random(123);
     private OptionGroup options;
@@ -80,8 +80,8 @@ public class Ticket2181 extends LegacyApplication implements
     private void set() {
         @SuppressWarnings("unchecked")
         Set<String> values = (Set<String>) options.getValue();
-        TextField[] tfs = new TextField[] { tf1, tf2 };
-        for (TextField tf : tfs) {
+        LegacyTextField[] tfs = new LegacyTextField[] { tf1, tf2 };
+        for (LegacyTextField tf : tfs) {
             // Clear all
             tf.setCaption(null);
             tf.setComponentError(null);

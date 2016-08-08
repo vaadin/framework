@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.layouts.layouttester;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
@@ -33,7 +34,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -93,7 +93,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
     private void fillComponents() {
         for (int i = 0; i < components.length; i++) {
             String name = "Field" + i;
-            TextField field = new TextField();
+            LegacyTextField field = new LegacyTextField();
             field.setValue(name);
             components[i] = field;
         }

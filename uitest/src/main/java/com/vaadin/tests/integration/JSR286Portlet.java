@@ -21,6 +21,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
 import com.vaadin.annotations.StyleSheet;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletService;
@@ -33,7 +34,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
@@ -45,7 +45,7 @@ import com.vaadin.ui.VerticalLayout;
 @StyleSheet("PortletConnectorResource.css")
 public class JSR286Portlet extends UI {
 
-    TextField tf = new TextField("Some value");
+    LegacyTextField tf = new LegacyTextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
     Link portletMax = new Link();

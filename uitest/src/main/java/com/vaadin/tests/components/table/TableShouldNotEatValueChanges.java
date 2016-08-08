@@ -2,11 +2,11 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TextField;
 
 public class TableShouldNotEatValueChanges extends TestBase {
 
@@ -22,7 +22,7 @@ public class TableShouldNotEatValueChanges extends TestBase {
         t.setTabIndex(4);
         // t.setSelectable(true);
 
-        final TextField tf = new TextField();
+        final LegacyTextField tf = new LegacyTextField();
         tf.setTabIndex(1);
         ItemClickListener l = new ItemClickListener() {
 

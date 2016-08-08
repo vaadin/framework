@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1939 extends LegacyApplication {
@@ -17,8 +17,8 @@ public class Ticket1939 extends LegacyApplication {
         final VerticalLayout l = new VerticalLayout();
         l.setWidth("400px");
         l.setHeight("100px");
-        l.addComponent(new TextField("This one works fine"));
-        TextField t = new TextField();
+        l.addComponent(new LegacyTextField("This one works fine"));
+        LegacyTextField t = new LegacyTextField();
         t.setRequired(true);
         t.setValue("This one bugs");
         l.addComponent(t);

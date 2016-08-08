@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
@@ -119,9 +119,9 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
 
         private final Table table;
         private final Label myLabel = new Label("");
-        private final TextField filterPhoneField = new TextField(
+        private final LegacyTextField filterPhoneField = new LegacyTextField(
                 "Foobar Number");
-        private final TextField filterFoobarField = new TextField("Foobar ID");
+        private final LegacyTextField filterFoobarField = new LegacyTextField("Foobar ID");
         private final CheckBox incomingOnlyField = new CheckBox(
                 "Incoming foobar only");
 
@@ -146,7 +146,7 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
             this.addComponent(topLayout);
 
             // Foobar phone #
-            final TextField smsNumber = new TextField("Foobar Phone #");
+            final LegacyTextField smsNumber = new LegacyTextField("Foobar Phone #");
             smsNumber.setSizeUndefined();
             smsNumber.setColumns(12);
             smsNumber.setMaxLength(16);

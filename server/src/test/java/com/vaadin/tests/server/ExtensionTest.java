@@ -17,10 +17,10 @@ package com.vaadin.tests.server;
 
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class ExtensionTest {
 
@@ -33,7 +33,7 @@ public class ExtensionTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveExtensionFromWrongConnector() {
         Label l = new Label();
-        TextField t = new TextField();
+        LegacyTextField t = new LegacyTextField();
         t.removeExtension(new DummyExtension(l));
     }
 

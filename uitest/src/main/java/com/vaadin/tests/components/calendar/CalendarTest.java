@@ -31,6 +31,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -49,7 +50,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -110,7 +110,7 @@ public class CalendarTest extends UI {
     private CheckBox readOnlyButton;
     private ComboBox customFirstDayOfWeekSelect;
 
-    private TextField captionField;
+    private LegacyTextField captionField;
 
     private Window scheduleEventPopup;
 
@@ -504,7 +504,7 @@ public class CalendarTest extends UI {
         });
 
         captionField = createTextField("Caption");
-        final TextField whereField = createTextField("Where");
+        final LegacyTextField whereField = createTextField("Where");
         final TextArea descriptionField = createTextArea("Description");
         descriptionField.setRows(3);
 
@@ -537,8 +537,8 @@ public class CalendarTest extends UI {
         return cb;
     }
 
-    private TextField createTextField(String caption) {
-        TextField f = new TextField(caption);
+    private LegacyTextField createTextField(String caption) {
+        LegacyTextField f = new LegacyTextField(caption);
         f.setNullRepresentation("");
         return f;
     }

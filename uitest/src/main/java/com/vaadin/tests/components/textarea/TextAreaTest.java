@@ -2,10 +2,10 @@ package com.vaadin.tests.components.textarea;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.tests.components.abstractfield.AbstractTextFieldTest;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractTextFieldTest;
 import com.vaadin.ui.TextArea;
 
-public class TextAreaTest extends AbstractTextFieldTest<TextArea> {
+public class TextAreaTest extends LegacyAbstractTextFieldTest<TextArea> {
 
     private Command<TextArea, Boolean> wordwrapCommand = new Command<TextArea, Boolean>() {
         @Override

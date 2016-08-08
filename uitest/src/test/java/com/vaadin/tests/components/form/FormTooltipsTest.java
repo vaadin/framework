@@ -20,7 +20,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.FormElement;
-import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.TooltipTest;
 
 public class FormTooltipsTest extends TooltipTest {
@@ -31,15 +31,14 @@ public class FormTooltipsTest extends TooltipTest {
         // first name tooltip
 
         WebElement fieldElement = $(FormElement.class).first()
-                .$(TextFieldElement.class).first();
+                .$(LegacyTextFieldElement.class).first();
         checkTooltip(fieldElement, "Fields own tooltip");
         clearTooltip();
         checkTooltipNotPresent();
 
         // first name caption tooltip
-        checkTooltip(
-                $(FormElement.class).first().findElement(
-                        By.className("v-caption")), "Fields own tooltip");
+        checkTooltip($(FormElement.class).first()
+                .findElement(By.className("v-caption")), "Fields own tooltip");
 
         clearTooltip();
         checkTooltipNotPresent();
@@ -51,12 +50,11 @@ public class FormTooltipsTest extends TooltipTest {
         checkTooltip(By.className("v-form-errormessage"), null);
 
         // last name should have no tooltip
-        checkTooltip($(TextFieldElement.class).get(1), null);
+        checkTooltip($(LegacyTextFieldElement.class).get(1), null);
 
         // last name caption should have no tooltip
-        checkTooltip(
-                $(FormElement.class).first()
-                        .findElements(By.className("v-caption")).get(1), null);
+        checkTooltip($(FormElement.class).first()
+                .findElements(By.className("v-caption")).get(1), null);
     }
 
 }

@@ -33,6 +33,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.dd.DragImageModifier;
 
 /**
@@ -44,7 +45,7 @@ import com.vaadin.client.ui.dd.DragImageModifier;
  * @author Vaadin Ltd.
  * 
  */
-public class VTextArea extends VTextField implements DragImageModifier {
+public class VTextArea extends VLegacyTextField implements DragImageModifier {
 
     public static final String CLASSNAME = "v-textarea";
     private boolean wordwrap = true;

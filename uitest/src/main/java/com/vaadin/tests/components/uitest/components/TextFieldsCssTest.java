@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.uitest.components;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ChameleonTheme;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -45,7 +45,7 @@ public class TextFieldsCssTest extends GridLayout {
 
     private void createTextFieldWith(String caption, String primaryStyleName,
             String inputPrompt) {
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         tf.setId("textfield" + debugIdCounter++);
         if (caption != null) {
             tf.setCaption(caption);

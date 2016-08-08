@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.absolutelayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -27,7 +28,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class AbsoluteLayoutHideComponent extends AbstractTestUI {
@@ -35,7 +35,7 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
     private AbsoluteLayout mainLayout;
     private VerticalLayout topBar = new VerticalLayout();
     private GridLayout menu;
-    private TextField editEmail = new TextField();
+    private LegacyTextField editEmail = new LegacyTextField();
     private PasswordField editPassword = new PasswordField();
 
     @Override

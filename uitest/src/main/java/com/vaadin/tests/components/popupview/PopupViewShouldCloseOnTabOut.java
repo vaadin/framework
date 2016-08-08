@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.popupview;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
@@ -32,11 +32,11 @@ public class PopupViewShouldCloseOnTabOut extends TestBase {
             @Override
             public Component getPopupComponent() {
                 VerticalLayout vl = new VerticalLayout();
-                TextField field1 = new TextField();
+                LegacyTextField field1 = new LegacyTextField();
                 field1.setValue("one");
                 field1.focus();
                 vl.addComponent(field1);
-                TextField field2 = new TextField();
+                LegacyTextField field2 = new LegacyTextField();
                 field2.setValue("two");
                 vl.addComponent(field2);
                 vl.setWidth("600px");
@@ -44,10 +44,10 @@ public class PopupViewShouldCloseOnTabOut extends TestBase {
             }
         });
         addComponent(pv);
-        TextField main = new TextField();
+        LegacyTextField main = new LegacyTextField();
         main.setValue("main");
         addComponent(main);
-        TextField main2 = new TextField();
+        LegacyTextField main2 = new LegacyTextField();
         main2.setValue("main2");
         addComponent(main2);
     }

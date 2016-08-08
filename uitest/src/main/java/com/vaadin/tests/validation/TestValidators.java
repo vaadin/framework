@@ -9,13 +9,13 @@ import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class TestValidators extends TestBase {
@@ -36,31 +36,33 @@ public class TestValidators extends TestBase {
 
         // simple validators
 
-        TextField tf = new TextField("A field, must contain 1-2 chars");
+        LegacyTextField tf = new LegacyTextField(
+                "A field, must contain 1-2 chars");
         tf.addValidator(
                 new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
         tf.setValue("ab");
         form.addField("a", tf);
 
-        tf = new TextField("A field, must contain an integer");
+        tf = new LegacyTextField("A field, must contain an integer");
         tf.addValidator(new LegacyIntegerValidator("Invalid integer {0}"));
         tf.setRequired(true);
         tf.setValue("123");
         form.addField("b", tf);
 
-        tf = new TextField("A field, must contain an integer or be empty");
+        tf = new LegacyTextField(
+                "A field, must contain an integer or be empty");
         tf.addValidator(new LegacyIntegerValidator("Invalid integer {0}"));
         tf.setValue("-321");
         form.addField("c", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must contain a floating point number or be empty");
         tf.addValidator(new LegacyDoubleValidator("Invalid double {0}"));
         tf.setValue("-123.45e6");
         form.addField("d", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must contain an e-mail address or be empty");
         tf.addValidator(new LegacyEmailValidator("Invalid e-mail address {0}"));
         tf.setValue("a.b@example.com");
@@ -68,28 +70,28 @@ public class TestValidators extends TestBase {
 
         // regular expressions
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must match the regular expression a.*b.*c");
         tf.addValidator(new LegacyRegexpValidator("a.*b.*c",
                 "{0} does not match the regular expression"));
         tf.setValue("aagsabeqgc");
         form.addField("f", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must contain the regular expression a.*b.*c");
         tf.addValidator(new LegacyRegexpValidator("a.*b.*c", false,
                 "{0} does not contain the regular expression"));
         tf.setValue("aagsabeqgc");
         form.addField("g", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must match the regular expression ^a.*b.*c$");
         tf.addValidator(new LegacyRegexpValidator("^a.*b.*c$", false,
                 "{0} does not match the regular expression with ^ and $"));
         tf.setValue("aagsabeqgc");
         form.addField("h", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must contain the regular expression ^a.*b.*c$");
         tf.addValidator(new LegacyRegexpValidator("^a.*b.*c$", false,
                 "{0} does not contain the regular expression with ^ and $"));
@@ -97,7 +99,7 @@ public class TestValidators extends TestBase {
         form.addField("i", tf);
 
         // TODO CompositeValidator
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must be a floating point number with 4-5 chars");
         LegacyCompositeValidator cv = new LegacyCompositeValidator(
                 CombinationMode.AND,
@@ -111,7 +113,7 @@ public class TestValidators extends TestBase {
         tf.setValue("12.34");
         form.addField("j", tf);
 
-        tf = new TextField(
+        tf = new LegacyTextField(
                 "A field, must be a floating point number or 4-5 chars");
         cv = new LegacyCompositeValidator(CombinationMode.OR,
                 "The field must contain a floating point  or with 4-5 characters");
@@ -125,7 +127,7 @@ public class TestValidators extends TestBase {
         form.addField("jb", tf);
 
         // Postal code that must be 5 digits (10000-99999).
-        tf = new TextField("Postal Code");
+        tf = new LegacyTextField("Postal Code");
         tf.setColumns(5);
 
         // Create the validator - this would be even easier with RegexpValidator

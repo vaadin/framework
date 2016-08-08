@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -42,7 +42,7 @@ public class FormLayoutInVerticalLayout extends AbstractTestUI {
         Label sectionLabel = createLabel();
         formLayout.addComponent(sectionLabel);
 
-        TextField nameTextField = new TextField("Name");
+        LegacyTextField nameTextField = new LegacyTextField("Name");
         nameTextField.setValue("Lorem ipsum");
         nameTextField.setWidth("50%");
         formLayout.addComponent(nameTextField);

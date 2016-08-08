@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class TableInFormLayoutCausesScrolling extends AbstractTestUI {
 
@@ -15,7 +15,7 @@ public class TableInFormLayoutCausesScrolling extends AbstractTestUI {
         addComponent(fl);
 
         for (int i = 20; i-- > 0;) {
-            fl.addComponent(new TextField());
+            fl.addComponent(new LegacyTextField());
         }
 
         final Table table = new Table();

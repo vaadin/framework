@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.legacy.ui.LegacyAbstractTextField;
+import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
 
-public abstract class AbstractTextFieldTest<T extends AbstractTextField>
+public abstract class LegacyAbstractTextFieldTest<T extends LegacyAbstractTextField>
         extends LegacyAbstractFieldTest<T> implements TextChangeListener {
 
     private Command<T, Integer> maxlengthCommand = new Command<T, Integer>() {
@@ -46,9 +46,11 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addTextChangeListener(AbstractTextFieldTest.this);
+                c.addListener(
+                        (TextChangeListener) LegacyAbstractTextFieldTest.this);
             } else {
-                c.removeTextChangeListener(AbstractTextFieldTest.this);
+                c.removeListener(
+                        (TextChangeListener) LegacyAbstractTextFieldTest.this);
             }
         }
     };
@@ -209,7 +211,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createTextChangeEventModeAction(String category) {
-        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<String, AbstractTextField.TextChangeEventMode>();
+        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<String, LegacyAbstractTextField.TextChangeEventMode>();
         for (TextChangeEventMode m : TextChangeEventMode.values()) {
             options.put(m.toString(), m);
         }
@@ -243,7 +245,8 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
 
     @Override
     public void textChange(TextChangeEvent event) {
-        AbstractTextField tf = (AbstractTextField) event.getComponent();
+        LegacyAbstractTextField tf = (LegacyAbstractTextField) event
+                .getComponent();
         log("TextChangeEvent: text='" + event.getText() + "', cursor position="
                 + event.getCursorPosition() + " (field cursor pos: "
                 + tf.getCursorPosition() + ")");

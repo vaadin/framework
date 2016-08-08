@@ -32,7 +32,7 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class FieldGroupTest {
     public void setReadOnly_readOnlyAndNoDataSource_fieldIsReadOnly() {
         FieldGroup fieldGroup = new FieldGroup();
 
-        TextField field = new TextField();
+        LegacyTextField field = new LegacyTextField();
         fieldGroup.bind(field, "property");
 
         fieldGroup.setReadOnly(true);
@@ -58,7 +58,7 @@ public class FieldGroupTest {
     public void setReadOnly_writableAndNoDataSource_fieldIsWritable() {
         FieldGroup fieldGroup = new FieldGroup();
 
-        TextField field = new TextField();
+        LegacyTextField field = new LegacyTextField();
         fieldGroup.bind(field, "property");
 
         fieldGroup.setReadOnly(false);
@@ -73,15 +73,15 @@ public class FieldGroupTest {
 
         fieldGroup.setItemDataSource(new TestItem());
 
-        TextField field1 = new TextField();
+        LegacyTextField field1 = new LegacyTextField();
         field1.setRequired(true);
         fieldGroup.bind(field1, "prop1");
 
-        TextField field2 = new TextField();
+        LegacyTextField field2 = new LegacyTextField();
         field2.setRequired(true);
         fieldGroup.bind(field2, "prop2");
 
-        Set<TextField> set = new HashSet<>(Arrays.asList(field1,
+        Set<LegacyTextField> set = new HashSet<>(Arrays.asList(field1,
                 field2));
 
         try {

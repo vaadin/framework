@@ -3,11 +3,11 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 public class FormUsingExistingLayout extends AbstractTestUI {
 
@@ -49,8 +49,8 @@ public class FormUsingExistingLayout extends AbstractTestUI {
     }
 
     public static class MyFormLayout extends GridLayout {
-        private TextField firstName = new TextField("First name");
-        private TextField lastName = new TextField("Last name");
+        private LegacyTextField firstName = new LegacyTextField("First name");
+        private LegacyTextField lastName = new LegacyTextField("Last name");
 
         // The name of the property is by default the name of the member field,
         // but it can be redefined with the @PropertyId annotation

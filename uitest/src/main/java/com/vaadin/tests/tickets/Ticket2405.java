@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Alignment;
@@ -10,7 +11,6 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2405 extends LegacyApplication {
@@ -58,7 +58,7 @@ public class Ticket2405 extends LegacyApplication {
         VerticalLayout vl = new VerticalLayout();
         split.addComponent(vl);
 
-        vl.addComponent(new TextField("abc"));
+        vl.addComponent(new LegacyTextField("abc"));
         vl.addComponent(image);
         vl.setExpandRatio(image, 1.0f);
         vl.setComponentAlignment(image, Alignment.BOTTOM_CENTER);

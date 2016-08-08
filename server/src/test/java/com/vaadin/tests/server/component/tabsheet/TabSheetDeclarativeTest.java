@@ -72,8 +72,8 @@ public class TabSheetDeclarativeTest extends DeclarativeTestBase<TabSheet> {
     public void tabsNotShown() {
         String design = "<vaadin-tab-sheet tabs-visible=\"false\">\n"
                 + "  <tab caption=\"My Tab\" selected>\n"
-                + "    <vaadin-label>My Content</vaadin-label>\n"
-                + "  </tab>\n" + "</vaadin-tab-sheet>\n";
+                + "    <vaadin-label>My Content</vaadin-label>\n" + "  </tab>\n"
+                + "</vaadin-tab-sheet>\n";
         TabSheet ts = new TabSheet();
         ts.setTabsVisible(false);
         Label l = new Label("My Content", ContentMode.HTML);

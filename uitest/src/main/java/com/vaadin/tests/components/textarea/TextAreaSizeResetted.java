@@ -92,8 +92,8 @@ public class TextAreaSizeResetted extends AbstractTestUI {
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                pollIndicator.setValue(String.valueOf(System
-                        .currentTimeMillis()));
+                pollIndicator
+                        .setValue(String.valueOf(System.currentTimeMillis()));
             }
         });
     }

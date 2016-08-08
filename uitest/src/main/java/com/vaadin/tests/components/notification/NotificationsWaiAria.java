@@ -3,6 +3,7 @@ package com.vaadin.tests.components.notification;
 import com.vaadin.data.Item;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -41,12 +42,12 @@ public class NotificationsWaiAria extends AbstractTestUI {
         // The text fields need to be non-immediate to avoid an extra event that
         // hides the notification while the test is still trying to read its
         // contents.
-        prefix.setImmediate(false);
+        prefix.setValueChangeMode(ValueChangeMode.BLUR);
         addComponent(prefix);
 
         postfix = new TextField("Postfix",
                 " - closes automatically after 10 seconds");
-        postfix.setImmediate(false);
+        postfix.setValueChangeMode(ValueChangeMode.BLUR);
         addComponent(postfix);
 
         role = new NativeSelect("NotificationRole");

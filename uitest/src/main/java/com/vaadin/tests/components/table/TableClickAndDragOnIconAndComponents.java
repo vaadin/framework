@@ -7,6 +7,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
@@ -19,7 +20,6 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TextField;
 
 public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
 
@@ -60,7 +60,7 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
-                TextField textfield = new TextField();
+                LegacyTextField textfield = new LegacyTextField();
                 textfield.setValue(String.valueOf(item.getItemProperty("foo")
                         .getValue()));
                 return textfield;
@@ -74,7 +74,7 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
-                TextField textfield = new TextField();
+                LegacyTextField textfield = new LegacyTextField();
                 textfield.setValue(String.valueOf(item.getItemProperty("foo")
                         .getValue()));
                 textfield.setReadOnly(true);

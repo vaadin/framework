@@ -15,13 +15,13 @@
  */
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 
 /**
  *
@@ -31,7 +31,7 @@ import com.vaadin.ui.TextField;
 public class GridIcon extends GridBaseLayoutTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        layout.addComponent(createLabelsFields(TextField.class, true, ""));
+        layout.addComponent(createLabelsFields(LegacyTextField.class, true, ""));
         layout.addComponent(createLabelsFields(Label.class, true, ""));
         layout.addComponent(createLabelsFields(Button.class, true, ""));
         layout.addComponent(createLabelsFields(ComboBox.class, true, ""));

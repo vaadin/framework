@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.accordion;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TextField;
 
 public class AccordionInactiveTabSize extends TestBase {
 
@@ -26,10 +26,10 @@ public class AccordionInactiveTabSize extends TestBase {
 
         Accordion acc = new Accordion();
 
-        Tab tab1 = acc.addTab(new TextField("first field"));
+        Tab tab1 = acc.addTab(new LegacyTextField("first field"));
         tab1.setCaption("First tab");
 
-        Tab tab2 = acc.addTab(new TextField("second field"));
+        Tab tab2 = acc.addTab(new LegacyTextField("second field"));
         tab2.setCaption("Second tab");
 
         acc.setSizeFull();

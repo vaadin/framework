@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class LayoutClickListenerTest extends TestBase {
@@ -27,7 +27,7 @@ public class LayoutClickListenerTest extends TestBase {
         layout.setSizeFull();
 
         // Add some components to the layout
-        layout.addComponent(new TextField(null, "Click here"));
+        layout.addComponent(new LegacyTextField(null, "Click here"));
         layout.addComponent(new Link("Click here", null));
 
         Select select = new Select(null, Arrays.asList("Click here"));
@@ -38,7 +38,7 @@ public class LayoutClickListenerTest extends TestBase {
         VerticalLayout l1 = new VerticalLayout();
         l1.setMargin(true);
         l1.addComponent(new Label("This is a label."));
-        l1.addComponent(new TextField(null, "Click here"));
+        l1.addComponent(new LegacyTextField(null, "Click here"));
         l1.addComponent(new Link("Click here", null));
 
         TabSheet t = new TabSheet();
@@ -48,7 +48,7 @@ public class LayoutClickListenerTest extends TestBase {
 
         VerticalLayout nestedLayout = new VerticalLayout();
         nestedLayout.addComponent(new Label("This is a label."));
-        nestedLayout.addComponent(new TextField(null, "Click here"));
+        nestedLayout.addComponent(new LegacyTextField(null, "Click here"));
         nestedLayout.addComponent(new Link("Click here", null));
 
         HorizontalLayout nestedLayout2 = new HorizontalLayout();

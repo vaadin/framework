@@ -2,18 +2,18 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class TextChangeTimeoutAfterDetach extends TestBase {
 
     @Override
     protected void setup() {
-        final TextField field = new TextField();
+        final LegacyTextField field = new LegacyTextField();
         field.setImmediate(false);
         field.setTextChangeTimeout(2000);
         field.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);

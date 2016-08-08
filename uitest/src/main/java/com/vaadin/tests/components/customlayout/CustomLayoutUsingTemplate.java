@@ -3,13 +3,13 @@ package com.vaadin.tests.components.customlayout;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class CustomLayoutUsingTemplate extends TestBase implements
         ClickListener {
@@ -61,7 +61,7 @@ public class CustomLayoutUsingTemplate extends TestBase implements
         if (event.getButton() == button1) {
             layout.addComponent(button2, "location1");
         } else {
-            layout.addComponent(new TextField("A text field!"), "location2");
+            layout.addComponent(new LegacyTextField("A text field!"), "location2");
         }
     }
 }

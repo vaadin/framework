@@ -6,6 +6,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -14,7 +15,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 
 public class TableUnregisterComponent extends TestBase {
 
@@ -26,12 +26,12 @@ public class TableUnregisterComponent extends TestBase {
         final Log log = new Log(5);
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(COL_A, TextField.class, null);
+        container.addContainerProperty(COL_A, LegacyTextField.class, null);
         container.addContainerProperty(COL_B, String.class, "");
 
         Item it = container.addItem("a");
         final ObjectProperty<String> valA = new ObjectProperty<String>("orgVal");
-        final TextField fieldA = new TextField(valA) {
+        final LegacyTextField fieldA = new LegacyTextField(valA) {
             @Override
             public void setPropertyDataSource(Property newDataSource) {
                 super.setPropertyDataSource(newDataSource);
@@ -52,7 +52,7 @@ public class TableUnregisterComponent extends TestBase {
             public LegacyField<?> createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
                 if (COL_B.equals(propertyId)) {
-                    LegacyField<String> field = new TextField() {
+                    LegacyField<String> field = new LegacyTextField() {
                         @Override
                         public void setPropertyDataSource(Property newDataSource) {
                             super.setPropertyDataSource(newDataSource);

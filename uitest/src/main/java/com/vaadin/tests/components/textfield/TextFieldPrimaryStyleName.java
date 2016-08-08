@@ -1,15 +1,15 @@
 package com.vaadin.tests.components.textfield;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.TextField;
 
 public class TextFieldPrimaryStyleName extends TestBase {
 
     @Override
     protected void setup() {
-        final TextField field = new TextField();
+        final LegacyTextField field = new LegacyTextField();
         field.setPrimaryStyleName("my-textfield");
         addComponent(field);
 

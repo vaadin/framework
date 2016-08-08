@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -17,7 +18,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -63,7 +63,7 @@ public class Ticket2061b extends LegacyApplication implements
         // table2 }, "Test");
 
         Label a = new Label("abc123");
-        TextField tf = new TextField("A large textfield");
+        LegacyTextField tf = new LegacyTextField("A large textfield");
         tf.setHeight("2500px");
         tf.setWidth("2500px");
 

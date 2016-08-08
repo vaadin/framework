@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.splitpanel;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class SplitPanelWidthOnResize extends AbstractTestCase {
@@ -20,7 +20,7 @@ public class SplitPanelWidthOnResize extends AbstractTestCase {
         HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
         Button button = new NativeButton("A huge button");
         button.setSizeFull();
-        TextField textField = new TextField("A small textfield");
+        LegacyTextField textField = new LegacyTextField("A small textfield");
 
         splitPanel.setFirstComponent(button);
         splitPanel.setSecondComponent(textField);

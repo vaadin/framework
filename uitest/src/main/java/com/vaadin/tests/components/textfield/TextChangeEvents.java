@@ -2,10 +2,10 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -28,19 +28,31 @@ public class TextChangeEvents extends TestBase {
             }
         };
 
-        tf.addTextChangeListener(inputEventListener);
+        tf.addValueChangeListener(listener -> {
+            l.log("Text change event for  " + tf.getCaption()
+                    + ", text content currently:'" + listener.getValue()
+                    + "' Cursor at index:" + tf.getCursorPosition());
+        });
 
         getLayout().addComponent(tf);
 
         TextField eager = new TextField("Eager");
-        eager.addTextChangeListener(inputEventListener);
-        eager.setTextChangeEventMode(TextChangeEventMode.EAGER);
+        eager.addValueChangeListener(listener -> {
+            l.log("Text change event for  " + eager.getCaption()
+                    + ", text content currently:'" + listener.getValue()
+                    + "' Cursor at index:" + eager.getCursorPosition());
+        });
+        eager.setValueChangeMode(ValueChangeMode.EAGER);
         getLayout().addComponent(eager);
 
         TextField to = new TextField("Timeout 3s");
-        to.addTextChangeListener(inputEventListener);
-        to.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
-        to.setTextChangeTimeout(3000);
+        to.addValueChangeListener(listener -> {
+            l.log("Text change event for  " + to.getCaption()
+                    + ", text content currently:'" + listener.getValue()
+                    + "' Cursor at index:" + to.getCursorPosition());
+        });
+        to.setValueChangeMode(ValueChangeMode.TIMEOUT);
+        to.setValueChangeTimeout(3000);
         getLayout().addComponent(to);
 
         TextArea ta = new TextArea("Default text area");
@@ -48,7 +60,11 @@ public class TextChangeEvents extends TestBase {
         getLayout().addComponent(ta);
 
         VaadinDeveloperNameField vd = new VaadinDeveloperNameField();
-        vd.addTextChangeListener(inputEventListener);
+        vd.addValueChangeListener(listener -> {
+            l.log("Text change event for  " + vd.getCaption()
+                    + ", text content currently:'" + listener.getValue()
+                    + "' Cursor at index:" + vd.getCursorPosition());
+        });
         getLayout().addComponent(vd);
 
         getLayout().addComponent(l);
@@ -73,15 +89,29 @@ public class TextChangeEvents extends TestBase {
      * 2010-10
      *
      */
-    private class VaadinDeveloperNameField extends TextField
-            implements TextChangeListener {
+    private class VaadinDeveloperNameField extends TextField {
         private String[] names = new String[] { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 
         public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
-            addTextChangeListener(this);
+            addValueChangeListener(listener -> {
+                boolean atTheEndOfText = listener.getValue()
+                        .length() == getCursorPosition();
+                String match = findMatch(listener.getValue());
+                if (match != null) {
+                    setStyleName("match");
+                    String curText = listener.getValue();
+                    int matchlenght = curText.length();
+                    // autocomplete if caret is at the end of the text
+                    if (atTheEndOfText) {
+                        suggest(match, matchlenght);
+                    }
+                } else {
+                    setStyleName("nomatch");
+                }
+            });
             setStyleName("nomatch");
         }
 
@@ -92,27 +122,9 @@ public class TextChangeEvents extends TestBase {
                     + ".nomatch {background:red;}");
         }
 
-        @Override
-        public void textChange(TextChangeEvent event) {
-            boolean atTheEndOfText = event.getText()
-                    .length() == getCursorPosition();
-            String match = findMatch(event.getText());
-            if (match != null) {
-                setStyleName("match");
-                String curText = event.getText();
-                int matchlenght = curText.length();
-                // autocomplete if garret is at the end of the text
-                if (atTheEndOfText) {
-                    suggest(match, matchlenght);
-                }
-            } else {
-                setStyleName("nomatch");
-            }
-        }
-
         private void suggest(String match, int matchlenght) {
             setValue(match);
-            setSelectionRange(matchlenght, match.length() - matchlenght);
+            setSelection(matchlenght, match.length() - matchlenght);
         }
 
         private String findMatch(String currentTextContent) {

@@ -1,19 +1,19 @@
 package com.vaadin.tests.components.form;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 
 public class FormPrimaryStyleName extends TestBase {
 
     @Override
     protected void setup() {
         final Form form = new Form();
-        form.addField("aaa", new TextField());
+        form.addField("aaa", new LegacyTextField());
         form.setDescription("This is a form description");
         form.setCaption("This is a form caption");
         form.setPrimaryStyleName("my-form");

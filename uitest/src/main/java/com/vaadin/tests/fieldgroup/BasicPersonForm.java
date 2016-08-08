@@ -10,6 +10,7 @@ import com.vaadin.legacy.data.util.converter.LegacyStringToBooleanConverter;
 import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Address;
@@ -24,17 +25,16 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class BasicPersonForm extends AbstractTestUIWithLog {
 
-    private TextField firstName;
+    private LegacyTextField firstName;
     private TextArea lastName;
-    private TextField email;
-    private TextField age;
+    private LegacyTextField email;
+    private LegacyTextField age;
     private Table sex;
-    private TextField deceased;
+    private LegacyTextField deceased;
 
     public class Configuration {
         public boolean preCommitFails = false;
@@ -61,16 +61,21 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
     private Configuration configuration = new Configuration();
 
     private class ConfigurationPanel extends Panel {
-        private CheckBox preCommitCheckBox = new CheckBox("Pre Commit Fails", configuration.isPreCommitFails());
-        private CheckBox postCommitCheckBox = new CheckBox("Post Commit Fails", configuration.isPostCommitFails());
+        private CheckBox preCommitCheckBox = new CheckBox("Pre Commit Fails",
+                configuration.isPreCommitFails());
+        private CheckBox postCommitCheckBox = new CheckBox("Post Commit Fails",
+                configuration.isPostCommitFails());
 
         public ConfigurationPanel() {
             super("Configuration", new VerticalLayout());
             ((VerticalLayout) getContent()).setMargin(true);
-            preCommitCheckBox.addValueChangeListener(event -> configuration.setPreCommitFails(event.getValue()));
-            postCommitCheckBox.addValueChangeListener(event -> configuration.setPostCommitFails(event.getValue()));
+            preCommitCheckBox.addValueChangeListener(
+                    event -> configuration.setPreCommitFails(event.getValue()));
+            postCommitCheckBox.addValueChangeListener(event -> configuration
+                    .setPostCommitFails(event.getValue()));
 
-            ((ComponentContainer) getContent()).addComponents(preCommitCheckBox, postCommitCheckBox);
+            ((ComponentContainer) getContent()).addComponents(preCommitCheckBox,
+                    postCommitCheckBox);
         }
     }
 

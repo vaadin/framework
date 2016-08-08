@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -7,7 +8,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 
 public class CaptionEnableDisable extends AbstractTestUI {
 
@@ -19,7 +19,7 @@ public class CaptionEnableDisable extends AbstractTestUI {
 
     public FormLayout createFormLayout() {
         FormLayout layout = new FormLayout();
-        final TextField textField = new TextField("TextField");
+        final LegacyTextField textField = new LegacyTextField("TextField");
         textField.setEnabled(false);
         layout.addComponent(textField);
 

@@ -43,6 +43,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.ui.UIConnector;
@@ -415,7 +416,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         // cause some odd issues. Should be replaced with a decent solution, see
         // also related BeforeShortcutActionListener interface. Same interface
         // might be usable here.
-        VTextField.flushChangesFromFocusedTextField();
+        VLegacyTextField.flushChangesFromFocusedTextField();
     }
 
     private native static void loadAppIdListFromDOM(ArrayList<String> list)

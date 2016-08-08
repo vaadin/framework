@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 
 public class Ticket2179 extends LegacyApplication {
 
-    TextField f = new TextField("Test fiel ( must contain 1 & 2 )");
+    LegacyTextField f = new LegacyTextField("Test fiel ( must contain 1 & 2 )");
     LegacyWindow main = new LegacyWindow("Dual validator test");
 
     @Override
@@ -27,8 +27,8 @@ public class Ticket2179 extends LegacyApplication {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                main.showNotification("Test field is "
-                        + (f.isValid() ? "valid" : "invalid"));
+                main.showNotification(
+                        "Test field is " + (f.isValid() ? "valid" : "invalid"));
             }
         });
 

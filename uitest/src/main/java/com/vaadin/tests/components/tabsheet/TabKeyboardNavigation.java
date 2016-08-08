@@ -6,6 +6,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
@@ -17,7 +18,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -75,11 +75,11 @@ public class TabKeyboardNavigation extends AbstractTestUI {
         addComponent(addTab);
         addComponent(focus);
 
-        TextField tf = new TextField();
+        LegacyTextField tf = new LegacyTextField();
         addComponent(tf);
         addComponent(focusblur);
         addComponent(ts);
-        tf = new TextField();
+        tf = new LegacyTextField();
         addComponent(tf);
     }
 
@@ -105,7 +105,7 @@ public class TabKeyboardNavigation extends AbstractTestUI {
         Label label = new Label("Tab " + index);
         label.setId(labelID(index));
         content.addComponent(label);
-        content.addComponent(new TextField());
+        content.addComponent(new LegacyTextField());
         Tab tab = ts.addTab(content, "Tab " + index, null);
         if (index == 2) {
             tab.setClosable(true);

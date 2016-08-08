@@ -20,12 +20,12 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.legacy.ui.LegacyField.ValueChangeEvent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
-import com.vaadin.ui.TextField;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -192,12 +192,12 @@ public interface FieldEvents {
      * The {@link TextChangeNotifier}s implementation may decide when exactly
      * TextChangeEvents are fired. TextChangeEvents are not necessary fire for
      * example on each key press, but buffered with a small delay. The
-     * {@link TextField} component supports different modes for triggering
+     * {@link LegacyTextField} component supports different modes for triggering
      * TextChangeEvents.
      *
      * @see TextChangeListener
      * @see TextChangeNotifier
-     * @see TextField#setTextChangeEventMode(com.vaadin.ui.TextField.TextChangeEventMode)
+     * @see LegacyTextField#setTextChangeEventMode(com.vaadin.ui.LegacyTextField.TextChangeEventMode)
      * @since 6.5
      */
     public static abstract class TextChangeEvent extends Component.Event {
@@ -240,7 +240,7 @@ public interface FieldEvents {
 
     /**
      * An interface implemented by a {@link LegacyField} supporting
-     * {@link TextChangeEvent}s. An example a {@link TextField} supports
+     * {@link TextChangeEvent}s. An example a {@link LegacyTextField} supports
      * {@link TextChangeListener}s.
      */
     public interface TextChangeNotifier extends Serializable {

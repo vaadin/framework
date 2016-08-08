@@ -11,17 +11,17 @@ import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
-import com.vaadin.ui.TextField;
+import com.vaadin.legacy.ui.LegacyTextField;
 
 public class TextFieldWithValidatorTest {
 
-    private TextField field;
+    private LegacyTextField field;
     private ObjectProperty<String> property;
 
     @Before
     public void setUp() {
 
-        field = new TextField();
+        field = new LegacyTextField();
         field.setInvalidAllowed(false);
         property = new ObjectProperty<String>("original");
         field.setPropertyDataSource(property);

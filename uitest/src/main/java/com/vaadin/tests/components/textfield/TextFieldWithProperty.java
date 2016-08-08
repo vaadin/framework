@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextField;
 
 @SuppressWarnings("unchecked")
 public class TextFieldWithProperty extends TestBase {
@@ -13,7 +13,7 @@ public class TextFieldWithProperty extends TestBase {
     @Override
     protected void setup() {
 
-        final TextField tf1 = new TextField();
+        final LegacyTextField tf1 = new LegacyTextField();
 
         final ObjectProperty<String> op = new ObjectProperty<String>("FOO");
 

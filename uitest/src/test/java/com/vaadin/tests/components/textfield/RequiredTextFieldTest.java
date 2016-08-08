@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -46,7 +46,7 @@ public class RequiredTextFieldTest extends MultiBrowserTest {
     }
 
     private String getStyles() {
-        return $(TextFieldElement.class).first().getAttribute("class");
+        return $(LegacyTextFieldElement.class).first().getAttribute("class");
     }
 
 }
