@@ -51,7 +51,7 @@ List<Person> persons = Arrays.asList(
 grid.setItems(persons);
 ----
 
-Listing components that allow the user to control in which order the items are displayed is automatically able to sort data by any property as long as the property type implements [classname]#Comparable#.
+Listing components that allow the user to control the display order of the items are automatically able to sort data by any property as long as the property type implements [classname]#Comparable#.
 
 We can also define a custom [classname]#Comparator# if we want to customize the way a specific column is sorted. The comparator can either be based on the item instances or on the values of the property that is being shown.
 
