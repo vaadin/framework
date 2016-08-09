@@ -26,7 +26,7 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 
 /**
  * Vaadin {@link Validator} using the JSR-303 (javax.validation)

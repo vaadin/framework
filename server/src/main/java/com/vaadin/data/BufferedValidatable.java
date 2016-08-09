@@ -18,6 +18,8 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 
+import com.vaadin.legacy.data.Validatable;
+
 /**
  * <p>
  * This interface defines the combination of <code>Validatable</code> and

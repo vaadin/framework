@@ -27,10 +27,10 @@ import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.AbstractProperty;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.TextField;
 

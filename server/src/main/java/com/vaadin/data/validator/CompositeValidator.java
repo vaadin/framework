@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 
 /**
  * The <code>CompositeValidator</code> allows you to chain (compose) many

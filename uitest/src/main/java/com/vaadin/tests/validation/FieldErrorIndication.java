@@ -17,9 +17,9 @@ package com.vaadin.tests.validation;
 
 import java.util.Set;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;

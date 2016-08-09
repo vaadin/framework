@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.data.Buffered;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.tests.util.Address;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;

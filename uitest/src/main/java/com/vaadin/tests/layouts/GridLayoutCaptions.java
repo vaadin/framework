@@ -1,8 +1,8 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;

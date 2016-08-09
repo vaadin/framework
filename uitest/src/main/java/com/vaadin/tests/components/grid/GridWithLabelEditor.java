@@ -17,8 +17,8 @@ package com.vaadin.tests.components.grid;
 
 import java.util.Collection;
 
-import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;

@@ -29,8 +29,6 @@ import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents;
@@ -38,6 +36,8 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.PaintException;

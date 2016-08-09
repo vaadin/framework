@@ -18,7 +18,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 
-import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 
 /**
  * <p>

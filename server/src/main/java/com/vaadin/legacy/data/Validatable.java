@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data;
+package com.vaadin.legacy.data;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -28,7 +28,7 @@ import java.util.Collection;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
- * @see com.vaadin.data.Validator
+ * @see com.vaadin.legacy.data.Validator
  */
 public interface Validatable extends Serializable {
 

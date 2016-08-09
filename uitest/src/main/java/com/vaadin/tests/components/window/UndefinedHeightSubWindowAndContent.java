@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;

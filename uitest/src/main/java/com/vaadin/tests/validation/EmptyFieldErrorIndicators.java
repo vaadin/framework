@@ -2,7 +2,7 @@ package com.vaadin.tests.validation;
 
 import java.util.Date;
 
-import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.AlwaysFailValidator;

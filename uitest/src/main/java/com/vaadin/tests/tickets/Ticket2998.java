@@ -9,8 +9,8 @@ import java.util.Random;
 import java.util.Set;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.ComboBox;

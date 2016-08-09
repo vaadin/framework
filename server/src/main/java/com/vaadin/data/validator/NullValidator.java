@@ -16,7 +16,7 @@
 
 package com.vaadin.data.validator;
 
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 
 /**
  * This validator is used for validating properties that do or do not allow null

@@ -32,9 +32,6 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validatable;
-import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
@@ -42,6 +39,9 @@ import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.legacy.data.Validatable;
+import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
@@ -69,7 +69,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  * 
  * <p>
- * The class also supports {@link com.vaadin.data.Validator validators} to make
+ * The class also supports {@link com.vaadin.legacy.data.Validator validators} to make
  * sure the value contained in the field is valid.
  * </p>
  * 
@@ -962,7 +962,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * is required and empty this method throws an EmptyValueException with the
      * error message set using {@link #setRequiredError(String)}.
      * 
-     * @see com.vaadin.data.Validatable#validate()
+     * @see com.vaadin.legacy.data.Validatable#validate()
      */
     @Override
     public void validate() throws Validator.InvalidValueException {
@@ -1035,7 +1035,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * because the field otherwise visually forget the user input immediately.
      * 
      * @return true iff the invalid values are allowed.
-     * @see com.vaadin.data.Validatable#isInvalidAllowed()
+     * @see com.vaadin.legacy.data.Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -1053,7 +1053,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * datasource is set.
      * </p>
      * 
-     * @see com.vaadin.data.Validatable#setInvalidAllowed(boolean)
+     * @see com.vaadin.legacy.data.Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidAllowed)

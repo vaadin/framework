@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.IntegerValidator;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;

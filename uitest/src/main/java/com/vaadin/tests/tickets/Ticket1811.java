@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data;
+package com.vaadin.legacy.data;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ import com.vaadin.server.VaadinServlet;
  * valid or not.
  * <p>
  * Implementors of this class can be added to any
- * {@link com.vaadin.data.Validatable Validatable} implementor to verify its
+ * {@link com.vaadin.legacy.data.Validatable Validatable} implementor to verify its
  * value.
  * </p>
  * <p>

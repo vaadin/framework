@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.validator.NullValidator;
+import com.vaadin.legacy.data.Validator;
 
 public class NullValidatorTest {
 

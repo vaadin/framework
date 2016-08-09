@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.data.Buffered;
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 
 /**
  * Base class for component error messages.

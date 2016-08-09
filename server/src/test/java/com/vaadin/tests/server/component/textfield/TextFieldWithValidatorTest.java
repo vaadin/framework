@@ -5,12 +5,12 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.ui.TextField;
 
 public class TextFieldWithValidatorTest {

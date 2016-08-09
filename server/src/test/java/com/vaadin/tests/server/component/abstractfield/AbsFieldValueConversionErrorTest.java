@@ -5,9 +5,9 @@ import static org.junit.Assert.fail;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;

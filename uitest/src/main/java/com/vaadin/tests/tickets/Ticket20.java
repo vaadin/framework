@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.CompositeValidator;
 import com.vaadin.data.validator.CompositeValidator.CombinationMode;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;

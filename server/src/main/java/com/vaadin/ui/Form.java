@@ -27,15 +27,15 @@ import java.util.Map;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validatable;
-import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.legacy.data.Validatable;
+import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractErrorMessage;
@@ -959,7 +959,7 @@ public class Form extends LegacyAbstractField<Object> implements Item.Editor,
     /**
      * Checks the validity of the Form and all of its fields.
      * 
-     * @see com.vaadin.data.Validatable#validate()
+     * @see com.vaadin.legacy.data.Validatable#validate()
      */
     @Override
     public void validate() throws InvalidValueException {
@@ -972,7 +972,7 @@ public class Form extends LegacyAbstractField<Object> implements Item.Editor,
     /**
      * Checks the validabtable object accept invalid values.
      * 
-     * @see com.vaadin.data.Validatable#isInvalidAllowed()
+     * @see com.vaadin.legacy.data.Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -982,7 +982,7 @@ public class Form extends LegacyAbstractField<Object> implements Item.Editor,
     /**
      * Should the validabtable object accept invalid values.
      * 
-     * @see com.vaadin.data.Validatable#setInvalidAllowed(boolean)
+     * @see com.vaadin.legacy.data.Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidValueAllowed)

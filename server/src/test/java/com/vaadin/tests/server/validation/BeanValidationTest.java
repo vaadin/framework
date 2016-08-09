@@ -3,9 +3,9 @@ package com.vaadin.tests.server.validation;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.data.bean.BeanToValidate;
 

@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 

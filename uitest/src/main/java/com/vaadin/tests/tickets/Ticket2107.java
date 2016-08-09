@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Validator;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;

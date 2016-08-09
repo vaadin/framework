@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;

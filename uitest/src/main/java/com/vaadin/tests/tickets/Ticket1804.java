@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.SystemError;
 import com.vaadin.shared.ui.label.ContentMode;
