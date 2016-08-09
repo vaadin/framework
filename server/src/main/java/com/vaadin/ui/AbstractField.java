@@ -23,6 +23,7 @@ import java.util.Objects;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.data.HasRequired;
 import com.vaadin.data.HasValue;
 import com.vaadin.event.Registration;
 import com.vaadin.shared.AbstractFieldState;
@@ -48,7 +49,7 @@ import com.vaadin.util.ReflectTools;
  *            the input value type
  */
 public abstract class AbstractField<T> extends AbstractComponent
-        implements HasValue<T>, Focusable {
+        implements HasValue<T>, HasRequired, Focusable {
 
     @Deprecated
     private static final Method VALUE_CHANGE_METHOD = ReflectTools
@@ -207,4 +208,13 @@ public abstract class AbstractField<T> extends AbstractComponent
         getState().tabIndex = tabIndex;
     }
 
+    @Override
+    public void setRequired(boolean required) {
+        getState().required = required;
+    }
+
+    @Override
+    public boolean isRequired() {
+        return getState(false).required;
+    }
 }

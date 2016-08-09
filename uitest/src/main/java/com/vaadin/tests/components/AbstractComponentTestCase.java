@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.data.HasRequired;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
@@ -15,15 +16,24 @@ import com.vaadin.ui.Layout.SpacingHandler;
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         extends TestBase {
 
-    protected static final ThemeResource ICON_16_HELP_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/help.png");
-    protected static final ThemeResource ICON_16_FOLDER_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/folder.png");
-    protected static final ThemeResource ICON_16_ERROR_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/error.png");
-    protected static final ThemeResource ICON_16_USER_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/user.png");
-    protected static final ThemeResource ICON_16_USER_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/16/user.png");
-    protected static final ThemeResource ICON_32_ATTENTION_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/32/attention.png");
-    protected static final ThemeResource ICON_32_ATTENTION_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/32/attention.png");
-    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/64/email-reply.png");
-    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/64/email-reply.png");
+    protected static final ThemeResource ICON_16_HELP_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/help.png");
+    protected static final ThemeResource ICON_16_FOLDER_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/folder.png");
+    protected static final ThemeResource ICON_16_ERROR_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/error.png");
+    protected static final ThemeResource ICON_16_USER_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_16_USER_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/64/email-reply.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/64/email-reply.png");
 
     private List<T> testComponents = new ArrayList<T>();
 
@@ -132,8 +142,8 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
         @Override
         public void execute(T c, Boolean enabled, Object data) {
-            if (c instanceof LegacyField) {
-                ((LegacyField<?>) c).setRequired(enabled);
+            if (c instanceof HasRequired) {
+                ((HasRequired) c).setRequired(enabled);
             } else {
                 throw new IllegalArgumentException(c.getClass().getName()
                         + " is not a field and cannot be set to required");
@@ -198,7 +208,8 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     };
 
-    protected <VALUET> void doCommand(Command<T, VALUET> command, VALUET value) {
+    protected <VALUET> void doCommand(Command<T, VALUET> command,
+            VALUET value) {
         doCommand(command, value, null);
     }
 

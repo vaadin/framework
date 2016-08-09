@@ -17,6 +17,7 @@
 package com.vaadin.legacy.ui;
 
 import com.vaadin.data.BufferedValidatable;
+import com.vaadin.data.HasRequired;
 import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
@@ -47,10 +48,8 @@ import com.vaadin.ui.Component.Focusable;
  */
 @Deprecated
 public interface LegacyField<T> extends Component, BufferedValidatable,
-        Property<T>,
-        Property.ValueChangeNotifier, Property.ValueChangeListener,
-        Property.Editor, Focusable {
-
+        Property<T>, Property.ValueChangeNotifier, Property.ValueChangeListener,
+        Property.Editor, Focusable, HasRequired {
     /**
      * Is this field required.
      *
@@ -60,6 +59,7 @@ public interface LegacyField<T> extends Component, BufferedValidatable,
      *         <code>false</code>.
      * @since 3.1
      */
+    @Override
     public boolean isRequired();
 
     /**
@@ -69,6 +69,7 @@ public interface LegacyField<T> extends Component, BufferedValidatable,
      *            Is the field required.
      * @since 3.1
      */
+    @Override
     public void setRequired(boolean required);
 
     /**
@@ -95,14 +96,13 @@ public interface LegacyField<T> extends Component, BufferedValidatable,
      *
      * @author Vaadin Ltd.
      * @since 3.0
-     * 
+     *
      * @deprecated As of 8.0, replaced by {@link ValueChange}.
      */
     @Deprecated
     @SuppressWarnings("serial")
-    public static class ValueChangeEvent extends
-            Component.Event implements
-            Property.ValueChangeEvent {
+    public static class ValueChangeEvent extends Component.Event
+            implements Property.ValueChangeEvent {
 
         /**
          * Constructs a new event object with the specified source field object.
@@ -128,10 +128,10 @@ public interface LegacyField<T> extends Component, BufferedValidatable,
 
     /**
      * Is the field empty?
-     * 
+     *
      * In general, "empty" state is same as null. As an exception, TextField
      * also treats empty string as "empty".
-     * 
+     *
      * @since 7.4
      * @return true if the field is empty, false otherwise
      */
@@ -142,7 +142,7 @@ public interface LegacyField<T> extends Component, BufferedValidatable,
      * <p>
      * The field value is typically reset to the initial value of the field.
      * Calling {@link #isEmpty()} on a cleared field must always returns true.
-     * 
+     *
      * @since 7.4
      */
     public void clear();
